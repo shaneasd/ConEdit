@@ -1,0 +1,542 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D904BED7-0716-4B54-8BBE-D53A7F938C8D}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ConversationEditor</RootNamespace>
+    <AssemblyName>ConversationEditor</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>e:\ConEdit\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>C:\Users\shane\Desktop\ConEdit\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>2F31BDAC2FF2A43C53D2A64B25E70F1EB3521833</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>ConversationEditor_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>GenericSystemHover.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="ConfigNodeDefinitions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Config\ColorsConfig.cs" />
+    <Compile Include="Config\ConfigParameterColor.cs" />
+    <Compile Include="Config\ConfigParameterList.cs" />
+    <Compile Include="Controllers\AudioProvider.cs" />
+    <Compile Include="Colors.cs" />
+    <Compile Include="Config\ConfigParameter.cs" />
+    <Compile Include="Config\ConfigParameterStringList.cs" />
+    <Compile Include="Config\ConfigParameterString.cs" />
+    <Compile Include="Config\ErrorCheckersConfig.cs" />
+    <Compile Include="Config\Config.cs" />
+    <Compile Include="Config\GraphViewConfig.cs" />
+    <Compile Include="Config\PluginsConfig.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Config\TypeMapConfig.cs" />
+    <Compile Include="ConnectionDrawer.cs" />
+    <Compile Include="Controllers\AudioFile.cs" />
+    <Compile Include="Controllers\BaseTypes.cs" />
+    <Compile Include="Controllers\ContextMenu.cs" />
+    <Compile Include="Controllers\ConversationConnectionRules.cs" />
+    <Compile Include="Controllers\ConversationFile.cs" />
+    <Compile Include="Controllers\DomainConnectionRules.cs" />
+    <Compile Include="Controllers\DomainIDs.cs" />
+    <Compile Include="Controllers\DomainUsage.cs" />
+    <Compile Include="Controllers\GraphContextMenuItems.cs" />
+    <Compile Include="Controllers\GraphFile.cs" />
+    <Compile Include="Controllers\DomainFile.cs" />
+    <Compile Include="Controllers\DomainDomain.cs" />
+    <Compile Include="Controllers\DummyConversationEditorControlData.cs" />
+    <Compile Include="Controllers\DummyConversationFile.cs" />
+    <Compile Include="Controllers\IConversationFile.cs" />
+    <Compile Include="Controllers\IProject.cs" />
+    <Compile Include="Controllers\LocalizationEngine.cs" />
+    <Compile Include="Controllers\LocalizationFile.cs" />
+    <Compile Include="Controllers\MakeBaseTypeSet.cs" />
+    <Compile Include="Controllers\MissingConversationFile.cs" />
+    <Compile Include="Controllers\DummyProject.cs" />
+    <Compile Include="Controllers\MissingDomainFile.cs" />
+    <Compile Include="Controllers\MissingFile.cs" />
+    <Compile Include="Controllers\MissingLocalizationFile.cs" />
+    <Compile Include="Controllers\PluginCheckerAssembly.cs" />
+    <Compile Include="Controllers\ProjectElementDefinition.cs" />
+    <Compile Include="Controllers\ProjectElementList.cs" />
+    <Compile Include="Controllers\ProjectMenuController.cs" />
+    <Compile Include="Controllers\DataSource.cs" />
+    <Compile Include="Controllers\SpecialConnectors.cs" />
+    <Compile Include="GUIs\Default Parameter Editors\UnknownParameterEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\UnknownParameterEditor.Designer.cs">
+      <DependentUpon>UnknownParameterEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Node Graphics\UnknownNodeRenderer.cs" />
+    <Compile Include="Node Graphics\EditableRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EditorInterfaces.cs" />
+    <Compile Include="Controllers\ErrorCheckerController.cs" />
+    <Compile Include="GUIs\DomainNodeRenderer.cs" />
+    <Compile Include="GUIs\FindReferencesDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUIs\FindReferencesDialog.Designer.cs">
+      <DependentUpon>FindReferencesDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\RealLeafItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\ConversationEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\DomainEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\DomainListItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\GraphEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\GraphEditorControl.Designer.cs">
+      <DependentUpon>GraphEditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\MissingLeafItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\ProjectExplorer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\ProjectExplorer.Designer.cs">
+      <DependentUpon>ProjectExplorer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\GraphItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultAudioEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultAudioEditor.Designer.cs">
+      <DependentUpon>DefaultAudioEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultLocalizedStringEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultLocalizedStringEditor.Designer.cs">
+      <DependentUpon>DefaultLocalizedStringEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\DrawWindow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\ErrorList2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\ErrorList2.Designer.cs">
+      <DependentUpon>ErrorList2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\ErrorCheckerSelectorDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUIs\ErrorCheckerSelectorDialog.Designer.cs">
+      <DependentUpon>ErrorCheckerSelectorDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\ErrorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUIs\ErrorForm.Designer.cs">
+      <DependentUpon>ErrorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultBooleanEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultBooleanEditor.Designer.cs">
+      <DependentUpon>DefaultBooleanEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultDecimalEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultDecimalEditor.Designer.cs">
+      <DependentUpon>DefaultDecimalEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultDynamicEnumEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultDynamicEnumEditor.Designer.cs">
+      <DependentUpon>DefaultDynamicEnumEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultEnumEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultEnumEditor.Designer.cs">
+      <DependentUpon>DefaultEnumEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultIntegerEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultIntegerEditor.Designer.cs">
+      <DependentUpon>DefaultIntegerEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultStringEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultStringEditor.Designer.cs">
+      <DependentUpon>DefaultStringEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\EditorCustomizer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUIs\EditorCustomizer.Designer.cs">
+      <DependentUpon>EditorCustomizer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\ErrorList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\ErrorList.Designer.cs">
+      <DependentUpon>ErrorList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\FileList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GUIs\FindAndReplaceDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUIs\FindAndReplaceDialog.Designer.cs">
+      <DependentUpon>FindAndReplaceDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\GreyScrollBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\GreyScrollBar.Designer.cs">
+      <DependentUpon>GreyScrollBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\NodeRendererCustomizer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUIs\NodeRendererCustomizer.Designer.cs">
+      <DependentUpon>NodeRendererCustomizer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\PluginSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUIs\PluginSelector.Designer.cs">
+      <DependentUpon>PluginSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUIs\ProjectExplorerItems.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\WM.cs" />
+    <Compile Include="ISaveableFile.cs" />
+    <Compile Include="LineDrawer.cs" />
+    <Compile Include="GUIs\NodeEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\NodeEditor.Designer.cs">
+      <DependentUpon>NodeEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controllers\CopyPasteController.cs" />
+    <Compile Include="MyComboBoxControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MyComboBoxControl.Designer.cs">
+      <DependentUpon>MyComboBoxControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MyTextBoxControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MyTextBoxControl.Designer.cs">
+      <DependentUpon>MyTextBoxControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Node Graphics\NodeUIData.cs" />
+    <Compile Include="Node Graphics\NodeUI.cs" />
+    <Compile Include="Serialization\ConversationEditorData.cs" />
+    <Compile Include="Serialization\NodeUIDataSerializerXml.cs" />
+    <Compile Include="GUIs\Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUIs\Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Node Graphics\CorruptedNodeRenderer.cs" />
+    <Compile Include="Node Graphics\NodeFactory.cs" />
+    <Compile Include="NodeEditorChoice.cs" />
+    <Compile Include="NodeGroup.cs" />
+    <Compile Include="NodeRendererChoice.cs" />
+    <Compile Include="NodeSet.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Controllers\Project.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Controllers\MouseController.cs" />
+    <Compile Include="Serialization\SerializationUtils.cs" />
+    <Compile Include="Serialization\XmlProject.cs" />
+    <Compile Include="Node Graphics\StartGUI.cs" />
+    <Compile Include="Node Graphics\TerminatorGUI.cs" />
+    <Compile Include="testform.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="testform.Designer.cs">
+      <DependentUpon>testform.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TransitionNoduleUIInfo.cs" />
+    <Compile Include="TypeChoice.cs" />
+    <EmbeddedResource Include="GenericSystemHover.ico" />
+    <EmbeddedResource Include="GUIs\Default Parameter Editors\UnknownParameterEditor.resx">
+      <DependentUpon>UnknownParameterEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\FindReferencesDialog.resx">
+      <DependentUpon>FindReferencesDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\GraphEditorControl.resx">
+      <DependentUpon>GraphEditorControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\ProjectExplorer.resx">
+      <DependentUpon>ProjectExplorer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\Default Parameter Editors\DefaultAudioEditor.resx">
+      <DependentUpon>DefaultAudioEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\Default Parameter Editors\DefaultLocalizedStringEditor.resx">
+      <DependentUpon>DefaultLocalizedStringEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\DrawWindow.resx">
+      <DependentUpon>DrawWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\ErrorList2.resx">
+      <DependentUpon>ErrorList2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\ErrorCheckerSelectorDialog.resx">
+      <DependentUpon>ErrorCheckerSelectorDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\ErrorForm.resx">
+      <DependentUpon>ErrorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\Default Parameter Editors\DefaultBooleanEditor.resx">
+      <DependentUpon>DefaultBooleanEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\Default Parameter Editors\DefaultDecimalEditor.resx">
+      <DependentUpon>DefaultDecimalEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\Default Parameter Editors\DefaultDynamicEnumEditor.resx">
+      <DependentUpon>DefaultDynamicEnumEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\Default Parameter Editors\DefaultEnumEditor.resx">
+      <DependentUpon>DefaultEnumEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\Default Parameter Editors\DefaultIntegerEditor.resx">
+      <DependentUpon>DefaultIntegerEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\Default Parameter Editors\DefaultStringEditor.resx">
+      <DependentUpon>DefaultStringEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\EditorCustomizer.resx">
+      <DependentUpon>EditorCustomizer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\ErrorList.resx">
+      <DependentUpon>ErrorList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\FindAndReplaceDialog.resx">
+      <DependentUpon>FindAndReplaceDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\GreyScrollBar.resx">
+      <DependentUpon>GreyScrollBar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\NodeEditor.resx">
+      <DependentUpon>NodeEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\NodeRendererCustomizer.resx">
+      <DependentUpon>NodeRendererCustomizer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUIs\PluginSelector.resx">
+      <DependentUpon>PluginSelector.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MyComboBoxControl.resx">
+      <DependentUpon>MyComboBoxControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MyTextBoxControl.resx">
+      <DependentUpon>MyTextBoxControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="testform.resx">
+      <DependentUpon>testform.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Speech" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Conversation2\Conversation2.csproj">
+      <Project>{6B83BE91-796D-4ABC-98F8-4220B6151A3D}</Project>
+      <Name>Conversation2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConversationSerialization\ConversationSerialization.csproj">
+      <Project>{ABEF494E-1FDB-427A-BA80-1BD98C82F041}</Project>
+      <Name>ConversationSerialization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{BC0871BD-3134-40F0-8E74-0D3AAF3BF65B}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Conversation.png" />
+    <EmbeddedResource Include="Resources\Folder.png" />
+    <EmbeddedResource Include="Resources\Project.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ScrollbarBackgroundVertical.png" />
+    <EmbeddedResource Include="Resources\ScrollbarUp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ScrollbarUpPressed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ScrollbarBottom.png" />
+    <EmbeddedResource Include="Resources\ScrollbarBottomPressed.png" />
+    <EmbeddedResource Include="Resources\ScrollbarMiddle.png" />
+    <EmbeddedResource Include="Resources\ScrollbarMiddlePressed.png" />
+    <EmbeddedResource Include="Resources\ScrollbarTop.png" />
+    <EmbeddedResource Include="Resources\ScrollbarTopPressed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ConversationMissing.png" />
+    <EmbeddedResource Include="Resources\LocalisationFile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\LocalisationFileMissing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Domain.png" />
+    <EmbeddedResource Include="Resources\DomainMissing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\GenericSystemHover.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Audio.png" />
+    <EmbeddedResource Include="Resources\AudioMissing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\End Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Start Icon.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

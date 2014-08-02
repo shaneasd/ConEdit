@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{27D22ED7-CA0C-4965-B7B6-B6D92A2CE3D7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PluginPack</RootNamespace>
+    <AssemblyName>PluginPack</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>e:\ConEdit\Plugins\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="IconRenderer.cs" />
+    <Compile Include="ErrorCheckers\BadNodeErrorChecker.cs" />
+    <Compile Include="CharacterEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CharacterEditor.Designer.cs">
+      <DependentUpon>CharacterEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErrorCheckers\CycleErrorChecker.cs" />
+    <Compile Include="ErrorCheckers\DisconnectionErrorChecker.cs" />
+    <Compile Include="ErrorCheckers\JumpsErrorChecker.cs" />
+    <Compile Include="ErrorCheckers\OptionErrorChecker.cs" />
+    <Compile Include="MenuActionFactory.cs" />
+    <Compile Include="NodeNameConfig.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="RedRenderer.cs" />
+    <Compile Include="SpecialNodes.cs" />
+    <Compile Include="TemplatesMenuActions.cs" />
+    <Compile Include="UneditableNodeEditorFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CharacterEditor.resx">
+      <DependentUpon>CharacterEditor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\neil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tammy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\jonas.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shane.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Player.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Conversation2\Conversation2.csproj">
+      <Project>{6B83BE91-796D-4ABC-98F8-4220B6151A3D}</Project>
+      <Name>Conversation2</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\ConversationEditor\ConversationEditor.csproj">
+      <Project>{D904BED7-0716-4B54-8BBE-D53A7F938C8D}</Project>
+      <Name>ConversationEditor</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\ConversationSerialization\ConversationSerialization.csproj">
+      <Project>{ABEF494E-1FDB-427A-BA80-1BD98C82F041}</Project>
+      <Name>ConversationSerialization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{BC0871BD-3134-40F0-8E74-0D3AAF3BF65B}</Project>
+      <Name>Utilities</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\End Icon.png" />
+    <Content Include="Resources\Start Icon.png" />
+    <EmbeddedResource Include="Templates\Basic Conversation.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Config\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

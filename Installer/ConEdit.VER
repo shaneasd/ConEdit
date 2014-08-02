@@ -1,0 +1,42 @@
+;----------------------------------------------------------------------------
+;
+;    MODULE NAME:   CONEDIT.VER
+;
+;        $Author:   USER "Dennis"  $
+;      $Revision:   1.5  $
+;          $Date:   10 Oct 2007 17:25:32  $
+;       $Logfile:   C:/DBAREIS/Projects.PVCS/Win32/MakeMsi/ConEdit.ver.pvcs  $
+;
+;    DESCRIPTION:   Simple sample/test MSI.
+;
+;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+; ProductName = ConEdit
+; DESCRIPTION = Both a sample and a simple test MSI, you should be able to
+;             = build it after correct installation of MAKEMSI.
+;             = <ol>
+;             =    <li>Item 1
+;             =    <li>Item <b>2</b>
+;             =    <li>Item <i>3</i>
+;             =    <li>Item 4
+;             = </ol>
+; Licence     = ConEdit.rtf
+; Installed   = WINDOWS_ALL
+; Guid.UpgradeCode = {7EF333CB-3BB9-457D-831E-8482E50F2999}
+; MsiName     = ConEdit
+;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+;############################################################################
+VERSION : 3.076.0000
+DATE    : 17 Mar 2003
+CHANGES : This is a fictional second release of this MSI.
+        : I will probably <b>not bother</b> to keep this information
+        : up to date for a simple sample!
+
+
+;############################################################################
+VERSION : 3.074.0000
+DATE    : 25 Feb 2003
+CHANGES : First cut.
+

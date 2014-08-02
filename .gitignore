@@ -1,0 +1,9 @@
+*.dll
+*.exe
+*.pdb
+*.7z
+*.msi
+*/bin/*
+*/obj/*
+Installer/out/*
+*.suo

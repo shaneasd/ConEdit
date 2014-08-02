@@ -1,0 +1,141 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using Conversation;
+using Utilities;
+
+namespace ConversationEditor
+{
+    public class NodeRendererCustomizer : NodeCustomizer<NodeRendererChoice>
+    {
+        public NodeRendererCustomizer(IDataSource datasource, TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice> config, PluginsConfig pluginsConfig)
+            : base(datasource, config, pluginsConfig)
+        {
+        }
+
+        protected override NodeRendererChoice Default(ID<NodeTypeTemp> guid)
+        {
+            return NodeRendererChoice.DefaultConversation(guid);
+        }
+
+        protected override IEnumerable<NodeRendererChoice> GetItemsFor(ID<NodeTypeTemp> guid)
+        {
+            return m_pluginsConfig.GetRenderersFor(guid);
+        }
+    }
+
+    public class NodeEditorCustomizer : NodeCustomizer<NodeEditorChoice>
+    {
+        public NodeEditorCustomizer(IDataSource datasource, TypeMapConfig<ID<NodeTypeTemp>, NodeEditorChoice> config, PluginsConfig pluginsConfig)
+            : base(datasource, config, pluginsConfig)
+        {
+        }
+
+        protected override NodeEditorChoice Default(ID<NodeTypeTemp> guid)
+        {
+            return NodeEditorChoice.Default(guid);
+        }
+
+        protected override IEnumerable<NodeEditorChoice> GetItemsFor(ID<NodeTypeTemp> guid)
+        {
+            return m_pluginsConfig.GetEditorsFor(guid);
+        }
+    }
+
+    public abstract partial class NodeCustomizer<TChoice> : Form
+        where TChoice : TypeChoice
+    {
+        public NodeCustomizer()
+        {
+            InitializeComponent();
+        }
+
+        IDataSource m_datasource;
+        TypeMapConfig<ID<NodeTypeTemp>, TChoice> m_config;
+        protected PluginsConfig m_pluginsConfig;
+
+        public NodeCustomizer(IDataSource datasource, TypeMapConfig<ID<NodeTypeTemp>, TChoice> config, PluginsConfig pluginsConfig)
+            : this()
+        {
+            m_datasource = datasource;
+            m_config = config;
+            m_pluginsConfig = pluginsConfig;
+        }
+
+        void AddNodeType(INodeType nodeType, int indent)
+        {
+            foreach (var n in nodeType.Nodes)
+            {
+                AddNode(n, indent);
+            }
+            foreach (INodeType t in nodeType.ChildTypes)
+                AddNodeType(t, indent + 1);
+        }
+
+        List<Action> m_save = new List<Action>();
+
+        protected abstract IEnumerable<TChoice> GetItemsFor(ID<NodeTypeTemp> guid);
+
+        void AddNode(EditableGenerator node, int indent)
+        {
+            Panel panel = new Panel();
+            panel.Height = 30;
+            panel.Dock = DockStyle.Top;
+
+            const int BUFFER_WIDTH = 30;
+            ComboBox c = new ComboBox();
+            c.Dock = DockStyle.Right;
+            c.Width = 200;
+
+            foreach (TChoice renderChoice in GetItemsFor(node.Guid))
+            {
+                c.Items.Add(ToStringWrapper.Make(renderChoice, renderChoice.DisplayName));
+            }
+            var item = ToStringWrapper.Make(m_config[node.Guid], m_config[node.Guid].DisplayName);
+            c.SelectedItem = item;
+            if (c.Items.Count < 2)
+                c.ForeColor = SystemColors.GrayText;
+
+            panel.Controls.Add(c);
+            panel.Controls.Add(new Label() { Text = node.Name, Dock = DockStyle.Left });
+            panel.Controls.Add(new Panel() { Width = BUFFER_WIDTH * indent, Dock = DockStyle.Left });
+
+            panel1.Controls.Add(panel);
+
+            panel1.ScrollControlIntoView(panel);
+
+            m_save.Add(() => { m_config[node.Guid] = (c.SelectedItem as ToStringWrapper<TChoice>).Value; });
+        }
+
+        protected abstract TChoice Default(ID<NodeTypeTemp> guid);
+
+        private void NodeRendererCustomizer_Load(object sender, EventArgs e)
+        {
+            this.SuspendLayout();
+
+            IEnumerable<EditableGenerator> nodeGenerators = Collection.Collapse(m_datasource.Nodes, t => t.ChildTypes, t => t.Nodes);
+
+            foreach (EditableGenerator nodeType in nodeGenerators)
+            {
+                if (!m_config.ContainsKey(nodeType.Guid))
+                    m_config[nodeType.Guid] = Default(nodeType.Guid);
+            }
+
+            AddNodeType(m_datasource.Nodes, 0);
+
+            this.ResumeLayout();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            foreach (var save in m_save)
+                save();
+            Close();
+        }
+    }
+}

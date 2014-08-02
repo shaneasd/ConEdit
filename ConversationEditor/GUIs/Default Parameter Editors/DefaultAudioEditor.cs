@@ -1,0 +1,100 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using Conversation;
+using Utilities;
+using System.IO;
+
+namespace ConversationEditor
+{
+    public partial class DefaultAudioEditor : UserControl, IParameterEditor<DefaultAudioEditor>
+    {
+        private MyTextBox m_textBox;
+
+        public DefaultAudioEditor()
+        {
+            InitializeComponent();
+            ForeColor = ColorScheme.Foreground;
+
+            m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), MyTextBox.InputFormEnum.Path);
+            m_textBox.Colors.BorderPen = ColorScheme.ControlBorder;
+            m_textBox.RequestedAreaChanged += () =>
+            {
+                int extraHeight = (Size.Height - drawWindow1.Size.Height).Clamp(0, int.MaxValue);
+                drawWindow1.MinimumSize = new Size(0, (int)m_textBox.RequestedArea.Height);
+                MinimumSize = new Size(MinimumSize.Width, (int)m_textBox.RequestedArea.Height + extraHeight);
+                drawWindow1.Size = m_textBox.RequestedArea.ToSize();
+                Size = new Size(Width, m_textBox.RequestedArea.ToSize().Height + extraHeight);
+            };
+            m_textBox.EnterPressed += () => Ok.Execute();
+            m_textBox.SpecialEnter = true;
+            MyTextBox.SetupCallbacks(drawWindow1, m_textBox);
+            drawWindow1.SizeChanged += new EventHandler(drawWindow1_SizeChanged);
+        }
+
+        void drawWindow1_SizeChanged(object sender, EventArgs e)
+        {
+        }
+
+        public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
+        {
+            return type == BaseTypeAudio.PARAMETER_TYPE;
+        }
+
+        IAudioParameter m_parameter;
+        IAudioProvider m_audioProvider;
+        public void Setup(IParameter parameter, LocalizationEngine localizer, IAudioProvider audioProvider)
+        {
+            m_parameter = parameter as IAudioParameter;
+            m_audioProvider = audioProvider;
+            if (!parameter.Corrupted)
+                m_textBox.Text = m_parameter.Value.DisplayValue();
+        }
+
+        public DefaultAudioEditor AsControl
+        {
+            get { return this; }
+        }
+
+        public SimpleUndoPair? UpdateParameterAction()
+        {
+            if (!IsValid())
+                throw new Exception("Current path invalid");
+
+            return m_parameter.SetValueAction(new Audio(m_textBox.Text));
+        }
+
+        public string DisplayName
+        {
+            get { return "Default Audio Editor"; }
+        }
+
+        public bool IsValid()
+        {
+            try
+            {
+                new FileInfo(m_textBox.Text);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public event Action Ok;
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (!IsValid())
+                MessageBox.Show("Current path invalid");
+            else
+                m_audioProvider.Play(new Audio(m_textBox.Text));
+        }
+    }
+}

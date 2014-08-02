@@ -1,0 +1,151 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Utilities
+{
+    public class Null
+    {
+        private Null()
+        {
+        }
+
+        public static readonly Func<Null> Func = () => null;
+    }
+
+    public static class Or
+    {
+        public static Or<T, U> Create<T,U>(bool useA, Func<T> aGenerator, Func<U> bGenerator)
+        {
+            return new Or<T, U>(useA, aGenerator, bGenerator);
+        }
+    }
+
+    public class Or<T, U>
+    {
+        bool m_aSpecified;
+
+        public Or(T a)
+        {
+            m_aSpecified = true;
+            A = a;
+            B = default(U);
+        }
+        public Or(U b)
+        {
+            m_aSpecified = false;
+            A = default(T);
+            B = b;
+        }
+        readonly T A;
+        readonly U B;
+
+        public Or(bool useA, Func<T> aGenerator, Func<U> bGenerator)
+        {
+            m_aSpecified = useA;
+            if (useA)
+            {
+                A = aGenerator();
+                B = default(U);
+            }
+            else
+            {
+                A = default(T);
+                B = bGenerator();
+            }
+        }
+
+        public static implicit operator Or<T, U>(T a)
+        {
+            return new Or<T, U>(a);
+        }
+
+        public static implicit operator Or<T, U>(U b)
+        {
+            return new Or<T, U>(b);
+        }
+
+        public override int GetHashCode()
+        {
+            return m_aSpecified ? A.GetHashCode() : B.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Or<T, U>)
+            {
+                var other = (Or<T, U>)obj;
+                if (m_aSpecified != other.m_aSpecified)
+                    return false;
+                else if (m_aSpecified)
+                    return object.Equals(other.A, A);
+                else
+                    return object.Equals(other.B, B);
+            }
+
+            if (m_aSpecified)
+                return object.Equals(obj, A);
+            else
+                return object.Equals(obj, B);
+        }
+
+        public static bool operator ==(Or<T, U> a, T b)
+        {
+            return object.Equals(a, b);
+        }
+        public static bool operator ==(Or<T, U> a, U b)
+        {
+            return object.Equals(a, b);
+        }
+        public static bool operator ==(T b, Or<T, U> a)
+        {
+            return object.Equals(a, b);
+        }
+        public static bool operator ==(U b, Or<T, U> a)
+        {
+            return object.Equals(a, b);
+        }
+
+        public static bool operator !=(Or<T, U> a, T b)
+        {
+            return !object.Equals(a, b);
+        }
+        public static bool operator !=(Or<T, U> a, U b)
+        {
+            return !object.Equals(a, b);
+        }
+        public static bool operator !=(T b, Or<T, U> a)
+        {
+            return !object.Equals(a, b);
+        }
+        public static bool operator !=(U b, Or<T, U> a)
+        {
+            return !object.Equals(a, b);
+        }
+
+        public V Transformed<V>(Func<T, V> a, Func<U, V> b)
+        {
+            if (m_aSpecified)
+                return a(A);
+            else
+                return b(B);
+        }
+
+        public Or<V,W> TransformedOr<V, W>(Func<T, V> a, Func<U, W> b)
+        {
+            if (m_aSpecified)
+                return a(A);
+            else
+                return b(B);
+        }
+
+        public void Do(Action<T> a, Action<U> b)
+        {
+            if (m_aSpecified)
+                a(A);
+            else
+                b(B);
+        }
+    }
+}
