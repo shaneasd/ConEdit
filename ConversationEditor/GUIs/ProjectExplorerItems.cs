@@ -7,6 +7,7 @@ using System.IO;
 using System.Windows.Forms;
 using Utilities;
 using System.Drawing.Drawing2D;
+using System.Reflection;
 
 namespace ConversationEditor
 {
@@ -118,6 +119,23 @@ namespace ConversationEditor
 
         public abstract class Item
         {
+            public static TextureBrush ReadonlyBackgroundBrush;
+            static Item()
+            {
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.ReadOnly.png"))
+                {
+                    //Something about the image makes it unsuitable for the TextureBrush causing an out of memory exception but I'm not sure what
+                    using (Image temp = new Bitmap(stream))
+                    {
+                        Image buffer = new Bitmap(temp.Width, temp.Height);
+                        using (var fg = Graphics.FromImage(buffer))
+                            fg.DrawImage(temp, 0, 0, temp.Width, temp.Height);
+                        ReadonlyBackgroundBrush = new TextureBrush(buffer);
+                    }
+                }
+            }
+
             public readonly FileSystemObject File;
             protected readonly IProject m_project;
             protected ContainerItem m_parent;
@@ -190,8 +208,7 @@ namespace ConversationEditor
 
             private void DrawReadOnly(Graphics g)
             {
-                //TODO: This better
-                g.FillRectangle(Brushes.Red, Area);
+                g.FillRectangle(ReadonlyBackgroundBrush, Area);
             }
 
             RectangleF IconRectangle
@@ -217,11 +234,6 @@ namespace ConversationEditor
                 float indent = Indent;
                 var iconRectangle = IconRectangle;
 
-                if (!File.Writable)
-                {
-                    DrawReadOnly(g);
-                }
-
                 DrawMinimizeIcon(g, MinimizedIconRectangle(g), filter);
 
                 DrawTree(g, iconRectangle, filter);
@@ -232,6 +244,14 @@ namespace ConversationEditor
 
                 if (m_textBox == null)
                     g.DrawString(Text, SystemFonts.MessageBoxFont, ColorScheme.ForegroundBrush, TextArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE));
+            }
+
+            internal void DrawBackground(Graphics g, VisibilityFilter Visibility)
+            {
+                if (!File.Writable)
+                {
+                    DrawReadOnly(g);
+                }
             }
 
             protected virtual void DrawMinimizeIcon(Graphics g, RectangleF minimizeIconRectangle, VisibilityFilter filter) { }
@@ -323,6 +343,7 @@ namespace ConversationEditor
 
             public abstract bool CanDelete { get; }
             public abstract bool CanRemove { get; }
+            public abstract bool CanSave { get; }
 
             internal void MoveTo(ContainerItem destination, string path)
             {
@@ -379,6 +400,8 @@ namespace ConversationEditor
 
             public override bool CanDelete { get { return false; } }
             public override bool CanRemove { get { return false; } }
+
+            public override bool CanSave { get { return Project.File.Writable; } }
         }
 
         private class FolderItem : ContainerItem
@@ -409,6 +432,7 @@ namespace ConversationEditor
 
             public override bool CanDelete { get { return false; } }
             public override bool CanRemove { get { return false; } }
+            public override bool CanSave { get { return false; } }
         }
 
         public abstract class ContainerItem : Item

@@ -37,7 +37,7 @@ namespace ConversationEditor
             : base(node, p)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
-            using (Stream stream = assembly.GetManifestResourceStream("Vanilla.Resources.Start Icon.png"))
+            using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.Start Icon.png"))
                 image = new Bitmap(stream);
         }
 

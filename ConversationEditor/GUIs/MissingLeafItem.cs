@@ -25,6 +25,8 @@ namespace ConversationEditor
 
             public override bool CanDelete { get { return false; } }
             public override bool CanRemove { get { return true; } }
+
+            public override bool CanSave { get { return false; } }
         }
     }
 }

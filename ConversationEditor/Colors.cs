@@ -378,7 +378,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return Color.Red;
+                    return SelectedConversationListItemPrimaryBackground;
                 }
             }
 
@@ -386,7 +386,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return Color.Red;
+                    return SelectedConversationListItemPrimaryBackground;
                 }
             }
 
@@ -394,7 +394,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return Color.Red;
+                    return SelectedConversationListItemBorder;
                 }
             }
 

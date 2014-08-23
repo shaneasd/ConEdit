@@ -22,9 +22,9 @@ namespace ConversationEditor
         public delegate bool ShouldSaveQuery(ID<LocalizedText> guid);
         private LocalizerData m_data;
 
-        private LocalizationFile(FileInfo path, LocalizerData data, ISerializer<LocalizerData> serializer)
+        private LocalizationFile(MemoryStream initialData, FileInfo path, LocalizerData data, ISerializer<LocalizerData> serializer)
         {
-            m_file = new SaveableFileNotUndoable(path, s => { serializer.Write(m_data, s); });
+            m_file = new SaveableFileNotUndoable(initialData, path, s => { serializer.Write(m_data, s); });
             m_data = data;
         }
 
@@ -43,8 +43,9 @@ namespace ConversationEditor
             }
 
             LocalizerData data = new LocalizerData();
-            Util.LoadFileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.None).Close();
-            LocalizationFile result = new LocalizationFile(path, data, serializer(path.FullName)); //Make a new localization file for an existing project
+            using (var file = Util.LoadFileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+                file.Close();
+            LocalizationFile result = new LocalizationFile(new MemoryStream(), path, data, serializer(path.FullName)); //Make a new localization file for an existing project
             result.File.Save();
             return result;
         }
@@ -52,12 +53,17 @@ namespace ConversationEditor
         internal static LocalizationFile Load(FileInfo path, ISerializer<LocalizerData> serializer)
         {
             LocalizerData data;
+            MemoryStream m;
             using (FileStream file = Util.LoadFileStream(path, FileMode.Open, FileAccess.Read))
             {
+                m = new MemoryStream((int)file.Length);
+                file.CopyTo(m);
+                m.Position = 0;
                 XmlLocalization.Deserializer d = new XmlLocalization.Deserializer();
-                data = d.Read(file);
+                data = d.Read(m);
+                m.Position = 0;
             }
-            LocalizationFile result = new LocalizationFile(path, data, serializer);
+            LocalizationFile result = new LocalizationFile(m, path, data, serializer);
             return result;
         }
 
@@ -66,9 +72,15 @@ namespace ConversationEditor
             return m_data.m_data.ContainsKey(guid);
         }
 
-        public void Removed()
+        public bool CanRemove(Func<bool> prompt)
         {
-            //Doesn't care
+            //TODO: Do we care if a localization is removed
+            return true;
+        }
+
+        void IInProject.Removed()
+        {
+            //Do nothing
         }
 
         public string Localize(ID<LocalizedText> guid)
@@ -106,7 +118,7 @@ namespace ConversationEditor
                     m_data.m_data.Remove(result);
                     m_file.Change();
                 },
-            };           
+            };
         }
 
         public event Action FileModifiedExternally

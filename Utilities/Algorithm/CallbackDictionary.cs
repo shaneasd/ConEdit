@@ -64,7 +64,7 @@ namespace Utilities
                     Removing.Execute(key, this[key]);
                     m_data.Remove(key);
                 }
-                Inserting(key, value);
+                Inserting.Execute(key, value);
                 m_data[key] = value;
                 Modified.Execute();
             }

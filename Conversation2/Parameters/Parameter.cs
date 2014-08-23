@@ -97,11 +97,12 @@ namespace Conversation
 
         private readonly ID<ParameterType> m_typeId;
         public ID<ParameterType> TypeId { get { return m_typeId; } }
-        public Parameter(string name, ID<Parameter> id, ID<ParameterType> typeid)
+        public Parameter(string name, ID<Parameter> id, ID<ParameterType> typeid, string value)
         {
             m_name = name;
             m_id = id;
             m_typeId = typeid;
+            TryDeserialiseValue(value);
             Corrupted = true;
         }
 
@@ -130,10 +131,9 @@ namespace Conversation
         /// <summary>
         /// Only called on load so doesn't need to be undoable
         /// </summary>
-        public bool TryDecorrupt()
+        public void TryDecorrupt()
         {
-            Corrupted = DeserialiseValue(m_lastValueString);
-            return Corrupted;
+            Corrupted = !DeserialiseValue(m_lastValueString);
         }
     }
 
@@ -145,8 +145,6 @@ namespace Conversation
         {
             get
             {
-                if (Corrupted)
-                    throw new Exception("Attempting to query the value of a corrupt parameter");
                 return m_value;
             }
             set
@@ -171,10 +169,9 @@ namespace Conversation
             };
         }
 
-        public Parameter(string name, ID<Parameter> id, T value, ID<ParameterType> typeId)
-            : base(name, id, typeId)
+        public Parameter(string name, ID<Parameter> id, ID<ParameterType> typeId, string defaultValue)
+            : base(name, id, typeId, defaultValue)
         {
-            Value = value;
         }
 
         public override string ToString()

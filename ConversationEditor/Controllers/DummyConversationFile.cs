@@ -58,9 +58,14 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        void IInProject.Removed()
+        bool IInProject.CanRemove(Func<bool> prompt)
         {
             throw new NotImplementedException();
+        }
+
+        void IInProject.Removed()
+        {
+            //Do nothing
         }
 
         ISaveableFile ISaveableFileProvider.File

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using Conversation;
+using Utilities;
 
 namespace ConversationEditor
 {
@@ -21,9 +22,15 @@ namespace ConversationEditor
             get { return m_file; }
         }
 
-        void IInProject.Removed()
+        bool IInProject.CanRemove(Func<bool> prompt)
         {
             //Doesn't care
+            return true;
+        }
+
+        void IInProject.Removed()
+        {
+            //Do nothing
         }
 
         string ILocalizationFile.Localize(ID<LocalizedText> guid)

@@ -75,8 +75,9 @@ namespace ConversationEditor.Controllers
             var point = ToGraphSpace(MenuPosition);
 
             bool showone = false;
-            foreach (MenuAction2<TNode> m in m_menuActions.Keys)
+            foreach (MenuAction2<TNode> mm in m_menuActions.Keys)
             {
+                var m = mm;
                 bool show = false;
                 m_mouseController.ForClickedOn(point, a => { show = m.NodeAction(a, point) != null; }, a => { show = m.TransitionAction != null; }, (a, b) => { }, a => { show = m.GroupAction != null; }, () => { show = m.EmptySpaceAction != null; });
                 bool visible = show & ConversationReal();

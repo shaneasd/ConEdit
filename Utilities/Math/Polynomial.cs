@@ -14,6 +14,8 @@ namespace Utilities
             for (int i = Coefficients.Length - 1; i >= 1; i--)
                 if (Math.Abs(Coefficients[i]) < 1e-12)
                     Array.Resize(ref Coefficients, i);
+                else
+                    break;
             m_deriv = new Lazy<Polynomial>(() => new Polynomial(Coefficients.Select((t, i) => i * t).Skip(1)));
         }
 

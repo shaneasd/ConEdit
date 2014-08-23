@@ -7,7 +7,7 @@ namespace Conversation
 {
     public class LocalizedStringParameter : Parameter<ID<LocalizedText>>, ILocalizedStringParameter
     {
-        public LocalizedStringParameter(string name, ID<Parameter> id, ID<ParameterType> typeId) : base(name, id, new ID<LocalizedText>(), typeId) { }
+        public LocalizedStringParameter(string name, ID<Parameter> id, ID<ParameterType> typeId, string defaultValue = null) : base(name, id, typeId, defaultValue) { }
 
         protected override bool DeserialiseValue(string value)
         {
@@ -16,7 +16,10 @@ namespace Conversation
 
         protected override string InnerValueAsString()
         {
-            return m_value.Serialized();
+            if (m_value != null)
+                return m_value.Serialized();
+            else
+                return ID<LocalizedText>.New().Serialized();
         }
 
         public override string DisplayValue(Func<ID<LocalizedText>, string> localize)

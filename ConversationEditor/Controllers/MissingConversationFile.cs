@@ -59,9 +59,15 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public void Removed()
+        public bool CanRemove(Func<bool> prompt)
         {
             //Doesn't care
+            return true;
+        }
+
+        void IInProject.Removed()
+        {
+            //Do nothing
         }
 
         public ISaveableFile File

@@ -107,6 +107,7 @@
     <ProjectReference Include="..\ConversationSerialization\ConversationSerialization.csproj">
       <Project>{ABEF494E-1FDB-427A-BA80-1BD98C82F041}</Project>
       <Name>ConversationSerialization</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Utilities\Utilities.csproj">
       <Project>{BC0871BD-3134-40F0-8E74-0D3AAF3BF65B}</Project>

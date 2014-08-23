@@ -156,14 +156,15 @@ namespace ConversationEditor
                     m_nodes.Add(n);
                     foreach (var group in containingGroups)
                         group.Contents.Add(n.Id);
-                    actions.Item1();
+                    actions.Redo();
                 });
                 undoActions.Add(() =>
                 {
-                    m_nodes.Remove(n);
+                    if (CanRemoveFromData(n, PromptNodeDeletion))
+                        m_nodes.Remove(n);
                     foreach (var group in containingGroups)
                         group.Contents.Remove(n.Id);
-                    actions.Item2();
+                    actions.Undo();
                     NodesDeleted.Execute();
                 });
             }
@@ -213,8 +214,21 @@ namespace ConversationEditor
             List<Action> undoActions = new List<Action>();
             List<Action> redoActions = new List<Action>();
 
+            if (nodes.Any(n => !CanRemoveFromData(n, () => false)))
+            {
+                if (!PromptNodeDeletion())
+                    return;
+            }
+
             if (removeNodes)
             {
+                //Make sure all the nodes are added before trying to link them
+                foreach (var node in nodes)
+                {
+                    var n = node;
+                    undoActions.Add(() => { m_nodes.Add(n); });
+                }
+
                 foreach (var node in nodes)
                 {
                     var n = node;
@@ -222,14 +236,13 @@ namespace ConversationEditor
                     var containingGroups = m_groups.Where(g => g.Contents.Contains(n.Id)).Evaluate();
                     undoActions.Add(() =>
                     {
-                        m_nodes.Add(n);
-                        actions.Item1(); //Connect after adding the node
+                        actions.Undo(); //Connect after adding the node
                         foreach (var group in containingGroups)
                             group.Contents.Add(n.Id);
                     });
                     redoActions.Add(() =>
                     {
-                        actions.Item2(); //Disconnect before removing the node
+                        actions.Redo(); //Disconnect before removing the node
                         m_nodes.Remove(n);
                         foreach (var group in containingGroups)
                             group.Contents.Remove(n.Id);
@@ -356,6 +369,27 @@ namespace ConversationEditor
         }
 
         public event Action NodesDeleted;
+        public static bool PromptNodeDeletion()
+        {
+            var result = MessageBox.Show("Removing this node will result in a domain which does not support the currently loaded conversations", "Ok to remove node?", MessageBoxButtons.OKCancel);
+            return result == DialogResult.OK;
+        }
+
+        public static bool PromptFileRemoved()
+        {
+            var result = MessageBox.Show("Removing this file will result in a domain which does not support the currently loaded conversations", "Ok to remove file?", MessageBoxButtons.OKCancel);
+            return result == DialogResult.OK;
+        }
+
+        protected virtual void RemoveFromData(ConversationNode node)
+        {
+            //Do nothing;
+        }
+
+        protected virtual bool CanRemoveFromData(ConversationNode node, Func<bool> prompt)
+        {
+            return true;
+        }
     }
 
 

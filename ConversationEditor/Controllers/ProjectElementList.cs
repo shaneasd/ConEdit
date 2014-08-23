@@ -10,6 +10,7 @@ namespace ConversationEditor
 {
     public interface IInProject
     {
+        bool CanRemove(Func<bool> prompt);
         void Removed();
     }
 
@@ -103,7 +104,6 @@ namespace ConversationEditor
     {
         public CallbackList<TInterface> m_data;
         private Func<IEnumerable<FileInfo>, IEnumerable<Or<TReal, TMissing>>> m_loader;
-        private Func<FileInfo, TMissing> m_makeMissing;
         private Func<DirectoryInfo, TReal> m_makeEmpty;
         private Func<string, bool> m_fileLocationOk;
 
@@ -128,7 +128,7 @@ namespace ConversationEditor
                                 var doc = loader(file.Only()).Single();
                                 result.Add(doc);
                             }
-                            catch (FileLoadException e)
+                            catch (MyFileLoadException e)
                             {
                                 Console.Out.WriteLine(e.Message);
                                 Console.Out.WriteLine(e.StackTrace);
@@ -150,18 +150,17 @@ namespace ConversationEditor
         }
 
         public ProjectElementList(Func<string, bool> fileLocationOk, Func<IEnumerable<FileInfo>, IEnumerable<TReal>> loader, Func<DirectoryInfo, TReal> makeEmpty, Func<FileInfo, TMissing> makeMissing)
-            : this(fileLocationOk, MyLoader(loader, makeMissing), makeEmpty, makeMissing)
+            : this(fileLocationOk, MyLoader(loader, makeMissing), makeEmpty)
         {
         }
 
-        public ProjectElementList(Func<string, bool> fileLocationOk, Func<IEnumerable<FileInfo>, IEnumerable<Or<TReal, TMissing>>> loader, Func<DirectoryInfo, TReal> makeEmpty, Func<FileInfo, TMissing> makeMissing)
+        public ProjectElementList(Func<string, bool> fileLocationOk, Func<IEnumerable<FileInfo>, IEnumerable<Or<TReal, TMissing>>> loader, Func<DirectoryInfo, TReal> makeEmpty)
         {
             m_data = new CallbackList<TInterface>();
             m_data.Removing += (element) => { element.Removed(); };
             m_data.Clearing += () => { m_data.ForAll(element => { element.Removed(); }); };
             m_loader = loader;
             m_makeEmpty = makeEmpty;
-            m_makeMissing = makeMissing;
             m_fileLocationOk = fileLocationOk;
 
             Added += a => GotChanged.Execute();
@@ -193,7 +192,8 @@ namespace ConversationEditor
                     {
                         if (existing.File.CanClose()) //TODO: If the file is modified and you try to load the same file over the top what happens? The message is probably unintuitive
                         {
-                            m_data.Remove(existing); //TODO: Removing a domain file should alter the domain
+                            //Ignore the fact that the new file might be missing stuff the conversation needs
+                            m_data.Remove(existing); //Callback on the list informs the domain file it has been removed thereby triggering domain update
                             toLoad.Add(Tuple.Create(fileInfo, existing));
                         }
                         else
@@ -201,7 +201,7 @@ namespace ConversationEditor
                             //Don't try to load it
                         }
                     }
-                    catch (FileLoadException e)
+                    catch (MyFileLoadException e)
                     {
                         Console.Out.WriteLine(e.Message);
                         Console.Out.WriteLine(e.StackTrace);
@@ -262,41 +262,36 @@ namespace ConversationEditor
 
         public void Remove(TInterface element, bool force)
         {
-            try
+            if (force || element.File.CanClose())
             {
-                if (force || element.File.CanClose())
+                if (force || element.CanRemove(GraphFile.PromptNodeDeletion))
                 {
                     m_data.Remove(element);
                     Removed.Execute(element);
                     element.Dispose();
                 }
             }
-            catch (FileLoadException e)
-            {
-                Console.Out.WriteLine(e.Message);
-                Console.Out.WriteLine(e.StackTrace);
-                Console.Out.WriteLine(e.InnerException.Message);
-                Console.Out.WriteLine(e.InnerException.StackTrace);
-                MessageBox.Show("Failed to access " + element.File.File.FullName + " for saving");
-            }
         }
 
         public void Delete(TInterface element)
         {
-            try
+            if (element.CanRemove(GraphFile.PromptNodeDeletion))
             {
-                element.File.File.Delete();
+                try
+                {
+                    element.File.File.Delete();
+                }
+                catch (System.IO.IOException)
+                {
+                    MessageBox.Show("Failed to delete file");
+                }
+                catch (System.Security.SecurityException)
+                {
+                    MessageBox.Show("Failed to delete file");
+                }
+                m_data.Remove(element);
+                Removed(element);
             }
-            catch (System.IO.IOException)
-            {
-                MessageBox.Show("Failed to delete file");
-            }
-            catch (System.Security.SecurityException)
-            {
-                MessageBox.Show("Failed to delete file");
-            }
-            m_data.Remove(element);
-            Removed(element);
         }
     }
 }

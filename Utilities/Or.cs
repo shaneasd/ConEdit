@@ -143,9 +143,9 @@ namespace Utilities
         public void Do(Action<T> a, Action<U> b)
         {
             if (m_aSpecified)
-                a(A);
+                a.Execute(A);
             else
-                b(B);
+                b.Execute(B);
         }
     }
 }

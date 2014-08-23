@@ -5,6 +5,7 @@ using System.Text;
 using Utilities;
 using ConversationEditor;
 using System.IO;
+using System.Threading;
 
 namespace ConsoleApplication1
 {
@@ -19,11 +20,12 @@ namespace ConsoleApplication1
         {
             TestPolynomial();
             TestUndoQueue();
+            ManualResetEvent();
         }
 
         public static void TestUndoQueue()
         {
-            SaveableFileUndoable file = new SaveableFileUndoable(new FileInfo("ignore.txt"), a => { });
+            SaveableFileUndoable file = new SaveableFileUndoable(new MemoryStream(), new FileInfo("ignore.txt"), a => { });
             Assert(!file.Changed);
             file.Change(new GenericUndoAction(() => { }, () => { }, ""));
             Assert(file.Changed);
@@ -41,6 +43,7 @@ namespace ConsoleApplication1
             Assert(file.Changed);
             file.UndoQueue.Redo();
             Assert(!file.Changed);
+            file.Dispose();
         }
 
         public static void TestPolynomial()
@@ -58,11 +61,11 @@ namespace ConsoleApplication1
                 Console.Out.WriteLine("Polynomial Remainder");
                 Polynomial a = new Polynomial(new double[] { 1, 1, 1, 1, 1 });
                 Polynomial b = new Polynomial(new double[] { -1, 0, 1 });
-                var c = Polynomial.PolynomialRemainder(a, b);
                 Console.Out.WriteLine(a);
                 Console.Out.WriteLine("-----------------------");
                 Console.Out.WriteLine(b);
                 Console.Out.WriteLine();
+                var c = Polynomial.PolynomialRemainder(a, b);
                 Console.Out.WriteLine(c);
             }
 
@@ -97,9 +100,16 @@ namespace ConsoleApplication1
                 Console.Out.WriteLine();
                 Console.Out.WriteLine(c);
             }
+        }
 
-
-            Console.ReadKey();
+        public static void ManualResetEvent()
+        {
+            ManualResetEventSlim e = new ManualResetEventSlim(false);
+            ManualResetEventSlim w = new ManualResetEventSlim();
+            ManualResetEventSlim ww = new ManualResetEventSlim();
+            Thread t = new Thread(() => { Thread.Sleep(1000); e.Set(); });
+            t.Start();
+            WaitHandle.WaitAny(new[] { e.WaitHandle, w.WaitHandle, ww.WaitHandle });
         }
     }
 }

@@ -69,7 +69,7 @@ namespace ConversationEditor
         /// </summary>
         /// <param name="id">The id of the specific derived type</param>
         /// <param name="type">The type in question</param>
-        private List<Usage> DerivedTypeUsage(ID<NodeTypeTemp> id, BaseType type)
+        private List<Usage> DerivedTypeUsage(ID<NodeTemp> id, BaseType type)
         {
             List<Usage> result = new List<Usage>();
             foreach (var domainFile in m_project.DomainFiles.Evaluate())
@@ -226,7 +226,7 @@ namespace ConversationEditor
             //It's a type definition
             else if (type != null)
             {
-                return DerivedTypeUsage(id, type);
+                return DerivedTypeUsage(node.Id, type);
             }
             //It's an enum value defintion (i.e. part of a type definition but also usable as a default value
             else if (id == DomainIDs.ENUMERATION_VALUE_DECLARATION)

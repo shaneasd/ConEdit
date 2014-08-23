@@ -29,9 +29,15 @@ namespace ConversationEditor
             get { throw new NotSupportedException("Shouldn't be trying to queue modifications to a missing file"); }
         }
 
-        void IInProject.Removed()
+        bool IInProject.CanRemove(Func<bool> prompt)
         {
             //Doesn't care
+            return true;
+        }
+
+        void IInProject.Removed()
+        {
+            //Do nothing
         }
 
         public void Remove(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups)
@@ -132,5 +138,7 @@ namespace ConversationEditor
         {
             throw new NotImplementedException();
         }
+
+        public event Action ConversationDomainModified { add { } remove { } }
     }
 }

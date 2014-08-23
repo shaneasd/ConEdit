@@ -7,8 +7,8 @@ namespace Conversation
 {
     public class BooleanParameter : Parameter<bool>, IBooleanParameter
     {
-        public BooleanParameter(string name, ID<Parameter> id, ID<ParameterType> typeId)
-            : base(name, id, false, typeId)
+        public BooleanParameter(string name, ID<Parameter> id, ID<ParameterType> typeId, string defaultValue = null)
+            : base(name, id, typeId, defaultValue)
         {
         }
 

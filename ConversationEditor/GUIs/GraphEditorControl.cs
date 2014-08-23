@@ -62,7 +62,7 @@ namespace ConversationEditor
         TNode MakeNode(IEditable e, NodeUIData uiData);
     }
 
-    public abstract partial class GraphEditorControl<TNode> : UserControl, IGraphEditorControl<TNode> where TNode : class, IRenderable<IGUI>, IConversationNode, IConfigurable
+    public partial class GraphEditorControl<TNode> : UserControl, IGraphEditorControl<TNode> where TNode : class, IRenderable<IGUI>, IConversationNode, IConfigurable
     {
         public GraphEditorControl()
         {
@@ -310,8 +310,8 @@ namespace ConversationEditor
                     var delete = m_mouseController.Delete();
                     if (delete != null)
                     {
-                        GenericUndoAction action = new GenericUndoAction(() => { delete.Value.Undo(); drawWindow.Invalidate(true); },
-                                                                         () => { delete.Value.Redo(); drawWindow.Invalidate(true); },
+                        GenericUndoAction action = new GenericUndoAction(() => { delete.Value.Undo(); Redraw(); },
+                                                                         () => { delete.Value.Redo(); Redraw(); },
                                                                          "Deleted");
                         CurrentFile.UndoableFile.Change(action);
                     }
@@ -347,6 +347,7 @@ namespace ConversationEditor
             drawWindow.MouseMove += (a, args) => m_mouseController.MouseMove(DrawWindowToGraphSpace(args.Location), args.Location);
             drawWindow.MouseDoubleClick += (a, args) => m_mouseController.MouseDoubleClick(DrawWindowToGraphSpace(args.Location), args.Button);
             drawWindow.MouseWheel += (a, args) => m_mouseController.MouseWheel(DrawWindowToGraphSpace(args.Location), args, Control.ModifierKeys);
+            drawWindow.MouseCaptureChanged += (a, args) => m_mouseController.MouseCaptureChanged();
 
             m_mouseController.Changed += (a) => { CurrentFile.UndoableFile.Change(a); ResizeDocument(); };
             m_mouseController.SelectionChanged += Redraw;
@@ -490,27 +491,57 @@ namespace ConversationEditor
                     foreach (var node in CurrentFile.Nodes)
                         node.Renderer.UpdateArea();
 
-                    //TODO: We really only want to render each connection once, not twice
-                    Action<TNode, ConnectionDrawer> renderNodeConnections = (node, connections) =>
+                    HashSet<UnordererTuple2<PointF>> unselectedNodeConnections = new HashSet<UnordererTuple2<PointF>>();
+                    HashSet<UnordererTuple2<PointF>> selectedNodeConnections = new HashSet<UnordererTuple2<PointF>>();
+                    HashSet<UnordererTuple2<PointF>> selectedConnections = new HashSet<UnordererTuple2<PointF>>();
+
+                    foreach (var node in orderedUnselectedNodes)
                     {
                         foreach (var t in node.Connectors)
                         {
-                            {
-                                bool selected = m_mouseController.SelectedTransition == t;
-                                UIInfo(t).Draw(g, selected ? ColorScheme.Foreground : Colors.Connectors);
-                            }
                             foreach (var connection in t.Connections)
                             {
-                                bool selected = m_mouseController.SelectedTransition == connection || m_mouseController.SelectedTransition == t;
-                                if (!selected || !m_mouseController.DraggingLinks) //If we're dragging this connection around then let the mouse controller render it
+                                PointF p1 = UIInfo(t).Area.Center();
+                                PointF p2 = UIInfo(connection).Area.Center();
+                                var pair = UnordererTuple.Make(p1, p2);
+                                bool selected = m_mouseController.IsSelected(connection) || m_mouseController.IsSelected(t);
+
+                                if (selected)
                                 {
-                                    PointF p1 = UIInfo(t).Area.Center();
-                                    PointF p2 = UIInfo(connection).Area.Center();
-                                    connections.Add(p1, p2, selected);
+                                    unselectedNodeConnections.Remove(pair);
+                                    if (!m_mouseController.DraggingLinks) //If we're dragging this connection around then let the mouse controller render it
+                                        selectedConnections.Add(pair);
                                 }
+                                else
+                                    unselectedNodeConnections.Add(pair);
                             }
                         }
-                    };
+                    }
+
+                    foreach (var node in orderedSelectedNodes)
+                    {
+                        foreach (var t in node.Connectors)
+                        {
+                            foreach (var connection in t.Connections)
+                            {
+                                PointF p1 = UIInfo(t).Area.Center();
+                                PointF p2 = UIInfo(connection).Area.Center();
+                                var pair = UnordererTuple.Make(p1, p2);
+                                bool selected = m_mouseController.IsSelected(connection) || m_mouseController.IsSelected(t);
+
+                                unselectedNodeConnections.Remove(pair);
+
+                                if (selected)
+                                {
+                                    selectedNodeConnections.Remove(pair);
+                                    if (!m_mouseController.DraggingLinks) //If we're dragging this connection around then let the mouse controller render it
+                                        selectedConnections.Add(pair);
+                                }
+                                else
+                                    selectedNodeConnections.Add(pair);
+                            }
+                        }
+                    }
 
                     //Draw all the groups
                     foreach (NodeGroup group in CurrentFile.Groups.Reverse())
@@ -521,10 +552,8 @@ namespace ConversationEditor
                     //Draw all the connections for unselected nodes
                     using (ConnectionDrawer connections = new ConnectionDrawer(this.Colors))
                     {
-                        foreach (TNode node in orderedUnselectedNodes)
-                        {
-                            renderNodeConnections(node, connections);
-                        }
+                        foreach (var connection in unselectedNodeConnections)
+                            connections.Add(connection.Item1, connection.Item2, false);
                         connections.Draw(g);
                     }
 
@@ -532,15 +561,18 @@ namespace ConversationEditor
                     foreach (TNode node in orderedUnselectedNodes)
                     {
                         node.Renderer.Draw(g, m_mouseController.Selected.Nodes.Contains(node.Id));
+                        foreach (var t in node.Connectors)
+                        {
+                            bool selected = m_mouseController.IsSelected(t);
+                            UIInfo(t).Draw(g, selected ? ColorScheme.Foreground : Colors.Connectors);
+                        }
                     }
 
                     //Draw all the connections for selected nodes
                     using (ConnectionDrawer connections = new ConnectionDrawer(this.Colors))
                     {
-                        foreach (TNode node in orderedSelectedNodes)
-                        {
-                            renderNodeConnections(node, connections);
-                        }
+                        foreach (var connection in selectedNodeConnections)
+                            connections.Add(connection.Item1, connection.Item2, false);
                         connections.Draw(g);
                     }
 
@@ -548,6 +580,19 @@ namespace ConversationEditor
                     foreach (TNode node in orderedSelectedNodes)
                     {
                         node.Renderer.Draw(g, m_mouseController.Selected.Nodes.Contains(node.Id));
+                        foreach (var t in node.Connectors)
+                        {
+                            bool selected = m_mouseController.IsSelected(t);
+                            UIInfo(t).Draw(g, selected ? ColorScheme.Foreground : Colors.Connectors);
+                        }
+                    }
+
+                    //Draw all the selected connections
+                    using (ConnectionDrawer connections = new ConnectionDrawer(this.Colors))
+                    {
+                        foreach (var connection in selectedConnections)
+                            connections.Add(connection.Item1, connection.Item2, true);
+                        connections.Draw(g);
                     }
 
                     //Draw any dynamic connections, etc
@@ -573,7 +618,7 @@ namespace ConversationEditor
         {
             if (CurrentFile.File.Exists)
             {
-                TNode g = CurrentFile.MakeNode(node.Generate(ID<NodeTemp>.New()), new NodeUIData(p));
+                TNode g = CurrentFile.MakeNode(node.Generate(ID<NodeTemp>.New(), new List<EditableGenerator.ParameterData>()), new NodeUIData(p));
                 Action addNode = () => { CurrentFile.Add(g.Only(), Enumerable.Empty<NodeGroup>()); };
                 g.Configure(Edit).Do
                 (
@@ -665,7 +710,12 @@ namespace ConversationEditor
         {
             return CurrentFile.UIInfo(connection);
         }
+    }
 
-        protected abstract bool IsDomainEditor { get; }
+    /// <summary>
+    /// To get rid of the generic parameter to make the designer happy
+    /// </summary>
+    public class ConversationEditorControl : GraphEditorControl<ConversationNode>
+    {
     }
 }

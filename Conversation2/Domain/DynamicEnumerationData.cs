@@ -24,9 +24,9 @@ namespace Conversation
 
         public IEnumerable<string> Options { get { return m_source.Options; } }
 
-        public Parameter Make(string name, ID<Parameter> id)
+        public Parameter Make(string name, ID<Parameter> id, string defaultValue)
         {
-            return new DynamicEnumParameter(name, id, m_source, TypeID);
+            return new DynamicEnumParameter(name, id, m_source, TypeID, defaultValue);
         }
     }
 }

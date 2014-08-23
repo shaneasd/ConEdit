@@ -13,7 +13,7 @@ namespace ConversationEditor
     {
         IDataSource DomainDataSource { get; }
         IDataSource ConversationDataSource { get; }
-        event Action DataSourceChanged;
+        bool ReloadConversationDatasourceIfRequired();
         DirectoryInfo Origin { get; }
 
         ISaveableFile File { get; }

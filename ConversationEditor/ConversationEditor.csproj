@@ -137,12 +137,6 @@
     <Compile Include="GUIs\RealLeafItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUIs\ConversationEditorControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUIs\DomainEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="GUIs\DomainListItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -530,6 +524,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Start Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ReadOnly.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -118,7 +118,7 @@ namespace Conversation
             m_renderer = m_currentRenderer(this);
         }
 
-        public Tuple<Action, Action> GetNodeRemoveActions()
+        public SimpleUndoPair GetNodeRemoveActions()
         {
             List<Action> redoActions = new List<Action>();
             List<Action> undoActions = new List<Action>();
@@ -131,7 +131,7 @@ namespace Conversation
 
             Action undo = () => { foreach (var action in undoActions) action(); };
             Action redo = () => { foreach (var action in redoActions) action(); };
-            return Tuple.Create(undo, redo);
+            return new SimpleUndoPair { Redo = redo, Undo = undo };
         }
     }
 }

@@ -35,5 +35,10 @@ namespace Utilities
         {
             return x.Value | y;
         }
+
+        public static bool operator !(BoolRef x)
+        {
+            return !x.Value;
+        }
     }
 }

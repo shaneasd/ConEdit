@@ -66,7 +66,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.projectExplorer = new ConversationEditor.ProjectExplorer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.conversationEditorControl1 = new ConversationEditor.ConversationEditorControl();
+            this.conversationEditorControl1 = new ConversationEditorControl();
             this.errorList1 = new ConversationEditor.ErrorList();
             this.connectorColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();

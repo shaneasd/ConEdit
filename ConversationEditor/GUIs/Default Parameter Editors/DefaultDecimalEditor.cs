@@ -40,8 +40,7 @@ namespace ConversationEditor
             m_parameter = parameter as IDecimalParameter;
             m_numericUpDown.Minimum = m_parameter.Min;
             m_numericUpDown.Maximum = m_parameter.Max;
-            if (!parameter.Corrupted)
-                m_numericUpDown.Value = m_parameter.Value;
+            m_numericUpDown.Value = m_parameter.Value;
         }
 
         public DefaultDecimalEditor AsControl

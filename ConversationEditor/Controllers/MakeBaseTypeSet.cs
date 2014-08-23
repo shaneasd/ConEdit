@@ -16,10 +16,10 @@ namespace ConversationEditor
             //result.AddInteger(BaseTypeInteger.PARAMETER_TYPE, (name, id) => new IntegerParameter(name, id, BaseTypeInteger.PARAMETER_TYPE));
             result.AddDecimal(BaseTypeDecimal.Data);
             //result.AddDecimal(BaseTypeDecimal.PARAMETER_TYPE, (name, id) => new DecimalParameter(name, id, BaseTypeDecimal.PARAMETER_TYPE));
-            result.AddOther(BaseTypeString.PARAMETER_TYPE, (name, id) => new StringParameter(name, id, BaseTypeString.PARAMETER_TYPE));
-            result.AddOther(BaseTypeLocalizedString.PARAMETER_TYPE, (name, id) => new LocalizedStringParameter(name, id, BaseTypeLocalizedString.PARAMETER_TYPE));
-            result.AddOther(BaseTypeBoolean.PARAMETER_TYPE, (name, id) => new BooleanParameter(name, id, BaseTypeBoolean.PARAMETER_TYPE));
-            result.AddOther(BaseTypeAudio.PARAMETER_TYPE, (name, id) => new AudioParameter(name, id, new Audio(Guid.NewGuid().ToString() + ".ogg"), BaseTypeAudio.PARAMETER_TYPE));
+            result.AddOther(BaseTypeString.PARAMETER_TYPE, (name, id, val) => new StringParameter(name, id, BaseTypeString.PARAMETER_TYPE, val));
+            result.AddOther(BaseTypeLocalizedString.PARAMETER_TYPE, (name, id, val) => new LocalizedStringParameter(name, id, BaseTypeLocalizedString.PARAMETER_TYPE, val));
+            result.AddOther(BaseTypeBoolean.PARAMETER_TYPE, (name, id, val) => new BooleanParameter(name, id, BaseTypeBoolean.PARAMETER_TYPE, val));
+            result.AddOther(BaseTypeAudio.PARAMETER_TYPE, (name, id, val) => new AudioParameter(name, id, BaseTypeAudio.PARAMETER_TYPE, val));//, Guid.NewGuid().ToString() + ".ogg"));
             return result;
         }
 

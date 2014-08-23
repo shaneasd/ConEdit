@@ -10,6 +10,14 @@ using System.IO;
 
 namespace Utilities
 {
+    public class MyFileLoadException : Exception
+    {
+        public MyFileLoadException(Exception inner)
+            : base("error loading file", inner)
+        {
+        }
+    }
+
     public static class Util
     {
         public static T Clamp<T>(this T val, T min, T max) where T : IComparable
@@ -175,15 +183,6 @@ namespace Utilities
             return new Rectangle((int)p.X, (int)p.Y, (int)p.Width, (int)p.Height);
         }
 
-        public class FileLoadException : Exception
-        {
-            public FileLoadException(Exception inner)
-                : base("error loading file", inner)
-            {
-            }
-        }
-
-
         public static FileStream LoadFileStream(string path, FileMode mode, FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.None)
         {
             FileStream s = null;
@@ -194,7 +193,14 @@ namespace Utilities
         public static FileStream LoadFileStream(FileInfo path, FileMode mode, FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.None)
         {
             FileStream s = null;
-            FileLoadOperation(()=>s = path.Open(mode, access, share));
+            try
+            {
+                FileLoadOperation(() => s = path.Open(mode, access, share));
+            }
+            catch (MyFileLoadException)
+            {
+                throw;
+            }
             return s;
         }
 
@@ -206,23 +212,23 @@ namespace Utilities
             }
             //An amalgamation of possible excetions from FileInfo.Open and FileStream ctor
             catch (System.Security.SecurityException e) //The caller does not have the required permission
-            { throw new FileLoadException(e); }
+            { throw new MyFileLoadException(e); }
             catch (System.ArgumentNullException e) //One or more arguments is null
-            { throw new FileLoadException(e); }
+            { throw new MyFileLoadException(e); }
             catch (System.ArgumentException e) //path is empty or contains only white spaces or contains one or more invalid characters. -or-path refers to a non-file device
-            { throw new FileLoadException(e); }
+            { throw new MyFileLoadException(e); }
             catch (System.IO.FileNotFoundException e) //The file is not found
-            { throw new FileLoadException(e); }
+            { throw new MyFileLoadException(e); }
             catch (System.UnauthorizedAccessException e)//The access requested is not permitted by the operating system for the specified path, such as when access is Write or ReadWrite and the file or directory is set for read-only access
-            { throw new FileLoadException(e); }
+            { throw new MyFileLoadException(e); }
             catch (System.IO.DirectoryNotFoundException e) //The specified path is invalid, such as being on an unmapped drive
-            { throw new FileLoadException(e); }
+            { throw new MyFileLoadException(e); }
             catch (System.IO.PathTooLongException e) //The specified path, file name, or both exceed the system-defined maximum length. For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters
-            { throw new FileLoadException(e); }
+            { throw new MyFileLoadException(e); }
             catch (System.IO.IOException e) //The file is already open; An I/O error, such as specifying FileMode.CreateNew when the file specified by path already exists, occurred. -or-The stream has been closed
-            { throw new FileLoadException(e); }
+            { throw new MyFileLoadException(e); }
             catch (System.NotSupportedException e) //path refers to a non-file device, such as "con:", "com1:", "lpt1:", etc. in a non-NTFS environment
-            { throw new FileLoadException(e); }
+            { throw new MyFileLoadException(e); }
         }
     }
 }

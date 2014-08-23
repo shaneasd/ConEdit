@@ -39,5 +39,10 @@ namespace Utilities
         {
             return Item1.GetHashCode() ^ Item2.GetHashCode();
         }
+
+        public bool Contains(T val)
+        {
+            return object.Equals(Item1, val) || object.Equals(Item2, val);
+        }
     }
 }

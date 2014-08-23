@@ -12,7 +12,7 @@ namespace ConversationEditor
     {
         TypeSet m_types;
 
-        private Dictionary<ID<NodeTypeTemp>, Tuple<Guid, GenericEditableGenerator2>> m_nodes = new Dictionary<ID<NodeTypeTemp>, Tuple<Guid, GenericEditableGenerator2>>();
+        private CallbackDictionary<ID<NodeTypeTemp>, Tuple<Guid, GenericEditableGenerator2>> m_nodes = new CallbackDictionary<ID<NodeTypeTemp>, Tuple<Guid, GenericEditableGenerator2>>();
         private NodeType m_nodeHeirarchy;
 
         Dictionary<ID<TConnectorDefinition>, ConnectorDefinitionData> m_connectorDefinitions = new Dictionary<ID<TConnectorDefinition>, ConnectorDefinitionData>()
@@ -28,6 +28,9 @@ namespace ConversationEditor
         public ConversationDataSource(TypeSet typeSet, IEnumerable<DomainData> domains)
         {
             m_types = typeSet;
+
+            m_nodes.Removing += m_nodes_Removing;
+
             domains = domains.Evaluate();
 
             //Types must be generated before Nodes and can be generated before NodeTypes
@@ -60,20 +63,20 @@ namespace ConversationEditor
             }
         }
 
+        void m_nodes_Removing(ID<NodeTypeTemp> id, Tuple<Guid, GenericEditableGenerator2> generator)
+        {
+            generator.Item2.Removed();
+        }
+
         public void AddNodeType(NodeData node)
         {
             var nodeGenerator = new GenericEditableGenerator2(node, m_types, m_connectorDefinitions, ConversationConnectionRules.Instance);
             m_nodes[node.Guid] = new Tuple<Guid, GenericEditableGenerator2>(node.Type.GetValueOrDefault(DomainIDs.CATEGORY_NONE), nodeGenerator);
         }
 
-        internal void NodeDefinitionModified(NodeData data)
+        internal void RemoveNodeType(ID<NodeTypeTemp> id)
         {
-            m_nodes[data.Guid].Item2.ChangeData(data);
-            //TODO: Update existing IEditables
-            //TODO: Update category
-            //TODO: Update connectors
-            //TODO: Update parameters
-            //TODO: Update config
+            m_nodes.Remove(id);
         }
 
         public void AddConnector(ConnectorDefinitionData connector)
@@ -81,8 +84,14 @@ namespace ConversationEditor
             m_connectorDefinitions[connector.Id] = connector;
         }
 
+        public void RemoveConnector(ID<TConnectorDefinition> id)
+        {
+            m_connectorDefinitions.Remove(id);
+        }
+
         private void GenerateCategories(List<NodeTypeData> nodeTypeData)
         {
+            nodeTypeData = nodeTypeData.ToList(); //Copy that shit because we don't want to break m_categories
             m_nodeHeirarchy = new NodeType(null, DomainIDs.CATEGORY_NONE);
 
             var duplicates = nodeTypeData.GroupBy(a => a.Guid).Where(g => g.Count() > 1);
@@ -138,6 +147,11 @@ namespace ConversationEditor
         public void UpdateEnumeration(EnumerationData data)
         {
             m_types.ModifyEnum(data);
+        }
+
+        public void RemoveType(ID<ParameterType> id)
+        {
+            m_types.Remove(id);
         }
 
         public void AddDynamicEnumType(DynamicEnumerationData typeData)
@@ -240,6 +254,11 @@ namespace ConversationEditor
         internal void AddCategory(NodeTypeData category)
         {
             m_categories.Add(category);
+        }
+
+        internal void RemoveCategory(Guid id)
+        {
+            m_categories.RemoveAll(c => c.Guid == id);
         }
 
         internal void RenameCategory(NodeTypeData data)

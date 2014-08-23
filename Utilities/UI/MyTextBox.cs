@@ -144,7 +144,8 @@ namespace Utilities
 
         public event Action<string> TextChanged;
 
-        private string MeasureText { get { return Text.EndsWith("\n") ? Text + " " : Text; } }
+        //private string MeasureText { get { return Text.EndsWith("\n") ? Text + " " : Text; } }
+        private string MeasureText { get { return Text + "."; } } //Doesn't seem to handle trailing whitespace well
         public string SelectedText { get { return Text.Substring(SelectionStart, Math.Abs(SelectionLength)); } }
 
         public Font Font = SystemFonts.MessageBoxFont;
@@ -182,6 +183,7 @@ namespace Utilities
 
         public RectangleF TextRectangle { get { return RectangleF.Inflate(Area, -BORDER_SIZE, -BORDER_SIZE); } }
 
+        //public StringFormat Format = new StringFormat(StringFormat.GenericTypographic);
         public StringFormat Format = new StringFormat(StringFormat.GenericDefault) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces, Trimming = StringTrimming.None };
 
         public readonly InputFormEnum InputForm;
@@ -269,7 +271,7 @@ namespace Utilities
                 var next = MeasureCharacterRanges(g, MakeCharacterRange(characterPos, 1))[0].GetBounds(g);
                 return RectangleF.FromLTRB(next.Left, next.Top, next.Left, next.Bottom);
             }
-            else if (MeasureText.Length >= characterPos + 1)
+            else if (MeasureText.Length > characterPos)
             {
                 var regions = MeasureCharacterRanges(g, MakeCharacterRange(characterPos - 1, 1), MakeCharacterRange(characterPos, 1));
                 var rectangles = Array.ConvertAll(regions, r => r.GetBounds(g));
@@ -286,6 +288,20 @@ namespace Utilities
 
         public override void Paint(Graphics g)
         {
+            //TODO:
+            //using (Bitmap bmp = new Bitmap(100, 100))
+            //{
+            //    using (Graphics gg = Graphics.FromImage(bmp))
+            //    {
+            //        Format.SetMeasurableCharacterRanges(new[] { MakeCharacterRange(14, 1) });
+            //        Region rrrr = gg.MeasureCharacterRanges("shane's test       ", Font, new RectangleF(0, 0, 1000, 1000), Format)[0];
+            //        var b = rrrr.GetBounds(gg);
+            //        gg.FillRegion(Brushes.Green, rrrr);
+            //        gg.DrawString("shane's test ", Font, Brushes.Red, new PointF(0, 0));
+            //    }
+            //    bmp.Save(@"C:\test.png");
+            //}
+
             var area = Area;
             g.FillRectangle(Colors.BackgroundBrush, area);
             g.DrawRectangle(Colors.BorderPen, new Rectangle((int)area.X, (int)area.Y, (int)Math.Floor(area.Width) - 1, (int)Math.Floor(area.Height) - 1));
@@ -293,6 +309,7 @@ namespace Utilities
             using (g.SaveState())
             {
                 g.Clip = new Region(TextRectangle);
+                //TextRenderer.DrawText(g, Text, Font, TextRectangle.Round(), Color.Green, TextFormatFlags.TextBoxControl | TextFormatFlags.WordBreak);
                 g.DrawString(Text, Font, Colors.TextBrush, TextRectangle, Format);
             }
 
@@ -755,7 +772,22 @@ namespace Utilities
                 {
                     SelectionLength = 0;
                 }
-                CursorPos = 0;
+
+                if (e.Control)
+                {
+                    CursorPos = 0;
+                }
+                else
+                {
+                    using (var g = m_control.CreateGraphics())
+                    {
+                        RectangleF cursorXY = PosToXY(CursorPos, g);
+                        PointF pos = cursorXY.Center();
+                        pos.X = int.MinValue;
+                        CursorPos = GetCursorPosition(pos.X, pos.Y, g);
+                    }
+                }
+
                 m_additionUndoAction = null;
             }
             else if (e.KeyCode == Keys.End)
@@ -769,7 +801,21 @@ namespace Utilities
                 {
                     SelectionLength = 0;
                 }
-                CursorPos = Text.Length;
+
+                if (e.Control)
+                {
+                    CursorPos = Text.Length;
+                }
+                else
+                {
+                    using (var g = m_control.CreateGraphics())
+                    {
+                        RectangleF cursorXY = PosToXY(CursorPos, g);
+                        PointF pos = cursorXY.Center();
+                        pos.X = int.MaxValue;
+                        CursorPos = GetCursorPosition(pos.X, pos.Y, g);
+                    }
+                }
                 m_additionUndoAction = null;
             }
             else if (e.KeyCode.IsSet(Keys.Enter))

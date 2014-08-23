@@ -11,7 +11,7 @@ namespace Conversation
     {
         private ID<NodeTemp> m_id;
         private readonly IEditableGenerator m_generator;
-        private readonly List<Parameter> m_parameters;
+        private List<Parameter> m_parameters;
         private readonly IEnumerable<Output> m_connectors;
 
         public ID<NodeTypeTemp> NodeTypeID
@@ -66,11 +66,6 @@ namespace Conversation
             Linked.Execute();
         }
 
-        public ExternalFunction(IEditableGenerator generator, ID<NodeTemp> id, IEnumerable<Func<IEditable, Output>> connectors, params Parameter[] parameters)
-            : this(generator, id, connectors, parameters as IEnumerable<Parameter>)
-        {
-        }
-
         public ExternalFunction(IEditableGenerator generator, ID<NodeTemp> id, IEnumerable<Func<IEditable, Output>> connectors, IEnumerable<Parameter> parameters)
         {
             m_id = id;
@@ -96,6 +91,17 @@ namespace Conversation
                 Redo = () => { m_parameters.Remove(p); },
                 Undo = () => { m_parameters.Insert(index, p); },
             };
+        }
+
+        private List<EditableGenerator.ParameterData> ParameterData()
+        {
+            return Parameters.Select(p => new EditableGenerator.ParameterData(p.Id, p.ValueAsString())).ToList();
+        }
+
+        public void GeneratorChanged()
+        {
+            m_parameters = m_generator.MakeParameters(ParameterData());
+            //TODO: Update connectors
         }
     }
 }

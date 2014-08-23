@@ -49,8 +49,8 @@ namespace ConversationEditor
             Func<Image, HighlightableImageButton> makeButton = icon =>
                 {
                     var thisoffset = offset;
-                    var result = HighlightableImageButton.Create(() => new RectangleF(thisoffset, 0, icon.Width, icon.Height), ColorScheme.ForegroundPen, icon);
-                    offset += icon.Width + 1;
+                    var result = HighlightableImageButton.Create(() => new RectangleF(thisoffset, 0, icon.Width + 4, icon.Height + 4), ColorScheme.ForegroundPen, ColorScheme.ForegroundBrush, icon);
+                    offset += icon.Width + 4 + 2;
                     return result;
                 };
 
@@ -216,6 +216,10 @@ namespace ConversationEditor
             {
                 using (Graphics g = Graphics.FromImage(image))
                 {
+                    foreach (var item in m_root.AllItems(Visibility))
+                    {
+                        item.DrawBackground(g, Visibility);
+                    }
                     foreach (var item in (new[] { m_selectedItem, m_selectedLocalizer, m_selectedEditable }).Distinct().Where(a => a != null))
                     {
                         if (IndexOf(item) >= 0)
@@ -228,7 +232,7 @@ namespace ConversationEditor
                 }
             }
 
-            e.Graphics.DrawImageUnscaled(image, new Point((int)TransformToRenderSurface.OffsetX, (int)TransformToRenderSurface.OffsetY));
+            e.Graphics.DrawImage(image, new Point((int)TransformToRenderSurface.OffsetX, (int)TransformToRenderSurface.OffsetY));
             e.Graphics.DrawRectangle(ColorScheme.ControlBorder, new Rectangle(new Point(0, 0), new Size(drawWindow1.Width - 1, drawWindow1.Height - 1)));
         }
 
@@ -313,6 +317,7 @@ namespace ConversationEditor
             }
             if (e.Button == MouseButtons.Right)
             {
+                saveToolStripMenuItem.Visible = m_selectedItem.CanSave;
                 removeToolStripMenuItem.Visible = m_selectedItem.CanRemove;
                 deleteToolStripMenuItem.Visible = m_selectedItem.CanDelete;
                 makeCurrentLocalizationMenuItem.Visible = m_selectedItem is RealLeafItem<LocalizationFile, ILocalizationFile>;
@@ -447,6 +452,14 @@ namespace ConversationEditor
                 else
                     result = definition.MakeMissingElement(() => RectangleForItem(result), element, m_root.Project, parent, () => TransformToRenderSurface);
                 result.File.SaveStateChanged += InvalidateImage;
+
+                if (m_selectedItem == null)
+                {
+                    m_selectedItem = result;
+                    m_selectedEditable = result;
+                    ItemSelected.Execute();
+                }
+
                 UpdateScrollBar();
                 InvalidateImage();
             }
@@ -767,7 +780,7 @@ namespace ConversationEditor
 
         private void drawWindow2_Paint(object sender, PaintEventArgs e)
         {
-            drawWindow2.Height = ProjectElementDefinition.Definitions.Select(d => d.Icon.Height).Max() + 4;
+            drawWindow2.Height = ProjectElementDefinition.Definitions.Select(d => d.Icon.Height).Max() + 4 + 4;
 
             m_buttons.ForEach(b => b.Paint(e.Graphics));
         }
@@ -829,6 +842,23 @@ namespace ConversationEditor
                 UpdateScrollBar();
                 InvalidateImage();
             }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var conversationItem = m_selectedItem as LeafItem<IConversationFile>;
+            var localizationItem = m_selectedItem as LeafItem<ILocalizationFile>;
+            var domainItem = m_selectedItem as LeafItem<IDomainFile>;
+            //Audio files are not saveable
+
+            if (conversationItem != null)
+                conversationItem.Item.File.Save();
+            else if (localizationItem != null)
+                localizationItem.Item.File.Save();
+            else if (domainItem != null)
+                domainItem.Item.File.Save();
+            else
+                throw new Exception("attempted to save a file that isn't saveable from the project explorer menu");
         }
     }
 }

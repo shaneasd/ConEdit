@@ -67,16 +67,16 @@ namespace Conversation
             public ID<Parameter> Id;
             public string Default; //Can be null, string form of the default value
 
-            public Parameter Make(Func<ID<ParameterType>, string, ID<Parameter>, Parameter> parameterFactory)
+            public Parameter Make(Func<ID<ParameterType>, string, ID<Parameter>, string, Parameter> parameterFactory)
             {
-                var result = parameterFactory(Type, Name, Id);
-                var @default = Default;
-                if (@default != null)
-                {
-                    bool success = result.TryDeserialiseValue(@default);
-                    if (!success)
-                        throw new Exception("Failed to deserialise a local value: " + @default.ToString() + " by " + result.GetType().ToString());
-                }
+                var result = parameterFactory(Type, Name, Id, Default);
+                //var @default = ;
+                //if (@default != null)
+                //{
+                //    bool success = result.TryDeserialiseValue(@default);
+                //    if (!success)
+                //        throw new Exception("Failed to deserialise a local value: " + @default.ToString() + " by " + result.GetType().ToString());
+                //}
                 return result;
             }
         }

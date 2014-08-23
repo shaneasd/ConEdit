@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using Utilities;
 
 namespace ConversationEditor
 {
@@ -13,13 +14,13 @@ namespace ConversationEditor
 
     public class AudioFile : IAudioFile
     {
-        ReadonlyFile m_file;
+        ReadonlyFileUnmonitored m_file;
         private AudioProvider m_provider;
 
         public AudioFile(System.IO.FileInfo file, AudioProvider provider)
         {
             m_provider = provider;
-            m_file = new ReadonlyFile(file);
+            m_file = new ReadonlyFileUnmonitored(file);
         }
 
         public ISaveableFile File
@@ -27,9 +28,14 @@ namespace ConversationEditor
             get { return m_file; }
         }
 
+        public bool CanRemove(Func<bool> prompt)
+        {
+            return true; //TODO: prevent removing an audio file that is being used by a conversation
+        }
+
         public void Removed()
         {
-            //Doesn't care
+            //Do nothing
         }
 
         public void Play()
@@ -63,9 +69,16 @@ namespace ConversationEditor
         {
             m_file = new MissingFile(file);
         }
-        void IInProject.Removed()
+
+        bool IInProject.CanRemove(Func<bool> prompt)
         {
             //Doesn't care
+            return true;
+        }
+
+        void IInProject.Removed()
+        {
+            //Do nothing
         }
 
         ISaveableFile ISaveableFileProvider.File

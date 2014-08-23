@@ -180,7 +180,7 @@ namespace Conversation.Serialization
                     foreach (var b in a.Enumerations)
                     {
                         var enumValueNames = new HashSet<string>() { };
-                        data.Enumerations.Add(new EnumerationData(BestName(b.Name, usedNames), b.Guid, b.Elements.Select(e => new EnumerationData.Element(BestName(e.Name, enumValueNames), e.Guid))));
+                        data.Enumerations.Add(new EnumerationData(BestName(b.Name, usedNames), b.TypeID, b.Elements.Select(e => new EnumerationData.Element(BestName(e.Name, enumValueNames), e.Guid))));
                     }
                     foreach (var b in a.Integers)
                         data.Integers.Add(new IntegerData(BestName(b.Name, usedNames), b.TypeID, b.Max, b.Min));
@@ -422,7 +422,7 @@ namespace Conversation.Serialization
                 foreach (var x in data.DynamicEnumerations)
                     basicTypeMap[x.TypeID.Guid] = x.Name;
                 foreach (var x in data.Enumerations)
-                    basicTypeMap[x.Guid.Guid] = x.Name;
+                    basicTypeMap[x.TypeID.Guid] = x.Name;
                 foreach (var x in data.Integers)
                     basicTypeMap[x.TypeID.Guid] = x.Name;
                 return basicTypeMap;
@@ -565,7 +565,7 @@ namespace Conversation.Serialization
             {
                 var name = enumeration.Name;
                 CodeTypeDeclaration type = new CodeTypeDeclaration(name) { IsEnum = true };
-                type.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(RuntimeConversation.TypeIDAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression(enumeration.Guid.Guid.ToString()))));
+                type.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(RuntimeConversation.TypeIDAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression(enumeration.TypeID.Guid.ToString()))));
 
                 foreach (var element in enumeration.Elements)
                 {

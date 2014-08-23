@@ -19,10 +19,10 @@ namespace ConversationEditor
         SaveableFileUndoable m_file;
         public override ISaveableFileUndoable UndoableFile { get { return m_file; } }
 
-        public ConversationFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, FileInfo file, ISerializer<TData> serializer, List<Error> errors, INodeFactory<ConversationNode> nodeFactory)
+        public ConversationFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ISerializer<TData> serializer, List<Error> errors, INodeFactory<ConversationNode> nodeFactory)
             : base(nodes, groups, errors, nodeFactory)
         {
-            m_file = new SaveableFileUndoable(file, SaveTo);
+            m_file = new SaveableFileUndoable(rawData, file, SaveTo);
             m_serializer = serializer;
         }
 
@@ -51,28 +51,41 @@ namespace ConversationEditor
             var groups = new List<NodeGroup>();
 
             //Fill the stream with the essential content
+            MemoryStream m = new MemoryStream();
             using (FileStream stream = Util.LoadFileStream(file, FileMode.CreateNew))
             {
-                project.ConversationSerializer.Write(SerializationUtils.MakeConversationData(nodes, new ConversationEditorData { Groups = groups }), stream);
+                project.ConversationSerializer.Write(SerializationUtils.MakeConversationData(nodes, new ConversationEditorData { Groups = groups }), m);
+                m.Position = 0;
+                m.CopyTo(stream);
             }
 
-            return new ConversationFile(nodes, groups, file, project.ConversationSerializer, new List<Error>(), nodeFactory);
+            return new ConversationFile(nodes, groups, m, file, project.ConversationSerializer, new List<Error>(), nodeFactory);
         }
 
-        /// <exception cref="FileLoadException">If file can't be read</exception>
+        /// <exception cref="MyFileLoadException">If file can't be read</exception>
         public static ConversationFile Load(FileInfo file, IDataSource datasource, INodeFactory nodeFactory, ISerializerDeserializer<TData> serializer)
         {
             TData data;
+            MemoryStream m;
             using (var stream = Util.LoadFileStream(file, FileMode.Open, FileAccess.Read))
             {
-                data = serializer.Read(stream);
+                m = new MemoryStream((int)stream.Length);
+                stream.CopyTo(m);
+                m.Position = 0;
+                data = serializer.Read(m);
             }
-            return new ConversationFile(data.Nodes.ToList(), data.EditorData.Groups.ToList(), file, serializer, data.Errors, nodeFactory);
+            return new ConversationFile(data.Nodes.ToList(), data.EditorData.Groups.ToList(), m, file, serializer, data.Errors, nodeFactory);
+        }
+
+        public bool CanRemove(Func<bool> prompt)
+        {
+            //Doesn't care
+            return true;
         }
 
         public void Removed()
         {
-            //Doesn't care
+            //Do nothing
         }
     }
 }

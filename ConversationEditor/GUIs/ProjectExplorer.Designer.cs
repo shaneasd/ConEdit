@@ -46,10 +46,11 @@
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.drawWindow1 = new ConversationEditor.DrawWindow();
             this.greyScrollBar1 = new ConversationEditor.GreyScrollBar();
             this.drawWindow2 = new ConversationEditor.DrawWindow();
-            this.newFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -69,12 +70,13 @@
             this.importAudioToolStripMenuItem,
             this.playMenuItem,
             this.toolStripSeparator4,
+            this.saveToolStripMenuItem,
             this.removeToolStripMenuItem,
             this.deleteToolStripMenuItem,
             this.showInExplorerToolStripMenuItem,
             this.newFolderToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(198, 336);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(198, 358);
             // 
             // newConversationToolStripMenuItem
             // 
@@ -180,6 +182,13 @@
             this.showInExplorerToolStripMenuItem.Text = "View in Explorer";
             this.showInExplorerToolStripMenuItem.Click += new System.EventHandler(this.showInExplorerToolStripMenuItem_Click);
             // 
+            // newFolderToolStripMenuItem
+            // 
+            this.newFolderToolStripMenuItem.Name = "newFolderToolStripMenuItem";
+            this.newFolderToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.newFolderToolStripMenuItem.Text = "New Folder";
+            this.newFolderToolStripMenuItem.Click += new System.EventHandler(this.newFolderToolStripMenuItem_Click);
+            // 
             // drawWindow1
             // 
             this.drawWindow1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(56)))), ((int)(((byte)(56)))));
@@ -223,12 +232,12 @@
             this.drawWindow2.Paint += new System.Windows.Forms.PaintEventHandler(this.drawWindow2_Paint);
             this.drawWindow2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.drawWindow2_MouseClick);
             // 
-            // newFolderToolStripMenuItem
+            // saveToolStripMenuItem
             // 
-            this.newFolderToolStripMenuItem.Name = "newFolderToolStripMenuItem";
-            this.newFolderToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.newFolderToolStripMenuItem.Text = "New Folder";
-            this.newFolderToolStripMenuItem.Click += new System.EventHandler(this.newFolderToolStripMenuItem_Click);
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // ProjectExplorer
             // 
@@ -267,5 +276,6 @@
         private System.Windows.Forms.ToolStripMenuItem showInExplorerToolStripMenuItem;
         private DrawWindow drawWindow2;
         private System.Windows.Forms.ToolStripMenuItem newFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
     }
 }

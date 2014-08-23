@@ -15,15 +15,25 @@ namespace Conversation
             public decimal? Min = null;
             public decimal? Max = null;
         }
-        public DecimalParameter(string name, ID<Parameter> id, ID<ParameterType> typeId, Definition definition = null, decimal def = 0)
-            : base(name, id, def, typeId)
+        public DecimalParameter(string name, ID<Parameter> id, ID<ParameterType> typeId, Definition definition, string defaultValue = null)
+            : base(name, id, typeId, defaultValue)
         {
             m_definition = definition ?? new Definition();
+            TryDecorrupt(); //The first setting will always be corrupt because definition is null
         }
 
         protected override bool DeserialiseValue(string value)
         {
-            return decimal.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out m_value);
+            if (!decimal.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out m_value))
+                return false;
+            //m_definition is not set the first time this is called (within the parent constructor)
+            if (m_definition == null)
+                return false;
+            if (m_value > m_definition.Max)
+                return false;
+            if (m_value < m_definition.Min)
+                return false;
+            return true;
         }
 
         protected override string InnerValueAsString()

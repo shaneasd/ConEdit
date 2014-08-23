@@ -16,9 +16,9 @@ namespace Conversation
 
     public static class EnumerationUtil
     {
-        public static Parameter Parameter(this IEnumeration e, string name, ID<Parameter> id)
+        public static Parameter Parameter(this IEnumeration e, string name, ID<Parameter> id, string defaultValue)
         {
-            return new EnumParameter(name, id, e);
+            return new EnumParameter(name, id, e, defaultValue);
         }
     }
 
@@ -98,10 +98,10 @@ namespace Conversation
         {
         }
 
-        public void SetName(Guid guid, string name)
-        {
-            m_options[guid] = name;
-        }
+        //public void SetName(Guid guid, string name)
+        //{
+        //    m_options[guid] = name;
+        //}
 
         public void Add(Guid guid, string name)
         {
@@ -116,10 +116,19 @@ namespace Conversation
         public EnumerationData GetData(string name)
         {
             EnumerationData data;
-            data.Guid = this.TypeId;
+            data.TypeID = this.TypeId;
             data.Name = name;
             data.Elements = m_options.Select(o => new EnumerationData.Element(o.Value, o.Key)).ToList();
             return data;
+        }
+
+        internal void SetOptions(List<EnumerationData.Element> elements)
+        {
+            m_options.Clear();
+            foreach (var option in elements)
+            {
+                Add(option.Guid, option.Name);
+            }
         }
     }
 }

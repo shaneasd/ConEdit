@@ -39,8 +39,7 @@ namespace ConversationEditor
             m_parameter = parameter as IIntegerParameter;
             m_numericUpDown.Minimum = m_parameter.Min;
             m_numericUpDown.Maximum = m_parameter.Max;
-            if (!m_parameter.Corrupted)
-                m_numericUpDown.Value = m_parameter.Value;
+            m_numericUpDown.Value = m_parameter.Value;
         }
 
         public DefaultIntegerEditor AsControl

@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversationEditor", "ConversationEditor\ConversationEditor.csproj", "{D904BED7-0716-4B54-8BBE-D53A7F938C8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inference", "Inference\Inference.csproj", "{CF26B539-800D-47CB-BE09-3788D70BA41C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{BC0871BD-3134-40F0-8E74-0D3AAF3BF65B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conversation2", "Conversation2\Conversation2.csproj", "{6B83BE91-796D-4ABC-98F8-4220B6151A3D}"
@@ -41,16 +39,6 @@ Global
 		{D904BED7-0716-4B54-8BBE-D53A7F938C8D}.Release|Mixed Platforms.Build.0 = Release|x86
 		{D904BED7-0716-4B54-8BBE-D53A7F938C8D}.Release|x86.ActiveCfg = Release|x86
 		{D904BED7-0716-4B54-8BBE-D53A7F938C8D}.Release|x86.Build.0 = Release|x86
-		{CF26B539-800D-47CB-BE09-3788D70BA41C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF26B539-800D-47CB-BE09-3788D70BA41C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CF26B539-800D-47CB-BE09-3788D70BA41C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{CF26B539-800D-47CB-BE09-3788D70BA41C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{CF26B539-800D-47CB-BE09-3788D70BA41C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{CF26B539-800D-47CB-BE09-3788D70BA41C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF26B539-800D-47CB-BE09-3788D70BA41C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CF26B539-800D-47CB-BE09-3788D70BA41C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{CF26B539-800D-47CB-BE09-3788D70BA41C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{CF26B539-800D-47CB-BE09-3788D70BA41C}.Release|x86.ActiveCfg = Release|Any CPU
 		{BC0871BD-3134-40F0-8E74-0D3AAF3BF65B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BC0871BD-3134-40F0-8E74-0D3AAF3BF65B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC0871BD-3134-40F0-8E74-0D3AAF3BF65B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

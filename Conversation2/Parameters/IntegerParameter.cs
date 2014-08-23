@@ -14,20 +14,24 @@ namespace Conversation
             public int? Min = null;
         }
 
-        public IntegerParameter(string name, ID<Parameter> id, ID<ParameterType> typeId, Definition definition = null, int def = 0) : base(name, id, def, typeId)
+        public IntegerParameter(string name, ID<Parameter> id, ID<ParameterType> typeId, Definition definition, string defaultValue = null)
+            : base(name, id, typeId, defaultValue)
         {
             m_definition = definition ?? new Definition();
+            TryDecorrupt(); //The first setting will always be corrupt because definition is null
         }
 
         protected override bool DeserialiseValue(string value)
         {
             if (!int.TryParse(value, out m_value))
                 return false;
-            //TODO: Should make the parameter corrupt or something
-            //if (m_value > m_max)
-            //    return false;
-            //if (m_value < m_min)
-            //    return false;
+            //m_definition is not set the first time this is called (within the parent constructor)
+            if (m_definition == null)
+                return false;
+            if (m_value > m_definition.Max)
+                return false;
+            if (m_value < m_definition.Min)
+                return false;
             return true;
         }
 

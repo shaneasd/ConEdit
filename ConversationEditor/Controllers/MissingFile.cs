@@ -78,5 +78,11 @@ namespace ConversationEditor
         public void Dispose()
         {
         }
+
+
+        public bool Writable
+        {
+            get { return false; }
+        }
     }
 }

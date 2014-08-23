@@ -84,7 +84,7 @@ namespace ConversationEditor
                     if (!s.File.CanClose())
                         return false;
                 }
-                catch (FileLoadException e)
+                catch (MyFileLoadException e)
                 {
                     Console.Out.WriteLine(e.Message);
                     Console.Out.WriteLine(e.StackTrace);
@@ -110,61 +110,60 @@ namespace ConversationEditor
 
         public void OpenProject(string path)
         {
-            FileStream projectFile = null;
+            MemoryStream m = null;
+
             try
             {
-                try
+                using (var projectFile = Util.LoadFileStream(path, FileMode.Open, FileAccess.Read))
                 {
-                    projectFile = Util.LoadFileStream(path, FileMode.Open, FileAccess.Read);
-                }
-                catch (FileLoadException e)
-                {
-                    Console.Out.WriteLine(e.Message);
-                    Console.Out.WriteLine(e.StackTrace);
-                    Console.Out.WriteLine(e.InnerException.Message);
-                    Console.Out.WriteLine(e.InnerException.StackTrace);
-                    MessageBox.Show("Project: " + path + " could not be accessed");
-                }
-                if (projectFile != null)
-                {
-                    var deserializer = new XMLProject.Deserializer();
-                    var projectData = deserializer.Read(projectFile);
-                    var project = new Project(projectData, m_conversationNodeFactory, m_domainNodeFactory, new FileInfo(path),
-                        new XMLProject.Serializer(),
-                        SerializationUtils.ConversationSerializer,
-                        SerializationUtils.ConversationSerializerDeserializer,
-                        SerializationUtils.DomainSerializer, m_pluginsConfig);
-
-                    project.FileDeletedExternally += () => m_executeInGUIThread(() => { MessageBox.Show("Project file deleted by another application"); });
-                    project.FileModifiedExternally += () => m_executeInGUIThread(() =>
-                        {
-                            var choice = MessageBox.Show("Project file modified by another application. Discard project changes and reload project from disk?", "Reload project?", MessageBoxButtons.YesNo);
-                            if (choice == DialogResult.Yes)
-                            {
-                                if (CanClose(false))
-                                {
-                                    CurrentProject = DummyProject.Instance;
-                                    //TODO: Update the GUI to reflect the change in project, in case the load fails.
-                                    OpenProject(project.File.File.FullName);
-                                }
-                            }
-                        });
-                    project.ElementModifiedExternally += (element, reload) => m_executeInGUIThread(() =>
-                    {
-                        var choice = MessageBox.Show("Project element " + element.File.File.FullName + " modified by another application. Discard changes to this element and reload project from disk?", "Reload element?", MessageBoxButtons.YesNo);
-                        if (choice == DialogResult.Yes)
-                        {
-                            reload();
-                        }
-                    });
-                    project.ElementDeletedExternally += (element) => m_executeInGUIThread(() => { MessageBox.Show("Project element " + element.File.File.FullName + " deleted by another application"); });
-                    CurrentProject = project;
+                    m = new MemoryStream((int)projectFile.Length);
+                    projectFile.CopyTo(m);
+                    m.Position = 0;
                 }
             }
-            finally
+            catch (MyFileLoadException e)
             {
-                if ( projectFile != null )
-                    projectFile.Close();
+                Console.Out.WriteLine(e.Message);
+                Console.Out.WriteLine(e.StackTrace);
+                Console.Out.WriteLine(e.InnerException.Message);
+                Console.Out.WriteLine(e.InnerException.StackTrace);
+                MessageBox.Show("Project: " + path + " could not be accessed");
+            }
+
+            if (m != null)
+            {
+                var deserializer = new XMLProject.Deserializer();
+                var projectData = deserializer.Read(m);
+                var project = new Project(projectData, m_conversationNodeFactory, m_domainNodeFactory, m, new FileInfo(path),
+                    new XMLProject.Serializer(),
+                    SerializationUtils.ConversationSerializer,
+                    SerializationUtils.ConversationSerializerDeserializer,
+                    SerializationUtils.DomainSerializer, m_pluginsConfig);
+
+                project.FileDeletedExternally += () => m_executeInGUIThread(() => { MessageBox.Show("Project file deleted by another application"); });
+                project.FileModifiedExternally += () => m_executeInGUIThread(() =>
+                    {
+                        var choice = MessageBox.Show("Project file modified by another application. Discard project changes and reload project from disk?", "Reload project?", MessageBoxButtons.YesNo);
+                        if (choice == DialogResult.Yes)
+                        {
+                            if (CanClose(false))
+                            {
+                                CurrentProject = DummyProject.Instance;
+                                //TODO: Update the GUI to reflect the change in project, in case the load fails.
+                                OpenProject(project.File.File.FullName);
+                            }
+                        }
+                    });
+                project.ElementModifiedExternally += (element, reload) => m_executeInGUIThread(() =>
+                {
+                    var choice = MessageBox.Show("Project element " + element.File.File.FullName + " modified by another application. Discard changes to this element and reload project from disk?", "Reload element?", MessageBoxButtons.YesNo);
+                    if (choice == DialogResult.Yes)
+                    {
+                        reload();
+                    }
+                });
+                project.ElementDeletedExternally += (element) => m_executeInGUIThread(() => { MessageBox.Show("Project element " + element.File.File.FullName + " deleted by another application"); });
+                CurrentProject = project;
             }
         }
 
@@ -177,7 +176,7 @@ namespace ConversationEditor
                     if (s.File.Changed)
                         s.File.Save();
                 }
-                catch (FileLoadException e)
+                catch (MyFileLoadException e)
                 {
                     Console.Out.WriteLine(e.Message);
                     Console.Out.WriteLine(e.StackTrace);
@@ -203,7 +202,7 @@ namespace ConversationEditor
                             SerializationUtils.ConversationSerializerDeserializer,
                             SerializationUtils.DomainSerializer, m_pluginsConfig);
                     }
-                    catch (FileLoadException e)
+                    catch (MyFileLoadException e)
                     {
                         Console.Out.WriteLine(e.Message);
                         Console.Out.WriteLine(e.StackTrace);

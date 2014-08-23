@@ -24,6 +24,9 @@ namespace Utilities
         }
 
         public event Action<T> Inserting;
+        /// <summary>
+        /// Triggered before an element is removed.
+        /// </summary>
         public event Action<T> Removing;
         public event Action Clearing;
 
@@ -51,8 +54,8 @@ namespace Utilities
             }
             set
             {
-                Removing.Execute( m_base[index]);
-                Inserting.Execute( value);
+                Removing.Execute(m_base[index]);
+                Inserting.Execute(value);
                 m_base[index] = value;
                 Modified.Execute();
             }
@@ -60,7 +63,7 @@ namespace Utilities
 
         public void Add(T item)
         {
-            Inserting.Execute( item);
+            Inserting.Execute(item);
             m_base.Add(item);
             Modified.Execute();
         }
@@ -76,7 +79,7 @@ namespace Utilities
         {
             if (m_base.Contains(item))
             {
-                Removing.Execute( item);
+                Removing.Execute(item);
                 bool result = m_base.Remove(item);
                 Modified.Execute();
                 return result;

@@ -22,7 +22,7 @@ namespace PluginPack
                 data = SerializationUtils.ConversationDeserializer(control.DataSource).Read(stream);
             }
 
-            yield return new MenuAction2<ConversationNode>("Basic Conversation", null, null, null, p =>
+            yield return new MenuAction2<ConversationNode>("Basic Conversation", (a, b) => null, null, null, p =>
             {
                 control.Insert(p, Tuple.Create(data.Nodes, data.EditorData.Groups));
             });

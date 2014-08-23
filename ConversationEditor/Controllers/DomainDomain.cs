@@ -13,149 +13,7 @@ namespace ConversationEditor
 
     public class DomainDomain : IDataSource
     {
-        public class Types
-        {
-            public static Guid INTEGER_SET_GUID = Guid.Parse("07ca7287-20c0-4ba5-ae28-e17ea97554d6");
-            public static Guid DECIMAL_SET_GUID = Guid.Parse("0c1e5fa8-97ff-450b-a01c-5d09ea6dbd78");
-            public static Guid ENUM_SET_GUID = Guid.Parse("e7526632-95ca-4981-8b45-56cea272ddd0");
-            public static Guid DYNAMIC_ENUM_SET_GUID = Guid.Parse("b3278dc3-6c2b-471a-a1c9-de39691af302");
-
-            //TODO: Make private
-            public TypeSet m_typeSet = BaseTypeSet.Make(); //Tracks types which are usable by the domain. This includes types defined by the user as well as all base types.
-            private CustomizableTypeSet<IntegerData> m_integer;
-            private CustomizableTypeSet<DecimalData> m_decimal;
-            private CustomizableTypeSet<EnumerationData> m_enumeration;
-            private CustomizableTypeSet<DynamicEnumerationData> m_dynamicEnumeration;
-
-            /// <summary>
-            /// Mapping of enum type guid to all the possible values that are currently linked to that type definition node
-            /// </summary>
-            private readonly Dictionary<ID<ParameterType>, IEnumerable<EnumerationData.Element>> m_enumOptions = new Dictionary<ID<ParameterType>, IEnumerable<EnumerationData.Element>>();
-            public Dictionary<ID<ParameterType>, IEnumerable<EnumerationData.Element>> GetEnumOptions() { return m_enumOptions; }
-
-            private readonly Dictionary<ID<ParameterType>, DynamicEnumParameter.Source> m_dynamicEnumParameterSources = new Dictionary<ID<ParameterType>, DynamicEnumParameter.Source>();
-            private DynamicEnumParameter.Source GetSource(ID<ParameterType> typeid)
-            {
-                if (!m_dynamicEnumParameterSources.ContainsKey(typeid))
-                    m_dynamicEnumParameterSources[typeid] = new DynamicEnumParameter.Source();
-                return m_dynamicEnumParameterSources[typeid];
-            }
-
-            public Parameter MakeParameter(ID<ParameterType> typeid, string name, ID<Parameter> id)
-            {
-                return m_typeSet.Make(typeid, name, id);
-            }
-
-            public ICustomizableTypeSet<IntegerData> Integers { get { return m_integer; } }
-            public ICustomizableTypeSet<DecimalData> Decimals { get { return m_decimal; } }
-            public ICustomizableTypeSet<EnumerationData> Enumerations { get { return m_enumeration; } }
-            public ICustomizableTypeSet<DynamicEnumerationData> DynamicEnumerations { get { return m_dynamicEnumeration; } }
-
-            public Types()
-            {
-                m_integer = new CustomizableTypeSet<IntegerData>(a => m_typeSet.AddInteger(a),
-                                                                 m_typeSet.IsInteger,
-                                                                 (n, id, guid) => new IntegerParameter(n, id, guid),
-                                                                 new MutableEnumeration(new[] { new Tuple<Guid, string>(BaseTypeInteger.PARAMETER_TYPE.Guid, "Integer") },
-                                                                 DomainIDs.TYPES_GUID, ""));
-                m_decimal = new CustomizableTypeSet<DecimalData>(a => m_typeSet.AddDecimal(a), m_typeSet.IsDecimal, (n, id, guid) => new DecimalParameter(n, id, guid), new MutableEnumeration(new[] { new Tuple<Guid, string>(BaseTypeDecimal.PARAMETER_TYPE.Guid, "Decimal") }, DomainIDs.TYPES_GUID, ""));
-                m_enumeration = new CustomizableTypeSet<EnumerationData>(a => m_typeSet.AddEnum(a), m_typeSet.IsEnum,
-                    (n, id, guid) => new EnumParameter(n, id, new WrapperEnumeration(() => m_enumOptions[guid].Select(e => e.Guid), g => m_enumOptions[guid].Single(e => e.Guid == g).Name, () => "", guid)),
-                    new MutableEnumeration(new Tuple<Guid, string>[0], DomainIDs.TYPES_GUID, ""));
-                m_dynamicEnumeration = new CustomizableTypeSet<DynamicEnumerationData>(a => m_typeSet.AddDynamicEnum(a), m_typeSet.IsDynamicEnum, (n, id, guid) => new DynamicEnumParameter(n, id, GetSource(guid), guid), new MutableEnumeration(new Tuple<Guid, string>[0], DomainIDs.TYPES_GUID, ""));
-            }
-
-            public interface ICustomizableTypeSet
-            {
-                IEnumeration Enum { get; }
-                void SetName(Guid guid, string name);
-                void Remove(Guid guid);
-                bool Is(ID<ParameterType> type);
-            }
-
-            public interface ICustomizableTypeSet<TData> : ICustomizableTypeSet
-            {
-                void Add(ID<ParameterType> guid, string name, TData data);
-            }
-
-            public class CustomizableTypeSet<TData> : ICustomizableTypeSet<TData>
-            {
-                public readonly MutableEnumeration m_enumeration;
-                private Func<string, ID<Parameter>, ID<ParameterType>, Parameter> m_factory;
-                //private Action<ID<ParameterType>, Func<string, ID<Parameter>, Parameter>> m_typeSetAdd;
-                private Action<TData> m_typeSetAdd;
-                private Func<ID<ParameterType>, bool> m_is;
-
-                public CustomizableTypeSet(Action<TData> typeSetAdd, Func<ID<ParameterType>, bool> @is, Func<string, ID<Parameter>, ID<ParameterType>, Parameter> factory, MutableEnumeration enumeration)
-                //public CustomizableTypeSet(Action<ID<ParameterType>, Func<string, ID<Parameter>, Parameter>> typeSetAdd, Func<ID<ParameterType>, bool> @is, Func<string, ID<Parameter>, ID<ParameterType>, Parameter> factory, MutableEnumeration enumeration)
-                {
-                    m_enumeration = enumeration;
-                    m_typeSetAdd = typeSetAdd;
-                    m_is = @is;
-                    m_factory = factory;
-                }
-
-                public IEnumeration Enum { get { return m_enumeration; } }
-
-                public void SetName(Guid guid, string name)
-                {
-                    m_enumeration.SetName(guid, name);
-                }
-
-                public void Add(ID<ParameterType> guid, string name, TData data)
-                {
-                    m_typeSetAdd(data);
-                    //m_typeSetAdd(guid, (n, id) => m_factory(n, id, guid));
-                    m_enumeration.Add(guid.Guid, name);
-                }
-
-                public void Remove(Guid guid)
-                {
-                    m_enumeration.Remove(guid);
-                }
-
-                public bool Is(ID<ParameterType> type)
-                {
-                    return m_is(type);
-                }
-            }
-
-            Dictionary<ID<NodeTypeTemp>, ICustomizableTypeSet> mapping
-            {
-                get
-                {
-                    return new Dictionary<ID<NodeTypeTemp>, ICustomizableTypeSet>()
-                    {
-                        { BaseType.Integer.NodeType, Integers },
-                        { BaseType.Decimal.NodeType, Decimals },
-                        { BaseType.Enumeration.NodeType, Enumerations },
-                        { BaseType.DynamicEnumeration.NodeType, DynamicEnumerations },
-                    };
-                }
-            }
-
-            internal void RenameType(BaseType baseType, string name, ID<ParameterType> guid)
-            {
-                mapping[baseType.NodeType].SetName(guid.Guid, name);
-            }
-
-            internal void RemoveType(BaseType baseType, ID<ParameterType> guid)
-            {
-                mapping[baseType.NodeType].Remove(guid.Guid);
-                m_typeSet.Remove(guid);
-            }
-
-            internal void UpdateEnumOptions(ID<ParameterType> id, List<EnumerationData.Element> elements)
-            {
-                m_enumOptions[id] = elements;
-            }
-        }
-
-        //Types m_types;
-
         TypeSet m_typeSet = BaseTypeSet.Make();
-
-        //private MutableEnumeration m_categories;
 
         public static ID<ParameterType> INTEGER_SET_GUID = ID<ParameterType>.Parse("07ca7287-20c0-4ba5-ae28-e17ea97554d6");
         public static ID<ParameterType> DECIMAL_SET_GUID = ID<ParameterType>.Parse("0c1e5fa8-97ff-450b-a01c-5d09ea6dbd78");
@@ -174,7 +32,6 @@ namespace ConversationEditor
 
         public DomainDomain(PluginsConfig pluginsConfig)
         {
-            //m_types = new Types();
             m_pluginsConfig = pluginsConfig;
 
             var categoryNone = Tuple.Create(DomainIDs.CATEGORY_NONE, "None");
@@ -195,9 +52,9 @@ namespace ConversationEditor
 
             m_typeSet.Modified += id =>
             {
-                if (!(new[] { allEnums, allDynamicEnums, allIntegers, allDecimals }).Any(e => e.Guid == id))
+                if (!(new[] { allEnums, allDynamicEnums, allIntegers, allDecimals }).Any(e => e.TypeID == id))
                 {
-                    allEnums.Elements = m_typeSet.VisibleEnums.Select(e => new EnumerationData.Element(e.Name, e.Guid.Guid)).ToList();
+                    allEnums.Elements = m_typeSet.VisibleEnums.Select(e => new EnumerationData.Element(e.Name, e.TypeID.Guid)).ToList();
                     m_typeSet.ModifyEnum(allEnums);
 
                     allDynamicEnums.Elements = m_typeSet.VisibleDynamicEnums.Select(e => new EnumerationData.Element(e.Name, e.TypeID.Guid)).ToList();
@@ -380,7 +237,7 @@ namespace ConversationEditor
             string m_value;
 
             public EnumDefaultParameter(Func<Dictionary<ID<ParameterType>, IEnumerable<EnumerationData.Element>>> enumOptions, Func<ID<ParameterType>> currentEnumType)
-                : base("Default", DomainIDs.PARAMETER_DEFAULT, TypeId)
+                : base("Default", DomainIDs.PARAMETER_DEFAULT, TypeId, null)
             {
                 m_value = "";
                 m_valueGuid = Guid.Empty;
@@ -501,7 +358,7 @@ namespace ConversationEditor
             data.Parameters = new List<NodeData.ParameterData> { nameParameter, enumTypeParameter };
             data.Type = parent.Guid;
 
-            Func<Dictionary<ID<ParameterType>, IEnumerable<EnumerationData.Element>>> options = () => m_typeSet.VisibleEnums.ToDictionary(e => e.Guid, e => e.Elements.Select(a => a));
+            Func<Dictionary<ID<ParameterType>, IEnumerable<EnumerationData.Element>>> options = () => m_typeSet.VisibleEnums.ToDictionary(e => e.TypeID, e => e.Elements.Select(a => a));
 
             var generator = new GenericEditableGenerator2(data, m_typeSet, ConnectorDefinitions, DomainConnectionRules.Instance,
                 p => new List<Parameter> { new EnumDefaultParameter(options, () => ID<ParameterType>.FromGuid((p.Single(a => a.Id == enumTypeParameter.Id) as IEnumParameter).EditorSelected)) });
@@ -542,19 +399,6 @@ namespace ConversationEditor
             m_nodes[guid] = generator;
             return generator;
         }
-
-        //private EditableGenerator AddNode(ID<NodeTypeTemp> guid, string name, NodeType parent, List<NodeData.ConfigData> config, IEnumerable<OutputDefinition> outputs, Func<ID<NodeTemp>, EditableGenerator, IEnumerable<Func<IEditable, Output>>, ExternalFunction> func)
-        //{
-        //    var generator = new GenericEditableGenerator(name, guid, config,
-        //        (id, g) =>
-        //        {
-        //            Func<OutputDefinition, Func<IEditable, Output>> curryNewID = output => data => output(data);
-        //            return func(id, g, outputs.Select(curryNewID));
-        //        });
-        //    parent.m_nodes.Add(generator);
-        //    m_nodes[guid] = generator;
-        //    return generator;
-        //}
 
         public IEnumerable<ID<ParameterType>> ParameterTypes
         {
@@ -768,27 +612,21 @@ namespace ConversationEditor
         public bool IsInteger(ID<ParameterType> type)
         {
             return m_typeSet.IsInteger(type);
-            //return m_types.Integers.Is(type);
         }
 
         public bool IsDecimal(ID<ParameterType> type)
         {
             return m_typeSet.IsDecimal(type);
-            //return m_types.Decimals.Is(type);
         }
 
         public bool IsEnum(ID<ParameterType> type)
         {
-            //TODO: Figure out if these special cases still need to exist
-            return m_typeSet.IsEnum(type) || type == DomainIDs.TYPES_GUID || type == DomainIDs.CATEGORY_TYPE || type == ConnectorPosition.ENUM_ID;
-            //return m_types.Enumerations.Is(type) || type == DomainIDs.TYPES_GUID || type == DomainIDs.CATEGORY_TYPE || type == ConnectorPosition.ENUM_ID;
+            return m_typeSet.IsEnum(type);
         }
 
         public bool IsDynamicEnum(ID<ParameterType> type)
         {
-            //TODO: Figure out if this special case still needs to exist
             return m_typeSet.IsDynamicEnum(type) || type == EnumDefaultParameter.TypeId;
-            //return m_types.DynamicEnumerations.Is(type) || type == EnumDefaultParameter.TypeId;
         }
 
         //CallbackDictionary<ID<TConnectorDefinition>, ConnectorDefinitionData> m_connectorDefinitions = new CallbackDictionary<ID<TConnectorDefinition>, ConnectorDefinitionData>()
@@ -916,7 +754,6 @@ namespace ConversationEditor
             return false;
         }
 
-        //TODO: This contains both connectors for domain domain node as well as regular nodes. It shouldn't be both
         public static readonly CallbackDictionary<ID<TConnectorDefinition>, ConnectorDefinitionData> ConnectorDefinitions = new CallbackDictionary<ID<TConnectorDefinition>, ConnectorDefinitionData>()
         {
             { SpecialConnectors.Input.Id, SpecialConnectors.Input },

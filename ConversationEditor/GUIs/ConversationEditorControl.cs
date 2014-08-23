@@ -13,6 +13,5 @@ namespace ConversationEditor
 {
     public class ConversationEditorControl : GraphEditorControl<ConversationNode>
     {
-        protected override bool IsDomainEditor { get { return false; } }
     }
 }

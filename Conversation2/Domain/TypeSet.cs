@@ -14,7 +14,7 @@ namespace Conversation
     public class TypeSet
     {
         private Dictionary<ID<ParameterType>, bool> m_hidden = new Dictionary<ID<ParameterType>, bool>();
-        private Dictionary<ID<ParameterType>, Func<string, ID<Parameter>, Parameter>> m_types = new Dictionary<ID<ParameterType>, Func<string, ID<Parameter>, Parameter>>();
+        private Dictionary<ID<ParameterType>, Func<string, ID<Parameter>, string, Parameter>> m_types = new Dictionary<ID<ParameterType>, Func<string, ID<Parameter>, string, Parameter>>();
         private Dictionary<ID<ParameterType>, DynamicEnumerationData> m_dynamicEnums = new Dictionary<ID<ParameterType>, DynamicEnumerationData>();
         private Dictionary<ID<ParameterType>, Tuple<string, MutableEnumeration>> m_enums = new Dictionary<ID<ParameterType>, Tuple<string, MutableEnumeration>>();
         private Dictionary<ID<ParameterType>, IntegerData> m_integers = new Dictionary<ID<ParameterType>, IntegerData>();
@@ -28,22 +28,22 @@ namespace Conversation
         public IEnumerable<IntegerData> VisiblelIntegers { get { return m_integers.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
         public IEnumerable<DecimalData> VisibleDecimals { get { return m_decimals.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
 
-        public Parameter Make(ID<ParameterType> typeid, string name, ID<Parameter> id)
+        public Parameter Make(ID<ParameterType> typeid, string name, ID<Parameter> id, string defaultValue)
         {
-            return m_types[typeid](name, id);
+            return m_types[typeid](name, id, defaultValue);
         }
 
         public void AddInteger(IntegerData typeData, bool hidden = false)
         {
             m_hidden[typeData.TypeID] = hidden;
             m_integers.Add(typeData.TypeID, typeData);
-            m_types.Add(typeData.TypeID, (name, id) => new IntegerParameter(name, id, typeData.TypeID, m_integers[typeData.TypeID].Definition()));
+            m_types.Add(typeData.TypeID, (name, id, defaultValue) => new IntegerParameter(name, id, typeData.TypeID, m_integers[typeData.TypeID].Definition(), defaultValue));
             Modified.Execute(typeData.TypeID);
         }
 
         public void ModifyInteger(IntegerData typeData)
         {
-            m_types[typeData.TypeID] = (name, id) => new IntegerParameter(name, id, typeData.TypeID, typeData.Definition());
+            m_types[typeData.TypeID] = (name, id, defaultValue) => new IntegerParameter(name, id, typeData.TypeID, typeData.Definition(), defaultValue);
             m_integers[typeData.TypeID] = typeData;
             Modified.Execute(typeData.TypeID);
         }
@@ -52,33 +52,32 @@ namespace Conversation
         {
             m_hidden[typeData.TypeID] = hidden;
             m_decimals.Add(typeData.TypeID, typeData);
-            m_types.Add(typeData.TypeID, (name, id) => new DecimalParameter(name, id, typeData.TypeID, typeData.Definition()));
+            m_types.Add(typeData.TypeID, (name, id, defaultValue) => new DecimalParameter(name, id, typeData.TypeID, typeData.Definition(), defaultValue));
             Modified.Execute(typeData.TypeID);
         }
 
         public void ModifyDecimal(DecimalData typeData)
         {
-            m_types[typeData.TypeID] = (name, id) => new DecimalParameter(name, id, typeData.TypeID, m_decimals[typeData.TypeID].Definition());
+            m_types[typeData.TypeID] = (name, id, defaultValue) => new DecimalParameter(name, id, typeData.TypeID, m_decimals[typeData.TypeID].Definition(), defaultValue);
             m_decimals[typeData.TypeID] = typeData;
             Modified.Execute(typeData.TypeID);
         }
 
         public void AddEnum(EnumerationData typeData, bool hidden = false)
         {
-            m_hidden[typeData.Guid] = hidden;
+            m_hidden[typeData.TypeID] = hidden;
             var elements = typeData.Elements.Select(e => Tuple.Create(e.Guid, e.Name));
-            MutableEnumeration enumeration = new MutableEnumeration(elements, typeData.Guid, "");
-            m_enums.Add(typeData.Guid, Tuple.Create(typeData.Name, enumeration));
-            m_types.Add(m_enums[typeData.Guid].Item2.TypeId, m_enums[typeData.Guid].Item2.Parameter);
-            Modified.Execute(typeData.Guid);
+            MutableEnumeration enumeration = new MutableEnumeration(elements, typeData.TypeID, "");
+            m_enums.Add(typeData.TypeID, Tuple.Create(typeData.Name, enumeration));
+            m_types.Add(m_enums[typeData.TypeID].Item2.TypeId, m_enums[typeData.TypeID].Item2.Parameter);
+            Modified.Execute(typeData.TypeID);
         }
 
         public void ModifyEnum(EnumerationData typeData)
         {
-            var e = m_enums[typeData.Guid].Item2;
-            foreach (var option in typeData.Elements)
-                e.SetName(option.Guid, option.Name);
-            Modified.Execute(typeData.Guid);
+            var e = m_enums[typeData.TypeID].Item2;
+            e.SetOptions(typeData.Elements);
+            Modified.Execute(typeData.TypeID);
         }
 
         public EnumerationData GetEnumData(ID<ParameterType> id)
@@ -104,7 +103,7 @@ namespace Conversation
             Modified.Execute(id);
         }
 
-        public void AddOther(ID<ParameterType> id, Func<string, ID<Parameter>, Parameter> factory)
+        public void AddOther(ID<ParameterType> id, Func<string, ID<Parameter>, string, Parameter> factory)
         {
             m_types.Add(id, factory);
             Modified.Execute(id);

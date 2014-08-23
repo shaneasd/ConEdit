@@ -22,7 +22,7 @@ namespace Conversation
         public EnumerationData(string name, ID<ParameterType> guid, IEnumerable<Element> elements)
         {
             Name = name;
-            Guid = guid;
+            TypeID = guid;
             Elements = elements.ToList();
             //Default = null;
         }
@@ -41,7 +41,7 @@ namespace Conversation
         //    Default = def;
         //}
         public string Name;
-        public ID<ParameterType> Guid;
+        public ID<ParameterType> TypeID;
         //public Or<string, Guid> Default; //can be null
         public List<Element> Elements;
 
@@ -50,7 +50,7 @@ namespace Conversation
             var elements = Elements.Select(e => Tuple.Create(e.Guid, e.Name));
 
             //if (Default == null)
-                return new Enumeration(elements, Guid);
+                return new Enumeration(elements, TypeID);
             //else
             //{
             //    var name = Name;

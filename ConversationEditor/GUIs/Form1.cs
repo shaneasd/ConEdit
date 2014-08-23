@@ -28,7 +28,7 @@ namespace ConversationEditor
         INodeFactory m_domainNodeFactory;
         ProjectMenuController m_projectMenuController;
 
-        DomainEditor m_domainEditor2 = new DomainEditor() { Dock = DockStyle.Fill, ShowGrid = true };
+        ConversationEditorControl m_domainEditor2 = new ConversationEditorControl() { Dock = DockStyle.Fill, ShowGrid = true };
 
         IGraphEditorControl<ConversationNode> m_currentEditor = null;
         IGraphEditorControl<ConversationNode> CurrentEditor
@@ -227,6 +227,15 @@ namespace ConversationEditor
         {
             projectExplorer.ItemSelected += () =>
             {
+                if (m_projectMenuController != null) //As we add items initially one of them will be selected. At the time, m_projectMenuController is not yet initialized
+                {
+                    if (m_projectMenuController.CurrentProject.ReloadConversationDatasourceIfRequired())
+                    {
+                        conversationEditorControl1.SetContext(m_projectMenuController.CurrentProject.ConversationDataSource, m_projectMenuController.CurrentProject.Localizer);
+                        conversationEditorControl1.UpdateKeyMappings();
+                    }
+                }
+
                 conversationEditorControl1.CurrentFile = projectExplorer.SelectedConversation;
                 m_domainEditor2.CurrentFile = projectExplorer.CurrentDomainFile;
 
@@ -299,15 +308,6 @@ namespace ConversationEditor
 
                 //TODO: Select the most appropriate file?
 
-                //Currently this is triggered When you add/remove domain files
-                project.DataSourceChanged += () =>
-                    {
-                        conversationEditorControl1.SetContext(project.ConversationDataSource, project.Localizer);
-                        conversationEditorControl1.UpdateKeyMappings();
-
-                        m_domainEditor2.SetContext(project.DomainDataSource, project.Localizer);
-                        m_domainEditor2.UpdateKeyMappings();
-                    };
                 project.File.Moved += (from, to) => Text = project.File.File.Name;
             };
 
@@ -335,7 +335,7 @@ namespace ConversationEditor
                                 {
                                     open = m_projectMenuController.CurrentProject.File.CanClose();
                                 }
-                                catch (FileLoadException e)
+                                catch (MyFileLoadException e)
                                 {
                                     Console.Out.WriteLine(e.Message);
                                     Console.Out.WriteLine(e.StackTrace);

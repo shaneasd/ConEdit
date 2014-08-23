@@ -60,20 +60,26 @@ namespace ConversationEditor
             FileInfo conversationFile;
             LocalizationFile localizationFile;
             //Start by making sure we can open the file
+            MemoryStream m = new MemoryStream();
+
+            m = new MemoryStream();
+
+            //Create the new conversation file stream, fill with essential content and close
+            conversationFile = ConversationFile.GetAvailableConversationPath(path.Directory, Enumerable.Empty<ISaveableFileProvider>(), p => !p.Exists);
+            using (FileStream conversationStream = Util.LoadFileStream(conversationFile, FileMode.CreateNew, FileAccess.Write))
+            {
+                conversationSerializer.Write(SerializationUtils.MakeConversationData(Enumerable.Empty<ConversationNode>(), new ConversationEditorData()), conversationStream);
+            }
+
+            LocalizationEngine temp = new LocalizationEngine(() => new HashSet<ID<LocalizedText>>(), s => false, s => false, p => !p.Exists, s => true);
+            localizationFile = LocalizationFile.MakeNew(path.Directory, s => temp.MakeSerializer(s), p => !p.Exists);
+
+            //Create the new project
+            Write(conversationFile.Only(), localizationFile.File.File.Only(), Enumerable.Empty<FileInfo>(), Enumerable.Empty<FileInfo>(), m, path.Directory, serializer);
             using (FileStream projectfile = Util.LoadFileStream(path, FileMode.Create, FileAccess.Write))
             {
-                //Create the new conversation file stream, fill with essential content and close
-                conversationFile = ConversationFile.GetAvailableConversationPath(path.Directory, Enumerable.Empty<ISaveableFileProvider>(), p => !p.Exists);
-                using (FileStream conversationStream = Util.LoadFileStream(conversationFile, FileMode.CreateNew, FileAccess.Write))
-                {
-                    conversationSerializer.Write(SerializationUtils.MakeConversationData(Enumerable.Empty<ConversationNode>(), new ConversationEditorData()), conversationStream);
-                }
-
-                LocalizationEngine temp = new LocalizationEngine(() => new HashSet<ID<LocalizedText>>(), s => false, s => false, p => !p.Exists, s => true);
-                localizationFile = LocalizationFile.MakeNew(path.Directory, s => temp.MakeSerializer(s), p => !p.Exists);
-
-                //Create the new project
-                Write(conversationFile.Only(), localizationFile.File.File.Only(), Enumerable.Empty<FileInfo>(), Enumerable.Empty<FileInfo>(), projectfile, path.Directory, serializer);
+                m.CopyTo(projectfile);
+                m.Position = 0;
             }
 
             var conversationPaths = conversationFile.Only().Select(c => FileSystem.RelativePath(c, path.Directory));
@@ -82,7 +88,7 @@ namespace ConversationEditor
 
             TData data = new TData(conversationPaths, domainPaths, localizationPaths, Enumerable.Empty<string>(), null, null);
 
-            result = new Project(data, conversationNodeFactory, domainNodeFactory, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig);
+            result = new Project(data, conversationNodeFactory, domainNodeFactory, m, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig);
             return result;
         }
 
@@ -124,10 +130,28 @@ namespace ConversationEditor
             return !f.Exists && !Elements.Any(s => s.File.File.FullName == f.FullName);
         }
 
-        public Project(TData data, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, FileInfo projectFile, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializerFactory, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig)
+        private bool m_conversationDatasourceModified = false;
+        private void ConversationDatasourceModified()
+        {
+            m_conversationDatasourceModified = true;
+        }
+        public bool ReloadConversationDatasourceIfRequired()
+        {
+            if (m_conversationDatasourceModified)
+            {
+                m_conversationDatasourceModified = false;
+                m_conversationDataSource = new ConversationDataSource(BaseTypeSet.Make(), m_domainFiles.Select(f => f.Data));
+                var serializer = m_conversationSerializerFactory(m_conversationDataSource);
+                m_conversations.Reload(); //Reload all conversations
+                return true;
+            }
+            return false;
+        }
+
+        public Project(TData data, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, MemoryStream initialData, FileInfo projectFile, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializerFactory, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig)
         {
             Action<Stream> saveTo = stream => { Write(Conversations.Select(c => c.File.File), LocalizationFiles.Select(l => l.File.File), DomainFiles.Select(d => d.File.File), AudioFiles.Select(a => a.File.File), stream, Origin, m_serializer); };
-            m_file = new SaveableFileNotUndoable(projectFile, saveTo);
+            m_file = new SaveableFileNotUndoable(initialData, projectFile, saveTo);
             ConversationNodeFactory = conversationNodeFactory;
             DomainNodeFactory = domainNodeFactory;
             m_serializer = serializer;
@@ -146,17 +170,21 @@ namespace ConversationEditor
                 m_audioProvider.AudioFiles.Load(toLoad);
             }
 
-            m_conversationDataSource = new ConversationDataSource(BaseTypeSet.Make(), Enumerable.Empty<DomainData>());
+            //m_conversationDataSource = new ConversationDataSource(BaseTypeSet.Make(), Enumerable.Empty<DomainData>());
             {
                 m_domainDataSource = new DomainDomain(pluginsConfig);
-                Func<IEnumerable<FileInfo>, IEnumerable<Or<DomainFile, MissingDomainFile>>> loader = paths => DomainFile.Load(paths, m_domainDataSource, m_conversationDataSource, DomainSerializerDeserializer.Make(m_domainDataSource), DomainNodeFactory);
-                Func<DirectoryInfo, DomainFile> makeEmpty = path => DomainFile.CreateEmpty(path, m_domainDataSource, m_conversationDataSource, m_domainSerializer, pathOk, DomainNodeFactory);
-                Func<FileInfo, MissingDomainFile> makeMissing = file => new MissingDomainFile(file);
-                m_domainFiles = new ProjectElementList<DomainFile, MissingDomainFile, IDomainFile>(s => CheckFolder(s, Origin), loader, makeEmpty, makeMissing);
+                Func<IEnumerable<FileInfo>, IEnumerable<Or<DomainFile, MissingDomainFile>>> loader = paths =>
+                {
+                    var result = DomainFile.Load(paths, m_domainDataSource, null, DomainSerializerDeserializer.Make(m_domainDataSource), DomainNodeFactory, () => DomainUsage).Evaluate();
+                    result.ForAll(a => a.Do(b => b.ConversationDomainModified += ConversationDatasourceModified, null));
+                    return result;
+                };
+                Func<DirectoryInfo, DomainFile> makeEmpty = path => DomainFile.CreateEmpty(path, m_domainDataSource, m_conversationDataSource, m_domainSerializer, pathOk, DomainNodeFactory, () => DomainUsage);
+                m_domainFiles = new ProjectElementList<DomainFile, MissingDomainFile, IDomainFile>(s => CheckFolder(s, Origin), loader, makeEmpty);
                 IEnumerable<FileInfo> toLoad = Rerout(domainPaths);
                 m_domainFiles.Load(toLoad);
             }
-            //m_conversationDataSource = new ConversationDataSource(BaseTypeSet.Make(), m_domainFiles.Select(df => df.Data));
+            m_conversationDataSource = new ConversationDataSource(BaseTypeSet.Make(), m_domainFiles.Select(df => df.Data));
 
             {
                 Func<IEnumerable<FileInfo>, IEnumerable<ConversationFile>> loadConversation = files => files.Select(file => ConversationFile.Load(file, m_conversationDataSource, ConversationNodeFactory, m_conversationSerializerFactory(m_conversationDataSource)));
@@ -188,9 +216,8 @@ namespace ConversationEditor
             m_localizer.Localizers.GotChanged += () => RefreshCallbacks(m_localizer.Localizers);
             m_domainFiles.GotChanged += () => RefreshCallbacks(m_domainFiles);
 
-            //m_domainFiles.Added += argument => ReloadDatasource();
-            m_domainFiles.Removed += argument => ReloadDatasource();
-            //m_domainFiles.Reloaded += (from, to) => ReloadDatasource();
+
+            m_domainFiles.GotChanged += ConversationDatasourceModified;
             //m_domainFiles.Added += argument => { argument.File.SaveStateChanged += () => { if (!argument.File.Changed) ReloadDatasource(); }; };
             //m_domainFiles.Reloaded += (from, to) => { to.File.SaveStateChanged += () => { if (!to.File.Changed) ReloadDatasource(); }; };
             //m_domainFiles.ForAll(d => d.File.SaveStateChanged += () => { if (!d.File.Changed) ReloadDatasource(); });
@@ -323,17 +350,6 @@ namespace ConversationEditor
         {
             GotChanged();
         }
-
-        private void ReloadDatasource()
-        {
-            m_conversationDataSource = new ConversationDataSource(BaseTypeSet.Make(), m_domainFiles.Select(f => f.Data));
-            var serializer = m_conversationSerializerFactory(m_conversationDataSource);
-            m_conversations.Reload(); //Reload all conversations
-
-            DataSourceChanged.Execute();
-        }
-
-        public event Action DataSourceChanged;
 
         public bool CanModifyConversations
         {

@@ -10,8 +10,9 @@ namespace Conversation
     public class EnumParameter : Parameter<Guid>, IEnumParameter
     {
         IEnumeration m_enumeration;
-        public EnumParameter(string name, ID<Parameter> id, IEnumeration enumeration)
-            : base(name, id, enumeration.Default.Transformed(a => Guid.Empty, a => a), enumeration.TypeId)
+        public EnumParameter(string name, ID<Parameter> id, IEnumeration enumeration, string defaultValue = null)
+            //: base(name, id, enumeration.TypeId, enumeration.Default.Transformed(a => Guid.Empty.ToString(), a => a.ToString()))
+            : base(name, id, enumeration.TypeId, defaultValue)
         {
             m_enumeration = enumeration;
         }

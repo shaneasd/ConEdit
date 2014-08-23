@@ -61,7 +61,6 @@
     <Compile Include="INodeGUI.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Nodes\IConfigNodeDefinitionFactory.cs" />
-    <Compile Include="Nodes\CorruptedEditable.cs" />
     <Compile Include="Nodes\NodeGenerator.cs" />
     <Compile Include="Nodes\SpecialNodes.cs" />
     <Compile Include="Nodes\UnknownEditable.cs" />

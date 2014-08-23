@@ -106,6 +106,7 @@ namespace Utilities
     public class HighlightableImageButton : MyButton
     {
         private Pen SelectionPen;
+        private Brush HighlightBackground;
         private Image Image;
 
         private bool m_highlighted;
@@ -124,24 +125,27 @@ namespace Utilities
 
         public event Action ValueChanged;
 
-        public static HighlightableImageButton Create(Func<RectangleF> area, Pen selectionPen, Image image)
+        public static HighlightableImageButton Create(Func<RectangleF> area, Pen selectionPen, Brush highlightBackground, Image image)
         {
             HighlightableImageButton result = null;
-            result = new HighlightableImageButton(area, () => { result.Highlighted = !result.Highlighted; }, selectionPen, image);
+            result = new HighlightableImageButton(area, () => { result.Highlighted = !result.Highlighted; }, selectionPen, highlightBackground, image);
             return result;
         }
 
-        private HighlightableImageButton(Func<RectangleF> area, Action callback, Pen selectionPen, Image image)
+        private HighlightableImageButton(Func<RectangleF> area, Action callback, Pen selectionPen, Brush highlightBackground, Image image)
             : base(area, callback)
         {
             SelectionPen = selectionPen;
+            HighlightBackground = highlightBackground;
             Image = image;
         }
 
         public override void Paint(Graphics g)
         {
             base.Paint(g);
-            g.DrawImageUnscaled(Image, new Point((int)Area.X, (int)Area.Y));
+            if (Highlighted)
+                g.FillRectangle(HighlightBackground, Area);
+            g.DrawImage(Image, (int)Area.X + 2, (int)Area.Y + 2, Image.Width, Image.Height);
             if (Highlighted)
                 g.DrawRectangle(SelectionPen, Area);
         }

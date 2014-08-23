@@ -47,7 +47,7 @@ namespace Conversation
 
     public class AudioParameter : Parameter<Audio>, IAudioParameter
     {
-        public AudioParameter(string name, ID<Parameter> id, Audio value, ID<ParameterType> typeId) : base(name, id, value, typeId) { }
+        public AudioParameter(string name, ID<Parameter> id, ID<ParameterType> typeId, string defaultValue) : base(name, id, typeId, defaultValue) { }
 
         protected override bool DeserialiseValue(string value)
         {

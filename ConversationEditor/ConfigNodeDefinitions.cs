@@ -10,10 +10,10 @@ namespace ConversationEditor
 {
     public class ShortcutKey : IConfigNodeDefinition
     {
-        public static readonly ID<NodeTypeTemp> ID = ID<NodeTypeTemp>.Parse("d2ca0f2a-abed-4000-a41c-7f55a7652585");
+        public static readonly ID<NodeTypeTemp> ID = ID<NodeTypeTemp>.Parse("b3a94816-8236-4ea5-8646-09887e1ebf94");
         public ID<NodeTypeTemp> Id
         {
-            get { return ID<NodeTypeTemp>.Parse("d2ca0f2a-abed-4000-a41c-7f55a7652585"); }
+            get { return ID; }
         }
 
         public string Name

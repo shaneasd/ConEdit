@@ -59,8 +59,6 @@ namespace ConversationEditor
             get { return DummyDataSource.Instance; }
         }
 
-        event Action IProject.DataSourceChanged { add { } remove { } }
-
         bool IProject.CanModifyConversations
         {
             get { throw new NotImplementedException(); }
@@ -89,6 +87,11 @@ namespace ConversationEditor
         IDomainUsage<ConversationNode, TransitionNoduleUIInfo> IProject.DomainUsage
         {
             get { return null; }
+        }
+
+        bool IProject.ReloadConversationDatasourceIfRequired()
+        {
+            return false;
         }
     }
 }

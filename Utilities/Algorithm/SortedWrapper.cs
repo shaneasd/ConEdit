@@ -12,7 +12,7 @@ namespace Utilities
         {
             m_sortedData = new LinkedList<T>(data);
             data.Inserting += a => m_sortedData.AddLast(a);
-            data.Removing += a => m_sortedData.Remove(a);
+            data.Removing += (a) => m_sortedData.Remove(a);
             data.Clearing += () => m_sortedData.Clear();
         }
 

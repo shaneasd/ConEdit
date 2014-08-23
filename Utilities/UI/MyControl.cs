@@ -122,7 +122,7 @@ namespace Utilities
             m_disposeActions.Clear();
         }
 
-        protected Stack<Action> m_disposeActions = new Stack<Action>(); //TODO: Promote to parent and make protected
+        protected Stack<Action> m_disposeActions = new Stack<Action>();
     }
 
     public class DummyMyControl : MyControl

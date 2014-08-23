@@ -17,7 +17,7 @@ namespace Utilities
         {
             m_data = data.ToDictionary(keySelector);
             data.Inserting += a => m_data[keySelector(a)] = a;
-            data.Removing += a => m_data.Remove(keySelector(a));
+            data.Removing += (a) => m_data.Remove(keySelector(a));
             data.Clearing += () => m_data.Clear();
         }
     }
