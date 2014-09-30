@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Conversation;
 
 namespace RuntimeConversation
 {
     public class LocalizedString
     {
-        public readonly Guid Id;
+        public readonly ID<LocalizedText> Id;
         public LocalizedString(string value)
         {
-            Id = Guid.Parse(value);
+            Id = ID<LocalizedText>.Parse(value);
         }
 
-        public string Localized(Func<Guid, string> localizer)
+        public string Localized(Func<ID<LocalizedText>, string> localizer)
         {
             return localizer(Id);
         }

@@ -77,10 +77,10 @@ namespace ConversationEditor
         }
 
         IBooleanParameter m_parameter;
-        public void Setup(IParameter parameter, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public void Setup(ParameterEditorSetupData data)
         {
-            m_parameter = parameter as IBooleanParameter;
-            if (!parameter.Corrupted)
+            m_parameter = data.Parameter as IBooleanParameter;
+            if (!data.Parameter.Corrupted)
                 Checked = m_parameter.Value;
         }
 
@@ -89,7 +89,7 @@ namespace ConversationEditor
             get { return this; }
         }
 
-        public SimpleUndoPair? UpdateParameterAction()
+        public UpdateParameterData UpdateParameterAction()
         {
             return m_parameter.SetValueAction(Checked);
         }

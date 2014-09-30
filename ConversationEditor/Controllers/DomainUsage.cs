@@ -75,7 +75,7 @@ namespace ConversationEditor
             foreach (var domainFile in m_project.DomainFiles.Evaluate())
             {
                 var domainNodes = domainFile.Nodes;
-                var parameterNodes = domainNodes.Where(n => BaseType.BaseTypes.Any(t => t.ParameterNodeType == n.Type)); //All the parameter definitions of this type in the domain
+                var parameterNodes = domainNodes.Where(n => type.ParameterNodeType == n.Type); //All the parameter definitions of this type in the domain
                 foreach (var parameterNode in parameterNodes)
                 {
                     var typeParameter = parameterNode.Parameters.SingleOrDefault(p => p.Id == DomainIDs.PARAMETER_TYPE) as IEnumParameter; //Identifies what subtype of the base type it is (e.g. what kind of integer)

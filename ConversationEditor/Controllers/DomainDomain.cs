@@ -34,7 +34,6 @@ namespace ConversationEditor
         {
             m_pluginsConfig = pluginsConfig;
 
-            var categoryNone = Tuple.Create(DomainIDs.CATEGORY_NONE, "None");
             EnumerationData categoryData = new EnumerationData("Categories", DomainIDs.CATEGORY_TYPE, new[] { new EnumerationData.Element("None", DomainIDs.CATEGORY_NONE) });
             m_typeSet.AddEnum(categoryData, true);
             //m_types.Enumerations.Add(categoryData.Guid, categoryData.Name, categoryData);
@@ -201,7 +200,7 @@ namespace ConversationEditor
                 AddNode(cnd.Id, cnd.Name, configMenu, config('c', "aabb00"), new List<NodeData.ConnectorData> { configConnector }, new List<NodeData.ParameterData>(), () => cnd.MakeParameters().ToList());
             }
 
-            var category = new NodeData.ParameterData("Category", DomainIDs.NODE_CATEGORY, DomainIDs.CATEGORY_TYPE);
+            var category = new NodeData.ParameterData("Category", DomainIDs.NODE_CATEGORY, DomainIDs.CATEGORY_TYPE, DomainIDs.CATEGORY_NONE.ToString());
             var nodeName = new NodeData.ParameterData("Name", DomainIDs.NODE_NAME, BaseTypeString.PARAMETER_TYPE);
             AddNode(DomainIDs.NODE_GUID, "Node", m_nodeMenu, config('n', "808080"), NodeConnectors, new List<NodeData.ParameterData> { nodeName, category });
 
@@ -338,6 +337,11 @@ namespace ConversationEditor
                     else
                         return new string[0];
                 }
+            }
+
+            protected override void DecorruptFromNull()
+            {
+                //TODO: Do we need to do something here?
             }
         }
 

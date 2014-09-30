@@ -200,8 +200,9 @@ namespace ConversationEditor
 
             public string GetName(Output connector)
             {
-                var name = connector.Parameters.Where(p => p.Id == ConnectorDefinitionData.OUTPUT_NAME).Select(p => p as IStringParameter).Select(p => p.Value).SingleOrDefault() ?? "";
-                return name;
+                return connector.GetName();
+                //var name = connector.Parameters.Where(p => p.Id == ConnectorDefinitionData.OUTPUT_NAME).Select(p => p as IStringParameter).Select(p => p.Value).SingleOrDefault() ?? "";
+                //return name;
             }
         }
 

@@ -78,10 +78,10 @@ namespace ConversationEditor
 
         public static NodeGroup Make<TNode2>(IEnumerable<TNode2> contents) where TNode2 : class, IGraphNode, IRenderable<IGUI>
         {
-            var l = contents.Min(n => n.Renderer.Area.Left) - GraphEditorControl<Conversation.ConversationNode<Conversation.INodeGUI>>.GRID_SPACING;
-            var r = contents.Max(n => n.Renderer.Area.Right) + GraphEditorControl<Conversation.ConversationNode<Conversation.INodeGUI>>.GRID_SPACING;
-            var t = contents.Min(n => n.Renderer.Area.Top) - GraphEditorControl<Conversation.ConversationNode<Conversation.INodeGUI>>.GRID_SPACING;
-            var b = contents.Max(n => n.Renderer.Area.Bottom) + GraphEditorControl<Conversation.ConversationNode<Conversation.INodeGUI>>.GRID_SPACING;
+            var l = contents.Min(n => n.Renderer.Area.Left) - 20;
+            var r = contents.Max(n => n.Renderer.Area.Right) + 20;
+            var t = contents.Min(n => n.Renderer.Area.Top) - 20;
+            var b = contents.Max(n => n.Renderer.Area.Bottom) + 20;
             return new NodeGroup(RectangleF.FromLTRB(l, t, r, b), contents.Select(n => n.Id));
         }
 

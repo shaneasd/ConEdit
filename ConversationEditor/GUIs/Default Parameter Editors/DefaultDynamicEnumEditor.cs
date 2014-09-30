@@ -42,10 +42,10 @@ namespace ConversationEditor
         }
 
         IDynamicEnumParameter m_parameter;
-        public void Setup(IParameter parameter, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public void Setup(ParameterEditorSetupData data)
         {
-            m_parameter = parameter as IDynamicEnumParameter;
-            if (!parameter.Corrupted)
+            m_parameter = data.Parameter as IDynamicEnumParameter;
+            if (!data.Parameter.Corrupted)
                 m_comboBox.SelectedItem = new MyComboBox<string>.Item(m_parameter.Value, m_parameter.Value);
         }
 
@@ -54,7 +54,7 @@ namespace ConversationEditor
             get { return this; }
         }
 
-        public SimpleUndoPair? UpdateParameterAction()
+        public UpdateParameterData UpdateParameterAction()
         {
             return m_parameter.SetValueAction(m_comboBox.SelectedItem.DisplayString);
         }

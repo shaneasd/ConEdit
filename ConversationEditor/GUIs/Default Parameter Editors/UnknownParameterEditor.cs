@@ -48,9 +48,9 @@ namespace ConversationEditor
         }
 
         UnknownParameter m_parameter;
-        public void Setup(IParameter parameter, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public void Setup(ParameterEditorSetupData data)
         {
-            m_parameter = parameter as UnknownParameter;
+            m_parameter = data.Parameter as UnknownParameter;
             if (!m_parameter.Corrupted)
                 m_textBox.Text = m_parameter.Value;
         }
@@ -62,7 +62,7 @@ namespace ConversationEditor
 
         bool m_remove = false;
         private SimpleUndoPair m_removeParameter;
-        public SimpleUndoPair? UpdateParameterAction()
+        public UpdateParameterData UpdateParameterAction()
         {
             if (m_remove)
                 return m_removeParameter;
@@ -83,10 +83,10 @@ namespace ConversationEditor
         public event Action Ok { add { } remove { } }
         public event Action Remove;
 
-        internal static UnknownParameterEditor Make(UnknownParameter unknownParameter, LocalizationEngine localizer, IAudioProvider audioProvider, SimpleUndoPair removeParameter, Action remove)
+        internal static UnknownParameterEditor Make(ParameterEditorSetupData data, SimpleUndoPair removeParameter, Action remove)
         {
             var result = new UnknownParameterEditor();
-            result.Setup(unknownParameter, localizer, audioProvider);
+            result.Setup(data);
             result.m_removeParameter = removeParameter;
             result.Remove += remove;
             return result;

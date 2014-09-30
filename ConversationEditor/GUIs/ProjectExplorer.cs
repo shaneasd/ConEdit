@@ -117,7 +117,6 @@ namespace ConversationEditor
             set;
         }
 
-
         #region http://tech.pro/tutorial/732/csharp-tutorial-how-to-use-custom-cursors
 
         public struct IconInfo
@@ -165,6 +164,7 @@ namespace ConversationEditor
         public event Action LocalizerSelected;
         public LocalizationFile CurrentLocalizer { get { return m_selectedLocalizer.Item; } }
         public IDomainFile CurrentDomainFile { get { return (m_selectedEditable is LeafItem<IDomainFile>) ? (m_selectedEditable as LeafItem<IDomainFile>).Item : null; } }
+        public bool ProjectSelected { get { return m_selectedEditable is ProjectItem; } }
 
         private float IndexToY(int i)
         {
@@ -317,13 +317,35 @@ namespace ConversationEditor
             }
             if (e.Button == MouseButtons.Right)
             {
+                m_cleanContextMenu();
+                m_cleanContextMenu = () => { };
                 saveToolStripMenuItem.Visible = m_selectedItem.CanSave;
                 removeToolStripMenuItem.Visible = m_selectedItem.CanRemove;
                 deleteToolStripMenuItem.Visible = m_selectedItem.CanDelete;
                 makeCurrentLocalizationMenuItem.Visible = m_selectedItem is RealLeafItem<LocalizationFile, ILocalizationFile>;
+                playMenuItem.Visible = m_selectedItem is RealLeafItem<AudioFile, IAudioFile>;
                 m_contextMenu.Show(PointToScreen(e.Location));
+
+                //import
+                //import
+                //makecurrent
+                //play
+                //foreach (var a in m_contextMenuItemsFactory.ConversationContextMenuItems(m_selectedLocalizer.Item.Localize)) //TODO: Fix localization
+                foreach (var a in m_contextMenuItemsFactory.ConversationContextMenuItems(a => ""))
+                {
+                    var con = m_selectedItem as ConversationItem;
+                    var i = new ToolStripMenuItem(a.Name);
+                    i.Click += (x, y) => a.Execute(con.Item);
+                    m_contextMenu.Items.Insert(m_contextMenu.Items.IndexOf(importConversationToolStripMenuItem), i);
+                    var temp = m_cleanContextMenu;
+                    m_cleanContextMenu = () => { temp(); m_contextMenu.Items.Remove(i); };
+                }
             }
         }
+
+        Action m_cleanContextMenu = () => { };
+
+        public IProjectExplorerContextMenuItemsFactory m_contextMenuItemsFactory;
 
         Item m_renamingItem = null;
 
@@ -749,6 +771,14 @@ namespace ConversationEditor
                 audioItem.Item.Play();
         }
 
+        private void ExploreBestFolder(DirectoryInfo folder)
+        {
+            if (folder.Exists)
+                Process.Start("explorer", "/root,\"" + folder.FullName + "\"");
+            else
+                ExploreBestFolder(folder.Parent);
+        }
+
         private void showInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var leaf = m_selectedItem as LeafItem;
@@ -759,14 +789,14 @@ namespace ConversationEditor
                 if (leaf.File.Exists)
                     Process.Start("explorer", "/select,\"" + leaf.File.FullName + "\"");
                 else
-                    Process.Start("explorer", "/root,\"" + leaf.File.Parent.FullName + "\"");
+                    ExploreBestFolder(leaf.File.Parent);
             }
             else if (project != null)
             {
                 Process.Start("explorer", "/select,\"" + project.File.FullName + "\"");
             }
             else if (folder != null)
-                Process.Start("explorer", "/root,\"" + folder.Path.FullName + "\"");
+                ExploreBestFolder(folder.Path);
         }
 
         private void makeCurrentLocalizationMenuItemClicked(object sender, EventArgs e)
@@ -852,11 +882,11 @@ namespace ConversationEditor
             //Audio files are not saveable
 
             if (conversationItem != null)
-                conversationItem.Item.File.Save();
+                conversationItem.Item.File.Writable.Save();
             else if (localizationItem != null)
-                localizationItem.Item.File.Save();
+                localizationItem.Item.File.Writable.Save();
             else if (domainItem != null)
-                domainItem.Item.File.Save();
+                domainItem.Item.File.Writable.Save();
             else
                 throw new Exception("attempted to save a file that isn't saveable from the project explorer menu");
         }

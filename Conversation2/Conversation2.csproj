@@ -44,6 +44,7 @@
     <Compile Include="ConfigureResult.cs" />
     <Compile Include="ConversationError.cs" />
     <Compile Include="ConversationNode.cs" />
+    <Compile Include="Customization\IConfigNodeDefinitionFactory.cs" />
     <Compile Include="Domain\ConnectorDefinitionData.cs" />
     <Compile Include="Domain\DecimalData.cs" />
     <Compile Include="Domain\DomainData.cs" />

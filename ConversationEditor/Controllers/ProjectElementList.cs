@@ -22,6 +22,9 @@ namespace ConversationEditor
         IEnumerable<TInterface> Load(IEnumerable<FileInfo> fileInfos);
         void Reload();
         TReal New(DirectoryInfo path);
+        /// <summary>
+        /// Remove the 'element' from the collection. Provided either 'force' is true or element.File.CanClose is true
+        /// </summary>
         void Remove(TInterface element, bool force);
         void Delete(TInterface element);
         bool FileLocationOk(string path);
@@ -260,11 +263,19 @@ namespace ConversationEditor
             return conversation;
         }
 
+        public static bool PromptUsedAudioRemoved()
+        {
+            var result = MessageBox.Show("This audio is currently referenced by nodes in loaded conversations. "+
+                                         "It will be automatically reloaded next time the project is loaded unless those references are removed", "Ok to remove file?", MessageBoxButtons.OKCancel);
+            return result == DialogResult.OK;
+        }
+
         public void Remove(TInterface element, bool force)
         {
             if (force || element.File.CanClose())
             {
-                if (force || element.CanRemove(GraphFile.PromptNodeDeletion))
+                Func<bool> prompt = element is IDomainFile ? (Func<bool>)GraphFile.PromptFileRemoved : (Func<bool>)PromptUsedAudioRemoved;
+                if (force || element.CanRemove(prompt))
                 {
                     m_data.Remove(element);
                     Removed.Execute(element);
@@ -275,7 +286,8 @@ namespace ConversationEditor
 
         public void Delete(TInterface element)
         {
-            if (element.CanRemove(GraphFile.PromptNodeDeletion))
+            Func<bool> prompt = element is IDomainFile ? (Func<bool>)GraphFile.PromptFileRemoved : (Func<bool>)PromptUsedAudioRemoved;
+            if (element.CanRemove(prompt))
             {
                 try
                 {

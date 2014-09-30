@@ -166,6 +166,10 @@ namespace Utilities
             {
                 m_textBox.KeyDown(args);
             }
+            else if ( args.KeyCode.IsSet(Keys.Enter))
+            {
+                m_textBox.KeyDown(args);
+            }
         }
 
         public void SetupCallbacks()

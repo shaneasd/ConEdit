@@ -26,9 +26,11 @@ namespace ConversationEditor
         Config m_config;
         INodeFactory m_conversationNodeFactory;
         INodeFactory m_domainNodeFactory;
+        INodeFactory m_projectNodeFactory;
         ProjectMenuController m_projectMenuController;
 
         ConversationEditorControl m_domainEditor2 = new ConversationEditorControl() { Dock = DockStyle.Fill, ShowGrid = true };
+        ConversationEditorControl m_projectGraphEditor = new ConversationEditorControl() { Dock = DockStyle.Fill, ShowGrid = true };
 
         IGraphEditorControl<ConversationNode> m_currentEditor = null;
         IGraphEditorControl<ConversationNode> CurrentEditor
@@ -58,6 +60,10 @@ namespace ConversationEditor
                         findAndReplaceToolStripMenuItem.Visible = true;
                         findAndReplaceToolStripMenuItem.Text = "Find in Domain";
                     }
+                    else if (value == m_projectGraphEditor)
+                    {
+                        findAndReplaceToolStripMenuItem.Visible = false;
+                    }
                     else
                     {
                         findAndReplaceToolStripMenuItem.Visible = false;
@@ -76,6 +82,8 @@ namespace ConversationEditor
                     return m_domainEditor2.CurrentFile;
                 else if (CurrentEditor == conversationEditorControl1)
                     return conversationEditorControl1.CurrentFile;
+                else if (CurrentEditor == m_projectGraphEditor)
+                    return m_projectGraphEditor.CurrentFile;
                 else
                     return DummyConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>.Instance;
             }
@@ -129,12 +137,15 @@ namespace ConversationEditor
             errorList1.BackColor = ColorScheme.Background;
 
             CurrentEditor = null;
+
+            projectExplorer.m_contextMenuItemsFactory = new WrapperContextMenuItemsFactory(()=>m_config.Plugins.UnfilteredAssemblies);
         }
 
         private void InitialiseNodeFactory()
         {
             m_conversationNodeFactory = new NodeFactory(m_config.ConversationNodeRenderers, guid => m_projectMenuController.CurrentProject.Localizer.Localize(guid));
             m_domainNodeFactory = new NodeFactory(m_config.DomainNodeRenderers, guid => m_projectMenuController.CurrentProject.Localizer.Localize(guid));
+            m_projectNodeFactory = new NodeFactory(m_config.ProjectNodeRenderers, guid => m_projectMenuController.CurrentProject.Localizer.Localize(guid));
         }
 
         private void InitialiseOptionsMenu()
@@ -160,6 +171,12 @@ namespace ConversationEditor
                 m_domainEditor2.SelectNode(node);
                 CurrentEditor = m_domainEditor2;
             }
+            else if (object.Equals(file.File, m_projectMenuController.CurrentProject.File))
+            {
+                m_projectGraphEditor.CurrentFile = file; //TODO:Shouldn't be necessary
+                m_projectGraphEditor.SelectNode(node);
+                CurrentEditor = m_projectGraphEditor;
+            }
             else
                 return false;
             return true;
@@ -180,20 +197,40 @@ namespace ConversationEditor
             return result;
         }
 
+        private IEnumerable<IAudioProviderCustomization> PluginAudioProviderCustomizations()
+        {
+            List<IAudioProviderCustomization> result = new List<IAudioProviderCustomization>();
+            foreach (var pa in m_config.Plugins.UnfilteredAssemblies)
+            {
+                var factories = pa.Assembly.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(IAudioProviderCustomization)));
+                foreach (var factory in factories)
+                {
+                    IAudioProviderCustomization obj = factory.GetConstructor(Type.EmptyTypes).Invoke(new object[0]) as IAudioProviderCustomization;
+                    result.Add(obj);
+                }
+            }
+            return result;
+        }
+
         private void InitialiseConversationEditor()
         {
-            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_conversationNodeFactory, m_projectMenuController.CurrentProject.ConversationDataSource, conversationEditorControl1, new GraphContextMenuItems(FindReferences, Edit));
+            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_conversationNodeFactory, m_projectMenuController.CurrentProject.ConversationDataSource, conversationEditorControl1, new GraphContextMenuItems(FindReferences));
         }
 
         private void InitializeDomainEditor()
         {
-            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_domainNodeFactory, m_projectMenuController.CurrentProject.DomainDataSource, m_domainEditor2, new DomainContextMenuItems(FindReferences, Edit));
+            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_domainNodeFactory, m_projectMenuController.CurrentProject.DomainDataSource, m_domainEditor2, new DomainContextMenuItems(FindReferences));
         }
 
-        private void InitializeGraphEditor(ConversationCopyPasteController copyPasteController, INodeFactory nodefactory, IDataSource datasource, GraphEditorControl<ConversationNode> editor, GraphContextMenuItems basicItems)
+        private void InitializeProjectEditor()
+        {
+            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_projectNodeFactory, ProjectDomain.Instance, m_projectGraphEditor, new ProjectContextMenuItems(m_projectMenuController.CurrentProject));
+        }
+
+        private void InitializeGraphEditor(ConversationCopyPasteController copyPasteController, INodeFactory nodefactory, IDataSource datasource, GraphEditorControl<ConversationNode> editor, IMenuActionFactory<ConversationNode> basicItems)
         {
             editor.Initialise(Edit, nodefactory, copyPasteController, FindReferences);
-            editor.SetContext(datasource, m_projectMenuController.CurrentProject.Localizer);
+            editor.SetContext(datasource, m_projectMenuController.CurrentProject.Localizer, m_projectMenuController.CurrentProject);
             editor.m_contextMenu.Opening += () => editor.RefreshContextMenu(basicItems.Only().Concat(PluginContextMenuFactories()));
 
             Action updateGraphViewFromConfig = () =>
@@ -202,6 +239,8 @@ namespace ConversationEditor
                 editor.ShowGrid = m_config.GraphView.ShowGrid;
                 editor.ShowIDs = m_config.GraphView.ShowIDs;
                 editor.Colors = m_config.ColorScheme.Colors;
+                editor.MinorGridSpacing = m_config.GraphView.MinorGridSpacing;
+                editor.MajorGridSpacing = m_config.GraphView.MajorGridSpacing;
             };
             updateGraphViewFromConfig();
             m_config.GraphView.ValueChanged += updateGraphViewFromConfig;
@@ -229,20 +268,27 @@ namespace ConversationEditor
             {
                 if (m_projectMenuController != null) //As we add items initially one of them will be selected. At the time, m_projectMenuController is not yet initialized
                 {
-                    if (m_projectMenuController.CurrentProject.ReloadConversationDatasourceIfRequired())
+                    if (projectExplorer.SelectedConversation != null)
                     {
-                        conversationEditorControl1.SetContext(m_projectMenuController.CurrentProject.ConversationDataSource, m_projectMenuController.CurrentProject.Localizer);
-                        conversationEditorControl1.UpdateKeyMappings();
+                        if (m_projectMenuController.CurrentProject.ReloadConversationDatasourceIfRequired())
+                        {
+                            conversationEditorControl1.SetContext(m_projectMenuController.CurrentProject.ConversationDataSource, m_projectMenuController.CurrentProject.Localizer, m_projectMenuController.CurrentProject);
+                            conversationEditorControl1.UpdateKeyMappings();
+                        }
                     }
                 }
 
                 conversationEditorControl1.CurrentFile = projectExplorer.SelectedConversation;
                 m_domainEditor2.CurrentFile = projectExplorer.CurrentDomainFile;
+                //m_projectGraphEditor.CurrentFile = m_projectMenuController.CurrentProject; //TODO:
 
                 if (projectExplorer.SelectedConversation != null && projectExplorer.SelectedConversation.File.Exists)
                     CurrentEditor = conversationEditorControl1;
                 else if (projectExplorer.CurrentDomainFile != null && projectExplorer.CurrentDomainFile.File.Exists)
                     CurrentEditor = m_domainEditor2;
+                else if (projectExplorer.ProjectSelected)
+                    CurrentEditor = m_projectGraphEditor;
+
                 //TODO: What happens if you select an item for which there is no editor?
                 //else
                 //CurrentEditor = null;
@@ -295,13 +341,17 @@ namespace ConversationEditor
             Action<IProject> projectChanged = null;
             projectChanged = (project) =>
             {
-                conversationEditorControl1.SetContext(project.ConversationDataSource, project.Localizer);
+                conversationEditorControl1.SetContext(project.ConversationDataSource, project.Localizer, project);
                 conversationEditorControl1.UpdateKeyMappings();
                 conversationEditorControl1.CurrentFile = null;
 
-                m_domainEditor2.SetContext(project.DomainDataSource, project.Localizer);
+                m_domainEditor2.SetContext(project.DomainDataSource, project.Localizer, project);
                 m_domainEditor2.UpdateKeyMappings();
                 m_domainEditor2.CurrentFile = null;
+
+                //TODO: Shouldn't have to do any of this
+                //m_projectGraphEditor.SetContext(ProjectDomain.Instance, project.Localizer);
+                //m_projectGraphEditor.UpdateKeyMappings();
 
                 projectExplorer.SetProject(project);
                 Text = project.File.Exists ? project.File.File.Name : "No Project Open";
@@ -311,7 +361,7 @@ namespace ConversationEditor
                 project.File.Moved += (from, to) => Text = project.File.File.Name;
             };
 
-            m_projectMenuController = new ProjectMenuController(m_config.ProjectHistory, m_conversationNodeFactory, m_domainNodeFactory, projectExplorer, projectChanged, a => Invoke(a), m_config.Plugins);
+            m_projectMenuController = new ProjectMenuController(m_config.ProjectHistory, m_conversationNodeFactory, m_domainNodeFactory, projectExplorer, projectChanged, a => Invoke(a), m_config.Plugins, GetAudioCustomizer);
 
             this.projectSaveMenuItem.Click += (a, b) => m_projectMenuController.Save();
             this.projectNewMenuItem.Click += (a, b) => m_projectMenuController.New();
@@ -361,7 +411,7 @@ namespace ConversationEditor
             //CurrentFile = m_projectMenuController.CurrentProject.Files.FirstOrDefault();
         }
 
-        private ConfigureResult Edit(IEditable data)
+        private ConfigureResult Edit(IEditable data, AudioGenerationParameters audioContext)
         {
             if (data is UnknownEditable)
             {
@@ -369,7 +419,7 @@ namespace ConversationEditor
                 return ConfigureResult.NotApplicable;
             }
             else
-                return m_config.NodeEditors[data.NodeTypeID].GetEditorFactory().Edit(data, m_config.ParameterEditors, m_projectMenuController.CurrentProject.Localizer, m_projectMenuController.CurrentProject.AudioProvider);
+                return m_config.NodeEditors[data.NodeTypeID].GetEditorFactory().Edit(data, audioContext, m_config.ParameterEditors, m_projectMenuController.CurrentProject.Localizer, m_projectMenuController.CurrentProject.AudioProvider);
         }
 
         private void errorCheckToolStripMenuItem_Click(object sender, EventArgs e)
@@ -601,6 +651,34 @@ namespace ConversationEditor
                 {
                     m_config.ColorScheme.ConnectorColor = d.Color;
                 }
+            }
+        }
+
+        private IAudioProviderCustomization GetAudioCustomizer()
+        {
+            var customizations = AudioProvider.DefaultCustomization.Only().Concat(PluginAudioProviderCustomizations()).ToList();
+            return customizations.FirstOrDefault(c => c.Name == m_config.AudioCustomization.Value) ?? AudioProvider.DefaultCustomization;
+        }
+
+        private void audioNamingMethodToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            var customizations = AudioProvider.DefaultCustomization.Only().Concat(PluginAudioProviderCustomizations()).ToList();
+            var config = GetAudioCustomizer();
+            audioNamingMethodToolStripMenuItem.DropDownItems.Clear();
+            foreach (var customization in customizations)
+            {
+                var c = customization;
+                ToolStripMenuItem item = new ToolStripMenuItem(customization.Name);
+                item.CheckState = customization.GetType() == config.GetType() ? CheckState.Checked : CheckState.Unchecked;
+                item.CheckOnClick = true;
+                item.CheckedChanged += (a, b) =>
+                    {
+                        foreach (var i in audioNamingMethodToolStripMenuItem.DropDownItems)
+                            if (i != item)
+                                item.CheckState = CheckState.Unchecked;
+                        m_config.AudioCustomization.Value = c.Name;
+                    };
+                audioNamingMethodToolStripMenuItem.DropDownItems.Add(item);
             }
         }
     }

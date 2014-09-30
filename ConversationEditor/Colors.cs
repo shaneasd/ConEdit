@@ -32,6 +32,7 @@ namespace ConversationEditor
         public static readonly Color GroupBackgroundSelected = Color.FromArgb(92, Color.White);
         public static readonly Color GroupBackgroundUnselected = Color.FromArgb(51, Color.White);
         public static readonly Color Grid = Color.FromArgb(42, 42, 42);
+        public static readonly Color MinorGrid = Color.FromArgb(49, 49, 49);
         public Color Connectors { get { return m_connectorColor; } }
         //public static readonly Color Connectors = Color.Black;
         public static readonly Color SelectedConnectors = Foreground;

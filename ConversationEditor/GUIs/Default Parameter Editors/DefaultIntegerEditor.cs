@@ -34,9 +34,9 @@ namespace ConversationEditor
         }
 
         IIntegerParameter m_parameter;
-        public void Setup(IParameter parameter, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public void Setup(ParameterEditorSetupData data)
         {
-            m_parameter = parameter as IIntegerParameter;
+            m_parameter = data.Parameter as IIntegerParameter;
             m_numericUpDown.Minimum = m_parameter.Min;
             m_numericUpDown.Maximum = m_parameter.Max;
             m_numericUpDown.Value = m_parameter.Value;
@@ -47,7 +47,7 @@ namespace ConversationEditor
             get { return this; }
         }
 
-        public SimpleUndoPair? UpdateParameterAction()
+        public UpdateParameterData UpdateParameterAction()
         {
             return m_parameter.SetValueAction((int)m_numericUpDown.Value);
         }

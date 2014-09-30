@@ -53,11 +53,13 @@ namespace ConversationEditor
             m_parameters.Add(GraphView);
             m_parameters.Add(ConversationNodeRenderers);
             m_parameters.Add(DomainNodeRenderers);
+            m_parameters.Add(ProjectNodeRenderers);
             m_parameters.Add(NodeEditors);
             m_parameters.Add(Plugins);
             m_parameters.Add(ProjectHistory);
             m_parameters.Add(ExportPath);
             m_parameters.Add(ColorScheme);
+            m_parameters.Add(AudioCustomization);
 
             foreach (var p in m_parameters)
                 p.ValueChanged += Write;
@@ -69,11 +71,13 @@ namespace ConversationEditor
         public readonly GraphViewConfig GraphView = new GraphViewConfig();
         public readonly TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice> ConversationNodeRenderers = new TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice>("NodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultConversation(nodeType));
         public readonly TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice> DomainNodeRenderers = new TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice>("DomainNodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultDomain(nodeType));
+        public readonly TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice> ProjectNodeRenderers = new TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice>("ProjectNodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultDomain(nodeType));
         public readonly TypeMapConfig<ID<NodeTypeTemp>, NodeEditorChoice> NodeEditors = new TypeMapConfig<ID<NodeTypeTemp>, NodeEditorChoice>("NodeEditors", nodeType => nodeType.Serialized(), (a, t) => new NodeEditorChoice(a, t), nodeType => NodeEditorChoice.Default(nodeType));
         public readonly PluginsConfig Plugins = new PluginsConfig();
         public readonly ConfigParameterList<string> ProjectHistory = new ConfigParameterList<string>("ProjectHistory", () => new JustStringConfigParameter());
         public readonly ConfigParameterString ExportPath = new ConfigParameterString("ExportPath");
         public readonly ColorsConfig ColorScheme = new ColorsConfig();
+        public readonly ConfigParameterString AudioCustomization = new ConfigParameterString("AudioCustomization");
 
         string TryLoad(string file)
         {

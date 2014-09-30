@@ -28,11 +28,11 @@ namespace ConversationEditor
             cancelButton.ForeColor = ColorScheme.Foreground;
         }
 
-        public static ConfigureResult Edit(IEditable data, TypeMapConfig<ID<ParameterType>, ParameterEditorChoice> config, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public static ConfigureResult Edit(IEditable data, AudioGenerationParameters audioContext, TypeMapConfig<ID<ParameterType>, ParameterEditorChoice> config, LocalizationEngine localizer, IAudioProvider audioProvider)
         {
             using (Form f = new Form())
             {
-                NodeEditor editor = new NodeEditor(data, config, localizer, audioProvider);
+                NodeEditor editor = new NodeEditor(data, audioContext, config, localizer, audioProvider);
                 f.Text = editor.Title;
                 bool oked = false;
                 editor.Ok += () =>
@@ -61,11 +61,17 @@ namespace ConversationEditor
                     List<Action> redo = new List<Action>();
                     foreach (var e in editor.m_parameterEditors)
                     {
-                        SimpleUndoPair? actions = e.Item1.UpdateParameterAction();
+                        UpdateParameterData updateParameterData = e.Item1.UpdateParameterAction();
+                        SimpleUndoPair? actions = updateParameterData.Actions;
                         if (actions != null)
                         {
                             undo.Add(actions.Value.Undo);
                             redo.Add(actions.Value.Redo);
+                        }
+                        if (updateParameterData.Audio != null)
+                        {
+                            undo.Add(() => audioProvider.UpdateUsage(updateParameterData.Audio.Value));
+                            redo.Add(() => audioProvider.UpdateUsage(updateParameterData.Audio.Value));
                         }
                     }
                     if (undo.Any())
@@ -86,7 +92,7 @@ namespace ConversationEditor
 
         public string Title { get; private set; }
 
-        public NodeEditor(IEditable data, TypeMapConfig<ID<ParameterType>, ParameterEditorChoice> config, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public NodeEditor(IEditable data, AudioGenerationParameters audioContext, TypeMapConfig<ID<ParameterType>, ParameterEditorChoice> config, LocalizationEngine localizer, IAudioProvider audioProvider)
             : this()
         {
             m_data = data;
@@ -95,12 +101,13 @@ namespace ConversationEditor
             Title = m_data.Name;
             foreach (Parameter p in m_data.Parameters)
             {
+                var editorData = new ParameterEditorSetupData(p, localizer, audioProvider, audioContext);
                 if (p is UnknownParameter)
                 {
                     var unknown = p as UnknownParameter;
                     UnknownParameterEditor ed = null;
-                    ed = UnknownParameterEditor.Make(unknown, localizer, audioProvider, m_data.RemoveUnknownParameter(unknown), 
-                    ()=>
+                    ed = UnknownParameterEditor.Make(editorData, m_data.RemoveUnknownParameter(unknown),
+                    () =>
                     {
                         int row = tableLayoutPanel1.GetRow(ed);
                         tableLayoutPanel1.RowStyles[row].SizeType = SizeType.Absolute;
@@ -112,7 +119,7 @@ namespace ConversationEditor
                 else
                 {
                     var editorChoice = config[p.TypeId];
-                    AddParameter(p, editorChoice.MakeEditor(p, localizer, audioProvider));
+                    AddParameter(p, editorChoice.MakeEditor(editorData));
                 }
             }
 
@@ -180,10 +187,10 @@ namespace ConversationEditor
             return true;
         }
 
-        public override ConfigureResult Edit(IEditable node, TypeMapConfig<ID<ParameterType>, ParameterEditorChoice> config, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public override ConfigureResult Edit(IEditable node, AudioGenerationParameters audioContext, TypeMapConfig<ID<ParameterType>, ParameterEditorChoice> config, LocalizationEngine localizer, IAudioProvider audioProvider)
         {
             if (node.Parameters.Any())
-                return NodeEditor.Edit(node, config, localizer, audioProvider);
+                return NodeEditor.Edit(node, audioContext, config, localizer, audioProvider);
             else
                 return ConfigureResult.NotApplicable;
         }

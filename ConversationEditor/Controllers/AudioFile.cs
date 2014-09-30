@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using Utilities;
+using Conversation;
 
 namespace ConversationEditor
 {
@@ -16,11 +17,13 @@ namespace ConversationEditor
     {
         ReadonlyFileUnmonitored m_file;
         private AudioProvider m_provider;
+        private Audio m_audio;
 
         public AudioFile(System.IO.FileInfo file, AudioProvider provider)
         {
             m_provider = provider;
             m_file = new ReadonlyFileUnmonitored(file);
+            m_audio = new Audio(file.Name);
         }
 
         public ISaveableFile File
@@ -30,7 +33,10 @@ namespace ConversationEditor
 
         public bool CanRemove(Func<bool> prompt)
         {
-            return true; //TODO: prevent removing an audio file that is being used by a conversation
+            if (m_provider.UsedAudio().Contains(m_audio))
+                return prompt();
+            else
+                return true;
         }
 
         public void Removed()
@@ -64,16 +70,22 @@ namespace ConversationEditor
     public class MissingAudioFile : IAudioFile
     {
         private MissingFile m_file;
+        private AudioProvider m_provider;
+        private Audio m_audio;
 
-        public MissingAudioFile(FileInfo file)
+        public MissingAudioFile(FileInfo file, AudioProvider provider)
         {
             m_file = new MissingFile(file);
+            m_provider = provider;
+            m_audio = new Audio(file.Name);
         }
 
         bool IInProject.CanRemove(Func<bool> prompt)
         {
-            //Doesn't care
-            return true;
+            if (m_provider.UsedAudio().Contains(m_audio))
+                return prompt();
+            else
+                return true;
         }
 
         void IInProject.Removed()

@@ -103,7 +103,8 @@ namespace Conversation
             m_id = id;
             m_typeId = typeid;
             TryDeserialiseValue(value);
-            Corrupted = true;
+            if (value == null)
+                Corrupted = true; //Corrupt if null so editors don't get confused
         }
 
         public abstract string DisplayValue(Func<ID<LocalizedText>, string> localize);
@@ -128,12 +129,16 @@ namespace Conversation
             return !Corrupted;
         }
 
+        protected abstract void DecorruptFromNull();
+
         /// <summary>
         /// Only called on load so doesn't need to be undoable
         /// </summary>
         public void TryDecorrupt()
         {
             Corrupted = !DeserialiseValue(m_lastValueString);
+            if (Corrupted && m_lastValueString == null)
+                DecorruptFromNull();
         }
     }
 
@@ -169,14 +174,22 @@ namespace Conversation
             };
         }
 
+        string m_defaultValue = null;
+
         public Parameter(string name, ID<Parameter> id, ID<ParameterType> typeId, string defaultValue)
             : base(name, id, typeId, defaultValue)
         {
+            m_defaultValue = defaultValue;
         }
 
         public override string ToString()
         {
             throw new Exception("Dont call this");
+        }
+
+        protected override void DecorruptFromNull()
+        {
+            TryDeserialiseValue(m_defaultValue);
         }
     }
 }

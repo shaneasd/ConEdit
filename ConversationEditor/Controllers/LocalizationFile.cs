@@ -21,14 +21,27 @@ namespace ConversationEditor
     {
         public delegate bool ShouldSaveQuery(ID<LocalizedText> guid);
         private LocalizerData m_data;
+        SaveableFileExternalChangedSource m_file;
+        HashSet<object> m_changesLastSave = new HashSet<object>();
+        HashSet<object> m_currentChanges = new HashSet<object>();
+
+        private bool Changed()
+        {
+            return !m_changesLastSave.SetEquals(m_currentChanges);
+        }
+
+        private void Saved()
+        {
+            m_changesLastSave.Clear();
+            m_changesLastSave.UnionWith(m_currentChanges);
+        }
 
         private LocalizationFile(MemoryStream initialData, FileInfo path, LocalizerData data, ISerializer<LocalizerData> serializer)
         {
-            m_file = new SaveableFileNotUndoable(initialData, path, s => { serializer.Write(m_data, s); });
+            m_file = new SaveableFileExternalChangedSource(initialData, path, s => { serializer.Write(m_data, s); }, Changed, Saved);
             m_data = data;
         }
 
-        SaveableFileNotUndoable m_file;
         public ISaveableFile File { get { return m_file; } }
 
         internal static LocalizationFile MakeNew(DirectoryInfo directory, Func<string, ISerializer<LocalizerData>> serializer, Func<FileInfo, bool> pathOk)
@@ -44,9 +57,11 @@ namespace ConversationEditor
 
             LocalizerData data = new LocalizerData();
             using (var file = Util.LoadFileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+            {
                 file.Close();
+            }
             LocalizationFile result = new LocalizationFile(new MemoryStream(), path, data, serializer(path.FullName)); //Make a new localization file for an existing project
-            result.File.Save();
+            result.File.Writable.Save();
             return result;
         }
 
@@ -94,10 +109,21 @@ namespace ConversationEditor
         public SimpleUndoPair SetLocalizationAction(ID<LocalizedText> guid, string p)
         {
             Or<LocalizationElement, Null> oldValue = Or.Create(m_data.m_data.ContainsKey(guid), () => m_data.m_data[guid], Null.Func);
+            object change = new object();
             return new SimpleUndoPair
             {
-                Redo = () => { m_data.m_data[guid] = new LocalizationElement(DateTime.Now, p); m_file.Change(); }, //TODO: Should I bother making the file change undoable?
-                Undo = () => { oldValue.Do(a => m_data.m_data[guid] = a, b => m_data.m_data.Remove(guid)); m_file.Change(); },
+                Redo = () =>
+                {
+                    m_data.m_data[guid] = new LocalizationElement(DateTime.Now, p);
+                    m_currentChanges.Add(change);
+                    m_file.Change();
+                },
+                Undo = () =>
+                {
+                    oldValue.Do(a => m_data.m_data[guid] = a, b => m_data.m_data.Remove(guid));
+                    m_currentChanges.Remove(change);
+                    m_file.Change();
+                },
             };
         }
 

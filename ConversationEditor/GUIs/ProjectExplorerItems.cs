@@ -64,7 +64,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return m_target.Transformed(a => false, b => b.Changed);
+                    return m_target.Transformed(a => false, b => b.Writable == null || b.Writable.Changed);
                 }
             }
 
@@ -401,7 +401,7 @@ namespace ConversationEditor
             public override bool CanDelete { get { return false; } }
             public override bool CanRemove { get { return false; } }
 
-            public override bool CanSave { get { return Project.File.Writable; } }
+            public override bool CanSave { get { return Project.File.Writable != null; } }
         }
 
         private class FolderItem : ContainerItem

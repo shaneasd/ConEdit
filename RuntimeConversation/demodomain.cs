@@ -15,9 +15,138 @@ namespace MyNamespace.Types
     using System.Runtime.InteropServices;
     
     
+    [RuntimeConversation.TypeIDAttribute("2ac4cc58-7361-42b6-9937-25874c2a5319")]
+    public enum GameMode
+    {
+        
+        [RuntimeConversation.EnumValueIDAttribute("ee7875c8-6b8d-4794-bff4-667076270189")]
+        Survivor,
+        
+        [RuntimeConversation.EnumValueIDAttribute("51188fbf-4578-46f3-a174-554a2189a62e")]
+        Ghost,
+        
+        [RuntimeConversation.EnumValueIDAttribute("94f5ad40-a5a3-4be4-9a6f-5c5c0c18c060")]
+        Exfiltrate,
+        
+        [RuntimeConversation.EnumValueIDAttribute("ab1fc4ed-4a35-4333-8929-93ec1b66405a")]
+        Cleaner,
+        
+        [RuntimeConversation.EnumValueIDAttribute("9f63e8a3-d524-4a84-9a9f-26066b0c28c4")]
+        SmashAndGrab,
+        
+        [RuntimeConversation.EnumValueIDAttribute("fceb226e-ab52-469b-a8db-45d5d9f3e7b3")]
+        Story,
+    }
+    
+    [RuntimeConversation.TypeIDAttribute("712bbc30-1e41-4caf-8b65-0cdb36b34071")]
+    public enum DecimalFlag
+    {
+    }
+    
+    [RuntimeConversation.TypeIDAttribute("29bee9ca-90a4-4e72-a2b9-a482baff749d")]
+    public enum AnimationExpression
+    {
+        
+        [RuntimeConversation.EnumValueIDAttribute("3ee0b0dc-53c6-4095-8f06-082418d9402a")]
+        Sneer,
+        
+        [RuntimeConversation.EnumValueIDAttribute("f66c65fd-e96a-49af-a20d-1f7d32a90aaa")]
+        Bite_Lip,
+        
+        [RuntimeConversation.EnumValueIDAttribute("c571f27c-7f27-42a5-8486-1ec40f557a3f")]
+        Interest,
+        
+        [RuntimeConversation.EnumValueIDAttribute("1321d98e-4453-4b0a-8590-32e2c16075ff")]
+        Surprise,
+        
+        [RuntimeConversation.EnumValueIDAttribute("0ce707b3-35f3-4d57-91fc-6729ae0739ff")]
+        Laugh,
+        
+        [RuntimeConversation.EnumValueIDAttribute("a02fac0b-b816-43e0-ab2c-2c1f5555160f")]
+        Eyeroll,
+    }
+    
     [RuntimeConversation.TypeIDAttribute("c1292dd1-92bd-43a7-b444-d6db4c10d491")]
     public enum Character
     {
+        
+        [RuntimeConversation.EnumValueIDAttribute("d3786941-15c0-4118-85ff-ed5861cc4f21")]
+        MiloslavHoloubek,
+        
+        [RuntimeConversation.EnumValueIDAttribute("f5e791bb-755e-456f-bf12-d36972882a9b")]
+        SpencerCoates,
+        
+        [RuntimeConversation.EnumValueIDAttribute("91bc3b20-1a36-46bd-824b-c191c85fd851")]
+        EmmanuelAndreyev_,
+        
+        [RuntimeConversation.EnumValueIDAttribute("fb2b1a8b-19c6-4d4e-9299-0cf07ab10963")]
+        SecurityPhone,
+        
+        [RuntimeConversation.EnumValueIDAttribute("b9365342-f571-49b5-baec-2ea5b16d3648")]
+        LukasBecker,
+        
+        [RuntimeConversation.EnumValueIDAttribute("45b33905-c0ea-4111-bf1e-69fc4c7dfb08")]
+        DorofeiKotov,
+        
+        [RuntimeConversation.EnumValueIDAttribute("8179b575-cd03-47c6-9078-1608a7c8fa7d")]
+        MuratVoronov,
+        
+        [RuntimeConversation.EnumValueIDAttribute("b03359d0-f8b9-4441-b62f-fb05b822bdb5")]
+        DamianAnisimov,
+        
+        [RuntimeConversation.EnumValueIDAttribute("ba1c5931-c3c5-4989-8f89-b163922423cc")]
+        CelinaBorkowska,
+        
+        [RuntimeConversation.EnumValueIDAttribute("94754888-e338-4acc-8ee1-4ddfc6ef0869")]
+        PhilemonPirogov,
+        
+        [RuntimeConversation.EnumValueIDAttribute("ebf49e6b-072a-41b9-a3ae-78e39f7b6c56")]
+        RajmundNowak,
+        
+        [RuntimeConversation.EnumValueIDAttribute("0261c6dd-5ede-46bc-b4fb-c7f90100c01b")]
+        IsaacDemidov,
+        
+        [RuntimeConversation.EnumValueIDAttribute("d0a75648-302f-4c9a-b170-41c3fda31400")]
+        StefciaWojciechowska,
+        
+        [RuntimeConversation.EnumValueIDAttribute("b9733cb6-d3a6-4807-884a-36a594747602")]
+        ApolinaryCzarnecki,
+        
+        [RuntimeConversation.EnumValueIDAttribute("2b0d603f-31e5-420c-8f80-a00b5df09aa2")]
+        SerafinNowicki,
+        
+        [RuntimeConversation.EnumValueIDAttribute("6fc5679e-f4e0-4b96-855e-7689fb3309ea")]
+        JerzyKwiatkowski,
+        
+        [RuntimeConversation.EnumValueIDAttribute("63ee29d6-45d5-4a51-ab56-8a9f206342b0")]
+        BlasiusKapustin,
+        
+        [RuntimeConversation.EnumValueIDAttribute("20e28b72-4d98-4243-bc41-c96c9282aede")]
+        ArchiveGuard,
+        
+        [RuntimeConversation.EnumValueIDAttribute("3c5711cc-1d77-479d-a690-342ee3c50eb8")]
+        SecurityGuard,
+        
+        [RuntimeConversation.EnumValueIDAttribute("d2f28e41-b3c0-4dcc-a2b8-16854f5785fa")]
+        ElizabethAlix,
+        
+        [RuntimeConversation.EnumValueIDAttribute("2b41f85f-108c-4e06-baf9-26eb7b308b7f")]
+        Reinhardt,
+        
+        [RuntimeConversation.EnumValueIDAttribute("9e73e6ec-2280-4fd6-9e67-dc755c339681")]
+        Daniel,
+        
+        [RuntimeConversation.EnumValueIDAttribute("daa7eb14-970e-4c6c-82d9-ec7f0b64c5a6")]
+        Radko,
+        
+        [RuntimeConversation.EnumValueIDAttribute("346403bf-4335-402e-886e-6497a00cfa15")]
+        Sarah,
+        
+        [RuntimeConversation.EnumValueIDAttribute("824cc286-8d34-4c0b-93bc-0c466b128da5")]
+        Josiah,
+        
+        [RuntimeConversation.EnumValueIDAttribute("e15c0530-d6b3-4f75-9b8a-72a018b1e868")]
+        PoliceRadio,
         
         [RuntimeConversation.EnumValueIDAttribute("846d1c8c-93dd-4837-9ecf-79f54d88b3b7")]
         PoliceDanishStreet,
@@ -55,9 +184,6 @@ namespace MyNamespace.Types
         [RuntimeConversation.EnumValueIDAttribute("5e7b4ad1-acc3-4f3b-89b9-ee172cc5090d")]
         PoliceDanishB,
         
-        [RuntimeConversation.EnumValueIDAttribute("e15c0530-d6b3-4f75-9b8a-72a018b1e868")]
-        PoliceRadio,
-        
         [RuntimeConversation.EnumValueIDAttribute("42d950af-2f59-49d6-8a46-16a7bda6f94c")]
         PoliceDanish07,
         
@@ -75,22 +201,55 @@ namespace MyNamespace.Types
     public enum AnimationGesture
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("9fae3573-620d-4a7c-bcec-c571f890b168")]
+        [RuntimeConversation.EnumValueIDAttribute("c5ddc2fc-b297-4ee6-8f1d-0384667f302e")]
+        Knockout,
+        
+        [RuntimeConversation.EnumValueIDAttribute("94cc9a34-a514-481c-981c-26c91506d2bd")]
+        Woah,
+        
+        [RuntimeConversation.EnumValueIDAttribute("66d1e3c7-4a82-4d63-8097-8678bb8e3555")]
         Unsure,
         
         [RuntimeConversation.EnumValueIDAttribute("cb40eaf5-4971-4a89-ac15-1ebee9013854")]
-        Snarl,
+        Head_Nod,
+        
+        [RuntimeConversation.EnumValueIDAttribute("1b47a478-0268-4f9f-8351-f8d73730d908")]
+        Head_Shake,
         
         [RuntimeConversation.EnumValueIDAttribute("6b301d70-6d47-4788-a421-1de9bf8e8e57")]
         Laugh,
         
-        [RuntimeConversation.EnumValueIDAttribute("1b47a478-0268-4f9f-8351-f8d73730d908")]
-        Angry,
+        [RuntimeConversation.EnumValueIDAttribute("9fae3573-620d-4a7c-bcec-c571f890b168")]
+        Shrug,
+        
+        [RuntimeConversation.EnumValueIDAttribute("9a1b228d-a4ba-4652-9a1d-4f7c83180f0d")]
+        Take,
+        
+        [RuntimeConversation.EnumValueIDAttribute("8667456b-9cf9-47d8-a176-5a3325f7e834")]
+        Give,
+        
+        [RuntimeConversation.EnumValueIDAttribute("74bf3c46-2d5b-463f-95de-f3ffd2f66e6e")]
+        Point,
     }
     
     [RuntimeConversation.TypeIDAttribute("baecdea6-4173-46d8-844e-4f45b7498e09")]
     public enum AnimationAttitude
     {
+        
+        [RuntimeConversation.EnumValueIDAttribute("6e83c269-93de-4605-b9eb-9f788c7dcf92")]
+        Phone,
+        
+        [RuntimeConversation.EnumValueIDAttribute("aca46b9c-aa20-40b8-adcc-5d5007a6c482")]
+        Surrender,
+        
+        [RuntimeConversation.EnumValueIDAttribute("c0913d77-a506-48cd-b573-3f22bbf15cae")]
+        Gunpoint,
+        
+        [RuntimeConversation.EnumValueIDAttribute("5b789b51-af8c-4b15-900d-1e1b54eb85c5")]
+        Interested,
+        
+        [RuntimeConversation.EnumValueIDAttribute("7136834a-def9-4830-8baa-78610961064c")]
+        Radio,
         
         [RuntimeConversation.EnumValueIDAttribute("418fd464-e4c6-48f8-ab3b-461a1e7d303b")]
         Neutral,
@@ -100,49 +259,49 @@ namespace MyNamespace.Types
         
         [RuntimeConversation.EnumValueIDAttribute("3e5aa76c-debb-4937-95d8-5d3ac5905ff5")]
         Aggressive,
-        
-        [RuntimeConversation.EnumValueIDAttribute("5b789b51-af8c-4b15-900d-1e1b54eb85c5")]
-        Interested,
     }
     
     [RuntimeConversation.TypeIDAttribute("84611c39-a6ed-420a-a10b-9c339a2f2017")]
     public enum AnimationEmotion
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("8bfd402f-0489-4262-80c1-2be9239716cc")]
-        Neutral,
+        [RuntimeConversation.EnumValueIDAttribute("4e22cda9-2155-4a12-b086-381cf1ddf5c4")]
+        Scared,
         
         [RuntimeConversation.EnumValueIDAttribute("74aa2051-de8a-486a-8d0e-d2d60c99a2d6")]
         Pleased,
         
-        [RuntimeConversation.EnumValueIDAttribute("882510f3-d572-4997-817d-8380eb4de902")]
-        Contemplative,
-        
         [RuntimeConversation.EnumValueIDAttribute("6449be72-9e59-4ae8-94ab-904f10c2a123")]
         Nervous,
         
-        [RuntimeConversation.EnumValueIDAttribute("4e22cda9-2155-4a12-b086-381cf1ddf5c4")]
-        Scared,
-        
-        [RuntimeConversation.EnumValueIDAttribute("f7c9d1b2-d968-43f4-85f4-6bc812699361")]
-        Angry,
+        [RuntimeConversation.EnumValueIDAttribute("882510f3-d572-4997-817d-8380eb4de902")]
+        Contemplative,
         
         [RuntimeConversation.EnumValueIDAttribute("be16963f-dfa0-47a4-9f8e-8555aeccf243")]
         Annoyed,
         
+        [RuntimeConversation.EnumValueIDAttribute("f7c9d1b2-d968-43f4-85f4-6bc812699361")]
+        Angry,
+        
         [RuntimeConversation.EnumValueIDAttribute("20125ed8-90e9-4a9f-89e5-1b4b0abd7468")]
         Sarcastic,
+        
+        [RuntimeConversation.EnumValueIDAttribute("8bfd402f-0489-4262-80c1-2be9239716cc")]
+        Neutral,
     }
     
     [RuntimeConversation.TypeIDAttribute("16ebf380-6464-4dc1-b957-3ff5e32535f7")]
     public enum BooleanFlag
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("82ea8086-f523-408a-a88c-de872dff7687")]
-        Met_Bob,
+        [RuntimeConversation.EnumValueIDAttribute("31c05575-54b7-484e-b413-654853ce8301")]
+        WenZhi_Dead,
         
-        [RuntimeConversation.EnumValueIDAttribute("0ad076e0-41e4-4e6b-b5c8-fd64df2bd806")]
-        AntonDeJong_Dead,
+        [RuntimeConversation.EnumValueIDAttribute("f90b679a-6bf9-4005-82b3-8f3250ffbdee")]
+        Copenhagen_FinansministerietCamerasDown,
+        
+        [RuntimeConversation.EnumValueIDAttribute("9ca68a50-96b8-4bd2-8ac0-30c1aa2ed6b5")]
+        SecurityRoomClear,
         
         [RuntimeConversation.EnumValueIDAttribute("cadd864e-9298-4889-9916-91847f6a4c3b")]
         RichardBaxter_Dead,
@@ -152,8 +311,17 @@ namespace MyNamespace.Types
     public enum IntegerFlag
     {
         
+        [RuntimeConversation.EnumValueIDAttribute("e1447051-1368-4da8-81df-88203bf90771")]
+        PlayerFootprint,
+        
+        [RuntimeConversation.EnumValueIDAttribute("e6a6caa5-58c1-4da5-8d31-e47f843a9f3e")]
+        CharacterRandomiser,
+        
+        [RuntimeConversation.EnumValueIDAttribute("43e4a01d-0997-4bff-9120-fd0ff54f03b7")]
+        PressurePointRandomiser,
+        
         [RuntimeConversation.EnumValueIDAttribute("ca066421-bfa3-40bc-8e0a-03c819efca8d")]
-        Player_Kills,
+        PlayerKills,
     }
     
     [RuntimeConversation.TypeIDAttribute("ebfa534c-c036-407c-9c5f-4e63698dde87")]
@@ -429,11 +597,6 @@ public static implicit operator System.Decimal(Percentage value) { return value.
         }
     }
     
-    [RuntimeConversation.TypeIDAttribute("d1d20f40-f63d-4465-acce-fcb33279c92e")]
-    public enum Jump_IDs
-    {
-    }
-    
     [RuntimeConversation.TypeIDAttribute("40f345e0-beef-43fc-a59a-a96c8c289139")]
     public enum LocalVars
     {
@@ -442,8 +605,213 @@ public static implicit operator System.Decimal(Percentage value) { return value.
     public class TypeDeserializer : RuntimeConversation.TypeDeserializerBase
     {
         
+        public static void Deserialize(out GameMode a, string value)
+        {
+            if ("ee7875c8-6b8d-4794-bff4-667076270189".Equals(value))
+            {
+                a = GameMode.Survivor;
+                return;
+            }
+            if ("51188fbf-4578-46f3-a174-554a2189a62e".Equals(value))
+            {
+                a = GameMode.Ghost;
+                return;
+            }
+            if ("94f5ad40-a5a3-4be4-9a6f-5c5c0c18c060".Equals(value))
+            {
+                a = GameMode.Exfiltrate;
+                return;
+            }
+            if ("ab1fc4ed-4a35-4333-8929-93ec1b66405a".Equals(value))
+            {
+                a = GameMode.Cleaner;
+                return;
+            }
+            if ("9f63e8a3-d524-4a84-9a9f-26066b0c28c4".Equals(value))
+            {
+                a = GameMode.SmashAndGrab;
+                return;
+            }
+            if ("fceb226e-ab52-469b-a8db-45d5d9f3e7b3".Equals(value))
+            {
+                a = GameMode.Story;
+                return;
+            }
+            a = 0;
+        }
+        
+        public static void Deserialize(out DecimalFlag a, string value)
+        {
+            a = 0;
+        }
+        
+        public static void Deserialize(out AnimationExpression a, string value)
+        {
+            if ("3ee0b0dc-53c6-4095-8f06-082418d9402a".Equals(value))
+            {
+                a = AnimationExpression.Sneer;
+                return;
+            }
+            if ("f66c65fd-e96a-49af-a20d-1f7d32a90aaa".Equals(value))
+            {
+                a = AnimationExpression.Bite_Lip;
+                return;
+            }
+            if ("c571f27c-7f27-42a5-8486-1ec40f557a3f".Equals(value))
+            {
+                a = AnimationExpression.Interest;
+                return;
+            }
+            if ("1321d98e-4453-4b0a-8590-32e2c16075ff".Equals(value))
+            {
+                a = AnimationExpression.Surprise;
+                return;
+            }
+            if ("0ce707b3-35f3-4d57-91fc-6729ae0739ff".Equals(value))
+            {
+                a = AnimationExpression.Laugh;
+                return;
+            }
+            if ("a02fac0b-b816-43e0-ab2c-2c1f5555160f".Equals(value))
+            {
+                a = AnimationExpression.Eyeroll;
+                return;
+            }
+            a = 0;
+        }
+        
         public static void Deserialize(out Character a, string value)
         {
+            if ("d3786941-15c0-4118-85ff-ed5861cc4f21".Equals(value))
+            {
+                a = Character.MiloslavHoloubek;
+                return;
+            }
+            if ("f5e791bb-755e-456f-bf12-d36972882a9b".Equals(value))
+            {
+                a = Character.SpencerCoates;
+                return;
+            }
+            if ("91bc3b20-1a36-46bd-824b-c191c85fd851".Equals(value))
+            {
+                a = Character.EmmanuelAndreyev_;
+                return;
+            }
+            if ("fb2b1a8b-19c6-4d4e-9299-0cf07ab10963".Equals(value))
+            {
+                a = Character.SecurityPhone;
+                return;
+            }
+            if ("b9365342-f571-49b5-baec-2ea5b16d3648".Equals(value))
+            {
+                a = Character.LukasBecker;
+                return;
+            }
+            if ("45b33905-c0ea-4111-bf1e-69fc4c7dfb08".Equals(value))
+            {
+                a = Character.DorofeiKotov;
+                return;
+            }
+            if ("8179b575-cd03-47c6-9078-1608a7c8fa7d".Equals(value))
+            {
+                a = Character.MuratVoronov;
+                return;
+            }
+            if ("b03359d0-f8b9-4441-b62f-fb05b822bdb5".Equals(value))
+            {
+                a = Character.DamianAnisimov;
+                return;
+            }
+            if ("ba1c5931-c3c5-4989-8f89-b163922423cc".Equals(value))
+            {
+                a = Character.CelinaBorkowska;
+                return;
+            }
+            if ("94754888-e338-4acc-8ee1-4ddfc6ef0869".Equals(value))
+            {
+                a = Character.PhilemonPirogov;
+                return;
+            }
+            if ("ebf49e6b-072a-41b9-a3ae-78e39f7b6c56".Equals(value))
+            {
+                a = Character.RajmundNowak;
+                return;
+            }
+            if ("0261c6dd-5ede-46bc-b4fb-c7f90100c01b".Equals(value))
+            {
+                a = Character.IsaacDemidov;
+                return;
+            }
+            if ("d0a75648-302f-4c9a-b170-41c3fda31400".Equals(value))
+            {
+                a = Character.StefciaWojciechowska;
+                return;
+            }
+            if ("b9733cb6-d3a6-4807-884a-36a594747602".Equals(value))
+            {
+                a = Character.ApolinaryCzarnecki;
+                return;
+            }
+            if ("2b0d603f-31e5-420c-8f80-a00b5df09aa2".Equals(value))
+            {
+                a = Character.SerafinNowicki;
+                return;
+            }
+            if ("6fc5679e-f4e0-4b96-855e-7689fb3309ea".Equals(value))
+            {
+                a = Character.JerzyKwiatkowski;
+                return;
+            }
+            if ("63ee29d6-45d5-4a51-ab56-8a9f206342b0".Equals(value))
+            {
+                a = Character.BlasiusKapustin;
+                return;
+            }
+            if ("20e28b72-4d98-4243-bc41-c96c9282aede".Equals(value))
+            {
+                a = Character.ArchiveGuard;
+                return;
+            }
+            if ("3c5711cc-1d77-479d-a690-342ee3c50eb8".Equals(value))
+            {
+                a = Character.SecurityGuard;
+                return;
+            }
+            if ("d2f28e41-b3c0-4dcc-a2b8-16854f5785fa".Equals(value))
+            {
+                a = Character.ElizabethAlix;
+                return;
+            }
+            if ("2b41f85f-108c-4e06-baf9-26eb7b308b7f".Equals(value))
+            {
+                a = Character.Reinhardt;
+                return;
+            }
+            if ("9e73e6ec-2280-4fd6-9e67-dc755c339681".Equals(value))
+            {
+                a = Character.Daniel;
+                return;
+            }
+            if ("daa7eb14-970e-4c6c-82d9-ec7f0b64c5a6".Equals(value))
+            {
+                a = Character.Radko;
+                return;
+            }
+            if ("346403bf-4335-402e-886e-6497a00cfa15".Equals(value))
+            {
+                a = Character.Sarah;
+                return;
+            }
+            if ("824cc286-8d34-4c0b-93bc-0c466b128da5".Equals(value))
+            {
+                a = Character.Josiah;
+                return;
+            }
+            if ("e15c0530-d6b3-4f75-9b8a-72a018b1e868".Equals(value))
+            {
+                a = Character.PoliceRadio;
+                return;
+            }
             if ("846d1c8c-93dd-4837-9ecf-79f54d88b3b7".Equals(value))
             {
                 a = Character.PoliceDanishStreet;
@@ -504,11 +872,6 @@ public static implicit operator System.Decimal(Percentage value) { return value.
                 a = Character.PoliceDanishB;
                 return;
             }
-            if ("e15c0530-d6b3-4f75-9b8a-72a018b1e868".Equals(value))
-            {
-                a = Character.PoliceRadio;
-                return;
-            }
             if ("42d950af-2f59-49d6-8a46-16a7bda6f94c".Equals(value))
             {
                 a = Character.PoliceDanish07;
@@ -534,14 +897,29 @@ public static implicit operator System.Decimal(Percentage value) { return value.
         
         public static void Deserialize(out AnimationGesture a, string value)
         {
-            if ("9fae3573-620d-4a7c-bcec-c571f890b168".Equals(value))
+            if ("c5ddc2fc-b297-4ee6-8f1d-0384667f302e".Equals(value))
+            {
+                a = AnimationGesture.Knockout;
+                return;
+            }
+            if ("94cc9a34-a514-481c-981c-26c91506d2bd".Equals(value))
+            {
+                a = AnimationGesture.Woah;
+                return;
+            }
+            if ("66d1e3c7-4a82-4d63-8097-8678bb8e3555".Equals(value))
             {
                 a = AnimationGesture.Unsure;
                 return;
             }
             if ("cb40eaf5-4971-4a89-ac15-1ebee9013854".Equals(value))
             {
-                a = AnimationGesture.Snarl;
+                a = AnimationGesture.Head_Nod;
+                return;
+            }
+            if ("1b47a478-0268-4f9f-8351-f8d73730d908".Equals(value))
+            {
+                a = AnimationGesture.Head_Shake;
                 return;
             }
             if ("6b301d70-6d47-4788-a421-1de9bf8e8e57".Equals(value))
@@ -549,9 +927,24 @@ public static implicit operator System.Decimal(Percentage value) { return value.
                 a = AnimationGesture.Laugh;
                 return;
             }
-            if ("1b47a478-0268-4f9f-8351-f8d73730d908".Equals(value))
+            if ("9fae3573-620d-4a7c-bcec-c571f890b168".Equals(value))
             {
-                a = AnimationGesture.Angry;
+                a = AnimationGesture.Shrug;
+                return;
+            }
+            if ("9a1b228d-a4ba-4652-9a1d-4f7c83180f0d".Equals(value))
+            {
+                a = AnimationGesture.Take;
+                return;
+            }
+            if ("8667456b-9cf9-47d8-a176-5a3325f7e834".Equals(value))
+            {
+                a = AnimationGesture.Give;
+                return;
+            }
+            if ("74bf3c46-2d5b-463f-95de-f3ffd2f66e6e".Equals(value))
+            {
+                a = AnimationGesture.Point;
                 return;
             }
             a = 0;
@@ -559,6 +952,31 @@ public static implicit operator System.Decimal(Percentage value) { return value.
         
         public static void Deserialize(out AnimationAttitude a, string value)
         {
+            if ("6e83c269-93de-4605-b9eb-9f788c7dcf92".Equals(value))
+            {
+                a = AnimationAttitude.Phone;
+                return;
+            }
+            if ("aca46b9c-aa20-40b8-adcc-5d5007a6c482".Equals(value))
+            {
+                a = AnimationAttitude.Surrender;
+                return;
+            }
+            if ("c0913d77-a506-48cd-b573-3f22bbf15cae".Equals(value))
+            {
+                a = AnimationAttitude.Gunpoint;
+                return;
+            }
+            if ("5b789b51-af8c-4b15-900d-1e1b54eb85c5".Equals(value))
+            {
+                a = AnimationAttitude.Interested;
+                return;
+            }
+            if ("7136834a-def9-4830-8baa-78610961064c".Equals(value))
+            {
+                a = AnimationAttitude.Radio;
+                return;
+            }
             if ("418fd464-e4c6-48f8-ab3b-461a1e7d303b".Equals(value))
             {
                 a = AnimationAttitude.Neutral;
@@ -574,19 +992,14 @@ public static implicit operator System.Decimal(Percentage value) { return value.
                 a = AnimationAttitude.Aggressive;
                 return;
             }
-            if ("5b789b51-af8c-4b15-900d-1e1b54eb85c5".Equals(value))
-            {
-                a = AnimationAttitude.Interested;
-                return;
-            }
             a = 0;
         }
         
         public static void Deserialize(out AnimationEmotion a, string value)
         {
-            if ("8bfd402f-0489-4262-80c1-2be9239716cc".Equals(value))
+            if ("4e22cda9-2155-4a12-b086-381cf1ddf5c4".Equals(value))
             {
-                a = AnimationEmotion.Neutral;
+                a = AnimationEmotion.Scared;
                 return;
             }
             if ("74aa2051-de8a-486a-8d0e-d2d60c99a2d6".Equals(value))
@@ -594,24 +1007,14 @@ public static implicit operator System.Decimal(Percentage value) { return value.
                 a = AnimationEmotion.Pleased;
                 return;
             }
-            if ("882510f3-d572-4997-817d-8380eb4de902".Equals(value))
-            {
-                a = AnimationEmotion.Contemplative;
-                return;
-            }
             if ("6449be72-9e59-4ae8-94ab-904f10c2a123".Equals(value))
             {
                 a = AnimationEmotion.Nervous;
                 return;
             }
-            if ("4e22cda9-2155-4a12-b086-381cf1ddf5c4".Equals(value))
+            if ("882510f3-d572-4997-817d-8380eb4de902".Equals(value))
             {
-                a = AnimationEmotion.Scared;
-                return;
-            }
-            if ("f7c9d1b2-d968-43f4-85f4-6bc812699361".Equals(value))
-            {
-                a = AnimationEmotion.Angry;
+                a = AnimationEmotion.Contemplative;
                 return;
             }
             if ("be16963f-dfa0-47a4-9f8e-8555aeccf243".Equals(value))
@@ -619,9 +1022,19 @@ public static implicit operator System.Decimal(Percentage value) { return value.
                 a = AnimationEmotion.Annoyed;
                 return;
             }
+            if ("f7c9d1b2-d968-43f4-85f4-6bc812699361".Equals(value))
+            {
+                a = AnimationEmotion.Angry;
+                return;
+            }
             if ("20125ed8-90e9-4a9f-89e5-1b4b0abd7468".Equals(value))
             {
                 a = AnimationEmotion.Sarcastic;
+                return;
+            }
+            if ("8bfd402f-0489-4262-80c1-2be9239716cc".Equals(value))
+            {
+                a = AnimationEmotion.Neutral;
                 return;
             }
             a = 0;
@@ -629,14 +1042,19 @@ public static implicit operator System.Decimal(Percentage value) { return value.
         
         public static void Deserialize(out BooleanFlag a, string value)
         {
-            if ("82ea8086-f523-408a-a88c-de872dff7687".Equals(value))
+            if ("31c05575-54b7-484e-b413-654853ce8301".Equals(value))
             {
-                a = BooleanFlag.Met_Bob;
+                a = BooleanFlag.WenZhi_Dead;
                 return;
             }
-            if ("0ad076e0-41e4-4e6b-b5c8-fd64df2bd806".Equals(value))
+            if ("f90b679a-6bf9-4005-82b3-8f3250ffbdee".Equals(value))
             {
-                a = BooleanFlag.AntonDeJong_Dead;
+                a = BooleanFlag.Copenhagen_FinansministerietCamerasDown;
+                return;
+            }
+            if ("9ca68a50-96b8-4bd2-8ac0-30c1aa2ed6b5".Equals(value))
+            {
+                a = BooleanFlag.SecurityRoomClear;
                 return;
             }
             if ("cadd864e-9298-4889-9916-91847f6a4c3b".Equals(value))
@@ -649,9 +1067,24 @@ public static implicit operator System.Decimal(Percentage value) { return value.
         
         public static void Deserialize(out IntegerFlag a, string value)
         {
+            if ("e1447051-1368-4da8-81df-88203bf90771".Equals(value))
+            {
+                a = IntegerFlag.PlayerFootprint;
+                return;
+            }
+            if ("e6a6caa5-58c1-4da5-8d31-e47f843a9f3e".Equals(value))
+            {
+                a = IntegerFlag.CharacterRandomiser;
+                return;
+            }
+            if ("43e4a01d-0997-4bff-9120-fd0ff54f03b7".Equals(value))
+            {
+                a = IntegerFlag.PressurePointRandomiser;
+                return;
+            }
             if ("ca066421-bfa3-40bc-8e0a-03c819efca8d".Equals(value))
             {
-                a = IntegerFlag.Player_Kills;
+                a = IntegerFlag.PlayerKills;
                 return;
             }
             a = 0;
@@ -772,11 +1205,6 @@ public static implicit operator System.Decimal(Percentage value) { return value.
             a = Percentage.FromValue(decimal.Parse(value, System.Globalization.CultureInfo.InvariantCulture));
         }
         
-        public static void Deserialize(out Jump_IDs a, string value)
-        {
-            a = ((Jump_IDs)(Enum.Parse(typeof(Jump_IDs), value)));
-        }
-        
         public static void Deserialize(out LocalVars a, string value)
         {
             a = ((LocalVars)(Enum.Parse(typeof(LocalVars), value)));
@@ -827,11 +1255,31 @@ namespace MyNamespace.Nodes.Connectors
         }
     }
     
-    [RuntimeConversation.ConnectorTypeIDAttribute("0a825391-d307-4952-83ed-413d8fbe99b9")]
-    public class Instructions : Connector
+    [RuntimeConversation.ConnectorTypeIDAttribute("5c80f036-9bf8-43b7-afd5-0c4d619917c1")]
+    public class Controller : Connector
     {
         
-        public Instructions(Node parent, Conversation.ID<Conversation.TConnector> id) : 
+        public Controller(Node parent, Conversation.ID<Conversation.TConnector> id) : 
+                base(parent, id)
+        {
+        }
+    }
+    
+    [RuntimeConversation.ConnectorTypeIDAttribute("430e6b72-0caa-476e-8da6-8bd1f127127a")]
+    public class Cinematic : Connector
+    {
+        
+        public Cinematic(Node parent, Conversation.ID<Conversation.TConnector> id) : 
+                base(parent, id)
+        {
+        }
+    }
+    
+    [RuntimeConversation.ConnectorTypeIDAttribute("65f33e2b-fee8-4123-8853-1fec780471ea")]
+    public class Waiting : Connector
+    {
+        
+        public Waiting(Node parent, Conversation.ID<Conversation.TConnector> id) : 
                 base(parent, id)
         {
         }
@@ -891,52 +1339,15 @@ namespace MyNamespace.Nodes
         public abstract Connector Connector(Conversation.ID<Conversation.TConnector> connector);
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("3acaf075-abf5-4cb4-8f65-de46a4bfa98c")]
-    public class Gun_Drawn : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output idc5c41496222544e0a375bf43bae75fbe;
-        
-        public Gun_Drawn(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _2c2aa611ec984addaca75fb7f63a4777;
-            TypeDeserializer.Deserialize(out _2c2aa611ec984addaca75fb7f63a4777, "");
-            this.idc5c41496222544e0a375bf43bae75fbe = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("c5c41496-2225-44e0-a375-bf43bae75fbe"), _2c2aa611ec984addaca75fb7f63a4777);
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("c5c41496-2225-44e0-a375-bf43bae75fbe")))
-            {
-                return idc5c41496222544e0a375bf43bae75fbe;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-        }
-    }
-    
     [RuntimeConversation.NodeTypeIDAttribute("52ac74bd-fbe8-4783-bc91-8d6533b99b2b")]
     public class Prompt_Option : Node
     {
         
-        public MyNamespace.Nodes.Connectors.Input idb579f35fa56a455ca971884f555d0a29;
+        public MyNamespace.Nodes.Connectors.Cinematic id1cc222ab41e743248c4fefc769e54b3f;
         
-        public MyNamespace.Nodes.Connectors.Output id2fdfacb3fdb44c4f99a62fa7bc341c79;
+        public MyNamespace.Nodes.Connectors.Output ida85988e14f044d7faddb030d86adc7d2;
+        
+        public MyNamespace.Nodes.Connectors.Input id4b3001666ef24de6b17327f7694f79c5;
         
         [RuntimeConversation.ParameterIDAttribute("619f732b-f466-4d8b-8475-690b3def59c3")]
         public Boolean AI_selection;
@@ -947,21 +1358,26 @@ namespace MyNamespace.Nodes
         public Prompt_Option(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            this.idb579f35fa56a455ca971884f555d0a29 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("b579f35f-a56a-455c-a971-884f555d0a29"));
-            String _a5bcea48fe2b4426bdcf37145e37baec;
-            TypeDeserializer.Deserialize(out _a5bcea48fe2b4426bdcf37145e37baec, "");
-            this.id2fdfacb3fdb44c4f99a62fa7bc341c79 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("2fdfacb3-fdb4-4c4f-99a6-2fa7bc341c79"), _a5bcea48fe2b4426bdcf37145e37baec);
+            this.id1cc222ab41e743248c4fefc769e54b3f = new MyNamespace.Nodes.Connectors.Cinematic(this, Conversation.ID<Conversation.TConnector>.Parse("1cc222ab-41e7-4324-8c4f-efc769e54b3f"));
+            String _fee464eb33074f74a43802b26b15f9dd;
+            TypeDeserializer.Deserialize(out _fee464eb33074f74a43802b26b15f9dd, "");
+            this.ida85988e14f044d7faddb030d86adc7d2 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("a85988e1-4f04-4d7f-addb-030d86adc7d2"), _fee464eb33074f74a43802b26b15f9dd);
+            this.id4b3001666ef24de6b17327f7694f79c5 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("4b300166-6ef2-4de6-b173-27f7694f79c5"));
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("b579f35f-a56a-455c-a971-884f555d0a29")))
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("1cc222ab-41e7-4324-8c4f-efc769e54b3f")))
             {
-                return idb579f35fa56a455ca971884f555d0a29;
+                return id1cc222ab41e743248c4fefc769e54b3f;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("2fdfacb3-fdb4-4c4f-99a6-2fa7bc341c79")))
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("a85988e1-4f04-4d7f-addb-030d86adc7d2")))
             {
-                return id2fdfacb3fdb44c4f99a62fa7bc341c79;
+                return ida85988e14f044d7faddb030d86adc7d2;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4b300166-6ef2-4de6-b173-27f7694f79c5")))
+            {
+                return id4b3001666ef24de6b17327f7694f79c5;
             }
             return null;
         }
@@ -988,11 +1404,20 @@ namespace MyNamespace.Nodes
     public class Option : Node
     {
         
-        public MyNamespace.Nodes.Connectors.Input idb579f35fa56a455ca971884f555d0a29;
-        
-        public MyNamespace.Nodes.Connectors.Instructions idedf1b65960a3457286d6e73957193547;
+        public MyNamespace.Nodes.Connectors.Cinematic id1cc222ab41e743248c4fefc769e54b3f;
         
         public MyNamespace.Nodes.Connectors.Output id2fdfacb3fdb44c4f99a62fa7bc341c79;
+        
+        public MyNamespace.Nodes.Connectors.Input idb579f35fa56a455ca971884f555d0a29;
+        
+        [RuntimeConversation.ParameterIDAttribute("2c398f2c-4b17-4ec4-b8d1-a5c68b6c4e94")]
+        public Int32 Priority;
+        
+        [RuntimeConversation.ParameterIDAttribute("b9950a3d-14d9-46d0-94dd-4217ed1573ad")]
+        public RuntimeConversation.LocalizedString Subtitles;
+        
+        [RuntimeConversation.ParameterIDAttribute("b85bd615-4aba-43c1-a6c4-4c116a686955")]
+        public Boolean Only_once;
         
         [RuntimeConversation.ParameterIDAttribute("e8b15360-c500-434e-856c-bd1090c1b4a2")]
         public String Script;
@@ -1000,33 +1425,30 @@ namespace MyNamespace.Nodes
         [RuntimeConversation.ParameterIDAttribute("a4f77304-57b1-4e25-849a-3e199f0f1795")]
         public String Direction;
         
-        [RuntimeConversation.ParameterIDAttribute("b9950a3d-14d9-46d0-94dd-4217ed1573ad")]
-        public RuntimeConversation.LocalizedString Subtitles;
-        
         public Option(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
+            this.id1cc222ab41e743248c4fefc769e54b3f = new MyNamespace.Nodes.Connectors.Cinematic(this, Conversation.ID<Conversation.TConnector>.Parse("1cc222ab-41e7-4324-8c4f-efc769e54b3f"));
+            String _d1f2acc610b3458e953f8225eaa82647;
+            TypeDeserializer.Deserialize(out _d1f2acc610b3458e953f8225eaa82647, "");
+            this.id2fdfacb3fdb44c4f99a62fa7bc341c79 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("2fdfacb3-fdb4-4c4f-99a6-2fa7bc341c79"), _d1f2acc610b3458e953f8225eaa82647);
             this.idb579f35fa56a455ca971884f555d0a29 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("b579f35f-a56a-455c-a971-884f555d0a29"));
-            this.idedf1b65960a3457286d6e73957193547 = new MyNamespace.Nodes.Connectors.Instructions(this, Conversation.ID<Conversation.TConnector>.Parse("edf1b659-60a3-4572-86d6-e73957193547"));
-            String _b86cbe91ebdd4ee19dba7ccb2a88d659;
-            TypeDeserializer.Deserialize(out _b86cbe91ebdd4ee19dba7ccb2a88d659, "");
-            this.id2fdfacb3fdb44c4f99a62fa7bc341c79 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("2fdfacb3-fdb4-4c4f-99a6-2fa7bc341c79"), _b86cbe91ebdd4ee19dba7ccb2a88d659);
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("b579f35f-a56a-455c-a971-884f555d0a29")))
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("1cc222ab-41e7-4324-8c4f-efc769e54b3f")))
             {
-                return idb579f35fa56a455ca971884f555d0a29;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("edf1b659-60a3-4572-86d6-e73957193547")))
-            {
-                return idedf1b65960a3457286d6e73957193547;
+                return id1cc222ab41e743248c4fefc769e54b3f;
             }
             if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("2fdfacb3-fdb4-4c4f-99a6-2fa7bc341c79")))
             {
                 return id2fdfacb3fdb44c4f99a62fa7bc341c79;
             }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("b579f35f-a56a-455c-a971-884f555d0a29")))
+            {
+                return idb579f35fa56a455ca971884f555d0a29;
+            }
             return null;
         }
         
@@ -1043,78 +1465,11 @@ namespace MyNamespace.Nodes
         
         public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
         {
+            TypeDeserializer.Deserialize(out Priority, GetParameter(parameters, new System.Guid("2c398f2c-4b17-4ec4-b8d1-a5c68b6c4e94")));
+            TypeDeserializer.Deserialize(out Subtitles, GetParameter(parameters, new System.Guid("b9950a3d-14d9-46d0-94dd-4217ed1573ad")));
+            TypeDeserializer.Deserialize(out Only_once, GetParameter(parameters, new System.Guid("b85bd615-4aba-43c1-a6c4-4c116a686955")));
             TypeDeserializer.Deserialize(out Script, GetParameter(parameters, new System.Guid("e8b15360-c500-434e-856c-bd1090c1b4a2")));
             TypeDeserializer.Deserialize(out Direction, GetParameter(parameters, new System.Guid("a4f77304-57b1-4e25-849a-3e199f0f1795")));
-            TypeDeserializer.Deserialize(out Subtitles, GetParameter(parameters, new System.Guid("b9950a3d-14d9-46d0-94dd-4217ed1573ad")));
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("da1dfd60-28e4-48f6-93e6-298f3a68b67c")]
-    public class Player_Speech : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Instructions idee1f947a5f764199ac6cb46b816d8cd5;
-        
-        public MyNamespace.Nodes.Connectors.Output id179fd9edc5654fb2bf3ebc562c27c940;
-        
-        public MyNamespace.Nodes.Connectors.Input id675684c5ae5d49c992123b8f9057da47;
-        
-        [RuntimeConversation.ParameterIDAttribute("8987655a-92fe-4eca-8c50-8769a7edcf04")]
-        public RuntimeConversation.LocalizedString Subtitles;
-        
-        [RuntimeConversation.ParameterIDAttribute("0154fe0e-5f53-4657-acae-b983ea9030a0")]
-        public String Script;
-        
-        [RuntimeConversation.ParameterIDAttribute("98401421-e713-4014-8489-b8675c566179")]
-        public String Direction;
-        
-        [RuntimeConversation.ParameterIDAttribute("19577d79-42ca-46e9-a47b-640cdecfbd6c")]
-        public Character Listener;
-        
-        public Player_Speech(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            this.idee1f947a5f764199ac6cb46b816d8cd5 = new MyNamespace.Nodes.Connectors.Instructions(this, Conversation.ID<Conversation.TConnector>.Parse("ee1f947a-5f76-4199-ac6c-b46b816d8cd5"));
-            String _1d3de241797948128e36b7d6b06c1f64;
-            TypeDeserializer.Deserialize(out _1d3de241797948128e36b7d6b06c1f64, "");
-            this.id179fd9edc5654fb2bf3ebc562c27c940 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("179fd9ed-c565-4fb2-bf3e-bc562c27c940"), _1d3de241797948128e36b7d6b06c1f64);
-            this.id675684c5ae5d49c992123b8f9057da47 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("675684c5-ae5d-49c9-9212-3b8f9057da47"));
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ee1f947a-5f76-4199-ac6c-b46b816d8cd5")))
-            {
-                return idee1f947a5f764199ac6cb46b816d8cd5;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("179fd9ed-c565-4fb2-bf3e-bc562c27c940")))
-            {
-                return id179fd9edc5654fb2bf3ebc562c27c940;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("675684c5-ae5d-49c9-9212-3b8f9057da47")))
-            {
-                return id675684c5ae5d49c992123b8f9057da47;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-            TypeDeserializer.Deserialize(out Subtitles, GetParameter(parameters, new System.Guid("8987655a-92fe-4eca-8c50-8769a7edcf04")));
-            TypeDeserializer.Deserialize(out Script, GetParameter(parameters, new System.Guid("0154fe0e-5f53-4657-acae-b983ea9030a0")));
-            TypeDeserializer.Deserialize(out Direction, GetParameter(parameters, new System.Guid("98401421-e713-4014-8489-b8675c566179")));
-            TypeDeserializer.Deserialize(out Listener, GetParameter(parameters, new System.Guid("19577d79-42ca-46e9-a47b-640cdecfbd6c")));
         }
     }
     
@@ -1122,7 +1477,7 @@ namespace MyNamespace.Nodes
     public class NPC_Speech : Node
     {
         
-        public MyNamespace.Nodes.Connectors.Instructions idee1f947a5f764199ac6cb46b816d8cd5;
+        public MyNamespace.Nodes.Connectors.Cinematic idafcef95cc7224b61b0f6130fb90ca806;
         
         public MyNamespace.Nodes.Connectors.Output id179fd9edc5654fb2bf3ebc562c27c940;
         
@@ -1146,18 +1501,18 @@ namespace MyNamespace.Nodes
         public NPC_Speech(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            this.idee1f947a5f764199ac6cb46b816d8cd5 = new MyNamespace.Nodes.Connectors.Instructions(this, Conversation.ID<Conversation.TConnector>.Parse("ee1f947a-5f76-4199-ac6c-b46b816d8cd5"));
-            String _ad73caa773d846a2a99471900f07064e;
-            TypeDeserializer.Deserialize(out _ad73caa773d846a2a99471900f07064e, "");
-            this.id179fd9edc5654fb2bf3ebc562c27c940 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("179fd9ed-c565-4fb2-bf3e-bc562c27c940"), _ad73caa773d846a2a99471900f07064e);
+            this.idafcef95cc7224b61b0f6130fb90ca806 = new MyNamespace.Nodes.Connectors.Cinematic(this, Conversation.ID<Conversation.TConnector>.Parse("afcef95c-c722-4b61-b0f6-130fb90ca806"));
+            String _6f964eee9cd44dbbb95d479390d0839f;
+            TypeDeserializer.Deserialize(out _6f964eee9cd44dbbb95d479390d0839f, "");
+            this.id179fd9edc5654fb2bf3ebc562c27c940 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("179fd9ed-c565-4fb2-bf3e-bc562c27c940"), _6f964eee9cd44dbbb95d479390d0839f);
             this.id2784a61493054bf6a9962d8a7e097866 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("2784a614-9305-4bf6-a996-2d8a7e097866"));
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ee1f947a-5f76-4199-ac6c-b46b816d8cd5")))
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("afcef95c-c722-4b61-b0f6-130fb90ca806")))
             {
-                return idee1f947a5f764199ac6cb46b816d8cd5;
+                return idafcef95cc7224b61b0f6130fb90ca806;
             }
             if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("179fd9ed-c565-4fb2-bf3e-bc562c27c940")))
             {
@@ -1191,11 +1546,80 @@ namespace MyNamespace.Nodes
         }
     }
     
+    [RuntimeConversation.NodeTypeIDAttribute("da1dfd60-28e4-48f6-93e6-298f3a68b67c")]
+    public class Player_Speech : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Cinematic idafcef95cc7224b61b0f6130fb90ca806;
+        
+        public MyNamespace.Nodes.Connectors.Output id179fd9edc5654fb2bf3ebc562c27c940;
+        
+        public MyNamespace.Nodes.Connectors.Input id675684c5ae5d49c992123b8f9057da47;
+        
+        [RuntimeConversation.ParameterIDAttribute("98401421-e713-4014-8489-b8675c566179")]
+        public String Direction;
+        
+        [RuntimeConversation.ParameterIDAttribute("0154fe0e-5f53-4657-acae-b983ea9030a0")]
+        public String Script;
+        
+        [RuntimeConversation.ParameterIDAttribute("8987655a-92fe-4eca-8c50-8769a7edcf04")]
+        public RuntimeConversation.LocalizedString Subtitles;
+        
+        [RuntimeConversation.ParameterIDAttribute("19577d79-42ca-46e9-a47b-640cdecfbd6c")]
+        public Character Listener;
+        
+        public Player_Speech(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            this.idafcef95cc7224b61b0f6130fb90ca806 = new MyNamespace.Nodes.Connectors.Cinematic(this, Conversation.ID<Conversation.TConnector>.Parse("afcef95c-c722-4b61-b0f6-130fb90ca806"));
+            String _1bb95dbbf60e42b99c93c530e03cfca0;
+            TypeDeserializer.Deserialize(out _1bb95dbbf60e42b99c93c530e03cfca0, "");
+            this.id179fd9edc5654fb2bf3ebc562c27c940 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("179fd9ed-c565-4fb2-bf3e-bc562c27c940"), _1bb95dbbf60e42b99c93c530e03cfca0);
+            this.id675684c5ae5d49c992123b8f9057da47 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("675684c5-ae5d-49c9-9212-3b8f9057da47"));
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("afcef95c-c722-4b61-b0f6-130fb90ca806")))
+            {
+                return idafcef95cc7224b61b0f6130fb90ca806;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("179fd9ed-c565-4fb2-bf3e-bc562c27c940")))
+            {
+                return id179fd9edc5654fb2bf3ebc562c27c940;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("675684c5-ae5d-49c9-9212-3b8f9057da47")))
+            {
+                return id675684c5ae5d49c992123b8f9057da47;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Direction, GetParameter(parameters, new System.Guid("98401421-e713-4014-8489-b8675c566179")));
+            TypeDeserializer.Deserialize(out Script, GetParameter(parameters, new System.Guid("0154fe0e-5f53-4657-acae-b983ea9030a0")));
+            TypeDeserializer.Deserialize(out Subtitles, GetParameter(parameters, new System.Guid("8987655a-92fe-4eca-8c50-8769a7edcf04")));
+            TypeDeserializer.Deserialize(out Listener, GetParameter(parameters, new System.Guid("19577d79-42ca-46e9-a47b-640cdecfbd6c")));
+        }
+    }
+    
     [RuntimeConversation.NodeTypeIDAttribute("836eeb03-2730-4830-b192-3fc9ce41503e")]
     public class Radio_Message : Node
     {
         
-        public MyNamespace.Nodes.Connectors.Instructions idee1f947a5f764199ac6cb46b816d8cd5;
+        public MyNamespace.Nodes.Connectors.Cinematic idafcef95cc7224b61b0f6130fb90ca806;
         
         public MyNamespace.Nodes.Connectors.Output id179fd9edc5654fb2bf3ebc562c27c940;
         
@@ -1216,18 +1640,18 @@ namespace MyNamespace.Nodes
         public Radio_Message(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            this.idee1f947a5f764199ac6cb46b816d8cd5 = new MyNamespace.Nodes.Connectors.Instructions(this, Conversation.ID<Conversation.TConnector>.Parse("ee1f947a-5f76-4199-ac6c-b46b816d8cd5"));
-            String _56ce846cc33948e9858f91b2a86e4593;
-            TypeDeserializer.Deserialize(out _56ce846cc33948e9858f91b2a86e4593, "");
-            this.id179fd9edc5654fb2bf3ebc562c27c940 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("179fd9ed-c565-4fb2-bf3e-bc562c27c940"), _56ce846cc33948e9858f91b2a86e4593);
+            this.idafcef95cc7224b61b0f6130fb90ca806 = new MyNamespace.Nodes.Connectors.Cinematic(this, Conversation.ID<Conversation.TConnector>.Parse("afcef95c-c722-4b61-b0f6-130fb90ca806"));
+            String _44df13c1206c4065850946ad40d7b3af;
+            TypeDeserializer.Deserialize(out _44df13c1206c4065850946ad40d7b3af, "");
+            this.id179fd9edc5654fb2bf3ebc562c27c940 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("179fd9ed-c565-4fb2-bf3e-bc562c27c940"), _44df13c1206c4065850946ad40d7b3af);
             this.id066ce97d7d9742b6983a8f1a219cccf2 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("066ce97d-7d97-42b6-983a-8f1a219cccf2"));
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ee1f947a-5f76-4199-ac6c-b46b816d8cd5")))
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("afcef95c-c722-4b61-b0f6-130fb90ca806")))
             {
-                return idee1f947a5f764199ac6cb46b816d8cd5;
+                return idafcef95cc7224b61b0f6130fb90ca806;
             }
             if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("179fd9ed-c565-4fb2-bf3e-bc562c27c940")))
             {
@@ -1272,9 +1696,9 @@ namespace MyNamespace.Nodes
         public Start_Radio_Message(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            String _95f345fc589a4513b8f75317aa2db070;
-            TypeDeserializer.Deserialize(out _95f345fc589a4513b8f75317aa2db070, "");
-            this.id892f56f2754f46bd9a7e0cc2f272877b = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("892f56f2-754f-46bd-9a7e-0cc2f272877b"), _95f345fc589a4513b8f75317aa2db070);
+            String _22f2b24ce3b048f0a6af146cd31c0fd9;
+            TypeDeserializer.Deserialize(out _22f2b24ce3b048f0a6af146cd31c0fd9, "");
+            this.id892f56f2754f46bd9a7e0cc2f272877b = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("892f56f2-754f-46bd-9a7e-0cc2f272877b"), _22f2b24ce3b048f0a6af146cd31c0fd9);
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
@@ -1312,9 +1736,9 @@ namespace MyNamespace.Nodes
         public Start(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            String _c77c1fb6e2c2400bac663b55164d3141;
-            TypeDeserializer.Deserialize(out _c77c1fb6e2c2400bac663b55164d3141, "");
-            this.idb5b1fe0305e14058aecb4012ae91db1f = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("b5b1fe03-05e1-4058-aecb-4012ae91db1f"), _c77c1fb6e2c2400bac663b55164d3141);
+            String _a0bcd9dfc3de4c429bd8eae008c1de8e;
+            TypeDeserializer.Deserialize(out _a0bcd9dfc3de4c429bd8eae008c1de8e, "");
+            this.idb5b1fe0305e14058aecb4012ae91db1f = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("b5b1fe03-05e1-4058-aecb-4012ae91db1f"), _a0bcd9dfc3de4c429bd8eae008c1de8e);
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
@@ -1379,26 +1803,27 @@ namespace MyNamespace.Nodes
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("2162436e-5462-41e6-82ec-af29e45a4b70")]
-    public class Character_Info : Node
+    [RuntimeConversation.NodeTypeIDAttribute("53169cb6-eccd-4dc5-8be9-a2c2ae6286e4")]
+    public class Timing : Node
     {
         
-        [RuntimeConversation.ParameterIDAttribute("4c82e2fd-e2f1-4ff7-8f86-f3aa25429359")]
-        public Character BindName;
+        public MyNamespace.Nodes.Connectors.Controller id7f69909d1b4a4283b3ad123d6deddbc7;
         
-        [RuntimeConversation.ParameterIDAttribute("0e05e38d-5d1d-4b23-bc93-ad4ce674bc2a")]
-        public Character Bark_BindName;
+        [RuntimeConversation.ParameterIDAttribute("403de045-20ed-43e3-8dcf-0bcefbfedd96")]
+        public Decimal Time_Modifier;
         
-        [RuntimeConversation.ParameterIDAttribute("e2937b9d-b290-4f2a-84ad-b6ca7289258e")]
-        public RuntimeConversation.LocalizedString Display_Name;
-        
-        public Character_Info(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Timing(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
+            this.id7f69909d1b4a4283b3ad123d6deddbc7 = new MyNamespace.Nodes.Connectors.Controller(this, Conversation.ID<Conversation.TConnector>.Parse("7f69909d-1b4a-4283-b3ad-123d6deddbc7"));
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
         {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("7f69909d-1b4a-4283-b3ad-123d6deddbc7")))
+            {
+                return id7f69909d1b4a4283b3ad123d6deddbc7;
+            }
             return null;
         }
         
@@ -1415,9 +1840,7 @@ namespace MyNamespace.Nodes
         
         public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
         {
-            TypeDeserializer.Deserialize(out BindName, GetParameter(parameters, new System.Guid("4c82e2fd-e2f1-4ff7-8f86-f3aa25429359")));
-            TypeDeserializer.Deserialize(out Bark_BindName, GetParameter(parameters, new System.Guid("0e05e38d-5d1d-4b23-bc93-ad4ce674bc2a")));
-            TypeDeserializer.Deserialize(out Display_Name, GetParameter(parameters, new System.Guid("e2937b9d-b290-4f2a-84ad-b6ca7289258e")));
+            TypeDeserializer.Deserialize(out Time_Modifier, GetParameter(parameters, new System.Guid("403de045-20ed-43e3-8dcf-0bcefbfedd96")));
         }
     }
 }
@@ -1430,18 +1853,291 @@ namespace MyNamespace.Nodes.AI_Barks
     using MyNamespace.Types;
     
     
-    [RuntimeConversation.NodeTypeIDAttribute("8a83ed34-474e-4866-884c-2ee64bba782a")]
-    public class AI_Curious : Node
+    [RuntimeConversation.NodeTypeIDAttribute("3a75e7ae-80ac-40a8-b14c-7c91ce1011f1")]
+    public class PC_AI_Takedown_Steampipe : Node
     {
         
         public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
         
-        public AI_Curious(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public PC_AI_Takedown_Steampipe(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            String _1c3c9eff7c46404aae6bd01665865285;
-            TypeDeserializer.Deserialize(out _1c3c9eff7c46404aae6bd01665865285, "");
-            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _1c3c9eff7c46404aae6bd01665865285);
+            String _756e00544f4d4b539715f8e8f9e9483e;
+            TypeDeserializer.Deserialize(out _756e00544f4d4b539715f8e8f9e9483e, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _756e00544f4d4b539715f8e8f9e9483e);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("a9070db4-e4cb-4d06-99cb-536c19be5daf")]
+    public class PC_AI_Takedown_Transformer : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public PC_AI_Takedown_Transformer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _368dfa90f7734447a90ed18f7cc5061b;
+            TypeDeserializer.Deserialize(out _368dfa90f7734447a90ed18f7cc5061b, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _368dfa90f7734447a90ed18f7cc5061b);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("2e389da5-0334-4a97-ba94-b1f68668b4ae")]
+    public class PC_AI_Takedown_Nonlethal : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public PC_AI_Takedown_Nonlethal(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _adbe82be96ed46c3a23829b96932d22a;
+            TypeDeserializer.Deserialize(out _adbe82be96ed46c3a23829b96932d22a, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _adbe82be96ed46c3a23829b96932d22a);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("630b9f53-29bd-4680-82d0-0b3d63c4267f")]
+    public class PC_AI_Takedown_Lethal_Post : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public PC_AI_Takedown_Lethal_Post(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _48988e36e93a4b389b9590b211944414;
+            TypeDeserializer.Deserialize(out _48988e36e93a4b389b9590b211944414, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _48988e36e93a4b389b9590b211944414);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("5d5e1ebd-cfb5-4023-b6fa-4baf46f75ee3")]
+    public class PC_AI_Takedown_Nonlethal_Post : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public PC_AI_Takedown_Nonlethal_Post(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _9d9c50bc98ef4e45b072412c41c304ba;
+            TypeDeserializer.Deserialize(out _9d9c50bc98ef4e45b072412c41c304ba, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _9d9c50bc98ef4e45b072412c41c304ba);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("72ff1592-f78b-401f-b9d3-287342dbc336")]
+    public class PC_AI_Takedown_Lethal : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public PC_AI_Takedown_Lethal(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _f8262aff63344436ae78d9d3c35e6019;
+            TypeDeserializer.Deserialize(out _f8262aff63344436ae78d9d3c35e6019, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _f8262aff63344436ae78d9d3c35e6019);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("84594d80-3ee7-4c3a-8f2f-26896cd364bf")]
+    public class AI_Surprised : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public AI_Surprised(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _50d18fdaea764cd08210daba79a209d7;
+            TypeDeserializer.Deserialize(out _50d18fdaea764cd08210daba79a209d7, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _50d18fdaea764cd08210daba79a209d7);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("13b439cb-4e61-46cd-9f59-0de825899a22")]
+    public class AI_Alarmed_Investigation : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public AI_Alarmed_Investigation(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _db8189bbb6ee4dd1b3b325499fe39be9;
+            TypeDeserializer.Deserialize(out _db8189bbb6ee4dd1b3b325499fe39be9, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _db8189bbb6ee4dd1b3b325499fe39be9);
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
@@ -1478,555 +2174,9 @@ namespace MyNamespace.Nodes.AI_Barks
         public AI_Bribed_Caught(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            String _933023a70d94454e99b5fe22fbf9d35f;
-            TypeDeserializer.Deserialize(out _933023a70d94454e99b5fe22fbf9d35f, "");
-            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _933023a70d94454e99b5fe22fbf9d35f);
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
-            {
-                return id4bb00e6c72c647b4bd4b0524eac65adc;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("18bd0870-ee09-47e9-95b0-1702707ee9bf")]
-    public class AI_Bribed_Spotted : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
-        
-        public AI_Bribed_Spotted(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _57deaf23e2d54f1db38e90a1b345e791;
-            TypeDeserializer.Deserialize(out _57deaf23e2d54f1db38e90a1b345e791, "");
-            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _57deaf23e2d54f1db38e90a1b345e791);
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
-            {
-                return id4bb00e6c72c647b4bd4b0524eac65adc;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("168ae438-d892-4451-8980-31a9c6ce70c3")]
-    public class AI_Idle : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
-        
-        public AI_Idle(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _1a99a4bccc8c4b08aef32d65af85c695;
-            TypeDeserializer.Deserialize(out _1a99a4bccc8c4b08aef32d65af85c695, "");
-            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _1a99a4bccc8c4b08aef32d65af85c695);
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
-            {
-                return id4bb00e6c72c647b4bd4b0524eac65adc;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("e17be920-8234-489d-9521-5717e2b8c7f4")]
-    public class AI_Futz : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
-        
-        public AI_Futz(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _354d5549e2444bbdbd1caa03dc5ae6a5;
-            TypeDeserializer.Deserialize(out _354d5549e2444bbdbd1caa03dc5ae6a5, "");
-            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _354d5549e2444bbdbd1caa03dc5ae6a5);
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
-            {
-                return id4bb00e6c72c647b4bd4b0524eac65adc;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("b6c800dd-103b-4695-beb3-b380f54b1010")]
-    public class AI_Noise : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
-        
-        public AI_Noise(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _da8c5f8c156d4dcfb10c6b4fe19e74cf;
-            TypeDeserializer.Deserialize(out _da8c5f8c156d4dcfb10c6b4fe19e74cf, "");
-            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _da8c5f8c156d4dcfb10c6b4fe19e74cf);
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
-            {
-                return id4bb00e6c72c647b4bd4b0524eac65adc;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("3ac2461a-3e04-473b-a346-de0212a49d52")]
-    public class AI_Attacking : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
-        
-        public AI_Attacking(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _960c67d497b7445294c0a60e43037586;
-            TypeDeserializer.Deserialize(out _960c67d497b7445294c0a60e43037586, "");
-            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _960c67d497b7445294c0a60e43037586);
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
-            {
-                return id4bb00e6c72c647b4bd4b0524eac65adc;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("7af10c4b-c961-4336-aced-825c9b6fa5a8")]
-    public class AI_Enemy_Lost : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
-        
-        public AI_Enemy_Lost(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _2b66c791c1db4a9982d967ae9bdceae5;
-            TypeDeserializer.Deserialize(out _2b66c791c1db4a9982d967ae9bdceae5, "");
-            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _2b66c791c1db4a9982d967ae9bdceae5);
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
-            {
-                return id4bb00e6c72c647b4bd4b0524eac65adc;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("72f16b7b-222c-4995-8ac5-310182911794")]
-    public class AI_Reloading : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
-        
-        public AI_Reloading(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _f19088c1757a441d8c75374b57b8b4b8;
-            TypeDeserializer.Deserialize(out _f19088c1757a441d8c75374b57b8b4b8, "");
-            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _f19088c1757a441d8c75374b57b8b4b8);
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
-            {
-                return id4bb00e6c72c647b4bd4b0524eac65adc;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("79ba63f0-f75d-4734-9ab2-cc119545b6b5")]
-    public class AI_Weapon : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
-        
-        public AI_Weapon(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _c3d837552dff4c26885b260b32e0a691;
-            TypeDeserializer.Deserialize(out _c3d837552dff4c26885b260b32e0a691, "");
-            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _c3d837552dff4c26885b260b32e0a691);
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
-            {
-                return id4bb00e6c72c647b4bd4b0524eac65adc;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("f3237a51-faae-442f-89d0-4ea9760ee193")]
-    public class AI_Crime : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
-        
-        public AI_Crime(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _3465cf4b906049ca9e826b4ee2f038c5;
-            TypeDeserializer.Deserialize(out _3465cf4b906049ca9e826b4ee2f038c5, "");
-            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _3465cf4b906049ca9e826b4ee2f038c5);
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
-            {
-                return id4bb00e6c72c647b4bd4b0524eac65adc;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("d89cefcb-aab2-44dc-b3c7-581ca73250eb")]
-    public class AI_Damage : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
-        
-        public AI_Damage(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _7f0add0f38eb4443972383140c0185d1;
-            TypeDeserializer.Deserialize(out _7f0add0f38eb4443972383140c0185d1, "");
-            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _7f0add0f38eb4443972383140c0185d1);
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
-            {
-                return id4bb00e6c72c647b4bd4b0524eac65adc;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("08541ccf-4b11-4e64-b1c2-c0d78c23f004")]
-    public class AI_Carcass : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
-        
-        public AI_Carcass(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _2e8ae55a97b34b508a52977d8e2b1f0f;
-            TypeDeserializer.Deserialize(out _2e8ae55a97b34b508a52977d8e2b1f0f, "");
-            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _2e8ae55a97b34b508a52977d8e2b1f0f);
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
-            {
-                return id4bb00e6c72c647b4bd4b0524eac65adc;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("0330c8f7-5ca8-42fd-9112-46e4a7569402")]
-    public class AI_Disrepair : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
-        
-        public AI_Disrepair(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _c6caf82da27e4962971fb7fee91a54c7;
-            TypeDeserializer.Deserialize(out _c6caf82da27e4962971fb7fee91a54c7, "");
-            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _c6caf82da27e4962971fb7fee91a54c7);
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
-            {
-                return id4bb00e6c72c647b4bd4b0524eac65adc;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("41c77bb7-89a6-4484-bce2-26f680be0806")]
-    public class AI_Arresting : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
-        
-        public AI_Arresting(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _e6b24755757841b9b575680e15a9137d;
-            TypeDeserializer.Deserialize(out _e6b24755757841b9b575680e15a9137d, "");
-            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _e6b24755757841b9b575680e15a9137d);
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
-            {
-                return id4bb00e6c72c647b4bd4b0524eac65adc;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("b2ad422d-1e6c-431b-bd7b-227bcb98abf4")]
-    public class AI_Reinforcements : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
-        
-        public AI_Reinforcements(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _6783c56c71f742b3ba34c92a07d8884f;
-            TypeDeserializer.Deserialize(out _6783c56c71f742b3ba34c92a07d8884f, "");
-            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _6783c56c71f742b3ba34c92a07d8884f);
+            String _f70d1e791656475e95df703275b3eacd;
+            TypeDeserializer.Deserialize(out _f70d1e791656475e95df703275b3eacd, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _f70d1e791656475e95df703275b3eacd);
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
@@ -2063,9 +2213,594 @@ namespace MyNamespace.Nodes.AI_Barks
         public AI_Grenade_Throw(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            String _d808b8d603ea4fcd84f8a4bb13fd02da;
-            TypeDeserializer.Deserialize(out _d808b8d603ea4fcd84f8a4bb13fd02da, "");
-            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _d808b8d603ea4fcd84f8a4bb13fd02da);
+            String _039e365c8e07417aa584bf8e4badf1bf;
+            TypeDeserializer.Deserialize(out _039e365c8e07417aa584bf8e4badf1bf, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _039e365c8e07417aa584bf8e4badf1bf);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("d89cefcb-aab2-44dc-b3c7-581ca73250eb")]
+    public class AI_Damage : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public AI_Damage(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _a62ca59fc05646d08fc06e779b565106;
+            TypeDeserializer.Deserialize(out _a62ca59fc05646d08fc06e779b565106, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _a62ca59fc05646d08fc06e779b565106);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("72f16b7b-222c-4995-8ac5-310182911794")]
+    public class AI_Reloading : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public AI_Reloading(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _62aac20a2fb44403ad3f44e042e4fd05;
+            TypeDeserializer.Deserialize(out _62aac20a2fb44403ad3f44e042e4fd05, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _62aac20a2fb44403ad3f44e042e4fd05);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("3ac2461a-3e04-473b-a346-de0212a49d52")]
+    public class AI_Attacking : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public AI_Attacking(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _5c67f9c810064c53b25fa2e36f9d1043;
+            TypeDeserializer.Deserialize(out _5c67f9c810064c53b25fa2e36f9d1043, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _5c67f9c810064c53b25fa2e36f9d1043);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("8a83ed34-474e-4866-884c-2ee64bba782a")]
+    public class AI_Curious : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public AI_Curious(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _2c4eadcb1e0f45dbaba48cb4e6bbb8ae;
+            TypeDeserializer.Deserialize(out _2c4eadcb1e0f45dbaba48cb4e6bbb8ae, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _2c4eadcb1e0f45dbaba48cb4e6bbb8ae);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("0330c8f7-5ca8-42fd-9112-46e4a7569402")]
+    public class AI_Disrepair : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public AI_Disrepair(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _c25c444e8fbe4f38bf2fb1b47eaa4200;
+            TypeDeserializer.Deserialize(out _c25c444e8fbe4f38bf2fb1b47eaa4200, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _c25c444e8fbe4f38bf2fb1b47eaa4200);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("08541ccf-4b11-4e64-b1c2-c0d78c23f004")]
+    public class AI_Carcass : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public AI_Carcass(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _17457bf9c805404ab46f5e42926074a2;
+            TypeDeserializer.Deserialize(out _17457bf9c805404ab46f5e42926074a2, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _17457bf9c805404ab46f5e42926074a2);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("7af10c4b-c961-4336-aced-825c9b6fa5a8")]
+    public class AI_Enemy_Lost : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public AI_Enemy_Lost(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _747570ed44034b7cb5e117462111b62c;
+            TypeDeserializer.Deserialize(out _747570ed44034b7cb5e117462111b62c, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _747570ed44034b7cb5e117462111b62c);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("18bd0870-ee09-47e9-95b0-1702707ee9bf")]
+    public class AI_Bribed_Spotted : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public AI_Bribed_Spotted(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _3075f4d49bd746e89dc0d311598d6ccd;
+            TypeDeserializer.Deserialize(out _3075f4d49bd746e89dc0d311598d6ccd, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _3075f4d49bd746e89dc0d311598d6ccd);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("f3237a51-faae-442f-89d0-4ea9760ee193")]
+    public class AI_Crime : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public AI_Crime(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _c640cadc6cf54c45a7b04a8949621e2c;
+            TypeDeserializer.Deserialize(out _c640cadc6cf54c45a7b04a8949621e2c, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _c640cadc6cf54c45a7b04a8949621e2c);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("b2ad422d-1e6c-431b-bd7b-227bcb98abf4")]
+    public class AI_Reinforcements : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public AI_Reinforcements(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _f6e3a968d5e94cfaabf42bdf4b6c6481;
+            TypeDeserializer.Deserialize(out _f6e3a968d5e94cfaabf42bdf4b6c6481, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _f6e3a968d5e94cfaabf42bdf4b6c6481);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("41c77bb7-89a6-4484-bce2-26f680be0806")]
+    public class AI_Arresting : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public AI_Arresting(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _5c42357fcb314a3b8bcda2e309edff59;
+            TypeDeserializer.Deserialize(out _5c42357fcb314a3b8bcda2e309edff59, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _5c42357fcb314a3b8bcda2e309edff59);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("168ae438-d892-4451-8980-31a9c6ce70c3")]
+    public class AI_Idle : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public AI_Idle(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _baf1c33e40b2492683e3514ef821dbb3;
+            TypeDeserializer.Deserialize(out _baf1c33e40b2492683e3514ef821dbb3, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _baf1c33e40b2492683e3514ef821dbb3);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("e17be920-8234-489d-9521-5717e2b8c7f4")]
+    public class AI_Futz : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public AI_Futz(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _f0195a2c22204665b6fb02748c449c4e;
+            TypeDeserializer.Deserialize(out _f0195a2c22204665b6fb02748c449c4e, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _f0195a2c22204665b6fb02748c449c4e);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("b6c800dd-103b-4695-beb3-b380f54b1010")]
+    public class AI_Noise : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public AI_Noise(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _bfd1920d99054bae9b6bbce3ba99c8ce;
+            TypeDeserializer.Deserialize(out _bfd1920d99054bae9b6bbce3ba99c8ce, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _bfd1920d99054bae9b6bbce3ba99c8ce);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc")))
+            {
+                return id4bb00e6c72c647b4bd4b0524eac65adc;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("79ba63f0-f75d-4734-9ab2-cc119545b6b5")]
+    public class AI_Weapon : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4bb00e6c72c647b4bd4b0524eac65adc;
+        
+        public AI_Weapon(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _a3cb0705236f46bd9104fcf992740fdf;
+            TypeDeserializer.Deserialize(out _a3cb0705236f46bd9104fcf992740fdf, "");
+            this.id4bb00e6c72c647b4bd4b0524eac65adc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4bb00e6c-72c6-47b4-bd4b-0524eac65adc"), _a3cb0705236f46bd9104fcf992740fdf);
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
@@ -2102,13 +2837,59 @@ namespace MyNamespace.Nodes.Camera
     using MyNamespace.Types;
     
     
+    [RuntimeConversation.NodeTypeIDAttribute("71ed7f8d-ade5-4f10-98ea-aadeac0da197")]
+    public class Custom_Camera : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Controller idab8a4a357c694caeaa888d89f2ebd433;
+        
+        [RuntimeConversation.ParameterIDAttribute("b7f56dcc-c3a8-41d4-a0e1-9ce40403bb83")]
+        public String Object_Tag;
+        
+        [RuntimeConversation.ParameterIDAttribute("8c6ceeae-52ab-4a32-8293-f92f405b2115")]
+        public Decimal Delay;
+        
+        public Custom_Camera(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            this.idab8a4a357c694caeaa888d89f2ebd433 = new MyNamespace.Nodes.Connectors.Controller(this, Conversation.ID<Conversation.TConnector>.Parse("ab8a4a35-7c69-4cae-aa88-8d89f2ebd433"));
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ab8a4a35-7c69-4cae-aa88-8d89f2ebd433")))
+            {
+                return idab8a4a357c694caeaa888d89f2ebd433;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Object_Tag, GetParameter(parameters, new System.Guid("b7f56dcc-c3a8-41d4-a0e1-9ce40403bb83")));
+            TypeDeserializer.Deserialize(out Delay, GetParameter(parameters, new System.Guid("8c6ceeae-52ab-4a32-8293-f92f405b2115")));
+        }
+    }
+    
     [RuntimeConversation.NodeTypeIDAttribute("b0eea80e-74e4-4e09-a9a1-f1b80b9a4289")]
     public class Change_Camera : Node
     {
         
-        public MyNamespace.Nodes.Connectors.Output id1b452ebae3754a758ab9bea15280ca04;
+        public MyNamespace.Nodes.Connectors.Controller idab8a4a357c694caeaa888d89f2ebd433;
         
-        public MyNamespace.Nodes.Connectors.Input id6f4dee4b6e62443a9f52de8e2c20ac89;
+        [RuntimeConversation.ParameterIDAttribute("8c6ceeae-52ab-4a32-8293-f92f405b2115")]
+        public Decimal Delay;
         
         [RuntimeConversation.ParameterIDAttribute("0496a871-9567-4ab2-a417-5b97b1cba97e")]
         public CameraAnimation Animation;
@@ -2122,21 +2903,14 @@ namespace MyNamespace.Nodes.Camera
         public Change_Camera(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            String _0e1e77a9997245a88e9d7cae0443ca50;
-            TypeDeserializer.Deserialize(out _0e1e77a9997245a88e9d7cae0443ca50, "");
-            this.id1b452ebae3754a758ab9bea15280ca04 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("1b452eba-e375-4a75-8ab9-bea15280ca04"), _0e1e77a9997245a88e9d7cae0443ca50);
-            this.id6f4dee4b6e62443a9f52de8e2c20ac89 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("6f4dee4b-6e62-443a-9f52-de8e2c20ac89"));
+            this.idab8a4a357c694caeaa888d89f2ebd433 = new MyNamespace.Nodes.Connectors.Controller(this, Conversation.ID<Conversation.TConnector>.Parse("ab8a4a35-7c69-4cae-aa88-8d89f2ebd433"));
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("1b452eba-e375-4a75-8ab9-bea15280ca04")))
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ab8a4a35-7c69-4cae-aa88-8d89f2ebd433")))
             {
-                return id1b452ebae3754a758ab9bea15280ca04;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("6f4dee4b-6e62-443a-9f52-de8e2c20ac89")))
-            {
-                return id6f4dee4b6e62443a9f52de8e2c20ac89;
+                return idab8a4a357c694caeaa888d89f2ebd433;
             }
             return null;
         }
@@ -2154,6 +2928,7 @@ namespace MyNamespace.Nodes.Camera
         
         public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
         {
+            TypeDeserializer.Deserialize(out Delay, GetParameter(parameters, new System.Guid("8c6ceeae-52ab-4a32-8293-f92f405b2115")));
             TypeDeserializer.Deserialize(out Animation, GetParameter(parameters, new System.Guid("0496a871-9567-4ab2-a417-5b97b1cba97e")));
             TypeDeserializer.Deserialize(out Framing, GetParameter(parameters, new System.Guid("a32616b8-b68e-4802-a60c-2843a61fdc0c")));
             TypeDeserializer.Deserialize(out Target, GetParameter(parameters, new System.Guid("9db15260-e109-45d1-9c7a-47b57ddddbbb")));
@@ -2164,28 +2939,22 @@ namespace MyNamespace.Nodes.Camera
     public class Reset_Camera : Node
     {
         
-        public MyNamespace.Nodes.Connectors.Output id1b452ebae3754a758ab9bea15280ca04;
+        public MyNamespace.Nodes.Connectors.Controller idab8a4a357c694caeaa888d89f2ebd433;
         
-        public MyNamespace.Nodes.Connectors.Input id6d587c4f7dc343f08bdfca545c378602;
+        [RuntimeConversation.ParameterIDAttribute("8c6ceeae-52ab-4a32-8293-f92f405b2115")]
+        public Decimal Delay;
         
         public Reset_Camera(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            String _9ea739e2a2f74abdbf1b373ccedc5ac7;
-            TypeDeserializer.Deserialize(out _9ea739e2a2f74abdbf1b373ccedc5ac7, "");
-            this.id1b452ebae3754a758ab9bea15280ca04 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("1b452eba-e375-4a75-8ab9-bea15280ca04"), _9ea739e2a2f74abdbf1b373ccedc5ac7);
-            this.id6d587c4f7dc343f08bdfca545c378602 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("6d587c4f-7dc3-43f0-8bdf-ca545c378602"));
+            this.idab8a4a357c694caeaa888d89f2ebd433 = new MyNamespace.Nodes.Connectors.Controller(this, Conversation.ID<Conversation.TConnector>.Parse("ab8a4a35-7c69-4cae-aa88-8d89f2ebd433"));
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("1b452eba-e375-4a75-8ab9-bea15280ca04")))
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ab8a4a35-7c69-4cae-aa88-8d89f2ebd433")))
             {
-                return id1b452ebae3754a758ab9bea15280ca04;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("6d587c4f-7dc3-43f0-8bdf-ca545c378602")))
-            {
-                return id6d587c4f7dc343f08bdfca545c378602;
+                return idab8a4a357c694caeaa888d89f2ebd433;
             }
             return null;
         }
@@ -2203,6 +2972,7 @@ namespace MyNamespace.Nodes.Camera
         
         public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
         {
+            TypeDeserializer.Deserialize(out Delay, GetParameter(parameters, new System.Guid("8c6ceeae-52ab-4a32-8293-f92f405b2115")));
         }
     }
 }
@@ -2215,15 +2985,480 @@ namespace MyNamespace.Nodes.Condition
     using MyNamespace.Types;
     
     
+    [RuntimeConversation.NodeTypeIDAttribute("a1578ae6-f73d-497e-8dce-3b741562ae3e")]
+    public class Game_Mode : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Input id26e40ab298914e6e8634866e55acc74f;
+        
+        public MyNamespace.Nodes.Connectors.Output idb381d7e3eae647528028ecce8df0ab42;
+        
+        public MyNamespace.Nodes.Connectors.Output id7f184d2bd8844ae38f0b3a93f9e3a241;
+        
+        [RuntimeConversation.ParameterIDAttribute("15510795-34a7-4a76-8761-0dac14cdf5e7")]
+        public GameMode Game_Mode_;
+        
+        public Game_Mode(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            this.id26e40ab298914e6e8634866e55acc74f = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("26e40ab2-9891-4e6e-8634-866e55acc74f"));
+            String _99c78d292b874cd6be0f65b276c4ed0d;
+            TypeDeserializer.Deserialize(out _99c78d292b874cd6be0f65b276c4ed0d, "True");
+            this.idb381d7e3eae647528028ecce8df0ab42 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("b381d7e3-eae6-4752-8028-ecce8df0ab42"), _99c78d292b874cd6be0f65b276c4ed0d);
+            String _f766061bd3c74fd2b2f8d007d7c1115f;
+            TypeDeserializer.Deserialize(out _f766061bd3c74fd2b2f8d007d7c1115f, "False");
+            this.id7f184d2bd8844ae38f0b3a93f9e3a241 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("7f184d2b-d884-4ae3-8f0b-3a93f9e3a241"), _f766061bd3c74fd2b2f8d007d7c1115f);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("26e40ab2-9891-4e6e-8634-866e55acc74f")))
+            {
+                return id26e40ab298914e6e8634866e55acc74f;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("b381d7e3-eae6-4752-8028-ecce8df0ab42")))
+            {
+                return idb381d7e3eae647528028ecce8df0ab42;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("7f184d2b-d884-4ae3-8f0b-3a93f9e3a241")))
+            {
+                return id7f184d2bd8844ae38f0b3a93f9e3a241;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Game_Mode_, GetParameter(parameters, new System.Guid("15510795-34a7-4a76-8761-0dac14cdf5e7")));
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("3d5cfc7b-f605-4f35-a43d-b0c1c9ed2276")]
+    public class Check_Local_Decimal : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id76aab09126b046f9b5ca11efd99b5da9;
+        
+        public MyNamespace.Nodes.Connectors.Input id5cc98ea8340345aeb53a9e95f65008e2;
+        
+        public MyNamespace.Nodes.Connectors.Output id4947fa04ff924f5e81dceb38d73ba500;
+        
+        public MyNamespace.Nodes.Connectors.Output idce18fc018b7e452e9cda7eec8bc16286;
+        
+        [RuntimeConversation.ParameterIDAttribute("849bff94-fd4a-4080-8dbc-391d1cfda3aa")]
+        public DecimalFlag Flag;
+        
+        [RuntimeConversation.ParameterIDAttribute("acb4c3ab-cbe9-4685-8a42-0c4f65bd5d09")]
+        public Decimal Amount;
+        
+        public Check_Local_Decimal(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _4fc8142c54c34b5d80559a12cab2f517;
+            TypeDeserializer.Deserialize(out _4fc8142c54c34b5d80559a12cab2f517, "Less");
+            this.id76aab09126b046f9b5ca11efd99b5da9 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("76aab091-26b0-46f9-b5ca-11efd99b5da9"), _4fc8142c54c34b5d80559a12cab2f517);
+            this.id5cc98ea8340345aeb53a9e95f65008e2 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("5cc98ea8-3403-45ae-b53a-9e95f65008e2"));
+            String _f7b10539f8dd4e1599981c69dc4f907d;
+            TypeDeserializer.Deserialize(out _f7b10539f8dd4e1599981c69dc4f907d, "Equal");
+            this.id4947fa04ff924f5e81dceb38d73ba500 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4947fa04-ff92-4f5e-81dc-eb38d73ba500"), _f7b10539f8dd4e1599981c69dc4f907d);
+            String _427d87b9c3c64c8180528bb397856fac;
+            TypeDeserializer.Deserialize(out _427d87b9c3c64c8180528bb397856fac, "More");
+            this.idce18fc018b7e452e9cda7eec8bc16286 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("ce18fc01-8b7e-452e-9cda-7eec8bc16286"), _427d87b9c3c64c8180528bb397856fac);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("76aab091-26b0-46f9-b5ca-11efd99b5da9")))
+            {
+                return id76aab09126b046f9b5ca11efd99b5da9;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("5cc98ea8-3403-45ae-b53a-9e95f65008e2")))
+            {
+                return id5cc98ea8340345aeb53a9e95f65008e2;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4947fa04-ff92-4f5e-81dc-eb38d73ba500")))
+            {
+                return id4947fa04ff924f5e81dceb38d73ba500;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ce18fc01-8b7e-452e-9cda-7eec8bc16286")))
+            {
+                return idce18fc018b7e452e9cda7eec8bc16286;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("849bff94-fd4a-4080-8dbc-391d1cfda3aa")));
+            TypeDeserializer.Deserialize(out Amount, GetParameter(parameters, new System.Guid("acb4c3ab-cbe9-4685-8a42-0c4f65bd5d09")));
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("8fca70c8-2e1b-4d59-80b4-0c7219625899")]
+    public class Check_Story_Decimal : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id76aab09126b046f9b5ca11efd99b5da9;
+        
+        public MyNamespace.Nodes.Connectors.Input id4d10663eac3b458dadf1730f9609b8e7;
+        
+        public MyNamespace.Nodes.Connectors.Output id4947fa04ff924f5e81dceb38d73ba500;
+        
+        public MyNamespace.Nodes.Connectors.Output idce18fc018b7e452e9cda7eec8bc16286;
+        
+        [RuntimeConversation.ParameterIDAttribute("849bff94-fd4a-4080-8dbc-391d1cfda3aa")]
+        public DecimalFlag Flag;
+        
+        [RuntimeConversation.ParameterIDAttribute("acb4c3ab-cbe9-4685-8a42-0c4f65bd5d09")]
+        public Decimal Amount;
+        
+        public Check_Story_Decimal(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _272fd2f94d1849e6a11d9619cd122c93;
+            TypeDeserializer.Deserialize(out _272fd2f94d1849e6a11d9619cd122c93, "Less");
+            this.id76aab09126b046f9b5ca11efd99b5da9 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("76aab091-26b0-46f9-b5ca-11efd99b5da9"), _272fd2f94d1849e6a11d9619cd122c93);
+            this.id4d10663eac3b458dadf1730f9609b8e7 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("4d10663e-ac3b-458d-adf1-730f9609b8e7"));
+            String _0c4a52824ff7431c9da6b59af54ecc63;
+            TypeDeserializer.Deserialize(out _0c4a52824ff7431c9da6b59af54ecc63, "Equal");
+            this.id4947fa04ff924f5e81dceb38d73ba500 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4947fa04-ff92-4f5e-81dc-eb38d73ba500"), _0c4a52824ff7431c9da6b59af54ecc63);
+            String _d1ad069e228a493191f0342fae928a2f;
+            TypeDeserializer.Deserialize(out _d1ad069e228a493191f0342fae928a2f, "More");
+            this.idce18fc018b7e452e9cda7eec8bc16286 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("ce18fc01-8b7e-452e-9cda-7eec8bc16286"), _d1ad069e228a493191f0342fae928a2f);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("76aab091-26b0-46f9-b5ca-11efd99b5da9")))
+            {
+                return id76aab09126b046f9b5ca11efd99b5da9;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4d10663e-ac3b-458d-adf1-730f9609b8e7")))
+            {
+                return id4d10663eac3b458dadf1730f9609b8e7;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4947fa04-ff92-4f5e-81dc-eb38d73ba500")))
+            {
+                return id4947fa04ff924f5e81dceb38d73ba500;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ce18fc01-8b7e-452e-9cda-7eec8bc16286")))
+            {
+                return idce18fc018b7e452e9cda7eec8bc16286;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("849bff94-fd4a-4080-8dbc-391d1cfda3aa")));
+            TypeDeserializer.Deserialize(out Amount, GetParameter(parameters, new System.Guid("acb4c3ab-cbe9-4685-8a42-0c4f65bd5d09")));
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("bca29176-1034-4310-9864-b949dd64b4d0")]
+    public class Check_Local_Boolean : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output idb381d7e3eae647528028ecce8df0ab42;
+        
+        public MyNamespace.Nodes.Connectors.Input ided7f1c46265c4606b8b3ecd2fca86d88;
+        
+        public MyNamespace.Nodes.Connectors.Output id7f184d2bd8844ae38f0b3a93f9e3a241;
+        
+        [RuntimeConversation.ParameterIDAttribute("a1b79285-b7da-4cb6-b7c3-a8ed228b6461")]
+        public BooleanFlag Flag;
+        
+        public Check_Local_Boolean(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _32f7c569bfbd48b2bfcacbcc57433417;
+            TypeDeserializer.Deserialize(out _32f7c569bfbd48b2bfcacbcc57433417, "True");
+            this.idb381d7e3eae647528028ecce8df0ab42 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("b381d7e3-eae6-4752-8028-ecce8df0ab42"), _32f7c569bfbd48b2bfcacbcc57433417);
+            this.ided7f1c46265c4606b8b3ecd2fca86d88 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("ed7f1c46-265c-4606-b8b3-ecd2fca86d88"));
+            String _893d568d42574971b22b0afe5658ac03;
+            TypeDeserializer.Deserialize(out _893d568d42574971b22b0afe5658ac03, "False");
+            this.id7f184d2bd8844ae38f0b3a93f9e3a241 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("7f184d2b-d884-4ae3-8f0b-3a93f9e3a241"), _893d568d42574971b22b0afe5658ac03);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("b381d7e3-eae6-4752-8028-ecce8df0ab42")))
+            {
+                return idb381d7e3eae647528028ecce8df0ab42;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ed7f1c46-265c-4606-b8b3-ecd2fca86d88")))
+            {
+                return ided7f1c46265c4606b8b3ecd2fca86d88;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("7f184d2b-d884-4ae3-8f0b-3a93f9e3a241")))
+            {
+                return id7f184d2bd8844ae38f0b3a93f9e3a241;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("a1b79285-b7da-4cb6-b7c3-a8ed228b6461")));
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("42842463-2c60-4220-b231-ae82ea711d78")]
+    public class Check_Story_Boolean : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output idb381d7e3eae647528028ecce8df0ab42;
+        
+        public MyNamespace.Nodes.Connectors.Input id5b2be6ec24464d108af010db56aa0e3a;
+        
+        public MyNamespace.Nodes.Connectors.Output id7f184d2bd8844ae38f0b3a93f9e3a241;
+        
+        [RuntimeConversation.ParameterIDAttribute("a1b79285-b7da-4cb6-b7c3-a8ed228b6461")]
+        public BooleanFlag Flag;
+        
+        public Check_Story_Boolean(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _6d37f090b2c54c83953f766a94fe9d9f;
+            TypeDeserializer.Deserialize(out _6d37f090b2c54c83953f766a94fe9d9f, "True");
+            this.idb381d7e3eae647528028ecce8df0ab42 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("b381d7e3-eae6-4752-8028-ecce8df0ab42"), _6d37f090b2c54c83953f766a94fe9d9f);
+            this.id5b2be6ec24464d108af010db56aa0e3a = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("5b2be6ec-2446-4d10-8af0-10db56aa0e3a"));
+            String _376c89226938449cbed004553157ebe7;
+            TypeDeserializer.Deserialize(out _376c89226938449cbed004553157ebe7, "False");
+            this.id7f184d2bd8844ae38f0b3a93f9e3a241 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("7f184d2b-d884-4ae3-8f0b-3a93f9e3a241"), _376c89226938449cbed004553157ebe7);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("b381d7e3-eae6-4752-8028-ecce8df0ab42")))
+            {
+                return idb381d7e3eae647528028ecce8df0ab42;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("5b2be6ec-2446-4d10-8af0-10db56aa0e3a")))
+            {
+                return id5b2be6ec24464d108af010db56aa0e3a;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("7f184d2b-d884-4ae3-8f0b-3a93f9e3a241")))
+            {
+                return id7f184d2bd8844ae38f0b3a93f9e3a241;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("a1b79285-b7da-4cb6-b7c3-a8ed228b6461")));
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("965d6f95-b871-49cf-8568-16197fee8524")]
+    public class Check_Story_Integer : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id76aab09126b046f9b5ca11efd99b5da9;
+        
+        public MyNamespace.Nodes.Connectors.Input idc0e16a5abb8d4031a5c4839cf2cfc459;
+        
+        public MyNamespace.Nodes.Connectors.Output id4947fa04ff924f5e81dceb38d73ba500;
+        
+        public MyNamespace.Nodes.Connectors.Output idce18fc018b7e452e9cda7eec8bc16286;
+        
+        [RuntimeConversation.ParameterIDAttribute("1785b9d2-80f9-4a5a-a553-50625ca31f3d")]
+        public IntegerFlag Flag;
+        
+        [RuntimeConversation.ParameterIDAttribute("7bc072f7-a8db-46ee-90c2-b6b4ed71dd68")]
+        public Int32 Amount;
+        
+        public Check_Story_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _43f2450f71864bcbbf374b4af5a748c7;
+            TypeDeserializer.Deserialize(out _43f2450f71864bcbbf374b4af5a748c7, "Less");
+            this.id76aab09126b046f9b5ca11efd99b5da9 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("76aab091-26b0-46f9-b5ca-11efd99b5da9"), _43f2450f71864bcbbf374b4af5a748c7);
+            this.idc0e16a5abb8d4031a5c4839cf2cfc459 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("c0e16a5a-bb8d-4031-a5c4-839cf2cfc459"));
+            String _9f372c9172114b66a66718505d94b783;
+            TypeDeserializer.Deserialize(out _9f372c9172114b66a66718505d94b783, "Equal");
+            this.id4947fa04ff924f5e81dceb38d73ba500 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4947fa04-ff92-4f5e-81dc-eb38d73ba500"), _9f372c9172114b66a66718505d94b783);
+            String _9fc7b4caf7924f35941bc61c2509ea3e;
+            TypeDeserializer.Deserialize(out _9fc7b4caf7924f35941bc61c2509ea3e, "More");
+            this.idce18fc018b7e452e9cda7eec8bc16286 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("ce18fc01-8b7e-452e-9cda-7eec8bc16286"), _9fc7b4caf7924f35941bc61c2509ea3e);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("76aab091-26b0-46f9-b5ca-11efd99b5da9")))
+            {
+                return id76aab09126b046f9b5ca11efd99b5da9;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("c0e16a5a-bb8d-4031-a5c4-839cf2cfc459")))
+            {
+                return idc0e16a5abb8d4031a5c4839cf2cfc459;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4947fa04-ff92-4f5e-81dc-eb38d73ba500")))
+            {
+                return id4947fa04ff924f5e81dceb38d73ba500;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ce18fc01-8b7e-452e-9cda-7eec8bc16286")))
+            {
+                return idce18fc018b7e452e9cda7eec8bc16286;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("1785b9d2-80f9-4a5a-a553-50625ca31f3d")));
+            TypeDeserializer.Deserialize(out Amount, GetParameter(parameters, new System.Guid("7bc072f7-a8db-46ee-90c2-b6b4ed71dd68")));
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("08727d6a-da44-430b-8caf-a58cfdfe251c")]
+    public class Check_Local_Integer : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id76aab09126b046f9b5ca11efd99b5da9;
+        
+        public MyNamespace.Nodes.Connectors.Input idee53636aa7d847a7842547f88cc624aa;
+        
+        public MyNamespace.Nodes.Connectors.Output idce18fc018b7e452e9cda7eec8bc16286;
+        
+        public MyNamespace.Nodes.Connectors.Output id4947fa04ff924f5e81dceb38d73ba500;
+        
+        [RuntimeConversation.ParameterIDAttribute("7bc072f7-a8db-46ee-90c2-b6b4ed71dd68")]
+        public Int32 Amount;
+        
+        [RuntimeConversation.ParameterIDAttribute("1785b9d2-80f9-4a5a-a553-50625ca31f3d")]
+        public IntegerFlag Flag;
+        
+        public Check_Local_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _ed09b67c15504370ac4f7c1b1a5b2a23;
+            TypeDeserializer.Deserialize(out _ed09b67c15504370ac4f7c1b1a5b2a23, "Less");
+            this.id76aab09126b046f9b5ca11efd99b5da9 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("76aab091-26b0-46f9-b5ca-11efd99b5da9"), _ed09b67c15504370ac4f7c1b1a5b2a23);
+            this.idee53636aa7d847a7842547f88cc624aa = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("ee53636a-a7d8-47a7-8425-47f88cc624aa"));
+            String _095d5747d1fc4943a499544d096ac11e;
+            TypeDeserializer.Deserialize(out _095d5747d1fc4943a499544d096ac11e, "More");
+            this.idce18fc018b7e452e9cda7eec8bc16286 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("ce18fc01-8b7e-452e-9cda-7eec8bc16286"), _095d5747d1fc4943a499544d096ac11e);
+            String _68f878542165436691bd599414c22bef;
+            TypeDeserializer.Deserialize(out _68f878542165436691bd599414c22bef, "Equal");
+            this.id4947fa04ff924f5e81dceb38d73ba500 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4947fa04-ff92-4f5e-81dc-eb38d73ba500"), _68f878542165436691bd599414c22bef);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("76aab091-26b0-46f9-b5ca-11efd99b5da9")))
+            {
+                return id76aab09126b046f9b5ca11efd99b5da9;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ee53636a-a7d8-47a7-8425-47f88cc624aa")))
+            {
+                return idee53636aa7d847a7842547f88cc624aa;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ce18fc01-8b7e-452e-9cda-7eec8bc16286")))
+            {
+                return idce18fc018b7e452e9cda7eec8bc16286;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4947fa04-ff92-4f5e-81dc-eb38d73ba500")))
+            {
+                return id4947fa04ff924f5e81dceb38d73ba500;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Amount, GetParameter(parameters, new System.Guid("7bc072f7-a8db-46ee-90c2-b6b4ed71dd68")));
+            TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("1785b9d2-80f9-4a5a-a553-50625ca31f3d")));
+        }
+    }
+    
     [RuntimeConversation.NodeTypeIDAttribute("df8c4ddb-616b-4481-b0bc-07eb8236f7fb")]
     public class Is_Alive : Node
     {
         
+        public MyNamespace.Nodes.Connectors.Input idee1b251dacab476eb788efb1bd1c05c7;
+        
         public MyNamespace.Nodes.Connectors.Output id94b73ca161054b84a505141a878e7494;
         
         public MyNamespace.Nodes.Connectors.Output idbd570e148ca844c1a1e213d4252f8833;
-        
-        public MyNamespace.Nodes.Connectors.Input idee1b251dacab476eb788efb1bd1c05c7;
         
         [RuntimeConversation.ParameterIDAttribute("afe33600-ec07-4a01-a4ed-76d278a5aa24")]
         public Character Character;
@@ -2231,17 +3466,21 @@ namespace MyNamespace.Nodes.Condition
         public Is_Alive(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            String _b3d70c9e93d14a5ca70a72e80a105b27;
-            TypeDeserializer.Deserialize(out _b3d70c9e93d14a5ca70a72e80a105b27, "Alive");
-            this.id94b73ca161054b84a505141a878e7494 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("94b73ca1-6105-4b84-a505-141a878e7494"), _b3d70c9e93d14a5ca70a72e80a105b27);
-            String _1e17636f66f94f78b9d70d140c5d0e1f;
-            TypeDeserializer.Deserialize(out _1e17636f66f94f78b9d70d140c5d0e1f, "Dead");
-            this.idbd570e148ca844c1a1e213d4252f8833 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("bd570e14-8ca8-44c1-a1e2-13d4252f8833"), _1e17636f66f94f78b9d70d140c5d0e1f);
             this.idee1b251dacab476eb788efb1bd1c05c7 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("ee1b251d-acab-476e-b788-efb1bd1c05c7"));
+            String _049382808dd043c3b25e3c1ed66bc0f8;
+            TypeDeserializer.Deserialize(out _049382808dd043c3b25e3c1ed66bc0f8, "Alive");
+            this.id94b73ca161054b84a505141a878e7494 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("94b73ca1-6105-4b84-a505-141a878e7494"), _049382808dd043c3b25e3c1ed66bc0f8);
+            String _ff43581c6ba14853b48bda0a9187c01d;
+            TypeDeserializer.Deserialize(out _ff43581c6ba14853b48bda0a9187c01d, "Dead");
+            this.idbd570e148ca844c1a1e213d4252f8833 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("bd570e14-8ca8-44c1-a1e2-13d4252f8833"), _ff43581c6ba14853b48bda0a9187c01d);
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
         {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ee1b251d-acab-476e-b788-efb1bd1c05c7")))
+            {
+                return idee1b251dacab476eb788efb1bd1c05c7;
+            }
             if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("94b73ca1-6105-4b84-a505-141a878e7494")))
             {
                 return id94b73ca161054b84a505141a878e7494;
@@ -2249,10 +3488,6 @@ namespace MyNamespace.Nodes.Condition
             if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("bd570e14-8ca8-44c1-a1e2-13d4252f8833")))
             {
                 return idbd570e148ca844c1a1e213d4252f8833;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ee1b251d-acab-476e-b788-efb1bd1c05c7")))
-            {
-                return idee1b251dacab476eb788efb1bd1c05c7;
             }
             return null;
         }
@@ -2278,9 +3513,9 @@ namespace MyNamespace.Nodes.Condition
     public class Character_Nearby : Node
     {
         
-        public MyNamespace.Nodes.Connectors.Input id26be148f60a845ce8ef228521cad5389;
-        
         public MyNamespace.Nodes.Connectors.Output idb381d7e3eae647528028ecce8df0ab42;
+        
+        public MyNamespace.Nodes.Connectors.Input id26be148f60a845ce8ef228521cad5389;
         
         public MyNamespace.Nodes.Connectors.Output id7f184d2bd8844ae38f0b3a93f9e3a241;
         
@@ -2290,24 +3525,24 @@ namespace MyNamespace.Nodes.Condition
         public Character_Nearby(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
+            String _ad7d779290a94784850d1ea9fcac3c40;
+            TypeDeserializer.Deserialize(out _ad7d779290a94784850d1ea9fcac3c40, "True");
+            this.idb381d7e3eae647528028ecce8df0ab42 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("b381d7e3-eae6-4752-8028-ecce8df0ab42"), _ad7d779290a94784850d1ea9fcac3c40);
             this.id26be148f60a845ce8ef228521cad5389 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("26be148f-60a8-45ce-8ef2-28521cad5389"));
-            String _9c914eacea1c45d0914c6710fef62e86;
-            TypeDeserializer.Deserialize(out _9c914eacea1c45d0914c6710fef62e86, "True");
-            this.idb381d7e3eae647528028ecce8df0ab42 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("b381d7e3-eae6-4752-8028-ecce8df0ab42"), _9c914eacea1c45d0914c6710fef62e86);
-            String _4c4ec11fdef846018e6a8f04beb63805;
-            TypeDeserializer.Deserialize(out _4c4ec11fdef846018e6a8f04beb63805, "False");
-            this.id7f184d2bd8844ae38f0b3a93f9e3a241 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("7f184d2b-d884-4ae3-8f0b-3a93f9e3a241"), _4c4ec11fdef846018e6a8f04beb63805);
+            String _af5c4420f426403da3d98192cf0ed961;
+            TypeDeserializer.Deserialize(out _af5c4420f426403da3d98192cf0ed961, "False");
+            this.id7f184d2bd8844ae38f0b3a93f9e3a241 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("7f184d2b-d884-4ae3-8f0b-3a93f9e3a241"), _af5c4420f426403da3d98192cf0ed961);
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("26be148f-60a8-45ce-8ef2-28521cad5389")))
-            {
-                return id26be148f60a845ce8ef228521cad5389;
-            }
             if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("b381d7e3-eae6-4752-8028-ecce8df0ab42")))
             {
                 return idb381d7e3eae647528028ecce8df0ab42;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("26be148f-60a8-45ce-8ef2-28521cad5389")))
+            {
+                return id26be148f60a845ce8ef228521cad5389;
             }
             if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("7f184d2b-d884-4ae3-8f0b-3a93f9e3a241")))
             {
@@ -2337,37 +3572,37 @@ namespace MyNamespace.Nodes.Condition
     public class Player_Character : Node
     {
         
-        public MyNamespace.Nodes.Connectors.Output id8bb5e9bba4d6470a895fd006ee30034e;
+        public MyNamespace.Nodes.Connectors.Input id4f02fde216264045a0b0789efd769e79;
         
         public MyNamespace.Nodes.Connectors.Output id0988e9354ae1448abc7f79995462a368;
         
-        public MyNamespace.Nodes.Connectors.Input id4f02fde216264045a0b0789efd769e79;
+        public MyNamespace.Nodes.Connectors.Output id8bb5e9bba4d6470a895fd006ee30034e;
         
         public Player_Character(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            String _570c241a86364e6d940ebf194cc59439;
-            TypeDeserializer.Deserialize(out _570c241a86364e6d940ebf194cc59439, "Operative");
-            this.id8bb5e9bba4d6470a895fd006ee30034e = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("8bb5e9bb-a4d6-470a-895f-d006ee30034e"), _570c241a86364e6d940ebf194cc59439);
-            String _5db5b5ce8fe74e7daecb571a7dd1cecc;
-            TypeDeserializer.Deserialize(out _5db5b5ce8fe74e7daecb571a7dd1cecc, "Hacker");
-            this.id0988e9354ae1448abc7f79995462a368 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("0988e935-4ae1-448a-bc7f-79995462a368"), _5db5b5ce8fe74e7daecb571a7dd1cecc);
             this.id4f02fde216264045a0b0789efd769e79 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("4f02fde2-1626-4045-a0b0-789efd769e79"));
+            String _291b45caaafc4b87925c6b91429cdd69;
+            TypeDeserializer.Deserialize(out _291b45caaafc4b87925c6b91429cdd69, "Hacker");
+            this.id0988e9354ae1448abc7f79995462a368 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("0988e935-4ae1-448a-bc7f-79995462a368"), _291b45caaafc4b87925c6b91429cdd69);
+            String _37e39a35b3824c9a93412b17738b4b6c;
+            TypeDeserializer.Deserialize(out _37e39a35b3824c9a93412b17738b4b6c, "Operative");
+            this.id8bb5e9bba4d6470a895fd006ee30034e = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("8bb5e9bb-a4d6-470a-895f-d006ee30034e"), _37e39a35b3824c9a93412b17738b4b6c);
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("8bb5e9bb-a4d6-470a-895f-d006ee30034e")))
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4f02fde2-1626-4045-a0b0-789efd769e79")))
             {
-                return id8bb5e9bba4d6470a895fd006ee30034e;
+                return id4f02fde216264045a0b0789efd769e79;
             }
             if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("0988e935-4ae1-448a-bc7f-79995462a368")))
             {
                 return id0988e9354ae1448abc7f79995462a368;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4f02fde2-1626-4045-a0b0-789efd769e79")))
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("8bb5e9bb-a4d6-470a-895f-d006ee30034e")))
             {
-                return id4f02fde216264045a0b0789efd769e79;
+                return id8bb5e9bba4d6470a895fd006ee30034e;
             }
             return null;
         }
@@ -2392,26 +3627,30 @@ namespace MyNamespace.Nodes.Condition
     public class Player_Outfit : Node
     {
         
+        public MyNamespace.Nodes.Connectors.Input id8ac7d4c3f00c4669bd138a3023a79f47;
+        
         public MyNamespace.Nodes.Connectors.Output idc86205454c124229b2d68dad56759f16;
         
         public MyNamespace.Nodes.Connectors.Output id01c10f0a01b745e8a7b485f539d8cc70;
         
-        public MyNamespace.Nodes.Connectors.Input id8ac7d4c3f00c4669bd138a3023a79f47;
-        
         public Player_Outfit(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            String _ee225fccac834a4bbd402a38019f7c0d;
-            TypeDeserializer.Deserialize(out _ee225fccac834a4bbd402a38019f7c0d, "Low Profile");
-            this.idc86205454c124229b2d68dad56759f16 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("c8620545-4c12-4229-b2d6-8dad56759f16"), _ee225fccac834a4bbd402a38019f7c0d);
-            String _53086de546f2450187a05c59be8772f3;
-            TypeDeserializer.Deserialize(out _53086de546f2450187a05c59be8772f3, "Covert Ops");
-            this.id01c10f0a01b745e8a7b485f539d8cc70 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("01c10f0a-01b7-45e8-a7b4-85f539d8cc70"), _53086de546f2450187a05c59be8772f3);
             this.id8ac7d4c3f00c4669bd138a3023a79f47 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("8ac7d4c3-f00c-4669-bd13-8a3023a79f47"));
+            String _fedaf0ed7f334757adc29c87d4bfced4;
+            TypeDeserializer.Deserialize(out _fedaf0ed7f334757adc29c87d4bfced4, "Low Profile");
+            this.idc86205454c124229b2d68dad56759f16 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("c8620545-4c12-4229-b2d6-8dad56759f16"), _fedaf0ed7f334757adc29c87d4bfced4);
+            String _51524975bda847a1abcabfdf90b97e91;
+            TypeDeserializer.Deserialize(out _51524975bda847a1abcabfdf90b97e91, "Covert Ops");
+            this.id01c10f0a01b745e8a7b485f539d8cc70 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("01c10f0a-01b7-45e8-a7b4-85f539d8cc70"), _51524975bda847a1abcabfdf90b97e91);
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
         {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("8ac7d4c3-f00c-4669-bd13-8a3023a79f47")))
+            {
+                return id8ac7d4c3f00c4669bd138a3023a79f47;
+            }
             if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("c8620545-4c12-4229-b2d6-8dad56759f16")))
             {
                 return idc86205454c124229b2d68dad56759f16;
@@ -2420,10 +3659,6 @@ namespace MyNamespace.Nodes.Condition
             {
                 return id01c10f0a01b745e8a7b485f539d8cc70;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("8ac7d4c3-f00c-4669-bd13-8a3023a79f47")))
-            {
-                return id8ac7d4c3f00c4669bd138a3023a79f47;
-            }
             return null;
         }
         
@@ -2440,78 +3675,6 @@ namespace MyNamespace.Nodes.Condition
         
         public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
         {
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("08727d6a-da44-430b-8caf-a58cfdfe251c")]
-    public class Check_Integer : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output idce18fc018b7e452e9cda7eec8bc16286;
-        
-        public MyNamespace.Nodes.Connectors.Output id76aab09126b046f9b5ca11efd99b5da9;
-        
-        public MyNamespace.Nodes.Connectors.Output id4947fa04ff924f5e81dceb38d73ba500;
-        
-        public MyNamespace.Nodes.Connectors.Input idee53636aa7d847a7842547f88cc624aa;
-        
-        [RuntimeConversation.ParameterIDAttribute("1785b9d2-80f9-4a5a-a553-50625ca31f3d")]
-        public IntegerFlag Flag;
-        
-        [RuntimeConversation.ParameterIDAttribute("7bc072f7-a8db-46ee-90c2-b6b4ed71dd68")]
-        public Int32 Amount;
-        
-        public Check_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _0e3041eadb13410e83ba1d8e1de15344;
-            TypeDeserializer.Deserialize(out _0e3041eadb13410e83ba1d8e1de15344, "More");
-            this.idce18fc018b7e452e9cda7eec8bc16286 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("ce18fc01-8b7e-452e-9cda-7eec8bc16286"), _0e3041eadb13410e83ba1d8e1de15344);
-            String _acb129fcaea74ee7af9b5eaa657bdd71;
-            TypeDeserializer.Deserialize(out _acb129fcaea74ee7af9b5eaa657bdd71, "Less");
-            this.id76aab09126b046f9b5ca11efd99b5da9 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("76aab091-26b0-46f9-b5ca-11efd99b5da9"), _acb129fcaea74ee7af9b5eaa657bdd71);
-            String _f031054f161545939bdaa827ced25b9c;
-            TypeDeserializer.Deserialize(out _f031054f161545939bdaa827ced25b9c, "Equal");
-            this.id4947fa04ff924f5e81dceb38d73ba500 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4947fa04-ff92-4f5e-81dc-eb38d73ba500"), _f031054f161545939bdaa827ced25b9c);
-            this.idee53636aa7d847a7842547f88cc624aa = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("ee53636a-a7d8-47a7-8425-47f88cc624aa"));
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ce18fc01-8b7e-452e-9cda-7eec8bc16286")))
-            {
-                return idce18fc018b7e452e9cda7eec8bc16286;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("76aab091-26b0-46f9-b5ca-11efd99b5da9")))
-            {
-                return id76aab09126b046f9b5ca11efd99b5da9;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4947fa04-ff92-4f5e-81dc-eb38d73ba500")))
-            {
-                return id4947fa04ff924f5e81dceb38d73ba500;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ee53636a-a7d8-47a7-8425-47f88cc624aa")))
-            {
-                return idee53636aa7d847a7842547f88cc624aa;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-            TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("1785b9d2-80f9-4a5a-a553-50625ca31f3d")));
-            TypeDeserializer.Deserialize(out Amount, GetParameter(parameters, new System.Guid("7bc072f7-a8db-46ee-90c2-b6b4ed71dd68")));
         }
     }
     
@@ -2519,9 +3682,9 @@ namespace MyNamespace.Nodes.Condition
     public class Player_Inventory : Node
     {
         
-        public MyNamespace.Nodes.Connectors.Input id61943bf14e2f490495ab739e5738dd8b;
-        
         public MyNamespace.Nodes.Connectors.Output idb381d7e3eae647528028ecce8df0ab42;
+        
+        public MyNamespace.Nodes.Connectors.Input id61943bf14e2f490495ab739e5738dd8b;
         
         public MyNamespace.Nodes.Connectors.Output id7f184d2bd8844ae38f0b3a93f9e3a241;
         
@@ -2531,24 +3694,24 @@ namespace MyNamespace.Nodes.Condition
         public Player_Inventory(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
+            String _a7023f1b2163490f8b56c9717cd8f9a5;
+            TypeDeserializer.Deserialize(out _a7023f1b2163490f8b56c9717cd8f9a5, "True");
+            this.idb381d7e3eae647528028ecce8df0ab42 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("b381d7e3-eae6-4752-8028-ecce8df0ab42"), _a7023f1b2163490f8b56c9717cd8f9a5);
             this.id61943bf14e2f490495ab739e5738dd8b = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("61943bf1-4e2f-4904-95ab-739e5738dd8b"));
-            String _d6c91b7049f74ecd80b85a1b628fbae9;
-            TypeDeserializer.Deserialize(out _d6c91b7049f74ecd80b85a1b628fbae9, "True");
-            this.idb381d7e3eae647528028ecce8df0ab42 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("b381d7e3-eae6-4752-8028-ecce8df0ab42"), _d6c91b7049f74ecd80b85a1b628fbae9);
-            String _bb30f0202f2447abbe305937de3d0001;
-            TypeDeserializer.Deserialize(out _bb30f0202f2447abbe305937de3d0001, "False");
-            this.id7f184d2bd8844ae38f0b3a93f9e3a241 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("7f184d2b-d884-4ae3-8f0b-3a93f9e3a241"), _bb30f0202f2447abbe305937de3d0001);
+            String _4c22fa6608e94156b9e71587e605df2f;
+            TypeDeserializer.Deserialize(out _4c22fa6608e94156b9e71587e605df2f, "False");
+            this.id7f184d2bd8844ae38f0b3a93f9e3a241 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("7f184d2b-d884-4ae3-8f0b-3a93f9e3a241"), _4c22fa6608e94156b9e71587e605df2f);
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("61943bf1-4e2f-4904-95ab-739e5738dd8b")))
-            {
-                return id61943bf14e2f490495ab739e5738dd8b;
-            }
             if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("b381d7e3-eae6-4752-8028-ecce8df0ab42")))
             {
                 return idb381d7e3eae647528028ecce8df0ab42;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("61943bf1-4e2f-4904-95ab-739e5738dd8b")))
+            {
+                return id61943bf14e2f490495ab739e5738dd8b;
             }
             if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("7f184d2b-d884-4ae3-8f0b-3a93f9e3a241")))
             {
@@ -2578,9 +3741,9 @@ namespace MyNamespace.Nodes.Condition
     public class Player_Health : Node
     {
         
-        public MyNamespace.Nodes.Connectors.Input id36e21978b1a943b98d687be70965c3cd;
-        
         public MyNamespace.Nodes.Connectors.Output id76aab09126b046f9b5ca11efd99b5da9;
+        
+        public MyNamespace.Nodes.Connectors.Input id36e21978b1a943b98d687be70965c3cd;
         
         public MyNamespace.Nodes.Connectors.Output id4947fa04ff924f5e81dceb38d73ba500;
         
@@ -2592,27 +3755,27 @@ namespace MyNamespace.Nodes.Condition
         public Player_Health(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
+            String _8a3fcebc530748f5b54eb5b5221a77cd;
+            TypeDeserializer.Deserialize(out _8a3fcebc530748f5b54eb5b5221a77cd, "Less");
+            this.id76aab09126b046f9b5ca11efd99b5da9 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("76aab091-26b0-46f9-b5ca-11efd99b5da9"), _8a3fcebc530748f5b54eb5b5221a77cd);
             this.id36e21978b1a943b98d687be70965c3cd = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("36e21978-b1a9-43b9-8d68-7be70965c3cd"));
-            String _9b3658dc420241988e6e5eb0928562be;
-            TypeDeserializer.Deserialize(out _9b3658dc420241988e6e5eb0928562be, "Less");
-            this.id76aab09126b046f9b5ca11efd99b5da9 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("76aab091-26b0-46f9-b5ca-11efd99b5da9"), _9b3658dc420241988e6e5eb0928562be);
-            String _d57474faf1f1484b8db420205f6ca953;
-            TypeDeserializer.Deserialize(out _d57474faf1f1484b8db420205f6ca953, "Equal");
-            this.id4947fa04ff924f5e81dceb38d73ba500 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4947fa04-ff92-4f5e-81dc-eb38d73ba500"), _d57474faf1f1484b8db420205f6ca953);
-            String _3b55359fedad426f985cafb2ac0f77f2;
-            TypeDeserializer.Deserialize(out _3b55359fedad426f985cafb2ac0f77f2, "More");
-            this.idce18fc018b7e452e9cda7eec8bc16286 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("ce18fc01-8b7e-452e-9cda-7eec8bc16286"), _3b55359fedad426f985cafb2ac0f77f2);
+            String _638a300aff1e4cb1bd997bd282952633;
+            TypeDeserializer.Deserialize(out _638a300aff1e4cb1bd997bd282952633, "Equal");
+            this.id4947fa04ff924f5e81dceb38d73ba500 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4947fa04-ff92-4f5e-81dc-eb38d73ba500"), _638a300aff1e4cb1bd997bd282952633);
+            String _f96f27f6c6754dbaa90bae1bfaa71577;
+            TypeDeserializer.Deserialize(out _f96f27f6c6754dbaa90bae1bfaa71577, "More");
+            this.idce18fc018b7e452e9cda7eec8bc16286 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("ce18fc01-8b7e-452e-9cda-7eec8bc16286"), _f96f27f6c6754dbaa90bae1bfaa71577);
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("36e21978-b1a9-43b9-8d68-7be70965c3cd")))
-            {
-                return id36e21978b1a943b98d687be70965c3cd;
-            }
             if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("76aab091-26b0-46f9-b5ca-11efd99b5da9")))
             {
                 return id76aab09126b046f9b5ca11efd99b5da9;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("36e21978-b1a9-43b9-8d68-7be70965c3cd")))
+            {
+                return id36e21978b1a943b98d687be70965c3cd;
             }
             if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4947fa04-ff92-4f5e-81dc-eb38d73ba500")))
             {
@@ -2665,9 +3828,9 @@ namespace MyNamespace.Nodes.Dev
         public TODO(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            String _b9efd5b44bb94232926453b258669642;
-            TypeDeserializer.Deserialize(out _b9efd5b44bb94232926453b258669642, "");
-            this.id7a13cd196eb941aab94ba49107d8ba50 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("7a13cd19-6eb9-41aa-b94b-a49107d8ba50"), _b9efd5b44bb94232926453b258669642);
+            String _664f9a6ff0c141e4a02b67b110cd033d;
+            TypeDeserializer.Deserialize(out _664f9a6ff0c141e4a02b67b110cd033d, "");
+            this.id7a13cd196eb941aab94ba49107d8ba50 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("7a13cd19-6eb9-41aa-b94b-a49107d8ba50"), _664f9a6ff0c141e4a02b67b110cd033d);
             this.id5e37d69b1d12487cb26f81aad52bfab4 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("5e37d69b-1d12-487c-b26f-81aad52bfab4"));
         }
         
@@ -2756,9 +3919,9 @@ namespace MyNamespace.Nodes.Dev
         public Description(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            String _5f8e8d32900e4f37ad688fc4484b09d8;
-            TypeDeserializer.Deserialize(out _5f8e8d32900e4f37ad688fc4484b09d8, "");
-            this.iddc59839e3fc6431394799ce9506a49ad = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("dc59839e-3fc6-4313-9479-9ce9506a49ad"), _5f8e8d32900e4f37ad688fc4484b09d8);
+            String _8fc4f7a4eea443cda2483ccb17cea47f;
+            TypeDeserializer.Deserialize(out _8fc4f7a4eea443cda2483ccb17cea47f, "");
+            this.iddc59839e3fc6431394799ce9506a49ad = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("dc59839e-3fc6-4313-9479-9ce9506a49ad"), _8fc4f7a4eea443cda2483ccb17cea47f);
             this.ide6cfd63700004ea68a5c4f17c094ca37 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("e6cfd637-0000-4ea6-8a5c-4f17c094ca37"));
         }
         
@@ -2789,99 +3952,6 @@ namespace MyNamespace.Nodes.Dev
         public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
         {
             TypeDeserializer.Deserialize(out Description_, GetParameter(parameters, new System.Guid("3be5b7bd-35b9-4dae-bea5-f60b10862276")));
-        }
-    }
-}
-namespace MyNamespace.Nodes.Jumps
-{
-    using MyNamespace.Nodes.Connectors;
-    using System;
-    using System.Collections.Generic;
-    using System.Runtime.InteropServices;
-    using MyNamespace.Types;
-    
-    
-    [RuntimeConversation.NodeTypeIDAttribute("dd02c832-4896-4f25-9a49-3884d6146fa3")]
-    public class Jump_To : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Input ide04efd81ea02402f8b16f270f44daaf6;
-        
-        [RuntimeConversation.ParameterIDAttribute("70dea536-f654-40ec-a738-c1f0caec5d9e")]
-        public Jump_IDs Target;
-        
-        public Jump_To(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            this.ide04efd81ea02402f8b16f270f44daaf6 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("e04efd81-ea02-402f-8b16-f270f44daaf6"));
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("e04efd81-ea02-402f-8b16-f270f44daaf6")))
-            {
-                return ide04efd81ea02402f8b16f270f44daaf6;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-            TypeDeserializer.Deserialize(out Target, GetParameter(parameters, new System.Guid("70dea536-f654-40ec-a738-c1f0caec5d9e")));
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("17cf0309-8377-4e3e-9d8d-46d0a7cef943")]
-    public class Jump_Target : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id41c4957558e347d9ad447e39df3ac7cc;
-        
-        [RuntimeConversation.ParameterIDAttribute("60d947e7-2fc8-4acb-8f00-9e590da242c6")]
-        public Jump_IDs ID;
-        
-        public Jump_Target(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _3493aa5ef14c488fa91a495e17ff3d04;
-            TypeDeserializer.Deserialize(out _3493aa5ef14c488fa91a495e17ff3d04, "");
-            this.id41c4957558e347d9ad447e39df3ac7cc = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("41c49575-58e3-47d9-ad44-7e39df3ac7cc"), _3493aa5ef14c488fa91a495e17ff3d04);
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("41c49575-58e3-47d9-ad44-7e39df3ac7cc")))
-            {
-                return id41c4957558e347d9ad447e39df3ac7cc;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-            TypeDeserializer.Deserialize(out ID, GetParameter(parameters, new System.Guid("60d947e7-2fc8-4acb-8f00-9e590da242c6")));
         }
     }
 }
@@ -2947,43 +4017,27 @@ namespace MyNamespace.Nodes.Metadata
             TypeDeserializer.Deserialize(out Only_Play_Once, GetParameter(parameters, new System.Guid("10fc350d-2c7e-430b-bf49-24f6b5580dca")));
         }
     }
-}
-namespace MyNamespace.Nodes.Randomise
-{
-    using MyNamespace.Nodes.Connectors;
-    using System;
-    using System.Collections.Generic;
-    using System.Runtime.InteropServices;
-    using MyNamespace.Types;
     
-    
-    [RuntimeConversation.NodeTypeIDAttribute("03f66e93-bc0c-4713-ae07-dd249d85078d")]
-    public class Random : Node
+    [RuntimeConversation.NodeTypeIDAttribute("2162436e-5462-41e6-82ec-af29e45a4b70")]
+    public class Character_Info : Node
     {
         
-        public MyNamespace.Nodes.Connectors.Output idd1517dc6b4e04487bfc92eed2d2f04cd;
+        [RuntimeConversation.ParameterIDAttribute("4c82e2fd-e2f1-4ff7-8f86-f3aa25429359")]
+        public Character BindName;
         
-        public MyNamespace.Nodes.Connectors.Input id76652911e7494f08b5012ae0c09f77b3;
+        [RuntimeConversation.ParameterIDAttribute("0e05e38d-5d1d-4b23-bc93-ad4ce674bc2a")]
+        public Character Bark_BindName;
         
-        public Random(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        [RuntimeConversation.ParameterIDAttribute("e2937b9d-b290-4f2a-84ad-b6ca7289258e")]
+        public RuntimeConversation.LocalizedString Display_Name;
+        
+        public Character_Info(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            String _a089baa561f54fd2b308a7cc195ee49e;
-            TypeDeserializer.Deserialize(out _a089baa561f54fd2b308a7cc195ee49e, "");
-            this.idd1517dc6b4e04487bfc92eed2d2f04cd = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("d1517dc6-b4e0-4487-bfc9-2eed2d2f04cd"), _a089baa561f54fd2b308a7cc195ee49e);
-            this.id76652911e7494f08b5012ae0c09f77b3 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("76652911-e749-4f08-b501-2ae0c09f77b3"));
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("d1517dc6-b4e0-4487-bfc9-2eed2d2f04cd")))
-            {
-                return idd1517dc6b4e04487bfc92eed2d2f04cd;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("76652911-e749-4f08-b501-2ae0c09f77b3")))
-            {
-                return id76652911e7494f08b5012ae0c09f77b3;
-            }
             return null;
         }
         
@@ -3000,65 +4054,9 @@ namespace MyNamespace.Nodes.Randomise
         
         public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
         {
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("9c764213-48f0-4f68-acb4-cc416edc66ae")]
-    public class Probability : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id2b2c53380db74cc78403931b08f4a64b;
-        
-        public MyNamespace.Nodes.Connectors.Output id2dea9f2bfefa4f60b82808e19d8a06ec;
-        
-        public MyNamespace.Nodes.Connectors.Input id06803b592a0040ec89c2448e0937c38c;
-        
-        [RuntimeConversation.ParameterIDAttribute("914df4a8-e857-49d0-bf76-3bd9f6615193")]
-        public Percentage Percent;
-        
-        public Probability(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _1315e6c3afec4e4aab3f180ce4463559;
-            TypeDeserializer.Deserialize(out _1315e6c3afec4e4aab3f180ce4463559, "Success");
-            this.id2b2c53380db74cc78403931b08f4a64b = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("2b2c5338-0db7-4cc7-8403-931b08f4a64b"), _1315e6c3afec4e4aab3f180ce4463559);
-            String _a1c45e5bed2b4122aca58b5fa43b8a61;
-            TypeDeserializer.Deserialize(out _a1c45e5bed2b4122aca58b5fa43b8a61, "Failure");
-            this.id2dea9f2bfefa4f60b82808e19d8a06ec = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("2dea9f2b-fefa-4f60-b828-08e19d8a06ec"), _a1c45e5bed2b4122aca58b5fa43b8a61);
-            this.id06803b592a0040ec89c2448e0937c38c = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("06803b59-2a00-40ec-89c2-448e0937c38c"));
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("2b2c5338-0db7-4cc7-8403-931b08f4a64b")))
-            {
-                return id2b2c53380db74cc78403931b08f4a64b;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("2dea9f2b-fefa-4f60-b828-08e19d8a06ec")))
-            {
-                return id2dea9f2bfefa4f60b82808e19d8a06ec;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("06803b59-2a00-40ec-89c2-448e0937c38c")))
-            {
-                return id06803b592a0040ec89c2448e0937c38c;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-            TypeDeserializer.Deserialize(out Percent, GetParameter(parameters, new System.Guid("914df4a8-e857-49d0-bf76-3bd9f6615193")));
+            TypeDeserializer.Deserialize(out BindName, GetParameter(parameters, new System.Guid("4c82e2fd-e2f1-4ff7-8f86-f3aa25429359")));
+            TypeDeserializer.Deserialize(out Bark_BindName, GetParameter(parameters, new System.Guid("0e05e38d-5d1d-4b23-bc93-ad4ce674bc2a")));
+            TypeDeserializer.Deserialize(out Display_Name, GetParameter(parameters, new System.Guid("e2937b9d-b290-4f2a-84ad-b6ca7289258e")));
         }
     }
 }
@@ -3070,6 +4068,492 @@ namespace MyNamespace.Nodes.Trigger
     using System.Runtime.InteropServices;
     using MyNamespace.Types;
     
+    
+    [RuntimeConversation.NodeTypeIDAttribute("1df455bd-8f7f-4b7b-aee9-e56c73129ba0")]
+    public class Teleport_Character : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id26259a738b8d4d4da75842d3bbe09237;
+        
+        public MyNamespace.Nodes.Connectors.Input id5b4b96e9726141428d3dea441bc8b956;
+        
+        [RuntimeConversation.ParameterIDAttribute("670cc652-f371-4d60-b307-af4152803a80")]
+        public String Target_Object_Tag;
+        
+        [RuntimeConversation.ParameterIDAttribute("633af747-8234-4ba1-9e63-a1a1ba08d750")]
+        public Character Character;
+        
+        public Teleport_Character(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _39b630971f3a4d66b3e534281b777524;
+            TypeDeserializer.Deserialize(out _39b630971f3a4d66b3e534281b777524, "");
+            this.id26259a738b8d4d4da75842d3bbe09237 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("26259a73-8b8d-4d4d-a758-42d3bbe09237"), _39b630971f3a4d66b3e534281b777524);
+            this.id5b4b96e9726141428d3dea441bc8b956 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("5b4b96e9-7261-4142-8d3d-ea441bc8b956"));
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("26259a73-8b8d-4d4d-a758-42d3bbe09237")))
+            {
+                return id26259a738b8d4d4da75842d3bbe09237;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("5b4b96e9-7261-4142-8d3d-ea441bc8b956")))
+            {
+                return id5b4b96e9726141428d3dea441bc8b956;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Target_Object_Tag, GetParameter(parameters, new System.Guid("670cc652-f371-4d60-b307-af4152803a80")));
+            TypeDeserializer.Deserialize(out Character, GetParameter(parameters, new System.Guid("633af747-8234-4ba1-9e63-a1a1ba08d750")));
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("92938a3c-3a12-46dd-af6a-f5c0092bea52")]
+    public class Decrement_Integer : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id0cb7ba963c9e4d4080b9f3e0ecf213e2;
+        
+        public MyNamespace.Nodes.Connectors.Input idea33295e1c6b4cf993480743e98087cb;
+        
+        [RuntimeConversation.ParameterIDAttribute("053f8c9d-59f5-4dff-8065-18dafff32f22")]
+        public IntegerFlag Flag;
+        
+        [RuntimeConversation.ParameterIDAttribute("860e00c0-808d-4792-b782-34b0be953a1a")]
+        public Int32 By;
+        
+        public Decrement_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _9e5339c9bcfb430895ee4028629952fb;
+            TypeDeserializer.Deserialize(out _9e5339c9bcfb430895ee4028629952fb, "");
+            this.id0cb7ba963c9e4d4080b9f3e0ecf213e2 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("0cb7ba96-3c9e-4d40-80b9-f3e0ecf213e2"), _9e5339c9bcfb430895ee4028629952fb);
+            this.idea33295e1c6b4cf993480743e98087cb = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("ea33295e-1c6b-4cf9-9348-0743e98087cb"));
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("0cb7ba96-3c9e-4d40-80b9-f3e0ecf213e2")))
+            {
+                return id0cb7ba963c9e4d4080b9f3e0ecf213e2;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ea33295e-1c6b-4cf9-9348-0743e98087cb")))
+            {
+                return idea33295e1c6b4cf993480743e98087cb;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("053f8c9d-59f5-4dff-8065-18dafff32f22")));
+            TypeDeserializer.Deserialize(out By, GetParameter(parameters, new System.Guid("860e00c0-808d-4792-b782-34b0be953a1a")));
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("00b12526-aa16-4258-95b5-fd1e9927c271")]
+    public class Increment_Integer : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id4519707a672d4c25a3b6e96eef3f8805;
+        
+        public MyNamespace.Nodes.Connectors.Input id7710fc42fc43454b8288838a06fbc8b9;
+        
+        [RuntimeConversation.ParameterIDAttribute("015fc115-b8a5-4cd5-8f41-6c13a8b77643")]
+        public IntegerFlag Flag;
+        
+        [RuntimeConversation.ParameterIDAttribute("e3e1497f-bd0c-468e-aadd-8db9ed593700")]
+        public Int32 By;
+        
+        public Increment_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _b8afe07b404641b195d87acfd33b0498;
+            TypeDeserializer.Deserialize(out _b8afe07b404641b195d87acfd33b0498, "");
+            this.id4519707a672d4c25a3b6e96eef3f8805 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4519707a-672d-4c25-a3b6-e96eef3f8805"), _b8afe07b404641b195d87acfd33b0498);
+            this.id7710fc42fc43454b8288838a06fbc8b9 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("7710fc42-fc43-454b-8288-838a06fbc8b9"));
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4519707a-672d-4c25-a3b6-e96eef3f8805")))
+            {
+                return id4519707a672d4c25a3b6e96eef3f8805;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("7710fc42-fc43-454b-8288-838a06fbc8b9")))
+            {
+                return id7710fc42fc43454b8288838a06fbc8b9;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("015fc115-b8a5-4cd5-8f41-6c13a8b77643")));
+            TypeDeserializer.Deserialize(out By, GetParameter(parameters, new System.Guid("e3e1497f-bd0c-468e-aadd-8db9ed593700")));
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("78c38356-d036-418c-be97-b757e4792c4a")]
+    public class Set_Story_Boolean : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id6436b360e1fb465f91babcad9b47ad59;
+        
+        public MyNamespace.Nodes.Connectors.Input idd1d99b283eb14386a8c6f4ba664040ee;
+        
+        [RuntimeConversation.ParameterIDAttribute("70ce28d8-9284-4bab-8bb7-47ef421a18dd")]
+        public BooleanFlag Flag;
+        
+        [RuntimeConversation.ParameterIDAttribute("32fad20d-6ca6-4fc3-8c7a-e3a3cd84061b")]
+        public Boolean To;
+        
+        public Set_Story_Boolean(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _7f5e431ef8fd49b2bb4c0bdaa6d2571b;
+            TypeDeserializer.Deserialize(out _7f5e431ef8fd49b2bb4c0bdaa6d2571b, "");
+            this.id6436b360e1fb465f91babcad9b47ad59 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("6436b360-e1fb-465f-91ba-bcad9b47ad59"), _7f5e431ef8fd49b2bb4c0bdaa6d2571b);
+            this.idd1d99b283eb14386a8c6f4ba664040ee = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("d1d99b28-3eb1-4386-a8c6-f4ba664040ee"));
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("6436b360-e1fb-465f-91ba-bcad9b47ad59")))
+            {
+                return id6436b360e1fb465f91babcad9b47ad59;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("d1d99b28-3eb1-4386-a8c6-f4ba664040ee")))
+            {
+                return idd1d99b283eb14386a8c6f4ba664040ee;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("70ce28d8-9284-4bab-8bb7-47ef421a18dd")));
+            TypeDeserializer.Deserialize(out To, GetParameter(parameters, new System.Guid("32fad20d-6ca6-4fc3-8c7a-e3a3cd84061b")));
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("7adc2a07-f50e-439a-bca4-58aa80ed24b1")]
+    public class Set_Story_Integer : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id3dee23b1b1a04457b2f736fdfe67cdf2;
+        
+        public MyNamespace.Nodes.Connectors.Input id9a358db500e245d4934d7b1dd059f89b;
+        
+        [RuntimeConversation.ParameterIDAttribute("35890f6b-dd40-46a3-a395-cb5e0fa2b154")]
+        public IntegerFlag Variable;
+        
+        [RuntimeConversation.ParameterIDAttribute("490c4c46-d25a-4605-99cd-237b94679e95")]
+        public Int32 Value;
+        
+        public Set_Story_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _96f8d4a80bd1480dadb2e09e63573eb6;
+            TypeDeserializer.Deserialize(out _96f8d4a80bd1480dadb2e09e63573eb6, "");
+            this.id3dee23b1b1a04457b2f736fdfe67cdf2 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2"), _96f8d4a80bd1480dadb2e09e63573eb6);
+            this.id9a358db500e245d4934d7b1dd059f89b = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("9a358db5-00e2-45d4-934d-7b1dd059f89b"));
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2")))
+            {
+                return id3dee23b1b1a04457b2f736fdfe67cdf2;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("9a358db5-00e2-45d4-934d-7b1dd059f89b")))
+            {
+                return id9a358db500e245d4934d7b1dd059f89b;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Variable, GetParameter(parameters, new System.Guid("35890f6b-dd40-46a3-a395-cb5e0fa2b154")));
+            TypeDeserializer.Deserialize(out Value, GetParameter(parameters, new System.Guid("490c4c46-d25a-4605-99cd-237b94679e95")));
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("1abd75ed-6040-4d6b-a75e-5297c6f56aac")]
+    public class Set_Local_Boolean : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output idc73bbc1a92ae4b50a91c287c6e837e48;
+        
+        public MyNamespace.Nodes.Connectors.Input idc0a5db6d8053474c94f8e1458d64d7f9;
+        
+        [RuntimeConversation.ParameterIDAttribute("89ce91b7-1e7d-45a1-9052-f1dee3430142")]
+        public BooleanFlag Flag;
+        
+        [RuntimeConversation.ParameterIDAttribute("20da7b1e-e62b-4336-a35f-134d782bfe3f")]
+        public Boolean To;
+        
+        public Set_Local_Boolean(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _ac863325d43649cabb79f26b3d44e3f9;
+            TypeDeserializer.Deserialize(out _ac863325d43649cabb79f26b3d44e3f9, "");
+            this.idc73bbc1a92ae4b50a91c287c6e837e48 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("c73bbc1a-92ae-4b50-a91c-287c6e837e48"), _ac863325d43649cabb79f26b3d44e3f9);
+            this.idc0a5db6d8053474c94f8e1458d64d7f9 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("c0a5db6d-8053-474c-94f8-e1458d64d7f9"));
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("c73bbc1a-92ae-4b50-a91c-287c6e837e48")))
+            {
+                return idc73bbc1a92ae4b50a91c287c6e837e48;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("c0a5db6d-8053-474c-94f8-e1458d64d7f9")))
+            {
+                return idc0a5db6d8053474c94f8e1458d64d7f9;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("89ce91b7-1e7d-45a1-9052-f1dee3430142")));
+            TypeDeserializer.Deserialize(out To, GetParameter(parameters, new System.Guid("20da7b1e-e62b-4336-a35f-134d782bfe3f")));
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("03129c91-4dc8-4ba3-a957-8a8b4ca0442d")]
+    public class Set_Story_Decimal : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id8eba1d2106934f02ac6dc0469ea1afee;
+        
+        public MyNamespace.Nodes.Connectors.Input idd1d0ea049f0b45d9920b36adc755f232;
+        
+        [RuntimeConversation.ParameterIDAttribute("7845d7f1-92b3-4abb-829d-62c2c4784ad3")]
+        public DecimalFlag Variable;
+        
+        [RuntimeConversation.ParameterIDAttribute("bc3f2fff-75ac-4a61-9684-8b6ffb7699c0")]
+        public Decimal Value;
+        
+        public Set_Story_Decimal(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _f6375fce5fa844288522ba6179fe4326;
+            TypeDeserializer.Deserialize(out _f6375fce5fa844288522ba6179fe4326, "");
+            this.id8eba1d2106934f02ac6dc0469ea1afee = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("8eba1d21-0693-4f02-ac6d-c0469ea1afee"), _f6375fce5fa844288522ba6179fe4326);
+            this.idd1d0ea049f0b45d9920b36adc755f232 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("d1d0ea04-9f0b-45d9-920b-36adc755f232"));
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("8eba1d21-0693-4f02-ac6d-c0469ea1afee")))
+            {
+                return id8eba1d2106934f02ac6dc0469ea1afee;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("d1d0ea04-9f0b-45d9-920b-36adc755f232")))
+            {
+                return idd1d0ea049f0b45d9920b36adc755f232;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Variable, GetParameter(parameters, new System.Guid("7845d7f1-92b3-4abb-829d-62c2c4784ad3")));
+            TypeDeserializer.Deserialize(out Value, GetParameter(parameters, new System.Guid("bc3f2fff-75ac-4a61-9684-8b6ffb7699c0")));
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("5a78105e-7a5e-4f12-afcd-033f792ec045")]
+    public class Set_Local_Decimal : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output idc46f93d6aa0242b7a851d67c014ada8b;
+        
+        public MyNamespace.Nodes.Connectors.Input ide0dfde9b42f34b8592450adb941ee92f;
+        
+        [RuntimeConversation.ParameterIDAttribute("5214d582-e7e9-48d4-9b77-30658e7d1c44")]
+        public DecimalFlag Variable;
+        
+        [RuntimeConversation.ParameterIDAttribute("413f2094-0b2e-46f0-93a4-a876befc25bb")]
+        public Decimal Value;
+        
+        public Set_Local_Decimal(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _2a89f83b25a34e208730caeedbfc032b;
+            TypeDeserializer.Deserialize(out _2a89f83b25a34e208730caeedbfc032b, "");
+            this.idc46f93d6aa0242b7a851d67c014ada8b = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("c46f93d6-aa02-42b7-a851-d67c014ada8b"), _2a89f83b25a34e208730caeedbfc032b);
+            this.ide0dfde9b42f34b8592450adb941ee92f = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("e0dfde9b-42f3-4b85-9245-0adb941ee92f"));
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("c46f93d6-aa02-42b7-a851-d67c014ada8b")))
+            {
+                return idc46f93d6aa0242b7a851d67c014ada8b;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("e0dfde9b-42f3-4b85-9245-0adb941ee92f")))
+            {
+                return ide0dfde9b42f34b8592450adb941ee92f;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Variable, GetParameter(parameters, new System.Guid("5214d582-e7e9-48d4-9b77-30658e7d1c44")));
+            TypeDeserializer.Deserialize(out Value, GetParameter(parameters, new System.Guid("413f2094-0b2e-46f0-93a4-a876befc25bb")));
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("77248380-deec-439f-9b25-902b3bd5ebf0")]
+    public class Set_Local_Integer : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id07eb9202b30a4ef1a3d986bec8b3d636;
+        
+        public MyNamespace.Nodes.Connectors.Input id3b1078e7b6b34ae9ae74bfc9876d514c;
+        
+        [RuntimeConversation.ParameterIDAttribute("c181dc13-1d96-4155-a6ff-03dfde59f0b7")]
+        public IntegerFlag Variable;
+        
+        [RuntimeConversation.ParameterIDAttribute("3f6d6c23-afd2-4830-b372-badfe77cbdc5")]
+        public Int32 Value;
+        
+        public Set_Local_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _4eb0ba42ee924b759507ce605d2e0ccb;
+            TypeDeserializer.Deserialize(out _4eb0ba42ee924b759507ce605d2e0ccb, "");
+            this.id07eb9202b30a4ef1a3d986bec8b3d636 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("07eb9202-b30a-4ef1-a3d9-86bec8b3d636"), _4eb0ba42ee924b759507ce605d2e0ccb);
+            this.id3b1078e7b6b34ae9ae74bfc9876d514c = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("3b1078e7-b6b3-4ae9-ae74-bfc9876d514c"));
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("07eb9202-b30a-4ef1-a3d9-86bec8b3d636")))
+            {
+                return id07eb9202b30a4ef1a3d986bec8b3d636;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("3b1078e7-b6b3-4ae9-ae74-bfc9876d514c")))
+            {
+                return id3b1078e7b6b34ae9ae74bfc9876d514c;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Variable, GetParameter(parameters, new System.Guid("c181dc13-1d96-4155-a6ff-03dfde59f0b7")));
+            TypeDeserializer.Deserialize(out Value, GetParameter(parameters, new System.Guid("3f6d6c23-afd2-4830-b372-badfe77cbdc5")));
+        }
+    }
     
     [RuntimeConversation.NodeTypeIDAttribute("1d210c12-f969-4f07-bf89-1ddbefe8f77d")]
     public class Begin_Patrol : Node
@@ -3085,9 +4569,9 @@ namespace MyNamespace.Nodes.Trigger
         public Begin_Patrol(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            String _f37f9e29f2d84342823e540c03325591;
-            TypeDeserializer.Deserialize(out _f37f9e29f2d84342823e540c03325591, "");
-            this.idd8522f4026fd45a9831ea61472cda4c3 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("d8522f40-26fd-45a9-831e-a61472cda4c3"), _f37f9e29f2d84342823e540c03325591);
+            String _4f59979c861b4e0db3553b00cef6508e;
+            TypeDeserializer.Deserialize(out _4f59979c861b4e0db3553b00cef6508e, "");
+            this.idd8522f4026fd45a9831ea61472cda4c3 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("d8522f40-26fd-45a9-831e-a61472cda4c3"), _4f59979c861b4e0db3553b00cef6508e);
             this.idde8ffaedbc224fbd9a707badce0e9cc4 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("de8ffaed-bc22-4fbd-9a70-7badce0e9cc4"));
         }
         
@@ -3135,9 +4619,9 @@ namespace MyNamespace.Nodes.Trigger
         public Console_Message(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            String _12b158cae0b3407fbe7c59dd5befd573;
-            TypeDeserializer.Deserialize(out _12b158cae0b3407fbe7c59dd5befd573, "");
-            this.id95a6553e78304cf2aeb236f66b63acee = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("95a6553e-7830-4cf2-aeb2-36f66b63acee"), _12b158cae0b3407fbe7c59dd5befd573);
+            String _db7de33aa1de48c595fe98c533831cf5;
+            TypeDeserializer.Deserialize(out _db7de33aa1de48c595fe98c533831cf5, "");
+            this.id95a6553e78304cf2aeb236f66b63acee = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("95a6553e-7830-4cf2-aeb2-36f66b63acee"), _db7de33aa1de48c595fe98c533831cf5);
             this.idd9517feb8c3a45ddba4c62aa6a733dc9 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("d9517feb-8c3a-45dd-ba4c-62aa6a733dc9"));
         }
         
@@ -3175,32 +4659,39 @@ namespace MyNamespace.Nodes.Trigger
     public class Prompt : Node
     {
         
+        public MyNamespace.Nodes.Connectors.Waiting id1fc23fc45fd74f2c9f6e475dead86a49;
+        
         public MyNamespace.Nodes.Connectors.Output id417cc64abfb74b8fa5ee267643964f3c;
         
         public MyNamespace.Nodes.Connectors.Output iddde8a2b1e85e43f68588a34aef8f2802;
         
         public MyNamespace.Nodes.Connectors.Input id17ebe05d0b114f93974853483f69b3aa;
         
+        [RuntimeConversation.ParameterIDAttribute("f5af79a2-0a18-4d04-afda-dcbdf489d694")]
+        public NonNegativeInteger Time_Limit;
+        
         [RuntimeConversation.ParameterIDAttribute("9081e6dc-c2a5-4f93-9c0d-50bcdb835209")]
         public RuntimeConversation.LocalizedString Prompt_text;
-        
-        [RuntimeConversation.ParameterIDAttribute("f5af79a2-0a18-4d04-afda-dcbdf489d694")]
-        public NonNegativeInteger Time_Limit_Seconds;
         
         public Prompt(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            String _94ae9c21635f40a49e946567b3314f2b;
-            TypeDeserializer.Deserialize(out _94ae9c21635f40a49e946567b3314f2b, "Options");
-            this.id417cc64abfb74b8fa5ee267643964f3c = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("417cc64a-bfb7-4b8f-a5ee-267643964f3c"), _94ae9c21635f40a49e946567b3314f2b);
-            String _a7a37de08aea4c119112c37c0ea62997;
-            TypeDeserializer.Deserialize(out _a7a37de08aea4c119112c37c0ea62997, "Default");
-            this.iddde8a2b1e85e43f68588a34aef8f2802 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("dde8a2b1-e85e-43f6-8588-a34aef8f2802"), _a7a37de08aea4c119112c37c0ea62997);
+            this.id1fc23fc45fd74f2c9f6e475dead86a49 = new MyNamespace.Nodes.Connectors.Waiting(this, Conversation.ID<Conversation.TConnector>.Parse("1fc23fc4-5fd7-4f2c-9f6e-475dead86a49"));
+            String _f7fb77e2af8145188a1ed6eb7238e611;
+            TypeDeserializer.Deserialize(out _f7fb77e2af8145188a1ed6eb7238e611, "Options");
+            this.id417cc64abfb74b8fa5ee267643964f3c = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("417cc64a-bfb7-4b8f-a5ee-267643964f3c"), _f7fb77e2af8145188a1ed6eb7238e611);
+            String _db41f8a800794349b427f35062d89568;
+            TypeDeserializer.Deserialize(out _db41f8a800794349b427f35062d89568, "Default");
+            this.iddde8a2b1e85e43f68588a34aef8f2802 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("dde8a2b1-e85e-43f6-8588-a34aef8f2802"), _db41f8a800794349b427f35062d89568);
             this.id17ebe05d0b114f93974853483f69b3aa = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("17ebe05d-0b11-4f93-9748-53483f69b3aa"));
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
         {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("1fc23fc4-5fd7-4f2c-9f6e-475dead86a49")))
+            {
+                return id1fc23fc45fd74f2c9f6e475dead86a49;
+            }
             if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("417cc64a-bfb7-4b8f-a5ee-267643964f3c")))
             {
                 return id417cc64abfb74b8fa5ee267643964f3c;
@@ -3229,278 +4720,8 @@ namespace MyNamespace.Nodes.Trigger
         
         public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
         {
+            TypeDeserializer.Deserialize(out Time_Limit, GetParameter(parameters, new System.Guid("f5af79a2-0a18-4d04-afda-dcbdf489d694")));
             TypeDeserializer.Deserialize(out Prompt_text, GetParameter(parameters, new System.Guid("9081e6dc-c2a5-4f93-9c0d-50bcdb835209")));
-            TypeDeserializer.Deserialize(out Time_Limit_Seconds, GetParameter(parameters, new System.Guid("f5af79a2-0a18-4d04-afda-dcbdf489d694")));
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("77248380-deec-439f-9b25-902b3bd5ebf0")]
-    public class Set_Local_Integer : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id07eb9202b30a4ef1a3d986bec8b3d636;
-        
-        public MyNamespace.Nodes.Connectors.Input id3b1078e7b6b34ae9ae74bfc9876d514c;
-        
-        [RuntimeConversation.ParameterIDAttribute("bd945c69-624c-4626-b3b1-422e2e1cf6d0")]
-        public LocalVars Variable;
-        
-        [RuntimeConversation.ParameterIDAttribute("3f6d6c23-afd2-4830-b372-badfe77cbdc5")]
-        public Int32 Value;
-        
-        public Set_Local_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _eb7d11a3060a4850ac67f1ec1e74ceea;
-            TypeDeserializer.Deserialize(out _eb7d11a3060a4850ac67f1ec1e74ceea, "");
-            this.id07eb9202b30a4ef1a3d986bec8b3d636 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("07eb9202-b30a-4ef1-a3d9-86bec8b3d636"), _eb7d11a3060a4850ac67f1ec1e74ceea);
-            this.id3b1078e7b6b34ae9ae74bfc9876d514c = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("3b1078e7-b6b3-4ae9-ae74-bfc9876d514c"));
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("07eb9202-b30a-4ef1-a3d9-86bec8b3d636")))
-            {
-                return id07eb9202b30a4ef1a3d986bec8b3d636;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("3b1078e7-b6b3-4ae9-ae74-bfc9876d514c")))
-            {
-                return id3b1078e7b6b34ae9ae74bfc9876d514c;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-            TypeDeserializer.Deserialize(out Variable, GetParameter(parameters, new System.Guid("bd945c69-624c-4626-b3b1-422e2e1cf6d0")));
-            TypeDeserializer.Deserialize(out Value, GetParameter(parameters, new System.Guid("3f6d6c23-afd2-4830-b372-badfe77cbdc5")));
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("5a78105e-7a5e-4f12-afcd-033f792ec045")]
-    public class Set_Local_Decimal : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output idc46f93d6aa0242b7a851d67c014ada8b;
-        
-        public MyNamespace.Nodes.Connectors.Input ide0dfde9b42f34b8592450adb941ee92f;
-        
-        [RuntimeConversation.ParameterIDAttribute("6ef91ad5-121c-4f6e-b18a-0400a6df38e0")]
-        public LocalVars Variable;
-        
-        [RuntimeConversation.ParameterIDAttribute("413f2094-0b2e-46f0-93a4-a876befc25bb")]
-        public Decimal Value;
-        
-        public Set_Local_Decimal(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _e9dbc92e0b944972bef12f1f62061ef4;
-            TypeDeserializer.Deserialize(out _e9dbc92e0b944972bef12f1f62061ef4, "");
-            this.idc46f93d6aa0242b7a851d67c014ada8b = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("c46f93d6-aa02-42b7-a851-d67c014ada8b"), _e9dbc92e0b944972bef12f1f62061ef4);
-            this.ide0dfde9b42f34b8592450adb941ee92f = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("e0dfde9b-42f3-4b85-9245-0adb941ee92f"));
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("c46f93d6-aa02-42b7-a851-d67c014ada8b")))
-            {
-                return idc46f93d6aa0242b7a851d67c014ada8b;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("e0dfde9b-42f3-4b85-9245-0adb941ee92f")))
-            {
-                return ide0dfde9b42f34b8592450adb941ee92f;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-            TypeDeserializer.Deserialize(out Variable, GetParameter(parameters, new System.Guid("6ef91ad5-121c-4f6e-b18a-0400a6df38e0")));
-            TypeDeserializer.Deserialize(out Value, GetParameter(parameters, new System.Guid("413f2094-0b2e-46f0-93a4-a876befc25bb")));
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("78c38356-d036-418c-be97-b757e4792c4a")]
-    public class Set_Boolean : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id6436b360e1fb465f91babcad9b47ad59;
-        
-        public MyNamespace.Nodes.Connectors.Input idd1d99b283eb14386a8c6f4ba664040ee;
-        
-        [RuntimeConversation.ParameterIDAttribute("70ce28d8-9284-4bab-8bb7-47ef421a18dd")]
-        public BooleanFlag Flag;
-        
-        [RuntimeConversation.ParameterIDAttribute("32fad20d-6ca6-4fc3-8c7a-e3a3cd84061b")]
-        public Boolean To;
-        
-        public Set_Boolean(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _ed035df5323a41ba84395237ae372c1c;
-            TypeDeserializer.Deserialize(out _ed035df5323a41ba84395237ae372c1c, "");
-            this.id6436b360e1fb465f91babcad9b47ad59 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("6436b360-e1fb-465f-91ba-bcad9b47ad59"), _ed035df5323a41ba84395237ae372c1c);
-            this.idd1d99b283eb14386a8c6f4ba664040ee = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("d1d99b28-3eb1-4386-a8c6-f4ba664040ee"));
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("6436b360-e1fb-465f-91ba-bcad9b47ad59")))
-            {
-                return id6436b360e1fb465f91babcad9b47ad59;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("d1d99b28-3eb1-4386-a8c6-f4ba664040ee")))
-            {
-                return idd1d99b283eb14386a8c6f4ba664040ee;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-            TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("70ce28d8-9284-4bab-8bb7-47ef421a18dd")));
-            TypeDeserializer.Deserialize(out To, GetParameter(parameters, new System.Guid("32fad20d-6ca6-4fc3-8c7a-e3a3cd84061b")));
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("7adc2a07-f50e-439a-bca4-58aa80ed24b1")]
-    public class Set_Integer : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id3dee23b1b1a04457b2f736fdfe67cdf2;
-        
-        public MyNamespace.Nodes.Connectors.Input id9a358db500e245d4934d7b1dd059f89b;
-        
-        [RuntimeConversation.ParameterIDAttribute("b30054dd-f984-41a7-b245-aaed6bac39f8")]
-        public IntegerFlag Flag;
-        
-        [RuntimeConversation.ParameterIDAttribute("490c4c46-d25a-4605-99cd-237b94679e95")]
-        public Int32 To;
-        
-        public Set_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _cc51b4459c8e480cabca1001644e29e0;
-            TypeDeserializer.Deserialize(out _cc51b4459c8e480cabca1001644e29e0, "");
-            this.id3dee23b1b1a04457b2f736fdfe67cdf2 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2"), _cc51b4459c8e480cabca1001644e29e0);
-            this.id9a358db500e245d4934d7b1dd059f89b = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("9a358db5-00e2-45d4-934d-7b1dd059f89b"));
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2")))
-            {
-                return id3dee23b1b1a04457b2f736fdfe67cdf2;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("9a358db5-00e2-45d4-934d-7b1dd059f89b")))
-            {
-                return id9a358db500e245d4934d7b1dd059f89b;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-            TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("b30054dd-f984-41a7-b245-aaed6bac39f8")));
-            TypeDeserializer.Deserialize(out To, GetParameter(parameters, new System.Guid("490c4c46-d25a-4605-99cd-237b94679e95")));
-        }
-    }
-    
-    [RuntimeConversation.NodeTypeIDAttribute("00b12526-aa16-4258-95b5-fd1e9927c271")]
-    public class Increment_Integer : Node
-    {
-        
-        public MyNamespace.Nodes.Connectors.Output id4519707a672d4c25a3b6e96eef3f8805;
-        
-        public MyNamespace.Nodes.Connectors.Input id7710fc42fc43454b8288838a06fbc8b9;
-        
-        [RuntimeConversation.ParameterIDAttribute("015fc115-b8a5-4cd5-8f41-6c13a8b77643")]
-        public IntegerFlag Flag;
-        
-        [RuntimeConversation.ParameterIDAttribute("e3e1497f-bd0c-468e-aadd-8db9ed593700")]
-        public Int32 By;
-        
-        public Increment_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
-                base(id, position)
-        {
-            String _c6e0117b4d1d4a7d853373e48a9d0f13;
-            TypeDeserializer.Deserialize(out _c6e0117b4d1d4a7d853373e48a9d0f13, "");
-            this.id4519707a672d4c25a3b6e96eef3f8805 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4519707a-672d-4c25-a3b6-e96eef3f8805"), _c6e0117b4d1d4a7d853373e48a9d0f13);
-            this.id7710fc42fc43454b8288838a06fbc8b9 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("7710fc42-fc43-454b-8288-838a06fbc8b9"));
-        }
-        
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
-        {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4519707a-672d-4c25-a3b6-e96eef3f8805")))
-            {
-                return id4519707a672d4c25a3b6e96eef3f8805;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("7710fc42-fc43-454b-8288-838a06fbc8b9")))
-            {
-                return id7710fc42fc43454b8288838a06fbc8b9;
-            }
-            return null;
-        }
-        
-        public override void Process(IProcessor processor)
-        {
-            processor.ProcessNode(this);
-        }
-        
-        public override T Process<T>(IProcessor<T> processor)
-        
-        {
-            return processor.ProcessNode(this);
-        }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
-        {
-            TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("015fc115-b8a5-4cd5-8f41-6c13a8b77643")));
-            TypeDeserializer.Deserialize(out By, GetParameter(parameters, new System.Guid("e3e1497f-bd0c-468e-aadd-8db9ed593700")));
         }
     }
     
@@ -3524,9 +4745,9 @@ namespace MyNamespace.Nodes.Trigger
         public Give_Item(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            String _e25d1857729c4864812f4ee18635cde7;
-            TypeDeserializer.Deserialize(out _e25d1857729c4864812f4ee18635cde7, "");
-            this.id44590c933bd2436d979a84fe70583c3d = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("44590c93-3bd2-436d-979a-84fe70583c3d"), _e25d1857729c4864812f4ee18635cde7);
+            String _c5cd2b0155e04abc8af560761ba7bac8;
+            TypeDeserializer.Deserialize(out _c5cd2b0155e04abc8af560761ba7bac8, "");
+            this.id44590c933bd2436d979a84fe70583c3d = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("44590c93-3bd2-436d-979a-84fe70583c3d"), _c5cd2b0155e04abc8af560761ba7bac8);
             this.id4264c31346ac4abba19d628d5572f67d = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("4264c313-46ac-4abb-a19d-628d5572f67d"));
         }
         
@@ -3579,9 +4800,9 @@ namespace MyNamespace.Nodes.Trigger
         public Change_Bindname(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            String _e4f256c00cb34dffbbb14805ed4d3379;
-            TypeDeserializer.Deserialize(out _e4f256c00cb34dffbbb14805ed4d3379, "");
-            this.id21756115dd00440f824b52b26fcaa755 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("21756115-dd00-440f-824b-52b26fcaa755"), _e4f256c00cb34dffbbb14805ed4d3379);
+            String _29cbd6dec9c748fdb2375b50d4c2c491;
+            TypeDeserializer.Deserialize(out _29cbd6dec9c748fdb2375b50d4c2c491, "");
+            this.id21756115dd00440f824b52b26fcaa755 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("21756115-dd00-440f-824b-52b26fcaa755"), _29cbd6dec9c748fdb2375b50d4c2c491);
             this.id2b0f4c46735b4f7db6bfc355b2cf87c3 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("2b0f4c46-735b-4f7d-b6bf-c355b2cf87c3"));
         }
         
@@ -3615,6 +4836,56 @@ namespace MyNamespace.Nodes.Trigger
             TypeDeserializer.Deserialize(out Change_To, GetParameter(parameters, new System.Guid("af6e8208-0cb4-4d5a-90b4-6dd0ab19b56e")));
         }
     }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("bb0091bc-a5e9-43e6-9733-fb391f79170a")]
+    public class Trigger_Game_Object : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output idd8c1260429f44e77bcf9c52978214d2d;
+        
+        public MyNamespace.Nodes.Connectors.Input idc060f2729254499cb270ea905a75cf39;
+        
+        [RuntimeConversation.ParameterIDAttribute("675c068a-6e45-4c4b-bd8e-c926103b9f6d")]
+        public String Object_Tag;
+        
+        public Trigger_Game_Object(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _965de84fa2e64fad8c5989b0fa06deb0;
+            TypeDeserializer.Deserialize(out _965de84fa2e64fad8c5989b0fa06deb0, "");
+            this.idd8c1260429f44e77bcf9c52978214d2d = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("d8c12604-29f4-4e77-bcf9-c52978214d2d"), _965de84fa2e64fad8c5989b0fa06deb0);
+            this.idc060f2729254499cb270ea905a75cf39 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("c060f272-9254-499c-b270-ea905a75cf39"));
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("d8c12604-29f4-4e77-bcf9-c52978214d2d")))
+            {
+                return idd8c1260429f44e77bcf9c52978214d2d;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("c060f272-9254-499c-b270-ea905a75cf39")))
+            {
+                return idc060f2729254499cb270ea905a75cf39;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Object_Tag, GetParameter(parameters, new System.Guid("675c068a-6e45-4c4b-bd8e-c926103b9f6d")));
+        }
+    }
 }
 namespace MyNamespace.Nodes.Animation
 {
@@ -3625,41 +4896,32 @@ namespace MyNamespace.Nodes.Animation
     using MyNamespace.Types;
     
     
-    [RuntimeConversation.NodeTypeIDAttribute("62ce5a50-079e-4897-b5c8-10f4f9a6cef2")]
-    public class Trigger_Gesture : Node
+    [RuntimeConversation.NodeTypeIDAttribute("7f668a0a-fc68-4aeb-b9de-c4069e91b0fe")]
+    public class Trigger_Expression : Node
     {
         
-        public MyNamespace.Nodes.Connectors.Input idd34ef63a4d40425fa1ffd1774832d5a6;
+        public MyNamespace.Nodes.Connectors.Controller id96bf0cefb0ec4ad5bf74c6fe43ce238f;
         
-        public MyNamespace.Nodes.Connectors.Output id00ae130505544293be17a99ae3b94f33;
+        [RuntimeConversation.ParameterIDAttribute("84086ce7-4e89-48d0-a0e3-142e2adf1283")]
+        public AnimationExpression Expression;
         
         [RuntimeConversation.ParameterIDAttribute("8f448b36-80bf-491a-88e8-2b45515e1f0b")]
         public CameraTarget Actor;
         
-        [RuntimeConversation.ParameterIDAttribute("d4cfde03-9620-4399-8958-483206f8b5b3")]
-        public AnimationGesture Gesture;
-        
         [RuntimeConversation.ParameterIDAttribute("1be995ff-175f-4429-9a0f-548228f6b0db")]
         public Decimal Delay;
         
-        public Trigger_Gesture(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Trigger_Expression(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            this.idd34ef63a4d40425fa1ffd1774832d5a6 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("d34ef63a-4d40-425f-a1ff-d1774832d5a6"));
-            String _bbacfbe7496a47e38e84c9628cb8e12f;
-            TypeDeserializer.Deserialize(out _bbacfbe7496a47e38e84c9628cb8e12f, "");
-            this.id00ae130505544293be17a99ae3b94f33 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("00ae1305-0554-4293-be17-a99ae3b94f33"), _bbacfbe7496a47e38e84c9628cb8e12f);
+            this.id96bf0cefb0ec4ad5bf74c6fe43ce238f = new MyNamespace.Nodes.Connectors.Controller(this, Conversation.ID<Conversation.TConnector>.Parse("96bf0cef-b0ec-4ad5-bf74-c6fe43ce238f"));
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("d34ef63a-4d40-425f-a1ff-d1774832d5a6")))
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("96bf0cef-b0ec-4ad5-bf74-c6fe43ce238f")))
             {
-                return idd34ef63a4d40425fa1ffd1774832d5a6;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("00ae1305-0554-4293-be17-a99ae3b94f33")))
-            {
-                return id00ae130505544293be17a99ae3b94f33;
+                return id96bf0cefb0ec4ad5bf74c6fe43ce238f;
             }
             return null;
         }
@@ -3677,8 +4939,57 @@ namespace MyNamespace.Nodes.Animation
         
         public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
         {
+            TypeDeserializer.Deserialize(out Expression, GetParameter(parameters, new System.Guid("84086ce7-4e89-48d0-a0e3-142e2adf1283")));
             TypeDeserializer.Deserialize(out Actor, GetParameter(parameters, new System.Guid("8f448b36-80bf-491a-88e8-2b45515e1f0b")));
+            TypeDeserializer.Deserialize(out Delay, GetParameter(parameters, new System.Guid("1be995ff-175f-4429-9a0f-548228f6b0db")));
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("62ce5a50-079e-4897-b5c8-10f4f9a6cef2")]
+    public class Trigger_Gesture : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Controller id96bf0cefb0ec4ad5bf74c6fe43ce238f;
+        
+        [RuntimeConversation.ParameterIDAttribute("d4cfde03-9620-4399-8958-483206f8b5b3")]
+        public AnimationGesture Gesture;
+        
+        [RuntimeConversation.ParameterIDAttribute("8f448b36-80bf-491a-88e8-2b45515e1f0b")]
+        public CameraTarget Actor;
+        
+        [RuntimeConversation.ParameterIDAttribute("1be995ff-175f-4429-9a0f-548228f6b0db")]
+        public Decimal Delay;
+        
+        public Trigger_Gesture(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            this.id96bf0cefb0ec4ad5bf74c6fe43ce238f = new MyNamespace.Nodes.Connectors.Controller(this, Conversation.ID<Conversation.TConnector>.Parse("96bf0cef-b0ec-4ad5-bf74-c6fe43ce238f"));
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("96bf0cef-b0ec-4ad5-bf74-c6fe43ce238f")))
+            {
+                return id96bf0cefb0ec4ad5bf74c6fe43ce238f;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
             TypeDeserializer.Deserialize(out Gesture, GetParameter(parameters, new System.Guid("d4cfde03-9620-4399-8958-483206f8b5b3")));
+            TypeDeserializer.Deserialize(out Actor, GetParameter(parameters, new System.Guid("8f448b36-80bf-491a-88e8-2b45515e1f0b")));
             TypeDeserializer.Deserialize(out Delay, GetParameter(parameters, new System.Guid("1be995ff-175f-4429-9a0f-548228f6b0db")));
         }
     }
@@ -3687,9 +4998,10 @@ namespace MyNamespace.Nodes.Animation
     public class Set_Emotion : Node
     {
         
-        public MyNamespace.Nodes.Connectors.Input id708ed3ddfa984979b73283fd4266d224;
+        public MyNamespace.Nodes.Connectors.Controller id96bf0cefb0ec4ad5bf74c6fe43ce238f;
         
-        public MyNamespace.Nodes.Connectors.Output id00ae130505544293be17a99ae3b94f33;
+        [RuntimeConversation.ParameterIDAttribute("1be995ff-175f-4429-9a0f-548228f6b0db")]
+        public Decimal Delay;
         
         [RuntimeConversation.ParameterIDAttribute("8f448b36-80bf-491a-88e8-2b45515e1f0b")]
         public CameraTarget Actor;
@@ -3697,27 +5009,17 @@ namespace MyNamespace.Nodes.Animation
         [RuntimeConversation.ParameterIDAttribute("6ca360a6-7dfa-4306-bd47-7a06616eed60")]
         public AnimationEmotion Emotion;
         
-        [RuntimeConversation.ParameterIDAttribute("1be995ff-175f-4429-9a0f-548228f6b0db")]
-        public Decimal Delay;
-        
         public Set_Emotion(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            this.id708ed3ddfa984979b73283fd4266d224 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("708ed3dd-fa98-4979-b732-83fd4266d224"));
-            String _b9072795d4404b2294e8fa1addeeef87;
-            TypeDeserializer.Deserialize(out _b9072795d4404b2294e8fa1addeeef87, "");
-            this.id00ae130505544293be17a99ae3b94f33 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("00ae1305-0554-4293-be17-a99ae3b94f33"), _b9072795d4404b2294e8fa1addeeef87);
+            this.id96bf0cefb0ec4ad5bf74c6fe43ce238f = new MyNamespace.Nodes.Connectors.Controller(this, Conversation.ID<Conversation.TConnector>.Parse("96bf0cef-b0ec-4ad5-bf74-c6fe43ce238f"));
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("708ed3dd-fa98-4979-b732-83fd4266d224")))
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("96bf0cef-b0ec-4ad5-bf74-c6fe43ce238f")))
             {
-                return id708ed3ddfa984979b73283fd4266d224;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("00ae1305-0554-4293-be17-a99ae3b94f33")))
-            {
-                return id00ae130505544293be17a99ae3b94f33;
+                return id96bf0cefb0ec4ad5bf74c6fe43ce238f;
             }
             return null;
         }
@@ -3735,9 +5037,9 @@ namespace MyNamespace.Nodes.Animation
         
         public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
         {
+            TypeDeserializer.Deserialize(out Delay, GetParameter(parameters, new System.Guid("1be995ff-175f-4429-9a0f-548228f6b0db")));
             TypeDeserializer.Deserialize(out Actor, GetParameter(parameters, new System.Guid("8f448b36-80bf-491a-88e8-2b45515e1f0b")));
             TypeDeserializer.Deserialize(out Emotion, GetParameter(parameters, new System.Guid("6ca360a6-7dfa-4306-bd47-7a06616eed60")));
-            TypeDeserializer.Deserialize(out Delay, GetParameter(parameters, new System.Guid("1be995ff-175f-4429-9a0f-548228f6b0db")));
         }
     }
     
@@ -3745,12 +5047,7 @@ namespace MyNamespace.Nodes.Animation
     public class Set_Attitude : Node
     {
         
-        public MyNamespace.Nodes.Connectors.Input id4ac0299ab35c47d49da711cb3b3a9ccb;
-        
-        public MyNamespace.Nodes.Connectors.Output id00ae130505544293be17a99ae3b94f33;
-        
-        [RuntimeConversation.ParameterIDAttribute("8f448b36-80bf-491a-88e8-2b45515e1f0b")]
-        public CameraTarget Actor;
+        public MyNamespace.Nodes.Connectors.Controller id96bf0cefb0ec4ad5bf74c6fe43ce238f;
         
         [RuntimeConversation.ParameterIDAttribute("72e20359-2d15-422c-a1e6-7e539abe246c")]
         public AnimationAttitude Attitude;
@@ -3758,24 +5055,20 @@ namespace MyNamespace.Nodes.Animation
         [RuntimeConversation.ParameterIDAttribute("1be995ff-175f-4429-9a0f-548228f6b0db")]
         public Decimal Delay;
         
+        [RuntimeConversation.ParameterIDAttribute("8f448b36-80bf-491a-88e8-2b45515e1f0b")]
+        public CameraTarget Actor;
+        
         public Set_Attitude(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            this.id4ac0299ab35c47d49da711cb3b3a9ccb = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("4ac0299a-b35c-47d4-9da7-11cb3b3a9ccb"));
-            String _fb5d5130a10641d18a5187c08583be07;
-            TypeDeserializer.Deserialize(out _fb5d5130a10641d18a5187c08583be07, "");
-            this.id00ae130505544293be17a99ae3b94f33 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("00ae1305-0554-4293-be17-a99ae3b94f33"), _fb5d5130a10641d18a5187c08583be07);
+            this.id96bf0cefb0ec4ad5bf74c6fe43ce238f = new MyNamespace.Nodes.Connectors.Controller(this, Conversation.ID<Conversation.TConnector>.Parse("96bf0cef-b0ec-4ad5-bf74-c6fe43ce238f"));
         }
         
         public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4ac0299a-b35c-47d4-9da7-11cb3b3a9ccb")))
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("96bf0cef-b0ec-4ad5-bf74-c6fe43ce238f")))
             {
-                return id4ac0299ab35c47d49da711cb3b3a9ccb;
-            }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("00ae1305-0554-4293-be17-a99ae3b94f33")))
-            {
-                return id00ae130505544293be17a99ae3b94f33;
+                return id96bf0cefb0ec4ad5bf74c6fe43ce238f;
             }
             return null;
         }
@@ -3793,9 +5086,209 @@ namespace MyNamespace.Nodes.Animation
         
         public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
         {
-            TypeDeserializer.Deserialize(out Actor, GetParameter(parameters, new System.Guid("8f448b36-80bf-491a-88e8-2b45515e1f0b")));
             TypeDeserializer.Deserialize(out Attitude, GetParameter(parameters, new System.Guid("72e20359-2d15-422c-a1e6-7e539abe246c")));
             TypeDeserializer.Deserialize(out Delay, GetParameter(parameters, new System.Guid("1be995ff-175f-4429-9a0f-548228f6b0db")));
+            TypeDeserializer.Deserialize(out Actor, GetParameter(parameters, new System.Guid("8f448b36-80bf-491a-88e8-2b45515e1f0b")));
+        }
+    }
+}
+namespace MyNamespace.Nodes.Branch
+{
+    using MyNamespace.Nodes.Connectors;
+    using System;
+    using System.Collections.Generic;
+    using System.Runtime.InteropServices;
+    using MyNamespace.Types;
+    
+    
+    [RuntimeConversation.NodeTypeIDAttribute("9c764213-48f0-4f68-acb4-cc416edc66ae")]
+    public class Probability : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Input id06803b592a0040ec89c2448e0937c38c;
+        
+        public MyNamespace.Nodes.Connectors.Output id2dea9f2bfefa4f60b82808e19d8a06ec;
+        
+        public MyNamespace.Nodes.Connectors.Output id2b2c53380db74cc78403931b08f4a64b;
+        
+        [RuntimeConversation.ParameterIDAttribute("914df4a8-e857-49d0-bf76-3bd9f6615193")]
+        public Percentage Percent;
+        
+        public Probability(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            this.id06803b592a0040ec89c2448e0937c38c = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("06803b59-2a00-40ec-89c2-448e0937c38c"));
+            String _15537efd783247769a9aa9e4fcdee5ce;
+            TypeDeserializer.Deserialize(out _15537efd783247769a9aa9e4fcdee5ce, "Failure");
+            this.id2dea9f2bfefa4f60b82808e19d8a06ec = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("2dea9f2b-fefa-4f60-b828-08e19d8a06ec"), _15537efd783247769a9aa9e4fcdee5ce);
+            String _92db823437534d8b89654b5e1ae5de34;
+            TypeDeserializer.Deserialize(out _92db823437534d8b89654b5e1ae5de34, "Success");
+            this.id2b2c53380db74cc78403931b08f4a64b = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("2b2c5338-0db7-4cc7-8403-931b08f4a64b"), _92db823437534d8b89654b5e1ae5de34);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("06803b59-2a00-40ec-89c2-448e0937c38c")))
+            {
+                return id06803b592a0040ec89c2448e0937c38c;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("2dea9f2b-fefa-4f60-b828-08e19d8a06ec")))
+            {
+                return id2dea9f2bfefa4f60b82808e19d8a06ec;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("2b2c5338-0db7-4cc7-8403-931b08f4a64b")))
+            {
+                return id2b2c53380db74cc78403931b08f4a64b;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Percent, GetParameter(parameters, new System.Guid("914df4a8-e857-49d0-bf76-3bd9f6615193")));
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("4a77a85d-306b-44e1-97d2-c23843eaf0b0")]
+    public class Cycle : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output id6774f693fb2d4dbfa50a5740604cc7f3;
+        
+        public MyNamespace.Nodes.Connectors.Output id021e6c751c734715bf6a9869ad6ad6b2;
+        
+        public MyNamespace.Nodes.Connectors.Output id50a61ab964384b51ac2b1d983f36b7f6;
+        
+        public MyNamespace.Nodes.Connectors.Output idf5f92ef823b647b6ac3577a128ced7a2;
+        
+        public MyNamespace.Nodes.Connectors.Input idb5e8ee826ffa47898ceef4bc085b6112;
+        
+        public MyNamespace.Nodes.Connectors.Output id155e8a71d1a04357bafe52c863ef3ec7;
+        
+        [RuntimeConversation.ParameterIDAttribute("dee1392b-4f4e-4c33-9a86-f4d97f45452a")]
+        public Boolean Loop;
+        
+        public Cycle(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _ed073ab626344f7eab2ef31cf95e76f9;
+            TypeDeserializer.Deserialize(out _ed073ab626344f7eab2ef31cf95e76f9, "5");
+            this.id6774f693fb2d4dbfa50a5740604cc7f3 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("6774f693-fb2d-4dbf-a50a-5740604cc7f3"), _ed073ab626344f7eab2ef31cf95e76f9);
+            String _9bddd60dcd1a4675a7985a825eb63f6a;
+            TypeDeserializer.Deserialize(out _9bddd60dcd1a4675a7985a825eb63f6a, "4");
+            this.id021e6c751c734715bf6a9869ad6ad6b2 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("021e6c75-1c73-4715-bf6a-9869ad6ad6b2"), _9bddd60dcd1a4675a7985a825eb63f6a);
+            String _9109621c2c5c4584900ec524591a75d9;
+            TypeDeserializer.Deserialize(out _9109621c2c5c4584900ec524591a75d9, "3");
+            this.id50a61ab964384b51ac2b1d983f36b7f6 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("50a61ab9-6438-4b51-ac2b-1d983f36b7f6"), _9109621c2c5c4584900ec524591a75d9);
+            String _12369a915356495a9b3a7afbeada871b;
+            TypeDeserializer.Deserialize(out _12369a915356495a9b3a7afbeada871b, "1");
+            this.idf5f92ef823b647b6ac3577a128ced7a2 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("f5f92ef8-23b6-47b6-ac35-77a128ced7a2"), _12369a915356495a9b3a7afbeada871b);
+            this.idb5e8ee826ffa47898ceef4bc085b6112 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("b5e8ee82-6ffa-4789-8cee-f4bc085b6112"));
+            String _d369fce8350c466795114fafd9e6ec72;
+            TypeDeserializer.Deserialize(out _d369fce8350c466795114fafd9e6ec72, "2");
+            this.id155e8a71d1a04357bafe52c863ef3ec7 = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("155e8a71-d1a0-4357-bafe-52c863ef3ec7"), _d369fce8350c466795114fafd9e6ec72);
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("6774f693-fb2d-4dbf-a50a-5740604cc7f3")))
+            {
+                return id6774f693fb2d4dbfa50a5740604cc7f3;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("021e6c75-1c73-4715-bf6a-9869ad6ad6b2")))
+            {
+                return id021e6c751c734715bf6a9869ad6ad6b2;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("50a61ab9-6438-4b51-ac2b-1d983f36b7f6")))
+            {
+                return id50a61ab964384b51ac2b1d983f36b7f6;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("f5f92ef8-23b6-47b6-ac35-77a128ced7a2")))
+            {
+                return idf5f92ef823b647b6ac3577a128ced7a2;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("b5e8ee82-6ffa-4789-8cee-f4bc085b6112")))
+            {
+                return idb5e8ee826ffa47898ceef4bc085b6112;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("155e8a71-d1a0-4357-bafe-52c863ef3ec7")))
+            {
+                return id155e8a71d1a04357bafe52c863ef3ec7;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
+            TypeDeserializer.Deserialize(out Loop, GetParameter(parameters, new System.Guid("dee1392b-4f4e-4c33-9a86-f4d97f45452a")));
+        }
+    }
+    
+    [RuntimeConversation.NodeTypeIDAttribute("03f66e93-bc0c-4713-ae07-dd249d85078d")]
+    public class Random : Node
+    {
+        
+        public MyNamespace.Nodes.Connectors.Output idd1517dc6b4e04487bfc92eed2d2f04cd;
+        
+        public MyNamespace.Nodes.Connectors.Input id76652911e7494f08b5012ae0c09f77b3;
+        
+        public Random(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+                base(id, position)
+        {
+            String _9e41a8122ef6486fb93961e490473123;
+            TypeDeserializer.Deserialize(out _9e41a8122ef6486fb93961e490473123, "");
+            this.idd1517dc6b4e04487bfc92eed2d2f04cd = new MyNamespace.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("d1517dc6-b4e0-4487-bfc9-2eed2d2f04cd"), _9e41a8122ef6486fb93961e490473123);
+            this.id76652911e7494f08b5012ae0c09f77b3 = new MyNamespace.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("76652911-e749-4f08-b501-2ae0c09f77b3"));
+        }
+        
+        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        {
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("d1517dc6-b4e0-4487-bfc9-2eed2d2f04cd")))
+            {
+                return idd1517dc6b4e04487bfc92eed2d2f04cd;
+            }
+            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("76652911-e749-4f08-b501-2ae0c09f77b3")))
+            {
+                return id76652911e7494f08b5012ae0c09f77b3;
+            }
+            return null;
+        }
+        
+        public override void Process(IProcessor processor)
+        {
+            processor.ProcessNode(this);
+        }
+        
+        public override T Process<T>(IProcessor<T> processor)
+        
+        {
+            return processor.ProcessNode(this);
+        }
+        
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+        {
         }
     }
 }
@@ -3808,11 +5301,10 @@ namespace MyNamespace
     using MyNamespace.Nodes.Camera;
     using MyNamespace.Nodes.Condition;
     using MyNamespace.Nodes.Dev;
-    using MyNamespace.Nodes.Jumps;
     using MyNamespace.Nodes.Metadata;
-    using MyNamespace.Nodes.Randomise;
     using MyNamespace.Nodes.Trigger;
     using MyNamespace.Nodes.Animation;
+    using MyNamespace.Nodes.Branch;
     
     
     public class Deserializer : Utilities.IDeserializer<RuntimeConversation.Conversation>
@@ -3826,9 +5318,51 @@ namespace MyNamespace
         
         private Utilities.Or<RuntimeConversation.NodeBase, Conversation.Serialization.Error> GetNode(Conversation.ID<Conversation.NodeTypeTemp> typeid, Conversation.ID<Conversation.NodeTemp> id, System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters, System.Drawing.PointF position)
         {
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("8a83ed34-474e-4866-884c-2ee64bba782a")))
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("3a75e7ae-80ac-40a8-b14c-7c91ce1011f1")))
             {
-                MyNamespace.Nodes.AI_Barks.AI_Curious node = new MyNamespace.Nodes.AI_Barks.AI_Curious(id, position);
+                MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Steampipe node = new MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Steampipe(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("a9070db4-e4cb-4d06-99cb-536c19be5daf")))
+            {
+                MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Transformer node = new MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Transformer(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("2e389da5-0334-4a97-ba94-b1f68668b4ae")))
+            {
+                MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Nonlethal node = new MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Nonlethal(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("630b9f53-29bd-4680-82d0-0b3d63c4267f")))
+            {
+                MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Lethal_Post node = new MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Lethal_Post(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("5d5e1ebd-cfb5-4023-b6fa-4baf46f75ee3")))
+            {
+                MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Nonlethal_Post node = new MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Nonlethal_Post(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("72ff1592-f78b-401f-b9d3-287342dbc336")))
+            {
+                MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Lethal node = new MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Lethal(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("84594d80-3ee7-4c3a-8f2f-26896cd364bf")))
+            {
+                MyNamespace.Nodes.AI_Barks.AI_Surprised node = new MyNamespace.Nodes.AI_Barks.AI_Surprised(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("13b439cb-4e61-46cd-9f59-0de825899a22")))
+            {
+                MyNamespace.Nodes.AI_Barks.AI_Alarmed_Investigation node = new MyNamespace.Nodes.AI_Barks.AI_Alarmed_Investigation(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
@@ -3838,9 +5372,75 @@ namespace MyNamespace
                 node.GetParameters(parameters);
                 return node;
             }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("3f198013-c7c2-4f4f-b805-c6adcf23e55f")))
+            {
+                MyNamespace.Nodes.AI_Barks.AI_Grenade_Throw node = new MyNamespace.Nodes.AI_Barks.AI_Grenade_Throw(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("d89cefcb-aab2-44dc-b3c7-581ca73250eb")))
+            {
+                MyNamespace.Nodes.AI_Barks.AI_Damage node = new MyNamespace.Nodes.AI_Barks.AI_Damage(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("72f16b7b-222c-4995-8ac5-310182911794")))
+            {
+                MyNamespace.Nodes.AI_Barks.AI_Reloading node = new MyNamespace.Nodes.AI_Barks.AI_Reloading(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("3ac2461a-3e04-473b-a346-de0212a49d52")))
+            {
+                MyNamespace.Nodes.AI_Barks.AI_Attacking node = new MyNamespace.Nodes.AI_Barks.AI_Attacking(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("8a83ed34-474e-4866-884c-2ee64bba782a")))
+            {
+                MyNamespace.Nodes.AI_Barks.AI_Curious node = new MyNamespace.Nodes.AI_Barks.AI_Curious(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("0330c8f7-5ca8-42fd-9112-46e4a7569402")))
+            {
+                MyNamespace.Nodes.AI_Barks.AI_Disrepair node = new MyNamespace.Nodes.AI_Barks.AI_Disrepair(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("08541ccf-4b11-4e64-b1c2-c0d78c23f004")))
+            {
+                MyNamespace.Nodes.AI_Barks.AI_Carcass node = new MyNamespace.Nodes.AI_Barks.AI_Carcass(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("7af10c4b-c961-4336-aced-825c9b6fa5a8")))
+            {
+                MyNamespace.Nodes.AI_Barks.AI_Enemy_Lost node = new MyNamespace.Nodes.AI_Barks.AI_Enemy_Lost(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
             if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("18bd0870-ee09-47e9-95b0-1702707ee9bf")))
             {
                 MyNamespace.Nodes.AI_Barks.AI_Bribed_Spotted node = new MyNamespace.Nodes.AI_Barks.AI_Bribed_Spotted(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("f3237a51-faae-442f-89d0-4ea9760ee193")))
+            {
+                MyNamespace.Nodes.AI_Barks.AI_Crime node = new MyNamespace.Nodes.AI_Barks.AI_Crime(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("b2ad422d-1e6c-431b-bd7b-227bcb98abf4")))
+            {
+                MyNamespace.Nodes.AI_Barks.AI_Reinforcements node = new MyNamespace.Nodes.AI_Barks.AI_Reinforcements(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("41c77bb7-89a6-4484-bce2-26f680be0806")))
+            {
+                MyNamespace.Nodes.AI_Barks.AI_Arresting node = new MyNamespace.Nodes.AI_Barks.AI_Arresting(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
@@ -3862,69 +5462,15 @@ namespace MyNamespace
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("3ac2461a-3e04-473b-a346-de0212a49d52")))
-            {
-                MyNamespace.Nodes.AI_Barks.AI_Attacking node = new MyNamespace.Nodes.AI_Barks.AI_Attacking(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("7af10c4b-c961-4336-aced-825c9b6fa5a8")))
-            {
-                MyNamespace.Nodes.AI_Barks.AI_Enemy_Lost node = new MyNamespace.Nodes.AI_Barks.AI_Enemy_Lost(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("72f16b7b-222c-4995-8ac5-310182911794")))
-            {
-                MyNamespace.Nodes.AI_Barks.AI_Reloading node = new MyNamespace.Nodes.AI_Barks.AI_Reloading(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
             if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("79ba63f0-f75d-4734-9ab2-cc119545b6b5")))
             {
                 MyNamespace.Nodes.AI_Barks.AI_Weapon node = new MyNamespace.Nodes.AI_Barks.AI_Weapon(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("f3237a51-faae-442f-89d0-4ea9760ee193")))
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("71ed7f8d-ade5-4f10-98ea-aadeac0da197")))
             {
-                MyNamespace.Nodes.AI_Barks.AI_Crime node = new MyNamespace.Nodes.AI_Barks.AI_Crime(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("d89cefcb-aab2-44dc-b3c7-581ca73250eb")))
-            {
-                MyNamespace.Nodes.AI_Barks.AI_Damage node = new MyNamespace.Nodes.AI_Barks.AI_Damage(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("08541ccf-4b11-4e64-b1c2-c0d78c23f004")))
-            {
-                MyNamespace.Nodes.AI_Barks.AI_Carcass node = new MyNamespace.Nodes.AI_Barks.AI_Carcass(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("0330c8f7-5ca8-42fd-9112-46e4a7569402")))
-            {
-                MyNamespace.Nodes.AI_Barks.AI_Disrepair node = new MyNamespace.Nodes.AI_Barks.AI_Disrepair(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("41c77bb7-89a6-4484-bce2-26f680be0806")))
-            {
-                MyNamespace.Nodes.AI_Barks.AI_Arresting node = new MyNamespace.Nodes.AI_Barks.AI_Arresting(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("b2ad422d-1e6c-431b-bd7b-227bcb98abf4")))
-            {
-                MyNamespace.Nodes.AI_Barks.AI_Reinforcements node = new MyNamespace.Nodes.AI_Barks.AI_Reinforcements(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("3f198013-c7c2-4f4f-b805-c6adcf23e55f")))
-            {
-                MyNamespace.Nodes.AI_Barks.AI_Grenade_Throw node = new MyNamespace.Nodes.AI_Barks.AI_Grenade_Throw(id, position);
+                MyNamespace.Nodes.Camera.Custom_Camera node = new MyNamespace.Nodes.Camera.Custom_Camera(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
@@ -3937,6 +5483,48 @@ namespace MyNamespace
             if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("1f470d56-c46f-432c-ade9-4650630d6e59")))
             {
                 MyNamespace.Nodes.Camera.Reset_Camera node = new MyNamespace.Nodes.Camera.Reset_Camera(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("a1578ae6-f73d-497e-8dce-3b741562ae3e")))
+            {
+                MyNamespace.Nodes.Condition.Game_Mode node = new MyNamespace.Nodes.Condition.Game_Mode(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("3d5cfc7b-f605-4f35-a43d-b0c1c9ed2276")))
+            {
+                MyNamespace.Nodes.Condition.Check_Local_Decimal node = new MyNamespace.Nodes.Condition.Check_Local_Decimal(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("8fca70c8-2e1b-4d59-80b4-0c7219625899")))
+            {
+                MyNamespace.Nodes.Condition.Check_Story_Decimal node = new MyNamespace.Nodes.Condition.Check_Story_Decimal(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("bca29176-1034-4310-9864-b949dd64b4d0")))
+            {
+                MyNamespace.Nodes.Condition.Check_Local_Boolean node = new MyNamespace.Nodes.Condition.Check_Local_Boolean(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("42842463-2c60-4220-b231-ae82ea711d78")))
+            {
+                MyNamespace.Nodes.Condition.Check_Story_Boolean node = new MyNamespace.Nodes.Condition.Check_Story_Boolean(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("965d6f95-b871-49cf-8568-16197fee8524")))
+            {
+                MyNamespace.Nodes.Condition.Check_Story_Integer node = new MyNamespace.Nodes.Condition.Check_Story_Integer(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("08727d6a-da44-430b-8caf-a58cfdfe251c")))
+            {
+                MyNamespace.Nodes.Condition.Check_Local_Integer node = new MyNamespace.Nodes.Condition.Check_Local_Integer(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
@@ -3961,12 +5549,6 @@ namespace MyNamespace
             if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("4ec0e4c2-c0b5-4507-97eb-3d1e10fd6315")))
             {
                 MyNamespace.Nodes.Condition.Player_Outfit node = new MyNamespace.Nodes.Condition.Player_Outfit(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("08727d6a-da44-430b-8caf-a58cfdfe251c")))
-            {
-                MyNamespace.Nodes.Condition.Check_Integer node = new MyNamespace.Nodes.Condition.Check_Integer(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
@@ -4000,24 +5582,6 @@ namespace MyNamespace
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("3acaf075-abf5-4cb4-8f65-de46a4bfa98c")))
-            {
-                MyNamespace.Nodes.Gun_Drawn node = new MyNamespace.Nodes.Gun_Drawn(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("dd02c832-4896-4f25-9a49-3884d6146fa3")))
-            {
-                MyNamespace.Nodes.Jumps.Jump_To node = new MyNamespace.Nodes.Jumps.Jump_To(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("17cf0309-8377-4e3e-9d8d-46d0a7cef943")))
-            {
-                MyNamespace.Nodes.Jumps.Jump_Target node = new MyNamespace.Nodes.Jumps.Jump_Target(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
             if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("d5974ffe-777b-419c-b9bc-bde980cb99a6")))
             {
                 MyNamespace.Nodes.Metadata.Conversation_Info node = new MyNamespace.Nodes.Metadata.Conversation_Info(id, position);
@@ -4036,27 +5600,15 @@ namespace MyNamespace
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("03f66e93-bc0c-4713-ae07-dd249d85078d")))
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("196dc521-8336-4714-93b7-77ac09b3abd7")))
             {
-                MyNamespace.Nodes.Randomise.Random node = new MyNamespace.Nodes.Randomise.Random(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("9c764213-48f0-4f68-acb4-cc416edc66ae")))
-            {
-                MyNamespace.Nodes.Randomise.Probability node = new MyNamespace.Nodes.Randomise.Probability(id, position);
+                MyNamespace.Nodes.NPC_Speech node = new MyNamespace.Nodes.NPC_Speech(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
             if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("da1dfd60-28e4-48f6-93e6-298f3a68b67c")))
             {
                 MyNamespace.Nodes.Player_Speech node = new MyNamespace.Nodes.Player_Speech(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("196dc521-8336-4714-93b7-77ac09b3abd7")))
-            {
-                MyNamespace.Nodes.NPC_Speech node = new MyNamespace.Nodes.NPC_Speech(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
@@ -4084,6 +5636,60 @@ namespace MyNamespace
                 node.GetParameters(parameters);
                 return node;
             }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("1df455bd-8f7f-4b7b-aee9-e56c73129ba0")))
+            {
+                MyNamespace.Nodes.Trigger.Teleport_Character node = new MyNamespace.Nodes.Trigger.Teleport_Character(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("92938a3c-3a12-46dd-af6a-f5c0092bea52")))
+            {
+                MyNamespace.Nodes.Trigger.Decrement_Integer node = new MyNamespace.Nodes.Trigger.Decrement_Integer(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("00b12526-aa16-4258-95b5-fd1e9927c271")))
+            {
+                MyNamespace.Nodes.Trigger.Increment_Integer node = new MyNamespace.Nodes.Trigger.Increment_Integer(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("78c38356-d036-418c-be97-b757e4792c4a")))
+            {
+                MyNamespace.Nodes.Trigger.Set_Story_Boolean node = new MyNamespace.Nodes.Trigger.Set_Story_Boolean(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("7adc2a07-f50e-439a-bca4-58aa80ed24b1")))
+            {
+                MyNamespace.Nodes.Trigger.Set_Story_Integer node = new MyNamespace.Nodes.Trigger.Set_Story_Integer(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("1abd75ed-6040-4d6b-a75e-5297c6f56aac")))
+            {
+                MyNamespace.Nodes.Trigger.Set_Local_Boolean node = new MyNamespace.Nodes.Trigger.Set_Local_Boolean(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("03129c91-4dc8-4ba3-a957-8a8b4ca0442d")))
+            {
+                MyNamespace.Nodes.Trigger.Set_Story_Decimal node = new MyNamespace.Nodes.Trigger.Set_Story_Decimal(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("5a78105e-7a5e-4f12-afcd-033f792ec045")))
+            {
+                MyNamespace.Nodes.Trigger.Set_Local_Decimal node = new MyNamespace.Nodes.Trigger.Set_Local_Decimal(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("77248380-deec-439f-9b25-902b3bd5ebf0")))
+            {
+                MyNamespace.Nodes.Trigger.Set_Local_Integer node = new MyNamespace.Nodes.Trigger.Set_Local_Integer(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
             if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("1d210c12-f969-4f07-bf89-1ddbefe8f77d")))
             {
                 MyNamespace.Nodes.Trigger.Begin_Patrol node = new MyNamespace.Nodes.Trigger.Begin_Patrol(id, position);
@@ -4102,36 +5708,6 @@ namespace MyNamespace
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("77248380-deec-439f-9b25-902b3bd5ebf0")))
-            {
-                MyNamespace.Nodes.Trigger.Set_Local_Integer node = new MyNamespace.Nodes.Trigger.Set_Local_Integer(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("5a78105e-7a5e-4f12-afcd-033f792ec045")))
-            {
-                MyNamespace.Nodes.Trigger.Set_Local_Decimal node = new MyNamespace.Nodes.Trigger.Set_Local_Decimal(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("78c38356-d036-418c-be97-b757e4792c4a")))
-            {
-                MyNamespace.Nodes.Trigger.Set_Boolean node = new MyNamespace.Nodes.Trigger.Set_Boolean(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("7adc2a07-f50e-439a-bca4-58aa80ed24b1")))
-            {
-                MyNamespace.Nodes.Trigger.Set_Integer node = new MyNamespace.Nodes.Trigger.Set_Integer(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("00b12526-aa16-4258-95b5-fd1e9927c271")))
-            {
-                MyNamespace.Nodes.Trigger.Increment_Integer node = new MyNamespace.Nodes.Trigger.Increment_Integer(id, position);
-                node.GetParameters(parameters);
-                return node;
-            }
             if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("9c4a1f4c-7313-46a1-bb46-d5b4131549aa")))
             {
                 MyNamespace.Nodes.Trigger.Give_Item node = new MyNamespace.Nodes.Trigger.Give_Item(id, position);
@@ -4144,9 +5720,21 @@ namespace MyNamespace
                 node.GetParameters(parameters);
                 return node;
             }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("bb0091bc-a5e9-43e6-9733-fb391f79170a")))
+            {
+                MyNamespace.Nodes.Trigger.Trigger_Game_Object node = new MyNamespace.Nodes.Trigger.Trigger_Game_Object(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
             if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("2162436e-5462-41e6-82ec-af29e45a4b70")))
             {
-                MyNamespace.Nodes.Character_Info node = new MyNamespace.Nodes.Character_Info(id, position);
+                MyNamespace.Nodes.Metadata.Character_Info node = new MyNamespace.Nodes.Metadata.Character_Info(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("7f668a0a-fc68-4aeb-b9de-c4069e91b0fe")))
+            {
+                MyNamespace.Nodes.Animation.Trigger_Expression node = new MyNamespace.Nodes.Animation.Trigger_Expression(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
@@ -4168,6 +5756,30 @@ namespace MyNamespace
                 node.GetParameters(parameters);
                 return node;
             }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("9c764213-48f0-4f68-acb4-cc416edc66ae")))
+            {
+                MyNamespace.Nodes.Branch.Probability node = new MyNamespace.Nodes.Branch.Probability(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("4a77a85d-306b-44e1-97d2-c23843eaf0b0")))
+            {
+                MyNamespace.Nodes.Branch.Cycle node = new MyNamespace.Nodes.Branch.Cycle(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("03f66e93-bc0c-4713-ae07-dd249d85078d")))
+            {
+                MyNamespace.Nodes.Branch.Random node = new MyNamespace.Nodes.Branch.Random(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
+            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("53169cb6-eccd-4dc5-8be9-a2c2ae6286e4")))
+            {
+                MyNamespace.Nodes.Timing node = new MyNamespace.Nodes.Timing(id, position);
+                node.GetParameters(parameters);
+                return node;
+            }
             return new Conversation.Serialization.Error("Failed to create node");
         }
     }
@@ -4175,11 +5787,47 @@ namespace MyNamespace
     public interface IProcessor
     {
         
-        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Curious node);
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Steampipe node);
+        
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Transformer node);
+        
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Nonlethal node);
+        
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Lethal_Post node);
+        
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Nonlethal_Post node);
+        
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Lethal node);
+        
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Surprised node);
+        
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Alarmed_Investigation node);
         
         void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Bribed_Caught node);
         
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Grenade_Throw node);
+        
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Damage node);
+        
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Reloading node);
+        
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Attacking node);
+        
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Curious node);
+        
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Disrepair node);
+        
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Carcass node);
+        
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Enemy_Lost node);
+        
         void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Bribed_Spotted node);
+        
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Crime node);
+        
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Reinforcements node);
+        
+        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Arresting node);
         
         void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Idle node);
         
@@ -4187,31 +5835,27 @@ namespace MyNamespace
         
         void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Noise node);
         
-        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Attacking node);
-        
-        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Enemy_Lost node);
-        
-        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Reloading node);
-        
         void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Weapon node);
         
-        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Crime node);
-        
-        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Damage node);
-        
-        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Carcass node);
-        
-        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Disrepair node);
-        
-        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Arresting node);
-        
-        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Reinforcements node);
-        
-        void ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Grenade_Throw node);
+        void ProcessNode(MyNamespace.Nodes.Camera.Custom_Camera node);
         
         void ProcessNode(MyNamespace.Nodes.Camera.Change_Camera node);
         
         void ProcessNode(MyNamespace.Nodes.Camera.Reset_Camera node);
+        
+        void ProcessNode(MyNamespace.Nodes.Condition.Game_Mode node);
+        
+        void ProcessNode(MyNamespace.Nodes.Condition.Check_Local_Decimal node);
+        
+        void ProcessNode(MyNamespace.Nodes.Condition.Check_Story_Decimal node);
+        
+        void ProcessNode(MyNamespace.Nodes.Condition.Check_Local_Boolean node);
+        
+        void ProcessNode(MyNamespace.Nodes.Condition.Check_Story_Boolean node);
+        
+        void ProcessNode(MyNamespace.Nodes.Condition.Check_Story_Integer node);
+        
+        void ProcessNode(MyNamespace.Nodes.Condition.Check_Local_Integer node);
         
         void ProcessNode(MyNamespace.Nodes.Condition.Is_Alive node);
         
@@ -4220,8 +5864,6 @@ namespace MyNamespace
         void ProcessNode(MyNamespace.Nodes.Condition.Player_Character node);
         
         void ProcessNode(MyNamespace.Nodes.Condition.Player_Outfit node);
-        
-        void ProcessNode(MyNamespace.Nodes.Condition.Check_Integer node);
         
         void ProcessNode(MyNamespace.Nodes.Condition.Player_Inventory node);
         
@@ -4233,25 +5875,15 @@ namespace MyNamespace
         
         void ProcessNode(MyNamespace.Nodes.Dev.Description node);
         
-        void ProcessNode(MyNamespace.Nodes.Gun_Drawn node);
-        
-        void ProcessNode(MyNamespace.Nodes.Jumps.Jump_To node);
-        
-        void ProcessNode(MyNamespace.Nodes.Jumps.Jump_Target node);
-        
         void ProcessNode(MyNamespace.Nodes.Metadata.Conversation_Info node);
         
         void ProcessNode(MyNamespace.Nodes.Prompt_Option node);
         
         void ProcessNode(MyNamespace.Nodes.Option node);
         
-        void ProcessNode(MyNamespace.Nodes.Randomise.Random node);
-        
-        void ProcessNode(MyNamespace.Nodes.Randomise.Probability node);
+        void ProcessNode(MyNamespace.Nodes.NPC_Speech node);
         
         void ProcessNode(MyNamespace.Nodes.Player_Speech node);
-        
-        void ProcessNode(MyNamespace.Nodes.NPC_Speech node);
         
         void ProcessNode(MyNamespace.Nodes.Radio_Message node);
         
@@ -4261,44 +5893,100 @@ namespace MyNamespace
         
         void ProcessNode(MyNamespace.Nodes.Terminator node);
         
+        void ProcessNode(MyNamespace.Nodes.Trigger.Teleport_Character node);
+        
+        void ProcessNode(MyNamespace.Nodes.Trigger.Decrement_Integer node);
+        
+        void ProcessNode(MyNamespace.Nodes.Trigger.Increment_Integer node);
+        
+        void ProcessNode(MyNamespace.Nodes.Trigger.Set_Story_Boolean node);
+        
+        void ProcessNode(MyNamespace.Nodes.Trigger.Set_Story_Integer node);
+        
+        void ProcessNode(MyNamespace.Nodes.Trigger.Set_Local_Boolean node);
+        
+        void ProcessNode(MyNamespace.Nodes.Trigger.Set_Story_Decimal node);
+        
+        void ProcessNode(MyNamespace.Nodes.Trigger.Set_Local_Decimal node);
+        
+        void ProcessNode(MyNamespace.Nodes.Trigger.Set_Local_Integer node);
+        
         void ProcessNode(MyNamespace.Nodes.Trigger.Begin_Patrol node);
         
         void ProcessNode(MyNamespace.Nodes.Trigger.Console_Message node);
         
         void ProcessNode(MyNamespace.Nodes.Trigger.Prompt node);
         
-        void ProcessNode(MyNamespace.Nodes.Trigger.Set_Local_Integer node);
-        
-        void ProcessNode(MyNamespace.Nodes.Trigger.Set_Local_Decimal node);
-        
-        void ProcessNode(MyNamespace.Nodes.Trigger.Set_Boolean node);
-        
-        void ProcessNode(MyNamespace.Nodes.Trigger.Set_Integer node);
-        
-        void ProcessNode(MyNamespace.Nodes.Trigger.Increment_Integer node);
-        
         void ProcessNode(MyNamespace.Nodes.Trigger.Give_Item node);
         
         void ProcessNode(MyNamespace.Nodes.Trigger.Change_Bindname node);
         
-        void ProcessNode(MyNamespace.Nodes.Character_Info node);
+        void ProcessNode(MyNamespace.Nodes.Trigger.Trigger_Game_Object node);
+        
+        void ProcessNode(MyNamespace.Nodes.Metadata.Character_Info node);
+        
+        void ProcessNode(MyNamespace.Nodes.Animation.Trigger_Expression node);
         
         void ProcessNode(MyNamespace.Nodes.Animation.Trigger_Gesture node);
         
         void ProcessNode(MyNamespace.Nodes.Animation.Set_Emotion node);
         
         void ProcessNode(MyNamespace.Nodes.Animation.Set_Attitude node);
+        
+        void ProcessNode(MyNamespace.Nodes.Branch.Probability node);
+        
+        void ProcessNode(MyNamespace.Nodes.Branch.Cycle node);
+        
+        void ProcessNode(MyNamespace.Nodes.Branch.Random node);
+        
+        void ProcessNode(MyNamespace.Nodes.Timing node);
     }
     
     public interface IProcessor<T>
     
     {
         
-        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Curious node);
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Steampipe node);
+        
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Transformer node);
+        
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Nonlethal node);
+        
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Lethal_Post node);
+        
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Nonlethal_Post node);
+        
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Lethal node);
+        
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Surprised node);
+        
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Alarmed_Investigation node);
         
         T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Bribed_Caught node);
         
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Grenade_Throw node);
+        
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Damage node);
+        
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Reloading node);
+        
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Attacking node);
+        
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Curious node);
+        
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Disrepair node);
+        
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Carcass node);
+        
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Enemy_Lost node);
+        
         T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Bribed_Spotted node);
+        
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Crime node);
+        
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Reinforcements node);
+        
+        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Arresting node);
         
         T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Idle node);
         
@@ -4306,31 +5994,27 @@ namespace MyNamespace
         
         T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Noise node);
         
-        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Attacking node);
-        
-        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Enemy_Lost node);
-        
-        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Reloading node);
-        
         T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Weapon node);
         
-        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Crime node);
-        
-        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Damage node);
-        
-        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Carcass node);
-        
-        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Disrepair node);
-        
-        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Arresting node);
-        
-        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Reinforcements node);
-        
-        T ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Grenade_Throw node);
+        T ProcessNode(MyNamespace.Nodes.Camera.Custom_Camera node);
         
         T ProcessNode(MyNamespace.Nodes.Camera.Change_Camera node);
         
         T ProcessNode(MyNamespace.Nodes.Camera.Reset_Camera node);
+        
+        T ProcessNode(MyNamespace.Nodes.Condition.Game_Mode node);
+        
+        T ProcessNode(MyNamespace.Nodes.Condition.Check_Local_Decimal node);
+        
+        T ProcessNode(MyNamespace.Nodes.Condition.Check_Story_Decimal node);
+        
+        T ProcessNode(MyNamespace.Nodes.Condition.Check_Local_Boolean node);
+        
+        T ProcessNode(MyNamespace.Nodes.Condition.Check_Story_Boolean node);
+        
+        T ProcessNode(MyNamespace.Nodes.Condition.Check_Story_Integer node);
+        
+        T ProcessNode(MyNamespace.Nodes.Condition.Check_Local_Integer node);
         
         T ProcessNode(MyNamespace.Nodes.Condition.Is_Alive node);
         
@@ -4339,8 +6023,6 @@ namespace MyNamespace
         T ProcessNode(MyNamespace.Nodes.Condition.Player_Character node);
         
         T ProcessNode(MyNamespace.Nodes.Condition.Player_Outfit node);
-        
-        T ProcessNode(MyNamespace.Nodes.Condition.Check_Integer node);
         
         T ProcessNode(MyNamespace.Nodes.Condition.Player_Inventory node);
         
@@ -4352,25 +6034,15 @@ namespace MyNamespace
         
         T ProcessNode(MyNamespace.Nodes.Dev.Description node);
         
-        T ProcessNode(MyNamespace.Nodes.Gun_Drawn node);
-        
-        T ProcessNode(MyNamespace.Nodes.Jumps.Jump_To node);
-        
-        T ProcessNode(MyNamespace.Nodes.Jumps.Jump_Target node);
-        
         T ProcessNode(MyNamespace.Nodes.Metadata.Conversation_Info node);
         
         T ProcessNode(MyNamespace.Nodes.Prompt_Option node);
         
         T ProcessNode(MyNamespace.Nodes.Option node);
         
-        T ProcessNode(MyNamespace.Nodes.Randomise.Random node);
-        
-        T ProcessNode(MyNamespace.Nodes.Randomise.Probability node);
+        T ProcessNode(MyNamespace.Nodes.NPC_Speech node);
         
         T ProcessNode(MyNamespace.Nodes.Player_Speech node);
-        
-        T ProcessNode(MyNamespace.Nodes.NPC_Speech node);
         
         T ProcessNode(MyNamespace.Nodes.Radio_Message node);
         
@@ -4380,32 +6052,52 @@ namespace MyNamespace
         
         T ProcessNode(MyNamespace.Nodes.Terminator node);
         
+        T ProcessNode(MyNamespace.Nodes.Trigger.Teleport_Character node);
+        
+        T ProcessNode(MyNamespace.Nodes.Trigger.Decrement_Integer node);
+        
+        T ProcessNode(MyNamespace.Nodes.Trigger.Increment_Integer node);
+        
+        T ProcessNode(MyNamespace.Nodes.Trigger.Set_Story_Boolean node);
+        
+        T ProcessNode(MyNamespace.Nodes.Trigger.Set_Story_Integer node);
+        
+        T ProcessNode(MyNamespace.Nodes.Trigger.Set_Local_Boolean node);
+        
+        T ProcessNode(MyNamespace.Nodes.Trigger.Set_Story_Decimal node);
+        
+        T ProcessNode(MyNamespace.Nodes.Trigger.Set_Local_Decimal node);
+        
+        T ProcessNode(MyNamespace.Nodes.Trigger.Set_Local_Integer node);
+        
         T ProcessNode(MyNamespace.Nodes.Trigger.Begin_Patrol node);
         
         T ProcessNode(MyNamespace.Nodes.Trigger.Console_Message node);
         
         T ProcessNode(MyNamespace.Nodes.Trigger.Prompt node);
         
-        T ProcessNode(MyNamespace.Nodes.Trigger.Set_Local_Integer node);
-        
-        T ProcessNode(MyNamespace.Nodes.Trigger.Set_Local_Decimal node);
-        
-        T ProcessNode(MyNamespace.Nodes.Trigger.Set_Boolean node);
-        
-        T ProcessNode(MyNamespace.Nodes.Trigger.Set_Integer node);
-        
-        T ProcessNode(MyNamespace.Nodes.Trigger.Increment_Integer node);
-        
         T ProcessNode(MyNamespace.Nodes.Trigger.Give_Item node);
         
         T ProcessNode(MyNamespace.Nodes.Trigger.Change_Bindname node);
         
-        T ProcessNode(MyNamespace.Nodes.Character_Info node);
+        T ProcessNode(MyNamespace.Nodes.Trigger.Trigger_Game_Object node);
+        
+        T ProcessNode(MyNamespace.Nodes.Metadata.Character_Info node);
+        
+        T ProcessNode(MyNamespace.Nodes.Animation.Trigger_Expression node);
         
         T ProcessNode(MyNamespace.Nodes.Animation.Trigger_Gesture node);
         
         T ProcessNode(MyNamespace.Nodes.Animation.Set_Emotion node);
         
         T ProcessNode(MyNamespace.Nodes.Animation.Set_Attitude node);
+        
+        T ProcessNode(MyNamespace.Nodes.Branch.Probability node);
+        
+        T ProcessNode(MyNamespace.Nodes.Branch.Cycle node);
+        
+        T ProcessNode(MyNamespace.Nodes.Branch.Random node);
+        
+        T ProcessNode(MyNamespace.Nodes.Timing node);
     }
 }

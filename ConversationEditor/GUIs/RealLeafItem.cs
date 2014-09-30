@@ -33,7 +33,7 @@ namespace ConversationEditor
 
             public override bool CanDelete { get { return true; } }
             public override bool CanRemove { get { return true; } }
-            public override bool CanSave { get { return m_item.File.Writable; } }
+            public override bool CanSave { get { return m_item.File.Writable != null; } }
         }
     }
 }

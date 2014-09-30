@@ -21,16 +21,6 @@ namespace ConversationEditor
             get { return m_file; }
         }
 
-        public void Save()
-        {
-            //can't be changed so saving does nothing
-        }
-
-        void ISaveableFileBase.SaveAs(FileInfo path)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool Move(System.IO.FileInfo newPath, Func<bool> replace)
         {
             throw new NotImplementedException();
@@ -80,9 +70,9 @@ namespace ConversationEditor
         }
 
 
-        public bool Writable
+        public IWritable Writable
         {
-            get { return false; }
+            get { return null; }
         }
     }
 }

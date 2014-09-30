@@ -54,7 +54,7 @@ namespace ConversationEditor
         private ConversationDataSource m_conversationDataSource;
         SaveableFileNotUndoable m_file;
 
-        public static Project CreateEmpty(FileInfo path, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializer, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig)
+        public static Project CreateEmpty(FileInfo path, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializer, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
         {
             Project result = null;
             FileInfo conversationFile;
@@ -88,7 +88,7 @@ namespace ConversationEditor
 
             TData data = new TData(conversationPaths, domainPaths, localizationPaths, Enumerable.Empty<string>(), null, null);
 
-            result = new Project(data, conversationNodeFactory, domainNodeFactory, m, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig);
+            result = new Project(data, conversationNodeFactory, domainNodeFactory, m, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig, audioCustomization);
             return result;
         }
 
@@ -148,7 +148,7 @@ namespace ConversationEditor
             return false;
         }
 
-        public Project(TData data, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, MemoryStream initialData, FileInfo projectFile, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializerFactory, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig)
+        public Project(TData data, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, MemoryStream initialData, FileInfo projectFile, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializerFactory, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
         {
             Action<Stream> saveTo = stream => { Write(Conversations.Select(c => c.File.File), LocalizationFiles.Select(l => l.File.File), DomainFiles.Select(d => d.File.File), AudioFiles.Select(a => a.File.File), stream, Origin, m_serializer); };
             m_file = new SaveableFileNotUndoable(initialData, projectFile, saveTo);
@@ -165,7 +165,7 @@ namespace ConversationEditor
             IEnumerable<string> audioPaths = data.Audios;
 
             {
-                m_audioProvider = new AudioProvider(new FileInfo(projectFile.Name), s => CheckFolder(s, Origin));
+                m_audioProvider = new AudioProvider(new FileInfo(projectFile.FullName), s => CheckFolder(s, Origin), this, audioCustomization());
                 IEnumerable<FileInfo> toLoad = Rerout(audioPaths);
                 m_audioProvider.AudioFiles.Load(toLoad);
             }
@@ -187,8 +187,8 @@ namespace ConversationEditor
             m_conversationDataSource = new ConversationDataSource(BaseTypeSet.Make(), m_domainFiles.Select(df => df.Data));
 
             {
-                Func<IEnumerable<FileInfo>, IEnumerable<ConversationFile>> loadConversation = files => files.Select(file => ConversationFile.Load(file, m_conversationDataSource, ConversationNodeFactory, m_conversationSerializerFactory(m_conversationDataSource)));
-                Func<DirectoryInfo, ConversationFile> makeEmpty = path => ConversationFile.CreateEmpty(path, this, pathOk, ConversationNodeFactory);
+                Func<IEnumerable<FileInfo>, IEnumerable<ConversationFile>> loadConversation = files => files.Select(file => ConversationFile.Load(file, m_conversationDataSource, ConversationNodeFactory, m_conversationSerializerFactory(m_conversationDataSource), c => m_audioProvider.Generate(new AudioGenerationParameters(c, this))));
+                Func<DirectoryInfo, ConversationFile> makeEmpty = path => ConversationFile.CreateEmpty(path, this, pathOk, ConversationNodeFactory, c => m_audioProvider.Generate(new AudioGenerationParameters(c, this)));
                 Func<FileInfo, MissingConversationFile> makeMissing = file => new MissingConversationFile(file);
                 m_conversations = new ProjectElementList<ConversationFile, MissingConversationFile, IConversationFile>(s => CheckFolder(s, Origin), loadConversation, makeEmpty, makeMissing);
                 IEnumerable<FileInfo> toLoad = Rerout(conversationPaths);
@@ -218,11 +218,18 @@ namespace ConversationEditor
 
 
             m_domainFiles.GotChanged += ConversationDatasourceModified;
+            Action<IDomainFile> MaybeConversationDatasourceModified = file => { if (!file.File.Changed()) ConversationDatasourceModified(); };
+            m_domainFiles.Added += argument => { argument.File.SaveStateChanged += () => MaybeConversationDatasourceModified(argument); };
+            m_domainFiles.Reloaded += (_, argument) => { argument.File.SaveStateChanged += () => MaybeConversationDatasourceModified(argument); };
+            m_domainFiles.ForAll(d => d.File.SaveStateChanged += () => MaybeConversationDatasourceModified(d));
             //m_domainFiles.Added += argument => { argument.File.SaveStateChanged += () => { if (!argument.File.Changed) ReloadDatasource(); }; };
             //m_domainFiles.Reloaded += (from, to) => { to.File.SaveStateChanged += () => { if (!to.File.Changed) ReloadDatasource(); }; };
             //m_domainFiles.ForAll(d => d.File.SaveStateChanged += () => { if (!d.File.Changed) ReloadDatasource(); });
 
             m_domainUsage = new DomainUsage(this);
+
+            foreach (var audio in m_audioProvider.UsedAudio())
+                m_audioProvider.UpdateUsage(audio);
         }
 
         public void RefreshCallbacks<TReal, TInterface>(IProjectElementList<TReal, TInterface> elements)
@@ -353,12 +360,12 @@ namespace ConversationEditor
 
         public bool CanModifyConversations
         {
-            get { return DomainFiles.All(f => !f.File.Changed); }
+            get { return DomainFiles.All(f => f.File.Writable == null || !f.File.Writable.Changed); }
         }
 
         public bool CanModifyDomain
         {
-            get { return Conversations.All(f => !f.File.Changed); }
+            get { return Conversations.All(f => f.File.Writable == null || !f.File.Writable.Changed); }
         }
 
         private readonly IAudioProvider m_audioProvider;

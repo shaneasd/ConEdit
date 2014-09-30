@@ -46,14 +46,19 @@ namespace ConversationEditor
             return type == BaseTypeAudio.PARAMETER_TYPE;
         }
 
+        public event Action Ok;
+        AudioGenerationParameters m_audioGenerationParameters;
         IAudioParameter m_parameter;
         IAudioProvider m_audioProvider;
-        public void Setup(IParameter parameter, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public void Setup(ParameterEditorSetupData data)
         {
-            m_parameter = parameter as IAudioParameter;
-            m_audioProvider = audioProvider;
-            if (!parameter.Corrupted)
+            m_parameter = data.Parameter as IAudioParameter;
+            m_audioProvider = data.AudioProvider;
+            m_audioGenerationParameters = data.AudioGenerationParameters;
+            if (!data.Parameter.Corrupted)
                 m_textBox.Text = m_parameter.Value.DisplayValue();
+            else if (m_parameter.Value.Value == null)
+                Generate();
         }
 
         public DefaultAudioEditor AsControl
@@ -61,12 +66,16 @@ namespace ConversationEditor
             get { return this; }
         }
 
-        public SimpleUndoPair? UpdateParameterAction()
+        public UpdateParameterData UpdateParameterAction()
         {
             if (!IsValid())
                 throw new Exception("Current path invalid");
 
-            return m_parameter.SetValueAction(new Audio(m_textBox.Text));
+            Audio audio = new Audio(m_textBox.Text);
+            UpdateParameterData result = m_parameter.SetValueAction(audio);
+            if (result.Actions != null)
+                result.Audio = audio;
+            return result;
         }
 
         public string DisplayName
@@ -87,7 +96,6 @@ namespace ConversationEditor
             }
         }
 
-        public event Action Ok;
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -95,6 +103,16 @@ namespace ConversationEditor
                 MessageBox.Show("Current path invalid");
             else
                 m_audioProvider.Play(new Audio(m_textBox.Text));
+        }
+
+        private void Generate()
+        {
+            m_textBox.Text = m_audioProvider.Generate(m_audioGenerationParameters).Value;
+        }
+
+        private void btnGenerate_Click(object sender, EventArgs e)
+        {
+            Generate();
         }
     }
 }

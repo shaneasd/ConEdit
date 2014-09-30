@@ -30,14 +30,17 @@ namespace ConversationEditor
         protected List<Error> m_errors;
 
         private INodeFactory<ConversationNode> m_nodeFactory;
+        private Func<ISaveableFileProvider, Audio> m_generateAudio;
+
         public ConversationNode MakeNode(IEditable e, NodeUIData uiData)
         {
             return m_nodeFactory.MakeNode(e, uiData);
         }
 
-        public GraphFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, List<Error> errors, INodeFactory<ConversationNode> nodeFactory)
+        public GraphFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, List<Error> errors, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, Audio> generateAudio)
         {
             m_nodeFactory = nodeFactory;
+            m_generateAudio = generateAudio;
             m_nodes = new CallbackList<ConversationNode>(nodes.Select(gnu => MakeNode(gnu.GraphData, gnu.UIData)));
             m_nodesLookup = new O1LookupWrapper<ConversationNode, ID<NodeTemp>>(m_nodes, n => n.Id);
             m_nodesOrdered = new SortedWrapper<ConversationNode>(m_nodes);
@@ -71,11 +74,23 @@ namespace ConversationEditor
                 {
                     foreach (var p in node.Parameters.OfType<LocalizedStringParameter>())
                     {
-                        var localize = p as LocalizedStringParameter;
-                        var result = localization.DuplicateActions(localize.Value);
-                        localize.Value = result.Item1;
+                        var result = localization.DuplicateActions(p.Value);
+                        p.Value = result.Item1;
                         undoActions.Add(result.Item2.Undo);
                         redoActions.Add(result.Item2.Redo);
+                    }
+
+                    foreach (var p in node.Parameters.OfType<IAudioParameter>())
+                    {
+                        var actions = p.SetValueAction(m_generateAudio(this));
+                        undoActions.Add(actions.Value.Undo);
+                        redoActions.Add(actions.Value.Redo);
+                        //TODO: update used audio
+                    }
+
+                    foreach (var p in node.Parameters.OfType<AudioParameter>())
+                    {
+                        p.Value = new Audio(Guid.NewGuid().ToString());
                     }
 
                     var oldID = node.Id;
@@ -104,10 +119,10 @@ namespace ConversationEditor
                 SimpleUndoPair addActions = InnerAddNodes(nodes, groups);
 
                 Action undo = () =>
-                    {
-                        undoActions.ForEach(a => a());
-                        addActions.Undo();
-                    };
+                {
+                    undoActions.ForEach(a => a());
+                    addActions.Undo();
+                };
                 Action redo = () =>
                 {
                     redoActions.ForEach(a => a());
@@ -156,7 +171,7 @@ namespace ConversationEditor
                     m_nodes.Add(n);
                     foreach (var group in containingGroups)
                         group.Contents.Add(n.Id);
-                    actions.Redo();
+                    actions.Undo();
                 });
                 undoActions.Add(() =>
                 {
@@ -164,7 +179,7 @@ namespace ConversationEditor
                         m_nodes.Remove(n);
                     foreach (var group in containingGroups)
                         group.Contents.Remove(n.Id);
-                    actions.Undo();
+                    actions.Redo();
                     NodesDeleted.Execute();
                 });
             }

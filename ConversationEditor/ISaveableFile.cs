@@ -21,20 +21,33 @@ namespace ConversationEditor
         ISaveableFileUndoable UndoableFile { get; }
     }
 
+    public interface IWritable : IDisposable
+    {
+        void Save();
+        void SaveAs(FileInfo path);
+        bool Changed { get; }
+    }
+
+    public static class ISaveableFileBaseUtil
+    {
+        public static bool Changed(this ISaveableFileBase f)
+        {
+            return f.Writable != null && f.Writable.Changed;
+        }
+    }
+
     public interface ISaveableFileBase : IDisposable
     {
         FileInfo File { get; }
-        void Save();
-        void SaveAs(FileInfo path);
         bool Move(FileInfo newPath, Func<bool> replace);
         /// <summary>
         /// Notify the file that it has been moved due to a parent folder being renamed
         /// </summary>
         void GotMoved(FileInfo newPath);
-        bool Changed { get; }
         bool CanClose();
         bool Exists { get; }
-        bool Writable { get; } //TODO: If it's not writable is it really a saveablefile?
+
+        IWritable Writable { get; }
 
         event Action FileModifiedExternally;
         event Action FileDeletedExternally;
@@ -53,179 +66,7 @@ namespace ConversationEditor
         void Change(UndoAction actions);
     }
 
-    public class UpToDateFile : IDisposable
-    {
-        public FileInfo File { get { return m_file; } }
-
-        private FileSystemWatcher m_watcher;
-        private FileInfo m_file;
-        private AutoResetEvent m_reopen;
-        private Thread m_worker;
-        private MemoryStream m_onDisk;
-        private object m_onDiskAccess = new object();
-        private Action<Stream> m_saveTo;
-        public event Action FileChanged; //A change was made to the file externally
-        public event Action FileDeleted; //The file was deleted
-        private ManualResetEventSlim m_abort;
-        private ManualResetEventSlim m_aborted;
-        private ManualResetEventSlim m_deleted;
-
-        public UpToDateFile(MemoryStream lastSavedOrLoaded, FileInfo file, Action<Stream> saveTo)
-        {
-            m_file = file;
-            m_onDisk = lastSavedOrLoaded;
-            m_saveTo = saveTo;
-
-            m_abort = new ManualResetEventSlim(false);
-            m_reopen = new AutoResetEvent(false);
-            m_deleted = new ManualResetEventSlim(false);
-            m_aborted = new ManualResetEventSlim(false);
-            m_worker = new Thread(UpdateThread);
-            m_worker.Start();
-            m_watcher = new FileSystemWatcher();
-            m_watcher.Path = m_file.Directory.FullName;
-            m_watcher.Filter = m_file.Name;
-            m_watcher.Changed += m_watcher_Changed;
-            m_watcher.Deleted += m_watcher_Changed;
-            m_watcher.Renamed += m_watcher_Changed;
-            m_watcher.EnableRaisingEvents = true;
-
-            Application.ApplicationExit += (a, b) => { m_abort.Set(); }; //Rather than clients being responsible for disposing the object and thus killing the thread, just have the thread monitor whether the application wants to exit
-        }
-
-        void m_watcher_Changed(object sender, FileSystemEventArgs e)
-        {
-            if (e.ChangeType == WatcherChangeTypes.Changed)
-                m_reopen.Set();
-            else
-                m_deleted.Set();
-        }
-
-        private void UpdateThread()
-        {
-            try
-            {
-                while (true)
-                {
-                    var condition = WaitHandle.WaitAny(new WaitHandle[] { m_abort.WaitHandle, m_deleted.WaitHandle, m_reopen });
-                    if (m_abort.IsSet)
-                        return;
-                    else if (m_deleted.IsSet)
-                    {
-                        FileDeleted.Execute();
-                        return;
-                    }
-                    else
-                    {
-                        bool fileChanged = false;
-                        while (true)
-                        {
-                            if (m_abort.IsSet)
-                                return;
-                            try
-                            {
-                                using (var stream = Util.LoadFileStream(m_file, FileMode.Open, FileAccess.Read))
-                                {
-                                    int length = (int)stream.Length;
-                                    if (length > 100e6)
-                                        MessageBox.Show("Attempting to load more than 100MB from a file. This is probably why we get the out of memory exception");
-                                    //MemoryStream m = null;
-                                    lock (m_onDiskAccess)
-                                    {
-                                        fileChanged = FileSystem.ChangeIfDifferent(ref m_onDisk, stream, m_abort.WaitHandle);
-                                        break;
-                                        //try
-                                        //{
-                                        //    m = new MemoryStream(length);
-                                        //    stream.CopyTo(m);
-
-                                        //    var data1 = m.GetBuffer().Take((int)m.Length);
-
-                                        //    var data2 = m_onDisk.GetBuffer().Take((int)m_onDisk.Length);
-                                        //    //TODO: Introduce periodic checking if m_abort for particularly long comparisons
-                                        //    if (!data1.SequenceEqual(data2)) //TODO: Refactor this comparison into a utility that could be optimized
-                                        //    {
-                                        //        //The data has changed
-                                        //        m_onDisk = m;
-                                        //        m = null;
-                                        //        fileChanged = true;
-                                        //    }
-                                        //    break;
-                                        //}
-                                        //finally //Almost a using block except we want to be able to cancel the dispose if we decide to keep the new data
-                                        //{
-                                        //    if (m != null)
-                                        //        m.Dispose();
-                                        //}
-                                    }
-                                }
-                            }
-                            catch (MyFileLoadException)
-                            {
-                            }
-
-                            //Essentially wait 100ms before trying the file again but if we get terminated in the mean time just abort
-                            if (m_abort.Wait(100))
-                                return;
-                        }
-                        if (fileChanged)
-                            ThreadPool.QueueUserWorkItem(a => FileChanged.Execute()); //Queue the changes on a thread so this thread can be aborted due to a dispose triggered from the callback
-                    }
-                }
-            }
-            finally
-            {
-                m_aborted.Set();
-            }
-        }
-
-        public void Save()
-        {
-            using (FileStream file = Util.LoadFileStream(m_file, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
-            {
-                m_deleted.Reset();
-                lock (m_onDiskAccess)
-                {
-                    m_onDisk.Position = 0;
-                    m_onDisk.SetLength(0);
-                    m_saveTo(m_onDisk);
-                    m_onDisk.Position = 0;
-                    file.SetLength(0);
-                    m_onDisk.CopyTo(file);
-                    file.Flush(true);
-                }
-            }
-        }
-
-        public void Dispose()
-        {
-            m_abort.Set();
-            bool success = m_aborted.Wait(100000); //Wait a second. If we were unlucky and in the middle of a stream comparison it could take a while.
-            DisposeContents();
-        }
-
-        private void DisposeContents()
-        {
-            m_watcher.Dispose();
-            m_reopen.Dispose();
-            if (m_onDisk != null)
-                m_onDisk.Dispose();
-            m_abort.Dispose();
-            m_aborted.Dispose();
-            m_deleted.Dispose();
-        }
-
-        public MemoryStream Migrate()
-        {
-            m_abort.Set();
-            MemoryStream temp = m_onDisk;
-            m_onDisk = null;
-            this.Dispose();
-            return temp;
-        }
-    }
-
-    public abstract class SaveableFile : ISaveableFileBase, IDisposable
+    public abstract class SaveableFile : ISaveableFileBase, IWritable, IDisposable
     {
         private UpToDateFile m_upToDateFile;
 
@@ -339,9 +180,9 @@ namespace ConversationEditor
             m_upToDateFile.Dispose();
         }
 
-        public bool Writable
+        public IWritable Writable
         {
-            get { return true; }
+            get { return this; }
         }
     }
 
@@ -384,14 +225,61 @@ namespace ConversationEditor
         public event Action SaveStateChanged { add { m_undoQueue.ModifiedChanged += value; } remove { m_undoQueue.ModifiedChanged -= value; } }
     }
 
-    public class SaveableFileNotUndoable : SaveableFile, ISaveableFile
+    public class SaveableFileExternalChangedSource : SaveableFile, ISaveableFile
     {
-        public SaveableFileNotUndoable(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo) : base(initialContent, path, saveTo) { }
+        public SaveableFileExternalChangedSource(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo, Func<bool> changed, Action saved)
+            : base(initialContent, path, saveTo)
+        {
+            m_changed = changed;
+            m_saved = saved;
+            m_lastChanged = false;
+        }
 
         readonly NoUndoQueue m_undoQueue = new NoUndoQueue();
         public IUndoQueue UndoQueue { get { return m_undoQueue; } }
 
-        bool m_changed = false;
+        private Func<bool> m_changed;
+        private Action m_saved;
+        private bool m_lastChanged;
+
+        public void Change()
+        {
+            var changed = m_changed();
+            if (!m_lastChanged)
+            {
+                m_lastChanged = true;
+                SaveStateChanged.Execute();
+            }
+            Modified.Execute();
+        }
+
+        public override bool Changed
+        {
+            get { return m_changed(); }
+        }
+
+        protected override void Saved()
+        {
+            m_saved();
+            m_lastChanged = m_changed();
+            SaveStateChanged.Execute();
+        }
+
+        public event Action SaveStateChanged;
+        public event Action Modified;
+    }
+
+    public class SaveableFileNotUndoable : SaveableFile, ISaveableFile
+    {
+        public SaveableFileNotUndoable(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo)
+            : base(initialContent, path, saveTo)
+        {
+        }
+
+        readonly NoUndoQueue m_undoQueue = new NoUndoQueue();
+        public IUndoQueue UndoQueue { get { return m_undoQueue; } }
+
+        private bool m_changed = false;
 
         public void Change()
         {
@@ -442,14 +330,6 @@ namespace ConversationEditor
             private set;
         }
 
-        public void Save()
-        {
-        }
-
-        public void SaveAs(FileInfo path)
-        {
-        }
-
         public bool Move(FileInfo path, Func<bool> replace)
         {
             var oldFile = File;
@@ -487,9 +367,9 @@ namespace ConversationEditor
             get { return true; }
         }
 
-        public bool Writable
+        public IWritable Writable
         {
-            get { return false; }
+            get { return null; }
         }
 
         public event Action FileModifiedExternally { add { } remove { } }
@@ -515,16 +395,6 @@ namespace ConversationEditor
         public FileInfo File
         {
             get { return m_upToDateFile.File; }
-        }
-
-        public void Save()
-        {
-            //No need
-        }
-
-        void ISaveableFileBase.SaveAs(FileInfo path)
-        {
-            throw new NotSupportedException("Can't save a readonly file");
         }
 
         public bool Move(FileInfo path, Func<bool> replace)
@@ -594,9 +464,9 @@ namespace ConversationEditor
             m_upToDateFile.Dispose();
         }
 
-        public bool Writable
+        public IWritable Writable
         {
-            get { return false; }
+            get { return null; }
         }
     }
 }

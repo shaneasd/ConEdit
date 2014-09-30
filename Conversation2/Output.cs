@@ -229,5 +229,11 @@ namespace Conversation
         {
             return Tuple.Create(ID, Parent).GetHashCode();
         }
+
+        public string GetName()
+        {
+            var name = Parameters.Where(p => p.Id == ConnectorDefinitionData.OUTPUT_NAME).Select(p => p as IStringParameter).Select(p => p.Value).SingleOrDefault() ?? "";
+            return name;
+        }
     }
 }

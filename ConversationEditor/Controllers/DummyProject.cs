@@ -8,6 +8,7 @@ using Conversation;
 namespace ConversationEditor
 {
     using ConversationNode = ConversationNode<INodeGUI>;
+    using Utilities;
 
     public class DummyProject : IProject
     {

@@ -25,6 +25,15 @@ namespace ConversationEditor
                 var showIds = node.Element("ShowIDs");
                 if (showIds != null)
                     m_showIDs = bool.Parse(showIds.Attribute("value").Value);
+
+                var minorGridSpacing = node.Element("MinorGridSpacing");
+                if (minorGridSpacing != null)
+                    uint.TryParse(minorGridSpacing.Attribute("value").Value, out m_minorGridSpacing);
+
+                var majorGridSpacing = node.Element("MajorGridSpacing");
+                if (majorGridSpacing != null)
+                    uint.TryParse(majorGridSpacing.Attribute("value").Value, out m_majorGridSpacing);
+
             }
         }
 
@@ -41,6 +50,12 @@ namespace ConversationEditor
 
                 var showIds = new XElement("ShowIDs", new XAttribute("value", m_showIDs));
                 node.Add(showIds);
+
+                var minorGridSpacing = new XElement("MinorGridSpacing", new XAttribute("value", m_minorGridSpacing));
+                node.Add(minorGridSpacing);
+
+                var majorGridSpacing = new XElement("MajorGridSpacing", new XAttribute("value", m_majorGridSpacing));
+                node.Add(majorGridSpacing);
             }
         }
 
@@ -75,6 +90,28 @@ namespace ConversationEditor
             set
             {
                 m_showIDs = value;
+                ValueChanged.Execute();
+            }
+        }
+
+        private uint m_minorGridSpacing = 20;
+        public uint MinorGridSpacing
+        {
+            get { return m_minorGridSpacing; }
+            set
+            {
+                m_minorGridSpacing = value;
+                ValueChanged.Execute();
+            }
+        }
+        private uint m_majorGridSpacing = 80;
+
+        public uint MajorGridSpacing
+        {
+            get { return m_majorGridSpacing; }
+            set
+            {
+                m_majorGridSpacing = value;
                 ValueChanged.Execute();
             }
         }

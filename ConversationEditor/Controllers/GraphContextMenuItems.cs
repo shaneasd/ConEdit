@@ -13,8 +13,8 @@ namespace ConversationEditor
 {
     public class DomainContextMenuItems : GraphContextMenuItems
     {
-        public DomainContextMenuItems(Action<ConversationNode> findReferences, Func<IEditable, ConfigureResult> edit)
-            : base(findReferences, edit)
+        public DomainContextMenuItems(Action<ConversationNode> findReferences )
+            : base(findReferences)
         {
         }
 
@@ -29,11 +29,9 @@ namespace ConversationEditor
     public class GraphContextMenuItems : IMenuActionFactory<ConversationNode>
     {
         protected Action<ConversationNode> FileReferences;
-        protected Func<IEditable, ConfigureResult> Edit;
-        public GraphContextMenuItems(Action<ConversationNode> findReferences, Func<IEditable, ConfigureResult> edit)
+        public GraphContextMenuItems(Action<ConversationNode> findReferences)
         {
             FileReferences = findReferences;
-            Edit = edit;
         }
 
         public virtual IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(GraphEditorControl<ConversationNode> control)

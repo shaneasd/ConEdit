@@ -11,9 +11,4 @@ namespace Conversation
         string Name { get; }
         IEnumerable<Parameter> MakeParameters();
     }
-
-    public interface IConfigNodeDefinitionFactory
-    {
-        IEnumerable<IConfigNodeDefinition> ConfigNodeDefinitions();
-    }
 }

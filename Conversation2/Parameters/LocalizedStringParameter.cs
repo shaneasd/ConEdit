@@ -26,5 +26,10 @@ namespace Conversation
         {
             return localize(m_value) ?? "Missing Localization";
         }
+
+        protected override void DecorruptFromNull()
+        {
+            Value = ID<LocalizedText>.New();
+        }
     }
 }

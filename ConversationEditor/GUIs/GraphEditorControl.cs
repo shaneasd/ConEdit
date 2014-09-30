@@ -71,6 +71,7 @@ namespace ConversationEditor
             Colors = new ColorScheme();
 
             BackColor = ColorScheme.FormBackground;
+            drawWindow.BackColor = ColorScheme.Background;
 
             hScrollBar1.Scrolled += Redraw;
             vScrollBar1.Scrolled += Redraw;
@@ -84,6 +85,7 @@ namespace ConversationEditor
         }
 
         IConversationEditorControlData<TNode, TransitionNoduleUIInfo> m_conversation = DummyConversationEditorControlData<TNode, TransitionNoduleUIInfo>.Instance;
+        private IProject m_project;
 
         private void Redraw()
         {
@@ -172,10 +174,11 @@ namespace ConversationEditor
 
         LocalizationEngine m_localization;
 
-        internal void SetContext(IDataSource datasource, LocalizationEngine localization)
+        internal void SetContext(IDataSource datasource, LocalizationEngine localization, IProject project)
         {
             m_datasource = datasource;
             m_localization = localization;
+            m_project = project;
         }
 
         public ContextMenu<TNode> m_contextMenu;
@@ -196,9 +199,8 @@ namespace ConversationEditor
             Redraw();
         }
 
-        public const int GRID_SPACING = 20;
         private MouseController<TNode> m_mouseController;
-        private Func<IEditable, ConfigureResult> Edit;
+        private Func<IEditable, AudioGenerationParameters, ConfigureResult> Edit;
         private Action<TNode> FileReferences;
         private INodeFactory<TNode> m_nodeFactory;
         private CopyPasteController<TNode, TransitionNoduleUIInfo> m_copyPasteController;
@@ -214,6 +216,13 @@ namespace ConversationEditor
         public bool SnapToGrid { get; set; }
         private bool m_showGrid;
         public bool ShowGrid { get { return m_showGrid; } set { m_showGrid = value; Redraw(); } }
+
+        private uint m_minorGridSpacing;
+        public uint MinorGridSpacing { get { return m_minorGridSpacing; } set { m_minorGridSpacing = value; Redraw(); } }
+
+        private uint m_majorGridSpacing;
+        public uint MajorGridSpacing { get { return m_majorGridSpacing; } set { m_majorGridSpacing = value; Redraw(); } }
+
         public bool ShowIDs { get; set; }
         private ColorScheme m_colorScheme;
         public ColorScheme Colors { get { return m_colorScheme; } set { m_colorScheme = value; Redraw(); } }
@@ -266,7 +275,7 @@ namespace ConversationEditor
 
         ToolTip m_toolTip = new ToolTip();
 
-        internal void Initialise(Func<IEditable, ConfigureResult> editNode, INodeFactory<TNode> nodeFactory, CopyPasteController<TNode, TransitionNoduleUIInfo> copyPasteController, Action<TNode> findReferences)
+        internal void Initialise(Func<IEditable, AudioGenerationParameters, ConfigureResult> editNode, INodeFactory<TNode> nodeFactory, CopyPasteController<TNode, TransitionNoduleUIInfo> copyPasteController, Action<TNode> findReferences)
         {
             Edit = editNode;
             m_nodeFactory = nodeFactory;
@@ -283,12 +292,12 @@ namespace ConversationEditor
         {
             if (SnapToGrid ^ Control.ModifierKeys.HasFlag(Keys.Shift))
             {
-                float x = p.X / GRID_SPACING;
-                float y = p.Y / GRID_SPACING;
+                float x = p.X / MinorGridSpacing;
+                float y = p.Y / MinorGridSpacing;
                 x = (float)Math.Round(x);
                 y = (float)Math.Round(y);
-                p.X = x * GRID_SPACING;
-                p.Y = y * GRID_SPACING;
+                p.X = x * MinorGridSpacing;
+                p.Y = y * MinorGridSpacing;
                 return p;
             }
             else
@@ -339,9 +348,13 @@ namespace ConversationEditor
 
         Dictionary<Keys, EditableGenerator> m_keyMapping = new Dictionary<Keys, EditableGenerator>();
 
+        private ConfigureResult MyEdit(IEditable data)
+        {
+            return Edit(data, new AudioGenerationParameters(CurrentFile, m_project));
+        }
         private void InitialiseMouseController()
         {
-            m_mouseController = new MouseController<TNode>(Redraw, shift => Shift(shift), (p, z) => Zoom(p, z), () => CurrentFile.Nodes, () => CurrentFile.Groups, Edit, n => CurrentFile.Remove(n.Only(), Enumerable.Empty<NodeGroup>()), Snap, UIInfo, id => CurrentFile.GetNode(id));
+            m_mouseController = new MouseController<TNode>(Redraw, shift => Shift(shift), (p, z) => Zoom(p, z), () => CurrentFile.Nodes, () => CurrentFile.Groups, MyEdit, n => CurrentFile.Remove(n.Only(), Enumerable.Empty<NodeGroup>()), Snap, UIInfo, id => CurrentFile.GetNode(id));
             drawWindow.MouseDown += (a, args) => m_mouseController.MouseDown(DrawWindowToGraphSpace(args.Location), args.Location, args.Button);
             drawWindow.MouseUp += (a, args) => m_mouseController.MouseUp(DrawWindowToGraphSpace(args.Location), args.Location, args.Button);
             drawWindow.MouseMove += (a, args) => m_mouseController.MouseMove(DrawWindowToGraphSpace(args.Location), args.Location);
@@ -440,32 +453,37 @@ namespace ConversationEditor
                 PointF lowerBound = mi.TransformPoint(new PointF(0, 0));
                 PointF upperBound = mi.TransformPoint(new PointF(drawWindow.Size.Width, drawWindow.Size.Height));
 
-                if (GRID_SPACING * GraphScale >= 4)
+                using (var pen = new Pen(ColorScheme.MinorGrid))
+                    DrawGrid(e, pen, MinorGridSpacing, lowerBound, upperBound);
+                using (var pen = new Pen(ColorScheme.Grid))
+                    DrawGrid(e, pen, MajorGridSpacing, lowerBound, upperBound);
+            }
+        }
+
+        private void DrawGrid(PaintEventArgs e, Pen pen, uint GRID_SPACING, PointF lowerBound, PointF upperBound)
+        {
+            if (GRID_SPACING * GraphScale >= 4)
+            {
+                List<PointF> pointList = new List<PointF>();
+
+                for (float i = (float)Math.Floor(lowerBound.X / GRID_SPACING) * GRID_SPACING; i < upperBound.X; i += GRID_SPACING)
                 {
-                    List<PointF> pointList = new List<PointF>();
+                    pointList.Add(new PointF(i, lowerBound.Y - GRID_SPACING));
+                    pointList.Add(new PointF(i, upperBound.Y + GRID_SPACING));
+                }
 
-                    for (float i = (float)Math.Floor(lowerBound.X / GRID_SPACING) * GRID_SPACING; i < upperBound.X; i += GRID_SPACING)
-                    {
-                        pointList.Add(new PointF(i, lowerBound.Y - GRID_SPACING));
-                        pointList.Add(new PointF(i, upperBound.Y + GRID_SPACING));
-                    }
+                for (float i = (float)Math.Floor(lowerBound.Y / GRID_SPACING) * GRID_SPACING; i < upperBound.Y; i += GRID_SPACING)
+                {
+                    pointList.Add(new PointF(lowerBound.X - GRID_SPACING, i));
+                    pointList.Add(new PointF(upperBound.X + GRID_SPACING, i));
+                }
 
-                    for (float i = (float)Math.Floor(lowerBound.Y / GRID_SPACING) * GRID_SPACING; i < upperBound.Y; i += GRID_SPACING)
-                    {
-                        pointList.Add(new PointF(lowerBound.X - GRID_SPACING, i));
-                        pointList.Add(new PointF(upperBound.X + GRID_SPACING, i));
-                    }
-
-                    PointF[] points = pointList.ToArray();
-                    Matrix transform = GetTransform();
-                    transform.TransformPoints(points); //Apply the transform ourselves so the lines don't get stretched
-                    for (int i = 0; i < points.Length; i += 2)
-                    {
-                        using (var pen = new Pen(ColorScheme.Grid))
-                        {
-                            e.Graphics.DrawLine(pen, points[i], points[i + 1]);
-                        }
-                    }
+                PointF[] points = pointList.ToArray();
+                Matrix transform = GetTransform();
+                transform.TransformPoints(points); //Apply the transform ourselves so the lines don't get stretched
+                for (int i = 0; i < points.Length; i += 2)
+                {
+                    e.Graphics.DrawLine(pen, points[i], points[i + 1]);
                 }
             }
         }
@@ -620,9 +638,10 @@ namespace ConversationEditor
             {
                 TNode g = CurrentFile.MakeNode(node.Generate(ID<NodeTemp>.New(), new List<EditableGenerator.ParameterData>()), new NodeUIData(p));
                 Action addNode = () => { CurrentFile.Add(g.Only(), Enumerable.Empty<NodeGroup>()); };
-                g.Configure(Edit).Do
+                g.Configure(MyEdit).Do
                 (
-                    sup => { sup.Redo(); addNode(); }, //Configure the node (doesn't need to be undoable) and add it
+                    //TODO: I swapped the add and configure here. Really not confident that this order makes sense. However it's needed for the audio parameters to correctly detect that their associated files are being used.
+                    sup => { addNode(); sup.Redo(); }, //Configure the node (doesn't need to be undoable) and add it
                     b => { if (b != ConfigureResult.Cancel) addNode(); } //Add the node if the user didn't cancel (i.e. no editing was required)
                 );
             }

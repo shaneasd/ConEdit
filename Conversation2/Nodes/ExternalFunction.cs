@@ -70,7 +70,7 @@ namespace Conversation
         {
             m_id = id;
             m_parameters = parameters.ToList();
-            m_connectors = connectors.Select(i => i(this)).Evaluate();
+            m_connectors = connectors.Select(i => i(this)).OrderBy(o=>o.GetName()).Evaluate(); //TODO: Ordering by name is a little awkward what with many connectors not having one
             foreach (var connector in Connectors)
             {
                 connector.Connected += OnOutputLinked;

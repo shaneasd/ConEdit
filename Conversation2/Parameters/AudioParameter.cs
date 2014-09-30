@@ -17,6 +17,8 @@ namespace Conversation
     {
         public Audio(string value)
         {
+            if (string.IsNullOrEmpty(value))
+                throw new ArgumentNullException("value");
             Value = value;
         }
 
@@ -47,7 +49,10 @@ namespace Conversation
 
     public class AudioParameter : Parameter<Audio>, IAudioParameter
     {
-        public AudioParameter(string name, ID<Parameter> id, ID<ParameterType> typeId, string defaultValue) : base(name, id, typeId, defaultValue) { }
+        public AudioParameter(string name, ID<Parameter> id, ID<ParameterType> typeId, string defaultValue)
+            : base(name, id, typeId, defaultValue)
+        {
+        }
 
         protected override bool DeserialiseValue(string value)
         {
@@ -63,6 +68,11 @@ namespace Conversation
         public override string DisplayValue(Func<ID<LocalizedText>, string> localize)
         {
             return m_value.DisplayValue();
+        }
+
+        protected override void DecorruptFromNull()
+        {
+            //TODO: Something here?
         }
     }
 }

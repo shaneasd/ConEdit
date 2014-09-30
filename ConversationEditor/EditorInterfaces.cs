@@ -9,10 +9,42 @@ using Utilities;
 
 namespace ConversationEditor
 {
+    public class UpdateParameterData
+    {
+        /// <summary>
+        /// Undo/Redo actions to perform to change the state of the parameter based on the editor selection
+        /// </summary>
+        public SimpleUndoPair? Actions = null;
+        /// <summary>
+        /// An audio file whose inclusion in the project should be updated
+        /// </summary>
+        public Audio? Audio = null;
+
+        public static implicit operator UpdateParameterData(SimpleUndoPair? actions)
+        {
+            return new UpdateParameterData() { Actions = actions };
+        }
+    }
+
+    public class ParameterEditorSetupData
+    {
+        public ParameterEditorSetupData(IParameter parameter, LocalizationEngine localizer, IAudioProvider audioProvider, AudioGenerationParameters audioGenerationParameters)
+        {
+            Parameter = parameter;
+            Localizer = localizer;
+            AudioProvider = audioProvider;
+            AudioGenerationParameters = audioGenerationParameters;
+        }
+        public readonly IParameter Parameter;
+        public readonly LocalizationEngine Localizer;
+        public readonly IAudioProvider AudioProvider;
+        public readonly AudioGenerationParameters AudioGenerationParameters;
+    }
+
     public interface IParameterEditor<out TUI>
     {
         bool WillEdit(ID<ParameterType> type, WillEdit willEdit);
-        void Setup(IParameter parameter, LocalizationEngine localizer, IAudioProvider audioProvider);
+        void Setup(ParameterEditorSetupData data);
         TUI AsControl { get; }
         /// <summary>
         /// Get the action pair for actions to 
@@ -20,7 +52,8 @@ namespace ConversationEditor
         /// Undo: return the parameter to its current value
         /// Or null if no change is required (i.e. the two values are the same)
         /// </summary>
-        SimpleUndoPair? UpdateParameterAction();
+        /// <param name="updateAudio">set to an audio file whose inclusion in the project should be update or left null</param>
+        UpdateParameterData UpdateParameterAction();
         bool IsValid();
         string DisplayName { get; }
 
@@ -59,10 +92,10 @@ namespace ConversationEditor
             return m_type.GetConstructor(new Type[0]).Invoke(new object[0]) as IParameterEditor<Control>;
         }
 
-        public IParameterEditor<Control> MakeEditor(IParameter p, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public IParameterEditor<Control> MakeEditor(ParameterEditorSetupData data)
         {
             var ed = GetEditor();
-            ed.Setup(p, localizer, audioProvider);
+            ed.Setup(data);
             return ed;
         }
     }

@@ -32,7 +32,7 @@ namespace Conversation
                 m_textOverride = null;
             }
             //return false;
-            //TODO: Should this cause it to fail?
+            //TODO: Should this cause it to fail? Or be corrupt?
             //if ( !m_enumeration.Options.Contains(guid))
             //    return false;
             Value = guid;

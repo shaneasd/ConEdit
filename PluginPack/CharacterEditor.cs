@@ -48,9 +48,9 @@ namespace PluginPack
         }
 
         private IEnumParameter m_parameter;
-        public void Setup(IParameter parameter, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public void Setup(ParameterEditorSetupData data)
         {
-            m_parameter = parameter as IEnumParameter;
+            m_parameter = data.Parameter as IEnumParameter;
             foreach (var ch in m_parameter.Options)
                 comboBox1.Items.Add(ch);
             if (comboBox1.Items.Contains(m_parameter.Value))
@@ -64,7 +64,7 @@ namespace PluginPack
             get { return this; }
         }
 
-        public SimpleUndoPair? UpdateParameterAction()
+        public UpdateParameterData UpdateParameterAction()
         {
             if (!IsValid())
                 throw new Exception("Current character selection is invalid");

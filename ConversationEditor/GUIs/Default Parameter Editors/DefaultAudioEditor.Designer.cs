@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.button1 = new System.Windows.Forms.Button();
+            this.btnGenerate = new System.Windows.Forms.Button();
             this.drawWindow1 = new ConversationEditor.DrawWindow();
             this.SuspendLayout();
             // 
@@ -44,6 +45,18 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // btnGenerate
+            // 
+            this.btnGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGenerate.Location = new System.Drawing.Point(281, 0);
+            this.btnGenerate.Name = "btnGenerate";
+            this.btnGenerate.Size = new System.Drawing.Size(76, 54);
+            this.btnGenerate.TabIndex = 2;
+            this.btnGenerate.Text = "Generate";
+            this.btnGenerate.UseVisualStyleBackColor = true;
+            this.btnGenerate.Click += new System.EventHandler(this.btnGenerate_Click);
+            // 
             // drawWindow1
             // 
             this.drawWindow1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
@@ -53,13 +66,14 @@
             this.drawWindow1.HandleNavigation = false;
             this.drawWindow1.Location = new System.Drawing.Point(0, 0);
             this.drawWindow1.Name = "drawWindow1";
-            this.drawWindow1.Size = new System.Drawing.Size(357, 54);
+            this.drawWindow1.Size = new System.Drawing.Size(275, 54);
             this.drawWindow1.TabIndex = 0;
             // 
             // DefaultAudioEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnGenerate);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.drawWindow1);
             this.Name = "DefaultAudioEditor";
@@ -72,5 +86,6 @@
 
         private DrawWindow drawWindow1;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnGenerate;
     }
 }

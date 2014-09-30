@@ -19,11 +19,21 @@ namespace ConversationEditor
         SaveableFileUndoable m_file;
         public override ISaveableFileUndoable UndoableFile { get { return m_file; } }
 
-        public ConversationFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ISerializer<TData> serializer, List<Error> errors, INodeFactory<ConversationNode> nodeFactory)
-            : base(nodes, groups, errors, nodeFactory)
+        public ConversationFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ISerializer<TData> serializer, List<Error> errors, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, Audio> generateAudio)
+            : base(nodes, groups, errors, nodeFactory, generateAudio)
         {
             m_file = new SaveableFileUndoable(rawData, file, SaveTo);
             m_serializer = serializer;
+
+            foreach (var node in m_nodes)
+            {
+                var audios = node.Parameters.OfType<IAudioParameter>();
+                var localized = node.Parameters.OfType<ILocalizedStringParameter>();
+                foreach (var aud in audios)
+                    if (aud.Corrupted)
+                        aud.SetValueAction(generateAudio(this)).Value.Redo();
+                node.UpdateRendererCorruption();
+            }
         }
 
         private void SaveTo(Stream file)
@@ -43,7 +53,7 @@ namespace ConversationEditor
             }
         }
 
-        public static ConversationFile CreateEmpty(DirectoryInfo directory, Project project, Func<FileInfo, bool> pathOk, INodeFactory<ConversationNode> nodeFactory)
+        public static ConversationFile CreateEmpty(DirectoryInfo directory, Project project, Func<FileInfo, bool> pathOk, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, Audio> generateAudio)
         {
             var file = GetAvailableConversationPath(directory, project.Elements, pathOk);
 
@@ -59,11 +69,11 @@ namespace ConversationEditor
                 m.CopyTo(stream);
             }
 
-            return new ConversationFile(nodes, groups, m, file, project.ConversationSerializer, new List<Error>(), nodeFactory);
+            return new ConversationFile(nodes, groups, m, file, project.ConversationSerializer, new List<Error>(), nodeFactory, generateAudio);
         }
 
         /// <exception cref="MyFileLoadException">If file can't be read</exception>
-        public static ConversationFile Load(FileInfo file, IDataSource datasource, INodeFactory nodeFactory, ISerializerDeserializer<TData> serializer)
+        public static ConversationFile Load(FileInfo file, IDataSource datasource, INodeFactory nodeFactory, ISerializerDeserializer<TData> serializer, Func<ISaveableFileProvider, Audio> generateAudio)
         {
             TData data;
             MemoryStream m;
@@ -74,7 +84,7 @@ namespace ConversationEditor
                 m.Position = 0;
                 data = serializer.Read(m);
             }
-            return new ConversationFile(data.Nodes.ToList(), data.EditorData.Groups.ToList(), m, file, serializer, data.Errors, nodeFactory);
+            return new ConversationFile(data.Nodes.ToList(), data.EditorData.Groups.ToList(), m, file, serializer, data.Errors, nodeFactory, generateAudio);
         }
 
         public bool CanRemove(Func<bool> prompt)

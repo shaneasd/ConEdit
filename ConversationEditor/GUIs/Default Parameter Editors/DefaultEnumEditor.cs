@@ -31,6 +31,8 @@ namespace ConversationEditor
             m_comboBox.Colors.BorderPen = ColorScheme.ControlBorder;
             m_comboBox.Renderer = ColorScheme.ContextMenu;
             m_comboBox.SelectionChanged += () => m_parameter.EditorSelected = m_comboBox.SelectedItem.Contents;
+            m_comboBox.SpecialEnter = true;
+            m_comboBox.EnterPressed += () => { Ok.Execute(); };
         }
 
         public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
@@ -50,9 +52,9 @@ namespace ConversationEditor
             }
         }
 
-        public void Setup(IParameter parameter, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public void Setup(ParameterEditorSetupData data)
         {
-            m_parameter = parameter as IEnumParameter;
+            m_parameter = data.Parameter as IEnumParameter;
             foreach (var ch in m_parameter.Options)
             {
                 m_comboBoxItems.Add(new MyComboBox<Guid>.Item(m_parameter.GetName(ch), ch));
@@ -73,7 +75,7 @@ namespace ConversationEditor
             get { return this; }
         }
 
-        public SimpleUndoPair? UpdateParameterAction()
+        public UpdateParameterData UpdateParameterAction()
         {
             if (!IsValid())
                 throw new Exception("Current enum selection is invalid");
@@ -91,10 +93,10 @@ namespace ConversationEditor
             return m_comboBox.Items.Any(i => i.Contents == m_comboBox.SelectedItem.Contents);
         }
 
-        public event Action Ok
-        {
-            add { }
-            remove { }
-        }
+        public event Action Ok;
+        //{
+        //    add { }
+        //    remove { }
+        //}
     }
 }

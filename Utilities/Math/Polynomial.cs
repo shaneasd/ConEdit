@@ -11,6 +11,8 @@ namespace Utilities
         public Polynomial(IEnumerable<double> coefficients)
         {
             Coefficients = coefficients.ToArray();
+            if (!Coefficients.Any())
+                Coefficients = new double[] { 0 };
             for (int i = Coefficients.Length - 1; i >= 1; i--)
                 if (Math.Abs(Coefficients[i]) < 1e-12)
                     Array.Resize(ref Coefficients, i);
@@ -157,6 +159,14 @@ namespace Utilities
             }
         }
 
+        public bool IsZero()
+        {
+            if (Order == 0 && Math.Abs(Coefficients[0]) < 1e-12)
+                return true;
+            else
+                return false;
+        }
+
         public static Polynomial PolynomialRemainder(Polynomial a, Polynomial b)
         {
             while (a.Order >= b.Order)
@@ -199,7 +209,7 @@ namespace Utilities
             for (i = 2; i <= Order; i++)
             {
                 var next = -(Polynomial.PolynomialRemainder(result[i - 2], result[i - 1]));
-                if (next.Indices > 0)
+                if (!next.IsZero())
                     result[i] = next;
                 else
                 {
@@ -219,8 +229,6 @@ namespace Utilities
                 coefficients.Add(a.Coefficients[i] + b.Coefficients[i]);
             for (int i = lower + 1; i < coefficients.Capacity; i++)
                 coefficients.Add(longer.Coefficients[i]);
-            while (Math.Abs(coefficients.Last()) < 1e-12)
-                coefficients.RemoveAt(coefficients.Count - 1);
             return new Polynomial(coefficients);
         }
 

@@ -7,13 +7,8 @@ using System.Drawing;
 using Utilities;
 using Conversation;
 
-namespace ConversationEditor.Controllers
+namespace ConversationEditor
 {
-    public interface IMenuActionFactory<TNode> where TNode : class, IRenderable<IGUI>, IConversationNode, IConfigurable
-    {
-        IEnumerable<MenuAction2<TNode>> GetMenuActions(GraphEditorControl<TNode> control);
-    }
-
     public class MenuAction2<TNode> where TNode : IRenderable<IGUI>, IConversationNode, IConfigurable
     {
         public readonly string Name;

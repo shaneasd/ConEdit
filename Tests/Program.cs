@@ -58,6 +58,13 @@ namespace ConsoleApplication1
             }
 
             {
+                Console.Out.WriteLine("Zero");
+                double[] coefficients = { 0, 0, 0, 0 };
+                Polynomial p = new Polynomial(coefficients);
+                Assert(p.Coefficients.Any());
+            }
+
+            {
                 Console.Out.WriteLine("Polynomial Remainder");
                 Polynomial a = new Polynomial(new double[] { 1, 1, 1, 1, 1 });
                 Polynomial b = new Polynomial(new double[] { -1, 0, 1 });

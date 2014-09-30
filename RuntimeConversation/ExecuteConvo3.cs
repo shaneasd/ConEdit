@@ -12,6 +12,7 @@ using Utilities;
 using System.Threading;
 using Conversation;
 using Conversation.Serialization;
+using MyNamespace.Nodes.Metadata;
 
 namespace RuntimeConversation
 {
@@ -20,6 +21,7 @@ namespace RuntimeConversation
         private Button button1;
         private GroupBox conversation;
         private GroupBox localizer;
+        private Button button2;
         private TextBox textBox1;
 
         public Form1()
@@ -39,6 +41,8 @@ namespace RuntimeConversation
 
         Conversation m_convo;
         Dictionary<ID<LocalizedText>, string> m_localizer;
+
+        private 
 
         void Form1_DragDrop(object sender, DragEventArgs e)
         {
@@ -69,13 +73,14 @@ namespace RuntimeConversation
             this.conversation = new System.Windows.Forms.GroupBox();
             this.localizer = new System.Windows.Forms.GroupBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(332, 12);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(70, 92);
+            this.button1.Size = new System.Drawing.Size(70, 45);
             this.button1.TabIndex = 1;
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
@@ -109,9 +114,20 @@ namespace RuntimeConversation
             this.textBox1.Size = new System.Drawing.Size(390, 238);
             this.textBox1.TabIndex = 4;
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(332, 63);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(67, 41);
+            this.button2.TabIndex = 5;
+            this.button2.Text = "word count";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(411, 353);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.localizer);
             this.Controls.Add(this.conversation);
@@ -286,12 +302,7 @@ namespace RuntimeConversation
         {
             throw new NotImplementedException();
         }
-
-        public Node ProcessNode(MyNamespace.Nodes.Condition.Check_Integer node)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public Node ProcessNode(MyNamespace.Nodes.Condition.Player_Inventory node)
         {
             throw new NotImplementedException();
@@ -317,21 +328,6 @@ namespace RuntimeConversation
             throw new NotImplementedException();
         }
 
-        public Node ProcessNode(Gun_Drawn node)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Node ProcessNode(MyNamespace.Nodes.Jumps.Jump_To node)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Node ProcessNode(MyNamespace.Nodes.Jumps.Jump_Target node)
-        {
-            throw new NotImplementedException();
-        }
-
         public Node ProcessNode(MyNamespace.Nodes.Metadata.Conversation_Info node)
         {
             throw new NotImplementedException();
@@ -347,21 +343,11 @@ namespace RuntimeConversation
             throw new NotImplementedException();
         }
 
-        public Node ProcessNode(MyNamespace.Nodes.Randomise.Random node)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Node ProcessNode(MyNamespace.Nodes.Randomise.Probability node)
-        {
-            throw new NotImplementedException();
-        }
-
         public Node ProcessNode(NPC_Speech node)
         {
             var speaker = node.Speaker;
             var script = node.Script;
-            string subtitle = m_localizer[ID<LocalizedText>.FromGuid(node.Subtitles.Id)];
+            string subtitle = m_localizer[node.Subtitles.Id];
 
             this.Invoke(new Action(() => { textBox1.Text += speaker + ": " + subtitle + "\n"; }));
 
@@ -424,16 +410,6 @@ namespace RuntimeConversation
             throw new NotImplementedException();
         }
 
-        public Node ProcessNode(MyNamespace.Nodes.Trigger.Set_Boolean node)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Node ProcessNode(MyNamespace.Nodes.Trigger.Set_Integer node)
-        {
-            throw new NotImplementedException();
-        }
-
         public Node ProcessNode(MyNamespace.Nodes.Trigger.Increment_Integer node)
         {
             throw new NotImplementedException();
@@ -445,6 +421,159 @@ namespace RuntimeConversation
         }
 
         public Node ProcessNode(MyNamespace.Nodes.Trigger.Change_Bindname node)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            int count  = 0;
+            count += m_convo.Nodes.OfType<Option>().Select(n=>n.Subtitles).Select(l=>StringUtil.WordCount( l.Localized(id=>m_localizer[id]))).Sum();
+            count += m_convo.Nodes.OfType<Player_Speech>().Select(n=>n.Subtitles).Select(l=>StringUtil.WordCount( l.Localized(id=>m_localizer[id]))).Sum();
+            count += m_convo.Nodes.OfType<NPC_Speech>().Select(n=>n.Subtitles).Select(l=>StringUtil.WordCount( l.Localized(id=>m_localizer[id]))).Sum();
+            count += m_convo.Nodes.OfType<Radio_Message>().Select(n=>n.Subtitles).Select(l=>StringUtil.WordCount( l.Localized(id=>m_localizer[id]))).Sum();
+            count += m_convo.Nodes.OfType<MyNamespace.Nodes.Trigger.Console_Message>().Select(n=>n.Message).Select(l=>StringUtil.WordCount( l.Localized(id=>m_localizer[id]))).Sum();
+            count += m_convo.Nodes.OfType<MyNamespace.Nodes.Trigger.Prompt>().Select(n => n.Prompt_text).Select(l => StringUtil.WordCount(l.Localized(id => m_localizer[id]))).Sum();
+            count += m_convo.Nodes.OfType<Prompt_Option>().Select(n => n.Command).Select(l => StringUtil.WordCount(l.Localized(id => m_localizer[id]))).Sum();
+            MessageBox.Show("Word Count: " + count);
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Steampipe node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Transformer node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Nonlethal node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Lethal_Post node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Nonlethal_Post node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.AI_Barks.PC_AI_Takedown_Lethal node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Surprised node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.AI_Barks.AI_Alarmed_Investigation node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Camera.Custom_Camera node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Condition.Game_Mode node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Condition.Check_Local_Decimal node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Condition.Check_Story_Decimal node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Condition.Check_Local_Boolean node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Condition.Check_Story_Boolean node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Condition.Check_Story_Integer node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Condition.Check_Local_Integer node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Trigger.Teleport_Character node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Trigger.Decrement_Integer node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Trigger.Set_Story_Boolean node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Trigger.Set_Story_Integer node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Trigger.Set_Local_Boolean node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Trigger.Set_Story_Decimal node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Trigger.Trigger_Game_Object node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Animation.Trigger_Expression node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Branch.Probability node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Branch.Cycle node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(MyNamespace.Nodes.Branch.Random node)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Node ProcessNode(Timing node)
         {
             throw new NotImplementedException();
         }

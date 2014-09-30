@@ -5,6 +5,7 @@ using System.Text;
 using ConversationEditor;
 using Conversation;
 using System.Windows.Forms;
+using Utilities;
 
 namespace PluginPack
 {
@@ -15,7 +16,7 @@ namespace PluginPack
             return true;
         }
 
-        public override Conversation.ConfigureResult Edit(Conversation.IEditable node, TypeMapConfig<ID<ParameterType>, ParameterEditorChoice> config, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public override Conversation.ConfigureResult Edit(Conversation.IEditable node, AudioGenerationParameters audioContext, TypeMapConfig<ID<ParameterType>, ParameterEditorChoice> config, LocalizationEngine localizer, IAudioProvider audioProvider)
         {
             MessageBox.Show("This node is configured to be uneditable");
             return ConfigureResult.NotApplicable;

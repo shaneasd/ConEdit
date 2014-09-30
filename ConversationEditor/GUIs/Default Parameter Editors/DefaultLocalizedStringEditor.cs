@@ -41,10 +41,10 @@ namespace ConversationEditor
         }
 
         ILocalizedStringParameter m_parameter;
-        public void Setup(IParameter parameter, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public void Setup(ParameterEditorSetupData data)
         {
-            m_parameter = parameter as ILocalizedStringParameter;
-            m_localizer = localizer;
+            m_parameter = data.Parameter as ILocalizedStringParameter;
+            m_localizer = data.Localizer;
             if (!m_parameter.Corrupted)
                 m_textBox.Text = m_localizer.Localize(m_parameter.Value) ?? "Missing Localization";
             else
@@ -56,7 +56,7 @@ namespace ConversationEditor
             get { return this; }
         }
 
-        public SimpleUndoPair? UpdateParameterAction()
+        public UpdateParameterData UpdateParameterAction()
         {
             var localized = m_parameter.Corrupted ? null : m_localizer.Localize(m_parameter.Value);
             if (m_textBox.Text != localized)

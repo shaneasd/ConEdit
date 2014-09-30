@@ -57,14 +57,16 @@ namespace ConversationEditor
         public event Action<IProject> ProjectChanged;
         private Action<Action> m_executeInGUIThread;
         private PluginsConfig m_pluginsConfig;
+        private Func<IAudioProviderCustomization> m_audioCustomization;
 
-        public ProjectMenuController(ConfigParameterList<string> config, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ProjectExplorer list, Action<IProject> projectChanged, Action<Action> executeInGUIThread, PluginsConfig pluginsConfig)
+        public ProjectMenuController(ConfigParameterList<string> config, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ProjectExplorer list, Action<IProject> projectChanged, Action<Action> executeInGUIThread, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
         {
             m_executeInGUIThread = executeInGUIThread;
             m_conversationNodeFactory = conversationNodeFactory;
             m_domainNodeFactory = domainNodeFactory;
             m_config = config;
             m_pluginsConfig = pluginsConfig;
+            m_audioCustomization = audioCustomization;
             CurrentProject = DummyProject.Instance;
 
             ProjectChanged += projectChanged;
@@ -138,7 +140,7 @@ namespace ConversationEditor
                     new XMLProject.Serializer(),
                     SerializationUtils.ConversationSerializer,
                     SerializationUtils.ConversationSerializerDeserializer,
-                    SerializationUtils.DomainSerializer, m_pluginsConfig);
+                    SerializationUtils.DomainSerializer, m_pluginsConfig, m_audioCustomization);
 
                 project.FileDeletedExternally += () => m_executeInGUIThread(() => { MessageBox.Show("Project file deleted by another application"); });
                 project.FileModifiedExternally += () => m_executeInGUIThread(() =>
@@ -156,7 +158,7 @@ namespace ConversationEditor
                     });
                 project.ElementModifiedExternally += (element, reload) => m_executeInGUIThread(() =>
                 {
-                    var choice = MessageBox.Show("Project element " + element.File.File.FullName + " modified by another application. Discard changes to this element and reload project from disk?", "Reload element?", MessageBoxButtons.YesNo);
+                    var choice = MessageBox.Show("Project element " + element.File.File.FullName + " modified by another application. Discard changes to this element and reload from disk?", "Reload element?", MessageBoxButtons.YesNo);
                     if (choice == DialogResult.Yes)
                     {
                         reload();
@@ -173,8 +175,10 @@ namespace ConversationEditor
             {
                 try
                 {
-                    if (s.File.Changed)
-                        s.File.Save();
+                    var writable = s.File.Writable;
+                    if (writable != null)
+                        if (writable.Changed)
+                            writable.Save();
                 }
                 catch (MyFileLoadException e)
                 {
@@ -200,7 +204,7 @@ namespace ConversationEditor
                             new XMLProject.Serializer(),
                             SerializationUtils.ConversationSerializer,
                             SerializationUtils.ConversationSerializerDeserializer,
-                            SerializationUtils.DomainSerializer, m_pluginsConfig);
+                            SerializationUtils.DomainSerializer, m_pluginsConfig, m_audioCustomization);
                     }
                     catch (MyFileLoadException e)
                     {
@@ -221,7 +225,7 @@ namespace ConversationEditor
         {
             if (m_sfd.ShowDialog() == DialogResult.OK)
             {
-                CurrentProject.File.SaveAs(new FileInfo(m_sfd.FileName));
+                CurrentProject.File.Writable.SaveAs(new FileInfo(m_sfd.FileName));
                 ProjectChanged.Execute(CurrentProject);
                 return true;
             }

@@ -72,6 +72,7 @@
     <Compile Include="Config\ColorsConfig.cs" />
     <Compile Include="Config\ConfigParameterColor.cs" />
     <Compile Include="Config\ConfigParameterList.cs" />
+    <Compile Include="Config\ConfigParameterUint.cs" />
     <Compile Include="Controllers\AudioProvider.cs" />
     <Compile Include="Colors.cs" />
     <Compile Include="Config\ConfigParameter.cs" />
@@ -110,11 +111,18 @@
     <Compile Include="Controllers\MissingFile.cs" />
     <Compile Include="Controllers\MissingLocalizationFile.cs" />
     <Compile Include="Controllers\PluginCheckerAssembly.cs" />
+    <Compile Include="Controllers\ProjectContextMenuItems.cs" />
+    <Compile Include="Controllers\ProjectDomain.cs" />
     <Compile Include="Controllers\ProjectElementDefinition.cs" />
     <Compile Include="Controllers\ProjectElementList.cs" />
     <Compile Include="Controllers\ProjectMenuController.cs" />
     <Compile Include="Controllers\DataSource.cs" />
     <Compile Include="Controllers\SpecialConnectors.cs" />
+    <Compile Include="Customization\IAudioProviderCustomization.cs" />
+    <Compile Include="Customization\IExportMode.cs" />
+    <Compile Include="Customization\IMenuActionFactory.cs" />
+    <Compile Include="Customization\WrapperContextMenuItemsFactory.cs" />
+    <Compile Include="Customization\IProjectExplorerContextMenuItemsFactory.cs" />
     <Compile Include="GUIs\Default Parameter Editors\UnknownParameterEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -135,9 +143,6 @@
       <DependentUpon>FindReferencesDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="GUIs\RealLeafItem.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUIs\DomainListItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUIs\GraphEditorControl.cs">
@@ -270,7 +275,6 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUIs\WM.cs" />
-    <Compile Include="ISaveableFile.cs" />
     <Compile Include="LineDrawer.cs" />
     <Compile Include="GUIs\NodeEditor.cs">
       <SubType>UserControl</SubType>

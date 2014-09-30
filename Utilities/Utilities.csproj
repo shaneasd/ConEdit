@@ -46,11 +46,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyUtils.cs" />
+    <Compile Include="IO\ISaveableFile.cs" />
+    <Compile Include="IO\UpToDateFile.cs" />
     <Compile Include="Math\Bezier.cs" />
     <Compile Include="BoolRef.cs" />
     <Compile Include="Algorithm\CallbackDictionary.cs" />
     <Compile Include="Algorithm\CallbackList.cs" />
     <Compile Include="Algorithm\CallbackSet.cs" />
+    <Compile Include="StringUtil.cs" />
     <Compile Include="UI\Caret.cs" />
     <Compile Include="Algorithm\Collection.cs" />
     <Compile Include="Algorithm\DictionaryOfLists.cs" />
@@ -71,7 +74,7 @@
     <Compile Include="Math\MyMath.cs" />
     <Compile Include="UI\MyNumericUpDown.cs" />
     <Compile Include="UI\Drawing.cs" />
-    <Compile Include="FileSystem.cs" />
+    <Compile Include="IO\FileSystem.cs" />
     <Compile Include="UI\GraphicsUtil.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="UI\MyComboBox.cs" />
@@ -95,8 +98,7 @@
     <Compile Include="UI\TabStop.Designer.cs">
       <DependentUpon>TabStop.cs</DependentUpon>
     </Compile>
-    <Compile Include="Text.cs" />
-    <Compile Include="ToStringWrapper.cs" />
+    <Compile Include="UI\ToStringWrapper.cs" />
     <Compile Include="UndoAction.cs" />
     <Compile Include="UndoQueue.cs" />
     <Compile Include="UnordererTuple.cs" />

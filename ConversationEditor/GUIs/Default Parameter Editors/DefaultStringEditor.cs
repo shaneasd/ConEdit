@@ -38,9 +38,9 @@ namespace ConversationEditor
         }
 
         IStringParameter m_parameter;
-        public void Setup(IParameter parameter, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public void Setup(ParameterEditorSetupData data)
         {
-            m_parameter = parameter as IStringParameter;
+            m_parameter = data.Parameter as IStringParameter;
             if (!m_parameter.Corrupted)
                 m_textBox.Text = m_parameter.Value;
         }
@@ -50,7 +50,7 @@ namespace ConversationEditor
             get { return this; }
         }
 
-        public SimpleUndoPair? UpdateParameterAction()
+        public UpdateParameterData UpdateParameterAction()
         {
             return m_parameter.SetValueAction(m_textBox.Text);
         }
