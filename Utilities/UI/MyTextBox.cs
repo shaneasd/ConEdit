@@ -685,7 +685,8 @@ namespace Utilities
                         else
                         {
                             Text = Text.Remove(GetCursorPosInt() - 1, 1);
-                            CursorPos = new CP(Math.Max(0, CursorPos.Pos - 1));
+                            var lines = GetLines().ToList();
+                            CursorPos = new CP(Math.Max(0, CursorPos.Pos - 1), CursorPos.GetUV(lines).X == 0);
                         }
                         Redraw();
                     }
