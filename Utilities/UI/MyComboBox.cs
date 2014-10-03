@@ -221,7 +221,7 @@ namespace Utilities
             {
                 m_selectedItem = value;
                 m_textBox.Text = m_selectedItem.DisplayString;
-                m_textBox.CursorPos = int.MaxValue;
+                m_textBox.CursorPos = new MyTextBox.CP(int.MaxValue);
             }
         }
 

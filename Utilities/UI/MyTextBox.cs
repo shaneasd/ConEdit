@@ -48,7 +48,7 @@ namespace Utilities
         private struct State
         {
             public string Text;
-            public int CursorPos;
+            public CP CursorPos;
             public int SelectionLength;
         }
 
@@ -99,7 +99,7 @@ namespace Utilities
 
         public ColorOptions Colors { get; set; }
 
-        State m_state = new State { Text = "", CursorPos = 0, SelectionLength = 0 };
+        State m_state = new State { Text = "", CursorPos = new CP(0), SelectionLength = 0 };
 
         bool m_uninitializedText = true;
         public string Text
@@ -120,17 +120,62 @@ namespace Utilities
                 }
             }
         }
-        public int CursorPos
+
+        public struct CP
+        {
+            public int Pos;
+            public bool PreferEnd; //Put the cursor at the end of line i instead of the start of line i+1
+            public CP(int pos, bool preferEnd = false) { Pos = pos; PreferEnd = preferEnd; }
+
+            public Point GetUV(List<string> lines)
+            {
+                int before = 0;
+                int i = 0;
+                while (i < lines.Count && lines[i].Length + before + (PreferEnd ? 1 : 0) <= Pos)
+                {
+                    before += lines[i].Length;
+                    i++;
+                }
+
+                if (i == lines.Count)
+                {
+                    return new Point(lines.Last().Length, lines.Count - 1);
+                }
+                return new Point(Pos - before, i);
+            }
+
+            public CP End(List<string> lines)
+            {
+                var uv = GetUV(lines);
+                int before = lines.Take(uv.Y).Select(l => l.Length).Concat(0.Only()).Sum();
+                if (lines[uv.Y].EndsWith("\n"))
+                    return new CP(before + lines[uv.Y].Length - 1);
+                else
+                    return new CP(before + lines[uv.Y].Length, true);
+            }
+        }
+
+        public CP CursorPos
         {
             get { return m_state.CursorPos; }
             set
             {
-                m_state.CursorPos = value.Clamp(0, Text.Length);
+                if (value.Pos < 0)
+                    value.Pos = 0;
+                if (value.Pos > Text.Length)
+                    value.Pos = Text.Length;
+                m_state.CursorPos = value;
                 using (var g = m_control.CreateGraphics())
                     MoveCaret(g);
                 Redraw();
             }
         }
+
+        private int GetCursorPosInt()
+        {
+            return CursorPos.Pos;
+        }
+
         public int SelectionLength { get { return m_state.SelectionLength; } set { m_state.SelectionLength = value; } }
 
         UndoQueue m_undoQueue = new UndoQueue();
@@ -144,8 +189,6 @@ namespace Utilities
 
         public event Action<string> TextChanged;
 
-        //private string MeasureText { get { return Text.EndsWith("\n") ? Text + " " : Text; } }
-        private string MeasureText { get { return Text + "."; } } //Doesn't seem to handle trailing whitespace well
         public string SelectedText { get { return Text.Substring(SelectionStart, Math.Abs(SelectionLength)); } }
 
         public Font Font = SystemFonts.MessageBoxFont;
@@ -155,13 +198,12 @@ namespace Utilities
         {
             using (Graphics g = m_control.CreateGraphics())
             {
-                var measureText = MeasureText.Length != 0 ? MeasureText : "|";
-                Format.SetMeasurableCharacterRanges(new[] { new CharacterRange(0, measureText.Length) });
-                var size = g.MeasureCharacterRanges(measureText, Font, new RectangleF(0, 0, TextRectangle.Width, int.MaxValue), Format)[0].GetBounds(g);
+                RectangleF size = GetTextBounds(g);
                 size.Inflate(BORDER_SIZE, BORDER_SIZE);
                 RequestedArea = new SizeF(Area.Width, size.Height);
             }
         }
+
         public override event Action RequestedAreaChanged;
         private SizeF m_requestedSize;
         public SizeF RequestedArea
@@ -183,9 +225,6 @@ namespace Utilities
 
         public RectangleF TextRectangle { get { return RectangleF.Inflate(Area, -BORDER_SIZE, -BORDER_SIZE); } }
 
-        //public StringFormat Format = new StringFormat(StringFormat.GenericTypographic);
-        public StringFormat Format = new StringFormat(StringFormat.GenericDefault) { FormatFlags = StringFormatFlags.MeasureTrailingSpaces, Trimming = StringTrimming.None };
-
         public readonly InputFormEnum InputForm;
 
         public enum InputFormEnum { Text, Decimal, Integer, Path, FileName, None }
@@ -196,7 +235,7 @@ namespace Utilities
             m_requestedSize = SizeF.Empty;
             m_control = control;
             Colors = new ColorOptions();
-            CursorPos = 0;
+            CursorPos = new CP(0);
             SelectionLength = 0;
             control.SizeChanged += (a, b) => UpdateRequestedArea();
             InputForm = inputForm;
@@ -207,101 +246,64 @@ namespace Utilities
             m_control.Invalidate(true);
         }
 
-        public int SelectionStart { get { return Math.Min(CursorPos, CursorPos + SelectionLength).Clamp(0, Text.Length); } }
-        public int SelectionEnd { get { return Math.Max(CursorPos, CursorPos + SelectionLength).Clamp(0, Text.Length); } }
+        public int SelectionStart { get { var a = GetCursorPosInt(); return Math.Min(a, a + SelectionLength).Clamp(0, Text.Length); } }
+        public int SelectionEnd { get { var a = GetCursorPosInt(); return Math.Max(a, a + SelectionLength).Clamp(0, Text.Length); } }
 
-        CharacterRange MakeCharacterRange(int start, int length)
+        #region Text Measurement
+
+        private IEnumerable<string> GetLines()
         {
-            if (length < 0)
-            {
-                start = start + length;
-                length = -length;
-            }
-            if (start < 0)
-                start = 0;
-            if (start + length > MeasureText.Length)
-                length = MeasureText.Length - start;
-            return new CharacterRange(start, length);
+            return StringUtil.GetLines(Text, Font, TextRectangle.Width, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding);
         }
 
-        Region[] MeasureCharacterRanges(Graphics g)
+        private RectangleF GetTextBounds(Graphics g)
         {
-            return MeasureCharacterRanges(g, Enumerable.Range(0, MeasureText.Length).Select(i => MakeCharacterRange(i, 1)).ToArray());
+            var lines = GetLines().ToList();
+            return new RectangleF(0, 0, lines.Select(l => MeasureText(l)).Concat(0.Only()).Max(), lines.Count * Font.Height);
         }
 
-        Region[] MeasureCharacterRanges(Graphics g, params CharacterRange[] ranges)
+        private int MeasureText(string text)
         {
-            Region[] result;
-            if (ranges.Length <= 32)
-            {
-                Format.SetMeasurableCharacterRanges(ranges);
-                result = g.MeasureCharacterRanges(MeasureText, Font, TextRectangle, Format);
-            }
-            else
-            {
-                result = new Region[ranges.Length];
-                for (int start = 0; start < ranges.Length; start += 32)
-                {
-                    var length = Math.Min(32, ranges.Length - start);
-                    CharacterRange[] charRanges = new CharacterRange[length];
-                    Array.Copy(ranges, start, charRanges, 0, length);
-                    Format.SetMeasurableCharacterRanges(charRanges);
-                    var newRegions = g.MeasureCharacterRanges(MeasureText, Font, TextRectangle, Format);
-                    Array.Copy(newRegions, 0, result, start, length);
-                }
-            }
-
-            return result;
+            return TextRenderer.MeasureText(text + ".", Font, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix).Width
+                 - TextRenderer.MeasureText(".", Font, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix).Width;
         }
 
-        public RectangleF PosToXY(int characterPos, Graphics g)
+        public PointF CursorToXY(Point characterPos, Graphics g)
         {
-            if (characterPos == 0)
-            {
-                if (MeasureText.Length == 0)
-                    return RectangleF.FromLTRB(TextRectangle.X, TextRectangle.Top, TextRectangle.X, TextRectangle.Top + CARET_HEIGHT);
-                else
-                {
-                    var char0 = MeasureCharacterRanges(g, MakeCharacterRange(0, 1))[0].GetBounds(g);
-                    return RectangleF.FromLTRB(char0.Left, char0.Top, char0.Left, char0.Bottom);
-                }
-            }
-            if (characterPos < MeasureText.Length && MeasureText[characterPos - 1] == '\n')
-            {
-                var next = MeasureCharacterRanges(g, MakeCharacterRange(characterPos, 1))[0].GetBounds(g);
-                return RectangleF.FromLTRB(next.Left, next.Top, next.Left, next.Bottom);
-            }
-            else if (MeasureText.Length > characterPos)
-            {
-                var regions = MeasureCharacterRanges(g, MakeCharacterRange(characterPos - 1, 1), MakeCharacterRange(characterPos, 1));
-                var rectangles = Array.ConvertAll(regions, r => r.GetBounds(g));
-                if (rectangles[0].Top < rectangles[1].Top)
-                    return RectangleF.FromLTRB(rectangles[1].Left, rectangles[1].Top, rectangles[1].Left, rectangles[1].Bottom);
-                else
-                    return RectangleF.FromLTRB(rectangles[0].Right, rectangles[0].Top, rectangles[0].Right, rectangles[0].Bottom);
-            }
-            else
-            {
-                return MeasureCharacterRanges(g, MakeCharacterRange(characterPos - 1, 1))[0].GetBounds(g);
-            }
+            float y = (characterPos.Y + 0.5f) * Font.Height + TextRectangle.Top;
+            var lines = GetLines().ToList();
+            float x = TextRectangle.Left;
+            if (characterPos.X != 0)
+                x += MeasureText(lines[characterPos.Y].Substring(0, characterPos.X));
+            return new PointF(x, y);
         }
+
+        public CP XYToCursor(float x, float y, Graphics g)
+        {
+            if (Text.Length == 0)
+                return new CP(0);
+
+            x -= TextRectangle.Left;
+            y -= TextRectangle.Top;
+
+            int v = (int)Math.Floor(y / Font.Height);
+            if (v < 0)
+                return new CP(0);
+            var lines = GetLines().ToList();
+            if (v > lines.Count - 1)
+                return new CP(int.MaxValue);
+            var line = lines[v];
+            var before = lines.Take(v).Sum(l => l.Length);
+            int u = 0;
+            while (u < line.Length && line[u] != '\n' && MeasureText(line.Substring(0, u)) < x)
+                u++;
+            return new CP(before + u, u == line.Length && x > 0);
+        }
+
+        #endregion
 
         public override void Paint(Graphics g)
         {
-            //TODO:
-            //using (Bitmap bmp = new Bitmap(100, 100))
-            //{
-            //    using (Graphics gg = Graphics.FromImage(bmp))
-            //    {
-            //        Format.SetMeasurableCharacterRanges(new[] { MakeCharacterRange(14, 1) });
-            //        Region rrrr = gg.MeasureCharacterRanges("shane's test       ", Font, new RectangleF(0, 0, 1000, 1000), Format)[0];
-            //        var b = rrrr.GetBounds(gg);
-            //        gg.FillRegion(Brushes.Green, rrrr);
-            //        gg.DrawString("shane's test ", Font, Brushes.Red, new PointF(0, 0));
-            //    }
-            //    bmp.Save(@"C:\test.png");
-            //}
-
             var area = Area;
             g.FillRectangle(Colors.BackgroundBrush, area);
             g.DrawRectangle(Colors.BorderPen, new Rectangle((int)area.X, (int)area.Y, (int)Math.Floor(area.Width) - 1, (int)Math.Floor(area.Height) - 1));
@@ -309,21 +311,41 @@ namespace Utilities
             using (g.SaveState())
             {
                 g.Clip = new Region(TextRectangle);
-                //TextRenderer.DrawText(g, Text, Font, TextRectangle.Round(), Color.Green, TextFormatFlags.TextBoxControl | TextFormatFlags.WordBreak);
-                g.DrawString(Text, Font, Colors.TextBrush, TextRectangle, Format);
-            }
+                var lines = GetLines().ToList();
+                for (int line = 0; line < lines.Count; line++)
+                {
+                    var text = lines[line];
+                    for (int i = 0; i <= text.Length; i++)
+                    {
+                        g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
+                        TextRenderer.DrawText(g, text.Substring(0, i), Font, TextRectangle.Location.Round().Plus(0, Font.Height * line), Colors.Text, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix);
+                    }
+                }
 
-            using (g.SaveState())
-            {
-                Region r = new Region();
-                r.MakeEmpty();
-                var ranges = MeasureCharacterRanges(g, Enumerable.Range(SelectionStart, SelectionEnd - SelectionStart).Where(i => MeasureText[i] != '\n').Select(i => MakeCharacterRange(i, 1)).ToArray());
-                for (int i = 0; i < ranges.Length; i++)
-                    r.Union(ranges[i]);
-                r.Intersect(TextRectangle);
-                g.Clip = r;
-                g.FillRectangle(Colors.SelectedBackgroundBrush, area);
-                g.DrawString(Text, Font, Colors.SelectedTextBrush, TextRectangle, Format);
+                if (Math.Abs(SelectionLength) > 0)
+                {
+                    Point p1 = CursorPos.GetUV(lines);
+                    Point p2 = new CP(CursorPos.Pos + SelectionLength).GetUV(lines);
+
+                    if (p1.Y > p2.Y || (p1.Y == p2.Y && p1.X > p2.X))
+                        Util.Swap(ref p1, ref p2);
+
+                    for (int y = p1.Y; y <= p2.Y; y++)
+                    {
+                        int minx = p1.Y == y ? p1.X : 0;
+                        int maxx = p2.Y == y ? p2.X : lines[y].Length;
+
+                        float startx = CursorToXY(new Point(minx, y), g).X;
+                        float endx = CursorToXY(new Point(maxx, y), g).X;
+                        using (g.SaveState())
+                        {
+                            Region r = new Region(RectangleF.FromLTRB(startx, y * Font.Height + TextRectangle.Y, endx, (1 + y) * Font.Height + TextRectangle.Y));
+                            g.Clip = r;
+                            g.FillRectangle(Colors.SelectedBackgroundBrush, area);
+                            TextRenderer.DrawText(g, lines[y], Font, TextRectangle.Location.Round().Plus(0, Font.Height * y), Colors.SelectedText, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
+                        }
+                    }
+                }
             }
         }
 
@@ -336,7 +358,7 @@ namespace Utilities
                 using (var g = m_control.CreateGraphics())
                 {
                     var loc = args.Location.Take(Area.Location.Round());
-                    CursorPos = GetCursorPosition(args.X, args.Y, g);
+                    CursorPos = XYToCursor(args.X, args.Y, g);
                     SelectionLength = 0;
                 }
                 m_selecting = true;
@@ -354,9 +376,9 @@ namespace Utilities
             {
                 using (var g = m_control.CreateGraphics())
                 {
-                    var selectionEnd = CursorPos + SelectionLength;
-                    CursorPos = GetCursorPosition(args.X, args.Y, g);
-                    SelectionLength = selectionEnd - CursorPos;
+                    var selectionEnd = GetCursorPosInt() + SelectionLength;
+                    CursorPos = XYToCursor(args.X, args.Y, g);
+                    SelectionLength = selectionEnd - GetCursorPosInt();
                 }
                 Redraw();
             }
@@ -370,7 +392,7 @@ namespace Utilities
                 {
                     using (var g = m_control.CreateGraphics())
                     {
-                        CursorPos = GetCursorPosition(args.X, args.Y, g);
+                        CursorPos = XYToCursor(args.X, args.Y, g);
                     }
                 }
             }
@@ -380,15 +402,8 @@ namespace Utilities
         {
             //if (InputForm != InputFormEnum.None)
             {
-                if (CursorPos == 0)
-                {
-                    Caret.SetCaretPos((int)(TextRectangle.X), (int)TextRectangle.Y + 2);
-                }
-                else
-                {
-                    var pos = PosToXY(CursorPos, g);
-                    Caret.SetCaretPos((int)(pos.Right), (int)pos.Top);
-                }
+                var pos = CursorToXY(CursorPos.GetUV(GetLines().ToList()), g);
+                Caret.SetCaretPos((int)(pos.X), (int)pos.Y - Font.Height / 2);
             }
         }
 
@@ -400,85 +415,12 @@ namespace Utilities
                 return i + 1;
         }
 
-        public int GetCursorPosition(float x, float y, Graphics g)
-        {
-            if (Text.Length == 0)
-                return 0;
-
-            var bounds = Array.ConvertAll(MeasureCharacterRanges(g), r => r.GetBounds(g));
-            var topLeftChar = bounds[0];
-            var lastChar = bounds.Last(b => !b.IsEmpty);
-            if (topLeftChar.Top > y) //Query location is above the text
-            {
-                for (int i = 0; i < bounds.Length; i++)
-                {
-                    if (bounds[i].Top > topLeftChar.Top)
-                    {
-                        if (MeasureText[i - 1] == '\n')
-                            return PosForChar(x, y, bounds[i - 2], i - 2);
-                        else
-                            return PosForChar(x, y, bounds[i - 1], i - 1);
-                    }
-                    else if (x < bounds[i].Right)
-                    {
-                        return PosForChar(x, y, bounds[i], i);
-                    }
-                }
-                return PosForChar(x, y, bounds[bounds.Length - 1], bounds.Length);
-            }
-            else if (lastChar.Bottom < y) //Query location is below the text
-            {
-                for (int i = bounds.Length - 1; i >= 0; i--)
-                {
-                    if (!bounds[i].IsEmpty)
-                    {
-                        if (bounds[i].Top < lastChar.Top)
-                        {
-                            return PosForChar(x, y, bounds[i + 1], i + 1);
-                        }
-                        else if (x > bounds[i].Left)
-                        {
-                            return PosForChar(x, y, bounds[i], i);
-                        }
-                    }
-                }
-                return PosForChar(x, y, bounds[0], 0);
-            }
-            else if (topLeftChar.Left > x)
-            {
-                for (int i = 0; i < bounds.Length; i++)
-                {
-                    if (bounds[i].Bottom >= y)
-                    {
-                        return PosForChar(x, y, bounds[i], i);
-                    }
-                }
-            }
-            else
-            {
-                for (int i = bounds.Length - 1; i >= 0; i--)
-                {
-                    if (!bounds[i].IsEmpty)
-                    {
-                        if (bounds[i].Top <= y && bounds[i].Left <= x)
-                            if (MeasureText[i] != '\n')
-                                return PosForChar(x, y, bounds[i], i);
-                            else
-                                return i;
-                        if (bounds[i].Bottom < y)
-                            return PosForChar(x, y, bounds[i - 1], i - 1);
-                    }
-                }
-            }
-            return 0;
-        }
-
         public void DeleteSelection()
         {
             if (Math.Abs(SelectionLength) > 0)
             {
                 Text = Text.Remove(SelectionStart, Math.Abs(SelectionLength));
-                CursorPos = SelectionStart;
+                CursorPos = new CP(SelectionStart);
                 SelectionLength = 0;
                 Redraw();
             }
@@ -500,10 +442,10 @@ namespace Utilities
 
                     DeleteSelection();
                     if (!char.IsControl(args.KeyChar))
-                        Text = Text.Insert(CursorPos, args.KeyChar.ToString());
+                        Text = Text.Insert(GetCursorPosInt(), args.KeyChar.ToString()); //TODO: This isn't working right
                     else if (args.KeyChar == '\r')
-                        Text = Text.Insert(CursorPos, "\n"); //Currently newlines are considered like any other text in terms of resetting undo state
-                    CursorPos++;
+                        Text = Text.Insert(GetCursorPosInt(), "\n"); //Currently newlines are considered like any other text in terms of resetting undo state
+                    CursorPos = new CP(CursorPos.Pos + 1);
                     m_additionUndoAction.SetRedo(m_state);
                 }
             }
@@ -554,7 +496,7 @@ namespace Utilities
             if (e.KeyCode.IsSet(Keys.A) && e.Control)
             {
                 SelectionLength = -Text.Length;
-                CursorPos = Text.Length;
+                CursorPos = new CP(int.MaxValue);
                 m_additionUndoAction = null;
             }
             else if (e.KeyCode.IsSet(Keys.C) && e.Control)
@@ -584,8 +526,8 @@ namespace Utilities
                     if (SelectionLength != 0)
                         DeleteSelection();
                     var insertText = Clipboard.GetText();
-                    Text = Text.Insert(CursorPos, insertText);
-                    CursorPos += insertText.Length;
+                    Text = Text.Insert(GetCursorPosInt(), insertText);
+                    CursorPos = new CP(CursorPos.Pos + insertText.Length);
                     m_additionUndoAction = null;
                     undo.SetRedo(m_state);
                 }
@@ -602,21 +544,21 @@ namespace Utilities
             }
             else if (e.KeyCode.IsSet(Keys.Right))
             {
-                var oldPos = CursorPos;
-                int nextPos = CursorPos + 1;
+                var oldPos = GetCursorPosInt();
+                int nextPos = 1;
                 if (e.Control)
                 {
                     Regex r = new Regex(@"\s*\S*");
-                    nextPos = r.Match(Text, CursorPos).Length + CursorPos;
+                    nextPos = r.Match(Text, GetCursorPosInt()).Length;
                 }
-                CursorPos = nextPos;
+                CursorPos = new CP(CursorPos.Pos + nextPos);
 
                 if (e.Shift)
                 {
                     if (SelectionLength <= 0)
-                        SelectionLength -= CursorPos - oldPos;
+                        SelectionLength -= GetCursorPosInt() - oldPos;
                     else
-                        SelectionLength -= CursorPos - oldPos;
+                        SelectionLength -= GetCursorPosInt() - oldPos;
                 }
                 else
                 {
@@ -627,23 +569,22 @@ namespace Utilities
             }
             else if (e.KeyCode.IsSet(Keys.Left))
             {
-                var oldPos = CursorPos;
-                int nextPos = CursorPos - 1;
+                var oldPos = GetCursorPosInt();
+                int nextPos = Math.Max(0, GetCursorPosInt() - 1);
                 if (e.Control)
                 {
                     Regex r = new Regex(@"\S*\s*$");
-                    string before = Text.Substring(0, CursorPos);
-                    var match = r.Match(before);
-                    nextPos = match.Index;
+                    string before = Text.Substring(0, GetCursorPosInt());
+                    nextPos = r.Match(before).Index;
                 }
-                CursorPos = nextPos;
+                CursorPos = new CP(nextPos);
 
                 if (e.Shift)
                 {
                     if (SelectionLength <= 0)
-                        SelectionLength -= CursorPos - oldPos;
+                        SelectionLength -= GetCursorPosInt() - oldPos;
                     else
-                        SelectionLength -= CursorPos - oldPos;
+                        SelectionLength -= GetCursorPosInt() - oldPos;
                 }
                 else
                 {
@@ -656,26 +597,20 @@ namespace Utilities
             {
                 using (Graphics g = m_control.CreateGraphics())
                 {
-                    PointF pos = PosToXY(CursorPos, g).RightCenter();
-                    PointF higherPos = pos;
-                    int i;
-                    for (i = CursorPos - 1; i > 0 && higherPos.Y == pos.Y; i--)
-                    {
-                        var rect = PosToXY(i, g);
-                        higherPos = rect.RightCenter();
-                        System.Diagnostics.Debug.WriteLine(rect);
-                    }
-                    PointF newPos = new PointF(pos.X, higherPos.Y);
                     if (e.Shift)
                     {
-                        var selectionEnd = CursorPos + SelectionLength;
-                        CursorPos = GetCursorPosition(newPos.X, newPos.Y, g);
-                        SelectionLength = selectionEnd - CursorPos;
+                        var selectionEnd = GetCursorPosInt() + SelectionLength;
+                        var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()), g);
+                        point.Y -= Font.Height;
+                        CursorPos = XYToCursor(point.X, point.Y, g);
+                        SelectionLength = selectionEnd - GetCursorPosInt();
                     }
                     else
                     {
                         SelectionLength = 0;
-                        CursorPos = GetCursorPosition(newPos.X, newPos.Y, g);
+                        var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()), g);
+                        point.Y -= Font.Height;
+                        CursorPos = XYToCursor(point.X, point.Y, g);
                     }
                     Redraw();
                 }
@@ -685,23 +620,20 @@ namespace Utilities
             {
                 using (Graphics g = m_control.CreateGraphics())
                 {
-                    PointF pos = PosToXY(CursorPos, g).RightCenter();
-                    PointF lowerPos = pos;
-                    for (int i = CursorPos + 1; i <= MeasureText.Length && lowerPos.Y == pos.Y; i++)
-                    {
-                        lowerPos = PosToXY(i, g).RightCenter();
-                    }
-                    PointF newPos = new PointF(pos.X, lowerPos.Y);
                     if (e.Shift)
                     {
-                        var selectionEnd = CursorPos + SelectionLength;
-                        CursorPos = GetCursorPosition(newPos.X, newPos.Y, g);
-                        SelectionLength = selectionEnd - CursorPos;
+                        var selectionEnd = GetCursorPosInt() + SelectionLength;
+                        var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()), g);
+                        point.Y += Font.Height;
+                        CursorPos = XYToCursor(point.X, point.Y, g);
+                        SelectionLength = selectionEnd - GetCursorPosInt();
                     }
                     else
                     {
                         SelectionLength = 0;
-                        CursorPos = GetCursorPosition(newPos.X, newPos.Y, g);
+                        var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()), g);
+                        point.Y += Font.Height;
+                        CursorPos = XYToCursor(point.X, point.Y, g);
                     }
                     Redraw();
                 }
@@ -714,17 +646,17 @@ namespace Utilities
                     var undo = MakeUndoAction();
                     if (SelectionLength != 0)
                         DeleteSelection();
-                    else if (CursorPos < Text.Length)
+                    else if (GetCursorPosInt() < Text.Length)
                     {
                         if (e.Control)
                         {
                             Regex r = new Regex(@"\s*\S*");
-                            SelectionLength = r.Match(Text, CursorPos).Length;
+                            SelectionLength = r.Match(Text, GetCursorPosInt()).Length;
                             DeleteSelection();
                         }
                         else
                         {
-                            Text = Text.Remove(CursorPos, 1);
+                            Text = Text.Remove(GetCursorPosInt(), 1);
                         }
                         Redraw();
                     }
@@ -739,21 +671,21 @@ namespace Utilities
                     var undo = MakeUndoAction();
                     if (SelectionLength != 0)
                         DeleteSelection();
-                    else if (CursorPos > 0)
+                    else if (GetCursorPosInt() > 0)
                     {
                         if (e.Control)
                         {
                             Regex r = new Regex(@"\S*\s*$");
-                            string before = Text.Substring(0, CursorPos);
+                            string before = Text.Substring(0, GetCursorPosInt());
                             var match = r.Match(before);
-                            CursorPos = match.Index;
+                            CursorPos = new CP(match.Index);
                             SelectionLength = match.Length;
                             DeleteSelection();
                         }
                         else
                         {
-                            Text = Text.Remove(CursorPos - 1, 1);
-                            CursorPos--;
+                            Text = Text.Remove(GetCursorPosInt() - 1, 1);
+                            CursorPos = new CP(Math.Max(0, CursorPos.Pos - 1));
                         }
                         Redraw();
                     }
@@ -765,8 +697,11 @@ namespace Utilities
             {
                 if (e.Shift)
                 {
-                    var end = CursorPos + SelectionLength;
-                    SelectionLength = end;
+                    var end = GetCursorPosInt() + SelectionLength;
+                    var lines = GetLines().ToList();
+                    var uv = CursorPos.GetUV(lines);
+                    CursorPos = new CP(lines.Take(uv.Y).Select(l => l.Length).Concat(0.Only()).Sum());
+                    SelectionLength = end - CursorPos.Pos;
                 }
                 else
                 {
@@ -775,17 +710,13 @@ namespace Utilities
 
                 if (e.Control)
                 {
-                    CursorPos = 0;
+                    CursorPos = new CP(0);
                 }
                 else
                 {
-                    using (var g = m_control.CreateGraphics())
-                    {
-                        RectangleF cursorXY = PosToXY(CursorPos, g);
-                        PointF pos = cursorXY.Center();
-                        pos.X = int.MinValue;
-                        CursorPos = GetCursorPosition(pos.X, pos.Y, g);
-                    }
+                    var lines = GetLines().ToList();
+                    var uv = CursorPos.GetUV(lines);
+                    CursorPos = new CP(lines.Take(uv.Y).Select(l => l.Length).Concat(0.Only()).Sum());
                 }
 
                 m_additionUndoAction = null;
@@ -794,8 +725,10 @@ namespace Utilities
             {
                 if (e.Shift)
                 {
-                    var start = CursorPos + SelectionLength;
-                    SelectionLength = start - Text.Length;
+                    var start = GetCursorPosInt() + SelectionLength;
+                    var lines = GetLines().ToList();
+                    var pos = CursorPos.End(lines);
+                    SelectionLength = start - pos.Pos;
                 }
                 else
                 {
@@ -804,17 +737,11 @@ namespace Utilities
 
                 if (e.Control)
                 {
-                    CursorPos = Text.Length;
+                    CursorPos = new CP(int.MaxValue);
                 }
                 else
                 {
-                    using (var g = m_control.CreateGraphics())
-                    {
-                        RectangleF cursorXY = PosToXY(CursorPos, g);
-                        PointF pos = cursorXY.Center();
-                        pos.X = int.MaxValue;
-                        CursorPos = GetCursorPosition(pos.X, pos.Y, g);
-                    }
+                    CursorPos = CursorPos.End(GetLines().ToList());
                 }
                 m_additionUndoAction = null;
             }

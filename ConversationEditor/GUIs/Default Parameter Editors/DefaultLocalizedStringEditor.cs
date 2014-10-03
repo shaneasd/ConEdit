@@ -80,7 +80,7 @@ namespace ConversationEditor
             }
             else
             {
-                return null;
+                return new UpdateParameterData();
             }
         }
 

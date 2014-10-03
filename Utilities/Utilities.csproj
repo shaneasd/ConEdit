@@ -60,14 +60,14 @@
     <Compile Include="Algorithm\EnumerableReversible.cs" />
     <Compile Include="Algorithm\ExtraLazyEnumerable.cs" />
     <Compile Include="Algorithm\GenericEqualityComparer.cs" />
-    <Compile Include="Identities.cs" />
+    <Compile Include="Unused\Identities.cs" />
     <Compile Include="UI\InvisibleControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UI\InvisibleControl.Designer.cs">
       <DependentUpon>InvisibleControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="ISerializer.cs" />
+    <Compile Include="Serialization\ISerializer.cs" />
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="UI\MyButton.cs" />
     <Compile Include="UI\MyControl.cs" />
@@ -79,8 +79,8 @@
     <Compile Include="Misc.cs" />
     <Compile Include="UI\MyComboBox.cs" />
     <Compile Include="UI\MyTextBox.cs" />
-    <Compile Include="NotNullable.cs" />
-    <Compile Include="NullDeserializer.cs" />
+    <Compile Include="Unused\NotNullable.cs" />
+    <Compile Include="Serialization\NullDeserializer.cs" />
     <Compile Include="Algorithm\O1LookupWrapper.cs" />
     <Compile Include="Algorithm\O1Tree.cs" />
     <Compile Include="Or.cs" />

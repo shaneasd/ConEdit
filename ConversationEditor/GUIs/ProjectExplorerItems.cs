@@ -300,7 +300,7 @@ namespace ConversationEditor
                 {
                     m_textBox = new MyTextBox(control, () => new RectangleF(TextArea.Location.Plus(ToControlTransform().OffsetX, ToControlTransform().OffsetY), TextArea.Size), MyTextBox.InputFormEnum.FileName);
                     m_textBox.Text = PermanentText;
-                    m_textBox.CursorPos = cursorPos;
+                    m_textBox.CursorPos = new MyTextBox.CP(cursorPos);
                     m_textBox.Colors.BackgroundBrush = Brushes.Transparent;
                     m_textBox.Colors.BorderPen = Pens.Transparent;
                     MyTextBox.SetupCallbacks(control, m_textBox);

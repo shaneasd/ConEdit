@@ -219,7 +219,7 @@ namespace Utilities
                 {
                     m_value = value;
                     m_textBox.Text = m_value.ToString();
-                    m_textBox.CursorPos = int.MaxValue;
+                    m_textBox.CursorPos = new MyTextBox.CP(int.MaxValue);
                 }
             }
         }
