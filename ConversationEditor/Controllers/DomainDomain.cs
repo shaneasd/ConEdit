@@ -15,10 +15,10 @@ namespace ConversationEditor
     {
         TypeSet m_typeSet = BaseTypeSet.Make();
 
-        public static ID<ParameterType> INTEGER_SET_GUID = ID<ParameterType>.Parse("07ca7287-20c0-4ba5-ae28-e17ea97554d6");
-        public static ID<ParameterType> DECIMAL_SET_GUID = ID<ParameterType>.Parse("0c1e5fa8-97ff-450b-a01c-5d09ea6dbd78");
-        public static ID<ParameterType> ENUM_SET_GUID = ID<ParameterType>.Parse("e7526632-95ca-4981-8b45-56cea272ddd0");
-        public static ID<ParameterType> DYNAMIC_ENUM_SET_GUID = ID<ParameterType>.Parse("b3278dc3-6c2b-471a-a1c9-de39691af302");
+        public static readonly ID<ParameterType> INTEGER_SET_GUID = ID<ParameterType>.Parse("07ca7287-20c0-4ba5-ae28-e17ea97554d6");
+        public static readonly ID<ParameterType> DECIMAL_SET_GUID = ID<ParameterType>.Parse("0c1e5fa8-97ff-450b-a01c-5d09ea6dbd78");
+        public static readonly ID<ParameterType> ENUM_SET_GUID = ID<ParameterType>.Parse("e7526632-95ca-4981-8b45-56cea272ddd0");
+        public static readonly ID<ParameterType> DYNAMIC_ENUM_SET_GUID = ID<ParameterType>.Parse("b3278dc3-6c2b-471a-a1c9-de39691af302");
 
 
         NodeType m_nodeHeirarchy;
@@ -142,7 +142,7 @@ namespace ConversationEditor
             List<NodeData.ParameterData> connectorDefinitionParameters = new List<NodeData.ParameterData>()
             {
                 new NodeData.ParameterData("Name", DomainIDs.CONNECTOR_DEFINITION_NAME, BaseTypeString.PARAMETER_TYPE),
-                new NodeData.ParameterData("Position", ConnectorPosition.PARAMETER_ID, ConnectorPosition.ENUM_ID, ConnectorPosition.Bottom.Element.Name),
+                new NodeData.ParameterData("Position", ConnectorPosition.PARAMETER_ID, ConnectorPosition.ENUM_ID, ConnectorPosition.Bottom.Element.Guid.ToString()),
             };
             AddNode(DomainIDs.CONNECTOR_DEFINITION_GUID, "Connector", m_nodeHeirarchy, config('o', "ffff00"), connectorDefinitionConnectors, connectorDefinitionParameters);
             m_connectorsMenu = new NodeType("Connectors", DomainIDs.NODE_MENU);
@@ -153,8 +153,8 @@ namespace ConversationEditor
                 ID<TConnector> parameterDefinitionConnector1 = ID<TConnector>.Parse("1fd8a64d-271e-42b8-bfd8-85e5174bbf9d");
                 NodeData.ConnectorData parameterOutput = new NodeData.ConnectorData(parameterDefinitionConnector1, DomainIDs.PARAMETER_OUTPUT_DEFINITION.Id, new List<Parameter>());
                 NodeData.ParameterData nameParameter = new NodeData.ParameterData("Name", DomainIDs.PARAMETER_NAME, BaseTypeString.PARAMETER_TYPE);
-                NodeData.ParameterData integerTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, INTEGER_SET_GUID, BaseTypeInteger.Data.Name);
-                NodeData.ParameterData decimalTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, DECIMAL_SET_GUID, BaseTypeDecimal.Data.Name);
+                NodeData.ParameterData integerTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, INTEGER_SET_GUID, BaseTypeInteger.PARAMETER_TYPE.Guid.ToString());
+                NodeData.ParameterData decimalTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, DECIMAL_SET_GUID, BaseTypeDecimal.PARAMETER_TYPE.Guid.ToString());
                 NodeData.ParameterData dynamicEnumTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, DYNAMIC_ENUM_SET_GUID);
                 NodeData.ParameterData integerDefaultParameter = new NodeData.ParameterData("Default", DomainIDs.PARAMETER_DEFAULT, BaseTypeInteger.PARAMETER_TYPE);
                 NodeData.ParameterData decimalDefaultParameter = new NodeData.ParameterData("Default", DomainIDs.PARAMETER_DEFAULT, BaseTypeDecimal.PARAMETER_TYPE);
@@ -758,7 +758,7 @@ namespace ConversationEditor
             return false;
         }
 
-        public static readonly CallbackDictionary<ID<TConnectorDefinition>, ConnectorDefinitionData> ConnectorDefinitions = new CallbackDictionary<ID<TConnectorDefinition>, ConnectorDefinitionData>()
+        public CallbackDictionary<ID<TConnectorDefinition>, ConnectorDefinitionData> ConnectorDefinitions = new CallbackDictionary<ID<TConnectorDefinition>, ConnectorDefinitionData>()
         {
             { SpecialConnectors.Input.Id, SpecialConnectors.Input },
             { SpecialConnectors.Output.Id, SpecialConnectors.Output },
@@ -773,5 +773,11 @@ namespace ConversationEditor
             {  DomainIDs.ENUM_OUTPUT_DEFINITION                                     .Id,       DomainIDs.ENUM_OUTPUT_DEFINITION                          },
         };
         private PluginsConfig m_pluginsConfig;
+
+
+        public string GetTypeName(ID<ParameterType> type)
+        {
+            throw new NotImplementedException(); //TODO: Implement this?
+        }
     }
 }

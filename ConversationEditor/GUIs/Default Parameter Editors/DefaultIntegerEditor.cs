@@ -13,6 +13,30 @@ namespace ConversationEditor
 {
     public partial class DefaultIntegerEditor : UserControl, IParameterEditor<DefaultIntegerEditor>
     {
+        public class Factory : IParameterEditorFactory
+        {
+            public static readonly Guid GUID = Guid.Parse("1e5e942c-b9a9-4f5c-a572-0a189c9545fe");
+            public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
+            {
+                return willEdit.IsInteger(type);
+            }
+
+            public string Name
+            {
+                get { return "Default Integer Editor"; }
+            }
+
+            public Guid Guid
+            {
+                get { return GUID; }
+            }
+
+            public IParameterEditor<Control> Make()
+            {
+                return new DefaultIntegerEditor();
+            }
+        }
+
         MyNumericUpDown<int> m_numericUpDown;
         public DefaultIntegerEditor()
         {

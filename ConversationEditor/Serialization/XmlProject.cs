@@ -24,10 +24,6 @@ namespace ConversationEditor
                 var domains = data.Domains.Select(d => new XElement("Domain", new XAttribute("path", d)));
                 var audios = data.Audios.Select(a => new XElement("Audio", new XAttribute("path", a)));
                 var root = new XElement(ROOT, (new XAttribute("xmlversion", XML_VERSION)).Only().Concat<object>(conversations).Concat(localizers).Concat(domains).Concat(audios).ToArray());
-                if (data.LastEdited != null)
-                    root.Add(new XElement("LastEdited", new XAttribute("value", data.LastEdited)));
-                if (data.SelectedLocalization != null)
-                    root.Add(new XElement("SelectedLocalization", new XAttribute("value", data.SelectedLocalization)));
                 XDocument doc = new XDocument(root);
                 stream.SetLength(0);
                 doc.Save(stream);
@@ -50,10 +46,7 @@ namespace ConversationEditor
                 var audios = root.Elements("Audio");
                 IEnumerable<string> audioPaths = audios.Select(n => n.Attribute("path").Value);
 
-                var lastEdited = root.Elements("LastEdited").Select(e => e.Attribute("value").Value).SingleOrDefault();
-                var selectedLocalzation = root.Elements("SelectedLocalization").Select(e => e.Attribute("value").Value).SingleOrDefault();
-
-                return new Project.TData(conversationPaths, domainPaths, localizerPaths, audioPaths, lastEdited, selectedLocalzation);
+                return new Project.TData(conversationPaths, domainPaths, localizerPaths, audioPaths);
             }
         }
 

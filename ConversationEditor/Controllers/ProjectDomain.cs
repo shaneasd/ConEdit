@@ -64,5 +64,11 @@ namespace ConversationEditor.Controllers
         {
             throw new NotImplementedException();
         }
+
+
+        public string GetTypeName(ID<ParameterType> type)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -281,8 +281,8 @@ namespace ConversationEditor
                 {
                     if (x.Renderer.Area.Contains(m_midButtonDownPos))
                     {
-                        m_parent.RemoveNode(x); //TODO: This could fail
-                        m_parent.Deleted();
+                        if (m_parent.RemoveNode(x))
+                            m_parent.Deleted();
                     }
                 }
 
@@ -683,13 +683,13 @@ namespace ConversationEditor
         public event Action<UndoAction> Changed;
         private readonly Func<PointF, PointF> Snap;
         private readonly Func<IEditable, ConfigureResult> Edit;
-        private readonly Action<TNode> RemoveNode;
+        private readonly Func<TNode, bool> RemoveNode;
         private readonly Func<ID<NodeTemp>, TNode> GetNode;
         public event Action<Point> PlainClick;
         public bool m_keyHeld;
         private readonly Func<Output, TransitionNoduleUIInfo> UIInfo;
 
-        public MouseController(Action refreshDisplay, Action<Point> shift, Action<Point, float> scale, Func<IEnumerable<TNode>> nodes, Func<IEnumerable<NodeGroup>> groups, Func<IEditable, ConfigureResult> edit, Action<TNode> removeNode, Func<PointF, PointF> snap, Func<Output, TransitionNoduleUIInfo> uiInfo, Func<ID<NodeTemp>, TNode> getNode)
+        public MouseController(Action refreshDisplay, Action<Point> shift, Action<Point, float> scale, Func<IEnumerable<TNode>> nodes, Func<IEnumerable<NodeGroup>> groups, Func<IEditable, ConfigureResult> edit, Func<TNode, bool> removeNode, Func<PointF, PointF> snap, Func<Output, TransitionNoduleUIInfo> uiInfo, Func<ID<NodeTemp>, TNode> getNode)
         {
             m_innerState = new State.Nothing(this, null, null);
             RefreshDisplay = refreshDisplay;

@@ -14,6 +14,31 @@ namespace ConversationEditor
 {
     public partial class DefaultBooleanEditor : UserControl, IParameterEditor<DefaultBooleanEditor>
     {
+        public class Factory : IParameterEditorFactory
+        {
+            public static readonly Guid GUID = Guid.Parse("87253284-4ade-4a7d-9043-81f3b58f1ba5");
+
+            public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
+            {
+                return type == BaseTypeBoolean.PARAMETER_TYPE;
+            }
+
+            public string Name
+            {
+                get { return "Default Boolean Editor"; }
+            }
+
+            public Guid Guid
+            {
+                get { return GUID; }
+            }
+
+            public IParameterEditor<Control> Make()
+            {
+                return new DefaultBooleanEditor();
+            }
+        }
+
         public DefaultBooleanEditor()
         {
             InitializeComponent();

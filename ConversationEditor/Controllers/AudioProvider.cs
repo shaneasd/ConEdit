@@ -31,6 +31,19 @@ namespace ConversationEditor
         Audio Generate(AudioGenerationParameters parameters);
         IEnumerable<Audio> UsedAudio();
         void UpdateUsage(Audio audio);
+        void UpdateUsage(ConversationNode<INodeGUI> n);
+    }
+
+    public class NoAudio : IAudioProvider
+    {
+        void IAudioProvider.Play(Audio guid) { }
+        void IAudioProvider.Play(AudioFile file) { }
+        IProjectElementList<AudioFile, IAudioFile> IAudioProvider.AudioFiles { get { throw new NotSupportedException(); } }
+        Audio IAudioProvider.Generate(AudioGenerationParameters parameters) { throw new NotSupportedException(); }
+        IEnumerable<Audio> IAudioProvider.UsedAudio(){ return Enumerable.Empty<Audio>(); }
+        void IAudioProvider.UpdateUsage(Audio audio) { }
+        void IAudioProvider.UpdateUsage(ConversationNode<INodeGUI> n) { }
+        public static readonly NoAudio Instance = new NoAudio();
     }
 
     public class AudioProvider : IAudioProvider
@@ -112,8 +125,12 @@ namespace ConversationEditor
         {
             var conversations = m_project.Conversations;
             var nodes = conversations.SelectMany(c => c.Nodes);
-            var parameters = nodes.SelectMany(n => n.Parameters);
-            var audioParameters = parameters.OfType<IAudioParameter>();
+            return nodes.SelectMany(UsedAudio);
+        }
+
+        public IEnumerable<Audio> UsedAudio(ConversationNode<INodeGUI> n)
+        {
+            var audioParameters = n.Parameters.OfType<IAudioParameter>();
             var audioValues = audioParameters.Select(a => a.Value);
             return audioValues;
         }
@@ -125,6 +142,9 @@ namespace ConversationEditor
 
         public void UpdateUsage(Audio audio)
         {
+            if (audio.Value == null) //As far as I can tell, only a default constructed Audio can have this property
+                return;
+
             bool used = UsedAudio().Contains(audio);
             IAudioFile match = m_project.AudioFiles.FirstOrDefault(f => Matches(audio, f));
 
@@ -132,6 +152,12 @@ namespace ConversationEditor
                 m_project.AudioFiles.Load(GetPath(audio).Only());
             else if (!used && match != null)
                 m_project.AudioFiles.Remove(match, true);
+        }
+
+        public void UpdateUsage(ConversationNode<INodeGUI> n)
+        {
+            foreach (var audio in UsedAudio(n))
+                UpdateUsage(audio);
         }
 
         public Audio Generate(AudioGenerationParameters parameters)

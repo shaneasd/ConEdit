@@ -14,6 +14,30 @@ namespace ConversationEditor
 {
     public partial class DefaultAudioEditor : UserControl, IParameterEditor<DefaultAudioEditor>
     {
+        public class Factory : IParameterEditorFactory
+        {
+            public static readonly Guid GUID = Guid.Parse("b5d1b3ea-5998-4e53-bf78-f09311f81405");
+            public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
+            {
+                return type == BaseTypeAudio.PARAMETER_TYPE;
+            }
+
+            public string Name
+            {
+                get { return "Default Audio Editor"; }
+            }
+
+            public Guid Guid
+            {
+                get { return GUID; }
+            }
+
+            public IParameterEditor<Control> Make()
+            {
+                return new DefaultAudioEditor();
+            }
+        }
+
         private MyTextBox m_textBox;
 
         public DefaultAudioEditor()

@@ -28,7 +28,7 @@ namespace ConversationEditor
             cancelButton.ForeColor = ColorScheme.Foreground;
         }
 
-        public static ConfigureResult Edit(IEditable data, AudioGenerationParameters audioContext, TypeMapConfig<ID<ParameterType>, ParameterEditorChoice> config, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public static ConfigureResult Edit(IEditable data, AudioGenerationParameters audioContext, Func<ID<ParameterType>, ParameterEditorSetupData, IParameterEditor<Control>> config, LocalizationEngine localizer, IAudioProvider audioProvider)
         {
             using (Form f = new Form())
             {
@@ -92,7 +92,7 @@ namespace ConversationEditor
 
         public string Title { get; private set; }
 
-        public NodeEditor(IEditable data, AudioGenerationParameters audioContext, TypeMapConfig<ID<ParameterType>, ParameterEditorChoice> config, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public NodeEditor(IEditable data, AudioGenerationParameters audioContext, Func<ID<ParameterType>, ParameterEditorSetupData, IParameterEditor<Control>> config, LocalizationEngine localizer, IAudioProvider audioProvider)
             : this()
         {
             m_data = data;
@@ -118,8 +118,7 @@ namespace ConversationEditor
                 }
                 else
                 {
-                    var editorChoice = config[p.TypeId];
-                    AddParameter(p, editorChoice.MakeEditor(editorData));
+                    AddParameter(p, config(p.TypeId, editorData));
                 }
             }
 
@@ -187,7 +186,7 @@ namespace ConversationEditor
             return true;
         }
 
-        public override ConfigureResult Edit(IEditable node, AudioGenerationParameters audioContext, TypeMapConfig<ID<ParameterType>, ParameterEditorChoice> config, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public override ConfigureResult Edit(IEditable node, AudioGenerationParameters audioContext, Func<ID<ParameterType>, ParameterEditorSetupData, IParameterEditor<Control>> config, LocalizationEngine localizer, IAudioProvider audioProvider)
         {
             if (node.Parameters.Any())
                 return NodeEditor.Edit(node, audioContext, config, localizer, audioProvider);

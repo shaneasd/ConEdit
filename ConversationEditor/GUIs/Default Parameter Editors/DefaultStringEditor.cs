@@ -13,6 +13,30 @@ namespace ConversationEditor
 {
     public partial class DefaultStringEditor : UserControl, IParameterEditor<DefaultStringEditor>
     {
+        public class Factory : IParameterEditorFactory
+        {
+            public static readonly Guid GUID = Guid.Parse("b3948691-425b-4220-ba6e-9ef00c5bc0f7");
+            public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
+            {
+                return type == BaseTypeString.PARAMETER_TYPE;
+            }
+
+            public string Name
+            {
+                get { return "Default String Editor"; }
+            }
+
+            public Guid Guid
+            {
+                get { return GUID; }
+            }
+
+            public IParameterEditor<Control> Make()
+            {
+                return new DefaultStringEditor();
+            }
+        }
+
         private MyTextBox m_textBox;
 
         public DefaultStringEditor()

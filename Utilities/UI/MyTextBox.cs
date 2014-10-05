@@ -428,7 +428,9 @@ namespace Utilities
 
         public override void KeyPress(KeyPressEventArgs args)
         {
-            if (!char.IsControl(args.KeyChar) || args.KeyChar == '\r')
+            bool isEnter = args.KeyChar == '\n' || args.KeyChar == '\r';
+            bool canEnter = ((Control.ModifierKeys & Keys.Shift) == Keys.Shift) || !SpecialEnter;
+            if (!char.IsControl(args.KeyChar) || (isEnter && canEnter))
             {
                 bool acceptable = InputForm == MyTextBox.InputFormEnum.Text ||
                                   InputForm == MyTextBox.InputFormEnum.Decimal && IsAcceptableNumeric(args.KeyChar) ||
@@ -442,7 +444,7 @@ namespace Utilities
 
                     DeleteSelection();
                     if (!char.IsControl(args.KeyChar))
-                        Text = Text.Insert(GetCursorPosInt(), args.KeyChar.ToString()); //TODO: This isn't working right
+                        Text = Text.Insert(GetCursorPosInt(), args.KeyChar.ToString());
                     else if (args.KeyChar == '\r')
                         Text = Text.Insert(GetCursorPosInt(), "\n"); //Currently newlines are considered like any other text in terms of resetting undo state
                     CursorPos = new CP(CursorPos.Pos + 1);
@@ -808,6 +810,7 @@ namespace Utilities
 
         public override void Dispose()
         {
+            base.Dispose();
             Caret.DestroyCaret();
         }
     }

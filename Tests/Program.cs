@@ -7,9 +7,9 @@ using ConversationEditor;
 using System.IO;
 using System.Threading;
 
-namespace ConsoleApplication1
+namespace Tests
 {
-    class Program
+    partial class Program
     {
         public static void Assert(bool condition)
         {
@@ -18,6 +18,7 @@ namespace ConsoleApplication1
         }
         static void Main(string[] args)
         {
+            TestWeakEvent();
             TestPolynomial();
             TestUndoQueue();
             ManualResetEvent();

@@ -13,6 +13,30 @@ namespace ConversationEditor
 {
     public partial class DefaultDynamicEnumEditor : UserControl, IParameterEditor<DefaultDynamicEnumEditor>
     {
+        public class Factory : IParameterEditorFactory
+        {
+            public static readonly Guid GUID = Guid.Parse("a9083141-9c56-44f1-8d5d-c10479877663");
+            public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
+            {
+                return willEdit.IsDynamicEnum(type);
+            }
+
+            public string Name
+            {
+                get { return "Default Dynamic Enumeration Editor"; }
+            }
+
+            public Guid Guid
+            {
+                get { return GUID; }
+            }
+
+            public IParameterEditor<Control> Make()
+            {
+                return new DefaultDynamicEnumEditor();
+            }
+        }
+
         private MyComboBox<string> m_comboBox;
         private IEnumerable<MyComboBox<string>.Item> m_comboBoxItems;
 

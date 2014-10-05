@@ -13,6 +13,30 @@ namespace ConversationEditor
 {
     public partial class DefaultDecimalEditor : UserControl, IParameterEditor<DefaultDecimalEditor>
     {
+        public class Factory : IParameterEditorFactory
+        {
+            public static readonly Guid GUID = Guid.Parse("846c1908-4e19-4b11-bbb3-ea40b58ef72a");
+            public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
+            {
+                return willEdit.IsDecimal(type);
+            }
+
+            public string Name
+            {
+                get { return "Default Decimal Editor"; }
+            }
+
+            public Guid Guid
+            {
+                get { return GUID; }
+            }
+
+            public IParameterEditor<Control> Make()
+            {
+                return new DefaultDecimalEditor();
+            }
+        }
+
         MyNumericUpDown<decimal> m_numericUpDown;
 
         public DefaultDecimalEditor()

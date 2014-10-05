@@ -63,6 +63,8 @@ namespace Conversation
         bool IsTypeDefinition(ID<NodeTypeTemp> id);
         bool IsConnectorDefinition(ID<NodeTypeTemp> id);
         bool IsNodeDefinition(ID<NodeTypeTemp> id);
+
+        string GetTypeName(ID<ParameterType> type);
     }
 
     public static class DataSourceUtils
@@ -130,6 +132,32 @@ namespace Conversation
         }
 
         public bool IsNodeDefinition(ID<NodeTypeTemp> id)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        bool IDataSource.IsCategoryDefinition(ID<NodeTypeTemp> id)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IDataSource.IsTypeDefinition(ID<NodeTypeTemp> id)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IDataSource.IsConnectorDefinition(ID<NodeTypeTemp> id)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IDataSource.IsNodeDefinition(ID<NodeTypeTemp> id)
+        {
+            throw new NotImplementedException();
+        }
+
+        string IDataSource.GetTypeName(ID<ParameterType> type)
         {
             throw new NotImplementedException();
         }

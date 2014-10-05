@@ -118,5 +118,22 @@ namespace Utilities
                     m.Dispose();
             }
         }
+
+        public static bool EnsureExists(this DirectoryInfo dir)
+        {
+            //This operation will return false if we recurse all the way to the root which doesn't exist.
+            //This will likely end up giving a more logical exception in subsequent operations than we could generate here
+            if (dir == null)
+                return false;
+
+            if (!dir.Exists)
+            {
+                if (!EnsureExists(dir.Parent))
+                    return false;
+                dir.Create();
+                return true;
+            }
+            return true;
+        }
     }
 }

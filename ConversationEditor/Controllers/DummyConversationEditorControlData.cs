@@ -12,7 +12,7 @@ namespace ConversationEditor.Controllers
         public static IConversationEditorControlData<TNode, TTransitionUI> Instance = new DummyConversationEditorControlData<TNode, TTransitionUI>();
         private DummyConversationEditorControlData() { }
 
-        public void Remove(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups)
+        public bool Remove(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups)
         {
             throw new NotImplementedException();
         }

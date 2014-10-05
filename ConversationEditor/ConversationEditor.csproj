@@ -110,17 +110,19 @@
     <Compile Include="Controllers\MissingDomainFile.cs" />
     <Compile Include="Controllers\MissingFile.cs" />
     <Compile Include="Controllers\MissingLocalizationFile.cs" />
+    <Compile Include="Controllers\ParameterEditorCustomization.cs" />
     <Compile Include="Controllers\PluginCheckerAssembly.cs" />
     <Compile Include="Controllers\ProjectContextMenuItems.cs" />
     <Compile Include="Controllers\ProjectDomain.cs" />
     <Compile Include="Controllers\ProjectElementDefinition.cs" />
     <Compile Include="Controllers\ProjectElementList.cs" />
     <Compile Include="Controllers\ProjectMenuController.cs" />
-    <Compile Include="Controllers\DataSource.cs" />
+    <Compile Include="Controllers\ConversationDataSource.cs" />
     <Compile Include="Controllers\SpecialConnectors.cs" />
     <Compile Include="Customization\IAudioProviderCustomization.cs" />
     <Compile Include="Customization\IExportMode.cs" />
     <Compile Include="Customization\IMenuActionFactory.cs" />
+    <Compile Include="Customization\IParameterEditorFactory.cs" />
     <Compile Include="Customization\WrapperContextMenuItemsFactory.cs" />
     <Compile Include="Customization\IProjectExplorerContextMenuItemsFactory.cs" />
     <Compile Include="GUIs\Default Parameter Editors\UnknownParameterEditor.cs">
@@ -232,11 +234,11 @@
     <Compile Include="GUIs\Default Parameter Editors\DefaultStringEditor.Designer.cs">
       <DependentUpon>DefaultStringEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUIs\EditorCustomizer.cs">
+    <Compile Include="GUIs\ParameterEditorCustomizer1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUIs\EditorCustomizer.Designer.cs">
-      <DependentUpon>EditorCustomizer.cs</DependentUpon>
+    <Compile Include="GUIs\ParameterEditorCustomizer1.Designer.cs">
+      <DependentUpon>ParameterEditorCustomizer1.cs</DependentUpon>
     </Compile>
     <Compile Include="GUIs\ErrorList.cs">
       <SubType>UserControl</SubType>
@@ -377,8 +379,8 @@
     <EmbeddedResource Include="GUIs\Default Parameter Editors\DefaultStringEditor.resx">
       <DependentUpon>DefaultStringEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUIs\EditorCustomizer.resx">
-      <DependentUpon>EditorCustomizer.cs</DependentUpon>
+    <EmbeddedResource Include="GUIs\ParameterEditorCustomizer1.resx">
+      <DependentUpon>ParameterEditorCustomizer1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUIs\ErrorList.resx">
       <DependentUpon>ErrorList.cs</DependentUpon>

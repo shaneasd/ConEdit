@@ -107,7 +107,7 @@ namespace ConversationEditor
 
         Item m_selectedItem = Item.Null; //The most highlighted thing. Clicking again will rename.
         Item m_selectedEditable = null; //The thing that's being viewed in the main editor
-        RealLeafItem<LocalizationFile, ILocalizationFile> m_selectedLocalizer;
+        RealLeafItem<ILocalizationFile, ILocalizationFile> m_selectedLocalizer;
         /// <summary>
         /// The item being dragged within the list
         /// </summary>
@@ -162,7 +162,7 @@ namespace ConversationEditor
             }
         }
         public event Action LocalizerSelected;
-        public LocalizationFile CurrentLocalizer { get { return m_selectedLocalizer.Item; } }
+        public ILocalizationFile CurrentLocalizer { get { return m_selectedLocalizer.Item; } }
         public IDomainFile CurrentDomainFile { get { return (m_selectedEditable is LeafItem<IDomainFile>) ? (m_selectedEditable as LeafItem<IDomainFile>).Item : null; } }
         public bool ProjectSelected { get { return m_selectedEditable is ProjectItem; } }
 
@@ -317,13 +317,14 @@ namespace ConversationEditor
             }
             if (e.Button == MouseButtons.Right)
             {
+                m_contextItem = item;
                 m_cleanContextMenu();
                 m_cleanContextMenu = () => { };
                 saveToolStripMenuItem.Visible = m_selectedItem.CanSave;
                 removeToolStripMenuItem.Visible = m_selectedItem.CanRemove;
                 deleteToolStripMenuItem.Visible = m_selectedItem.CanDelete;
-                makeCurrentLocalizationMenuItem.Visible = m_selectedItem is RealLeafItem<LocalizationFile, ILocalizationFile>;
-                playMenuItem.Visible = m_selectedItem is RealLeafItem<AudioFile, IAudioFile>;
+                makeCurrentLocalizationMenuItem.Visible = m_contextItem is RealLeafItem<ILocalizationFile, ILocalizationFile>;
+                playMenuItem.Visible = m_contextItem is RealLeafItem<AudioFile, IAudioFile>;
                 m_contextMenu.Show(PointToScreen(e.Location));
 
                 //import
@@ -333,7 +334,7 @@ namespace ConversationEditor
                 //foreach (var a in m_contextMenuItemsFactory.ConversationContextMenuItems(m_selectedLocalizer.Item.Localize)) //TODO: Fix localization
                 foreach (var a in m_contextMenuItemsFactory.ConversationContextMenuItems(a => ""))
                 {
-                    var con = m_selectedItem as ConversationItem;
+                    var con = m_contextItem as ConversationItem;
                     var i = new ToolStripMenuItem(a.Name);
                     i.Click += (x, y) => a.Execute(con.Item);
                     m_contextMenu.Items.Insert(m_contextMenu.Items.IndexOf(importConversationToolStripMenuItem), i);
@@ -348,6 +349,7 @@ namespace ConversationEditor
         public IProjectExplorerContextMenuItemsFactory m_contextMenuItemsFactory;
 
         Item m_renamingItem = null;
+        private Item m_contextItem;
 
         Item GetItem(Point location)
         {
@@ -608,7 +610,7 @@ namespace ConversationEditor
         {
             if (m_root.Project.CanModifyConversations)
             {
-                IConversationFile conversation = m_root.Project.Conversations.New(m_selectedItem.SpawnLocation.Path);
+                IConversationFile conversation = m_root.Project.Conversations.New(m_contextItem.SpawnLocation.Path);
                 Add(conversation);
                 Select(conversation);
             }
@@ -641,7 +643,7 @@ namespace ConversationEditor
 
         private void newLocalizationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ILocalizationFile localizer = m_root.Project.LocalizationFiles.New(m_selectedItem.SpawnLocation.Path);
+            ILocalizationFile localizer = m_root.Project.LocalizationFiles.New(m_contextItem.SpawnLocation.Path);
             Select(localizer);
         }
 
@@ -671,7 +673,7 @@ namespace ConversationEditor
         {
             if (m_root.Project.CanModifyDomain)
             {
-                IDomainFile domain = m_root.Project.DomainFiles.New(m_selectedItem.SpawnLocation.Path);
+                IDomainFile domain = m_root.Project.DomainFiles.New(m_contextItem.SpawnLocation.Path);
                 Select(domain);
             }
             else
@@ -709,10 +711,10 @@ namespace ConversationEditor
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var conversationItem = m_selectedItem as LeafItem<IConversationFile>;
-            var localizationItem = m_selectedItem as LeafItem<ILocalizationFile>;
-            var domainItem = m_selectedItem as LeafItem<IDomainFile>;
-            var audioItem = m_selectedItem as LeafItem<IAudioFile>;
+            var conversationItem = m_contextItem as LeafItem<IConversationFile>;
+            var localizationItem = m_contextItem as LeafItem<ILocalizationFile>;
+            var domainItem = m_contextItem as LeafItem<IDomainFile>;
+            var audioItem = m_contextItem as LeafItem<IAudioFile>;
 
             if (conversationItem != null)
                 m_root.Project.Conversations.Remove(conversationItem.Item, false);
@@ -737,10 +739,10 @@ namespace ConversationEditor
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var conversationItem = m_selectedItem as LeafItem<IConversationFile>;
-            var localizationItem = m_selectedItem as LeafItem<ILocalizationFile>;
-            var domainItem = m_selectedItem as LeafItem<IDomainFile>;
-            var audioItem = m_selectedItem as LeafItem<IAudioFile>;
+            var conversationItem = m_contextItem as LeafItem<IConversationFile>;
+            var localizationItem = m_contextItem as LeafItem<ILocalizationFile>;
+            var domainItem = m_contextItem as LeafItem<IDomainFile>;
+            var audioItem = m_contextItem as LeafItem<IAudioFile>;
             if (conversationItem != null)
                 m_root.Project.Conversations.Delete(conversationItem.Item);
             else if (localizationItem != null)
@@ -766,7 +768,7 @@ namespace ConversationEditor
 
         private void playMenuItem_Click(object sender, EventArgs e)
         {
-            var audioItem = m_selectedItem as LeafItem<IAudioFile>;
+            var audioItem = m_contextItem as LeafItem<IAudioFile>;
             if (audioItem.File.Exists)
                 audioItem.Item.Play();
         }
@@ -781,9 +783,9 @@ namespace ConversationEditor
 
         private void showInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var leaf = m_selectedItem as LeafItem;
-            var folder = m_selectedItem as FolderItem;
-            var project = m_selectedItem as ProjectItem;
+            var leaf = m_contextItem as LeafItem;
+            var folder = m_contextItem as FolderItem;
+            var project = m_contextItem as ProjectItem;
             if (leaf != null)
             {
                 if (leaf.File.Exists)
@@ -799,13 +801,27 @@ namespace ConversationEditor
                 ExploreBestFolder(folder.Path);
         }
 
-        private void makeCurrentLocalizationMenuItemClicked(object sender, EventArgs e)
+        internal void SelectLocalization(ILocalizationFile loc)
+        {
+            var localizationItems = m_root.AllItems(VisibilityFilter.Everything).OfType<RealLeafItem<ILocalizationFile, ILocalizationFile>>();
+            if (!localizationItems.Any())
+                return; //This can happen for dummy projects
+            var match = localizationItems.FirstOrDefault(f => f.Item.Equals(loc)) ?? localizationItems.First();
+            SelectLocalization(match);
+        }
+
+        private void SelectLocalization(RealLeafItem<ILocalizationFile, ILocalizationFile> loc)
         {
             var oldSelected = m_selectedLocalizer;
-            m_selectedLocalizer = m_selectedItem as RealLeafItem<LocalizationFile, ILocalizationFile>;
+            m_selectedLocalizer = loc;
             if (m_selectedLocalizer != oldSelected)
                 LocalizerSelected.Execute();
             InvalidateImage();
+        }
+
+        private void makeCurrentLocalizationMenuItemClicked(object sender, EventArgs e)
+        {
+            SelectLocalization(m_contextItem as RealLeafItem<ILocalizationFile, ILocalizationFile>);
         }
 
         private void drawWindow2_Paint(object sender, PaintEventArgs e)
@@ -842,7 +858,7 @@ namespace ConversationEditor
 
         private void newFolderToolStripMenuItem_Click(object sender, EventArgs _)
         {
-            var parent = m_selectedItem.SpawnLocation;
+            var parent = m_contextItem.SpawnLocation;
             DirectoryInfo newDir = null;
             for (int i = 0; newDir == null; i++)
             {
@@ -876,9 +892,9 @@ namespace ConversationEditor
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var conversationItem = m_selectedItem as LeafItem<IConversationFile>;
-            var localizationItem = m_selectedItem as LeafItem<ILocalizationFile>;
-            var domainItem = m_selectedItem as LeafItem<IDomainFile>;
+            var conversationItem = m_contextItem as LeafItem<IConversationFile>;
+            var localizationItem = m_contextItem as LeafItem<ILocalizationFile>;
+            var domainItem = m_contextItem as LeafItem<IDomainFile>;
             //Audio files are not saveable
 
             if (conversationItem != null)

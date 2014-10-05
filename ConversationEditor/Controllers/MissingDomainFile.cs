@@ -40,7 +40,7 @@ namespace ConversationEditor
             //Do nothing
         }
 
-        public void Remove(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups)
+        public bool Remove(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups)
         {
             throw new NotImplementedException();
         }

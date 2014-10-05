@@ -17,6 +17,7 @@ using ConversationEditor;
 using Utilities;
 using ConversationNode = Conversation.ConversationNode<Conversation.INodeGUI>;
 using Conversation.Serialization;
+using System.Xml.Linq;
 
 namespace ConversationEditor
 {
@@ -136,9 +137,7 @@ namespace ConversationEditor
             errorList1.ForeColor = ColorScheme.Foreground;
             errorList1.BackColor = ColorScheme.Background;
 
-            CurrentEditor = null;
-
-            projectExplorer.m_contextMenuItemsFactory = new WrapperContextMenuItemsFactory(()=>m_config.Plugins.UnfilteredAssemblies);
+            projectExplorer.m_contextMenuItemsFactory = new WrapperContextMenuItemsFactory(() => m_config.Plugins.UnfilteredAssemblies);
         }
 
         private void InitialiseNodeFactory()
@@ -206,6 +205,21 @@ namespace ConversationEditor
                 foreach (var factory in factories)
                 {
                     IAudioProviderCustomization obj = factory.GetConstructor(Type.EmptyTypes).Invoke(new object[0]) as IAudioProviderCustomization;
+                    result.Add(obj);
+                }
+            }
+            return result;
+        }
+
+        private List<IParameterEditorFactory> GetAllParameterEditors()
+        {
+            List<IParameterEditorFactory> result = new List<IParameterEditorFactory>();
+            foreach (var pa in m_config.Plugins.UnfilteredAssemblies.Select(a=>a.Assembly).Concat(Assembly.GetExecutingAssembly().Only()))
+            {
+                var factories = pa.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(IParameterEditorFactory)));
+                foreach (var factory in factories)
+                {
+                    IParameterEditorFactory obj = factory.GetConstructor(Type.EmptyTypes).Invoke(new object[0]) as IParameterEditorFactory;
                     result.Add(obj);
                 }
             }
@@ -280,6 +294,7 @@ namespace ConversationEditor
 
                 conversationEditorControl1.CurrentFile = projectExplorer.SelectedConversation;
                 m_domainEditor2.CurrentFile = projectExplorer.CurrentDomainFile;
+
                 //m_projectGraphEditor.CurrentFile = m_projectMenuController.CurrentProject; //TODO:
 
                 if (projectExplorer.SelectedConversation != null && projectExplorer.SelectedConversation.File.Exists)
@@ -297,6 +312,8 @@ namespace ConversationEditor
             };
             projectExplorer.LocalizerSelected += () =>
             {
+                if (m_projectMenuController != null)
+                    m_projectMenuController.CurrentProject.Localizer.SelectLocalizer(projectExplorer.CurrentLocalizer);
                 conversationEditorControl1.Invalidate();
                 m_domainEditor2.Invalidate();
             };
@@ -341,22 +358,44 @@ namespace ConversationEditor
             Action<IProject> projectChanged = null;
             projectChanged = (project) =>
             {
+                Project.TConfig projectConfig = ReadProjectConfig(project);
+
                 conversationEditorControl1.SetContext(project.ConversationDataSource, project.Localizer, project);
                 conversationEditorControl1.UpdateKeyMappings();
-                conversationEditorControl1.CurrentFile = null;
 
                 m_domainEditor2.SetContext(project.DomainDataSource, project.Localizer, project);
                 m_domainEditor2.UpdateKeyMappings();
-                m_domainEditor2.CurrentFile = null;
 
                 //TODO: Shouldn't have to do any of this
                 //m_projectGraphEditor.SetContext(ProjectDomain.Instance, project.Localizer);
                 //m_projectGraphEditor.UpdateKeyMappings();
 
                 projectExplorer.SetProject(project);
-                Text = project.File.Exists ? project.File.File.Name : "No Project Open";
+                var p = project as Project;
+                if (p != null)
+                {
+                    var con = projectConfig.LastEdited != null ? project.Conversations.FirstOrDefault(c => c.File.File.FullName == p.Rerout(projectConfig.LastEdited.Only()).Single().FullName) : null;
+                    var dom = projectConfig.LastEdited != null ? project.DomainFiles.FirstOrDefault(c => c.File.File.FullName == p.Rerout(projectConfig.LastEdited.Only()).Single().FullName) : null;
+                    conversationEditorControl1.CurrentFile = con;
+                    m_domainEditor2.CurrentFile = dom;
+                    if (con != null)
+                    {
+                        projectExplorer.Select(con);
+                        CurrentEditor = conversationEditorControl1;
+                    }
+                    else if (dom != null)
+                    {
+                        projectExplorer.Select(dom);
+                        CurrentEditor = m_domainEditor2;
+                    }
+                    else
+                        CurrentEditor = null;
+                    var loc = projectConfig.LastLocalization != null ? project.LocalizationFiles.FirstOrDefault(c => c.File.File.FullName == (p.Rerout(projectConfig.LastLocalization.Only()).Single()).FullName) : null;
+                    projectExplorer.SelectLocalization(loc);
+                    p.Localizer.SelectLocalizer(loc);
+                }
 
-                //TODO: Select the most appropriate file?
+                Text = project.File.Exists ? project.File.File.Name : "No Project Open";
 
                 project.File.Moved += (from, to) => Text = project.File.File.Name;
             };
@@ -383,7 +422,7 @@ namespace ConversationEditor
                                 bool open = false;
                                 try
                                 {
-                                    open = m_projectMenuController.CurrentProject.File.CanClose();
+                                    open = m_projectMenuController.CanClose(true);
                                 }
                                 catch (MyFileLoadException e)
                                 {
@@ -411,6 +450,19 @@ namespace ConversationEditor
             //CurrentFile = m_projectMenuController.CurrentProject.Files.FirstOrDefault();
         }
 
+        private IParameterEditor<Control> GetParameterEditor(Guid id, ParameterEditorSetupData data)
+        {
+            var editorFactory = GetAllParameterEditors().Where(e=>e.Guid == id).Single();
+            IParameterEditor<Control> editor = editorFactory.Make();
+            editor.Setup(data);
+            return editor;
+        }
+
+        private IParameterEditor<Control> GetParameterEditor(ID<ParameterType> id, ParameterEditorSetupData data)
+        {
+            return GetParameterEditor(m_config.ParameterEditors[id], data);
+        }
+
         private ConfigureResult Edit(IEditable data, AudioGenerationParameters audioContext)
         {
             if (data is UnknownEditable)
@@ -419,7 +471,7 @@ namespace ConversationEditor
                 return ConfigureResult.NotApplicable;
             }
             else
-                return m_config.NodeEditors[data.NodeTypeID].GetEditorFactory().Edit(data, audioContext, m_config.ParameterEditors, m_projectMenuController.CurrentProject.Localizer, m_projectMenuController.CurrentProject.AudioProvider);
+                return m_config.NodeEditors[data.NodeTypeID].GetEditorFactory().Edit(data, audioContext, GetParameterEditor, m_projectMenuController.CurrentProject.Localizer, m_projectMenuController.CurrentProject.AudioProvider);
         }
 
         private void errorCheckToolStripMenuItem_Click(object sender, EventArgs e)
@@ -434,10 +486,68 @@ namespace ConversationEditor
             success &= SelectNode(node, file);
         }
 
+        Project.TConfig ReadProjectConfig(IProject project)
+        {
+            if (project is DummyProject)
+                return new Project.TConfig(null, null);
+
+            var configPath = project.File.File.FullName + ".config";
+            if (File.Exists(configPath))
+            {
+                XElement lastDocument = null;
+                XElement lastLocalization = null;
+                try
+                {
+                    XDocument doc = XDocument.Load(configPath);
+                    var config = doc.Element("Config");
+                    lastDocument = config.Element("LastDocument");
+                    lastLocalization = config.Element("LastLocalization");
+                }
+                catch
+                {
+                    //Ignore any problems with the file
+                    return new Project.TConfig(null, null);
+                }
+                return new Project.TConfig(lastDocument != null ? lastDocument.Value : null,
+                                           lastLocalization != null ? lastLocalization.Value : null);
+            }
+            return new Project.TConfig(null, null);
+        }
+
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            var projectFile = m_projectMenuController.CurrentProject.File;
+            string configPath = null;
+            string lastDocument = null;
+            string lastLocalization = null;
+            if (projectFile.Exists)
+            {
+                configPath = m_projectMenuController.CurrentProject.File.File.FullName + ".config";
+                lastDocument = projectExplorer.SelectedConversation != null ? FileSystem.RelativePath(projectExplorer.SelectedConversation.File.File, m_projectMenuController.CurrentProject.Origin) :
+                               projectExplorer.CurrentDomainFile != null ? FileSystem.RelativePath(projectExplorer.CurrentDomainFile.File.File, m_projectMenuController.CurrentProject.Origin) :
+                               null;
+                lastLocalization = projectExplorer.CurrentLocalizer != null ? FileSystem.RelativePath(projectExplorer.CurrentLocalizer.File.File, m_projectMenuController.CurrentProject.Origin) : null;
+            }
             if (!m_projectMenuController.Exit())
                 e.Cancel = true;
+            else
+            {
+                if (configPath != null)
+                {
+                    var config = new XElement("Config");
+                    if (lastDocument != null)
+                        config.Add(new XElement("LastDocument", lastDocument));
+                    if (lastLocalization != null)
+                        config.Add(new XElement("LastLocalization", lastLocalization));
+                    XDocument doc = new XDocument(config);
+
+                    using (FileStream s = new FileStream(configPath, FileMode.OpenOrCreate, FileAccess.Write))
+                    {
+                        s.SetLength(0);
+                        doc.Save(s);
+                    }
+                }
+            }
         }
 
         private void throwTestExceptionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -481,11 +591,30 @@ namespace ConversationEditor
 
         private void customiseParameterEditorsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (EditorCustomizer ec = new EditorCustomizer())
+            var data = new ParameterEditorCustomization(m_projectMenuController.CurrentProject.ConversationDataSource, m_config.ParameterEditors, GetAllParameterEditors());
+            //var config = new MapConfig<ID<ParameterType>, Guid>("ParameterEditors", kvp => new KeyValuePair<string,string>(kvp.Key.Serialized(), kvp.Value.ToString())
+            //                                                    , kvp => new KeyValuePair<ID<ParameterType>,Guid>(ID<ParameterType>.Parse(kvp.Key), Guid.Parse(kvp.Value))
+            //                                                    , g => DefaultEnumEditor.Factory.GUID);
+            Func<ID<ParameterType>, ParameterEditorSetupData, IParameterEditor<Control>> config = (id, d) =>
             {
-                ec.Init(m_config.ParameterEditors, m_projectMenuController.CurrentProject.ConversationDataSource);
-                ec.ShowDialog();
+                var result = new DefaultEnumEditor();
+                result.Setup(d);
+                return result;
+            };
+
+            var editor = new DefaultNodeEditorFactory();
+            editor.Edit(data, null, config, null, null).Do(a => a.Redo(), a => { });
+
+            foreach (var d in data.Parameters)
+            {
+                m_config.ParameterEditors[d.TypeId] = (d as IEnumParameter).Value;
             }
+            
+            //using (ParameterEditorCustomizer2 ec = new ParameterEditorCustomizer2())
+            //{
+            //    ec.Init(m_config.ParameterEditors, m_projectMenuController.CurrentProject.ConversationDataSource);
+            //    ec.ShowDialog();
+            //}
         }
 
         private void customiseNodeRendererToolStripMenuItem_Click(object sender, EventArgs e)

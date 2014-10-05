@@ -13,6 +13,30 @@ namespace ConversationEditor
 {
     public partial class DefaultEnumEditor : UserControl, IParameterEditor<DefaultEnumEditor>
     {
+        public class Factory : IParameterEditorFactory
+        {
+            public static readonly Guid GUID = Guid.Parse("1e8f8730-a710-4341-be04-2c80272e896c");
+            public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
+            {
+                return willEdit.IsEnum(type);
+            }
+
+            public string Name
+            {
+                get { return "Default Enumeration Editor"; }
+            }
+
+            public Guid Guid
+            {
+                get { return GUID; }
+            }
+
+            public IParameterEditor<Control> Make()
+            {
+                return new DefaultEnumEditor();
+            }
+        }
+
         MyComboBox<Guid> m_comboBox;
         List<MyComboBox<Guid>.Item> m_comboBoxItems = new List<MyComboBox<Guid>.Item>();
         IEnumParameter m_parameter;
@@ -55,7 +79,7 @@ namespace ConversationEditor
         public void Setup(ParameterEditorSetupData data)
         {
             m_parameter = data.Parameter as IEnumParameter;
-            foreach (var ch in m_parameter.Options)
+            foreach (var ch in m_parameter.Options.OrderBy(o=>m_parameter.GetName(o)))
             {
                 m_comboBoxItems.Add(new MyComboBox<Guid>.Item(m_parameter.GetName(ch), ch));
             }

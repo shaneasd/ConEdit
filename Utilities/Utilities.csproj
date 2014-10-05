@@ -103,6 +103,7 @@
     <Compile Include="UndoQueue.cs" />
     <Compile Include="UnordererTuple.cs" />
     <Compile Include="Util.cs" />
+    <Compile Include="WeakEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\TabStop.resx">

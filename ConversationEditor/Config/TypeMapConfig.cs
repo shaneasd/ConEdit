@@ -78,4 +78,75 @@ namespace ConversationEditor
             return m_data.ContainsKey(m_serializeKey(key));
         }
     }
+
+    public class MapConfig<TKey, TData> : IConfigParameter
+    {
+        protected Dictionary<TKey, TData> m_data = new Dictionary<TKey, TData>();
+        protected readonly string m_nodeName;
+        protected readonly Func<KeyValuePair<TKey, TData>, KeyValuePair<string, string>> m_serialize;
+        protected readonly Func<KeyValuePair<string, string>, KeyValuePair<TKey, TData>> m_deserialize;
+        protected readonly Func<TKey, TData> m_defaults;
+
+        public MapConfig(string nodeName, Func<KeyValuePair<TKey, TData>, KeyValuePair<string, string>> serialize, Func<KeyValuePair<string, string>, KeyValuePair<TKey, TData>> deserialize, Func<TKey, TData> defaults)
+        {
+            m_nodeName = nodeName;
+            m_serialize = serialize;
+            m_deserialize = deserialize;
+            m_defaults = defaults;
+        }
+
+        public void Load(XElement root)
+        {
+            m_data = new Dictionary<TKey, TData>();
+            var node = root.Element(m_nodeName);
+            if (node != null)
+            {
+                foreach (var n in node.Elements("Editor"))
+                {
+                    var parameter = n.Attribute("parameter");
+                    var editor = n.Attribute("editor");
+
+                    var data = m_deserialize(new KeyValuePair<string, string>(parameter.Value, editor.Value));
+                    m_data[data.Key] = data.Value;
+                }
+            }
+        }
+
+        public void Write(XElement root)
+        {
+            var node = new XElement(m_nodeName);
+            root.Add(node);
+            foreach (var kvp in m_data)
+            {
+                var data = m_serialize(kvp);
+                node.Add(new XElement("Editor", new XAttribute("parameter", data.Key), new XAttribute("editor", data.Value)));
+            }
+        }
+
+        public event Action ValueChanged;
+
+        public TData this[TKey key]
+        {
+            get
+            {
+                if (m_data.ContainsKey(key))
+                    return m_data[key];
+                else
+                    return m_defaults(key);
+            }
+            set
+            {
+                if (value == null)
+                    m_data.Remove(key);
+                else
+                    m_data[key] = value;
+                ValueChanged.Execute();
+            }
+        }
+
+        public bool ContainsKey(TKey key)
+        {
+            return m_data.ContainsKey(key);
+        }
+    }
 }

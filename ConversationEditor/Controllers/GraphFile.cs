@@ -31,16 +31,18 @@ namespace ConversationEditor
 
         private INodeFactory<ConversationNode> m_nodeFactory;
         private Func<ISaveableFileProvider, Audio> m_generateAudio;
+        private IAudioProvider m_audioProvider;
 
         public ConversationNode MakeNode(IEditable e, NodeUIData uiData)
         {
             return m_nodeFactory.MakeNode(e, uiData);
         }
 
-        public GraphFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, List<Error> errors, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, Audio> generateAudio)
+        public GraphFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, List<Error> errors, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, Audio> generateAudio, IAudioProvider audioProvider)
         {
             m_nodeFactory = nodeFactory;
             m_generateAudio = generateAudio;
+            m_audioProvider = audioProvider;
             m_nodes = new CallbackList<ConversationNode>(nodes.Select(gnu => MakeNode(gnu.GraphData, gnu.UIData)));
             m_nodesLookup = new O1LookupWrapper<ConversationNode, ID<NodeTemp>>(m_nodes, n => n.Id);
             m_nodesOrdered = new SortedWrapper<ConversationNode>(m_nodes);
@@ -82,10 +84,11 @@ namespace ConversationEditor
 
                     foreach (var p in node.Parameters.OfType<IAudioParameter>())
                     {
-                        var actions = p.SetValueAction(m_generateAudio(this));
+                        //No need to update audio usage as this will occur when the node is added/removed
+                        var audio = m_generateAudio(this);
+                        var actions = p.SetValueAction(audio);
                         undoActions.Add(actions.Value.Undo);
                         redoActions.Add(actions.Value.Redo);
-                        //TODO: update used audio
                     }
 
                     foreach (var p in node.Parameters.OfType<AudioParameter>())
@@ -169,6 +172,7 @@ namespace ConversationEditor
                 redoActions.Add(() =>
                 {
                     m_nodes.Add(n);
+                    m_audioProvider.UpdateUsage(n);
                     foreach (var group in containingGroups)
                         group.Contents.Add(n.Id);
                     actions.Undo();
@@ -176,7 +180,10 @@ namespace ConversationEditor
                 undoActions.Add(() =>
                 {
                     if (CanRemoveFromData(n, PromptNodeDeletion))
+                    {
                         m_nodes.Remove(n);
+                        m_audioProvider.UpdateUsage(n);
+                    }
                     foreach (var group in containingGroups)
                         group.Contents.Remove(n.Id);
                     actions.Redo();
@@ -219,7 +226,7 @@ namespace ConversationEditor
             };
         }
 
-        public void Remove(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups)
+        public bool Remove(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups)
         {
             nodes = nodes.ToList();
             groups = groups.ToList();
@@ -232,7 +239,7 @@ namespace ConversationEditor
             if (nodes.Any(n => !CanRemoveFromData(n, () => false)))
             {
                 if (!PromptNodeDeletion())
-                    return;
+                    return false;
             }
 
             if (removeNodes)
@@ -254,6 +261,7 @@ namespace ConversationEditor
                         actions.Undo(); //Connect after adding the node
                         foreach (var group in containingGroups)
                             group.Contents.Add(n.Id);
+                        m_audioProvider.UpdateUsage(n);
                     });
                     redoActions.Add(() =>
                     {
@@ -261,6 +269,7 @@ namespace ConversationEditor
                         m_nodes.Remove(n);
                         foreach (var group in containingGroups)
                             group.Contents.Remove(n.Id);
+                        m_audioProvider.UpdateUsage(n);
                         NodesDeleted.Execute();
                     });
                 }
@@ -292,6 +301,8 @@ namespace ConversationEditor
                 throw new Exception("Something went wrong :(");
 
             UndoableFile.Change(new GenericUndoAction(undo, redo, message));
+
+            return true;
         }
 
         public void RemoveLinks(Output o)

@@ -40,7 +40,6 @@ namespace ConversationEditor
         /// Currently it is impossible to modify the domain while there are unsaved changes to conversations
         /// </summary>
         bool CanModifyDomain { get; }
-
     }
 
 }

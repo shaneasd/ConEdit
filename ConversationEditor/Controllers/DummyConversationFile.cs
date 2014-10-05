@@ -16,7 +16,7 @@ namespace ConversationEditor
         public static IConversationFile Instance = new DummyConversationFile();
         private DummyConversationFile() { }
 
-        public void Remove(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups)
+        public bool Remove(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups)
         {
             throw new NotImplementedException();
         }

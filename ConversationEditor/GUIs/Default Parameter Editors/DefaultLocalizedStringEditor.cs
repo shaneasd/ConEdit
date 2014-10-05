@@ -14,6 +14,30 @@ namespace ConversationEditor
 {
     public partial class DefaultLocalizedStringEditor : UserControl, IParameterEditor<DefaultLocalizedStringEditor>
     {
+        public class Factory : IParameterEditorFactory
+        {
+            public static readonly Guid GUID = Guid.Parse("df3f30b8-ee05-4972-8b41-fb075d5502a7");
+            public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
+            {
+                return type == BaseTypeLocalizedString.PARAMETER_TYPE;
+            }
+
+            public string Name
+            {
+                get { return "Default Localized String Editor"; }
+            }
+
+            public Guid Guid
+            {
+                get { return GUID; }
+            }
+
+            public IParameterEditor<Control> Make()
+            {
+                return new DefaultLocalizedStringEditor();
+            }
+        }
+
         private MyTextBox m_textBox;
 
         public DefaultLocalizedStringEditor()
@@ -86,7 +110,7 @@ namespace ConversationEditor
 
         public string DisplayName
         {
-            get { return "Default String Editor"; }
+            get { return "Default Localized String Editor"; }
         }
 
         public bool IsValid()

@@ -41,7 +41,9 @@ namespace ConversationEditor
         public Config(string file, WillEdit willEdit)
         {
             m_file = file;
-            ParameterEditors = new TypeMapConfig<ID<ParameterType>, ParameterEditorChoice>("ParameterEditors", a => a.Serialized(), (a, t) => new ParameterEditorChoice(a, t), g => EditorCustomizer.DefaultEditor(g, willEdit));
+            ParameterEditors = new MapConfig<ID<ParameterType>, Guid>("ParameterEditors", kvp => new KeyValuePair<string, string>(kvp.Key.Serialized(), kvp.Value.ToString()),
+                                                                      kvp => new KeyValuePair<ID<ParameterType>, Guid>(ID<ParameterType>.Parse(kvp.Key), Guid.Parse(kvp.Value)),
+                                                                      a=>ParameterEditorCustomization.DefaultEditor(a,willEdit));
             InitParameters();
             LoadRoot(file);
         }
@@ -66,7 +68,7 @@ namespace ConversationEditor
         }
 
         public List<IConfigParameter> m_parameters = new List<IConfigParameter>();
-        public readonly TypeMapConfig<ID<ParameterType>, ParameterEditorChoice> ParameterEditors;
+        public readonly MapConfig<ID<ParameterType>, Guid> ParameterEditors;
         public readonly ErrorCheckersConfig ErrorCheckers = new ErrorCheckersConfig();
         public readonly GraphViewConfig GraphView = new GraphViewConfig();
         public readonly TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice> ConversationNodeRenderers = new TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice>("NodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultConversation(nodeType));

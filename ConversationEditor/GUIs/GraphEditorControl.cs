@@ -42,7 +42,7 @@ namespace ConversationEditor
         TNode GetNode(ID<NodeTemp> id);
         Tuple<IEnumerable<TNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, PointF location, LocalizationEngine localization);
         void Add(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups);
-        void Remove(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups);
+        bool Remove(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups);
         IEnumerableReversible<TNode> Nodes { get; }
         IEnumerableReversible<NodeGroup> Groups { get; }
         void RemoveLinks(Output o);
@@ -312,6 +312,7 @@ namespace ConversationEditor
             {
                 if (m_mouseController.Selected.Nodes.Any() || m_mouseController.Selected.Groups.Any())
                 {
+                    //TODO: This would probably make more sense in MouseController.Delete
                     CurrentFile.Remove(m_mouseController.Selected.Nodes.Select(CurrentFile.GetNode), m_mouseController.Selected.Groups);
                 }
                 else

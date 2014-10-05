@@ -28,6 +28,8 @@ namespace Conversation
         {
             try
             {
+                if (string.IsNullOrEmpty(value))
+                    return Failed.Instance;
                 return new Audio(value);
             }
             catch

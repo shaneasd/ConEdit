@@ -64,7 +64,7 @@ namespace ConversationEditor
         }
 
         public DomainFile(List<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, List<Error> errors, DomainDomain datasource, ConversationDataSource conversationDataSource, ISerializer<TData> serializer, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage)
-            : base(nodes, groups, errors, nodeFactory, null)
+            : base(nodes, groups, errors, nodeFactory, null, NoAudio.Instance)
         {
             m_file = new SaveableFileUndoable(rawData, file, SaveTo);
             m_domainUsage = domainUsage;

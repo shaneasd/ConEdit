@@ -23,22 +23,29 @@ namespace ConversationEditor
     {
         public class TData
         {
-            public TData(IEnumerable<string> conversations, IEnumerable<string> domains, IEnumerable<string> localizations, IEnumerable<string> audios, string lastEdited, string selectedLocalization)
+            public TData(IEnumerable<string> conversations, IEnumerable<string> domains, IEnumerable<string> localizations, IEnumerable<string> audios)
             {
                 Conversations = conversations;
                 Domains = domains;
                 Localizations = localizations;
                 Audios = audios;
-                LastEdited = lastEdited;
-                SelectedLocalization = selectedLocalization;
             }
 
             public readonly IEnumerable<string> Conversations;
             public readonly IEnumerable<string> Domains;
             public readonly IEnumerable<string> Localizations;
             public readonly IEnumerable<string> Audios;
+        }
+
+        public class TConfig
+        {
+            public TConfig(string lastEdited, string lastLocalization)
+            {
+                LastEdited = lastEdited;
+                LastLocalization = lastLocalization;
+            }
             public readonly string LastEdited;
-            public readonly string SelectedLocalization;
+            public readonly string LastLocalization;
         }
 
         public readonly ISerializer<TConversationData> ConversationSerializer;
@@ -86,7 +93,7 @@ namespace ConversationEditor
             var localizationPaths = localizationFile.Only().Select(l => FileSystem.RelativePath(l.File.File, path.Directory));
             var domainPaths = Enumerable.Empty<string>();
 
-            TData data = new TData(conversationPaths, domainPaths, localizationPaths, Enumerable.Empty<string>(), null, null);
+            TData data = new TData(conversationPaths, domainPaths, localizationPaths, Enumerable.Empty<string>());
 
             result = new Project(data, conversationNodeFactory, domainNodeFactory, m, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig, audioCustomization);
             return result;
@@ -187,8 +194,12 @@ namespace ConversationEditor
             m_conversationDataSource = new ConversationDataSource(BaseTypeSet.Make(), m_domainFiles.Select(df => df.Data));
 
             {
-                Func<IEnumerable<FileInfo>, IEnumerable<ConversationFile>> loadConversation = files => files.Select(file => ConversationFile.Load(file, m_conversationDataSource, ConversationNodeFactory, m_conversationSerializerFactory(m_conversationDataSource), c => m_audioProvider.Generate(new AudioGenerationParameters(c, this))));
-                Func<DirectoryInfo, ConversationFile> makeEmpty = path => ConversationFile.CreateEmpty(path, this, pathOk, ConversationNodeFactory, c => m_audioProvider.Generate(new AudioGenerationParameters(c, this)));
+                Func<ISaveableFileProvider, Audio> audio = c =>
+                {
+                    return m_audioProvider.Generate(new AudioGenerationParameters(c, this));
+                };
+                Func<IEnumerable<FileInfo>, IEnumerable<ConversationFile>> loadConversation = files => files.Select(file => ConversationFile.Load(file, m_conversationDataSource, ConversationNodeFactory, m_conversationSerializerFactory(m_conversationDataSource), audio, m_audioProvider));
+                Func<DirectoryInfo, ConversationFile> makeEmpty = path => ConversationFile.CreateEmpty(path, this, pathOk, ConversationNodeFactory, audio, m_audioProvider);
                 Func<FileInfo, MissingConversationFile> makeMissing = file => new MissingConversationFile(file);
                 m_conversations = new ProjectElementList<ConversationFile, MissingConversationFile, IConversationFile>(s => CheckFolder(s, Origin), loadConversation, makeEmpty, makeMissing);
                 IEnumerable<FileInfo> toLoad = Rerout(conversationPaths);
@@ -334,7 +345,7 @@ namespace ConversationEditor
             var localizationPaths = localizations.Select(l => FileSystem.RelativePath(l, origin));
             var domainPaths = domains.Select(d => FileSystem.RelativePath(d, origin));
             var audioPaths = audio.Select(d => FileSystem.RelativePath(d, origin));
-            serializer.Write(new Project.TData(conversationPaths, domainPaths, localizationPaths, audioPaths, null, null), stream); //TODO: Last Edited / Selected localizer
+            serializer.Write(new Project.TData(conversationPaths, domainPaths, localizationPaths, audioPaths), stream);
         }
 
         public void GotChanged()

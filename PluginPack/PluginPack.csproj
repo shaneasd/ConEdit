@@ -43,35 +43,45 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlternateAudioProviderCustomization.cs" />
-    <Compile Include="ExportAsCsv.cs" />
-    <Compile Include="IconRenderer.cs" />
+    <Compile Include="Config\BackgroundColor.cs" />
+    <Compile Include="Config\ConfigNodeDefinitions.cs" />
+    <Compile Include="Config\NameConfig.cs" />
+    <Compile Include="Config\ShortcutKey.cs" />
+    <Compile Include="Context Menu Items\ExportAsCsv.cs" />
+    <Compile Include="Node Renderers\IconRenderer.cs" />
     <Compile Include="ErrorCheckers\BadNodeErrorChecker.cs" />
-    <Compile Include="CharacterEditor.cs">
+    <Compile Include="Parameter Editors\CharacterEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CharacterEditor.Designer.cs">
+    <Compile Include="Parameter Editors\CharacterEditor.Designer.cs">
       <DependentUpon>CharacterEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="ErrorCheckers\CycleErrorChecker.cs" />
     <Compile Include="ErrorCheckers\DisconnectionErrorChecker.cs" />
     <Compile Include="ErrorCheckers\JumpsErrorChecker.cs" />
     <Compile Include="ErrorCheckers\OptionErrorChecker.cs" />
-    <Compile Include="MenuActionFactory.cs" />
-    <Compile Include="NodeNameConfig.cs" />
-    <Compile Include="ProjectExplorerContextMenu.cs" />
+    <Compile Include="Context Menu Items\MenuActionFactory.cs" />
+    <Compile Include="Config\IconConfig.cs" />
+    <Compile Include="Context Menu Items\ProjectExplorerContextMenu.cs" />
+    <Compile Include="Parameter Editors\FancyEnumEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Parameter Editors\FancyEnumEditor.Designer.cs">
+      <DependentUpon>FancyEnumEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RedRenderer.cs" />
+    <Compile Include="Node Renderers\RedRenderer.cs" />
     <Compile Include="SpecialNodes.cs" />
-    <Compile Include="TemplatesMenuActions.cs" />
+    <Compile Include="Context Menu Items\TemplatesMenuActions.cs" />
     <Compile Include="UneditableNodeEditorFactory.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CharacterEditor.resx">
+    <EmbeddedResource Include="Parameter Editors\CharacterEditor.resx">
       <DependentUpon>CharacterEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -123,9 +133,7 @@
     <Content Include="Resources\Start Icon.png" />
     <EmbeddedResource Include="Templates\Basic Conversation.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Config\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

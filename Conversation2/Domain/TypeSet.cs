@@ -15,6 +15,7 @@ namespace Conversation
     {
         private Dictionary<ID<ParameterType>, bool> m_hidden = new Dictionary<ID<ParameterType>, bool>();
         private Dictionary<ID<ParameterType>, Func<string, ID<Parameter>, string, Parameter>> m_types = new Dictionary<ID<ParameterType>, Func<string, ID<Parameter>, string, Parameter>>();
+        private Dictionary<ID<ParameterType>, string> m_typeNames = new Dictionary<ID<ParameterType>, string>();
         private Dictionary<ID<ParameterType>, DynamicEnumerationData> m_dynamicEnums = new Dictionary<ID<ParameterType>, DynamicEnumerationData>();
         private Dictionary<ID<ParameterType>, Tuple<string, MutableEnumeration>> m_enums = new Dictionary<ID<ParameterType>, Tuple<string, MutableEnumeration>>();
         private Dictionary<ID<ParameterType>, IntegerData> m_integers = new Dictionary<ID<ParameterType>, IntegerData>();
@@ -38,6 +39,7 @@ namespace Conversation
             m_hidden[typeData.TypeID] = hidden;
             m_integers.Add(typeData.TypeID, typeData);
             m_types.Add(typeData.TypeID, (name, id, defaultValue) => new IntegerParameter(name, id, typeData.TypeID, m_integers[typeData.TypeID].Definition(), defaultValue));
+            m_typeNames.Add(typeData.TypeID, typeData.Name);
             Modified.Execute(typeData.TypeID);
         }
 
@@ -45,6 +47,7 @@ namespace Conversation
         {
             m_types[typeData.TypeID] = (name, id, defaultValue) => new IntegerParameter(name, id, typeData.TypeID, typeData.Definition(), defaultValue);
             m_integers[typeData.TypeID] = typeData;
+            m_typeNames.Add(typeData.TypeID, typeData.Name);
             Modified.Execute(typeData.TypeID);
         }
 
@@ -53,12 +56,14 @@ namespace Conversation
             m_hidden[typeData.TypeID] = hidden;
             m_decimals.Add(typeData.TypeID, typeData);
             m_types.Add(typeData.TypeID, (name, id, defaultValue) => new DecimalParameter(name, id, typeData.TypeID, typeData.Definition(), defaultValue));
+            m_typeNames.Add(typeData.TypeID, typeData.Name);
             Modified.Execute(typeData.TypeID);
         }
 
         public void ModifyDecimal(DecimalData typeData)
         {
             m_types[typeData.TypeID] = (name, id, defaultValue) => new DecimalParameter(name, id, typeData.TypeID, m_decimals[typeData.TypeID].Definition(), defaultValue);
+            m_typeNames.Add(typeData.TypeID, typeData.Name);
             m_decimals[typeData.TypeID] = typeData;
             Modified.Execute(typeData.TypeID);
         }
@@ -70,6 +75,7 @@ namespace Conversation
             MutableEnumeration enumeration = new MutableEnumeration(elements, typeData.TypeID, "");
             m_enums.Add(typeData.TypeID, Tuple.Create(typeData.Name, enumeration));
             m_types.Add(m_enums[typeData.TypeID].Item2.TypeId, m_enums[typeData.TypeID].Item2.Parameter);
+            m_typeNames.Add(typeData.TypeID, typeData.Name);
             Modified.Execute(typeData.TypeID);
         }
 
@@ -90,6 +96,7 @@ namespace Conversation
             m_hidden[typeData.TypeID] = hidden;
             m_dynamicEnums.Add(typeData.TypeID, typeData);
             m_types.Add(typeData.TypeID, typeData.Make);
+            m_typeNames.Add(typeData.TypeID, typeData.Name);
             Modified.Execute(typeData.TypeID);
         }
 
@@ -103,9 +110,10 @@ namespace Conversation
             Modified.Execute(id);
         }
 
-        public void AddOther(ID<ParameterType> id, Func<string, ID<Parameter>, string, Parameter> factory)
+        public void AddOther(ID<ParameterType> id, string name, Func<string, ID<Parameter>, string, Parameter> factory)
         {
             m_types.Add(id, factory);
+            m_typeNames.Add(id, name);
             Modified.Execute(id);
         }
 
@@ -127,6 +135,33 @@ namespace Conversation
         public bool IsDynamicEnum(ID<ParameterType> type)
         {
             return m_dynamicEnums.ContainsKey(type);
+        }
+
+        public string GetTypeName(ID<ParameterType> guid)
+        {
+            return m_typeNames[guid];
+            if (IsInteger(guid))
+            {
+                var data = m_integers[guid];
+                return data.Name;
+            }
+            else if (IsDecimal(guid))
+            {
+                var data = m_decimals[guid];
+                return data.Name;
+            }
+            else if (IsEnum(guid))
+            {
+                var data = m_enums[guid];
+                return data.Item1;
+            }
+            else if (IsDynamicEnum(guid))
+            {
+                var data = m_dynamicEnums[guid];
+                return data.Name;
+            }
+            else
+                return "Unknown type"; //TODO: These are the build in types that don't have customized names
         }
 
         public void RenameType(ID<ParameterType> guid, string name)

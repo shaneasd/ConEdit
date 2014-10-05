@@ -243,7 +243,11 @@ namespace ConversationEditor
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
 
                 if (m_textBox == null)
-                    g.DrawString(Text, SystemFonts.MessageBoxFont, ColorScheme.ForegroundBrush, TextArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE));
+                {
+                    g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
+                    TextRenderer.DrawText(g, Text, SystemFonts.MessageBoxFont, TextArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE).Round(), ColorScheme.Foreground, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix);
+                    //g.DrawString(Text, SystemFonts.MessageBoxFont, ColorScheme.ForegroundBrush, TextArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE));
+                }
             }
 
             internal void DrawBackground(Graphics g, VisibilityFilter Visibility)
