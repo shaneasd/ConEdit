@@ -1,0 +1,896 @@
+File; Character; Script; Subtitle; Direction
+BarksPoliceDanish.xml; PoliceDanishA; Stands! Du er arresteret.; Stop! You're under arrest!; 
+BarksPoliceDanish.xml; PoliceDanishA; Stop! Hænderne op, du er anholdt!; Stop! Hands up, you're under arrest!; Stern.
+BarksPoliceDanish.xml; PoliceDanishA; Då dér! Hænderne i vejret, NU!; You there! Hands up, NOW!; Barking an order.
+BarksPoliceDanish.xml; PoliceDanishA; Du har ingen tilladelse til at være her. Jeg bliver nødt til at tage dig med på stationen.; You're not permitted to be here. I'm gonna have to take you down to the station.; Almost apologetic.
+BarksPoliceDanish.xml; PoliceDanishA; Du er arresteret! Ræk hænderne op og kom med stille og roligt.; You're under arrest! Put up your hands and come along quietly!; 
+BarksPoliceDanish.xml; PoliceDanishA; Hvad var nu det?; What was that?; Suspicious.
+BarksPoliceDanish.xml; PoliceDanishA; Hørte du det?; Did you hear that?; Suspicious.
+BarksPoliceDanish.xml; PoliceDanishA; Hvad var det for en larm?; What was that noise?; Suspicious.
+BarksPoliceDanish.xml; PoliceDanishA; Don't call attention to yourself, you're putting us both in danger!; Don't call attention to yourself, you're putting us both in danger!; 
+BarksPoliceDanish.xml; PoliceDanishA; Hvem har ødelagt den her?; Who messed this up?; Suspicious.
+BarksPoliceDanish.xml; PoliceDanishA; Pas på, hun er bevæbnet!; Watch out, she's armed!; Forskrækket.
+BarksPoliceDanish.xml; PoliceDanishA; Hov hov, då!; Hey hey, you!; Annoyed.
+BarksPoliceDanish.xml; PoliceDanishA; Skyd! SKYD!; Shoot! SHOOT!; Panicky.
+BarksPoliceDanish.xml; PoliceDanishA; Jeg er under angreb!; I'm under attack!; Shocked, into his radio.
+BarksPoliceDanish.xml; PoliceDanishA; Smid våbenet! Jeg skyder!; Drop the weapon! I'll shoot!; Aggressive.
+BarksPoliceDanish.xml; PoliceDanishA; Er det overstået? Forsvandt de?; Is it over? Did they disappear?; Nervous but also slightly relieved.
+BarksPoliceDanish.xml; PoliceDanishA; Hvor fanden blev hun af?!; Where the hell did she go?!; Nervous.
+BarksPoliceDanish.xml; PoliceDanishA; Hvor er du, dit svin?!; Where are you, you dirtbag?!; Angry, slightly scared.
+BarksPoliceDanish.xml; PoliceDanishA; Dæk mig, jeg lader!; Cover me, I'm reloading!; Nervous.
+BarksPoliceDanish.xml; PoliceDanishA; Jeg skifter magasin!; I'm changing mags!; Through gritted teeth.
+BarksPoliceDanish.xml; PoliceDanishA; Hvor er det sindssygt, det her!; This is insane!; Scared but excited.
+BarksPoliceDanish.xml; PoliceDanishA; Hm?; Hm?; Idly curious.
+BarksPoliceDanish.xml; PoliceDanishA; Hnh?; Huh?; Curious.
+BarksPoliceDanish.xml; PoliceDanishA; Hva'?; What?; Calmly surprised.
+BarksPoliceDanish.xml; PoliceDanishA; Våben! Våben!; Weapon! Weapon!; Shocked.
+BarksPoliceDanish.xml; PoliceDanishA; Shit, hun har en pistol!; Shit, she's got a gun!; Shocked.
+BarksPoliceDanish.xml; PoliceDanishA; Oh, it's you. Keep your head down.; Oh, it's you. Keep your head down.; 
+BarksPoliceDanish.xml; PoliceDanishA; You're lucky I was the one who found you. You gotta be more careful.; You're lucky I was the one who found you. You gotta be more careful.; 
+BarksPoliceDanish.xml; PoliceDanishA; We have a mutual friend. Be careful.; We have a mutual friend. Be careful.; 
+BarksPoliceDanish.xml; PoliceDanishA; Oh. Move along.; Oh. Move along.; 
+BarksPoliceDanish.xml; PoliceDanishA; Are you Kozlova? You were never here.; Are you Kozlova? You were never here.; 
+BarksPoliceDanish.xml; PoliceDanishA; I, uh... I haven't seen anything.; I, uh... I haven't seen anything.; 
+BarksPoliceDanish.xml; PoliceDanishA; Station, kom ind! Jeg skal bruge forstærkninger, NU!; Station, come in! I need backup, NOW!; Urgently over the radio.
+BarksPoliceDanish.xml; PoliceDanishA; I det mindste regner det ikke...; At least it's not raining...; Resignedly.
+BarksPoliceDanish.xml; PoliceDanishA; (Gaber); (Yawns); 
+BarksPoliceDanish.xml; PoliceDanishA; (Sukker); (Sighs); 
+BarksPoliceDanish.xml; PoliceDanishA; Rapporterer alt roligt.; Reporting all calm.; Over the radio.
+BarksPoliceDanish.xml; PoliceDanishA; (Rømmer sig); (Clears throat); 
+BarksPoliceDanish.xml; PoliceDanishA; Hva' pokker laver du?!; What the heck are you doing?!; Annoyed.
+BarksPoliceDanish.xml; PoliceDanishA; Det er ikke tilladt, det dér!; That's not allowed!; Annoyed.
+BarksPoliceDanish.xml; PoliceDanishA; Så holder vi op med det dér!; Stop that at once!; With authority.
+BarksPoliceDanish.xml; PoliceDanishA; Den slags opførsel gider jeg slet ikke se på, forstået?; I'm not gonna tolerate that kind of behaviour, understood?; Sternly.
+BarksPoliceDanish.xml; PoliceDanishA; Jeg hørte noget...; I heard something...; Suspicious.
+BarksPoliceDanish.xml; PoliceDanishA; Jeg har en mistænkelig lyd her.; I've got a suspicious sound here.; Over the radio.
+BarksPoliceDanish.xml; PoliceDanishB; Ja. Checker du det?; Yeah. Could you check it?; Confirming.
+BarksPoliceDanish.xml; PoliceDanishB; Vi må hellere lige kigge efter.; We better take a look; 
+BarksPoliceDanish.xml; PoliceDanishA; Bliv her, jeg kigger.; Stay here, I'll look.; 
+BarksPoliceDanish.xml; PoliceDanishA; Vent her, jeg skal lige se, hvad det var.; Wait here, I'm gonna see what that was.; Suspicious.
+BarksPoliceDanish.xml; PoliceDanishA; Du dér! Stop lige med det samme!; You there! Stop that at once!; Stern.
+BarksPoliceDanish.xml; PoliceDanishA; Hva' foregår der her?!; What's all this then?!; Authoritative.
+BarksPoliceDanish.xml; PoliceDanishA; Hva' i alverden tror du lige du står og laver?!; What in the world do you think you're doing?!; Stern.
+BarksPoliceDanish.xml; PoliceDanishA; Jeg er ramt, jeg er ramt!; I'm hit, I'm hit!; Panicked.
+BarksPoliceDanish.xml; PoliceDanishA; (Skriger); (Screams); Pained.
+BarksPoliceDanish.xml; PoliceDanishA; Nej! Hjælp! Jeg er blevet skudt!; No! Help! I've been shot!; Panicked.
+BarksPoliceDanish.xml; PoliceDanishA; Åh gud... der ligger nogen her!; Oh God... somebody's down here!; Skræmt.
+BarksPoliceDanish.xml; PoliceDanishA; Jeg har fundet et lig!; I've found a body!; Anxious.
+BarksPoliceDanish.xml; PoliceDanishA; Vi har én nede!; We have a man down!; Shocked.
+BarksPoliceDanish.xml; PoliceDanishA; Der er noget galt her.; Something's wrong here.; Suspicious.
+BarksPoliceDanish.xml; PoliceDanishA; Den her var da ikke i stykker før...; This wasn't broken before...; Suspicious.
+BarksPoliceDanish.xml; PoliceDanishA; KSN, kom ind! Jeg har brug for forstærkning!; KSN, come in! I need backup!; Urgently over the radio.
+BarksPoliceDanish.xml; PoliceDanishA; Jeg er under angreb, send forstærkninger med det samme! ; I'm under attack, send backup immediately!; Panicky over the radio.
+BarksPoliceDanish.xml; PoliceDanishA; Er der stadig varm kaffe på kanden?; Is there any coffee left in the pot?; Speaking into his radio.
+BarksPoliceDanish.xml; PoliceDanishA; Kæft det er koldt i aften.; Damn it's cold tonight.; Annoyed.
+BarksPoliceDanish.xml; PoliceDanishA; Sikke en ærtesuppe.; What a pea soup.; Bored.
+PoliceExterior.xml; Player; ; Damnit. Okay. Do you mind if I stick around for a few minutes so I can call my boss? Maybe he sent me to the wrong place.; 
+PoliceExterior.xml; Player; ; Thank you officer. Have a good night.; 
+PoliceExterior.xml; Player; ; Duly noted. Have a good night, officer.; 
+PoliceExterior.xml; Player; ; Thank you, will you call your colleagues and let them know I'm coming, so I don't get shot?; 
+PoliceExterior.xml; Player; ; Call them up on your radio and ask. It's okay, I'll wait.; Impatient.
+PoliceExterior.xml; Player; ; All the more reason to get the security system up and running as fast as possible, you see?; 
+PoliceExterior.xml; Player; ; Okay well you guys really need to start talking to each other, but that's none of my business. Anyway the ministry has a maintenance contract with us, and I'm here to fix the security system. Can I go through now please?; Sighs.
+PoliceExterior.xml; Player; ; Great, thank you so much. My name is Katarzyna Sobchak, I work for SecuCorp. Your men in the ministry of finance called us to report that the security system in the ministry has broken down, you have heard of this, yes?; 
+PoliceExterior.xml; Player; ; Hello, I am sorry my Danish isn't very good. Do you speak English?; Apologetic.
+PoliceExterior.xml; PoliceDanishStreet; Har I hørt, om sikkerhedssystemet skulle være nede i Finansministeriet? Skifter.; Did you hear about the security system being down in the Ministry of Finance? Over.; Speaking into his radio.
+PoliceExterior.xml; PoliceDanishStreet; Har I hørt, om sikkerhedssystemet skulle være nede i Finansministeriet? Skifter.; Did you hear about the security system being down in the Ministry of Finance? Over.; Speaking into his radio.
+PoliceExterior.xml; PoliceDanishStreet; Okay tak for det. Slut. (To Katya) I'm sorry miss, nobody has heard about a problem. I have to ask you to leave now, please.; Okay, thanks. Out. I'm sorry miss, nobody has heard about a problem. I have to ask you to leave now, please.; Speaking into his radio.
+PoliceExterior.xml; PoliceDanishStreet; Hallo, central?; Hello central?; Speaking into his radio.
+PoliceExterior.xml; PoliceDanishStreet; Nej nej, jeg har bare en tekniker her, der siger, at hun er blevet tilkaldt for at fikse systemet derovre.; No no, I just have a technician here who claims to have been called to fix the system over there.; Speaking into his radio.
+PoliceExterior.xml; PoliceDanishStreet; ; Hmm. All right, but stay out here on the street, the garden is closed tonight.; 
+PoliceExterior.xml; PoliceDanishStreet; Godt så, tak for det. Hav en god aften. Slut. (To Katya) All right miss, sounds like you're needed in the ministry.; All right then, thank you. Have a nice evening. Out. (To Katya) All right miss, sounds like you're needed in the ministry.; Speaking into his radio.
+PoliceExterior.xml; PoliceDanishStreet; ; I will. But be sure not to enter the courtyard, stay in the garden and the ministry itself. The castle is strictly off limits.; Polite and relieved to have settled the matter.
+PoliceExterior.xml; PoliceDanishStreet; Yes, of course. Central, det er Villumsen.; Yes, of course. Central, this is Villumsen.; Second sentence is spoken into his radio.
+PoliceExterior.xml; PoliceDanishStreet; ; I don't know...; 
+PoliceExterior.xml; PoliceDanishStreet; ; No uh, listen - I haven't heard anything about the security system breaking down. I'm under strict orders not to let anybody through here until tomorrow, the entire island is cordoned off for the murder investigation.; 
+PoliceExterior.xml; PoliceDanishStreet; ; I haven't heard anything about that.; 
+PoliceExterior.xml; PoliceDanishStreet; ; Uhm, uh yes, okay.; Hesitant.
+PoliceExterior.xml; PoliceDanishStreet; Hov frøken, du må da ikke være her. Hvordan er du kommet forbi vagterne på broen?; Miss, you're not allowed to be here. How did you get past the guards on the bridge?; Polite but stern.
+PoliceExterior.xml; PoliceRadio; Øjeblik. (Beat) Det har vi ikke fået nogen rapport om. Sidder du inde med nye oplysninger?; Hang on. We haven't received any report about that. Do you have new information?; 
+PoliceExterior.xml; PoliceRadio; Nå, men det kender vi altså ikke noget til.; Well, we don't know anything about that.; 
+PoliceExterior.xml; PoliceRadio; Øjeblik. (Beat) Ja, der indgik en rapport for lidt siden. De har oplevet en eller anden form for nedbrud, der er tilkaldt en tekniker.; Hang on. Yeah, we received a report a moment ago. They've experienced some form of breakdown. A technician has been called.; 
+PoliceExterior.xml; PoliceRadio; Her er centralen. Send.; This is Central. Transmit.; 
+PoliceExterior.xml; PoliceRadio; Her er centralen. Send.; This is Central. Transmit.; 
+CopsOverheardFootball.xml; PoliceDanish01; Fik du set kampen igår?; Did you watch the game yesterday?; 
+CopsOverheardFootball.xml; PoliceDanish02; Kun første halvleg, så blev det for deprimerende. 6-1 til AGF, mand. Sådan en kamp er jo ikke spændende.; Only the first half, then it got too depressing. 6-1 to AGF, man. A game like that isn't exciting.; 
+CopsOverheardFootball.xml; PoliceDanish01; Mølby fik da scoret et enkelt mål i anden halvlej.; Mølby did manage to score one goal in the second half.; Consolingly.
+CopsOverheardFootball.xml; PoliceDanish02; Det er ikke så sjovt at holde med AaB i år. Jeg overvejer at blive FCK supporter.; It's not much fun to cheer on AaB this year. I'm thinking about becoming an FCK supporter.; Half-joking.
+CopsOverheardFootball.xml; PoliceDanish01; Var din tunge!; Watch your mouth!; Jokingly admonishing.
+CopsOverheardFootball.xml; PoliceDanish02; (Klukker); (Chuckles); 
+CopsOverheardMainEntrance.xml; PoliceDanish03; Vi er i højeste beredskab jo, sikkerheden skal være upåklagelig!; We're at the highest state of alert, security needs to be impeccable!; 
+CopsOverheardMainEntrance.xml; PoliceDanish03; Hvem i Helvede satte en sten i klemme i døren?; Who the hell used a rock to keep the door open? ; Angry.
+CopsOverheardMainEntrance.xml; PoliceDanish04; Det ved jeg ikke, hvad er problemet?; I don't know. What's the problem?; Nonchalant.
+CopsOverheardMainEntrance.xml; PoliceDanish04; Tror du KGB kommer og sniger et hold spioner ind når jeg vender ryggen til?; You think KGB will come and sneak a team of spies in while my back is turned?; Moderately sarcastic.
+CopsOverheardMainEntrance.xml; PoliceDanish03; Sørg for at det ikke sker igen, okay? Ellers får inspektøren det at vide.; Make sure it doesn't happen again, okay? Otherwise the Sergeant will know about it.; Calming down a little, but still stern.
+CopsOverheardMainEntrance.xml; PoliceDanish04; Ja ja.; Yeah sure.; Calming.
+CopsOverheardAbsalonOffice.xml; PoliceDanish05; Det gør de også i nat – så kommer de med en varevogn og ribber kontoret fuldstændigt, så Folketinget kan komme tilbage på arbejde.; They will, tonight - they'll bring a van and clean the office out completely so the parliament can get back to work. ; 
+CopsOverheardAbsalonOffice.xml; PoliceDanish06; Nej, der sker ikke en skid her. Sig mig lige, hvorfor er det vi skal stå 30 mand klokken lort om natten og blokere helt for traffikken rundt om Christiansborg bare fordi PET har skudt en eller anden sekretær?; Nah, not a damn thing going on here. Tell me something, why is it we have to put 30 men here in the middle of the night and block all traffic around Christiansborg just because PET shot some secretary?; Tired, bored, and impatient.
+CopsOverheardAbsalonOffice.xml; PoliceDanish05; Nogen ind eller ud den sidste time?; Anybody in or out in the last hour?; 
+CopsOverheardAbsalonOffice.xml; PoliceDanish05; De tror han var spion jo – de er bange for at nogen kommer og forstyrrer gerningsstedet inden de har fået kigget det ordentligt igennem.; They think he was a spy, right? They're afraid that somebody will come in and disturb the crime scene before they finish examining it properly. ; Chuckling.
+CopsOverheardAbsalonOffice.xml; PoliceDanish06; Kunne de ikke bare have taget det hele med?; Couldn't they just have brought it all with them?; 
+CopsOverheardAbsalonOffice.xml; PoliceDanish06; Det bliver de nok glade for, politikerne – de har jo brug for al den tid, de kan få, til at gå og blande sig i andre menneskers job.; I'm sure they'll be grateful, the politicians - they do need all the time they can get to put their nose in other people's jobs.; Disdainful.
+CopsOverheardAbsalonOffice.xml; PoliceDanish05; Klap lige hesten Mogens Glistrup. Din vagt slutter om tre kvarter, så kan du komme hjem og få lidt søvn.; Calm down, Mogens Glistrup. Your shift ends in 45 minutes, then you can go home and get some sleep.; Amused.
+PoliceDanishA.xml; PoliceDanishA; Go' aften.; Good evening.; Polite.
+PoliceDanishA.xml; PoliceDanishA; Er det ikke lidt sent sådan at rumstere omkring?; Quite a late hour to be rummaging about.; Suspicious.
+PoliceDanishA.xml; PoliceDanishA; Passer gaden.; Move along.; Stern.
+CopsOverheardGarden.xml; PoliceDanish08; Eneste jeg ved er, at PET er involveret. Gætter på han var spion, ham der blev skudt.; Only thing I know is that PET is involved. I'm guessing he was a spy, the guy who got shot.; 
+CopsOverheardGarden.xml; PoliceDanish08; Kan være han ikke lige havde fået at vide, at den Kolde Krig er overstået.; Maybe he just hadn't been told that the Cold War is over.; 
+CopsOverheardGarden.xml; PoliceDanish07; Hva’ fa’en er der at spionere for på Christiansborg?; What the hell is there to spy on in Christiansborg?; 
+CopsOverheardGarden.xml; PoliceDanish07; Hvorfor er det lige vi lukker hele Slotsholmen på grund af et enkelt mord? Er det ikke lidt i overkanten?; Why is it we've closed all of Slotsholmen because of a single murder? Isn't that a bit over the top?; 
+CopsOverheardBarricadeNorth.xml; PoliceDanish09; Næh det er vel rigtig nok.; Nah I guess that's right.; 
+CopsOverheardBarricadeNorth.xml; PoliceDanish10; Nu er grønlændere jo ikke de eneste, der nogen gange har problemer med alkohol.; Greenlanders aren't the only people who sometimes have trouble with alcohol, you know.; 
+CopsOverheardBarricadeNorth.xml; PoliceDanish09; Grønlændere?; Greenlanders?; 
+CopsOverheardBarricadeNorth.xml; PoliceDanish10; Ja ja, han skulle bare lige køle lidt ned. Det er s’gu lidt trist egentligt.; Yeah yeah, he just had to cool off a little. It's kind of sad, really.; 
+CopsOverheardBarricadeNorth.xml; PoliceDanish09; Fik I ham smidt væk?; Did you get rid of him?; 
+CopsOverheardBarricadeNorth.xml; PoliceDanish10; Det var bare en fuld grønlænder der stod og skabte sig.; It was just a drunk Greenlander who was acting out.; 
+CopsOverheardBarricadeNorth.xml; PoliceDanish09; Hva’ var det for et problem, Petter havde?; What was the problem Petter had?; 
+RadioMessages.xml; Player; ; I'm wearing sneakers and a hoodie. All I need to do is pop on the headphones, and I'm just some girl out for a run.; 
+RadioMessages.xml; Player; ; No need to worry, it's a magnetic clasp, it's too weak for murder.; Dead-pan
+RadioMessages.xml; Player; ; Let's say things go a bit wrong, and suddenly I need to leave very quickly.; 
+RadioMessages.xml; Player; ; I like the look.; Dismissive
+RadioMessages.xml; Player; ; And since you seem to have not noticed it, we are the bad guys tonight.; Joking darkly - stress on "we"
+RadioMessages.xml; Player; ; I'm ready.; Determined
+RadioMessages.xml; Player; ; I'm in position.; Half-whispering
+RadioMessages.xml; Player; ; Scared shitless.; Under her breath
+RadioMessages.xml; Player; ; Loud and clear.; 
+RadioMessages.xml; Martin; ; Wait! There's a camera up ahead. Maybe see if you can find the PC it's connected to, then I can take it out for you.; 
+RadioMessages.xml; Martin; ; Do you need a minute?; 
+RadioMessages.xml; Martin; ; Very helpful of you to wear that wolf collar... to make it easier for the bad guys to strangle you to death.; Teasing
+RadioMessages.xml; Martin; ; Got it! Thanks for hooking us up.; 
+RadioMessages.xml; Martin; ; Looks like there's more cover in the pit, but the patrols are a bit tighter. It's your call.; 
+RadioMessages.xml; Martin; ; Huh. Cool.; Mildly impressed
+RadioMessages.xml; Martin; ; Uh-huh.; Indicating for her to go on
+RadioMessages.xml; Martin; ; Heh, yeah. But seriously though.; 
+RadioMessages.xml; Martin; ; By the way, what's with the headphones?; Honest question
+RadioMessages.xml; Martin; ; Camera is blacked out, hurry along before I draw too much attention!; 
+RadioMessages.xml; Martin; ; Ah, that makes sense.; 
+RadioMessages.xml; Martin; ; Then let's go.; 
+RadioMessages.xml; Martin; ; Everything's looking good on my end. How are you doing?; Tense but professional
+RadioMessages.xml; Martin; ; Testing, one-two. Do you hear me?; 
+Radko.xml; Player; ; I've read your file--; 
+Radko.xml; Player; ; If I ever run out of bullets, I suspect I've found a problem that is too big to be solved with more bullets.; Sarcastic.
+Radko.xml; Player; ; You are really living up to Eastern European stereotypes, Radko.; Amused.
+Radko.xml; Player; ; Shall I host a fundraiser?; Joking.
+Radko.xml; Player; ; You will assign me my equipment, yes?; 
+Radko.xml; Player; ; I really hope there is a but.; Skeptical.
+Radko.xml; Player; ; I'll take what I can get.; Shrugging.
+Radko.xml; Player; ; Just Katya will be fine, Major Cibulka.; Polite.
+Radko.xml; Radko; ; Anything else I can help you with, Katya?; Friendly.
+Radko.xml; Radko; ; Yekaterina Ilyinichna, I was wondering when you would pay me a visit.; Friendly.
+Radko.xml; Radko; ; Yes, and one day I'll tell you some of the things that aren't in that file, but not today.; 
+Radko.xml; Radko; ; Probably better than my Czech these days. I've been Russian longer than I was Czech - I've probably been speaking Russian longer than you, my dear.; 
+Radko.xml; Radko; ; I've also scrounged up a crate of American surplus fragmentation grenades, as well as some standard flashbang grenades. If nothing else, they'll make for a great distraction.; 
+Radko.xml; Radko; ; You'll be familiar with the SR1 Vektor. Standard issue FSB sidearm. Includes silencer, of course, and comes with your choice of Ball or Airfoil bullets. It's a good all-round weapon, but ammunition will be difficult to come by in the field.
+; 
+Radko.xml; Radko; ; Good. I'll let you know when I manage to establish new supply channels.; 
+Radko.xml; Radko; ; That's why I'm here. Bring me what you find - intel, trade secrets, blackmail material... I'll find a buyer and add the profits to our field operations fund to pay for gear. The more data we sell, the more credibility we will build, and the more materiel we will have access to.; 
+Radko.xml; Radko; ; Just keep an eye out for valuable intel when you're in the field. Not just valuable to us, but to potential third parties. I've got extensive black market contacts.; 
+Radko.xml; Radko; ; Admirable attitude, but you can help me expand our options.; Amused.
+Radko.xml; Radko; ; I will use my connections to acquire weapons and gear for you. Our chieftain has given me a budget to secure a basic selection, but when you have to buy from smugglers and terrorists, everything is a little more expensive.; 
+Radko.xml; Radko; ; Nothing quite so regimented. We have no access to official supply channels, so in principle, KBE has no equipment to give you.; 
+Radko.xml; Radko; ; Then I am just Radko to you. We were not properly introduced before your "promotion", but now that you're on the field team, I expect I will see a lot of you down here.; 
+Radko.xml; ; ; Thank you. I'll see you before the next mission.; 
+Radko.xml; ; ; Your Russian is very good.; 
+Radko.xml; ; ; So what are my options for now?; 
+Martin.xml; Player; ; We'll keep an eye on him.; 
+Martin.xml; Player; ; If you're worried you'll be partnered up with him, you can relax. I think Josiah has more of a solo role in mind for him.; 
+Martin.xml; Player; ; And in any case, we need a proper field man.; 
+Martin.xml; Player; ; You're being paranoid.; 
+Martin.xml; Player; ; He's a CIA man.; 
+Martin.xml; Player; ; Why?; 
+Martin.xml; Player; ; No, he's in the hospital - for a couple of weeks, I think.; 
+Martin.xml; Martin; ; I just think this is all too damn convenient.; 
+Martin.xml; Martin; ; You and I did just fine in Mexico. Better than some fast talker in a cheap suit.; 
+Martin.xml; Martin; ; Am I?; 
+Martin.xml; Martin; ; That doesn't mean anything. He could still be a plant, or something. What if he reports back to his old handler? If CIA upper management ever found out what's going on here, we'd all be done.; 
+Martin.xml; Martin; ; There's just something shady about that whole situation, to me. Maybe it's nothing. I just wouldn't trust him this easily.; 
+Martin.xml; Martin; ; Don't get me wrong, I'm happy we saved his bacon - and thanks for taking the initiative on that one by the way. Nobody deserves whatever those asshates were about to do to him.; 
+Martin.xml; Martin; ; Me neither. Does it seem like a bad move to you, recruiting him just like that?; 
+Martin.xml; Martin; ; Had a chance to talk to Daniel yet?; 
+Martin.xml; Martin; ; Hope the next job will go as smoothly.; 
+Sarah.xml; Player; ; You think you know everything about me because you read me file? You saw me in Mexico.; Slightly annoyed.
+Sarah.xml; Player; ; It won’t be a problem. I understand what’s at stake.; Backing off a bit, assuming a reassuring tone.
+Sarah.xml; Player; ; Cut the bullshit please.; Matter-of-fact.
+Sarah.xml; Player; ; For... this conversation?; Being a smartass.
+Sarah.xml; Player; ; That would make sense...; Wary.
+Sarah.xml; Player; ; And now this Absalon guy. That's a lot of dead people.; 
+Sarah.xml; Player; ; Jesus.; Shocked.
+Sarah.xml; Player; ; I don't know, that seems a little weak.; Skeptical
+Sarah.xml; Sarah; ; Mexico City was great work, we were all impressed by the initiative you and Martin showed - but that was street thugs. Your next operations are going to require a lot more finesse.; Picking her words carefully.
+Sarah.xml; Sarah; ; All right. I just don't think you're the right person for the job. This is commando work or deep cover work. You're a technician, you haven't trained for this.; 
+Sarah.xml; Sarah; ; I've read your file, I know about your work against Black Sickle, but our mission is altogether very different. You'll not be spying on friends, this will be smash and grab work. You'll be dealing with well trained security people.; 
+Sarah.xml; Sarah; ; I mean no disrespect, but are you sure you're ready for this?; 
+Sarah.xml; Sarah; ; Ms. Kozlova. I suppose I should congratulate you on your promotion.; Cold, but polite.
+Sarah.xml; Sarah; ; Is there anything I can help you with?; 
+Sarah.xml; Sarah; ; It's not an uplifting topic, I know. Was there anything else?; 
+Sarah.xml; Sarah; ; Enrique Pascual, CIA veteran, now Interpol. Apparently drove his car off a cliff with his whole family in it, but he was probably pushed. He was working against ETA, the basque separatists, so they're an obvious suspect. Further, he died 3 days after Deniro, and we know ETA has connections to FARC.; 
+Sarah.xml; Sarah; ; Right, I should get back to work.; 
+Sarah.xml; Sarah; ; It follows the same pattern: by all accounts his cover was secure. He doesn't seem to have made any mistakes, one day they just took him to the basement and tried to kill him.; 
+Sarah.xml; Sarah; ; We're seeing clear connections to some of the other deaths - particularly Deniro and Vedenina. The only thing that points in the other direction is that he's a bit wet behind the ears - all our other victims have been veterans.; 
+Sarah.xml; Sarah; ; Seven intelligence officers have died this year, not including Absalon. Our backers believe their deaths are related, so we're acting on that assumption until we find evidence to the contrary.; 
+Sarah.xml; Sarah; ; And last: Chen Wing Yan, CIA. We're not sure about him, it's been difficult to establish connections to the other deaths. He was spying on the Chinese authorities in Hong Kong, but we think one of the triads may have killed him. He was strangled to death.; 
+Sarah.xml; Sarah; ; Julia Hughes and Dmitri Loshchilov died two days apart in April, in the Middle East. Mrs. Hughes was investigating nuclear proliferation for the CIA, Loshchilov was spying on Iran for SVR. We're suspecting Pakistanian ISI or Iran's VEVAK in both cases. ; 
+Sarah.xml; Sarah; ; Mariya Vedenina died June 11 in Saint Petersburg. She was deep cover for FSB inside the Grekov gang. Stabbed nine times in the chest, then had her throat slit.; 
+Sarah.xml; Sarah; ; Hughes fell to her death from her room on the 16th floor of a hotel in Doha, Qatar. Loshchilov died of asphyxia - we haven't had access to the autopsy of course, but it sounds like he was poisoned with strychnine.; 
+Sarah.xml; Sarah; ; Do you want me to go on?; 
+Sarah.xml; Sarah; ; All right, chronologically: Pyotr Kisselov, Russian SVR, was executed by gunshot on February 24 - we believe the Chechens did it, but it may have been Mujahideen. As far as we know, nobody even knew he was there.; 
+Sarah.xml; Sarah; ; Alexander Deniro, CIA,was working on Colombian drug production. He was found beheaded behind his hotel on March 14, probably by the Norte del Valle Cartel, but it may also have been FARC. ; 
+Sarah.xml; Sarah; ; We're not sure about all of them, but the murderboard shows the connections we've established. Some of them died within days of each other, and nobody knows how they were compromised. It all points to a leak of some sort. ; 
+Sarah.xml; Sarah; ; So far the pattern looks clear. They were all veterans of the cold war. They were all still in active service, and as far as everyone knew up to their deaths, all their covers were solid.; 
+Sarah.xml; Sarah; ; Of course. What would you like to talk about?; Pleased.
+Sarah.xml; Sarah; ; Good. I hope you pull it off. Is there anything I can help you with?; Not convinced.
+Sarah.xml; ; ; Just passing through.; 
+Sarah.xml; ; ; I'll talk to you later.; 
+Sarah.xml; ; ; Sure.; 
+Sarah.xml; ; ; I get the picture.; 
+Sarah.xml; ; ; How do we know their deaths were related?; 
+Sarah.xml; ; ; Walk me through the list?; 
+Sarah.xml; ; ; Who were the victims of the assassinations we're investigating?; 
+Sarah.xml; ; ; I'd like to brush up on the mission of the Kingbridge Executive. Can you run me through the background brief again?; 
+Sarah.xml; ; ; What makes you think Danny's incident is related to our mandate?; 
+Daniel.xml; Player; ; I'm told it used to be a navy installation during the first great war. Josiah is renting it from a secure storage company.; 
+Daniel.xml; Player; ; Martin.; 
+Daniel.xml; Player; ; Well I'm sure you'll be a good addition to the team.; 
+Daniel.xml; Player; ; Just like your finger nails.; Darkly joking.
+Daniel.xml; Daniel; ; I would for sure, but that's what I was trained for. You didn't have to go in for me.; 
+Daniel.xml; Daniel; ; I get the feeling you're the favourite around here, but eh... between you and me, we'll find these guys and put a stop to the leaks.; Chuckling.
+Daniel.xml; Daniel; ; Augh, don't even joke about that. I'm just glad you decided not to wait for the federales.; Chuckling.
+Daniel.xml; Daniel; ; Somebody sold me out. The way they came for me... it was out of my hands.; 
+Daniel.xml; Daniel; ; Right, my smile would be a whole lot less charming right now. My amigos were bringing out the tongs. It was gonna get ugly.; Grateful.
+Daniel.xml; Daniel; ; Listen, I wanna thank you for saving my ass back in Mexico. If it weren't for you and that hacker guy--; 
+Daniel.xml; Daniel; ; You guys are not messing around. This is a very impressive compound.; Duly impressed.
+Daniel.xml; ; ; You would have done the same.; Modest.
+Daniel.xml; ; ; It was careless of you to get caught like that.; Frowning slightly disapprovingly.
+Reinhardt.xml; Player; ; Oh God, why...; Exhasperated, yet amused.
+Reinhardt.xml; Player; ; Yes...; Wary.
+Reinhardt.xml; Reinhardt; ; Yeah because you electrify me.; Knowingly cheesy.
+Reinhardt.xml; Reinhardt; ; Hey Ms. Kozlova, you're an electrical engineer, right?; Cheery.
+ElizabethAlix.xml; Player; ; Don't test me, Elizabeth.; Threatening.
+ElizabethAlix.xml; Player; ; I don't think anyone down there is in any shape to take your call right now.; Mock concern.
+ElizabethAlix.xml; Player; ; Good. Thank you.; 
+ElizabethAlix.xml; Player; ; I'll deal with security, just get me in there.; 
+ElizabethAlix.xml; Player; ; What are you developing?; 
+ElizabethAlix.xml; Player; ; I killed them.; Matter-of-fact.
+ElizabethAlix.xml; Player; ; Very quietly.; Stress on "very".
+ElizabethAlix.xml; Player; ; All right. Get me access to Spectrum. I'm not leaving empty-handed.; 
+ElizabethAlix.xml; Player; ; You're not much help, Elizabeth.; The menace re-enters Katya's voice.
+ElizabethAlix.xml; Player; ; We're going to have a quiet, friendly chat, same as you and I are having right now.; 
+ElizabethAlix.xml; Player; ; Where might I find Ms. Chau?; 
+ElizabethAlix.xml; Player; ; Michelle Chau?; 
+ElizabethAlix.xml; Player; ; Wen Zhi, ever heard of her?; 
+ElizabethAlix.xml; Player; ; Who knows?; Pushing for more info.
+ElizabethAlix.xml; Player; ; Your company has a contract with the NSA.; 
+ElizabethAlix.xml; Player; ; Do you think you and I can have a civilised conversation?; 
+ElizabethAlix.xml; Player; ; I'm not here to hurt you, I just need a few answers from you, then I'll be going again.; 
+ElizabethAlix.xml; Player; ; I don't need an appointment, I have a gun.; Still polite.
+ElizabethAlix.xml; Player; ; Good evening Mrs. Alix. I hope you can help me with some questions.; Polite.
+ElizabethAlix.xml; ElizabethAlix; ; It's just a data processing project. Listen, Spectrum is a whole different kettle of fish! It's isolated from our consumer services division, with joint oversight from the NSA and the board of directors.; Starting to fear for her life, but still maintaining her composure.
+ElizabethAlix.xml; ElizabethAlix; ; Who are you?; Shocked, to Katya.
+ElizabethAlix.xml; ElizabethAlix; ; I'll sound the alarm.; Pushing her luck.
+ElizabethAlix.xml; ElizabethAlix; ; There's an armed woman in my office!; Urgent.
+ElizabethAlix.xml; ElizabethAlix; ; This is Bess Alix, get up here at once!; Angry.
+ElizabethAlix.xml; ElizabethAlix; ; Yes.; 
+ElizabethAlix.xml; ElizabethAlix; ; Security?; Uncertain.
+ElizabethAlix.xml; ElizabethAlix; ; What did you do to them?; Suddenly filled with dread.
+ElizabethAlix.xml; ElizabethAlix; ; Oh God... take it easy. Don't do anything rash.; 
+ElizabethAlix.xml; ElizabethAlix; ; I don't know...; Nervous.
+ElizabethAlix.xml; ElizabethAlix; ; What?; On the verge of tears.
+ElizabethAlix.xml; ElizabethAlix; ; Is that it? What now?; Stoically concealing a creeping dread.
+ElizabethAlix.xml; ElizabethAlix; ; I understand.; Elizabeth doesn't dare to feel relief just yet.
+ElizabethAlix.xml; ElizabethAlix; ; It's just a keypad. Here, I have a note with today's code.; 
+ElizabethAlix.xml; ElizabethAlix; ; I'm not authorised to give anybody access. If they catch you in there, security will shoot first and ask questions later.; Anxious.
+ElizabethAlix.xml; ElizabethAlix; ; What? How did you get past the guards?; Shocked, but holding her composure.
+ElizabethAlix.xml; ElizabethAlix; ; I'm giving you all I know...; Anxious.
+ElizabethAlix.xml; ElizabethAlix; ; I don't know Chau's schedule. She doesn't work for me. I don't know when she'll be here again.; 
+ElizabethAlix.xml; ElizabethAlix; ; What are you going to do?; Worried.
+ElizabethAlix.xml; ElizabethAlix; ; Y-- yes... Ms. Chau works at the other facility, I've met her at meetings about Spectrum. She's... a communication intelligence consultant, I think.; Surprised.
+ElizabethAlix.xml; ElizabethAlix; ; What? No... I haven't.; Confused.
+ElizabethAlix.xml; ElizabethAlix; ; There's another facility somewhere. I'm not involved.; 
+ElizabethAlix.xml; ElizabethAlix; ; My people are working on algorithms for rapid processing of very large volumes of data, but I don't know what they're being used for.; 
+ElizabethAlix.xml; ElizabethAlix; ; What is this about? If you're trying to scare me, you'll have no success.; Maintaining a brave face.
+ElizabethAlix.xml; ElizabethAlix; ; I don't remember scheduling any appointments this late.; Gearing up to throw Katya out.
+ElizabethAlix.xml; ElizabethAlix; ; Um, hello? Who are you?; Confused.
+ElizabethAlix.xml; SecurityPhone; ; Yes ma'am!; Urgent.
+ElizabethAlix.xml; SecurityPhone; ; Is this a joke?; Skeptical.
+ElizabethAlix.xml; SecurityPhone; ; Security office, how can I help you?; Professional.
+ElizabethAlix.xml; Martin; ; Good evening, Ms. Alix.; Polite.
+ElizabethAlix.xml; Martin; ; I'm afraid not. I think it's best if you do as my friend tells you.; Friendly.
+ElizabethAlix.xml; SecurityPhone; ; [Ring tone]; 3-4 second ring tone.
+ElizabethAlix.xml; ; ; [Knock her out] You're going to take a nap.; 
+ElizabethAlix.xml; ; ; You're going to have to stay in your office a bit longer.; 
+ElizabethAlix.xml; ; ; [Draw weapon] I would advise against it.; Casually menacing.
+ElizabethAlix.xml; ; ; Go ahead. I won't stop you.; Shrugging.
+Reinhardt.xml; Player; ; The only way this can possibly end is with me punching you.; Amused.
+Reinhardt.xml; Reinhardt; ; Heaven must be missing an angel...; Cheesy.
+Reinhardt.xml; Player; ; You're the worst.; Shaking her head with a smile.
+Reinhardt.xml; Player; ; Give it a rest already.; Amused.
+Reinhardt.xml; Player; ; What did I drop?; 
+Reinhardt.xml; Reinhardt; ; Your standards. Hi, I'm Reinhardt.; Suave.
+Reinhardt.xml; Reinhardt; ; Come on, play along.; Friendly.
+Reinhardt.xml; Reinhardt; ; Hey Katya, you dropped something.; Innocent.
+Reinhardt.xml; Player; ; God damnit.; Amused, but feigning exhasperation.
+Reinhardt.xml; Player; ; Please. Just... stop.; Mock pity.
+Reinhardt.xml; Reinhardt; ; No? Well how about a date?; 
+Reinhardt.xml; Reinhardt; ; I saw a smile!; Grinning.
+Reinhardt.xml; Reinhardt; ; Do you have any raisins?; 
+Reinhardt.xml; Player; ; Have a good one, Reinhardt.; Friendly.
+Reinhardt.xml; Player; ; Hah! You know, that almost would have worked, if this wasn't the dumbest, most inappropriate place to come on to me!; Laughing.
+Reinhardt.xml; Reinhardt; ; Just trying to brighten up your day.; Winking.
+Reinhardt.xml; Reinhardt; ; You're so beautiful you made me forget my pick up line.; 
+Radko.xml; Player; ; If it's all the same to you, Radoslav, I will stick to my pistol. ; Curt, using his full name to emphasise her severity.
+Radko.xml; Player; ; If I start shooting like a maniac, it will only make things worse. ; Dismissive.
+Radko.xml; Player; ; I am not an assassin.; Annoyed.
+Radko.xml; Player; ; Well... then I guess my pistol is just as expedient as I need, no?; 
+Radko.xml; Player; ; I'm breaking into office buildings, Radko - I'm not going to war.; 
+Radko.xml; Player; ; Just swinging by to see if you have anything new for me.; Polite.
+Radko.xml; Radko; ; As you wish - Yekaterina.; Shrugging.
+Radko.xml; Radko; ; No, you are completely alone, surrounded by people who will kill you or lock you up for the rest of your life. There is no place there for a conscience. ; 
+Radko.xml; Radko; ; What if I can get you an automatic pistol? Call it a compromise.; 
+Radko.xml; Radko; ; Nevertheless--; He's cut off before he can get any further.
+Radko.xml; Radko; ; My dear, you knocked off enough people on your last mission to earn an honorary membership of the GRU.; 
+Radko.xml; Radko; ; You shouldn't be afraid to get your hands dirty, my girl. If it's you or him, there can be no time to hesitate.; Concerned.
+Radko.xml; Radko; ; What can I do for you today?; Service-minded.
+Radko.xml; Radko; ; Touché.; 
+Radko.xml; Radko; ; Maybe I can tempt you with something a little more expedient? The MP5K is all the rage for wet work these days.; 
+Martin.xml; Player; ; It is just me. I’ll give you access to the feed as well, all right?; 
+Martin.xml; Player; ; Thank you Martin, that’s all.; Katya starts to leave.
+Martin.xml; Player; ; Da?; 
+Martin.xml; Player; ; I just like to know what’s going on.; 
+Martin.xml; Player; ; Security does a full bug sweep every Friday. I need you to crack their software and put my equipment on the whitelist.; 
+Martin.xml; Player; ; I need your help to bug this place.; 
+Martin.xml; Player; ; Do you have a minute?; 
+Martin.xml; Martin; ; Hey.; Means "wait"
+Martin.xml; Martin; ; This isn’t some FSB thing, is it?; Worried.
+Martin.xml; Martin; ; Easy enough. Is that it?; Shrugging in agreement.
+Martin.xml; Martin; ; What do you need?; Wary.
+Martin.xml; Martin; ; Sure. Cool.; 
+Martin.xml; Martin; ; What? Why?; 
+Martin.xml; Martin; ; Of course.; 
+Debriefing.xml; Josiah; ; You assessed the situation, you took a calculated risk, and it paid off. Thanks to both of you, we are able to add Daniel Mansoor to our roster as soon as he recovers from his injuries. This puts us in a much better position, going forward.; 
+Debriefing.xml; Katya; ; Couldn't have done it without you, Martin.; Encouraging.
+Debriefing.xml; Josiah; ; Hear me out. I know this is not how things are normally done, but what I saw in Mexico City impressed me a great deal. It seems to me you were both integral to the success of that extraction, and I'd like to see if the success is repeatable.; 
+Debriefing.xml; Josiah; ; Good luck.; 
+Debriefing.xml; Katya; Хуй с ним.; Fuck it.; Muttering.
+Debriefing.xml; Josiah; ; I know we all wish we had more time to prepare, but this next one is extremely time sensitive. Like I said, we play the hand we've been dealt.; 
+Debriefing.xml; Martin; ; We'll be ready.; 
+Debriefing.xml; Katya; ; Tonight?!; Disbelief.
+Debriefing.xml; Martin; ; Thank you.; 
+Debriefing.xml; Josiah; ; Spend the day getting the formalities out of the way and settling into your new roles. Unfortunately we have to move fast on the lead we got from Mansoor. You'll be briefed on your next operation at 5 pm, and you fly out at 8.; 
+Debriefing.xml; Katya; ; Thank you sir.; 
+Debriefing.xml; Josiah; ; Then welcome to the field team Ms. Kozlova, Mr. Symborski.; Satisfied.
+Debriefing.xml; Katya; ; Thank you, Mr. Gray!; 
+Debriefing.xml; Martin; ; Sounds like it.; Tentative.
+Debriefing.xml; Martin; ; What do you think?; Unsure.
+Debriefing.xml; Katya; ; Why not? It worked once, it'll work again.; Eager.
+Debriefing.xml; Josiah; ; Is that a yes?; 
+Debriefing.xml; Josiah; ; You'll be on overwatch, and it'll be Ms. Kozlova's boots on the ground.; 
+Debriefing.xml; Martin; ; So... I'll stay in the van?; Mostly reassured.
+Debriefing.xml; Martin; ; Sir, I'm no field man. I just do computers.; Slightly alarmed.
+Debriefing.xml; Katya; ; Yes sir.; Surprised.
+Debriefing.xml; Josiah; ; With that in mind, I would like to offer both of you a permanent place on the field staff.; 
+Debriefing.xml; Josiah; ; It's no secret we are underfunded and short-staffed. We have to do our best with the hand we've been dealt, and that means we must stay agile. We need operatives who can think on their feet and make decisions based on the information available in the field - classic spy work.; 
+Debriefing.xml; Josiah; ; However, your actions in Mexico City are exactly what this task group needs.; 
+Debriefing.xml; Katya; ; Mr. Gray --; About to defend herself.
+Debriefing.xml; Katya; ; Friendly people.; Sarcastic.
+Debriefing.xml; Josiah; ; I'm supposed to admonish you for diverging from mission parameters and putting your lives in danger.; 
+Debriefing.xml; Josiah; ; How was Mexico?; 
+Debriefing.xml; Katya; ; Thank you.; 
+Debriefing.xml; Martin; ; Great weather.; 
+Debriefing.xml; Josiah; ; Welcome back.; 
+Debriefing.xml; Katya; ; It was fine, thank you.; Cheerful.
+Debriefing.xml; Reinhardt; ; Hey guys, welcome back. How was the flight?; Friendly
+Debriefing.xml; Josiah; ; Kozlova, Symborski - nicely done. Debriefing is in 15 minutes, my office.; Josiah enters from the side staircase and walks to the main one.
+Debriefing.xml; Martin; ; No time to lose, I guess. Come on.; Slightly sarcastic, but not too negative.
+Debriefing.xml; Martin; ; Long as hell. Maybe next time, we can fly business class, huh?; Wry.
+Debriefing.xml; Reinhardt; ; Incredible work in Mexico. And so unexpected! We were all watching on the big screen.; 
+Briefing.xml; Katya; ; We'll work it out on the plane.; 
+Briefing.xml; Katya; ; We'll handle it. Can you get us a pretext this quickly?; "Pretext" is spy lingo for a cover.
+Briefing.xml; Josiah; ; Mr. Mansoor is fresh out of a torture chamber, he will need a few days to recover.; 
+Briefing.xml; Josiah; ; I know it's not ideal to go in with so little time to prepare, but our best hope is to search Absalon's office in the parliament building before Danish intelligence strips it clean and takes everything away.; 
+Briefing.xml; Sarah; ; That'll have to do.; 
+Briefing.xml; Martin; ; Isn't this the kinda thing Mansoor should handle?; 
+Briefing.xml; Josiah; ; Unfortunately there's no time to rest. The Company lost a man in Copenhagen last night – he might be relevant to our mission, and we have to strike while the iron is hot.; 
+Briefing.xml; Josiah; Needless to say, if you get caught, no one will come for you. Hope for the best, plan for the worst. (Raps knuckles on desk) Good luck.; Needless to say, if you get caught, no one will come for you. Hope for the best, plan for the worst. Good luck.; 
+Briefing.xml; Josiah; ; Once you're inside, find Absalon's office, search for anything that might connect his death to our mission, and return to the channel for extraction. Any questions?; 
+Briefing.xml; Josiah; ; Copenhagen isn't exactly a hotspot, but we have a small network there. If you're willing to compromise on gear, our local assets can give you cover for the perimeter. The castle itself is going to be off limits all day, so once you're inside, don't get caught.; 
+Briefing.xml; Josiah; ; Through the library garden, you'll reach the main entrance to the palace. Unfortunately, if you go in that way, it'll be without your gun - there's a metal detector.; 
+Briefing.xml; Josiah; ; Our best bet for insertion is the Copenhagen Channel. At the moment, the bank is a construction site, you can move through the mess to get past the police barriers. That'll already put you inside the perimeter, which makes things a lot easier.; 
+Briefing.xml; Josiah; At six thirty last night, the local spy shop tried to apprehend him, and apparently he started shooting. The police returned fire and shot him dead.; At 06:30 last night, the local spy shop tried to apprehend him, and apparently he started shooting. The police returned fire and shot him dead.; 
+Briefing.xml; Josiah; ; Details are thin on the ground so far. Nobody knows why the Danes tried to grab him, or why he fought back. We're going to put the field team on a plane to Copenhagen in three hours, and the op itself needs to go down this evening.; 
+Briefing.xml; Josiah; ; His code name was Absalon. He was a NOC agent embedded in the Danish parliament as a government official.; NOC is pronounced "knock".
+Briefing.xml; Josiah; First things first. Owing to our... (smiles) unexpectedly swift resolution to Mexico City, we now have a field team. Mr. Mansoor will be our singleton, and I've instated Katya and Martin as an operational unit.; First things first. Owing to our... unexpectedly swift resolution to Mexico City, we now have a field team. Mr. Mansoor will be our singleton, and I've instated Katya and Martin as an operational unit. ; 
+Josiah.xml; Player; ; Will they make it?; 
+Josiah.xml; Player; ; But not in Copenhagen.; 
+Josiah.xml; Player; ; How long ahead of time?; 
+Josiah.xml; Player; ; My main concern is local assets. It takes real time to build a network.; 
+Josiah.xml; Player; ; Unorthodox is not the word I would use. Insane, maybe. I'm not a commando, and neither is Daniel - we're deep cover agents, and you're not giving us any time to establish a cover. ; 
+Josiah.xml; Player; ; I have some concerns about the way we're going to run our operations.; 
+Josiah.xml; Josiah; ; Right, good that you mentioned it. Sarah and I have been assembling a database of freelancers and low-tier agents that we've worked with in the past - people we can trust.; 
+Josiah.xml; Josiah; ; We're essentially writing a new doctrine. As such, I'm sure we'll run into some difficulties along the way that we'll have to solve. Do you have any specific concerns?; 
+Josiah.xml; Josiah; ; Come on in, Ms. Kozlova. How are you doing?; 
+Josiah.xml; Josiah; ; It looks like we'll have options, yeah.; 
+Josiah.xml; Josiah; ; As I said before, nobody is happy about the time frame of this mission, but we have to beat the local authorities. We're working hard to get assets set up in the area, calling in people from Germany and Sweden...; 
+Josiah.xml; Josiah; ; As soon as we know where the next target is, we'll start setting things up.; 
+Josiah.xml; Josiah; ; Instead of trying to build a local network in each location where you'll deploy, which as you say takes more time than we can afford, we'll hire some of these agents to go in and make the necessary preparations ahead of time.; 
+Josiah.xml; Josiah; ; I know it's unorthodox. We're in a very unusual situation here. Our mission imposes a certain time pressure on us, and we have very limited personnel.; Nodding.
+IntroBanter.xml; Player; ; And since you seem to have not noticed it, we are the bad guys tonight.; Joking darkly - stress on "we"
+IntroBanter.xml; Player; ; No need to worry, it's a magnetic clasp, it's too weak for murder.; 
+IntroBanter.xml; Martin; ; Ah, that makes sense.; 
+IntroBanter.xml; Martin; ; I see you nice and clear. Oh, how helpful of you to wear that wolf collar, to make it easier for the bad guys to strangle you to death.; Sarcastic.
+ArchiveGuard.xml; Player; ; The guy who sent me is called Phil. I don't remember his last name. I'm pretty new.; 
+ArchiveGuard.xml; Player; ; Yulia.; 
+ArchiveGuard.xml; Player; ; And you weren't told that I was coming? I was led to believe that you had been informed.; 
+ArchiveGuard.xml; Player; ; I was told to find the archive room and speak to the guard. I thought the name was different.; 
+ArchiveGuard.xml; Player; ; Peter McCalland. I see. Okay.; Nodding.
+ArchiveGuard.xml; Player; ; Are you John Smith?; She makes up this name on the spot.
+ArchiveGuard.xml; Player; ; Dylan Gilbert. I see. Okay.; Nodding.
+ArchiveGuard.xml; Player; ; Tom Bryan. I see. Okay.; Nodding.
+ArchiveGuard.xml; Player; ; Good evening.; Casual.
+ArchiveGuard.xml; ArchiveGuard; ; Yeah no kidding. And who the hell is Phil? Listen, I can't let you in here based on that. Tell this Phil bloke to call down himself if he needs something.; 
+ArchiveGuard.xml; ArchiveGuard; ; Great, can't wait. Bring Phil!; Sarcastic.
+ArchiveGuard.xml; ArchiveGuard; ; And who is your boss?; 
+ArchiveGuard.xml; ArchiveGuard; ; What is your name?; 
+ArchiveGuard.xml; ArchiveGuard; ; Nobody tells me anything, apparently. Maybe if you would tell me who you are and what you're doing here, we can find out if I can let you into the archive or not.; 
+ArchiveGuard.xml; ArchiveGuard; ; Yes I'm always on this post! Every Monday the archive room is mine. ; Annoyed.
+ArchiveGuard.xml; ArchiveGuard; ; Yeah, well... I'm on this post tonight. Now what is this about?; Annoyed.
+ArchiveGuard.xml; ArchiveGuard; ; Yes... who are you?; 
+ArchiveGuard.xml; ArchiveGuard; ; I don't think we even have a John Smith here... what is this about?; Musing.
+ArchiveGuard.xml; ArchiveGuard; ; Smith? No, my name is Dylan Gilbert.; Slightly taken aback.
+ArchiveGuard.xml; ArchiveGuard; ; Smith? No, my name is Tom Bryan.; Slightly taken aback.
+ArchiveGuard.xml; ArchiveGuard; ; Smith? No, my name is Peter McCalland.; Slightly taken aback.
+ArchiveGuard.xml; ArchiveGuard; ; Good evening miss. I'm sorry, but the cleaning crew is not allowed down here.; Stern.
+ArchiveGuard.xml; ; ; Never mind, I'll come back tomorrow.; 
+ArchiveGuard.xml; ; ; [Keep stalling] I'm an intern up in Central Auditing. I need to fetch some files for the internal accounting guys.; 
+ArchiveGuard.xml; ; ; [Keep stalling] Are you always on this post?; 
+ArchiveGuard.xml; ; ; [Stall] This the archive room, yes?; Deliberately vague.
+ArchiveGuard.xml; ; ; It's come to our attention that your son has tax problems.; 
+ArchiveGuard.xml; ; ; What is your employer's policy on stealing from your clients?; 
+ArchiveGuard.xml; ; ; Do you worry that your wife might learn about your affair?; 
+RadioMessages.xml; Player; ; I'm ashore. Insertion point looks clear.; 
+RadioMessages.xml; Player; ; I'm in, ready to proceed when you are.; 
+RadioMessages.xml; Player; ; Of course there was...; 
+RadioMessages.xml; Player; ; Objective secured.; 
+RadioMessages.xml; Player; ; All right, I'm in position.; 
+RadioMessages.xml; Martin; ; It's all right, we can deal with this. Let's get you to the extraction point for pick-up.; 
+RadioMessages.xml; Martin; ; Oh shit. I'm seeing a lot of activity. It looks like there was a silent alarm on that door.; 
+RadioMessages.xml; Martin; ; Roger that. Our local asset has given us several points of interest. We just need to get you into the construction site to grab any intel you find at the indicated locations.; 
+RadioMessages.xml; Martin; ; All good on my end. Just to reiterate: we need this site pacified. Locate all hostiles and neutralise them. Dead if you must, but unconscious is fine too.; 
+RadioMessages.xml; Martin; ; You're up against civilian security contractors from SafeGuard. Their standard issue is a 9mm and a twitchy trigger finger. Watch yourself in there.; 
+Briefing.xml; Sarah; ; It's clearly some sort of money laundering. Catalyst is a black hole into which staggering amounts of capital is disappearing. It must be coming out somewhere else, but we can't see past the event horizon - to maintain the metaphor.; 
+Briefing.xml; Sarah; ; At the same time, it's clear that this scheme is at the heart of Absalon's death. Absalon and Mansoor were investigating different parts of the same criminal operation, and they were both getting very close indeed.; 
+Briefing.xml; Daniel; (Impressed whistle) What's it all for?; What's it all for?; 
+Briefing.xml; Josiah; ; Handled by a contractor called SafeGuard - one of the few private firms licensed to carry lethal weaponry in the UK. They're one step above mall cops, but don't underestimate them.; 
+Briefing.xml; Josiah; ; Two: the server room is on the third floor, but first you'll need to secure a decryption key from the IT offices.; 
+Briefing.xml; Katya; ; Don't worry, we'll be fine.; 
+Briefing.xml; Josiah; ; You have two pairs of primary targets. One: our sources indicate that the chief internal auditor should have the records of which files we need - find them, then search the physical archive in the basement.; 
+Briefing.xml; Josiah; ; I would recommend going in light - our pretext should get you through the front door without any trouble. If you want to go in heavy, we feel the rear entrance is your best bet.; 
+Briefing.xml; Josiah; ; I've chosen to send Ms. Kozlova and Mr. Symborski to London while Mr. Mansoor will track down Absalon's German contact and establish a connection with his network in Central Europe.; 
+Briefing.xml; Martin; ; WE'RE going to London?!; 
+Briefing.xml; Josiah; ; Thank you, Sarah.; 
+Briefing.xml; Martin; ; How can we know that?; 
+Briefing.xml; Sarah; ; The cash flow stopped shortly after Absalon died. The operation is probably being restructured while the CIA is scrambling to establish new NOC agents. It's not conclusive evidence, but it's enough to act on.; 
+Briefing.xml; Sarah; ; We conclude that they were sold out in order to impede the investigation.; 
+Briefing.xml; Martin; ; Hold the phone. How does this relate to our mission?; 
+Briefing.xml; Sarah; ; This money laundering scheme is the best lead we've got. The betrayal of Absalon fits the pattern of our leaks. For now, we're assuming that whoever was responsible for our leaks also sold out Absalon and Mr. Mansoor.; 
+Briefing.xml; Sarah; ; Yes. Of course we need to get inside Catalyst. We need to get a hold of their files, both physical and digital, so we can trace the movement of the drug money through the organization and identify the recipients.; 
+Briefing.xml; Katya; ; I see where this is going.; 
+Briefing.xml; Sarah; ; On the order of hundreds of millions of dollars.; 
+Briefing.xml; Daniel; ; How much money are we talking about?; 
+Briefing.xml; Sarah; ; He managed to get quite close to identifying a single common destination for this money, but of course he was not an analyst. We managed to finish what he started. We've traced the accounts to a London-based financial company called Catalyst Investment Group.; 
+Briefing.xml; Sarah; ; Right! Well, thanks to the efforts of our field team, we've had full access to the data compiled by Absalon in the months leading up to his death. Absalon was charting the monetary flow from the pan-European and the South American drug trade.; 
+Briefing.xml; Josiah; ; Now, I'll let Sarah explain what the analysis department has discovered since Copenhagen, and then I'll get into the details of this next operation.; 
+Briefing.xml; Josiah; ; It's been a rough start, but it feels like we've all begun to set aside our differences and get into the swing of things. Keep up the good work.; 
+Briefing.xml; Josiah; ; All right everyone. Before we begin the briefing, I'd just like to thank you all for the work you've put in over the past couple of weeks.; 
+Briefing.xml; ; ; How's the security?; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; You're lucky no one else saw that!; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Oh jeez, it's you! Try not to draw so much attention!; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Be careful or we're both screwed!; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Get outta here before my colleagues catch you!; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; I'll look the other way, but don't push it!; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Sweet Jesus!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Move along.
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Oh. Uhm... was there a pass phrase?; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; You are cleared to pass.
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; I didn't see anything...
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Don't let my colleagues see you here!; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Give it a rest, will ya?
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; (Grunts angrily)
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; What are you doing?
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Stop that!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Hey! What the hell?; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; I think I heard something...; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; I'm watching you!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Hey! Keep that up, and you're under arrest!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; You can't do that, ma'am!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Who... broke this?
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Hang on... this is busted.
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; I don't remember that being broken...
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; I've found a body! I need assistance.; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; We've got a man down!; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Man down!; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Hands where I can see 'em!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Don't! Move!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; You're under arrest!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Freeze!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Stop right there!; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Augh what the--?!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Christ!; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Holy shit!; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Whoa!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; I knew something was wrong!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; What is going on?!; Stress on "what"
+BarksSafeguardSecurity.xml; SecurityGuard; ; Moving to investigate!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; I know I heard that!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; C'mon, you trained for this!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Send everyone!; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Grenade out!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Throwing grenade!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Requesting backup!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; 217 in progress!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; I need backup!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; I'm hurt! I think I'm really hurt!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Help! I-- I'm bleeding!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; She got me!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Oh shit oh shit!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; GOD DAMN, I think I'm hit!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; She's armed!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Gun!
+ Gun!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Security threat!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; She's got a gun!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Shit! C'mon...
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; I'm out! Reloading!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Slamming a mag!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Cover me!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Reloading!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Surrender and you won't be harmed!; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; I know you're out there!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; This is your last chance! Give up!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Where did she go?!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; I lost sight of her!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; I'm escalating!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; I'm gonna shoot!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Neutralizing threat!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Opening fire!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; You're done for!
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Wuh? Is it just me, or...?
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Was that...? Hm...
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; What the heck?
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; What was that noise?
+; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; (Yawns); 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Almost done for the night...; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Ho hum
+.; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; (Sniffles and grunts); 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Security is thirsty work
+.; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Huh?; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Hm.; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Whazzat?; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; What?; 
+BarksSafeguardSecurity.xml; SecurityGuard; ; Fire in the hole!
+; 
+Katya.xml; Katya; черт побери.; Damnit.; 
+Katya.xml; Katya; ; That's that.; 
+Katya.xml; Katya; ; Wrong place, wrong time.; 
+Katya.xml; Katya; ; That sucked.; 
+Katya.xml; Katya; пухом.; Down.; 
+Katya.xml; Katya; ; Had to be done.; 
+Katya.xml; Katya; ; What a waste.; Genuinely slightly sad.
+Katya.xml; Katya; ; Out for the count.; 
+Katya.xml; Katya; ; He won't be a problem for a while.; 
+Katya.xml; Katya; ; Let's see what you've got.; 
+Katya.xml; Katya; ; Careful now!; 
+Katya.xml; Katya; ; Relax. Stop fighting.; 
+Katya.xml; Katya; ; Down you go.; 
+Katya.xml; Katya; ; I'm getting good at this.; 
+Katya.xml; Katya; ; Let's hope he doesn't snore.; 
+Katya.xml; Katya; ; Lights out.; 
+Katya.xml; Katya; ; Time to sleep.; 
+Katya.xml; Katya; ; Make your peace.; 
+Katya.xml; Katya; ; This'll be quick.; 
+Katya.xml; Katya; ; Let's get it over with.; 
+Katya.xml; Katya; ; It will be quick.; 
+Katya.xml; Katya; ; I hope you're religious.; 
+Katya.xml; Katya; ; Nothing personal.; 
+Katya.xml; Katya; ; Let's hope he gets some vacation after this.; 
+Katya.xml; Katya; ; Maybe they will give him a bonus.; 
+Katya.xml; Katya; ; He'll be fine.; 
+Katya.xml; Katya; ; Still alive, good.; 
+Katya.xml; Katya; ; Be quiet, I won't kill you.; 
+Katya.xml; Katya; ; Go to sleep my friend.; 
+Katya.xml; Katya; ; Sweet dreams.; 
+Katya.xml; Katya; ; It'll be all right.; 
+Katya.xml; Katya; Отдых в мире.; Rest in peace.; 
+Katya.xml; Katya; ; He put up a good fight.; 
+Katya.xml; Katya; ; I had no choice.; 
+Katya.xml; Katya; ; Sorry my friend.; 
+Katya.xml; Katya; ; It'll be over in a moment.; 
+Katya.xml; Katya; прости пожалуйста.; Forgive me.; 
+Katya.xml; Katya; ; Shh shh.; 
+Katya.xml; Katya; ; Don't resist, you're making it worse.; 
+Katya.xml; Katya; ; He'll have a headache tomorrow.; 
+Martin.xml; Martin; ; He'll be fine in a couple days.; 
+Martin.xml; Martin; ; Should learn to mind his surroundings.; 
+Martin.xml; Martin; ; Better watch your step there, buddy.; 
+Martin.xml; Martin; ; Glad that wasn't me.; 
+Martin.xml; Martin; ; Bye bye.; 
+Martin.xml; Martin; Dead pan, no nonsense.; Boom.; 
+Martin.xml; Martin; ; What a mess...; 
+Martin.xml; Martin; Shaking his head.; He walked right into that one.; 
+Martin.xml; Martin; ; One down.; 
+Martin.xml; Martin; ; He won't be a problem anymore.; 
+Martin.xml; Martin; ; Yeah. He's dead.; 
+Martin.xml; Martin; ; Bullseye.; 
+Martin.xml; Martin; ; Bad luck.; 
+Martin.xml; Martin; ; Looks like a goner.; 
+Martin.xml; Martin; ; Enemy down.; 
+Martin.xml; Martin; ; Bad day in the office...; 
+Martin.xml; Martin; ; Got one.; 
+Martin.xml; Martin; ; That's the end of him.; 
+Martin.xml; Martin; ; One less to worry about.; 
+Martin.xml; Martin; ; Another one bites the dust.; 
+Martin.xml; Martin; ; Bad way to go.; 
+Martin.xml; Martin; ; He's down for good.; 
+Martin.xml; Martin; ; Zzzzap.; 
+Martin.xml; Martin; ; Ain't enough painkillers in the world.; 
+Martin.xml; Martin; ; Nighty night!; 
+Martin.xml; Martin; ; Bad wiring. He should sue.; 
+Martin.xml; Martin; ; Hope he didn't have a pacemaker.; 
+Martin.xml; Martin; "SF" for San Fransisco, of course.; I call that The SF Suckerpunch.; 
+Martin.xml; Martin; ; Stay down.; 
+Martin.xml; Martin; ; Just bagged his hazard bonus for sure.; 
+Martin.xml; Martin; ; He ain't getting up soon.; 
+Martin.xml; Martin; ; Sleep tight, pal.; 
+Martin.xml; Martin; ; That'll leave a mark.; 
+Martin.xml; Martin; ; He'll feel that one for a while.; 
+Martin.xml; Martin; ; Hahah! Ouch!; 
+Martin.xml; Martin; ; Ooh that looked like it hurt!; 
+RadioMessages.xml; Player; ; Good, I'm pretty tired of this trailer.; 
+RadioMessages.xml; Player; ; I was starting to think you had forgot about me.; 
+RadioMessages.xml; Player; ; Local asset sold us out?; 
+RadioMessages.xml; Player; ; I've got what we came for. Time to leave.; 
+RadioMessages.xml; Player; ; Next time I'll bring a book. Let's go.; 
+RadioMessages.xml; Martin; ; Probably. Try to get back out to the parking lot, I'll pick you up just outside the gate.; 
+RadioMessages.xml; Martin; ; All right, we've got several offices to search. Once you have the intel, make your way back out here and I'll pick you up outside the gate.; 
+RadioMessages.xml; Martin; ; Security here is lightly armed, but they seem to be expecting trouble. Don't take any chances.; 
+RadioMessages.xml; Martin; ; Hold up. Looks like security just got an anonymous tip-off. They're spreading out to search the building.; 
+RadioMessages.xml; Martin; ; Don't be so eager, this'll be grim work. Castle wants all security personnel neutralised. They don't need to be dead, necessarily, but we do need them incapacitated.; 
+RadioMessages.xml; Martin; ; Rise and shine, Kat. The last employee has left the building. It's go time.; 
+RadioMessages.xml; Player; ; I'm inside the gate. How does it look?; 
+RadioMessages.xml; Player; ; That doesn't sound good...; 
+RadioMessages.xml; Player; ; I have the file. I'll make my way back down.; 
+RadioMessages.xml; Player; ; I'm in position and ready to go.; 
+RadioMessages.xml; Player; ; I've entered the courtyard. Are we good to go?; 
+RadioMessages.xml; Martin; ; This could get messy. Orders are to pacify the whole site - you don't need to kill anybody if you can avoid it, as long as all the lights are out, so to speak.; 
+RadioMessages.xml; Martin; ; The alarm just went off. They're beginning to search the building. Keep your head down and head back to the end of the courtyard, I'll pick you up out on the street.; 
+RadioMessages.xml; Martin; ; Stop. Uh-oh.; 
+RadioMessages.xml; Martin; ; Security is pretty tight, but the guards are lightly armed. Stay on your toes.; 
+RadioMessages.xml; Martin; ; All good out here. Hey, don't be intimidated by the Interpol logo, this'll be a simple smash and grab job. Get in, find the intel, get back out. Easy.; 
+RadioMessages.xml; Player; ; I've reached the insertion point.; 
+RadioMessages.xml; Player; ; I'm at the warehouse lot. Are you ready?; 
+RadioMessages.xml; Player; ; All right. I've got eyes on the Helios offices.; 
+RadioMessages.xml; Player; ; I thought this seemed too easy...; 
+RadioMessages.xml; Player; ; I have the intel.; 
+RadioMessages.xml; Martin; ; All right, we've got green light from Castle. We need all security personnel neutralised - dead or unconscious, doesn't matter, as long as they're no longer a threat.; 
+RadioMessages.xml; Martin; ; I've got your feed. Our sources indicate several different rooms that hold potentially valuable intel. Once you've secured it, return to the warehouse lot for extraction.; 
+RadioMessages.xml; Martin; ; Looks like SafeGuard has the security contract. They'll be lightly armed, but reasonably well trained. Be careful, Kat.; 
+RadioMessages.xml; Martin; ; Try to reach the warehouse lot across the street. I'll meet you in the alley and get you out of there.; 
+RadioMessages.xml; Martin; ; Bad news. Looks like the safe was wired - you're about to have a lot of company. ; 
+Daniel.xml; Player; ; He's got my back. Why?; 
+Daniel.xml; Player; ; He expects a lot of us. Perhaps too much.; 
+Daniel.xml; Player; ; So enigmatic.; Poking a little fun at Daniel.
+Daniel.xml; Player; ; "We?"; 
+Daniel.xml; Player; ; It sounded like it would be a milk run.; 
+Daniel.xml; Player; ; Hey, how was Berlin?; 
+Daniel.xml; Daniel; ; I'll try to get used to him.; 
+Daniel.xml; Daniel; ; Hm. Maybe he's only like that around me.; 
+Daniel.xml; Daniel; (Snorts) It was, uh... interesting.; It was, uh... interesting.; 
+Daniel.xml; Daniel; ; He just seems a bit... full of himself.; 
+Daniel.xml; Daniel; ; How is it to work with Martin?; 
+Daniel.xml; Daniel; ; Well... we're all still alive so far. Maybe it gets easier. ; 
+Daniel.xml; Daniel; ; I don't know what Josiah's game is. He has plenty of field experience, so he must know what he's doing, but this whole outfit just seems reckless to me. ; 
+Daniel.xml; Daniel; ; How about you? I heard you pulled quite the heist in London.; 
+Daniel.xml; Daniel; ; Ah, yep, I made some new friends. I'll introduce you to them sometime.; 
+Daniel.xml; Daniel; ; It did, didn't it? Let's just say things didn't go according to plan. We got what we came for though.; 
+Daniel.xml; ; ; He can be a pain in the ass, but he's good at his job.; 
+Daniel.xml; ; ; I haven't really noticed.; 
+Daniel.xml; ; ; We pulled it off, but it wasn't easy.; Shaking her head.
+Daniel.xml; ; ; It all went off without a hitch.; 
+PartyOverheard01.xml; JerzyKwiatkowski; ; You've got a deal!; 
+PartyOverheard01.xml; JerzyKwiatkowski; ; When and where?; 
+PartyOverheard01.xml; BlasiusKapustin; ; A week from today, Munich. I'll send the details.; Laughing.
+PartyOverheard01.xml; BlasiusKapustin; ; I like your style. How about a trial then? 60 sleeves. If your product is good, we'll up it to 600.; Laughing.
+PartyOverheard01.xml; JerzyKwiatkowski; ; What do you take me for? Some two-bit scab?; Angrily.
+PartyOverheard01.xml; BlasiusKapustin; ; I'll need assurances that you can deliver.; 
+PartyOverheard02.xml; MiloslavHoloubek; ; No-- no one would be that stupid, Mr. Andreyev.; Nervous.
+PartyOverheard02.xml; MiloslavHoloubek; ; (Laughs); 
+PartyOverheard02.xml; EmmanuelAndreyev ; ; (Laughs mirthlessly); 
+PartyOverheard02.xml; EmmanuelAndreyev ; ; ...however, if I ever found out that someone talked, that person would want to get their affairs in order.; Stress on "if".
+PartyOverheard03.xml; SerafinNowicki; ; Classical cocktails?; 
+PartyOverheard03.xml; SpencerCoates; ; I guess I'm more one to hark back to the classical cocktails.; Pretentious.
+PartyOverheard03.xml; SerafinNowicki; ; Maybe the bartender can mix up a couple?; Intrigued.
+PartyOverheard03.xml; SpencerCoates; ; It's a New Orleans variation on a cognac cocktail - named for the eponymous spirit.; Highly pretentious.
+PartyOverheard03.xml; SerafinNowicki; ; I've never had the pleasure.; 
+PartyOverheard03.xml; SpencerCoates; ; Oh yes, nothing whets your palate like a good sazerac.; 
+PartyOverheard04.xml; ApolinaryCzarnecki; ; Of course. So would you.; Grinning.
+PartyOverheard04.xml; ApolinaryCzarnecki; ; Ugh... rich people make me sick...; 
+PartyOverheard04.xml; StefciaWojciechowska; ; But you'd join them if you could.; Smiling.
+PartyOverheard04.xml; StefciaWojciechowska; ; On. The. Walls. How do you manage that unless you're deliberately trying?; Scandalised.
+PartyOverheard04.xml; ApolinaryCzarnecki; ; I get the feeling I don't want to know...; 
+PartyOverheard04.xml; StefciaWojciechowska; ; And guess who is cleaning that up. Do you know what I found in the 2nd floor lavatories?; 
+PartyOverheard04.xml; ApolinaryCzarnecki; ; Did you see Mr. Creosote over there? I swear, if he doesn't lay off the canapees, he'll burst.; Disdain.
+PartyOverheard05.xml; IsaacDemidov; ; Good servants are seen, not heard.; Cheap parting shot.
+PartyOverheard05.xml; IsaacDemidov; ; And no lip. You're paid to work, not talk. Now hurry off.; Condescending.
+PartyOverheard05.xml; RajmundNowak; ; Of course.; Maintaining his polite facade.
+PartyOverheard05.xml; RajmundNowak; ; Yes, of course.; Polite.
+PartyOverheard05.xml; IsaacDemidov; ; Hey! Champagne for me and my friend here. ; Demanding.
+PartyOverheard06.xml; PhilemonPirogov; ; You are here to look good on my arm. Don't interrupt me when I am talking.; Cruelly dismissive.
+PartyOverheard06.xml; PhilemonPirogov; ; Don't be preposterous - no one found a body, but he didn't escape. What would you know about that anyway?; Irritated.
+PartyOverheard06.xml; CelinaBorkowska; ; I--; Foot in mouth.
+PartyOverheard06.xml; CelinaBorkowska; ; My sister said she'd seen him in Belgrade.; Trying to join in on the conversation.
+PartyOverheard06.xml; PhilemonPirogov; ; ...so the vaccum left by Karadzic has affected our business in Srpska. For that, I'd shoot the bastard myself if he wasn't already dead.; 
+PartyOverheard07.xml; DamianAnisimov; ; I will hope for a quick recovery. Our business has been amicable and very profitable in the past.; 
+PartyOverheard07.xml; DamianAnisimov; ; Columbian revolutionaries? Yes, there was a distinct drop in export around that time.; 
+PartyOverheard07.xml; LukasBecker; ; We had holdings near Guaviare - some of them were compromised. It is a bad situation.; 
+PartyOverheard07.xml; LukasBecker; ; ...and my employer is still very upset with last month's fighting.; 
+PartyOverheard08.xml; MuratVoronov; Of course! The law is a sham - money makes the rules, and we... (shrugs) we have the money.; Of course! The law is a sham - money makes the rules, and we... we have the money.; Self-satisfied.
+PartyOverheard08.xml; DorofeiKotov; ; It's that easy?; Amused.
+PartyOverheard08.xml; MuratVoronov; ; Cop salaries are a joke. They're all bitter and greedy - it's easy to keep one on payroll... hell, he thinks he's getting a ransom when it's barely pocket change.; 
+PartyOverheard08.xml; DorofeiKotov; ; And how'd he find out?; Curious.
+PartyOverheard08.xml; MuratVoronov; ; ...so they show up, trying to be nonchalant - all "may we come in and look around, sir?" Of course, my guy had called HOURS ago to let me know.; Gloating.
+Debriefing.xml; Katya; ; Right. Let's talk again when we're ready to leave.; 
+Debriefing.xml; Katya; ; It's all we've got. If you have a better idea, now is the time to speak up.; 
+Debriefing.xml; Daniel; ; It may work. But where does that leave you with the FSB?; 
+Debriefing.xml; Katya; ; That's right. We hand Grishin over to CIA, at minimum they see we're still cooperative.; 
+Debriefing.xml; Katya; ; Radko was old-fashioned. He had a little black book with names and secure phone lines. We need to re-establish our supply lines, so hopefully his contacts are still willing to work with us.; 
+Debriefing.xml; Martin; ; We'll also need to download the KBE Database from the Analysis Office so we can restore contact with Kingbridge's network of support assets for one last mission. Which brings us to step three:; 
+Debriefing.xml; Daniel; ; Radoslav's black market contacts?; 
+Debriefing.xml; Katya; ; Step two: The Kingbridge network.; 
+Debriefing.xml; Martin; ; We need to re-establish our satcom access. I believe Josiah had some black ops access codes. It's possible they were all removed or revoked during the raid, in which case we'll be flying blind from now on.; 
+Debriefing.xml; Katya; ; Step one: recover what we've lost. Martin.; Prompting Martin to elaborate.
+Debriefing.xml; Daniel; ; I guess we better get ready then.; 
+Debriefing.xml; Daniel; ; There's a lot of wishful thinking in this plan.; 
+Debriefing.xml; Katya; ; I have no interest in working for the FSB anymore. My hope is to make a deal for protection with the CIA, and then... find a better way to make a living.; 
+Debriefing.xml; Martin; ; If we're lucky, they'll debrief us and allow us to re-enter their service.; 
+Debriefing.xml; Daniel; ; You'll trade him in?; 
+Debriefing.xml; Katya; ; If we run now, we'll be running forever. We need to get Grishin so we can end it now, once and for all.; 
+Debriefing.xml; Daniel; ; Why? Why go after Grishin? CIA and FSB want nothing to do with us anymore, that much is clear. Why don't we just cut and run?; 
+Debriefing.xml; Katya; ; Find and capture Christopher Grishin.; 
+Debriefing.xml; Martin; ; But if I know Josiah well enough, he had contingencies. If we find the codes, and if they still work, we can secure an overhead platform.; 
+Debriefing.xml; Daniel; ; You have a plan?; 
+Debriefing.xml; Martin; ; Nobody could have made it out of there alive.; 
+Debriefing.xml; Katya; ; It's not over. I will not let it end like this.; 
+Debriefing.xml; Daniel; ; So it's all over then. We're all that's left.; 
+Debriefing.xml; Katya; ; We think so.; 
+Debriefing.xml; Daniel; ; What about the others? Is everyone... are they all dead?; 
+Debriefing.xml; Katya; ; You're safe here, this place is secure. We've made sure of it.; 
+Debriefing.xml; Daniel; ; Well, I've been running for my life.; 
+Debriefing.xml; Katya; ; How have you been, Danny?; 
+Debriefing.xml; Daniel; ; Oh my god, I'm so glad to see you guys again, you have no idea.; 
+Radko.xml; Player; ; Is that a prerequisite?; 
+Radko.xml; Player; ; I have tits for one.; Sarcastic.
+Radko.xml; Player; ; Should I not?; A little confused.
+Radko.xml; Player; ; You thought I would not pull the trigger?; 
+Radko.xml; Player; ; Should I not be concerned with the loss of innocent lives?; 
+Radko.xml; Player; ; No, he's mostly been concerned with how much evidence we've left behind - and dead men tell no tales, as they say.; 
+Radko.xml; Player; ; Should I be worried?; 
+Radko.xml; Player; ; It's not conscience, it's caution. It's safer in the long run if we keep things clean.; 
+Radko.xml; Player; ; My next mission is a party. You'll have to forgive me if I don't murder all the guests.; 
+Radko.xml; Player; ; I've killed before, Radko.; 
+Radko.xml; Player; ; There are so many reasons to worry about me. Which one did you pick?; 
+Radko.xml; Radko; ; No. But it helps, I think.; 
+Radko.xml; Radko; ; That is not what I'm implying. Merely that you are not... damaged.; 
+Radko.xml; Radko; ; I have met a few hardened killers in my time, and you are very different from them.; 
+Radko.xml; Radko; ; Innocence is a philosophical word, I leave such things to others. I am merely relieved to see that you are not afraid to do what needs to be done for the mission.; 
+Radko.xml; Radko; ; Did Josiah bust your balls about the people you've killed?; 
+Radko.xml; Radko; ; Good. The man knows his job. Don't get me wrong, we're not specifically out to kill people, but the mission must come first. It is inevitable in an operation like this that a few people will be in the wrong place at the wrong time.; 
+Radko.xml; Radko; ; Actually I am the one who is worried about you.; Light stress on "I" and "you"
+Radko.xml; Radko; ; There you are. I've been meaning to talk to you.; Severe
+Radko.xml; Radko; ; Save your sarcasm for the Americans.; 
+Radko.xml; Radko; ; That's a good point. We'll see what the future brings.; 
+Radko.xml; Radko; ; I hope that you are right. Never let your conscience get in the way of the mission.; 
+Radko.xml; Radko; ; You must be willing to kill for the sake of the mission. Otherwise, you are not fit for this job.; 
+Radko.xml; Radko; ; That is different. The day will come when you are face to face with a human being and you have to pull the trigger for the sake of the mission. nothing personal, just business.; 
+Radko.xml; Radko; ; There is nothing wrong with mercy. Only, I worry if you are capable of taking a life.; 
+Radko.xml; Radko; ; It seems that you go out of your way to avoid killing people.; 
+Radko.xml; ; ; I am not afraid to kill - when necessary.; 
+Radko.xml; ; ; I am a spy, not an assassin.; Defensive
+Sarah.xml; Player; ; You're right...; Contemplative.
+Sarah.xml; Player; ; Could that be true?; Slightly shocked.
+Sarah.xml; Player; ; I have very little patience for obtuseness. If something is wrong, I would prefer for you to tell me.; Frowning.
+Sarah.xml; Player; ; Is there a problem?; Frowning.
+Sarah.xml; Player; ; You seem a little terse today.; 
+Sarah.xml; Sarah; ; That's all I'm asking. Thank you.; 
+Sarah.xml; Sarah; ; Just... keep it in mind.; 
+Sarah.xml; Sarah; ; Like I said, it's not my place. I should get back to work.; Annoyed.
+Sarah.xml; Sarah; ; Seven deaths we've connected to our case. You've killed more than that.; 
+Sarah.xml; Sarah; ; I wasn't there. I don't know what it's like to make decisions under such pressure. But please, for your own sake if nothing else, try to pace yourself in the future. Seven lives must weigh a lot on a conscience.; 
+Sarah.xml; Sarah; ; All right. You've killed more people by now than the leaks we're investigating.; 
+Sarah.xml; Sarah; ; I shouldn't say. It's not my place.; Deflective.
+Sarah.xml; Sarah; ; That wasn't my intention.; It was totally her intention.
+Sarah.xml; Sarah; ; Ms. Kozlova.; Terse.
+Sarah.xml; ; ; Spare me the guilt trip. Our mission cannot be measured in lives.; 
+Sarah.xml; ; ; I'll do everything I can to prevent further bloodshed.; 
+Sarah.xml; ; ; I can't control these things. If it's me or them...; 
+Grishin.xml; Player; ; Sounds like we are heading into dangerous territory. I love it.; 
+Grishin.xml; Player; ; Mr. Mansoor is a businessman from America. Import-export, he says.; Bored.
+Grishin.xml; Player; ; I will see what I can do.; 
+Grishin.xml; Player; ; And in return?; 
+Grishin.xml; Player; ; I'm not a computer person. How can I find your files?; 
+Grishin.xml; Player; ; Katya. Likewise.; Smiling.
+Grishin.xml; Player; ; I was considering it.; 
+Grishin.xml; Player; ; Are you affiliated?; 
+Grishin.xml; Player; ; That is wise, but please don't tell my date this advice. I prefer to be underestimated.; 
+Grishin.xml; Player; ; He's off talking business with "the boys". Grown-up stuff, not something a little girl like me would understand.; Facetious.
+Grishin.xml; Grishin; ; Maybe I can help you out with that. But I need something in return.; 
+Grishin.xml; Grishin; ; I've noticed you taking an interest in the English banker, Richard Baxter.; 
+Grishin.xml; Grishin; ; Is that so? Experience has taught me never to underestimate women like you.; Semi-flirty.
+Grishin.xml; Grishin; ; Great. I'll meet you in the winter garden when you're done.; 
+Grishin.xml; Grishin; ; I will convince Mr. Baxter to meet you upstairs, in the guest suite.; 
+Grishin.xml; Grishin; ; All I need is for you to plug this into one of the computers. My associate will take it from there.; 
+Grishin.xml; Grishin; ; I have a feeling you get whatever you want.; 
+Grishin.xml; Grishin; ; I'm a broker of sorts.; 
+Grishin.xml; Grishin; ; Our host has a very special room in the basement, where he keeps some computers. I've been told there are certain files on those computers that pertain to me and my business.; 
+Grishin.xml; Grishin; ; We've had dealings. You're after his money?; 
+Grishin.xml; Grishin; ; And what is your date's name, if I may be so direct? I haven't seen him in these circles before.; 
+Grishin.xml; Grishin; (Chuckles) Please pardon my lack of manners. I am Christopher. Very nice to meet you.; Please pardon my lack of manners. I am Christopher. Very nice to meet you.; 
+Grishin.xml; Grishin; ; Did you lose your date?; 
+Grishin.xml; ; ; And you think I can get you this information?; 
+Grishin.xml; ; ; What business might that be?; 
