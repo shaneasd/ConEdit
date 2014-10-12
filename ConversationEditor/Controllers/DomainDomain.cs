@@ -777,7 +777,7 @@ namespace ConversationEditor
 
         public string GetTypeName(ID<ParameterType> type)
         {
-            throw new NotImplementedException(); //TODO: Implement this?
+            throw new NotImplementedException(); // Don't need an implementation for this because we won't be modifying editors for types in the domain domain
         }
     }
 }

@@ -53,11 +53,6 @@ namespace ConversationEditor
             m_numericUpDown.SetupCallbacks(drawWindow1);
         }
 
-        public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
-        {
-            return willEdit.IsDecimal(type);
-        }
-
         IDecimalParameter m_parameter;
         public void Setup(ParameterEditorSetupData data)
         {
@@ -83,11 +78,6 @@ namespace ConversationEditor
             {
                 Ok.Execute();
             }
-        }
-
-        public string DisplayName
-        {
-            get { return "Default Decimal Editor"; }
         }
 
         public bool IsValid()

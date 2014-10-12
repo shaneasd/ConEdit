@@ -42,11 +42,6 @@ namespace ConversationEditor
             LastFocused = m_textBox;
         }
 
-        public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
-        {
-            return false; //Technically this can edit anything but we don't want it to be selectable
-        }
-
         UnknownParameter m_parameter;
         public void Setup(ParameterEditorSetupData data)
         {
@@ -68,11 +63,6 @@ namespace ConversationEditor
                 return m_removeParameter;
             else
                 return null;
-        }
-
-        public string DisplayName
-        {
-            get { return "Unknown Parameter Editor"; }
         }
 
         public bool IsValid()

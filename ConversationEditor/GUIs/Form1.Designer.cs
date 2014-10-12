@@ -57,20 +57,19 @@
             this.tsmiShowIDs = new System.Windows.Forms.ToolStripMenuItem();
             this.connectorColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.audioNamingMethodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.errorCheckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.domainAsCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.throwTestExceptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.projectExplorer = new ConversationEditor.ProjectExplorer();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.conversationEditorControl1 = new ConversationEditor.ConversationEditorControl();
             this.errorList1 = new ConversationEditor.ErrorList();
-            this.defaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -314,6 +313,14 @@
             this.audioNamingMethodToolStripMenuItem.Text = "Audio Naming Method";
             this.audioNamingMethodToolStripMenuItem.DropDownOpening += new System.EventHandler(this.audioNamingMethodToolStripMenuItem_DropDownOpening);
             // 
+            // defaultToolStripMenuItem
+            // 
+            this.defaultToolStripMenuItem.Checked = true;
+            this.defaultToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.defaultToolStripMenuItem.Name = "defaultToolStripMenuItem";
+            this.defaultToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.defaultToolStripMenuItem.Text = "Default";
+            // 
             // errorCheckToolStripMenuItem
             // 
             this.errorCheckToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -339,18 +346,9 @@
             // 
             // exportToolStripMenuItem
             // 
-            this.exportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.domainAsCToolStripMenuItem});
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
             this.exportToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
             this.exportToolStripMenuItem.Text = "Export";
-            // 
-            // domainAsCToolStripMenuItem
-            // 
-            this.domainAsCToolStripMenuItem.Name = "domainAsCToolStripMenuItem";
-            this.domainAsCToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
-            this.domainAsCToolStripMenuItem.Text = "Domain as C#";
-            this.domainAsCToolStripMenuItem.Click += new System.EventHandler(this.domainAsCToolStripMenuItem_Click);
             // 
             // debugToolStripMenuItem
             // 
@@ -390,6 +388,15 @@
             this.splitContainer1.SplitterDistance = 181;
             this.splitContainer1.TabIndex = 2;
             // 
+            // projectExplorer
+            // 
+            this.projectExplorer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.projectExplorer.Location = new System.Drawing.Point(0, 0);
+            this.projectExplorer.Margin = new System.Windows.Forms.Padding(0);
+            this.projectExplorer.Name = "projectExplorer";
+            this.projectExplorer.Size = new System.Drawing.Size(181, 561);
+            this.projectExplorer.TabIndex = 0;
+            // 
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -409,15 +416,6 @@
             this.splitContainer2.SplitterDistance = 419;
             this.splitContainer2.TabIndex = 4;
             // 
-            // projectExplorer
-            // 
-            this.projectExplorer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.projectExplorer.Location = new System.Drawing.Point(0, 0);
-            this.projectExplorer.Margin = new System.Windows.Forms.Padding(0);
-            this.projectExplorer.Name = "projectExplorer";
-            this.projectExplorer.Size = new System.Drawing.Size(181, 561);
-            this.projectExplorer.TabIndex = 0;
-            // 
             // conversationEditorControl1
             // 
             this.conversationEditorControl1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
@@ -425,6 +423,8 @@
             this.conversationEditorControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.conversationEditorControl1.GraphScale = 1F;
             this.conversationEditorControl1.Location = new System.Drawing.Point(0, 0);
+            this.conversationEditorControl1.MajorGridSpacing = ((uint)(0u));
+            this.conversationEditorControl1.MinorGridSpacing = ((uint)(0u));
             this.conversationEditorControl1.Name = "conversationEditorControl1";
             this.conversationEditorControl1.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.conversationEditorControl1.ShowGrid = false;
@@ -441,14 +441,6 @@
             this.errorList1.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.errorList1.Size = new System.Drawing.Size(804, 138);
             this.errorList1.TabIndex = 3;
-            // 
-            // defaultToolStripMenuItem
-            // 
-            this.defaultToolStripMenuItem.Checked = true;
-            this.defaultToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.defaultToolStripMenuItem.Name = "defaultToolStripMenuItem";
-            this.defaultToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.defaultToolStripMenuItem.Text = "Default";
             // 
             // Form1
             // 
@@ -518,7 +510,6 @@
         private System.Windows.Forms.ToolStripMenuItem recentProjectsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tsmiShowIDs;
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem domainAsCToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem connectorColorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem audioNamingMethodToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem defaultToolStripMenuItem;

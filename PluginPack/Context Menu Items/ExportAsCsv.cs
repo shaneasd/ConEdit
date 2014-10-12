@@ -140,6 +140,17 @@ namespace PluginPack
             };
         }
 
+        CsvData GetPlayerSpeechData(ConversationNode<INodeGUI> node)
+        {
+            return new CsvData()
+            {
+                Character = "Player",
+                Script = node.Parameters.Single(p => p.Id == SPEECH_SCRIPT).DisplayValue(m_localize),
+                Subtitle = node.Parameters.Single(p => p.Id == SPEECH_SUBTITLE).DisplayValue(m_localize),
+                Direction = node.Parameters.Single(p => p.Id == SPEECH_DIRECTION).DisplayValue(m_localize),
+            };
+        }
+
         CsvData GetOptionData(ConversationNode<INodeGUI> node)
         {
             return new CsvData()
@@ -167,31 +178,47 @@ namespace PluginPack
                 sfd.AddExtension = true;
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    var nodes = conversation.Nodes;
-
-                    var playerSpeechNodes = conversation.Nodes.Where(n => n.Type == PLAYER_SPEECH);
-                    var npcSpeechNodes = conversation.Nodes.Where(n => n.Type == NPC_SPEECH);
-                    var radioSpeechNodes = conversation.Nodes.Where(n => n.Type == RADIO_SPEECH);
-                    var optionNodes = conversation.Nodes.Where(n => n.Type == OPTION);
-
-                    IEnumerable<CsvData> rows = playerSpeechNodes.Select(GetSpeechData)
-                                                .Concat(npcSpeechNodes.Select(GetSpeechData))
-                                                .Concat(radioSpeechNodes.Select(GetSpeechData))
-                                                .Concat(optionNodes.Select(GetOptionData));
-
                     using (var stream = sfd.OpenFile())
                     {
                         using (StreamWriter sw = new StreamWriter(stream))
                         {
-                            sw.WriteLine("Character; Script; Subtitle; Direction");
-                            foreach (CsvData row in rows)
-                            {
-                                sw.WriteLine(String.Format("{0}; {1}; {2}; {3}", row.Character, row.Script, row.Subtitle, row.Direction));
-                            }
+                            WriteTitle(sw, false);
+                            WriteConversation(conversation, sw, false);
                         }
                     }
                 }
             }
+        }
+
+        public void WriteConversation(IConversationFile conversation, StreamWriter sw, bool includeName)
+        {
+            var nodes = conversation.Nodes;
+
+            var playerSpeechNodes = conversation.Nodes.Where(n => n.Type == PLAYER_SPEECH);
+            var npcSpeechNodes = conversation.Nodes.Where(n => n.Type == NPC_SPEECH);
+            var radioSpeechNodes = conversation.Nodes.Where(n => n.Type == RADIO_SPEECH);
+            var optionNodes = conversation.Nodes.Where(n => n.Type == OPTION);
+
+            IEnumerable<CsvData> rows = playerSpeechNodes.Select(GetPlayerSpeechData)
+                                        .Concat(npcSpeechNodes.Select(GetSpeechData))
+                                        .Concat(radioSpeechNodes.Select(GetSpeechData))
+                                        .Concat(optionNodes.Select(GetOptionData));
+
+            foreach (CsvData row in rows)
+            {
+                var data = String.Format("{0}; {1}; {2}; {3}", row.Character, row.Script, row.Subtitle, row.Direction);
+                if (includeName)
+                    data = conversation.File.File.Name + "; " + data;
+                sw.WriteLine(data);
+            }
+        }
+
+        public void WriteTitle(StreamWriter sw, bool includeName)
+        {
+            var data = "Character; Script; Subtitle; Direction";
+            if (includeName)
+                data = "File; " + data;
+            sw.WriteLine(data);
         }
     }
 }

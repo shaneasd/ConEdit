@@ -154,7 +154,7 @@ namespace Conversation
         public event Action Connected;
         public event Action Disconnected;
 
-        private bool CounterConnect(Output other)
+        public bool CanConnectTo(Output other)
         {
             //Can't connect a nodes output to its own input
             if (object.ReferenceEquals(other.Parent.NodeID, Parent.NodeID))
@@ -166,6 +166,14 @@ namespace Conversation
 
             //Can only connect connectors whose types can be paired according to the rules
             if (!Rules.CanConnect(this.m_definition.Id, other.m_definition.Id))
+                return false;
+
+            return true;
+        }
+
+        private bool CounterConnect(Output other)
+        {
+            if (!CanConnectTo(other))
                 return false;
 
             m_connections.Add(other);

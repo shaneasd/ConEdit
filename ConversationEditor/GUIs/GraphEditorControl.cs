@@ -510,9 +510,9 @@ namespace ConversationEditor
                     foreach (var node in CurrentFile.Nodes)
                         node.Renderer.UpdateArea();
 
-                    HashSet<UnordererTuple2<PointF>> unselectedNodeConnections = new HashSet<UnordererTuple2<PointF>>();
-                    HashSet<UnordererTuple2<PointF>> selectedNodeConnections = new HashSet<UnordererTuple2<PointF>>();
-                    HashSet<UnordererTuple2<PointF>> selectedConnections = new HashSet<UnordererTuple2<PointF>>();
+                    HashSet<UnorderedTuple2<PointF>> unselectedNodeConnections = new HashSet<UnorderedTuple2<PointF>>();
+                    HashSet<UnorderedTuple2<PointF>> selectedNodeConnections = new HashSet<UnorderedTuple2<PointF>>();
+                    HashSet<UnorderedTuple2<PointF>> selectedConnections = new HashSet<UnorderedTuple2<PointF>>();
 
                     foreach (var node in orderedUnselectedNodes)
                     {

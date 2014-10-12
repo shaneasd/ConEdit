@@ -177,5 +177,20 @@ namespace Utilities
             g.DrawLine(Foreground, new PointF(left, bottom), new PointF(right, top));
         }
     }
+
+    public class GenericButton : MyButton
+    {
+        private Action<RectangleF, Graphics> m_draw;
+        public GenericButton(Func<RectangleF> area, Action<RectangleF, Graphics> draw, Action callback) : base(area, callback)
+        {
+            m_draw = draw;
+        }
+
+        public override void Paint(Graphics g)
+        {
+            base.Paint(g);
+            m_draw(Area, g);
+        }
+    }
 }
 

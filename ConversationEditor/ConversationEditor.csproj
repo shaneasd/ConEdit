@@ -91,6 +91,8 @@
     <Compile Include="Controllers\ContextMenu.cs" />
     <Compile Include="Controllers\ConversationConnectionRules.cs" />
     <Compile Include="Controllers\ConversationFile.cs" />
+    <Compile Include="Controllers\DanglingAudioError.cs" />
+    <Compile Include="Controllers\DomainAsCSharp.cs" />
     <Compile Include="Controllers\DomainConnectionRules.cs" />
     <Compile Include="Controllers\DomainIDs.cs" />
     <Compile Include="Controllers\DomainUsage.cs" />
@@ -112,6 +114,7 @@
     <Compile Include="Controllers\MissingLocalizationFile.cs" />
     <Compile Include="Controllers\ParameterEditorCustomization.cs" />
     <Compile Include="Controllers\PluginCheckerAssembly.cs" />
+    <Compile Include="Controllers\PointlessAudioError.cs" />
     <Compile Include="Controllers\ProjectContextMenuItems.cs" />
     <Compile Include="Controllers\ProjectDomain.cs" />
     <Compile Include="Controllers\ProjectElementDefinition.cs" />
@@ -123,6 +126,7 @@
     <Compile Include="Customization\IExportMode.cs" />
     <Compile Include="Customization\IMenuActionFactory.cs" />
     <Compile Include="Customization\IParameterEditorFactory.cs" />
+    <Compile Include="Customization\IProjectExporter.cs" />
     <Compile Include="Customization\WrapperContextMenuItemsFactory.cs" />
     <Compile Include="Customization\IProjectExplorerContextMenuItemsFactory.cs" />
     <Compile Include="GUIs\Default Parameter Editors\UnknownParameterEditor.cs">
@@ -176,9 +180,6 @@
     </Compile>
     <Compile Include="GUIs\Default Parameter Editors\DefaultLocalizedStringEditor.Designer.cs">
       <DependentUpon>DefaultLocalizedStringEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GUIs\DrawWindow.cs">
-      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUIs\ErrorList2.cs">
       <SubType>UserControl</SubType>
@@ -234,12 +235,6 @@
     <Compile Include="GUIs\Default Parameter Editors\DefaultStringEditor.Designer.cs">
       <DependentUpon>DefaultStringEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUIs\ParameterEditorCustomizer1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUIs\ParameterEditorCustomizer1.Designer.cs">
-      <DependentUpon>ParameterEditorCustomizer1.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUIs\ErrorList.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -254,12 +249,6 @@
     </Compile>
     <Compile Include="GUIs\FindAndReplaceDialog.Designer.cs">
       <DependentUpon>FindAndReplaceDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GUIs\GreyScrollBar.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUIs\GreyScrollBar.Designer.cs">
-      <DependentUpon>GreyScrollBar.cs</DependentUpon>
     </Compile>
     <Compile Include="GUIs\NodeRendererCustomizer.cs">
       <SubType>Form</SubType>
@@ -348,9 +337,6 @@
     <EmbeddedResource Include="GUIs\Default Parameter Editors\DefaultLocalizedStringEditor.resx">
       <DependentUpon>DefaultLocalizedStringEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUIs\DrawWindow.resx">
-      <DependentUpon>DrawWindow.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="GUIs\ErrorList2.resx">
       <DependentUpon>ErrorList2.cs</DependentUpon>
     </EmbeddedResource>
@@ -379,17 +365,11 @@
     <EmbeddedResource Include="GUIs\Default Parameter Editors\DefaultStringEditor.resx">
       <DependentUpon>DefaultStringEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUIs\ParameterEditorCustomizer1.resx">
-      <DependentUpon>ParameterEditorCustomizer1.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="GUIs\ErrorList.resx">
       <DependentUpon>ErrorList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUIs\FindAndReplaceDialog.resx">
       <DependentUpon>FindAndReplaceDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUIs\GreyScrollBar.resx">
-      <DependentUpon>GreyScrollBar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUIs\NodeEditor.resx">
       <DependentUpon>NodeEditor.cs</DependentUpon>
@@ -491,21 +471,6 @@
     <EmbeddedResource Include="Resources\Conversation.png" />
     <EmbeddedResource Include="Resources\Folder.png" />
     <EmbeddedResource Include="Resources\Project.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\ScrollbarBackgroundVertical.png" />
-    <EmbeddedResource Include="Resources\ScrollbarUp.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\ScrollbarUpPressed.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\ScrollbarBottom.png" />
-    <EmbeddedResource Include="Resources\ScrollbarBottomPressed.png" />
-    <EmbeddedResource Include="Resources\ScrollbarMiddle.png" />
-    <EmbeddedResource Include="Resources\ScrollbarMiddlePressed.png" />
-    <EmbeddedResource Include="Resources\ScrollbarTop.png" />
-    <EmbeddedResource Include="Resources\ScrollbarTopPressed.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\ConversationMissing.png" />

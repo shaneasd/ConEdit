@@ -60,6 +60,16 @@
     <Compile Include="Algorithm\EnumerableReversible.cs" />
     <Compile Include="Algorithm\ExtraLazyEnumerable.cs" />
     <Compile Include="Algorithm\GenericEqualityComparer.cs" />
+    <Compile Include="UI\MySuggestionBox.cs" />
+    <Compile Include="UI\DrawWindow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\GreyScrollBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\GreyScrollBar.Designer.cs">
+      <DependentUpon>GreyScrollBar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Unused\Identities.cs" />
     <Compile Include="UI\InvisibleControl.cs">
       <SubType>UserControl</SubType>
@@ -101,14 +111,31 @@
     <Compile Include="UI\ToStringWrapper.cs" />
     <Compile Include="UndoAction.cs" />
     <Compile Include="UndoQueue.cs" />
-    <Compile Include="UnordererTuple.cs" />
+    <Compile Include="UnorderedTuple.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="WeakEvent.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="UI\DrawWindow.resx">
+      <DependentUpon>DrawWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\GreyScrollBar.resx">
+      <DependentUpon>GreyScrollBar.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\TabStop.resx">
       <DependentUpon>TabStop.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Resources\ScrollbarBackgroundVertical.png" />
+    <EmbeddedResource Include="UI\Resources\ScrollbarBottom.png" />
+    <EmbeddedResource Include="UI\Resources\ScrollbarBottomPressed.png" />
+    <EmbeddedResource Include="UI\Resources\ScrollbarMiddle.png" />
+    <EmbeddedResource Include="UI\Resources\ScrollbarMiddlePressed.png" />
+    <EmbeddedResource Include="UI\Resources\ScrollbarTop.png" />
+    <EmbeddedResource Include="UI\Resources\ScrollbarTopPressed.png" />
+    <EmbeddedResource Include="UI\Resources\ScrollbarUp.png" />
+    <EmbeddedResource Include="UI\Resources\ScrollbarUpPressed.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

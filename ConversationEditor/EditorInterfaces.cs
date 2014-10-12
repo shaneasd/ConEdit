@@ -43,7 +43,6 @@ namespace ConversationEditor
 
     public interface IParameterEditor<out TUI>
     {
-        bool WillEdit(ID<ParameterType> type, WillEdit willEdit);
         void Setup(ParameterEditorSetupData data);
         TUI AsControl { get; }
         /// <summary>
@@ -55,48 +54,7 @@ namespace ConversationEditor
         /// <param name="updateAudio">set to an audio file whose inclusion in the project should be update or left null</param>
         UpdateParameterData UpdateParameterAction();
         bool IsValid();
-        string DisplayName { get; }
 
         event Action Ok;
-    }
-
-    public class ParameterEditorChoice : TypeChoice
-    {
-        public ParameterEditorChoice(Type type)
-            : base(type)
-        {
-        }
-
-        public ParameterEditorChoice(string assembly, string type)
-            : base(assembly, type)
-        {
-        }
-
-        public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
-        {
-            return GetEditor().WillEdit(type, willEdit);
-        }
-
-        public override string ToString()
-        {
-            return DisplayName;
-        }
-
-        public override string DisplayName
-        {
-            get { return GetEditor().DisplayName; }
-        }
-
-        private IParameterEditor<Control> GetEditor()
-        {
-            return m_type.GetConstructor(new Type[0]).Invoke(new object[0]) as IParameterEditor<Control>;
-        }
-
-        public IParameterEditor<Control> MakeEditor(ParameterEditorSetupData data)
-        {
-            var ed = GetEditor();
-            ed.Setup(data);
-            return ed;
-        }
     }
 }

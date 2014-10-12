@@ -9,7 +9,7 @@ namespace ConversationEditor
 {
     public class DomainConnectionRules : IConnectionRules
     {
-        static readonly HashSet<UnordererTuple2<ID<TConnectorDefinition>>> acceptablePairings = new HashSet<UnordererTuple2<ID<TConnectorDefinition>>>()
+        static readonly HashSet<UnorderedTuple2<ID<TConnectorDefinition>>> acceptablePairings = new HashSet<UnorderedTuple2<ID<TConnectorDefinition>>>()
         {
             UnordererTuple.Make(DomainIDs.ENUM_OUTPUT_DEFINITION.Id, DomainIDs.ENUM_VALUE_OUTPUT_DEFINITION.Id), //Connect enumeration declarations with possible values
             

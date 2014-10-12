@@ -207,7 +207,7 @@ namespace ConversationEditor
                     }
                     else
                     {
-                        var x = m_parent.BestConnector(client, a => m_parent.CanConnect(a, LinkingTransition));
+                        var x = m_parent.BestConnector(client, a => a.CanConnectTo(LinkingTransition));
                         if (x != LinkingTransition)
                             Connect(LinkingTransition, x);
                         else
@@ -223,7 +223,7 @@ namespace ConversationEditor
                     if (Control.ModifierKeys.HasFlag(Keys.Shift))
                     {
                         var p0 = m_lastClientPos;
-                        Output x = m_parent.BestConnector(p0, a => m_parent.CanConnect(a, LinkingTransition));
+                        Output x = m_parent.BestConnector(p0, a => a.CanConnectTo(LinkingTransition));
                         if (x != null)
                             connections.Add(m_parent.UIInfo(x).Area.Center(), m_parent.UIInfo(LinkingTransition).Area.Center(), false);
                     }
@@ -478,7 +478,7 @@ namespace ConversationEditor
                         if (Control.ModifierKeys.HasFlag(Keys.Shift))
                         {
                             var p0 = m_lastClientPos;
-                            Output x = m_parent.BestConnector(p0, a => m_parent.CanConnect(a, connection));
+                            Output x = m_parent.BestConnector(p0, a => a.CanConnectTo(connection));
                             if (x != null)
                                 connections.Add(m_parent.UIInfo(x).Area.Center(), m_parent.UIInfo(connection).Area.Center(), true);
                         }
@@ -531,7 +531,7 @@ namespace ConversationEditor
 
                     if (Control.ModifierKeys.HasFlag(Keys.Shift))
                     {
-                        var best = m_parent.BestConnector(client, a => SelectedTransition.Connections.All(c => m_parent.CanConnect(a, c)));
+                        var best = m_parent.BestConnector(client, a => SelectedTransition.Connections.All(c => a.CanConnectTo(c)));
                         action(best);
                     }
                     m_parent.ForClickedOn(client, x => { }, action, (a, b) => { }, x => { }, () => { });
@@ -553,8 +553,8 @@ namespace ConversationEditor
             } //Yes
             public class ConnectionSelected : State
             {
-                public readonly UnordererTuple2<Output> SelectedConnection;
-                public ConnectionSelected(MouseController<TNode> parent, UnordererTuple2<Output> selectedConnection)
+                public readonly UnorderedTuple2<Output> SelectedConnection;
+                public ConnectionSelected(MouseController<TNode> parent, UnorderedTuple2<Output> selectedConnection)
                     : base(parent)
                 {
                     SelectedConnection = selectedConnection;
@@ -648,11 +648,6 @@ namespace ConversationEditor
                 m_selection.Add(group);
         }
 
-        private bool CanConnect(Output a, Output b)
-        {
-            return a.Rules.CanConnect(a.m_definition.Id, b.m_definition.Id);
-        }
-
         public void Draw(Graphics g, ConnectionDrawer connections)
         {
             m_state.Draw(g, connections);
@@ -736,7 +731,7 @@ namespace ConversationEditor
             }
 
             var connectors = nodes.SelectMany(n => n.Connectors);
-            HashSet<UnordererTuple2<Output>> connections = new HashSet<UnordererTuple2<Output>>(connectors.SelectMany(o => o.Connections.Select(c => UnordererTuple.Make(o, c))));
+            HashSet<UnorderedTuple2<Output>> connections = new HashSet<UnorderedTuple2<Output>>(connectors.SelectMany(o => o.Connections.Select(c => UnordererTuple.Make(o, c))));
             foreach (var connection in connections)
             {
                 Bezier b = LineDrawer.GetBezier(Util.Center(UIInfo(connection.Item1).Area), Util.Center(UIInfo(connection.Item2).Area));

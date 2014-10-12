@@ -123,6 +123,7 @@ namespace ConversationEditor
             InitialiseConversationEditor();
             InitializeDomainEditor();
             InitialiseOptionsMenu();
+            InitialiseExportMenu();
             m_errorCheckerController = new ErrorCheckerController(m_config.ErrorCheckers, m_config.Plugins);
 
             errorList1.HightlightNode += errorList1_HightlightNode;
@@ -214,7 +215,7 @@ namespace ConversationEditor
         private List<IParameterEditorFactory> GetAllParameterEditors()
         {
             List<IParameterEditorFactory> result = new List<IParameterEditorFactory>();
-            foreach (var pa in m_config.Plugins.UnfilteredAssemblies.Select(a=>a.Assembly).Concat(Assembly.GetExecutingAssembly().Only()))
+            foreach (var pa in m_config.Plugins.UnfilteredAssemblies.Select(a => a.Assembly).Concat(Assembly.GetExecutingAssembly().Only()))
             {
                 var factories = pa.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(IParameterEditorFactory)));
                 foreach (var factory in factories)
@@ -390,7 +391,12 @@ namespace ConversationEditor
                     }
                     else
                         CurrentEditor = null;
-                    var loc = projectConfig.LastLocalization != null ? project.LocalizationFiles.FirstOrDefault(c => c.File.File.FullName == (p.Rerout(projectConfig.LastLocalization.Only()).Single()).FullName) : null;
+                    Func<ILocalizationFile, bool> matchesLastLocalization = c => c.File.File.FullName == (p.Rerout(projectConfig.LastLocalization.Only()).Single()).FullName;
+                    IEnumerable<ILocalizationFile> allLocalizers = project.LocalizationFiles;
+                    if (projectConfig.LastLocalization != null)
+                        allLocalizers = allLocalizers.OrderByDescending(matchesLastLocalization);
+
+                    var loc = allLocalizers.First();
                     projectExplorer.SelectLocalization(loc);
                     p.Localizer.SelectLocalizer(loc);
                 }
@@ -452,7 +458,7 @@ namespace ConversationEditor
 
         private IParameterEditor<Control> GetParameterEditor(Guid id, ParameterEditorSetupData data)
         {
-            var editorFactory = GetAllParameterEditors().Where(e=>e.Guid == id).Single();
+            var editorFactory = GetAllParameterEditors().Where(e => e.Guid == id).Single();
             IParameterEditor<Control> editor = editorFactory.Make();
             editor.Setup(data);
             return editor;
@@ -609,7 +615,7 @@ namespace ConversationEditor
             {
                 m_config.ParameterEditors[d.TypeId] = (d as IEnumParameter).Value;
             }
-            
+
             //using (ParameterEditorCustomizer2 ec = new ParameterEditorCustomizer2())
             //{
             //    ec.Init(m_config.ParameterEditors, m_projectMenuController.CurrentProject.ConversationDataSource);
@@ -685,36 +691,6 @@ namespace ConversationEditor
             d.Show();
         }
 
-        class DanglingAudioError : ConversationError<ConversationNode>
-        {
-            private string m_file;
-            public DanglingAudioError(string file, ConversationNode node)
-                : base(node.Only())
-            {
-                m_file = file;
-            }
-
-            public override string Message
-            {
-                get { return "Audio parameter value '" + m_file + "' does not have a corresponding audio file loaded in the project"; }
-            }
-        }
-
-        class PointlessAudioError : ConversationError<ConversationNode>
-        {
-            private string m_file;
-            public PointlessAudioError(string file)
-                : base(Enumerable.Empty<ConversationNode>())
-            {
-                m_file = file;
-            }
-
-            public override string Message
-            {
-                get { return "Audio file '" + m_file + "' is not referenced by any conversation in this project"; }
-            }
-        }
-
         private void testProjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Func<string, FileInfo> rooted = s =>
@@ -736,34 +712,6 @@ namespace ConversationEditor
             IEnumerable<ErrorList.Element> danglingPointerErrors = danglingPointers.Select(a => new ErrorList.Element(new DanglingAudioError(a.Path, a.Node), a.Document));
             IEnumerable<ErrorList.Element> pointlessAudioErrors = unnecessaryAudioFiles.Select(a => new ErrorList.Element(new PointlessAudioError(a), null));
             errorList1.SetErrors(danglingPointerErrors.Concat(pointlessAudioErrors));
-        }
-
-        private void domainAsCToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            DomainData builtIn = new DomainData();
-            builtIn.Connectors.Add(SpecialConnectors.Input);
-            builtIn.Connectors.Add(SpecialConnectors.Output);
-            var data = m_projectMenuController.CurrentProject.DomainFiles.Select(d => d.Data).Concat(builtIn.Only());
-            using (var sfd = new SaveFileDialog())
-            {
-                sfd.DefaultExt = "*.cs";
-                sfd.AddExtension = true;
-                sfd.CreatePrompt = false;
-                sfd.InitialDirectory = m_config.ExportPath.Value;
-                sfd.OverwritePrompt = true;
-                sfd.ValidateNames = true;
-                sfd.Title = "Export to C# source file";
-                if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    m_config.ExportPath.Value = Path.GetDirectoryName(sfd.FileName);
-                    CsDomain<INodeGUI, NodeUIData, ConversationEditorData>.Serializer s = new CsDomain<INodeGUI, NodeUIData, ConversationEditorData>.Serializer(BaseTypeSet.BasicTypeMap(), "MyNamespace");
-                    using (var stream = new FileStream(sfd.FileName, FileMode.OpenOrCreate, FileAccess.Write))
-                    {
-                        stream.SetLength(0);
-                        s.Write(data, stream);
-                    }
-                }
-            }
         }
 
         private void FindReferences(ConversationNode node)
@@ -810,5 +758,32 @@ namespace ConversationEditor
                 audioNamingMethodToolStripMenuItem.DropDownItems.Add(item);
             }
         }
+
+        private List<T> GetAllFactories<T>() where T : class
+        {
+            List<T> result = new List<T>();
+            foreach (var pa in m_config.Plugins.UnfilteredAssemblies.Select(a => a.Assembly).Concat(Assembly.GetExecutingAssembly().Only()))
+            {
+                var factories = pa.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(T)));
+                foreach (var factory in factories)
+                {
+                    T obj = factory.GetConstructor(Type.EmptyTypes).Invoke(new object[0]) as T;
+                    result.Add(obj);
+                }
+            }
+            return result;
+        }
+
+        private void InitialiseExportMenu()
+        {
+            var exporters = GetAllFactories<IProjectExporter>();
+            foreach (var exporter in exporters)
+            {
+                var e = exporter;
+                var item = exportToolStripMenuItem.DropDownItems.Add(e.Name);
+                item.Click += (a, b) => { e.Export(m_projectMenuController.CurrentProject, m_config.ExportPath, l => projectExplorer.CurrentLocalizer.Localize(l)); };
+            }
+        }
+
     }
 }

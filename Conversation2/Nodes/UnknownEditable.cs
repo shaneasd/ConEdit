@@ -62,7 +62,7 @@ namespace Conversation
 
         class CustomConnectionRules : IConnectionRules
         {
-            HashSet<UnordererTuple2<ID<TConnectorDefinition>>> m_rules = new HashSet<UnordererTuple2<ID<TConnectorDefinition>>>();
+            HashSet<UnorderedTuple2<ID<TConnectorDefinition>>> m_rules = new HashSet<UnorderedTuple2<ID<TConnectorDefinition>>>();
 
             public bool CanConnect(ID<TConnectorDefinition> a, ID<TConnectorDefinition> b)
             {

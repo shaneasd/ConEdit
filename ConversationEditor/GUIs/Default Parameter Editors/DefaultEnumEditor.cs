@@ -37,31 +37,26 @@ namespace ConversationEditor
             }
         }
 
-        MyComboBox<Guid> m_comboBox;
-        List<MyComboBox<Guid>.Item> m_comboBoxItems = new List<MyComboBox<Guid>.Item>();
+        MySuggestionBox<Guid> m_comboBox;
+        List<MySuggestionBox<Guid>.Item> m_comboBoxItems = new List<MySuggestionBox<Guid>.Item>();
         IEnumParameter m_parameter;
 
         public DefaultEnumEditor()
         {
             InitializeComponent();
 
-            m_comboBox = new MyComboBox<Guid>(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), false, m_comboBoxItems);
+            m_comboBox = new MySuggestionBox<Guid>(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), false, m_comboBoxItems);
             m_comboBox.SetupCallbacks();
             m_comboBox.RequestedAreaChanged += () =>
                 {
                     MinimumSize = new Size(0, (int)m_comboBox.RequestedArea.Height);
                     Size = m_comboBox.RequestedArea.ToSize();
                 };
-            m_comboBox.Colors.BorderPen = ColorScheme.ControlBorder;
+            m_comboBox.Colors.TextBox.BorderPen = ColorScheme.ControlBorder;
+            m_comboBox.Colors.SelectedBackground = ColorScheme.SelectedConversationListItemPrimaryBackground;
             m_comboBox.Renderer = ColorScheme.ContextMenu;
             m_comboBox.SelectionChanged += () => m_parameter.EditorSelected = m_comboBox.SelectedItem.Contents;
-            m_comboBox.SpecialEnter = true;
             m_comboBox.EnterPressed += () => { Ok.Execute(); };
-        }
-
-        public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
-        {
-            return willEdit.IsEnum(type);
         }
 
         private Guid SelectedItem
@@ -72,7 +67,7 @@ namespace ConversationEditor
             }
             set
             {
-                m_comboBox.SelectedItem = new MyComboBox<Guid>.Item(m_parameter.GetName(value), value);
+                m_comboBox.SelectedItem = new MySuggestionBox<Guid>.Item(m_parameter.GetName(value), value);
             }
         }
 
@@ -81,16 +76,16 @@ namespace ConversationEditor
             m_parameter = data.Parameter as IEnumParameter;
             foreach (var ch in m_parameter.Options.OrderBy(o=>m_parameter.GetName(o)))
             {
-                m_comboBoxItems.Add(new MyComboBox<Guid>.Item(m_parameter.GetName(ch), ch));
+                m_comboBoxItems.Add(new MySuggestionBox<Guid>.Item(m_parameter.GetName(ch), ch));
             }
 
             if (!m_parameter.Corrupted)
             {
                 var valueName = m_parameter.GetName(m_parameter.Value);
                 if (valueName != null)
-                    m_comboBox.SelectedItem = new MyComboBox<Guid>.Item(valueName, m_parameter.Value);
+                    m_comboBox.SelectedItem = new MySuggestionBox<Guid>.Item(valueName, m_parameter.Value);
                 else
-                    m_comboBox.SelectedItem = new MyComboBox<Guid>.Item(EnumParameter.INVALID_VALUE);
+                    m_comboBox.SelectedItem = new MySuggestionBox<Guid>.Item(EnumParameter.INVALID_VALUE);
             }
         }
 
@@ -105,11 +100,6 @@ namespace ConversationEditor
                 throw new Exception("Current enum selection is invalid");
 
             return m_parameter.SetValueAction(SelectedItem);
-        }
-
-        public string DisplayName
-        {
-            get { return "Default Enumeration Editor"; }
         }
 
         public bool IsValid()

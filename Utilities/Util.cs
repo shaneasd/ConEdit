@@ -197,6 +197,7 @@ namespace Utilities
             return s;
         }
 
+        [System.Diagnostics.DebuggerNonUserCode]
         public static FileStream LoadFileStream(FileInfo path, FileMode mode, FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.None)
         {
             FileStream s = null;

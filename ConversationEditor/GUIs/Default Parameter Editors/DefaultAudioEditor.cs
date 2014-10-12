@@ -65,11 +65,6 @@ namespace ConversationEditor
         {
         }
 
-        public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
-        {
-            return type == BaseTypeAudio.PARAMETER_TYPE;
-        }
-
         public event Action Ok;
         AudioGenerationParameters m_audioGenerationParameters;
         IAudioParameter m_parameter;
@@ -100,11 +95,6 @@ namespace ConversationEditor
             if (result.Actions != null)
                 result.Audio = audio;
             return result;
-        }
-
-        public string DisplayName
-        {
-            get { return "Default Audio Editor"; }
         }
 
         public bool IsValid()

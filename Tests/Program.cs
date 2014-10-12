@@ -6,16 +6,12 @@ using Utilities;
 using ConversationEditor;
 using System.IO;
 using System.Threading;
+using NUnit.Framework;
 
 namespace Tests
 {
-    partial class Program
+    public static partial class Program
     {
-        public static void Assert(bool condition)
-        {
-            if (!condition)
-                throw new Exception();
-        }
         static void Main(string[] args)
         {
             TestWeakEvent();
@@ -24,45 +20,50 @@ namespace Tests
             ManualResetEvent();
         }
 
+        [NUnit.Framework.Test]
         public static void TestUndoQueue()
         {
             SaveableFileUndoable file = new SaveableFileUndoable(new MemoryStream(), new FileInfo("ignore.txt"), a => { });
-            Assert(!file.Changed);
+            Assert.False(file.Changed);
             file.Change(new GenericUndoAction(() => { }, () => { }, ""));
-            Assert(file.Changed);
+            Assert.True(file.Changed);
             file.UndoQueue.Undo();
-            Assert(!file.Changed);
+            Assert.False(file.Changed);
             file.UndoQueue.Redo();
-            Assert(file.Changed);
+            Assert.True(file.Changed);
             file.Save();
-            Assert(!file.Changed);
+            Assert.False(file.Changed);
             file.Change(new GenericUndoAction(() => { }, () => { }, ""));
-            Assert(file.Changed);
+            Assert.True(file.Changed);
             file.UndoQueue.Undo();
-            Assert(!file.Changed);
+            Assert.False(file.Changed);
             file.UndoQueue.Undo();
-            Assert(file.Changed);
+            Assert.True(file.Changed);
             file.UndoQueue.Redo();
-            Assert(!file.Changed);
+            Assert.False(file.Changed);
             file.Dispose();
         }
 
+        [NUnit.Framework.Test]
         public static void TestPolynomial()
         {
             {
-                Console.Out.WriteLine("Definition");
+                //Console.Out.WriteLine("Definition");
                 double[] coefficients = { 5, 2, 8, 7 };
                 Polynomial p = new Polynomial(coefficients);
-                Console.Out.WriteLine(p);
-                Console.Out.WriteLine(p.Derivative);
-                Console.Out.WriteLine();
+                //Console.Out.WriteLine(p);
+                //Console.Out.WriteLine(p.Derivative);
+                //Console.Out.WriteLine();
+                Assert.AreEqual(2*1, p.Derivative.Coefficients[0]);
+                Assert.AreEqual(8*2, p.Derivative.Coefficients[1]);
+                Assert.AreEqual(7*3, p.Derivative.Coefficients[2]);
             }
 
             {
                 Console.Out.WriteLine("Zero");
                 double[] coefficients = { 0, 0, 0, 0 };
                 Polynomial p = new Polynomial(coefficients);
-                Assert(p.Coefficients.Any());
+                Assert.True(p.Coefficients.Any());
             }
 
             {
@@ -104,12 +105,18 @@ namespace Tests
                 Polynomial a = new Polynomial(new double[] { 1, 2 });
                 Polynomial b = new Polynomial(new double[] { -4, 1, 0, 0, 3 });
                 var c = a + b;
-                Console.Out.WriteLine(a + "  +  " + b);
-                Console.Out.WriteLine();
-                Console.Out.WriteLine(c);
+                //Console.Out.WriteLine(a + "  +  " + b);
+                //Console.Out.WriteLine();
+                //Console.Out.WriteLine(c);
+                Assert.AreEqual(a.Coefficients[0] + b.Coefficients[0], c.Coefficients[0]);
+                Assert.AreEqual(a.Coefficients[1] + b.Coefficients[1], c.Coefficients[1]);
+                Assert.AreEqual(b.Coefficients[2], c.Coefficients[2]);
+                Assert.AreEqual(b.Coefficients[3], c.Coefficients[3]);
+                Assert.AreEqual(b.Coefficients[4], c.Coefficients[4]);
             }
         }
 
+        [NUnit.Framework.Test]
         public static void ManualResetEvent()
         {
             ManualResetEventSlim e = new ManualResetEventSlim(false);

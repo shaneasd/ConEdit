@@ -30,22 +30,6 @@ namespace ConversationEditor
                 return Guid.Empty;
         }
 
-        public static IEnumerable<ParameterEditorChoice> DefaultEditors
-        {
-            get
-            {
-                yield return new ParameterEditorChoice(typeof(DefaultBooleanEditor));
-                yield return new ParameterEditorChoice(typeof(DefaultDecimalEditor));
-                yield return new ParameterEditorChoice(typeof(DefaultDynamicEnumEditor));
-                yield return new ParameterEditorChoice(typeof(DefaultEnumEditor));
-                yield return new ParameterEditorChoice(typeof(DefaultIntegerEditor));
-                //yield return new ParameterEditorChoice(typeof(DefaultFilePathEditor));
-                yield return new ParameterEditorChoice(typeof(DefaultStringEditor));
-                yield return new ParameterEditorChoice(typeof(DefaultLocalizedStringEditor));
-                yield return new ParameterEditorChoice(typeof(DefaultAudioEditor));
-            }
-        }
-
         private List<Parameter> m_parameters;
         private MapConfig<ID<ParameterType>, Guid> m_typeMapConfig;
         public ParameterEditorCustomization()

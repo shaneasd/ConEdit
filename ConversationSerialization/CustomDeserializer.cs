@@ -76,9 +76,9 @@ namespace Conversation.Serialization
             return datasource(guid, id, parameters, new PointF(x,y));
         }
 
-        private static HashSet<UnordererTuple2<Tuple<ID<TConnector>, ID<NodeTemp>>>> ReadLinks(IEnumerable<ID<NodeTemp>> filteredNodes, XElement root)
+        private static HashSet<UnorderedTuple2<Tuple<ID<TConnector>, ID<NodeTemp>>>> ReadLinks(IEnumerable<ID<NodeTemp>> filteredNodes, XElement root)
         {
-            HashSet<UnordererTuple2<Tuple<ID<TConnector>, ID<NodeTemp>>>> result = new HashSet<UnordererTuple2<Tuple<ID<TConnector>, ID<NodeTemp>>>>();
+            HashSet<UnorderedTuple2<Tuple<ID<TConnector>, ID<NodeTemp>>>> result = new HashSet<UnorderedTuple2<Tuple<ID<TConnector>, ID<NodeTemp>>>>();
 
             foreach (var link in root.Elements("Link"))
             {

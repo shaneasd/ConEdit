@@ -32,8 +32,8 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.panel1 = new System.Windows.Forms.Panel();
             this.button2 = new System.Windows.Forms.Button();
-            this.drawWindow1 = new ConversationEditor.DrawWindow();
-            this.greyScrollBar1 = new ConversationEditor.GreyScrollBar();
+            this.drawWindow1 = new Utilities.DrawWindow();
+            this.greyScrollBar1 = new Utilities.GreyScrollBar();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -124,7 +124,7 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button button2;
-        private DrawWindow drawWindow1;
-        private GreyScrollBar greyScrollBar1;
+        private Utilities.DrawWindow drawWindow1;
+        private Utilities.GreyScrollBar greyScrollBar1;
     }
 }

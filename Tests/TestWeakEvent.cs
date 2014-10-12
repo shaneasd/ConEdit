@@ -3,24 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Utilities;
+using NUnit.Framework;
 
 namespace Tests
 {
-    partial class Program
+    public static partial class Program
     {
+        [NUnit.Framework.Test]
         public static void TestWeakEvent()
         {
             object a = new object();
             bool w1Executed = false;
             WeakCallback w1 = new WeakCallback<object>(a, A => { w1Executed = true; });
             w1.Execute();
-            Assert(w1Executed);
+            Assert.True(w1Executed);
             w1Executed = false;
             a = null;
             GC.Collect();
             GC.WaitForPendingFinalizers();
             w1.Execute();
-            Assert(!w1Executed);
+            Assert.False(w1Executed);
 
             object b = new object();
             bool w2Executed = false;
@@ -30,7 +32,7 @@ namespace Tests
             e.Register(w1);
             e.Register(w2);
             e.Execute();
-            Assert(w2Executed);
+            Assert.True(w2Executed);
         }
     }
 }

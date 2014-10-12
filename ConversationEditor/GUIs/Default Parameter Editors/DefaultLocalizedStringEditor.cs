@@ -59,11 +59,6 @@ namespace ConversationEditor
 
         LocalizationEngine m_localizer;
 
-        public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
-        {
-            return type == BaseTypeLocalizedString.PARAMETER_TYPE;
-        }
-
         ILocalizedStringParameter m_parameter;
         public void Setup(ParameterEditorSetupData data)
         {
@@ -106,11 +101,6 @@ namespace ConversationEditor
             {
                 return new UpdateParameterData();
             }
-        }
-
-        public string DisplayName
-        {
-            get { return "Default Localized String Editor"; }
         }
 
         public bool IsValid()

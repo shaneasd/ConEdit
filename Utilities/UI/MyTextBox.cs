@@ -59,7 +59,7 @@ namespace Utilities
                 Text = Color.FromArgb(205, 205, 205);
                 SelectedText = Color.Cyan;
                 SelectedBackgroundBrush = Brushes.Navy;
-                BackgroundBrush = new SolidBrush(Color.FromArgb(56, 56, 56));
+                Background = Color.FromArgb(56, 56, 56);
                 BorderPen = new Pen(Color.FromArgb(205, 205, 205));
             }
 
@@ -89,12 +89,19 @@ namespace Utilities
                 }
             }
 
-            public Brush BackgroundBrush { get; set; }
+
             public Pen BorderPen { get; set; }
-            public Brush SelectedBackgroundBrush { get; set; }
 
             public Brush TextBrush { get; protected set; }
             public Brush SelectedTextBrush { get; protected set; }
+
+            private Color m_background;
+            public Color Background { get { return m_background; } set { m_background = value; BackgroundBrush = new SolidBrush(Background); } }
+            public Brush BackgroundBrush { get; protected set; }
+
+            private Color m_selectedBackground;
+            public Color SelectedBackground { get { return m_selectedBackground; } set { m_selectedBackground = value; SelectedBackgroundBrush = new SolidBrush(m_selectedBackground); } }
+            public Brush SelectedBackgroundBrush { get; protected set; }
         }
 
         public ColorOptions Colors { get; set; }
@@ -318,7 +325,7 @@ namespace Utilities
                     for (int i = 0; i <= text.Length; i++)
                     {
                         g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
-                        TextRenderer.DrawText(g, text.Substring(0, i), Font, TextRectangle.Location.Round().Plus(0, Font.Height * line), Colors.Text, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix);
+                        TextRenderer.DrawText(g, text.Substring(0, i), Font, TextRectangle.Location.Round().Plus(0, Font.Height * line), Colors.Text, Colors.Background, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix);
                     }
                 }
 
@@ -342,7 +349,7 @@ namespace Utilities
                             Region r = new Region(RectangleF.FromLTRB(startx, y * Font.Height + TextRectangle.Y, endx, (1 + y) * Font.Height + TextRectangle.Y));
                             g.Clip = r;
                             g.FillRectangle(Colors.SelectedBackgroundBrush, area);
-                            TextRenderer.DrawText(g, lines[y], Font, TextRectangle.Location.Round().Plus(0, Font.Height * y), Colors.SelectedText, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
+                            TextRenderer.DrawText(g, lines[y], Font, TextRectangle.Location.Round().Plus(0, Font.Height * y), Colors.SelectedText, Colors.SelectedBackground, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
                         }
                     }
                 }

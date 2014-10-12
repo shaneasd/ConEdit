@@ -96,11 +96,6 @@ namespace ConversationEditor
                 g.FillRectangle(ColorScheme.ForegroundBrush, new Rectangle(boxRectangle.X + 2, boxRectangle.Y + 2, boxRectangle.Width - 3, boxRectangle.Height - 3));
         }
 
-        public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
-        {
-            return type == BaseTypeBoolean.PARAMETER_TYPE;
-        }
-
         IBooleanParameter m_parameter;
         public void Setup(ParameterEditorSetupData data)
         {
@@ -117,11 +112,6 @@ namespace ConversationEditor
         public UpdateParameterData UpdateParameterAction()
         {
             return m_parameter.SetValueAction(Checked);
-        }
-
-        public string DisplayName
-        {
-            get { return "Default Boolean Editor"; }
         }
 
         public bool IsValid()

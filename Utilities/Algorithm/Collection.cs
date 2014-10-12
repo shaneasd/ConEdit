@@ -212,5 +212,14 @@ namespace Utilities
             }
             return best;
         }
+
+        public static IEnumerable<T> TakeUpTo<T>(this IEnumerable<T> data, int count)
+        {
+            var e = data.GetEnumerator();
+            for (int i = 0; e.MoveNext() && i < count; i++)
+            {
+                yield return e.Current;
+            }
+        }
     }
 }

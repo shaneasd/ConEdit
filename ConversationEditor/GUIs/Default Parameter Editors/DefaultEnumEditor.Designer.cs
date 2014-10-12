@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.drawWindow1 = new ConversationEditor.DrawWindow();
+            this.drawWindow1 = new Utilities.DrawWindow();
             this.SuspendLayout();
             // 
             // drawWindow1
@@ -55,6 +55,6 @@
 
         #endregion
 
-        private DrawWindow drawWindow1;
+        private Utilities.DrawWindow drawWindow1;
     }
 }

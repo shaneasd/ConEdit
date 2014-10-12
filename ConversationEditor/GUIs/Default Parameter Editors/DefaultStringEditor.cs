@@ -56,11 +56,6 @@ namespace ConversationEditor
             MyTextBox.SetupCallbacks(drawWindow1, m_textBox);
         }
 
-        public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
-        {
-            return type == BaseTypeString.PARAMETER_TYPE;
-        }
-
         IStringParameter m_parameter;
         public void Setup(ParameterEditorSetupData data)
         {
@@ -77,11 +72,6 @@ namespace ConversationEditor
         public UpdateParameterData UpdateParameterAction()
         {
             return m_parameter.SetValueAction(m_textBox.Text);
-        }
-
-        public string DisplayName
-        {
-            get { return "Default String Editor"; }
         }
 
         public bool IsValid()

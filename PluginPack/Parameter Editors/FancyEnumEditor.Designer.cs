@@ -28,10 +28,31 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.drawWindow1 = new Utilities.DrawWindow();
+            this.SuspendLayout();
+            // 
+            // drawWindow1
+            // 
+            this.drawWindow1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.drawWindow1.HandleNavigation = false;
+            this.drawWindow1.Location = new System.Drawing.Point(0, 0);
+            this.drawWindow1.Name = "drawWindow1";
+            this.drawWindow1.Size = new System.Drawing.Size(182, 30);
+            this.drawWindow1.TabIndex = 0;
+            // 
+            // FancyCharacterEditor
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.drawWindow1);
+            this.Name = "FancyCharacterEditor";
+            this.Size = new System.Drawing.Size(182, 30);
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private Utilities.DrawWindow drawWindow1;
     }
 }

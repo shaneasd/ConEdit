@@ -245,9 +245,9 @@ namespace Conversation.Serialization
                 return result;
             }
 
-            private static HashSet<UnordererTuple2<Tuple<ID<TConnector>, ID<NodeTemp>>>> ReadLinks(IEnumerable<ID<NodeTemp>> filteredNodes, XElement root)
+            private static HashSet<UnorderedTuple2<Tuple<ID<TConnector>, ID<NodeTemp>>>> ReadLinks(IEnumerable<ID<NodeTemp>> filteredNodes, XElement root)
             {
-                HashSet<UnordererTuple2<Tuple<ID<TConnector>, ID<NodeTemp>>>> result = new HashSet<UnordererTuple2<Tuple<ID<TConnector>, ID<NodeTemp>>>>();
+                HashSet<UnorderedTuple2<Tuple<ID<TConnector>, ID<NodeTemp>>>> result = new HashSet<UnorderedTuple2<Tuple<ID<TConnector>, ID<NodeTemp>>>>();
 
                 foreach (var link in root.Elements("Link"))
                 {
@@ -291,7 +291,7 @@ namespace Conversation.Serialization
 
             private static void WriteLinks(XmlGraphData<TUIRawData, TEditorData> conversation, XElement root)
             {
-                HashSet<UnordererTuple2<Tuple<ID<TConnector>, IEditable>>> links = new HashSet<UnordererTuple2<Tuple<ID<TConnector>, IEditable>>>();
+                HashSet<UnorderedTuple2<Tuple<ID<TConnector>, IEditable>>> links = new HashSet<UnorderedTuple2<Tuple<ID<TConnector>, IEditable>>>();
                 foreach (var n in conversation.Nodes)
                 {
                     foreach (var c in n.GraphData.Connectors)

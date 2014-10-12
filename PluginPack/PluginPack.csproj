@@ -50,12 +50,6 @@
     <Compile Include="Context Menu Items\ExportAsCsv.cs" />
     <Compile Include="Node Renderers\IconRenderer.cs" />
     <Compile Include="ErrorCheckers\BadNodeErrorChecker.cs" />
-    <Compile Include="Parameter Editors\CharacterEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Parameter Editors\CharacterEditor.Designer.cs">
-      <DependentUpon>CharacterEditor.cs</DependentUpon>
-    </Compile>
     <Compile Include="ErrorCheckers\CycleErrorChecker.cs" />
     <Compile Include="ErrorCheckers\DisconnectionErrorChecker.cs" />
     <Compile Include="ErrorCheckers\JumpsErrorChecker.cs" />
@@ -69,6 +63,13 @@
     <Compile Include="Parameter Editors\FancyEnumEditor.Designer.cs">
       <DependentUpon>FancyEnumEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Parameter Editors\FancyEnumForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Parameter Editors\FancyEnumForm.Designer.cs">
+      <DependentUpon>FancyEnumForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project Exporters\ConversationsAsSsv.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -81,9 +82,11 @@
     <Compile Include="UneditableNodeEditorFactory.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Parameter Editors\CharacterEditor.resx">
-      <DependentUpon>CharacterEditor.cs</DependentUpon>
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="Parameter Editors\FancyEnumEditor.resx">
+      <DependentUpon>FancyEnumEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Parameter Editors\FancyEnumForm.resx">
+      <DependentUpon>FancyEnumForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -98,7 +101,7 @@
     <None Include="Resources\tammy.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\jonas.png" />
+    <EmbeddedResource Include="Resources\jonas.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shane.png" />
@@ -129,7 +132,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\ali.png" />
+    <EmbeddedResource Include="Resources\daniel.png" />
     <Content Include="Resources\End Icon.png" />
+    <EmbeddedResource Include="Resources\juan.png" />
     <Content Include="Resources\Start Icon.png" />
     <EmbeddedResource Include="Templates\Basic Conversation.xml" />
   </ItemGroup>
