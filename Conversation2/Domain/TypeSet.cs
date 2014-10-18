@@ -161,7 +161,7 @@ namespace Conversation
                 return data.Name;
             }
             else
-                return "Unknown type"; //TODO: These are the build in types that don't have customized names
+                return "Unknown type"; //TODO: These are the built in types that don't have customized names
         }
 
         public void RenameType(ID<ParameterType> guid, string name)

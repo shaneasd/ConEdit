@@ -16,7 +16,6 @@ using System.Drawing.Drawing2D;
 
 namespace ConversationEditor
 {
-    //TODO: Drawing the project explorer is super expensive because the area for each item is calculated a ton of times
     //TODO: Background color given to DrawText is wrong when the item is selected
 
     public partial class ProjectExplorer : UserControl
@@ -203,7 +202,6 @@ namespace ConversationEditor
         Image m_image = null;
         private void drawWindow1_Paint(object sender, PaintEventArgs e)
         {
-            Debug.WriteLine("Painting draw window");
             bool redraw = false;
             Image image;
             lock (m_imageLock)

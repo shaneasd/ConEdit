@@ -135,6 +135,18 @@
     <Compile Include="GUIs\Default Parameter Editors\UnknownParameterEditor.Designer.cs">
       <DependentUpon>UnknownParameterEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUIs\ProjectExporer\ContainerItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\ProjectExporer\FileSystemObject.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\ProjectExporer\FoilderItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\ProjectExporer\LeafItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Node Graphics\UnknownNodeRenderer.cs" />
     <Compile Include="Node Graphics\EditableRenderer.cs">
       <SubType>Code</SubType>
@@ -148,7 +160,7 @@
     <Compile Include="GUIs\FindReferencesDialog.Designer.cs">
       <DependentUpon>FindReferencesDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUIs\RealLeafItem.cs">
+    <Compile Include="GUIs\ProjectExporer\RealLeafItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUIs\GraphEditorControl.cs">
@@ -160,13 +172,13 @@
     <Compile Include="GUIs\MissingLeafItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUIs\ProjectExplorer.cs">
+    <Compile Include="GUIs\ProjectExporer\ProjectExplorer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUIs\ProjectExplorer.Designer.cs">
+    <Compile Include="GUIs\ProjectExporer\ProjectExplorer.Designer.cs">
       <DependentUpon>ProjectExplorer.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUIs\GraphItem.cs">
+    <Compile Include="GUIs\ProjectExporer\GraphItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUIs\Default Parameter Editors\DefaultAudioEditor.cs">
@@ -241,9 +253,6 @@
     <Compile Include="GUIs\ErrorList.Designer.cs">
       <DependentUpon>ErrorList.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUIs\FileList.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="GUIs\FindAndReplaceDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -262,7 +271,7 @@
     <Compile Include="GUIs\PluginSelector.Designer.cs">
       <DependentUpon>PluginSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUIs\ProjectExplorerItems.cs">
+    <Compile Include="GUIs\ProjectExporer\ProjectExplorerItems.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUIs\WM.cs" />
@@ -328,7 +337,7 @@
     <EmbeddedResource Include="GUIs\GraphEditorControl.resx">
       <DependentUpon>GraphEditorControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUIs\ProjectExplorer.resx">
+    <EmbeddedResource Include="GUIs\ProjectExporer\ProjectExplorer.resx">
       <DependentUpon>ProjectExplorer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUIs\Default Parameter Editors\DefaultAudioEditor.resx">

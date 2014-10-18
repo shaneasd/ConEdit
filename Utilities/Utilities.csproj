@@ -81,7 +81,7 @@
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="UI\MyButton.cs" />
     <Compile Include="UI\MyControl.cs" />
-    <Compile Include="Math\MyMath.cs" />
+    <Compile Include="Unused\MyMath.cs" />
     <Compile Include="UI\MyNumericUpDown.cs" />
     <Compile Include="UI\Drawing.cs" />
     <Compile Include="IO\FileSystem.cs" />
@@ -94,7 +94,7 @@
     <Compile Include="Algorithm\O1LookupWrapper.cs" />
     <Compile Include="Algorithm\O1Tree.cs" />
     <Compile Include="Or.cs" />
-    <Compile Include="Math\Polygon.cs" />
+    <Compile Include="Unused\Polygon.cs" />
     <Compile Include="Math\Polynomial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Algorithm\QuickLookupCollection.cs" />

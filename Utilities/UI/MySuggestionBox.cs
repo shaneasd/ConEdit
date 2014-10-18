@@ -92,14 +92,14 @@ namespace Utilities
 
             m_dropDown = new ToolStripDropDown();
             m_dropDown.Opened += (a, b) => { m_dropDownOpen = true; };
-            m_dropDown.Closed += (a, b) => { m_dropDownOpen = false; m_itemIndex = -1; };
+            m_dropDown.Closed += (a, b) => { m_dropDownOpen = false; m_itemIndex = -1; m_dropDownWindow = 0; };
 
             m_textBox = new MyTextBox(control, m_area, MyTextBox.InputFormEnum.Text);
             m_textBox.Font = m_dropDown.Font;
             m_textBox.RequestedAreaChanged += () => { RequestedArea = new SizeF(Area.Width, m_textBox.RequestedArea.Height); };
 
             m_textBox.TextChanged += s => SelectionChanged.Execute();
-            m_textBox.TextChanged += s => { if (!m_ignoreTextChange) UpdateDropdown(); };
+            m_textBox.TextChanged += s => { if (!m_ignoreTextChange) { m_itemIndex = -1; m_dropDownWindow = 0; UpdateDropdown(); } };
 
             m_colors = new ColorOptions() { TextBox = m_textBox.Colors, SelectedBackground = Color.Green };
         }
@@ -154,10 +154,24 @@ namespace Utilities
             get { return m_itemIndex; }
             set
             {
+                Debug.WriteLine("Index changed to " + value + " m_dropDownWindow: " + m_dropDownWindow);
                 if (SelectedToolStripItem != null)
                     SelectedToolStripItem.BackColor = m_dropDown.BackColor;
-                if (value >= 0 && value < m_dropDown.Items.Count)
+                if (value >= 0 && value < Items.Count())
                     m_itemIndex = value;
+
+                int newDropDownWindow = m_itemIndex - WINDOW_SIZE + 1;
+                if (newDropDownWindow > m_dropDownWindow)
+                {
+                    m_dropDownWindow = newDropDownWindow;
+                    UpdateDropdown();
+                }
+                if (m_itemIndex < m_dropDownWindow)
+                {
+                    m_dropDownWindow = m_itemIndex;
+                    UpdateDropdown();
+                }
+
                 if (SelectedToolStripItem != null)
                     SelectedToolStripItem.BackColor = Colors.SelectedBackground;
             }
@@ -166,11 +180,11 @@ namespace Utilities
         {
             get
             {
-                if (ItemIndex < 0)
+                if (ItemIndex - m_dropDownWindow < 0)
                     return null;
-                if (ItemIndex >= m_dropDown.Items.Count)
+                if (ItemIndex - m_dropDownWindow >= m_dropDown.Items.Count)
                     return null;
-                return m_dropDown.Items[ItemIndex];
+                return m_dropDown.Items[ItemIndex - m_dropDownWindow];
             }
         }
 
@@ -233,6 +247,7 @@ namespace Utilities
             m_control.KeyDown += (a, args) => KeyDown(args);
             m_control.GotFocus += (a, args) => GotFocus();
             m_control.LostFocus += (a, args) => LostFocus();
+            m_control.MouseWheel += (a, args) => MouseWheel(args);
 
             m_control.Paint += (a, args) => Paint(args.Graphics);
         }
@@ -270,28 +285,50 @@ namespace Utilities
             }
         }
 
+
+        public override void MouseWheel(MouseEventArgs args)
+        {
+            if (m_dropDownOpen)
+            {
+                if (args.Delta < 0)
+                    m_dropDownWindow++;
+                else
+                    m_dropDownWindow--;
+                m_itemIndex = -1;
+                UpdateDropdown();
+            }
+        }
+
+        const int WINDOW_SIZE = 12;
+        int m_dropDownWindow = 0;
+
         private void UpdateDropdown()
         {
+            m_dropDown.SuspendLayout();
             var width = (int)m_area().Width - 2;
+            var height = m_dropDown.Font.Height + 4;
             m_dropDown.Items.Clear();
             var matches = Items.Where(i => i.DisplayString.ToUpper().Contains(m_textBox.Text.ToUpper()));
             var sorted = matches.OrderBy(i => !i.DisplayString.ToUpper().StartsWith(m_textBox.Text.ToUpper())).ThenBy(i => i.DisplayString.ToUpper());
-            var limited = sorted.TakeUpTo(12);
+            var strictSorted = sorted.ToList();
+            if (m_dropDownWindow + WINDOW_SIZE > strictSorted.Count)
+                m_dropDownWindow -= strictSorted.Count - WINDOW_SIZE;
+            if (m_dropDownWindow < 0)
+                m_dropDownWindow = 0;
+            var limited = sorted.Skip(m_dropDownWindow).TakeUpTo(WINDOW_SIZE);
             foreach (var item in limited)
             {
                 var itemitem = item;
                 var element = m_dropDown.Items.Add(item.DisplayString, null, (a, b) => { SelectedItem = itemitem; });
                 element.TextAlign = ContentAlignment.MiddleLeft;
                 element.AutoSize = false;
+                element.Height = height;
                 element.Width = width;
             }
             m_dropDown.AutoClose = false;
-            m_dropDown.Show(m_control.PointToScreen(new Point((int)Area.Left, (int)Area.Bottom)));
-        }
-
-        public override void MouseWheel(MouseEventArgs args)
-        {
-            //Do nothing I guess...
+            if (!m_dropDownOpen)
+                m_dropDown.Show(m_control.PointToScreen(new Point((int)Area.Left, (int)Area.Bottom)));
+            m_dropDown.ResumeLayout();
         }
 
         public override void MouseCaptureChanged()

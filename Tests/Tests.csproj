@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestSuppressibleAction.cs" />
     <Compile Include="TestWeakEvent.cs" />
     <Compile Include="UnorderedTuple.cs" />
   </ItemGroup>

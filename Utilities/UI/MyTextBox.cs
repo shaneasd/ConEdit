@@ -510,7 +510,8 @@ namespace Utilities
             }
             else if (e.KeyCode.IsSet(Keys.C) && e.Control)
             {
-                Clipboard.SetText(SelectedText);
+                if (!string.IsNullOrEmpty(SelectedText))
+                    Clipboard.SetText(SelectedText);
                 m_additionUndoAction = null;
             }
             else if (e.KeyCode.IsSet(Keys.X) && e.Control)
@@ -520,7 +521,8 @@ namespace Utilities
                     if (!string.IsNullOrEmpty(SelectedText))
                     {
                         var undo = MakeUndoAction();
-                        Clipboard.SetText(SelectedText);
+                        if (!string.IsNullOrEmpty(SelectedText))
+                            Clipboard.SetText(SelectedText);
                         DeleteSelection();
                         m_additionUndoAction = null;
                         undo.SetRedo(m_state);

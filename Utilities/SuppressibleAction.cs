@@ -5,6 +5,12 @@ using System.Text;
 
 namespace Utilities
 {
+    /// <summary>
+    /// Provides a utility to wrap a callback in a way that allows delaying its execution.
+    /// This is achieved using the 'using' mechanism in C# to ensure the callback is restored.
+    /// Once the callback is restored, if it would have executed, it then executes.
+    /// This is useful for suppressing callbacks that update state when it is known that further updates are expected
+    /// </summary>
     public class SuppressibleAction : IDisposable
     {
         private Action m_action;
@@ -58,7 +64,7 @@ namespace Utilities
 
         public void Dispose()
         {
-            //Reset the action so even if any rogue suppressors are leftover they won't trigger the even anymore
+            //Reset the action so even if any rogue suppressors are leftover they won't trigger the event anymore
             m_action = () => { };
         }
     }
