@@ -9,6 +9,9 @@ using System.Windows.Forms;
 using Conversation;
 using Utilities;
 
+using TControl = Utilities.MySuggestionBox<System.Guid>;
+//using TControl = Utilities.MyComboBox<System.Guid>;
+
 namespace ConversationEditor
 {
     public partial class DefaultEnumEditor : UserControl, IParameterEditor<DefaultEnumEditor>
@@ -37,23 +40,23 @@ namespace ConversationEditor
             }
         }
 
-        MySuggestionBox<Guid> m_comboBox;
-        List<MySuggestionBox<Guid>.Item> m_comboBoxItems = new List<MySuggestionBox<Guid>.Item>();
+        TControl m_comboBox;
+        List<TControl.Item> m_comboBoxItems = new List<TControl.Item>();
         IEnumParameter m_parameter;
 
         public DefaultEnumEditor()
         {
             InitializeComponent();
 
-            m_comboBox = new MySuggestionBox<Guid>(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), false, m_comboBoxItems);
+            m_comboBox = new TControl(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), true, m_comboBoxItems);
             m_comboBox.SetupCallbacks();
             m_comboBox.RequestedAreaChanged += () =>
                 {
                     MinimumSize = new Size(0, (int)m_comboBox.RequestedArea.Height);
                     Size = m_comboBox.RequestedArea.ToSize();
                 };
-            m_comboBox.Colors.TextBox.BorderPen = ColorScheme.ControlBorder;
-            m_comboBox.Colors.SelectedBackground = ColorScheme.SelectedConversationListItemPrimaryBackground;
+            m_comboBox.TextBoxColors.BorderPen = ColorScheme.ControlBorder;
+            m_comboBox.SelectedBackgroundColor = ColorScheme.SelectedConversationListItemPrimaryBackground;
             m_comboBox.Renderer = ColorScheme.ContextMenu;
             m_comboBox.SelectionChanged += () => m_parameter.EditorSelected = m_comboBox.SelectedItem.Contents;
             m_comboBox.EnterPressed += () => { Ok.Execute(); };
@@ -67,7 +70,7 @@ namespace ConversationEditor
             }
             set
             {
-                m_comboBox.SelectedItem = new MySuggestionBox<Guid>.Item(m_parameter.GetName(value), value);
+                m_comboBox.SelectedItem = new TControl.Item(m_parameter.GetName(value), value);
             }
         }
 
@@ -76,16 +79,16 @@ namespace ConversationEditor
             m_parameter = data.Parameter as IEnumParameter;
             foreach (var ch in m_parameter.Options.OrderBy(o=>m_parameter.GetName(o)))
             {
-                m_comboBoxItems.Add(new MySuggestionBox<Guid>.Item(m_parameter.GetName(ch), ch));
+                m_comboBoxItems.Add(new TControl.Item(m_parameter.GetName(ch), ch));
             }
 
             if (!m_parameter.Corrupted)
             {
                 var valueName = m_parameter.GetName(m_parameter.Value);
                 if (valueName != null)
-                    m_comboBox.SelectedItem = new MySuggestionBox<Guid>.Item(valueName, m_parameter.Value);
+                    m_comboBox.SelectedItem = new TControl.Item(valueName, m_parameter.Value);
                 else
-                    m_comboBox.SelectedItem = new MySuggestionBox<Guid>.Item(EnumParameter.INVALID_VALUE);
+                    m_comboBox.SelectedItem = new TControl.Item(EnumParameter.INVALID_VALUE);
             }
         }
 

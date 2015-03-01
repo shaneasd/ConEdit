@@ -10,7 +10,7 @@ namespace ConversationEditor.Controllers
 {
     class DomainAsCSharp : IProjectExporter
     {
-        public void Export(IProject project, ConfigParameterString exportPath, Func<ID<LocalizedText>, string> localize)
+        public void Export(IProject project, ConfigParameterString exportPath, Func<ID<LocalizedText>, string> localize, IErrorCheckerUtilities util)
         {
             DomainData builtIn = new DomainData();
             builtIn.Connectors.Add(SpecialConnectors.Input);

@@ -190,6 +190,11 @@ namespace Utilities
             return new Rectangle((int)p.X, (int)p.Y, (int)p.Width, (int)p.Height);
         }
 
+        public static RectangleF ToRectangleF(this Rectangle r)
+        {
+            return new RectangleF(r.X, r.Y, r.Width, r.Height);
+        }
+
         public static FileStream LoadFileStream(string path, FileMode mode, FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.None)
         {
             FileStream s = null;

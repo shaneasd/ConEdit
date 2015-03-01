@@ -88,7 +88,9 @@ namespace ConversationEditor
                 {
                     PointF offset = client.Take(m_lastClientPos); //Amount the mouse has moved (since we last actually moved the nodes)
                     var selectionOrigin = m_dragTarget.Renderer.Area.Center();
-                    var newPosF = m_parent.Snap(selectionOrigin.Plus(offset));
+                    var newPosF = m_dragTarget is NodeGroup 
+                                  ? selectionOrigin.Plus(m_parent.SnapGroup(offset))
+                                  : m_parent.Snap(selectionOrigin.Plus(offset));
                     offset = newPosF.Take(selectionOrigin); //The actual offset applied
 
                     foreach (var a in m_parent.m_selection.Renderable(id => m_parent.GetNode(id)))
@@ -677,6 +679,7 @@ namespace ConversationEditor
         Func<IEnumerable<NodeGroup>> m_groups; //Accessor to the set of groups associated with the current file
         public event Action<UndoAction> Changed;
         private readonly Func<PointF, PointF> Snap;
+        private readonly Func<PointF, PointF> SnapGroup;
         private readonly Func<IEditable, ConfigureResult> Edit;
         private readonly Func<TNode, bool> RemoveNode;
         private readonly Func<ID<NodeTemp>, TNode> GetNode;
@@ -684,7 +687,7 @@ namespace ConversationEditor
         public bool m_keyHeld;
         private readonly Func<Output, TransitionNoduleUIInfo> UIInfo;
 
-        public MouseController(Action refreshDisplay, Action<Point> shift, Action<Point, float> scale, Func<IEnumerable<TNode>> nodes, Func<IEnumerable<NodeGroup>> groups, Func<IEditable, ConfigureResult> edit, Func<TNode, bool> removeNode, Func<PointF, PointF> snap, Func<Output, TransitionNoduleUIInfo> uiInfo, Func<ID<NodeTemp>, TNode> getNode)
+        public MouseController(Action refreshDisplay, Action<Point> shift, Action<Point, float> scale, Func<IEnumerable<TNode>> nodes, Func<IEnumerable<NodeGroup>> groups, Func<IEditable, ConfigureResult> edit, Func<TNode, bool> removeNode, Func<PointF, PointF> snap, Func<PointF, PointF> snapGroup, Func<Output, TransitionNoduleUIInfo> uiInfo, Func<ID<NodeTemp>, TNode> getNode)
         {
             m_innerState = new State.Nothing(this, null, null);
             RefreshDisplay = refreshDisplay;
@@ -695,6 +698,7 @@ namespace ConversationEditor
             RemoveNode = removeNode;
             Edit = edit;
             Snap = snap;
+            SnapGroup = snapGroup;
             UIInfo = uiInfo;
             GetNode = getNode;
         }

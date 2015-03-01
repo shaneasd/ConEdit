@@ -81,9 +81,12 @@ namespace Conversation
 
         public void ModifyEnum(EnumerationData typeData)
         {
-            var e = m_enums[typeData.TypeID].Item2;
-            e.SetOptions(typeData.Elements);
-            Modified.Execute(typeData.TypeID);
+            if (m_enums.ContainsKey(typeData.TypeID)) //If we're removing an entire domain file, an enum declaration can be removed before its values. In this circumstance, when the values are removed, this method will be called but the end wont exist.
+            {
+                var e = m_enums[typeData.TypeID].Item2;
+                e.SetOptions(typeData.Elements);
+                Modified.Execute(typeData.TypeID);
+            }
         }
 
         public EnumerationData GetEnumData(ID<ParameterType> id)
@@ -140,28 +143,6 @@ namespace Conversation
         public string GetTypeName(ID<ParameterType> guid)
         {
             return m_typeNames[guid];
-            if (IsInteger(guid))
-            {
-                var data = m_integers[guid];
-                return data.Name;
-            }
-            else if (IsDecimal(guid))
-            {
-                var data = m_decimals[guid];
-                return data.Name;
-            }
-            else if (IsEnum(guid))
-            {
-                var data = m_enums[guid];
-                return data.Item1;
-            }
-            else if (IsDynamicEnum(guid))
-            {
-                var data = m_dynamicEnums[guid];
-                return data.Name;
-            }
-            else
-                return "Unknown type"; //TODO: These are the built in types that don't have customized names
         }
 
         public void RenameType(ID<ParameterType> guid, string name)

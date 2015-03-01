@@ -38,7 +38,7 @@ namespace ConversationEditor
         public bool CanRemove(Func<bool> prompt)
         {
             bool asked = false;
-            prompt = () =>
+            Func<bool> check = () =>
             {
                 if (asked)
                     return true;
@@ -48,7 +48,7 @@ namespace ConversationEditor
                     return prompt();
                 }
             };
-            return m_nodes.All(node => CanRemoveFromData(node, prompt));
+            return m_nodes.All(node => CanRemoveFromData(node, check));
         }
 
         public void Removed()

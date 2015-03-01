@@ -221,5 +221,13 @@ namespace Utilities
                 yield return e.Current;
             }
         }
+
+        public static T LookupOrDefault<U, T>(this IDictionary<U, T> data, U key, T def)
+        {
+            if (data.ContainsKey(key))
+                return data[key];
+            else
+                return def;
+        }
     }
 }

@@ -26,9 +26,9 @@ namespace ConversationEditor
                     var types = assembly.GetExportedTypes();
                     foreach (Type type in types)
                     {
-                        if (type.IsSubclassOf(typeof(NodeUI.Factory)))
+                        if (type.IsSubclassOf(typeof(NodeUI.IFactory)))
                         {
-                            yield return new NodeRendererChoice((NodeUI.Factory)type.GetConstructor(new Type[0]).Invoke(new object[0]));
+                            yield return new NodeRendererChoice((NodeUI.IFactory)type.GetConstructor(new Type[0]).Invoke(new object[0]));
                         }
                     }
                 }

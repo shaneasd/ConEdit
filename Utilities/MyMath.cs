@@ -11,5 +11,10 @@ namespace Utilities
         {
             return (float)Math.Ceiling(val);
         }
+
+        public static bool IsPowerOf2(uint i)
+        {
+            return i > 0 && ((~i + 1) & i) == i;
+        }
     }
 }

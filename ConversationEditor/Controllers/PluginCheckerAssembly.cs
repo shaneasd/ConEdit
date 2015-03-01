@@ -46,7 +46,8 @@ namespace ConversationEditor
         public readonly PluginAssembly m_assembly;
         public readonly QuickLookupCollection<ErrorCheckerController.ErrorCheckerData, string> Types = new QuickLookupCollection<ErrorCheckerController.ErrorCheckerData, string>(a => a.SerializeName);
 
-        public ErrorCheckerAssembly(string path) : this(new PluginAssembly(path))
+        public ErrorCheckerAssembly(string path)
+            : this(new PluginAssembly(path))
         {
         }
 
@@ -63,7 +64,7 @@ namespace ConversationEditor
         {
             List<Type> result = new List<Type>();
             var allTypes = m_assembly.Assembly.GetExportedTypes();
-            
+
             //Load error checkers
             foreach (Type t in allTypes)
             {
@@ -87,7 +88,8 @@ namespace ConversationEditor
 
         public void SetEnabled(string name, bool enabled)
         {
-            Types[name].Enabled = enabled;
+            if (Types.ContainsKey(name))
+                Types[name].Enabled = enabled;
         }
 
         public IEnumerable<ErrorChecker<ConversationNode>> GetEnabledErrorCheckers()

@@ -10,13 +10,15 @@ namespace ConversationEditor
 {
     public abstract class NodeUI : INodeGUI
     {
-        public abstract class Factory //TODO: Distinguish between domain node renderers and conversation node renderers
+        public interface IFactory //TODO: Distinguish between domain node renderers and conversation node renderers
         {
-            public abstract bool WillRender(ID<NodeTypeTemp> nodeType);
+            bool WillRender(ID<NodeTypeTemp> nodeType);
 
-            public abstract string DisplayName { get; }
+            string DisplayName { get; }
 
-            public abstract INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer);
+            Guid Guid { get; }
+
+            INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer);
         }
 
         public NodeUI(ConversationNode<INodeGUI> node, PointF p)

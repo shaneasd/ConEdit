@@ -70,12 +70,12 @@ namespace ConversationEditor
             }
         }
 
-        internal IEnumerable<ConversationError<ConversationNode>> CheckForErrors(IEnumerable<ConversationNode> nodes)
+        internal IEnumerable<ConversationError<ConversationNode>> CheckForErrors(IEnumerable<ConversationNode> nodes, IErrorCheckerUtilities utils)
         {
             m_config.RefreshConfig(m_pluginsConfig);
             foreach (var assembly in m_config.Assemblies)
                 foreach (var checker in assembly.GetEnabledErrorCheckers())
-                    foreach (var error in checker.Check(nodes))
+                    foreach (var error in checker.Check(nodes, utils))
                         yield return error;
         }
     }

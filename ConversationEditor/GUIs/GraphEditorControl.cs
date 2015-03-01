@@ -306,6 +306,24 @@ namespace ConversationEditor
             }
         }
 
+        public PointF SnapGroup(PointF p)
+        {
+            if (SnapToGrid ^ Control.ModifierKeys.HasFlag(Keys.Shift))
+            {
+                float x = p.X / MinorGridSpacing;
+                float y = p.Y / MinorGridSpacing;
+                x = (float)Math.Round(x);
+                y = (float)Math.Round(y);
+                p.X = x * MinorGridSpacing;
+                p.Y = y * MinorGridSpacing;
+                return p;
+            }
+            else
+            {
+                return p;
+            }
+        }
+
         private void drawWindow_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
@@ -355,7 +373,7 @@ namespace ConversationEditor
         }
         private void InitialiseMouseController()
         {
-            m_mouseController = new MouseController<TNode>(Redraw, shift => Shift(shift), (p, z) => Zoom(p, z), () => CurrentFile.Nodes, () => CurrentFile.Groups, MyEdit, n => CurrentFile.Remove(n.Only(), Enumerable.Empty<NodeGroup>()), Snap, UIInfo, id => CurrentFile.GetNode(id));
+            m_mouseController = new MouseController<TNode>(Redraw, shift => Shift(shift), (p, z) => Zoom(p, z), () => CurrentFile.Nodes, () => CurrentFile.Groups, MyEdit, n => CurrentFile.Remove(n.Only(), Enumerable.Empty<NodeGroup>()), Snap, SnapGroup, UIInfo, id => CurrentFile.GetNode(id));
             drawWindow.MouseDown += (a, args) => m_mouseController.MouseDown(DrawWindowToGraphSpace(args.Location), args.Location, args.Button);
             drawWindow.MouseUp += (a, args) => m_mouseController.MouseUp(DrawWindowToGraphSpace(args.Location), args.Location, args.Button);
             drawWindow.MouseMove += (a, args) => m_mouseController.MouseMove(DrawWindowToGraphSpace(args.Location), args.Location);
@@ -699,7 +717,9 @@ namespace ConversationEditor
 
         public void SelectAll()
         {
-            SetSelection(CurrentFile.Nodes.Evaluate(), CurrentFile.Groups);
+            //Can't pass in the lazy collections as selecting these nodes brings them to the front
+            //which changes the order of the elements corrupting the enumerator
+            SetSelection(CurrentFile.Nodes.Evaluate(), CurrentFile.Groups.Evaluate());
         }
 
         public void CopySelection()

@@ -129,6 +129,7 @@ namespace ConversationEditor
 
         public SimpleUndoPair DuplicateAction(ID<LocalizedText> guid, ID<LocalizedText> result)
         {
+            object change = new object();
             return new SimpleUndoPair
             {
                 Redo = () =>
@@ -136,12 +137,14 @@ namespace ConversationEditor
                     if (m_data.m_data.ContainsKey(guid))
                     {
                         m_data.m_data[result] = m_data.m_data[guid];
+                        m_currentChanges.Add(change);
                         m_file.Change();
                     }
                 },
                 Undo = () =>
                 {
                     m_data.m_data.Remove(result);
+                    m_currentChanges.Add(change);
                     m_file.Change();
                 },
             };

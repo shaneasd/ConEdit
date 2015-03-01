@@ -62,16 +62,19 @@ namespace ConversationEditor
                     foreach (var e in editor.m_parameterEditors)
                     {
                         UpdateParameterData updateParameterData = e.Item1.UpdateParameterAction();
-                        SimpleUndoPair? actions = updateParameterData.Actions;
-                        if (actions != null)
+                        if (updateParameterData != null)
                         {
-                            undo.Add(actions.Value.Undo);
-                            redo.Add(actions.Value.Redo);
-                        }
-                        if (updateParameterData.Audio != null)
-                        {
-                            undo.Add(() => audioProvider.UpdateUsage(updateParameterData.Audio.Value));
-                            redo.Add(() => audioProvider.UpdateUsage(updateParameterData.Audio.Value));
+                            SimpleUndoPair? actions = updateParameterData.Actions;
+                            if (actions != null)
+                            {
+                                undo.Add(actions.Value.Undo);
+                                redo.Add(actions.Value.Redo);
+                            }
+                            if (updateParameterData.Audio != null)
+                            {
+                                undo.Add(() => audioProvider.UpdateUsage(updateParameterData.Audio.Value));
+                                redo.Add(() => audioProvider.UpdateUsage(updateParameterData.Audio.Value));
+                            }
                         }
                     }
                     if (undo.Any())
@@ -99,7 +102,8 @@ namespace ConversationEditor
 
             this.SuspendLayout();
             Title = m_data.Name;
-            foreach (Parameter p in m_data.Parameters)
+            int parameterCount = 0;
+            foreach (Parameter p in m_data.Parameters.OrderBy(p=>p.Name))
             {
                 var editorData = new ParameterEditorSetupData(p, localizer, audioProvider, audioContext);
                 if (p is UnknownParameter)
@@ -120,6 +124,13 @@ namespace ConversationEditor
                 {
                     AddParameter(p, config(p.TypeId, editorData));
                 }
+                parameterCount++;
+            }
+
+            if (parameterCount > 15)
+            {
+                tableLayoutPanel3.ColumnStyles[4].Width = 105;
+                tableLayoutPanel3.Controls.Add(new Button() { Width = 100 }, 4, 0);
             }
 
             //Add a buffer to fill up the space

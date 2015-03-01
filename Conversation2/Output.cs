@@ -130,6 +130,13 @@ namespace Conversation
     public class Output
     {
         public readonly ConnectorDefinitionData m_definition;
+        public readonly ID<TConnector> ID;
+        public readonly IEditable Parent;
+        public readonly List<Parameter> Parameters;
+        public readonly IConnectionRules Rules;
+
+        private List<Output> m_connections = new List<Output>();
+
         public Output(ID<TConnector> id, ConnectorDefinitionData definition, IEditable parent, List<Parameter> parameters, IConnectionRules rules)
         {
             m_definition = definition;
@@ -139,12 +146,6 @@ namespace Conversation
             ID = id;
         }
 
-        public readonly ID<TConnector> ID;
-        public readonly IEditable Parent;
-        public readonly List<Parameter> Parameters;
-        public readonly IConnectionRules Rules;
-
-        public List<Output> m_connections = new List<Output>();
 
         public IEnumerable<Output> Connections
         {

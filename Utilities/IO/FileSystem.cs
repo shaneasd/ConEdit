@@ -5,61 +5,66 @@ using System.Text;
 using System.IO;
 using Utilities;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Utilities
 {
     public static class FileSystem
     {
-        public static bool SameDir(DirectoryInfo dir1, DirectoryInfo dir2)
+        public static bool AncestorOf(this FileInfo descendant, DirectoryInfo ancestor)
         {
-            return dir1.FullName == dir2.FullName;
+            var pathA = ancestor.FullName;
+            var pathD = descendant.FullName;
+            return pathD.StartsWith(pathA, StringComparison.InvariantCultureIgnoreCase);
         }
 
-        public static bool AncestorOf(this FileInfo child, DirectoryInfo ancestor)
+        public static List<DirectoryInfo> PathToFrom(FileInfo descendant, DirectoryInfo ancestor)
         {
-            for (var test = child.Directory; test != null; test = test.Parent)
-                if (SameDir(test, ancestor))
-                    return true;
-            return false;
-        }
-
-        public static List<DirectoryInfo> PathToFrom(FileInfo child, DirectoryInfo ancestor)
-        {
-            Stack<DirectoryInfo> stack = new Stack<DirectoryInfo>();
-            for (var test = child.Directory; test != null; test = test.Parent)
+            var result = PathToFrom(descendant.Directory, ancestor);
+            if (result != null)
             {
-                stack.Push(test);
-                if (SameDir(test, ancestor))
-                {
-                    List<DirectoryInfo> result = new List<DirectoryInfo>();
-                    while (stack.Any())
-                        result.Add(stack.Pop());
-                    return result;
-                }
+                result.Add(descendant.Directory);
             }
-            return null;
+            return result;
+            //List<DirectoryInfo> stack = new List<DirectoryInfo>();
+            //for (var test = child.Directory; test != null; test = test.Parent)
+            //{
+            //    stack.Insert(0, test);
+            //    if (DirectoryEqualityComparer.SameDir(test, ancestor))
+            //    {
+            //        return stack;
+            //    }
+            //}
+            //return null;
         }
 
-        public static List<DirectoryInfo> PathToFrom(DirectoryInfo child, DirectoryInfo ancestor)
+        /// <summary>
+        /// Generate a list of DirectoryInfos representing all the folders in between the input ancestor and descendant
+        /// The first element is 'ancestor'
+        /// The last element is descendant's parent
+        /// If 'descendant' is not a descendant of 'ancestor', returns null
+        /// </summary>
+        public static List<DirectoryInfo> PathToFrom(DirectoryInfo descendant, DirectoryInfo ancestor)
         {
-            Stack<DirectoryInfo> stack = new Stack<DirectoryInfo>();
-            for (var test = child.Parent; test != null; test = test.Parent)
+            var pathA = ancestor.FullName;
+            var pathD = descendant.FullName;
+
+            if (!pathD.StartsWith(pathA, StringComparison.InvariantCultureIgnoreCase))
+                return null;
+
+            List<DirectoryInfo> result = new List<DirectoryInfo>();
+            for (int i = pathA.Length; i != -1; i = pathD.IndexOf('\\', i + 1))
             {
-                stack.Push(test);
-                if (SameDir(test, ancestor))
-                {
-                    List<DirectoryInfo> result = new List<DirectoryInfo>();
-                    while (stack.Any())
-                        result.Add(stack.Pop());
-                    return result;
-                }
+                result.Add(new DirectoryInfo(pathD.Substring(0, i)));
             }
-            return null;
+            return result;
         }
 
         public static string RelativePath(FileInfo child, DirectoryInfo root)
         {
             var path = PathToFrom(child, root);
+            if (path == null)
+                System.Windows.Forms.MessageBox.Show(child.FullName + "                           " + root.FullName);
             return string.Join("" + Path.DirectorySeparatorChar, path.Skip(1).Select(f => f.Name).Concat(child.Name.Only()).ToArray());
         }
 

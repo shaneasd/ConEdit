@@ -483,7 +483,7 @@ namespace Utilities
 
         public override void GotFocus()
         {
-            //if (InputForm != InputFormEnum.None)
+            if (InputForm != InputFormEnum.None)
             {
                 Caret.CreateCaret(m_control.Handle, IntPtr.Zero, 2, CARET_HEIGHT);
                 using (var g = m_control.CreateGraphics())

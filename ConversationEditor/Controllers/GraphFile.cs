@@ -221,8 +221,8 @@ namespace ConversationEditor
 
             return new SimpleUndoPair
             {
-                Undo = () => { foreach (Action action in undoActions) action(); },
-                Redo = () => { foreach (Action action in redoActions) action(); },
+                Undo = () => { using (m_audioProvider.SuppressUpdates()) foreach (Action action in undoActions) action(); },
+                Redo = () => { using (m_audioProvider.SuppressUpdates()) foreach (Action action in redoActions) action(); },
             };
         }
 
@@ -287,8 +287,8 @@ namespace ConversationEditor
                 });
             }
 
-            Action undo = () => { foreach (Action action in undoActions) action(); };
-            Action redo = () => { foreach (Action action in redoActions) action(); };
+            Action undo = () => { using (m_audioProvider.SuppressUpdates()) foreach (Action action in undoActions) action(); };
+            Action redo = () => { using (m_audioProvider.SuppressUpdates()) foreach (Action action in redoActions) action(); };
 
             string message;
             if (removeNodes && removeGroups)

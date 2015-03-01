@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyUtils.cs" />
+    <Compile Include="IO\DirectoryEqualityComparer.cs" />
     <Compile Include="IO\ISaveableFile.cs" />
     <Compile Include="IO\UpToDateFile.cs" />
     <Compile Include="Math\Bezier.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Algorithm\CallbackDictionary.cs" />
     <Compile Include="Algorithm\CallbackList.cs" />
     <Compile Include="Algorithm\CallbackSet.cs" />
+    <Compile Include="NativeTextRenderer.cs" />
     <Compile Include="StringUtil.cs" />
     <Compile Include="UI\Caret.cs" />
     <Compile Include="Algorithm\Collection.cs" />
@@ -70,6 +72,12 @@
     <Compile Include="UI\GreyScrollBar.Designer.cs">
       <DependentUpon>GreyScrollBar.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\ScrollPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\ScrollPanel.Designer.cs">
+      <DependentUpon>ScrollPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Unused\Identities.cs" />
     <Compile Include="UI\InvisibleControl.cs">
       <SubType>UserControl</SubType>
@@ -81,7 +89,7 @@
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="UI\MyButton.cs" />
     <Compile Include="UI\MyControl.cs" />
-    <Compile Include="Unused\MyMath.cs" />
+    <Compile Include="MyMath.cs" />
     <Compile Include="UI\MyNumericUpDown.cs" />
     <Compile Include="UI\Drawing.cs" />
     <Compile Include="IO\FileSystem.cs" />
@@ -122,6 +130,9 @@
     <EmbeddedResource Include="UI\GreyScrollBar.resx">
       <DependentUpon>GreyScrollBar.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\ScrollPanel.resx">
+      <DependentUpon>ScrollPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\TabStop.resx">
       <DependentUpon>TabStop.cs</DependentUpon>
     </EmbeddedResource>
@@ -136,6 +147,9 @@
     <EmbeddedResource Include="UI\Resources\ScrollbarTopPressed.png" />
     <EmbeddedResource Include="UI\Resources\ScrollbarUp.png" />
     <EmbeddedResource Include="UI\Resources\ScrollbarUpPressed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Resources\UpArrow.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

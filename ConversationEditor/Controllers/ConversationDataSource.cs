@@ -271,5 +271,15 @@ namespace ConversationEditor
             var index = m_categories.FindIndex(d => d.Guid == data.Guid);
             m_categories[index] = data;
         }
+
+        public Guid GetCategory(ID<NodeTypeTemp> type)
+        {
+            foreach (var item in m_nodes.Values)
+            {
+                if (item.Item2.Guid == type)
+                    return item.Item1;
+            }
+            return Guid.Empty;
+        }
     }
 }

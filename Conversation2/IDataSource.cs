@@ -65,6 +65,8 @@ namespace Conversation
         bool IsNodeDefinition(ID<NodeTypeTemp> id);
 
         string GetTypeName(ID<ParameterType> type);
+
+        Guid GetCategory(ID<NodeTypeTemp> type);
     }
 
     public static class DataSourceUtils
@@ -158,6 +160,11 @@ namespace Conversation
         }
 
         string IDataSource.GetTypeName(ID<ParameterType> type)
+        {
+            throw new NotImplementedException();
+        }
+
+        Guid IDataSource.GetCategory(ID<NodeTypeTemp> type)
         {
             throw new NotImplementedException();
         }

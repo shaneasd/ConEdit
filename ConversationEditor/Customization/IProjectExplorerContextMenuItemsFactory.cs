@@ -15,7 +15,7 @@ namespace ConversationEditor
     public interface IConversationContextMenuItem
     {
         string Name { get; }
-        void Execute(IConversationFile conversation);
+        void Execute(IConversationFile conversation, IErrorCheckerUtilities util);
     }
 
     public interface ILocalizationContextMenuItem

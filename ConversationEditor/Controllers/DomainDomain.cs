@@ -779,5 +779,11 @@ namespace ConversationEditor
         {
             throw new NotImplementedException(); // Don't need an implementation for this because we won't be modifying editors for types in the domain domain
         }
+
+
+        public Guid GetCategory(ID<NodeTypeTemp> type)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

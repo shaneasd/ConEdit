@@ -47,16 +47,12 @@
     <Compile Include="Config\ConfigNodeDefinitions.cs" />
     <Compile Include="Config\NameConfig.cs" />
     <Compile Include="Config\ShortcutKey.cs" />
-    <Compile Include="Context Menu Items\ExportAsCsv.cs" />
-    <Compile Include="Node Renderers\IconRenderer.cs" />
-    <Compile Include="ErrorCheckers\BadNodeErrorChecker.cs" />
     <Compile Include="ErrorCheckers\CycleErrorChecker.cs" />
+    <Compile Include="Node Renderers\IconRenderer.cs" />
     <Compile Include="ErrorCheckers\DisconnectionErrorChecker.cs" />
     <Compile Include="ErrorCheckers\JumpsErrorChecker.cs" />
-    <Compile Include="ErrorCheckers\OptionErrorChecker.cs" />
     <Compile Include="Context Menu Items\MenuActionFactory.cs" />
     <Compile Include="Config\IconConfig.cs" />
-    <Compile Include="Context Menu Items\ProjectExplorerContextMenu.cs" />
     <Compile Include="Parameter Editors\FancyEnumEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -69,7 +65,6 @@
     <Compile Include="Parameter Editors\FancyEnumForm.Designer.cs">
       <DependentUpon>FancyEnumForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Project Exporters\ConversationsAsSsv.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -139,7 +134,9 @@
     <Content Include="Resources\Start Icon.png" />
     <EmbeddedResource Include="Templates\Basic Conversation.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Project Exporters\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

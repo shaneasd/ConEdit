@@ -70,26 +70,34 @@ namespace Utilities
         private Control m_control;
 
         Func<RectangleF> m_buttonArea;
+        const int BUTTON_WIDTH = 20;
+
         Func<RectangleF> m_area;
         public RectangleF Area { get { return m_area(); } }
         ToolStripDropDown m_dropDown;
-        const int BUTTON_WIDTH = 20;
+        private bool m_allowCustomText;
 
-        public MyTextBox.ColorOptions Colors { get { return m_textBox.Colors; } set { m_textBox.Colors = value; } }
+        private readonly bool m_HasDropDownButton = false;
 
-        public MyComboBox(Control control, Func<RectangleF> area, bool allowTextEdit, IEnumerable<Item> items)
+        public MyTextBox.ColorOptions TextBoxColors { get { return m_textBox.Colors; } set { m_textBox.Colors = value; } }
+
+        public MyComboBox(Control control, Func<RectangleF> area, bool allowCustomText, IEnumerable<Item> items)
         {
-            m_allowTextEdit = allowTextEdit;
+            m_allowCustomText = allowCustomText;
             m_control = control;
             m_area = area;
             Items = items;
 
-            m_buttonArea = () => { var a = area(); return RectangleF.FromLTRB(a.Right - BUTTON_WIDTH, a.Top, a.Right, a.Bottom); };
-            Func<RectangleF> m_textBoxArea = () => { var a = area(); return RectangleF.FromLTRB(a.Left, a.Top, a.Right - BUTTON_WIDTH, a.Bottom); };
+            Func<RectangleF> m_textBoxArea = m_area;
+            if (m_HasDropDownButton)
+            {
+                m_buttonArea = () => { var a = area(); return RectangleF.FromLTRB(a.Right - BUTTON_WIDTH, a.Top, a.Right, a.Bottom); };
+                m_textBoxArea = () => { var a = area(); return RectangleF.FromLTRB(a.Left, a.Top, a.Right - BUTTON_WIDTH, a.Bottom); };
+            }
 
             m_dropDown = new ToolStripDropDown();
 
-            m_textBox = new MyTextBox(control, m_textBoxArea, MyTextBox.InputFormEnum.Text);
+            m_textBox = new MyTextBox(control, m_textBoxArea, allowCustomText ? MyTextBox.InputFormEnum.Text : MyTextBox.InputFormEnum.None);
             m_textBox.Font = m_dropDown.Font;
             m_textBox.RequestedAreaChanged += () => { RequestedArea = new SizeF(Area.Width, m_textBox.RequestedArea.Height); };
 
@@ -98,131 +106,10 @@ namespace Utilities
 
         public override void MouseDown(MouseEventArgs args)
         {
-            if (m_allowTextEdit)
-            {
-                if (m_buttonArea().Contains(args.Location))
-                    ButtonMouseDown(args);
-                else if (m_textBox.Area.Contains(args.Location))
-                    m_textBox.MouseDown(args);
-            }
-            else
-            {
-                if (m_buttonArea().Contains(args.Location))
-                    ButtonMouseDown(args);
-            }
-        }
-
-        public override void MouseUp(MouseEventArgs args)
-        {
-            if (m_allowTextEdit)
-            {
-                if (m_textBox.Area.Contains(args.Location)) m_textBox.MouseUp(args);
-            }
-        }
-
-        public override void MouseMove(MouseEventArgs args)
-        {
-            if (m_allowTextEdit)
-            {
-                if (m_textBox.Area.Contains(args.Location)) m_textBox.MouseMove(args);
-            }
-        }
-
-        public override void MouseClick(MouseEventArgs args)
-        {
-            if (m_allowTextEdit)
-            {
-                if (m_textBox.Area.Contains(args.Location)) m_textBox.MouseClick(args);
-            }
-        }
-
-        public override void GotFocus()
-        {
-            if (m_allowTextEdit)
-            {
-                m_textBox.GotFocus();
-            }
-        }
-
-        public override void LostFocus()
-        {
-            if (m_allowTextEdit)
-            {
-                m_textBox.LostFocus();
-            }
-        }
-
-        public override void KeyPress(KeyPressEventArgs args)
-        {
-            if (m_allowTextEdit)
-            {
-                m_textBox.KeyPress(args);
-            }
-        }
-
-        public override void KeyDown(KeyEventArgs args)
-        {
-            if (m_allowTextEdit)
-            {
-                m_textBox.KeyDown(args);
-            }
-            else if ( args.KeyCode.IsSet(Keys.Enter))
-            {
-                m_textBox.KeyDown(args);
-            }
-        }
-
-        public void SetupCallbacks()
-        {
-            m_control.MouseDown += (a, args) => MouseDown(args);
-            m_control.MouseUp += (a, args) => MouseUp(args);
-            m_control.MouseMove += (a, args) => MouseMove(args);
-            m_control.MouseClick += (a, args) => MouseClick(args);
-            m_control.KeyPress += (a, args) => KeyPress(args);
-            m_control.KeyDown += (a, args) => KeyDown(args);
-            m_control.GotFocus += (a, args) => GotFocus();
-            m_control.LostFocus += (a, args) => LostFocus();
-
-            m_control.Paint += (a, args) => Paint(args.Graphics);
-        }
-
-        public override void Paint(Graphics graphics)
-        {
-            m_textBox.Paint(graphics);
-
-            DrawButton(graphics, m_buttonArea());
-        }
-
-        private void DrawButton(Graphics graphics, RectangleF buttonArea)
-        {
-            graphics.DrawRectangle(Colors.BorderPen, RectangleF.FromLTRB(buttonArea.Left, buttonArea.Top, buttonArea.Right - 1, buttonArea.Bottom - 1));
-            var path = new GraphicsPath();
-            path.AddLines(new PointF[] { buttonArea.Location.Plus(buttonArea.Width/4,buttonArea.Height/3),
-                                         buttonArea.Location.Plus(3*buttonArea.Width/4, buttonArea.Height/3),
-                                         buttonArea.Location.Plus(buttonArea.Width/2, 2*buttonArea.Height/3)});
-            graphics.FillPath(Colors.TextBrush, path);
-        }
-
-        private Item m_selectedItem = new Item("Uninitialized default", default(T));
-        public Item SelectedItem
-        {
-            get
-            {
-                if (m_allowTextEdit)
-                {
-                    return Items.FirstOrDefault(i => i.DisplayString == m_textBox.Text) ?? new Item(m_textBox.Text);
-                }
-                else
-                {
-                    return m_selectedItem;
-                }
-            }
-            set
-            {
-                m_selectedItem = value;
-                m_textBox.Text = m_selectedItem.DisplayString;
-                m_textBox.CursorPos = new MyTextBox.CP(int.MaxValue);
-            }
+            if (m_buttonArea().Contains(args.Location))
+                ButtonMouseDown(args);
+            else if (m_textBox.Area.Contains(args.Location))
+                m_textBox.MouseDown(args);
         }
 
         private void ButtonMouseDown(MouseEventArgs args)
@@ -243,6 +130,105 @@ namespace Utilities
             }
         }
 
+        public override void MouseUp(MouseEventArgs args)
+        {
+            if (m_textBox.Area.Contains(args.Location)) m_textBox.MouseUp(args);
+        }
+
+        public override void MouseMove(MouseEventArgs args)
+        {
+            if (m_textBox.Area.Contains(args.Location)) m_textBox.MouseMove(args);
+        }
+
+        public override void MouseClick(MouseEventArgs args)
+        {
+            if (m_textBox.Area.Contains(args.Location)) m_textBox.MouseClick(args);
+        }
+
+        public override void GotFocus()
+        {
+            m_textBox.GotFocus();
+            m_textBox.CursorPos = new MyTextBox.CP(int.MaxValue);
+        }
+
+        public override void LostFocus()
+        {
+            m_textBox.LostFocus();
+        }
+
+        public override void KeyPress(KeyPressEventArgs args)
+        {
+            bool isEnter = args.KeyChar == '\n' || args.KeyChar == '\r';
+            if (!isEnter)
+            {
+                m_textBox.KeyPress(args);
+            }
+        }
+
+        public override void KeyDown(KeyEventArgs args)
+        {
+            m_textBox.KeyDown(args);
+        }
+
+        public void SetupCallbacks()
+        {
+            m_control.MouseDown += (a, args) => MouseDown(args);
+            m_control.MouseUp += (a, args) => MouseUp(args);
+            m_control.MouseMove += (a, args) => MouseMove(args);
+            m_control.MouseClick += (a, args) => MouseClick(args);
+            m_control.KeyPress += (a, args) => KeyPress(args);
+            m_control.KeyDown += (a, args) => KeyDown(args);
+            m_control.GotFocus += (a, args) => GotFocus();
+            m_control.LostFocus += (a, args) => LostFocus();
+            m_control.MouseWheel += (a, args) => MouseWheel(args);
+
+            m_control.Paint += (a, args) => Paint(args.Graphics);
+        }
+
+        public override void Paint(Graphics graphics)
+        {
+            m_textBox.Paint(graphics);
+
+            DrawButton(graphics, m_buttonArea());
+        }
+
+        private void DrawButton(Graphics graphics, RectangleF buttonArea)
+        {
+            graphics.DrawRectangle(TextBoxColors.BorderPen, RectangleF.FromLTRB(buttonArea.Left, buttonArea.Top, buttonArea.Right - 1, buttonArea.Bottom - 1));
+            var path = new GraphicsPath();
+            path.AddLines(new PointF[] { buttonArea.Location.Plus(buttonArea.Width/4,buttonArea.Height/3),
+                                         buttonArea.Location.Plus(3*buttonArea.Width/4, buttonArea.Height/3),
+                                         buttonArea.Location.Plus(buttonArea.Width/2, 2*buttonArea.Height/3)});
+            graphics.FillPath(TextBoxColors.TextBrush, path);
+        }
+
+        private Item MatchingItem()
+        {
+            return Items.FirstOrDefault(i => i.DisplayString == m_textBox.Text);
+        }
+
+        private Item m_selectedItem = new Item("Uninitialized default", default(T));
+        public Item SelectedItem
+        {
+            get
+            {
+                if (m_allowCustomText)
+                {
+                    return MatchingItem() ?? new Item(m_textBox.Text);
+                }
+                else
+                {
+                    return m_selectedItem;
+                }
+            }
+            set
+            {
+                m_selectedItem = value;
+                m_textBox.Text = m_selectedItem.DisplayString;
+                m_textBox.CursorPos = new MyTextBox.CP(int.MaxValue);
+            }
+        }
+
         public override void MouseWheel(MouseEventArgs args)
         {
             //Do nothing I guess...
@@ -255,9 +241,7 @@ namespace Utilities
 
         public ToolStripRenderer Renderer { get { return m_dropDown.Renderer; } set { m_dropDown.Renderer = value; } }
         public readonly IEnumerable<Item> Items;
-        private bool m_allowTextEdit;
 
-        public bool SpecialEnter { get { return m_textBox.SpecialEnter; } set { m_textBox.SpecialEnter = value; } }
         public event Action EnterPressed { add { m_textBox.EnterPressed += value; } remove { m_textBox.EnterPressed -= value; } }
 
         public override bool Contains(PointF point)

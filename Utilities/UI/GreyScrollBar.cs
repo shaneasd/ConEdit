@@ -325,7 +325,7 @@ namespace Utilities
         {
             get
             {
-                return RatioValue * (Range - BarLength) + BUTTON_SIZE - 1;
+                return RatioValue * (Range - BarLength) + BUTTON_SIZE-1;
             }
         }
 
@@ -333,7 +333,7 @@ namespace Utilities
         {
             get
             {
-                return RatioValue * (Range - BarLength) + TopButton.Area.Height + BarLength;
+                return RatioValue * (Range - BarLength) + TopButton.Area.Height + BarLength+1;
             }
         }
 

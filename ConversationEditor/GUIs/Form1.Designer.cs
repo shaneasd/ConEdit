@@ -70,6 +70,7 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.conversationEditorControl1 = new ConversationEditor.ConversationEditorControl();
             this.errorList1 = new ConversationEditor.ErrorList();
+            this.testEverythingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -325,7 +326,8 @@
             // 
             this.errorCheckToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.testToolStripMenuItem,
-            this.testProjectToolStripMenuItem});
+            this.testProjectToolStripMenuItem,
+            this.testEverythingToolStripMenuItem});
             this.errorCheckToolStripMenuItem.Name = "errorCheckToolStripMenuItem";
             this.errorCheckToolStripMenuItem.Size = new System.Drawing.Size(89, 20);
             this.errorCheckToolStripMenuItem.Text = "Error Checking";
@@ -333,14 +335,14 @@
             // testToolStripMenuItem
             // 
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.testToolStripMenuItem.Text = "Test Document";
             this.testToolStripMenuItem.Click += new System.EventHandler(this.errorCheckToolStripMenuItem_Click);
             // 
             // testProjectToolStripMenuItem
             // 
             this.testProjectToolStripMenuItem.Name = "testProjectToolStripMenuItem";
-            this.testProjectToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.testProjectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.testProjectToolStripMenuItem.Text = "Test Project";
             this.testProjectToolStripMenuItem.Click += new System.EventHandler(this.testProjectToolStripMenuItem_Click);
             // 
@@ -442,6 +444,13 @@
             this.errorList1.Size = new System.Drawing.Size(804, 138);
             this.errorList1.TabIndex = 3;
             // 
+            // testEverythingToolStripMenuItem
+            // 
+            this.testEverythingToolStripMenuItem.Name = "testEverythingToolStripMenuItem";
+            this.testEverythingToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.testEverythingToolStripMenuItem.Text = "Test Everything";
+            this.testEverythingToolStripMenuItem.Click += new System.EventHandler(this.testEverythingToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -513,6 +522,7 @@
         private System.Windows.Forms.ToolStripMenuItem connectorColorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem audioNamingMethodToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem defaultToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem testEverythingToolStripMenuItem;
     }
 }
 

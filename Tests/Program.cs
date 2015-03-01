@@ -14,35 +14,13 @@ namespace Tests
     {
         static void Main(string[] args)
         {
+            TestFileSystem.TestPathToFromDirDir();
             TestWeakEvent();
             TestPolynomial();
-            TestUndoQueue();
+            TestUndoQueue.TestEverything();
             ManualResetEvent();
         }
 
-        [NUnit.Framework.Test]
-        public static void TestUndoQueue()
-        {
-            SaveableFileUndoable file = new SaveableFileUndoable(new MemoryStream(), new FileInfo("ignore.txt"), a => { });
-            Assert.False(file.Changed);
-            file.Change(new GenericUndoAction(() => { }, () => { }, ""));
-            Assert.True(file.Changed);
-            file.UndoQueue.Undo();
-            Assert.False(file.Changed);
-            file.UndoQueue.Redo();
-            Assert.True(file.Changed);
-            file.Save();
-            Assert.False(file.Changed);
-            file.Change(new GenericUndoAction(() => { }, () => { }, ""));
-            Assert.True(file.Changed);
-            file.UndoQueue.Undo();
-            Assert.False(file.Changed);
-            file.UndoQueue.Undo();
-            Assert.True(file.Changed);
-            file.UndoQueue.Redo();
-            Assert.False(file.Changed);
-            file.Dispose();
-        }
 
         [NUnit.Framework.Test]
         public static void TestPolynomial()

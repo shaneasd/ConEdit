@@ -5,6 +5,7 @@ using System.Text;
 using Utilities;
 using System.IO;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace ConversationEditor
 {
@@ -105,7 +106,7 @@ namespace ConversationEditor
         where TMissing : TInterface
         where TInterface : class, ISaveableFileProvider, IInProject
     {
-        public CallbackList<TInterface> m_data;
+        public CallbackDictionary<string, TInterface> m_data;
         private Func<IEnumerable<FileInfo>, IEnumerable<Or<TReal, TMissing>>> m_loader;
         private Func<DirectoryInfo, TReal> m_makeEmpty;
         private Func<string, bool> m_fileLocationOk;
@@ -115,7 +116,10 @@ namespace ConversationEditor
         public event Action<TInterface, TInterface> Reloaded;
         public event Action GotChanged;
 
-        public bool FileLocationOk(string path) { return m_fileLocationOk(path); }
+        public bool FileLocationOk(string path)
+        {
+            return m_fileLocationOk(path);
+        }
 
         static Func<IEnumerable<FileInfo>, IEnumerable<Or<TReal, TMissing>>> MyLoader(Func<IEnumerable<FileInfo>, IEnumerable<TReal>> loader, Func<FileInfo, TMissing> makeMissing)
         {
@@ -157,22 +161,24 @@ namespace ConversationEditor
         {
         }
 
+        private SuppressibleAction m_suppressibleGotChanged;
         public ProjectElementList(Func<string, bool> fileLocationOk, Func<IEnumerable<FileInfo>, IEnumerable<Or<TReal, TMissing>>> loader, Func<DirectoryInfo, TReal> makeEmpty)
         {
-            m_data = new CallbackList<TInterface>();
-            m_data.Removing += (element) => { element.Removed(); };
-            m_data.Clearing += () => { m_data.ForAll(element => { element.Removed(); }); };
+            m_data = new CallbackDictionary<string,TInterface>();
+            m_data.Removing += (key, element) => { element.Removed(); };
+            m_data.Clearing += () => { m_data.Values.ForAll(element => { element.Removed(); }); };
             m_loader = loader;
             m_makeEmpty = makeEmpty;
             m_fileLocationOk = fileLocationOk;
 
-            Added += a => GotChanged.Execute();
-            Removed += a => GotChanged.Execute();
+            m_suppressibleGotChanged = new SuppressibleAction(() => { GotChanged.Execute(); });
+            Added += a => m_suppressibleGotChanged.TryExecute();
+            Removed += a => m_suppressibleGotChanged.TryExecute();
         }
 
         public IEnumerator<TInterface> GetEnumerator()
         {
-            return m_data.GetEnumerator();
+            return m_data.Values.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -180,15 +186,25 @@ namespace ConversationEditor
             return GetEnumerator();
         }
 
+        public static Stopwatch CheckLocationOkTime = new Stopwatch();
+        public static Stopwatch CheckExistingTime = new Stopwatch();
+        public static Stopwatch AddNewTime = new Stopwatch();
+        public static Stopwatch CallbacksTime = new Stopwatch();
+
         public IEnumerable<TInterface> Load(IEnumerable<FileInfo> fileInfos)
         {
             List<Tuple<FileInfo, TInterface>> toLoad = new List<Tuple<FileInfo, TInterface>>();
             foreach (var fileInfo in fileInfos)
             {
+                CheckLocationOkTime.Start();
                 if (!FileLocationOk(fileInfo.FullName))
                     throw new Exception("Attempting to load file that is not in a subfolder of the project's parent folder");
+                CheckLocationOkTime.Stop(); //233ms
 
-                var existing = m_data.FirstOrDefault(e => e.File.File.FullName == fileInfo.FullName);
+                CheckExistingTime.Start();
+                //var existing = m_data.FirstOrDefault(e => e.File.File.FullName == fileInfo.FullName);
+                var existing = m_data.ContainsKey(fileInfo.FullName) ? m_data[fileInfo.FullName] : null;
+                CheckExistingTime.Stop(); //0ms
                 if (existing != null)
                 {
                     try
@@ -196,7 +212,7 @@ namespace ConversationEditor
                         if (existing.File.CanClose()) //TODO: If the file is modified and you try to load the same file over the top what happens? The message is probably unintuitive
                         {
                             //Ignore the fact that the new file might be missing stuff the conversation needs
-                            m_data.Remove(existing); //Callback on the list informs the domain file it has been removed thereby triggering domain update
+                            m_data.Remove(fileInfo.FullName); //Callback on the list informs the domain file it has been removed thereby triggering domain update
                             toLoad.Add(Tuple.Create(fileInfo, existing));
                         }
                         else
@@ -220,18 +236,25 @@ namespace ConversationEditor
                 }
             }
 
+            AddNewTime.Start();
             List<TInterface> result = m_loader(toLoad.Select(t => t.Item1)).Select(o => o.Transformed<TInterface>(a => a, a => a)).ToList();
+            AddNewTime.Stop(); //18ms
 
-            for (int i = 0; i < result.Count; i++)
+            CallbacksTime.Start();
+            using (m_suppressibleGotChanged.SuppressCallback())
             {
-                var conversation = result[i];
-                var existing = toLoad[i].Item2;
-                m_data.Add(conversation);
-                if (existing != null)
-                    Reloaded.Execute(existing, conversation);
-                else
-                    Added.Execute(conversation);
+                for (int i = 0; i < result.Count; i++)
+                {
+                    var conversation = result[i];
+                    var existing = toLoad[i].Item2;
+                    m_data[conversation.File.File.FullName] = conversation;
+                    if (existing != null)
+                        Reloaded.Execute(existing, conversation);
+                    else
+                        Added.Execute(conversation);
+                }
             }
+            CallbacksTime.Stop();  //1ms
 
             return this;
         }
@@ -239,7 +262,7 @@ namespace ConversationEditor
         public void Reload()
         {
             List<Tuple<FileInfo, TInterface>> toLoad = new List<Tuple<FileInfo, TInterface>>();
-            foreach (var doc in m_data)
+            foreach (var doc in m_data.Values)
             {
                 toLoad.Add(Tuple.Create(doc.File.File, doc));
             }
@@ -249,23 +272,22 @@ namespace ConversationEditor
             {
                 var conversation = result[i];
                 var existing = toLoad[i].Item2;
-                m_data.Add(conversation);
+                m_data[conversation.File.File.FullName] = conversation;
                 Reloaded.Execute(existing, conversation);
-                m_data[i] = conversation;
             }
         }
 
         public TReal New(DirectoryInfo path)
         {
             TReal conversation = m_makeEmpty(path);
-            m_data.Add(conversation);
+            m_data.Add(conversation.File.File.FullName, conversation);
             Added.Execute(conversation);
             return conversation;
         }
 
         public static bool PromptUsedAudioRemoved()
         {
-            var result = MessageBox.Show("This audio is currently referenced by nodes in loaded conversations. "+
+            var result = MessageBox.Show("This audio is currently referenced by nodes in loaded conversations. " +
                                          "It will be automatically reloaded next time the project is loaded unless those references are removed", "Ok to remove file?", MessageBoxButtons.OKCancel);
             return result == DialogResult.OK;
         }
@@ -277,7 +299,7 @@ namespace ConversationEditor
                 Func<bool> prompt = element is IDomainFile ? (Func<bool>)GraphFile.PromptFileRemoved : (Func<bool>)PromptUsedAudioRemoved;
                 if (force || element.CanRemove(prompt))
                 {
-                    m_data.Remove(element);
+                    m_data.Remove(element.File.File.FullName);
                     Removed.Execute(element);
                     element.Dispose();
                 }
@@ -301,7 +323,7 @@ namespace ConversationEditor
                 {
                     MessageBox.Show("Failed to delete file");
                 }
-                m_data.Remove(element);
+                m_data.Remove(element.File.File.FullName);
                 Removed(element);
             }
         }

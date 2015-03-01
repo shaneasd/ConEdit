@@ -123,7 +123,9 @@ namespace ConversationEditor
         {
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_NAME) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
-            return new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), PARAMETER_TYPE, null);
+            var parameterDefParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_DEFAULT) as IBooleanParameter;
+            var parameterDef = parameterDefParameter.Value;
+            return new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), PARAMETER_TYPE, parameterDef.ToString());
         }
 
         public override string Name

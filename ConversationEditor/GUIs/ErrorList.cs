@@ -97,7 +97,6 @@ namespace ConversationEditor
             {
                 BoolRef success = true;
                 HightlightNode.Execute(m_nodeIterator.Current.Item1, m_nodeIterator.Current.Item2, success);
-                //TODO: Remove things that don't make sense from the list
             }
         }
 

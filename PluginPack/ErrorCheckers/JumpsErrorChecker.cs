@@ -54,7 +54,7 @@ namespace PluginPack
             }
         }
 
-        public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes)
+        public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities utils)
         {
             var targetnodes = nodes.Where(a => a.Type == SpecialNodes.JUMP_TARGET_GUID);
             var jumpnodes = nodes.Where(a => a.Type == SpecialNodes.JUMP_TO_GUID);

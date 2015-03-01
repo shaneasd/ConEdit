@@ -23,7 +23,7 @@ namespace ConversationEditor
         public static Bitmap ProjectIcon;
         public static Bitmap FolderIcon;
 
-        Dictionary<DirectoryInfo, ContainerItem> m_mapping = new Dictionary<DirectoryInfo, ContainerItem>(new DirectoryEqualityComparer());
+        Dictionary<DirectoryInfoHashed, ContainerItem> m_mapping = new Dictionary<DirectoryInfoHashed, ContainerItem>(10000);
         private ContextMenuStrip m_contextMenu;
 
         static ProjectExplorer()
@@ -35,9 +35,19 @@ namespace ConversationEditor
                 FolderIcon = new Bitmap(stream);
         }
 
+        SuppressibleAction m_updateScrollbar;
+
         public ProjectExplorer()
         {
             InitializeComponent();
+
+            m_updateScrollbar = new SuppressibleAction(() =>
+            {
+                greyScrollBar1.Minimum = 0;
+                var listSize = m_root.AllItems(Visibility).Count() * Item.HEIGHT;
+                greyScrollBar1.Maximum = (listSize - drawWindow1.Height).Clamp(0, float.MaxValue);
+                greyScrollBar1.PercentageCovered = drawWindow1.Height / listSize;
+            });
 
             drawWindow1.BackColor = ColorScheme.Background;
             m_contextMenu = this.contextMenuStrip1;
@@ -45,7 +55,7 @@ namespace ConversationEditor
             drawWindow1.Resize += (a, b) => this.InvalidateImage();
 
             greyScrollBar1.Scrolled += () => drawWindow1.Invalidate(true);
-            drawWindow1.Resize += (a, b) => UpdateScrollBar();
+            drawWindow1.Resize += (a, b) => m_updateScrollbar.TryExecute();
 
             int offset = 0;
             Func<Image, HighlightableImageButton> makeButton = icon =>
@@ -75,7 +85,12 @@ namespace ConversationEditor
         {
             lock (m_imageLock)
             {
-                m_image = null;
+                if (m_image != null)
+                {
+                    m_image.Dispose();
+                    m_drawn.Clear();
+                    m_image = null;
+                }
             }
             Action invalidate = () => Invalidate(true);
             if (InvokeRequired)
@@ -200,6 +215,7 @@ namespace ConversationEditor
 
         object m_imageLock = new object();
         Image m_image = null;
+        HashSet<Item> m_drawn = new HashSet<Item>();
         private void drawWindow1_Paint(object sender, PaintEventArgs e)
         {
             bool redraw = false;
@@ -214,27 +230,71 @@ namespace ConversationEditor
                 image = m_image;
             }
 
-            if (redraw)
+            Graphics g = e.Graphics;
+            //if (redraw)
             {
-                using (Graphics g = Graphics.FromImage(image))
+                //using (Graphics g = Graphics.FromImage(image))
                 {
-                    foreach (var item in m_root.AllItems(Visibility))
+                    var allItems = m_root.AllItems(Visibility).ToArray();
+                    //Dictionary<Item, int> allItemIndices = new Dictionary<Item, int>();
+                    int i = 0;
+                    List<Tuple<Item, int, RectangleF>> itemsToDraw = new List<Tuple<Item, int, RectangleF>>();
+                    foreach (var item in allItems)
                     {
-                        item.DrawBackground(g, Visibility);
+                        if (!m_drawn.Contains(item))
+                        {
+                            var y0 = IndexToY(i);
+                            y0 -= greyScrollBar1.Value;
+                            var y1 = y0 + Item.HEIGHT;
+                            if (y1 > 0 && y0 < drawWindow1.Height)
+                            {
+                                var rect = new RectangleF((int)TransformToRenderSurface.OffsetX, (int)TransformToRenderSurface.OffsetY+IndexToY(i), Width, Item.HEIGHT);
+                                itemsToDraw.Add(Tuple.Create(item, i, rect));
+                                //m_drawn.Add(item);
+                                //allItemIndices.Add(item, i);
+                            }
+                        }
+                        i++;
                     }
-                    foreach (var item in (new[] { m_selectedItem, m_selectedLocalizer, m_selectedEditable }).Distinct().Where(a => a != null))
+
+                    //Func<Item, bool> shouldDraw = item =>
+                    //{
+                    //    //return true; //TODO: 
+                    //    if (m_drawn.Contains(item))
+                    //        return false;
+                    //    var y0 = IndexToY(allItemIndices[item]);
+                    //    y0 -= greyScrollBar1.Value;
+                    //    var y1 = y0 + Item.HEIGHT;
+                    //    return y1 > 0 && y0 < drawWindow1.Height;
+                    //};
+
+                    //var itemsToDraw = allItems.Where(shouldDraw).ToArray();
+
+                    foreach (var item in itemsToDraw)
                     {
-                        if (IndexOf(item) >= 0)
-                            item.DrawSelection(g, RectangleForIndex(IndexOf(item)), m_selectedItem == item, m_selectedLocalizer == item || m_selectedEditable == item);
+                        item.Item1.DrawBackground(g, Visibility, item.Item3);
                     }
-                    foreach (var item in m_root.AllItems(Visibility))
+                    var selected = new[] { m_selectedItem, m_selectedLocalizer, m_selectedEditable };
+                    foreach (var item in itemsToDraw)
                     {
-                        item.Draw(g, Visibility);
+                        if ( selected.Any(s=>object.ReferenceEquals(s, item.Item1) ))
+                            item.Item1.DrawSelection(g, item.Item3, m_selectedItem == item.Item1, m_selectedLocalizer == item.Item1 || m_selectedEditable == item.Item1);
+                    }
+                    foreach (var item in itemsToDraw)
+                    {
+                        item.Item1.Draw(g, Visibility, item.Item3);
+                    }
+                    using (var renderer = new Arthur.NativeTextRenderer(g))
+                    {
+                        foreach (var item in itemsToDraw)
+                        {
+                            item.Item1.DrawText(renderer, Visibility, item.Item3); //Draw the text after everything else as we want to keep our NativeTextRenderer around and it blocks other graphics operations
+                        }
                     }
                 }
             }
 
-            e.Graphics.DrawImage(image, new Point((int)TransformToRenderSurface.OffsetX, (int)TransformToRenderSurface.OffsetY));
+            //e.Graphics.DrawImage(image, new Point((int)TransformToRenderSurface.OffsetX, (int)TransformToRenderSurface.OffsetY));
             e.Graphics.DrawRectangle(ColorScheme.ControlBorder, new Rectangle(new Point(0, 0), new Size(drawWindow1.Width - 1, drawWindow1.Height - 1)));
         }
 
@@ -288,7 +348,7 @@ namespace ConversationEditor
             {
                 using (Graphics g = CreateGraphics())
                 {
-                    if (container.MinimizedIconRectangle(g).Contains(e.Location))
+                    if (container.MinimizedIconRectangle(g, RectangleForItem(item)).Contains(e.Location))
                     {
                         if (e.Button == MouseButtons.Left)
                         {
@@ -333,7 +393,7 @@ namespace ConversationEditor
                 {
                     var con = m_contextItem as ConversationItem;
                     var i = new ToolStripMenuItem(a.Name);
-                    i.Click += (x, y) => a.Execute(con.Item);
+                    i.Click += (x, y) => a.Execute(con.Item, new ErrorCheckerUtils(m_root.Project.ConversationDataSource));
                     m_contextMenu.Items.Insert(m_contextMenu.Items.IndexOf(importConversationToolStripMenuItem), i);
                     var temp = m_cleanContextMenu;
                     m_cleanContextMenu = () => { temp(); m_contextMenu.Items.Remove(i); };
@@ -365,19 +425,6 @@ namespace ConversationEditor
                 Clicked(item, e);
         }
 
-        class DirectoryEqualityComparer : IEqualityComparer<DirectoryInfo>
-        {
-            public bool Equals(DirectoryInfo x, DirectoryInfo y)
-            {
-                return x.FullName == y.FullName;
-            }
-
-            public int GetHashCode(DirectoryInfo obj)
-            {
-                return obj.FullName.GetHashCode();
-            }
-        }
-
         private ProjectItem MakeNewProjectItem(IProject p)
         {
             var result = new ProjectItem(() => RectangleForItem(m_root), p, () => TransformToRenderSurface);
@@ -397,59 +444,66 @@ namespace ConversationEditor
 
         private void UpdateList()
         {
-            foreach (var item in m_root.Children(VisibilityFilter.Everything))
+            using (m_updateScrollbar.SuppressCallback())
             {
-                item.File.SaveStateChanged -= InvalidateImage;
-            }
-
-            m_mapping.Clear();
-            m_root.Clear();
-            m_mapping[m_root.Path] = m_root;
-
-            m_root.Project.AudioFiles.Removed += Remove;
-            m_root.Project.AudioFiles.Reloaded += (from, to) => { Remove(from); Add(to); };
-            m_root.Project.AudioFiles.Added += Add;
-            foreach (IAudioFile aud in m_root.Project.AudioFiles)
-            {
-                Add(aud);
-            }
-
-            m_root.Project.Conversations.Removed += Remove;
-            m_root.Project.Conversations.Reloaded += (from, to) => { Remove(from); Add(to); };
-            m_root.Project.Conversations.Added += Add;
-            foreach (var con in m_root.Project.Conversations)
-            {
-                Add(con);
-            }
-
-            m_root.Project.DomainFiles.Removed += Remove;
-            m_root.Project.DomainFiles.Reloaded += (from, to) => { Remove(from); Add(to); };
-            m_root.Project.DomainFiles.Added += Add;
-            foreach (var domainFile in m_root.Project.DomainFiles)
-            {
-                Add(domainFile);
-            }
-
-            m_root.Project.LocalizationFiles.Removed += Remove;
-            m_root.Project.LocalizationFiles.Reloaded += (from, to) => { Remove(from); Add(to); };
-            m_root.Project.LocalizationFiles.Added += Add;
-            foreach (var localizationFile in m_root.Project.LocalizationFiles)
-            {
-                Add(localizationFile);
-            }
-
-            if (m_root.Project.File.Exists) //If it's not a real project then don't try and enumerate directories
-            {
-                var dirs = m_root.Project.File.File.Directory.EnumerateDirectories("*", SearchOption.AllDirectories);
-                foreach (var dir in dirs)
+                foreach (var item in m_root.Children(VisibilityFilter.Everything))
                 {
-                    FindOrMakeParent(new FileInfo(Path.Combine(dir.FullName, "a.fake.file")));
+                    item.File.SaveStateChanged -= InvalidateImage;
                 }
+
+                m_mapping.Clear();
+                m_root.Clear();
+                m_mapping[new DirectoryInfoHashed(m_root.Path)] = m_root;
+
+                m_root.Project.AudioFiles.Removed += Remove;
+                m_root.Project.AudioFiles.Reloaded += (from, to) => { Remove(from); Add(to); };
+                m_root.Project.AudioFiles.Added += Add;
+                Stopwatch addingAudioTime = Stopwatch.StartNew();
+                foreach (IAudioFile aud in m_root.Project.AudioFiles)
+                {
+                    Add(aud);
+                }
+                addingAudioTime.Stop();
+
+                m_root.Project.Conversations.Removed += Remove;
+                m_root.Project.Conversations.Reloaded += (from, to) => { Remove(from); Add(to); };
+                m_root.Project.Conversations.Added += Add;
+                Stopwatch addingConversationsTime = Stopwatch.StartNew();
+                foreach (var con in m_root.Project.Conversations)
+                {
+                    Add(con);
+                }
+                addingConversationsTime.Stop();
+
+                m_root.Project.DomainFiles.Removed += Remove;
+                m_root.Project.DomainFiles.Reloaded += (from, to) => { Remove(from); Add(to); };
+                m_root.Project.DomainFiles.Added += Add;
+                foreach (var domainFile in m_root.Project.DomainFiles)
+                {
+                    Add(domainFile);
+                }
+
+                m_root.Project.LocalizationFiles.Removed += Remove;
+                m_root.Project.LocalizationFiles.Reloaded += (from, to) => { Remove(from); Add(to); };
+                m_root.Project.LocalizationFiles.Added += Add;
+                foreach (var localizationFile in m_root.Project.LocalizationFiles)
+                {
+                    Add(localizationFile);
+                }
+
+                if (m_root.Project.File.Exists) //If it's not a real project then don't try and enumerate directories
+                {
+                    var dirs = m_root.Project.File.File.Directory.EnumerateDirectories("*", SearchOption.AllDirectories);
+                    foreach (var dir in dirs)
+                    {
+                        FindOrMakeParent(new FileInfo(Path.Combine(dir.FullName, "a.fake.file")));
+                    }
+                }
+
+                SelectItem(null);
+
+                m_updateScrollbar.TryExecute();
             }
-
-            SelectItem(null);
-
-            UpdateScrollBar();
 
             InvalidateImage();
         }
@@ -459,13 +513,22 @@ namespace ConversationEditor
             return a.File.File.FullName == b.File.File.FullName;
         }
 
+        public static Stopwatch timeSpentMakingParents = new Stopwatch();
+
+        
         private void Add<T>(T element) where T : ISaveableFileProvider
         {
             var definition = ProjectElementDefinition.Get<T>();
-            Item result = m_root.AllItems(VisibilityFilter.Everything).OfType<LeafItem<T>>().SingleOrDefault(i => SameItem(i.Item, element));
-            if (result == null)
+            //Item result = m_root.AllItems(VisibilityFilter.Everything).OfType<LeafItem<T>>().SingleOrDefault(i => SameItem(i.Item, element));
+            if ( m_root.TryAdd(element) )
+            //if (!m_root.m_contents.ContainsKey(element.File.File.FullName))
+            //if (result == null)
             {
+                //m_root.m_contents[element.File.File.FullName] = element;
+                timeSpentMakingParents.Start();
                 ContainerItem parent = FindOrMakeParent(element.File.File);
+                timeSpentMakingParents.Stop();
+                Item result = null;
                 if (element.File.Exists)
                     result = definition.MakeElement(() => RectangleForItem(result), element, m_root.Project, parent, () => TransformToRenderSurface);
                 else
@@ -479,31 +542,27 @@ namespace ConversationEditor
                     ItemSelected.Execute();
                 }
 
-                UpdateScrollBar();
+                m_updateScrollbar.TryExecute();
                 InvalidateImage();
             }
         }
 
         private void Remove<T>(T element) where T : ISaveableFileProvider
         {
+            m_root.m_contents.Remove(element.File.File.FullName);
             Item item = m_root.AllItems(VisibilityFilter.Everything).OfType<LeafItem<T>>().SingleOrDefault(i => SameItem(i.Item, element));
-            item.File.SaveStateChanged -= InvalidateImage;
-            m_root.RemoveChild(item);
-            if (item == m_selectedItem)
+            if (item != null)
             {
-                m_selectedItem = null;
-                m_selectedEditable = null;
-                ItemSelected.Execute();
+                item.File.SaveStateChanged -= InvalidateImage;
+                m_root.RemoveChild(item);
+                if (item == m_selectedItem)
+                {
+                    m_selectedItem = null;
+                    m_selectedEditable = null;
+                    ItemSelected.Execute();
+                }
+                InvalidateImage();
             }
-            InvalidateImage();
-        }
-
-        private void UpdateScrollBar()
-        {
-            greyScrollBar1.Minimum = 0;
-            var listSize = m_root.AllItems(Visibility).Count() * Item.HEIGHT;
-            greyScrollBar1.Maximum = (listSize - drawWindow1.Height).Clamp(0, float.MaxValue);
-            greyScrollBar1.PercentageCovered = drawWindow1.Height / listSize;
         }
 
         private ContainerItem FindOrMakeParent(FileInfo file)
@@ -512,16 +571,18 @@ namespace ConversationEditor
             ContainerItem parent = m_root;
             foreach (var folder in path.Skip(1))
             {
-                if (m_mapping.ContainsKey(folder))
-                    parent = m_mapping[folder];
-                else
+                DirectoryInfoHashed key = new DirectoryInfoHashed(folder);
+                bool add = !m_mapping.ContainsKey(key);
+                if (!add)
+                    parent = m_mapping[key];
+                if (add)
                 {
                     FolderItem child = null;
                     child = new FolderItem(() => RectangleForItem(child), folder, m_root.Project, parent, () => TransformToRenderSurface);
-                    child.MinimizedChanged += UpdateScrollBar;
+                    child.MinimizedChanged += () => m_updateScrollbar.TryExecute();
                     parent.InsertChildAlphabetically(child);
                     parent = child;
-                    m_mapping[folder] = parent;
+                    m_mapping[key] = parent;
                 }
             }
             return parent;
@@ -572,7 +633,7 @@ namespace ConversationEditor
             {
                 using (Graphics g = drawWindow1.CreateGraphics())
                 {
-                    if (e.X > item.MinimizedIconRectangle(g).Right)
+                    if (e.X > item.MinimizedIconRectangle(g, RectangleForItem(item)).Right)
                         DragItem = item;
                     else
                         DragItem = null;
@@ -880,7 +941,7 @@ namespace ConversationEditor
                 ProjectExplorer.FolderItem item = null;
                 item = new ProjectExplorer.FolderItem(() => RectangleForItem(item), newDir, m_root.Project, parent, () => TransformToRenderSurface);
                 parent.InsertChildAlphabetically(item);
-                UpdateScrollBar();
+                m_updateScrollbar.TryExecute();
                 InvalidateImage();
             }
         }

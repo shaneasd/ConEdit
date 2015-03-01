@@ -12,23 +12,29 @@ namespace PluginPack
 {
     public class IconRenderer : NodeUI
     {
-        public new class Factory : NodeUI.Factory
+        public class Factory : NodeUI.IFactory
         {
             public static Factory Instance = new Factory();
 
-            public override bool WillRender(ID<NodeTypeTemp> nodeType)
+            public bool WillRender(ID<NodeTypeTemp> nodeType)
             {
                 return true;
             }
 
-            public override string DisplayName
+            public string DisplayName
             {
                 get { return "Icon Renderer"; }
             }
 
-            public override INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer)
+            public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer)
             {
                 return new IconRenderer(n, p, localizer);
+            }
+
+            static Guid m_guid = Guid.Parse("d629f0cb-58e5-4123-aab5-89617dabab31");
+            public Guid Guid
+            {
+                get { return m_guid; }
             }
         }
 

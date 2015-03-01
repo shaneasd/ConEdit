@@ -13,23 +13,29 @@ namespace ConversationEditor
 {
     public class EditableUI : NodeUI
     {
-        public new class Factory : NodeUI.Factory
+        public class Factory : NodeUI.IFactory
         {
             public static Factory Instance = new Factory();
 
-            public override bool WillRender(ID<NodeTypeTemp> nodeType)
+            public bool WillRender(ID<NodeTypeTemp> nodeType)
             {
                 return nodeType != SpecialNodes.START_GUID;
             }
 
-            public override string DisplayName
+            public string DisplayName
             {
-                get { return "Default Node Renderer"; }
+                get { return "Default Conversation Node Renderer"; }
             }
 
-            public override INodeGUI GetRenderer(ConversationNode n, PointF p, Func<ID<LocalizedText>, string> localizer)
+            public INodeGUI GetRenderer(ConversationNode n, PointF p, Func<ID<LocalizedText>, string> localizer)
             {
                 return new EditableUI(n, p, localizer);
+            }
+
+            static Guid m_guid = Guid.Parse("2cbbf5fa-4e42-4670-9c10-c3578a2400eb");
+            public Guid Guid
+            {
+                get { return m_guid; }
             }
         }
 

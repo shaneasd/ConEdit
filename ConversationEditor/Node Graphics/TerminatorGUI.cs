@@ -12,23 +12,29 @@ namespace ConversationEditor
 {
     public class TerminatorGUI : NodeUI
     {
-        public new class Factory : NodeUI.Factory
+        public class Factory : NodeUI.IFactory
         {
             public static Factory Instance = new Factory();
 
-            public override bool WillRender(ID<NodeTypeTemp> nodeType)
+            public bool WillRender(ID<NodeTypeTemp> nodeType)
             {
                 return nodeType == SpecialNodes.TERMINATOR_GUID;
             }
 
-            public override string DisplayName
+            public string DisplayName
             {
                 get { return "Terminator Node Renderer"; }
             }
 
-            public override INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer)
+            public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer)
             {
                 return new TerminatorGUI(n, p, localizer);
+            }
+
+            Guid m_guid = Guid.Parse("aacda2b5-bd9e-4fd2-ad0c-5f6a4d764702");
+            public Guid Guid
+            {
+                get { return m_guid; }
             }
         }
 

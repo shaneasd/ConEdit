@@ -143,7 +143,8 @@ namespace ConversationEditor
 
         private void InitialiseNodeFactory()
         {
-            m_conversationNodeFactory = new NodeFactory(m_config.ConversationNodeRenderers, guid => m_projectMenuController.CurrentProject.Localizer.Localize(guid));
+
+            m_conversationNodeFactory = new NodeFactory(m_config.ConversationNodeRenderers, GetAllNodeRenderers(), a => m_config.ConversationNodeRenderers.ValueChanged += a, guid => m_projectMenuController.CurrentProject.Localizer.Localize(guid));
             m_domainNodeFactory = new NodeFactory(m_config.DomainNodeRenderers, guid => m_projectMenuController.CurrentProject.Localizer.Localize(guid));
             m_projectNodeFactory = new NodeFactory(m_config.ProjectNodeRenderers, guid => m_projectMenuController.CurrentProject.Localizer.Localize(guid));
         }
@@ -161,12 +162,14 @@ namespace ConversationEditor
                 return false;
             if (m_projectMenuController.CurrentProject.Conversations.Contains(file))
             {
+                projectExplorer.Select(file);
                 conversationEditorControl1.CurrentFile = file;
                 conversationEditorControl1.SelectNode(node);
                 CurrentEditor = conversationEditorControl1;
             }
             else if (m_projectMenuController.CurrentProject.DomainFiles.Contains(file))
             {
+                projectExplorer.Select(file);
                 m_domainEditor2.CurrentFile = file;
                 m_domainEditor2.SelectNode(node);
                 CurrentEditor = m_domainEditor2;
@@ -182,6 +185,7 @@ namespace ConversationEditor
             return true;
         }
 
+        //TODO: Refactor all these to have a generic type parameter
         private IEnumerable<IMenuActionFactory<ConversationNode>> PluginContextMenuFactories()
         {
             List<IMenuActionFactory<ConversationNode>> result = new List<IMenuActionFactory<ConversationNode>>();
@@ -221,6 +225,21 @@ namespace ConversationEditor
                 foreach (var factory in factories)
                 {
                     IParameterEditorFactory obj = factory.GetConstructor(Type.EmptyTypes).Invoke(new object[0]) as IParameterEditorFactory;
+                    result.Add(obj);
+                }
+            }
+            return result;
+        }
+
+        private List<NodeUI.IFactory> GetAllNodeRenderers()
+        {
+            List<NodeUI.IFactory> result = new List<NodeUI.IFactory>();
+            foreach (var pa in m_config.Plugins.UnfilteredAssemblies.Select(a => a.Assembly).Concat(Assembly.GetExecutingAssembly().Only()))
+            {
+                var factories = pa.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(NodeUI.IFactory)));
+                foreach (var factory in factories)
+                {
+                    NodeUI.IFactory obj = factory.GetConstructor(Type.EmptyTypes).Invoke(new object[0]) as NodeUI.IFactory;
                     result.Add(obj);
                 }
             }
@@ -483,8 +502,18 @@ namespace ConversationEditor
         private void errorCheckToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //TODO: Error checking for domain files
-            var errors = m_errorCheckerController.CheckForErrors(CurrentFile.Nodes);
+
+            var errors = m_errorCheckerController.CheckForErrors(CurrentFile.Nodes, new ErrorCheckerUtils(m_projectMenuController.CurrentProject.ConversationDataSource));
             errorList1.SetErrors(errors.Select(error => new ErrorList.Element(error, CurrentFile)));
+        }
+
+        private void testEverythingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var conversations = m_projectMenuController.CurrentProject.Conversations;
+            var errors = conversations.SelectMany(
+                            c => m_errorCheckerController.CheckForErrors(c.Nodes, new ErrorCheckerUtils(m_projectMenuController.CurrentProject.ConversationDataSource)).Select(
+                                error => new ErrorList.Element(error, c)));
+            errorList1.SetErrors(errors);
         }
 
         private void errorList1_HightlightNode(ConversationNode node, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo> file, BoolRef success)
@@ -547,10 +576,17 @@ namespace ConversationEditor
                         config.Add(new XElement("LastLocalization", lastLocalization));
                     XDocument doc = new XDocument(config);
 
-                    using (FileStream s = new FileStream(configPath, FileMode.OpenOrCreate, FileAccess.Write))
+                    try
                     {
-                        s.SetLength(0);
-                        doc.Save(s);
+                        using (var s = Util.LoadFileStream(configPath, FileMode.OpenOrCreate, FileAccess.Write))
+                        {
+                            s.SetLength(0);
+                            doc.Save(s);
+                        }
+                    }
+                    catch (MyFileLoadException)
+                    {
+                        MessageBox.Show("Failed to save project config");
                     }
                 }
             }
@@ -625,11 +661,25 @@ namespace ConversationEditor
 
         private void customiseNodeRendererToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //TODO: Customize domain node renderers?
-            using (NodeRendererCustomizer form = new NodeRendererCustomizer(m_projectMenuController.CurrentProject.ConversationDataSource, m_config.ConversationNodeRenderers, m_config.Plugins))
+            var data = new NodeRendererCustomization(m_projectMenuController.CurrentProject.ConversationDataSource, m_config.ConversationNodeRenderers, GetAllNodeRenderers());
+            Func<ID<ParameterType>, ParameterEditorSetupData, IParameterEditor<Control>> config = (id, d) =>
             {
-                form.ShowDialog();
+                var result = new DefaultEnumEditor();
+                result.Setup(d);
+                return result;
+            };
+            var editor = new DefaultNodeEditorFactory();
+            editor.Edit(data, null, config, null, null).Do(a => a.Redo(), a => { });
+            foreach (var d in data.Parameters)
+            {
+                m_config.ConversationNodeRenderers[ID<NodeTypeTemp>.ConvertFrom(d.TypeId)] = (d as IEnumParameter).Value;
             }
+
+            //TODO: Customize domain node renderers?
+            //using (NodeRendererCustomizer form = new NodeRendererCustomizer(m_projectMenuController.CurrentProject.ConversationDataSource, m_config.ConversationNodeRenderers, m_config.Plugins))
+            //{
+            //    form.ShowDialog();
+            //}
         }
 
         private void pluginsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -781,9 +831,8 @@ namespace ConversationEditor
             {
                 var e = exporter;
                 var item = exportToolStripMenuItem.DropDownItems.Add(e.Name);
-                item.Click += (a, b) => { e.Export(m_projectMenuController.CurrentProject, m_config.ExportPath, l => projectExplorer.CurrentLocalizer.Localize(l)); };
+                item.Click += (a, b) => { e.Export(m_projectMenuController.CurrentProject, m_config.ExportPath, l => projectExplorer.CurrentLocalizer.Localize(l), new ErrorCheckerUtils(m_projectMenuController.CurrentProject.ConversationDataSource)); };
             }
         }
-
     }
 }

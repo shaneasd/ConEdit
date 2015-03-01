@@ -70,5 +70,11 @@ namespace ConversationEditor.Controllers
         {
             throw new NotImplementedException();
         }
+
+
+        public Guid GetCategory(ID<NodeTypeTemp> type)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

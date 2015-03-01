@@ -23,7 +23,7 @@ namespace PluginPack
             }
         }
 
-        public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes)
+        public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities utils)
         {
             return Enumerable.Empty<ConversationError<T>>(); //TODO: Reimplement this
             //var connectedNodes = new LinkedList<T>();
@@ -79,7 +79,7 @@ namespace PluginPack
 
         public override string GetName()
         {
-            return "Node not connected to terminator";
+            return "Cycle error checker";
         }
     }
 }

@@ -22,15 +22,21 @@ namespace ConversationEditor
 
     public class NodeFactory : INodeFactory
     {
-        Func<ID<LocalizedText>, string> m_localizer;
+        private Func<ID<NodeTypeTemp>, ConversationNode, PointF, INodeGUI> GetNodeRendererChoice;
 
-        private TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice> m_config;
         public NodeFactory(TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice> config, Func<ID<LocalizedText>, string> localizer)
         {
-            m_localizer = localizer;
-            m_config = config;
-            m_config.ValueChanged += () => UpdateRenderers();
+            GetNodeRendererChoice = (id, n, p) => config[id].GetRenderer(n, p, localizer);
+            config.ValueChanged += () => UpdateRenderers();
         }
+
+        public NodeFactory(MapConfig<ID<NodeTypeTemp>, Guid> config, List<NodeUI.IFactory> factories, Action<Action> changedCallback, Func<ID<LocalizedText>, string> localizer)
+        {
+            var nodeRenderers = factories.ToDictionary(n => n.Guid, n => n);
+            GetNodeRendererChoice = (id, n, p) => nodeRenderers[config[id]].GetRenderer(n, p, localizer);
+            changedCallback(UpdateRenderers);
+        }
+
 
         private List<ConversationNode> m_toUpdate = new List<ConversationNode>();
         public void UpdateRenderers()
@@ -47,9 +53,9 @@ namespace ConversationEditor
             if (n.m_data is UnknownEditable)
                 return new UnknownNodeRenderer(n, p);
 
-            var choice = m_config[n.Type];
             m_toUpdate.Add(n);
-            return choice.GetRenderer(n, p, m_localizer);
+
+            return GetNodeRendererChoice(n.Type, n, p);
         }
 
         public INodeGUI MakeCorruptedRenderer(ConversationNode n, PointF p)

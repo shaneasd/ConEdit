@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Utilities;
 using System.Drawing.Drawing2D;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace ConversationEditor
 {
@@ -83,9 +84,8 @@ namespace ConversationEditor
                 }
             }
 
-            private void DrawReadOnly(Graphics g)
+            private void DrawReadOnly(Graphics g, RectangleF area)
             {
-                RectangleF area = m_area();
                 g.FillRectangle(ReadonlyBackgroundBrush, area);
             }
 
@@ -101,11 +101,10 @@ namespace ConversationEditor
                 return RectangleF.FromLTRB(5 + indent + CalculateIconRectangle(area).Width, area.Top - 1, area.Right, area.Bottom);
             }
 
-            public RectangleF MinimizedIconRectangle(Graphics g)
+            public RectangleF MinimizedIconRectangle(Graphics g, RectangleF wholeArea)
             {
-                var area = m_area();
-                var indent = CalculateIndent(area);
-                return MinimizedIconRectangle(g, area, indent);
+                var indent = CalculateIndent(wholeArea);
+                return MinimizedIconRectangle(g, wholeArea, indent);
             }
             public RectangleF MinimizedIconRectangle(Graphics g, RectangleF area, float indent)
             {
@@ -136,34 +135,38 @@ namespace ConversationEditor
                 }
             }
 
-            public void Draw(Graphics g, VisibilityFilter filter)
+            public void Draw(Graphics g, VisibilityFilter filter, RectangleF area)
             {
-                var area = m_area();
                 float indent = CalculateIndent(area);
                 var iconRectangle = CalculateIconRectangle(area);
-
                 DrawMinimizeIcon(g, MinimizedIconRectangle(g, area, indent), filter);
-
                 DrawTree(g, iconRectangle, filter);
                 DrawIcon(g, iconRectangle);
-
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-
-                if (m_textBox == null)
-                {
-                    g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
-                    var textArea = CalculateTextArea(area, indent);
-                    TextRenderer.DrawText(g, Text, SystemFonts.MessageBoxFont, textArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE).Round(), ColorScheme.Foreground, Color.Transparent, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix);
-                    //g.DrawString(Text, SystemFonts.MessageBoxFont, ColorScheme.ForegroundBrush, TextArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE));
-                }
             }
 
-            internal void DrawBackground(Graphics g, VisibilityFilter Visibility)
+            internal void DrawBackground(Graphics g, VisibilityFilter Visibility, RectangleF area)
             {
                 if (!File.Writable)
                 {
-                    DrawReadOnly(g);
+                    DrawReadOnly(g, area);
+                }
+            }
+
+            public void DrawText(Arthur.NativeTextRenderer renderer, VisibilityFilter Visibility, RectangleF area)
+            {
+                //g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+                //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+
+                if (m_textBox == null)
+                {
+                    float indent = CalculateIndent(area);
+                    //g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
+                    var textArea = CalculateTextArea(area, indent);
+
+                    renderer.DrawString(Text, SystemFonts.MessageBoxFont, ColorScheme.Foreground, textArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE).Round());
+                    //TextRenderer.DrawText(g, Text, SystemFonts.MessageBoxFont, textArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE).Round(), ColorScheme.Foreground, Color.Transparent, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix);
+
+                    //g.DrawString(Text, SystemFonts.MessageBoxFont, ColorScheme.ForegroundBrush, TextArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE));
                 }
             }
 
@@ -285,9 +288,17 @@ namespace ConversationEditor
 
         private class ProjectItem : ContainerItem
         {
+            public Dictionary<string, ISaveableFileProvider> m_contents = new Dictionary<string, ISaveableFileProvider>(); //TODO: Private?
+
             public ProjectItem(Func<RectangleF> area, IProject project, Func<Matrix> toControlTransform)
                 : base(new ConstructorParams(area, project, new FileSystemObject(project, project.File), null, toControlTransform))
             {
+            }
+
+            public override void Clear()
+            {
+                base.Clear();
+                m_contents.Clear();
             }
 
             public IProject Project { get { return m_project; } }
@@ -318,6 +329,16 @@ namespace ConversationEditor
             public override bool CanRemove { get { return false; } }
 
             public override bool CanSave { get { return Project.File.Writable != null; } }
+
+            public bool TryAdd(ISaveableFileProvider element)
+            {
+                if (!m_contents.ContainsKey(element.File.File.FullName))
+                {
+                    m_contents[element.File.File.FullName] = element;
+                    return true;
+                }
+                return false;
+            }
         }
     }
 }

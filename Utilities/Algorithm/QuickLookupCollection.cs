@@ -30,6 +30,11 @@ namespace Utilities
             get { return m_data[key]; }
         }
 
+        public bool ContainsKey(U key)
+        {
+            return m_data.ContainsKey(key);
+        }
+
         public void Add(T value)
         {
             m_data.Add(m_keySelector(value), value);

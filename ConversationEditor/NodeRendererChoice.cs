@@ -10,9 +10,9 @@ namespace ConversationEditor
 {
     public class NodeRendererChoice : TypeChoice
     {
-        NodeUI.Factory m_factory;
+        NodeUI.IFactory m_factory;
 
-        public NodeRendererChoice(NodeUI.Factory factory)
+        public NodeRendererChoice(NodeUI.IFactory factory)
             : base(factory.GetType())
         {
             m_factory = factory;
@@ -21,7 +21,7 @@ namespace ConversationEditor
         public NodeRendererChoice(string assembly, string type)
             : base(assembly, type)
         {
-            m_factory = (NodeUI.Factory)Assembly.LoadFrom(assembly).GetType(type).GetConstructor(new Type[0]).Invoke(new object[0]);
+            m_factory = (NodeUI.IFactory)Assembly.LoadFrom(assembly).GetType(type).GetConstructor(new Type[0]).Invoke(new object[0]);
         }
 
         public bool WillRender(ID<NodeTypeTemp> guid)

@@ -58,7 +58,7 @@ namespace ConversationEditor
                     return Enumerable.Empty<Item>();
             }
 
-            public void Clear()
+            public virtual void Clear()
             {
                 m_subItems.Clear();
             }

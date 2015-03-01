@@ -83,6 +83,8 @@ namespace Utilities
                     int removed = 0;
                     while (TextRenderer.MeasureText(sb.ToString(), font, new Size(int.MaxValue, int.MaxValue), format).Width > width)
                     {
+                        if (sb.Length == 1)
+                            break; //We have to put at least one character on the line. This avoids issues with characters that are individually wider that the supported width.
                         sb.Remove(sb.Length - 1, 1);
                         removed++;
                     }

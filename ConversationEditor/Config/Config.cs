@@ -44,6 +44,9 @@ namespace ConversationEditor
             ParameterEditors = new MapConfig<ID<ParameterType>, Guid>("ParameterEditors", kvp => new KeyValuePair<string, string>(kvp.Key.Serialized(), kvp.Value.ToString()),
                                                                       kvp => new KeyValuePair<ID<ParameterType>, Guid>(ID<ParameterType>.Parse(kvp.Key), Guid.Parse(kvp.Value)),
                                                                       a=>ParameterEditorCustomization.DefaultEditor(a,willEdit));
+            ConversationNodeRenderers = new MapConfig<ID<NodeTypeTemp>, Guid>("ConversationNodeRenderers", kvp => new KeyValuePair<string, string>(kvp.Key.Serialized(), kvp.Value.ToString()),
+                                                                      kvp => new KeyValuePair<ID<NodeTypeTemp>, Guid>(ID<NodeTypeTemp>.Parse(kvp.Key), Guid.Parse(kvp.Value)),
+                                                                      a => EditableUI.Factory.Instance.Guid);
             InitParameters();
             LoadRoot(file);
         }
@@ -69,9 +72,10 @@ namespace ConversationEditor
 
         public List<IConfigParameter> m_parameters = new List<IConfigParameter>();
         public readonly MapConfig<ID<ParameterType>, Guid> ParameterEditors;
+        public readonly MapConfig<ID<NodeTypeTemp>, Guid> ConversationNodeRenderers;
         public readonly ErrorCheckersConfig ErrorCheckers = new ErrorCheckersConfig();
         public readonly GraphViewConfig GraphView = new GraphViewConfig();
-        public readonly TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice> ConversationNodeRenderers = new TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice>("NodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultConversation(nodeType));
+        //public readonly TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice> ConversationNodeRenderers = new TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice>("NodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultConversation(nodeType));
         public readonly TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice> DomainNodeRenderers = new TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice>("DomainNodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultDomain(nodeType));
         public readonly TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice> ProjectNodeRenderers = new TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice>("ProjectNodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultDomain(nodeType));
         public readonly TypeMapConfig<ID<NodeTypeTemp>, NodeEditorChoice> NodeEditors = new TypeMapConfig<ID<NodeTypeTemp>, NodeEditorChoice>("NodeEditors", nodeType => nodeType.Serialized(), (a, t) => new NodeEditorChoice(a, t), nodeType => NodeEditorChoice.Default(nodeType));

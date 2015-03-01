@@ -91,6 +91,8 @@
     <Compile Include="Controllers\ContextMenu.cs" />
     <Compile Include="Controllers\ConversationConnectionRules.cs" />
     <Compile Include="Controllers\ConversationFile.cs" />
+    <Compile Include="Controllers\ErrorCheckerUtils.cs" />
+    <Compile Include="Controllers\NodeRendererCustomization.cs" />
     <Compile Include="Controllers\DanglingAudioError.cs" />
     <Compile Include="Controllers\DomainAsCSharp.cs" />
     <Compile Include="Controllers\DomainConnectionRules.cs" />

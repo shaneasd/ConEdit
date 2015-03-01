@@ -32,6 +32,9 @@ namespace ConversationEditor
         IEnumerable<Audio> UsedAudio();
         void UpdateUsage(Audio audio);
         void UpdateUsage(ConversationNode<INodeGUI> n);
+
+        void UpdateUsage();
+        IDisposable SuppressUpdates();
     }
 
     public class NoAudio : IAudioProvider
@@ -40,10 +43,23 @@ namespace ConversationEditor
         void IAudioProvider.Play(AudioFile file) { }
         IProjectElementList<AudioFile, IAudioFile> IAudioProvider.AudioFiles { get { throw new NotSupportedException(); } }
         Audio IAudioProvider.Generate(AudioGenerationParameters parameters) { throw new NotSupportedException(); }
-        IEnumerable<Audio> IAudioProvider.UsedAudio(){ return Enumerable.Empty<Audio>(); }
+        IEnumerable<Audio> IAudioProvider.UsedAudio() { return Enumerable.Empty<Audio>(); }
         void IAudioProvider.UpdateUsage(Audio audio) { }
         void IAudioProvider.UpdateUsage(ConversationNode<INodeGUI> n) { }
         public static readonly NoAudio Instance = new NoAudio();
+
+        public void UpdateUsage() { }
+
+        private class Disposable : IDisposable
+        {
+            public void Dispose()
+            {
+            }
+        }
+        public IDisposable SuppressUpdates()
+        {
+            return new Disposable();
+        }
     }
 
     public class AudioProvider : IAudioProvider
@@ -68,7 +84,9 @@ namespace ConversationEditor
                 //For N = 1000 this gives a probability of no collision of 0.9999995 (http://www.wolframalpha.com/input/?i=%28%2832^8-+1%29%2F%2832^8%29%29^%28999000%2F2%29)
                 //for roughly a one in a million chance of collision
 
-                return new Audio("Audio\\" + conversationPath + "\\" + filename + ".ogg");
+                if (conversationPath.StartsWith("Resources\\Conversations\\"))
+                    conversationPath = conversationPath.Substring("Resources\\Conversations\\".Length, conversationPath.Length - "Resources\\Conversations\\".Length);
+                return new Audio("Resources\\Audio\\" + conversationPath + "\\" + filename + ".ogg");
             }
 
 
@@ -93,10 +111,21 @@ namespace ConversationEditor
             Func<DirectoryInfo, AudioFile> makeEmpty = path => { throw new NotSupportedException("Can't create new audio files within the editor"); };
             Func<FileInfo, MissingAudioFile> makeMissing = file => new MissingAudioFile(file, this);
             m_audioFiles = new ProjectElementList<AudioFile, MissingAudioFile, IAudioFile>(fileLocationOk, load, makeEmpty, makeMissing);
+            UpdateQueued = new SuppressibleAction(() => { ReallyUpdateUsage(); }); //For now just update everything
         }
+
+        List<Audio> m_toUpdate = new List<Audio>();
+        bool m_updateAll = false;
+        public IDisposable SuppressUpdates()
+        {
+            return UpdateQueued.SuppressCallback();
+        }
+        SuppressibleAction UpdateQueued;
 
         FileInfo GetPath(Audio audio)
         {
+            //Must be an absolute path or the FileInfo constructor will treat it as relative to current working dir as opposed to project dir
+            //return new FileInfo(audio.Value);
             return new FileInfo(Path.Combine(m_projectPath.FullName, audio.Value));
         }
 
@@ -145,6 +174,19 @@ namespace ConversationEditor
             if (audio.Value == null) //As far as I can tell, only a default constructed Audio can have this property
                 return;
 
+            m_toUpdate.Add(audio);
+            UpdateQueued.TryExecute();
+        }
+
+        public static Stopwatch PathGenerationTime = new Stopwatch();
+        public void UpdateUsage()
+        {
+            m_updateAll = true;
+            UpdateQueued.TryExecute();
+        }
+
+        public void ReallyUpdateUsage(Audio audio)
+        {
             bool used = UsedAudio().Contains(audio);
             IAudioFile match = m_project.AudioFiles.FirstOrDefault(f => Matches(audio, f));
 
@@ -154,10 +196,29 @@ namespace ConversationEditor
                 m_project.AudioFiles.Remove(match, true);
         }
 
+        private void ReallyUpdateUsage()
+        {
+            //if (m_updateAll)
+            //{
+            //    //TODO: m_project.AudioFiles.Clear or something?
+            m_project.AudioFiles.Load(UsedAudio().Select(GetPath));
+            //    m_toUpdate.Clear();
+            //}
+            //foreach (Audio audio in m_toUpdate)
+            //{
+            //    ReallyUpdateUsage(audio);
+            //}
+            m_updateAll = false;
+            m_toUpdate.Clear();
+        }
+
         public void UpdateUsage(ConversationNode<INodeGUI> n)
         {
-            foreach (var audio in UsedAudio(n))
-                UpdateUsage(audio);
+            using (SuppressUpdates())
+            {
+                foreach (var audio in UsedAudio(n))
+                    UpdateUsage(audio);
+            }
         }
 
         public Audio Generate(AudioGenerationParameters parameters)

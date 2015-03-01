@@ -9,6 +9,9 @@ using System.Windows.Forms;
 using Conversation;
 using Utilities;
 
+using TControl = Utilities.MySuggestionBox<string>;
+//using TControl = Utilities.MyComboBox<string>;
+
 namespace ConversationEditor
 {
     public partial class DefaultDynamicEnumEditor : UserControl, IParameterEditor<DefaultDynamicEnumEditor>
@@ -37,15 +40,15 @@ namespace ConversationEditor
             }
         }
 
-        private MySuggestionBox<string> m_comboBox;
-        private IEnumerable<MySuggestionBox<string>.Item> m_comboBoxItems;
+        private TControl m_comboBox;
+        private IEnumerable<TControl.Item> m_comboBoxItems;
 
         public DefaultDynamicEnumEditor()
         {
             InitializeComponent();
 
-            m_comboBoxItems = (new ExtraLazyEnumerable<MySuggestionBox<string>.Item>(() => m_parameter.Options.Select(ch => new MySuggestionBox<string>.Item(ch, ch))));
-            m_comboBox = new MySuggestionBox<string>(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), true, m_comboBoxItems);
+            m_comboBoxItems = (new ExtraLazyEnumerable<TControl.Item>(() => m_parameter.Options.Select(ch => new TControl.Item(ch, ch))));
+            m_comboBox = new TControl(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), true, m_comboBoxItems);
             m_comboBox.SetupCallbacks();
             m_comboBox.RequestedAreaChanged += () =>
             {
@@ -54,8 +57,8 @@ namespace ConversationEditor
                 Size = m_comboBox.RequestedArea.ToSize();
                 Invalidate(true);
             };
-            m_comboBox.Colors.TextBox.BorderPen = ColorScheme.ControlBorder;
-            m_comboBox.Colors.SelectedBackground = ColorScheme.SelectedConversationListItemPrimaryBackground;
+            m_comboBox.TextBoxColors.BorderPen = ColorScheme.ControlBorder;
+            m_comboBox.SelectedBackgroundColor = ColorScheme.SelectedConversationListItemPrimaryBackground;
             m_comboBox.Renderer = ColorScheme.ContextMenu;
             m_comboBox.EnterPressed += () => { Ok.Execute(); };
         }
@@ -65,7 +68,7 @@ namespace ConversationEditor
         {
             m_parameter = data.Parameter as IDynamicEnumParameter;
             if (!data.Parameter.Corrupted)
-                m_comboBox.SelectedItem = new MySuggestionBox<string>.Item(m_parameter.Value, m_parameter.Value);
+                m_comboBox.SelectedItem = new TControl.Item(m_parameter.Value, m_parameter.Value);
         }
 
         public DefaultDynamicEnumEditor AsControl

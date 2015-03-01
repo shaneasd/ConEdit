@@ -10,23 +10,29 @@ namespace PluginPack
 {
     public class RedRenderer : NodeUI
     {
-        public new class Factory : NodeUI.Factory
+        public class Factory : NodeUI.IFactory
         {
             public static Factory Instance = new Factory();
 
-            public override bool WillRender(ID<NodeTypeTemp> nodeType)
+            public bool WillRender(ID<NodeTypeTemp> nodeType)
             {
                 return nodeType != SpecialNodes.START_GUID;
             }
 
-            public override string DisplayName
+            public string DisplayName
             {
                 get { return "Red Renderer"; }
             }
 
-            public override INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer)
+            public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer)
             {
                 return new RedRenderer(n, p, localizer);
+            }
+
+            static Guid m_guid = Guid.Parse("7166fb2a-c457-4d0a-8c93-906e925a50ae");
+            public Guid Guid
+            {
+                get { return m_guid; }
             }
         }
 
