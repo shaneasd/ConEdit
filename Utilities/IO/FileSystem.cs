@@ -21,41 +21,36 @@ namespace Utilities
         public static List<DirectoryInfo> PathToFrom(FileInfo descendant, DirectoryInfo ancestor)
         {
             var result = PathToFrom(descendant.Directory, ancestor);
-            if (result != null)
-            {
-                result.Add(descendant.Directory);
-            }
             return result;
-            //List<DirectoryInfo> stack = new List<DirectoryInfo>();
-            //for (var test = child.Directory; test != null; test = test.Parent)
-            //{
-            //    stack.Insert(0, test);
-            //    if (DirectoryEqualityComparer.SameDir(test, ancestor))
-            //    {
-            //        return stack;
-            //    }
-            //}
-            //return null;
         }
 
         /// <summary>
         /// Generate a list of DirectoryInfos representing all the folders in between the input ancestor and descendant
         /// The first element is 'ancestor'
-        /// The last element is descendant's parent
+        /// The last element is 'descendant'
         /// If 'descendant' is not a descendant of 'ancestor', returns null
         /// </summary>
         public static List<DirectoryInfo> PathToFrom(DirectoryInfo descendant, DirectoryInfo ancestor)
         {
-            var pathA = ancestor.FullName;
-            var pathD = descendant.FullName;
+            string pathA = ancestor.FullName.TrimEnd('\\');
+            string pathD = descendant.FullName.TrimEnd('\\');
 
             if (!pathD.StartsWith(pathA, StringComparison.InvariantCultureIgnoreCase))
                 return null;
 
             List<DirectoryInfo> result = new List<DirectoryInfo>();
-            for (int i = pathA.Length; i != -1; i = pathD.IndexOf('\\', i + 1))
+
+            result.Add(ancestor); //The ancestor is always the first element
+
+            if (pathA != pathD)
             {
-                result.Add(new DirectoryInfo(pathD.Substring(0, i)));
+                for (int i = pathD.IndexOf('\\', pathA.Length + 1); i != -1; i = i + 1 < pathD.Length ? pathD.IndexOf('\\', i + 1) : -1)
+                {
+                    result.Add(new DirectoryInfo(pathD.Substring(0, i)));
+                }
+
+                //The descendant is always the last element
+                result.Add(descendant); //We know pathD does not end in a slash and so the last substring has not yet been included
             }
             return result;
         }
@@ -63,8 +58,6 @@ namespace Utilities
         public static string RelativePath(FileInfo child, DirectoryInfo root)
         {
             var path = PathToFrom(child, root);
-            if (path == null)
-                System.Windows.Forms.MessageBox.Show(child.FullName + "                           " + root.FullName);
             return string.Join("" + Path.DirectorySeparatorChar, path.Skip(1).Select(f => f.Name).Concat(child.Name.Only()).ToArray());
         }
 

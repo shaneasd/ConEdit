@@ -13,8 +13,8 @@ namespace ConversationEditor
     {
         private class FolderItem : ContainerItem
         {
-            public FolderItem(Func<RectangleF> area, DirectoryInfo path, IProject project, ContainerItem parent, Func<Matrix> toControlTransform)
-                : base(new ConstructorParams(area, project, new FileSystemObject(project, path), parent, toControlTransform))
+            public FolderItem(Func<RectangleF> area, DirectoryInfo path, IProject project, ContainerItem parent, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
+                : base(new ConstructorParams(area, project, new FileSystemObject(project, path), parent, toControlTransform, rename))
             {
                 if (path == null)
                     throw new ArgumentNullException("path");

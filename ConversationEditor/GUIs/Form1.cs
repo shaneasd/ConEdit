@@ -24,6 +24,7 @@ namespace ConversationEditor
     public partial class Form1 : Form
     {
         ErrorCheckerController m_errorCheckerController;
+        SharedContext m_context;
         Config m_config;
         INodeFactory m_conversationNodeFactory;
         INodeFactory m_domainNodeFactory;
@@ -94,6 +95,8 @@ namespace ConversationEditor
         {
             InitializeComponent();
 
+            m_context = new SharedContext();
+
             Assembly assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.GenericSystemHover.ico"))
                 this.Icon = new Icon(stream);
@@ -104,10 +107,10 @@ namespace ConversationEditor
             {
                 var willEdit = new WillEdit
                 {
-                    IsDecimal = guid => m_projectMenuController.CurrentProject.ConversationDataSource.IsDecimal(guid) || m_projectMenuController.CurrentProject.DomainDataSource.IsDecimal(guid),
-                    IsDynamicEnum = guid => m_projectMenuController.CurrentProject.ConversationDataSource.IsDynamicEnum(guid) || m_projectMenuController.CurrentProject.DomainDataSource.IsDynamicEnum(guid),
-                    IsEnum = guid => m_projectMenuController.CurrentProject.ConversationDataSource.IsEnum(guid) || m_projectMenuController.CurrentProject.DomainDataSource.IsEnum(guid),
-                    IsInteger = guid => m_projectMenuController.CurrentProject.ConversationDataSource.IsInteger(guid) || m_projectMenuController.CurrentProject.DomainDataSource.IsInteger(guid),
+                    IsDecimal = guid => m_context.CurrentProject.Value.ConversationDataSource.IsDecimal(guid) || m_context.CurrentProject.Value.DomainDataSource.IsDecimal(guid),
+                    IsDynamicEnum = guid => m_context.CurrentProject.Value.ConversationDataSource.IsDynamicEnum(guid) || m_context.CurrentProject.Value.DomainDataSource.IsDynamicEnum(guid),
+                    IsEnum = guid => m_context.CurrentProject.Value.ConversationDataSource.IsEnum(guid) || m_context.CurrentProject.Value.DomainDataSource.IsEnum(guid),
+                    IsInteger = guid => m_context.CurrentProject.Value.ConversationDataSource.IsInteger(guid) || m_context.CurrentProject.Value.DomainDataSource.IsInteger(guid),
                 };
                 m_config = new Config("config.xml", willEdit);
             }
@@ -115,6 +118,8 @@ namespace ConversationEditor
             {
                 throw;
             }
+
+            projectExplorer.Initialize(m_context);
 
             InitialiseNodeFactory();
             InitialiseFileMenu();
@@ -144,9 +149,9 @@ namespace ConversationEditor
         private void InitialiseNodeFactory()
         {
 
-            m_conversationNodeFactory = new NodeFactory(m_config.ConversationNodeRenderers, GetAllNodeRenderers(), a => m_config.ConversationNodeRenderers.ValueChanged += a, guid => m_projectMenuController.CurrentProject.Localizer.Localize(guid));
-            m_domainNodeFactory = new NodeFactory(m_config.DomainNodeRenderers, guid => m_projectMenuController.CurrentProject.Localizer.Localize(guid));
-            m_projectNodeFactory = new NodeFactory(m_config.ProjectNodeRenderers, guid => m_projectMenuController.CurrentProject.Localizer.Localize(guid));
+            m_conversationNodeFactory = new NodeFactory(m_config.ConversationNodeRenderers, GetAllNodeRenderers(), a => m_config.ConversationNodeRenderers.ValueChanged += a, guid => m_context.CurrentProject.Value.Localizer.Localize(guid));
+            m_domainNodeFactory = new NodeFactory(m_config.DomainNodeRenderers, guid => m_context.CurrentProject.Value.Localizer.Localize(guid));
+            m_projectNodeFactory = new NodeFactory(m_config.ProjectNodeRenderers, guid => m_context.CurrentProject.Value.Localizer.Localize(guid));
         }
 
         private void InitialiseOptionsMenu()
@@ -160,23 +165,22 @@ namespace ConversationEditor
         {
             if (!file.Nodes.Contains(node))
                 return false;
-            if (m_projectMenuController.CurrentProject.Conversations.Contains(file))
+            if (m_context.CurrentProject.Value.Conversations.Contains(file))
             {
                 projectExplorer.Select(file);
                 conversationEditorControl1.CurrentFile = file;
                 conversationEditorControl1.SelectNode(node);
                 CurrentEditor = conversationEditorControl1;
             }
-            else if (m_projectMenuController.CurrentProject.DomainFiles.Contains(file))
+            else if (m_context.CurrentProject.Value.DomainFiles.Contains(file))
             {
                 projectExplorer.Select(file);
                 m_domainEditor2.CurrentFile = file;
                 m_domainEditor2.SelectNode(node);
                 CurrentEditor = m_domainEditor2;
             }
-            else if (object.Equals(file.File, m_projectMenuController.CurrentProject.File))
+            else if (object.Equals(file.File, m_context.CurrentProject.Value.File))
             {
-                m_projectGraphEditor.CurrentFile = file; //TODO:Shouldn't be necessary
                 m_projectGraphEditor.SelectNode(node);
                 CurrentEditor = m_projectGraphEditor;
             }
@@ -248,23 +252,23 @@ namespace ConversationEditor
 
         private void InitialiseConversationEditor()
         {
-            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_conversationNodeFactory, m_projectMenuController.CurrentProject.ConversationDataSource, conversationEditorControl1, new GraphContextMenuItems(FindReferences));
+            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_conversationNodeFactory, m_context.CurrentProject.Value.ConversationDataSource, conversationEditorControl1, new GraphContextMenuItems(FindReferences));
         }
 
         private void InitializeDomainEditor()
         {
-            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_domainNodeFactory, m_projectMenuController.CurrentProject.DomainDataSource, m_domainEditor2, new DomainContextMenuItems(FindReferences));
+            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_domainNodeFactory, m_context.CurrentProject.Value.DomainDataSource, m_domainEditor2, new DomainContextMenuItems(FindReferences));
         }
 
         private void InitializeProjectEditor()
         {
-            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_projectNodeFactory, ProjectDomain.Instance, m_projectGraphEditor, new ProjectContextMenuItems(m_projectMenuController.CurrentProject));
+            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_projectNodeFactory, ProjectDomain.Instance, m_projectGraphEditor, new ProjectContextMenuItems(m_context.CurrentProject.Value));
         }
 
         private void InitializeGraphEditor(ConversationCopyPasteController copyPasteController, INodeFactory nodefactory, IDataSource datasource, GraphEditorControl<ConversationNode> editor, IMenuActionFactory<ConversationNode> basicItems)
         {
             editor.Initialise(Edit, nodefactory, copyPasteController, FindReferences);
-            editor.SetContext(datasource, m_projectMenuController.CurrentProject.Localizer, m_projectMenuController.CurrentProject);
+            editor.SetContext(datasource, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value);
             editor.m_contextMenu.Opening += () => editor.RefreshContextMenu(basicItems.Only().Concat(PluginContextMenuFactories()));
 
             Action updateGraphViewFromConfig = () =>
@@ -304,9 +308,9 @@ namespace ConversationEditor
                 {
                     if (projectExplorer.SelectedConversation != null)
                     {
-                        if (m_projectMenuController.CurrentProject.ReloadConversationDatasourceIfRequired())
+                        if (m_context.CurrentProject.Value.ReloadConversationDatasourceIfRequired())
                         {
-                            conversationEditorControl1.SetContext(m_projectMenuController.CurrentProject.ConversationDataSource, m_projectMenuController.CurrentProject.Localizer, m_projectMenuController.CurrentProject);
+                            conversationEditorControl1.SetContext(m_context.CurrentProject.Value.ConversationDataSource, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value);
                             conversationEditorControl1.UpdateKeyMappings();
                         }
                     }
@@ -330,13 +334,12 @@ namespace ConversationEditor
 
                 UpdateUndoMenu();
             };
-            projectExplorer.LocalizerSelected += () =>
+            m_context.CurrentLocalization.Changed.Register(this, (a, value) =>
             {
-                if (m_projectMenuController != null)
-                    m_projectMenuController.CurrentProject.Localizer.SelectLocalizer(projectExplorer.CurrentLocalizer);
+                //Invalidate graph editors as they can display localized text
                 conversationEditorControl1.Invalidate();
                 m_domainEditor2.Invalidate();
-            };
+            });
         }
 
         private void UpdateUndoMenu()
@@ -367,6 +370,49 @@ namespace ConversationEditor
             }
         }
 
+        void ProjectChanged(IProject old, IProject project)
+        {
+            Project.TConfig projectConfig = ReadProjectConfig(project);
+
+            conversationEditorControl1.SetContext(project.ConversationDataSource, project.Localizer, project);
+            conversationEditorControl1.UpdateKeyMappings();
+
+            m_domainEditor2.SetContext(project.DomainDataSource, project.Localizer, project);
+            m_domainEditor2.UpdateKeyMappings();
+            
+            projectExplorer.SetProject(project);
+            var p = project as Project;
+            if (p != null)
+            {
+                var con = projectConfig.LastEdited != null ? project.Conversations.FirstOrDefault(c => c.File.File.FullName == p.Rerout(projectConfig.LastEdited.Only()).Single().FullName) : null;
+                var dom = projectConfig.LastEdited != null ? project.DomainFiles.FirstOrDefault(c => c.File.File.FullName == p.Rerout(projectConfig.LastEdited.Only()).Single().FullName) : null;
+                conversationEditorControl1.CurrentFile = con;
+                m_domainEditor2.CurrentFile = dom;
+                if (con != null)
+                {
+                    projectExplorer.Select(con);
+                    CurrentEditor = conversationEditorControl1;
+                }
+                else if (dom != null)
+                {
+                    projectExplorer.Select(dom);
+                    CurrentEditor = m_domainEditor2;
+                }
+                else
+                    CurrentEditor = null;
+                Func<ILocalizationFile, bool> matchesLastLocalization = c => c.File.File.FullName == (p.Rerout(projectConfig.LastLocalization.Only()).Single()).FullName;
+                IEnumerable<ILocalizationFile> allLocalizers = project.LocalizationFiles;
+                if (projectConfig.LastLocalization != null)
+                    allLocalizers = allLocalizers.OrderByDescending(matchesLastLocalization);
+
+                m_context.CurrentLocalization.Value = allLocalizers.First(); //TODO: Select appropriate localizer
+            }
+
+            Text = project.File.Exists ? project.File.File.Name : "No Project Open";
+
+            project.File.Moved += (from, to) => Text = project.File.File.Name;
+        }
+
         public void InitialiseProjectMenu()
         {
             //fromXmlToolStripMenuItem.Click += (a, b) =>
@@ -375,57 +421,8 @@ namespace ConversationEditor
             //        m_dataSourceController.LoadFromXml();
             //};
 
-            Action<IProject> projectChanged = null;
-            projectChanged = (project) =>
-            {
-                Project.TConfig projectConfig = ReadProjectConfig(project);
-
-                conversationEditorControl1.SetContext(project.ConversationDataSource, project.Localizer, project);
-                conversationEditorControl1.UpdateKeyMappings();
-
-                m_domainEditor2.SetContext(project.DomainDataSource, project.Localizer, project);
-                m_domainEditor2.UpdateKeyMappings();
-
-                //TODO: Shouldn't have to do any of this
-                //m_projectGraphEditor.SetContext(ProjectDomain.Instance, project.Localizer);
-                //m_projectGraphEditor.UpdateKeyMappings();
-
-                projectExplorer.SetProject(project);
-                var p = project as Project;
-                if (p != null)
-                {
-                    var con = projectConfig.LastEdited != null ? project.Conversations.FirstOrDefault(c => c.File.File.FullName == p.Rerout(projectConfig.LastEdited.Only()).Single().FullName) : null;
-                    var dom = projectConfig.LastEdited != null ? project.DomainFiles.FirstOrDefault(c => c.File.File.FullName == p.Rerout(projectConfig.LastEdited.Only()).Single().FullName) : null;
-                    conversationEditorControl1.CurrentFile = con;
-                    m_domainEditor2.CurrentFile = dom;
-                    if (con != null)
-                    {
-                        projectExplorer.Select(con);
-                        CurrentEditor = conversationEditorControl1;
-                    }
-                    else if (dom != null)
-                    {
-                        projectExplorer.Select(dom);
-                        CurrentEditor = m_domainEditor2;
-                    }
-                    else
-                        CurrentEditor = null;
-                    Func<ILocalizationFile, bool> matchesLastLocalization = c => c.File.File.FullName == (p.Rerout(projectConfig.LastLocalization.Only()).Single()).FullName;
-                    IEnumerable<ILocalizationFile> allLocalizers = project.LocalizationFiles;
-                    if (projectConfig.LastLocalization != null)
-                        allLocalizers = allLocalizers.OrderByDescending(matchesLastLocalization);
-
-                    var loc = allLocalizers.First();
-                    projectExplorer.SelectLocalization(loc);
-                    p.Localizer.SelectLocalizer(loc);
-                }
-
-                Text = project.File.Exists ? project.File.File.Name : "No Project Open";
-
-                project.File.Moved += (from, to) => Text = project.File.File.Name;
-            };
-
-            m_projectMenuController = new ProjectMenuController(m_config.ProjectHistory, m_conversationNodeFactory, m_domainNodeFactory, projectExplorer, projectChanged, a => Invoke(a), m_config.Plugins, GetAudioCustomizer);
+            m_context.CurrentProject.Changed.Register(this, (a, b) => a.ProjectChanged(b.from, b.to));
+            m_projectMenuController = new ProjectMenuController(m_context, m_config.ProjectHistory, m_conversationNodeFactory, m_domainNodeFactory, projectExplorer, a => Invoke(a), m_config.Plugins, GetAudioCustomizer);
 
             this.projectSaveMenuItem.Click += (a, b) => m_projectMenuController.Save();
             this.projectNewMenuItem.Click += (a, b) => m_projectMenuController.New();
@@ -455,7 +452,7 @@ namespace ConversationEditor
                                     Console.Out.WriteLine(e.StackTrace);
                                     Console.Out.WriteLine(e.InnerException.Message);
                                     Console.Out.WriteLine(e.InnerException.StackTrace);
-                                    MessageBox.Show("Failed to access " + m_projectMenuController.CurrentProject.File.File.FullName + " for saving");
+                                    MessageBox.Show("Failed to access " + m_context.CurrentProject.Value.File.File.FullName + " for saving");
                                 }
                                 if (open)
                                 {
@@ -496,22 +493,22 @@ namespace ConversationEditor
                 return ConfigureResult.NotApplicable;
             }
             else
-                return m_config.NodeEditors[data.NodeTypeID].GetEditorFactory().Edit(data, audioContext, GetParameterEditor, m_projectMenuController.CurrentProject.Localizer, m_projectMenuController.CurrentProject.AudioProvider);
+                return m_config.NodeEditors[data.NodeTypeID].GetEditorFactory().Edit(data, audioContext, GetParameterEditor, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value.AudioProvider);
         }
 
         private void errorCheckToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //TODO: Error checking for domain files
 
-            var errors = m_errorCheckerController.CheckForErrors(CurrentFile.Nodes, new ErrorCheckerUtils(m_projectMenuController.CurrentProject.ConversationDataSource));
+            var errors = m_errorCheckerController.CheckForErrors(CurrentFile.Nodes, new ErrorCheckerUtils(m_context.CurrentProject.Value.ConversationDataSource));
             errorList1.SetErrors(errors.Select(error => new ErrorList.Element(error, CurrentFile)));
         }
 
         private void testEverythingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var conversations = m_projectMenuController.CurrentProject.Conversations;
+            var conversations = m_context.CurrentProject.Value.Conversations;
             var errors = conversations.SelectMany(
-                            c => m_errorCheckerController.CheckForErrors(c.Nodes, new ErrorCheckerUtils(m_projectMenuController.CurrentProject.ConversationDataSource)).Select(
+                            c => m_errorCheckerController.CheckForErrors(c.Nodes, new ErrorCheckerUtils(m_context.CurrentProject.Value.ConversationDataSource)).Select(
                                 error => new ErrorList.Element(error, c)));
             errorList1.SetErrors(errors);
         }
@@ -551,17 +548,18 @@ namespace ConversationEditor
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            var projectFile = m_projectMenuController.CurrentProject.File;
+            var projectFile = m_context.CurrentProject.Value.File;
             string configPath = null;
             string lastDocument = null;
             string lastLocalization = null;
             if (projectFile.Exists)
             {
-                configPath = m_projectMenuController.CurrentProject.File.File.FullName + ".config";
-                lastDocument = projectExplorer.SelectedConversation != null ? FileSystem.RelativePath(projectExplorer.SelectedConversation.File.File, m_projectMenuController.CurrentProject.Origin) :
-                               projectExplorer.CurrentDomainFile != null ? FileSystem.RelativePath(projectExplorer.CurrentDomainFile.File.File, m_projectMenuController.CurrentProject.Origin) :
+                configPath = m_context.CurrentProject.Value.File.File.FullName + ".config";
+                lastDocument = projectExplorer.SelectedConversation != null ? FileSystem.RelativePath(projectExplorer.SelectedConversation.File.File, m_context.CurrentProject.Value.Origin) :
+                               projectExplorer.CurrentDomainFile != null ? FileSystem.RelativePath(projectExplorer.CurrentDomainFile.File.File, m_context.CurrentProject.Value.Origin) :
                                null;
-                lastLocalization = projectExplorer.CurrentLocalizer != null ? FileSystem.RelativePath(projectExplorer.CurrentLocalizer.File.File, m_projectMenuController.CurrentProject.Origin) : null;
+                lastLocalization = FileSystem.RelativePath(m_context.CurrentLocalization.Value.File.File, m_context.CurrentProject.Value.Origin); //TODO: This could be null
+                //lastLocalization = projectExplorer.CurrentLocalizer != null ? FileSystem.RelativePath(projectExplorer.CurrentLocalizer.File.File, m_context.CurrentProject.Value.Origin) : null;
             }
             if (!m_projectMenuController.Exit())
                 e.Cancel = true;
@@ -633,7 +631,7 @@ namespace ConversationEditor
 
         private void customiseParameterEditorsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var data = new ParameterEditorCustomization(m_projectMenuController.CurrentProject.ConversationDataSource, m_config.ParameterEditors, GetAllParameterEditors());
+            var data = new ParameterEditorCustomization(m_context.CurrentProject.Value.ConversationDataSource, m_config.ParameterEditors, GetAllParameterEditors());
             //var config = new MapConfig<ID<ParameterType>, Guid>("ParameterEditors", kvp => new KeyValuePair<string,string>(kvp.Key.Serialized(), kvp.Value.ToString())
             //                                                    , kvp => new KeyValuePair<ID<ParameterType>,Guid>(ID<ParameterType>.Parse(kvp.Key), Guid.Parse(kvp.Value))
             //                                                    , g => DefaultEnumEditor.Factory.GUID);
@@ -661,7 +659,7 @@ namespace ConversationEditor
 
         private void customiseNodeRendererToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var data = new NodeRendererCustomization(m_projectMenuController.CurrentProject.ConversationDataSource, m_config.ConversationNodeRenderers, GetAllNodeRenderers());
+            var data = new NodeRendererCustomization(m_context.CurrentProject.Value.ConversationDataSource, m_config.ConversationNodeRenderers, GetAllNodeRenderers());
             Func<ID<ParameterType>, ParameterEditorSetupData, IParameterEditor<Control>> config = (id, d) =>
             {
                 var result = new DefaultEnumEditor();
@@ -693,7 +691,7 @@ namespace ConversationEditor
 
         private void customiseNodeEditorsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (NodeEditorCustomizer form = new NodeEditorCustomizer(m_projectMenuController.CurrentProject.ConversationDataSource, m_config.NodeEditors, m_config.Plugins))
+            using (NodeEditorCustomizer form = new NodeEditorCustomizer(m_context.CurrentProject.Value.ConversationDataSource, m_config.NodeEditors, m_config.Plugins))
             {
                 form.ShowDialog();
             }
@@ -704,29 +702,29 @@ namespace ConversationEditor
             IEnumerable<IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>> search;
             if (CurrentEditor == conversationEditorControl1)
             {
-                search = m_projectMenuController.CurrentProject.Conversations;
+                search = m_context.CurrentProject.Value.Conversations;
             }
             else if (CurrentEditor == m_domainEditor2)
             {
-                search = m_projectMenuController.CurrentProject.DomainFiles;
+                search = m_context.CurrentProject.Value.DomainFiles;
             }
             else
             {
                 throw new Exception("fvjblanbl");
             }
 
-            var d = new FindAndReplaceDialog(search, m_projectMenuController.CurrentProject.Localizer, () => CurrentFile);
+            var d = new FindAndReplaceDialog(search, m_context.CurrentProject.Value.Localizer, () => CurrentFile);
 
             d.FocusNode += (node, file) =>
             {
-                if (m_projectMenuController.CurrentProject.Conversations.Contains(file))
+                if (m_context.CurrentProject.Value.Conversations.Contains(file))
                 {
                     projectExplorer.Select(file);
                     conversationEditorControl1.CurrentFile = file;
                     CurrentEditor = conversationEditorControl1;
                     conversationEditorControl1.SelectNode(node);
                 }
-                else if (m_projectMenuController.CurrentProject.DomainFiles.Contains(file))
+                else if (m_context.CurrentProject.Value.DomainFiles.Contains(file))
                 {
                     projectExplorer.Select(file);
                     m_domainEditor2.CurrentFile = file;
@@ -748,13 +746,13 @@ namespace ConversationEditor
                     if (Path.IsPathRooted(s))
                         return new FileInfo(s);
                     else
-                        return new FileInfo(Path.Combine(m_projectMenuController.CurrentProject.File.File.Directory.FullName, s));
+                        return new FileInfo(Path.Combine(m_context.CurrentProject.Value.File.File.Directory.FullName, s));
                 };
 
-            IEnumerable<IConversationFile> conversations = m_projectMenuController.CurrentProject.Conversations;
+            IEnumerable<IConversationFile> conversations = m_context.CurrentProject.Value.Conversations;
             var allAudioReferences = (conversations.SelectMany(c => c.Nodes.SelectMany(n => n.Parameters.OfType<IAudioParameter>().Select(p => new { Node = n, Path = rooted(p.Value.Value).FullName, Document = c })))).ToHashSet();
 
-            var audioFiles = m_projectMenuController.CurrentProject.AudioFiles.Select(a => a.File.File.FullName).Evaluate();
+            var audioFiles = m_context.CurrentProject.Value.AudioFiles.Select(a => a.File.File.FullName).Evaluate();
 
             var unnecessaryAudioFiles = audioFiles.Except(allAudioReferences, a => a, b => b.Path);
             var danglingPointers = allAudioReferences.Except(audioFiles, b => b.Path, a => a);
@@ -766,7 +764,7 @@ namespace ConversationEditor
 
         private void FindReferences(ConversationNode node)
         {
-            errorList1.SetErrors(m_projectMenuController.CurrentProject.DomainUsage.Usages(node).Select(u => new ErrorList.Element(u.Node, u.File, u.Description)).ToList());
+            errorList1.SetErrors(m_context.CurrentProject.Value.DomainUsage.Usages(node).Select(u => new ErrorList.Element(u.Node, u.File, u.Description)).ToList());
         }
 
         private void connectorColorToolStripMenuItem_Click(object sender, EventArgs e)
@@ -831,7 +829,13 @@ namespace ConversationEditor
             {
                 var e = exporter;
                 var item = exportToolStripMenuItem.DropDownItems.Add(e.Name);
-                item.Click += (a, b) => { e.Export(m_projectMenuController.CurrentProject, m_config.ExportPath, l => projectExplorer.CurrentLocalizer.Localize(l), new ErrorCheckerUtils(m_projectMenuController.CurrentProject.ConversationDataSource)); };
+                item.Click += (a, b) =>
+                {
+                    if (m_context.CanLocalize)
+                        e.Export(m_context.CurrentProject.Value, m_config.ExportPath, l => m_context.CurrentLocalization.Value.Localize(l), new ErrorCheckerUtils(m_context.CurrentProject.Value.ConversationDataSource));
+                    else
+                        MessageBox.Show("Cannot export as there is no currently selected localizer");
+                };
             }
         }
     }

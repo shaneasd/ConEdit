@@ -183,6 +183,33 @@ namespace ConversationEditor
         }
     }
 
+    public class BaseTypeFlags : BaseType
+    {
+        public BaseTypeFlags()
+            : base(parameterNodeType: ID<NodeTypeTemp>.Parse("d60469d8-2c7a-4cef-8dd3-c372a3481c8a"),
+                   nodeType: TypeDefinitionNodeIDs.Enumeration)
+        {
+        }
+
+        public override NodeData.ParameterData ReadDomainNode(IEditable parameterNode)
+        {
+            var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_NAME) as IStringParameter;
+            var parameterName = parameterNameParameter.Value;
+            var parameterTypeParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_TYPE) as IEnumParameter;
+            var parameterType = ID<ParameterType>.FromGuid(parameterTypeParameter.Value);
+            //TODO: Defaults for this are a bit tricky maybe
+            //var parameterDefParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_DEFAULT) as DomainDomain.EnumDefaultParameter;
+            //var parameterDef = parameterDefParameter.BetterValue;
+            var data = new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), parameterType, ""); //Technically "" is a valid Set of zero elements
+            return data;
+        }
+
+        public override string Name
+        {
+            get { return "Set"; }
+        }
+    }
+
     public class BaseTypeDynamicEnumeration : BaseType
     {
         public BaseTypeDynamicEnumeration()
@@ -248,6 +275,7 @@ namespace ConversationEditor
         public static BaseTypeAudio Audio = new BaseTypeAudio();
         public static BaseTypeEnumeration Enumeration = new BaseTypeEnumeration();
         public static BaseTypeDynamicEnumeration DynamicEnumeration = new BaseTypeDynamicEnumeration();
+        public static BaseTypeFlags Set = new BaseTypeFlags();
 
         static BaseType()
         {
@@ -262,6 +290,7 @@ namespace ConversationEditor
             AddMapping(Audio);
             AddMapping(Enumeration);
             AddMapping(DynamicEnumeration);
+            AddMapping(Set);
         }
 
         private static Dictionary<ID<NodeTypeTemp>, BaseType> m_parameterNodeTypeToBaseTypeMapping;

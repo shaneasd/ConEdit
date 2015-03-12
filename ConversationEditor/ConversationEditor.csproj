@@ -91,6 +91,7 @@
     <Compile Include="Controllers\ContextMenu.cs" />
     <Compile Include="Controllers\ConversationConnectionRules.cs" />
     <Compile Include="Controllers\ConversationFile.cs" />
+    <Compile Include="Controllers\DummyLocalizationFile.cs" />
     <Compile Include="Controllers\ErrorCheckerUtils.cs" />
     <Compile Include="Controllers\NodeRendererCustomization.cs" />
     <Compile Include="Controllers\DanglingAudioError.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="Controllers\ProjectElementList.cs" />
     <Compile Include="Controllers\ProjectMenuController.cs" />
     <Compile Include="Controllers\ConversationDataSource.cs" />
+    <Compile Include="Controllers\SharedContext.cs" />
     <Compile Include="Controllers\SpecialConnectors.cs" />
     <Compile Include="Customization\IAudioProviderCustomization.cs" />
     <Compile Include="Customization\IExportMode.cs" />
@@ -147,6 +149,9 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUIs\ProjectExporer\LeafItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\ProjectExporer\ProjectExplorer.ProjectItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Node Graphics\UnknownNodeRenderer.cs" />
@@ -273,7 +278,7 @@
     <Compile Include="GUIs\PluginSelector.Designer.cs">
       <DependentUpon>PluginSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUIs\ProjectExporer\ProjectExplorerItems.cs">
+    <Compile Include="GUIs\ProjectExporer\ProjectExplorer.Item.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUIs\WM.cs" />

@@ -29,11 +29,30 @@ namespace ConversationEditor
         IProjectElementList<AudioFile, IAudioFile> AudioFiles { get; }
 
         Audio Generate(AudioGenerationParameters parameters);
+
+        /// <summary>
+        /// Determine a complete list of audio entities which are referenced by nodes
+        /// </summary>
         IEnumerable<Audio> UsedAudio();
+
+        /// <summary>
+        /// Add this audio to the project if it is referenced by a node
+        /// Update can be delayed using SuppressUpdates()
+        /// </summary>
         void UpdateUsage(Audio audio);
+
+        /// <summary>
+        /// Add all audio that the input node refers to to the project
+        /// Update can be delayed using SuppressUpdates()
+        /// </summary>
         void UpdateUsage(ConversationNode<INodeGUI> n);
 
+        /// <summary>
+        /// Add all required audio files to the project
+        /// Update can be delayed using SuppressUpdates()
+        /// </summary>
         void UpdateUsage();
+
         IDisposable SuppressUpdates();
     }
 
@@ -114,7 +133,7 @@ namespace ConversationEditor
             UpdateQueued = new SuppressibleAction(() => { ReallyUpdateUsage(); }); //For now just update everything
         }
 
-        List<Audio> m_toUpdate = new List<Audio>();
+        HashSet<FileInfo> m_toUpdate = new HashSet<FileInfo>();
         bool m_updateAll = false;
         public IDisposable SuppressUpdates()
         {
@@ -174,42 +193,8 @@ namespace ConversationEditor
             if (audio.Value == null) //As far as I can tell, only a default constructed Audio can have this property
                 return;
 
-            m_toUpdate.Add(audio);
+            m_toUpdate.Add(GetPath(audio));
             UpdateQueued.TryExecute();
-        }
-
-        public static Stopwatch PathGenerationTime = new Stopwatch();
-        public void UpdateUsage()
-        {
-            m_updateAll = true;
-            UpdateQueued.TryExecute();
-        }
-
-        public void ReallyUpdateUsage(Audio audio)
-        {
-            bool used = UsedAudio().Contains(audio);
-            IAudioFile match = m_project.AudioFiles.FirstOrDefault(f => Matches(audio, f));
-
-            if (used && match == null)
-                m_project.AudioFiles.Load(GetPath(audio).Only());
-            else if (!used && match != null)
-                m_project.AudioFiles.Remove(match, true);
-        }
-
-        private void ReallyUpdateUsage()
-        {
-            //if (m_updateAll)
-            //{
-            //    //TODO: m_project.AudioFiles.Clear or something?
-            m_project.AudioFiles.Load(UsedAudio().Select(GetPath));
-            //    m_toUpdate.Clear();
-            //}
-            //foreach (Audio audio in m_toUpdate)
-            //{
-            //    ReallyUpdateUsage(audio);
-            //}
-            m_updateAll = false;
-            m_toUpdate.Clear();
         }
 
         public void UpdateUsage(ConversationNode<INodeGUI> n)
@@ -219,6 +204,57 @@ namespace ConversationEditor
                 foreach (var audio in UsedAudio(n))
                     UpdateUsage(audio);
             }
+        }
+
+        public void UpdateUsage()
+        {
+            //Func<IEnumerable<FileInfo>, int> CalculateAudioFilesHash = files =>
+            //{
+            //    int hash = 0;
+            //    foreach (var file in files)
+            //    {
+            //        unchecked
+            //        {
+            //            //Accumulate all the hashes using addition. I didn't want to use xor because I intuite that it might be quite sensitive to
+            //            //false matches (an unintentional birthday attack). However I did need something that was commutative so that the order of
+            //            //the lists doesn't matter. Unchecked signed integer addition seems to use modulo arithmetic and so is commutative over addition
+            //            hash += file.FullName.GetHashCode();
+            //        }
+            //    }
+            //    return hash;
+            //};
+
+            //int oldHash = CalculateAudioFilesHash(AudioFiles.Select(a => a.File.File));
+            //int newHash = CalculateAudioFilesHash(UsedAudio().Select(GetPath));
+
+            //We make the (potentially incorrect) assumption that if the hash of all the files hasn't changed
+            //Then the list of files hasn't changed. This will probably always hold but due to the primitive
+            //hashing function there could be some peculiar cases.
+            //if (oldHash != newHash)
+            //{
+            m_updateAll = true;
+            UpdateQueued.TryExecute();
+            //return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
+        }
+
+        private void ReallyUpdateUsage()
+        {
+            if (m_updateAll)
+            {
+                m_project.AudioFiles.Load(UsedAudio().Select(GetPath));
+            }
+            else if (m_toUpdate.Any())
+            {
+                m_project.AudioFiles.Load(m_toUpdate);
+            }
+
+            m_updateAll = false;
+            m_toUpdate.Clear();
         }
 
         public Audio Generate(AudioGenerationParameters parameters)

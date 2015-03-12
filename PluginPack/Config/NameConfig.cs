@@ -17,7 +17,7 @@ namespace PluginPack
 
         public string Name
         {
-            get { return "Shortcut Key"; }
+            get { return "Name"; }
         }
 
         public IEnumerable<Parameter> MakeParameters()

@@ -80,7 +80,7 @@ namespace ConversationEditor
         {
             protected SizeF m_size;
             protected ConversationNode Node;
-            
+
             public Section(ConversationNode node)
             {
                 Node = node;
@@ -232,14 +232,52 @@ namespace ConversationEditor
                 }
             }
 
+            private bool ShouldntRender<T>(Parameter p, Func<string, bool> shouldnt) where T : Parameter
+            {
+                var t = p as T;
+                if (t != null)
+                    return shouldnt(t.ValueAsString());
+                return false;
+            }
+
+            private bool ShouldntRender(EnumParameter p)
+            {
+                //TODO: filter rendering of enums
+                if (p == null)
+                    return false;
+                //return p.Value == p.Value
+                return false;
+            }
+
+            private bool ShouldRender(Parameter p)
+            {
+                bool shouldntRender = ShouldntRender<AudioParameter>(p, s => true) ||
+                                      ShouldntRender<BooleanParameter>(p, s => s == false.ToString()) ||
+                                      ShouldntRender<DecimalParameter>(p, s => s == 0m.ToString()) ||
+                                      ShouldntRender<DynamicEnumParameter>(p, s => s == "") ||
+                                      ShouldntRender(p as EnumParameter) ||
+                                      ShouldntRender<IntegerParameter>(p, s => s == 0.ToString()) ||
+                                      ShouldntRender<LocalizedStringParameter>(p, s => s == "") ||
+                                      ShouldntRender<StringParameter>(p, s => s == "");
+                return !shouldntRender;
+            }
+
+            private IEnumerable<Parameter> ParametersToRender
+            {
+                get
+                {
+                    return Node.Parameters.Where(ShouldRender);
+                }
+            }
+
             public override SizeF Measure(Graphics g)
             {
-                if (Node.Parameters.Any())
+                if (ParametersToRender.Any())
                 {
-                    IEnumerable<SizeF> titleSizes = Node.Parameters.Select(p => g.MeasureString(p.Name + " ", BoldFont, MAX_TITLE_WIDTH));
+                    IEnumerable<SizeF> titleSizes = ParametersToRender.Select(p => g.MeasureString(p.Name + " ", BoldFont, MAX_TITLE_WIDTH));
                     float headingWidth = titleSizes.Max(s => s.Width + 2);
 
-                    IEnumerable<SizeF> dataSizes = Node.Parameters.Select(p => g.MeasureString(p.DisplayValue(m_localizer), Font, (int)(MaxWidth - headingWidth)));
+                    IEnumerable<SizeF> dataSizes = ParametersToRender.Select(p => g.MeasureString(p.DisplayValue(m_localizer), Font, (int)(MaxWidth - headingWidth)));
                     float dataWidth = dataSizes.Max(s => s.Width + 2);
 
                     float totalHeight = titleSizes.Zip(dataSizes, (a, b) => Math.Max(a.Height, b.Height)).Sum() + 4;
@@ -255,7 +293,7 @@ namespace ConversationEditor
 
             public override void Draw(Graphics g, PointF location)
             {
-                if (Node.Parameters.Any())
+                if (ParametersToRender.Any())
                 {
                     float brightnessFactor = 0.5f;
                     float darknessFactor = 0.5f;
@@ -263,10 +301,10 @@ namespace ConversationEditor
                     DrawChunk(g, brightnessFactor, darknessFactor, location);
                     PointF renderAt = new PointF(location.X + 2, location.Y + 2);
 
-                    IEnumerable<SizeF> titleSizes = Node.Parameters.Select(p => g.MeasureString(p.Name + " ", BoldFont, MAX_TITLE_WIDTH));
+                    IEnumerable<SizeF> titleSizes = ParametersToRender.Select(p => g.MeasureString(p.Name + " ", BoldFont, MAX_TITLE_WIDTH));
                     float headingWidth = titleSizes.Max(s => s.Width + 2);
 
-                    foreach (var parameter in Node.Parameters)
+                    foreach (var parameter in ParametersToRender)
                     {
                         var name = parameter.Name;
                         var data = parameter.DisplayValue(m_localizer);

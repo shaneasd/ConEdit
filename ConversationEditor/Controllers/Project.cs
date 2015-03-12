@@ -62,7 +62,7 @@ namespace ConversationEditor
         private ConversationDataSource m_conversationDataSource;
         SaveableFileNotUndoable m_file;
 
-        public static Project CreateEmpty(FileInfo path, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializer, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
+        public static Project CreateEmpty(ILocalizationContext context, FileInfo path, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializer, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
         {
             Project result = null;
             FileInfo conversationFile;
@@ -79,7 +79,7 @@ namespace ConversationEditor
                 conversationSerializer.Write(SerializationUtils.MakeConversationData(Enumerable.Empty<ConversationNode>(), new ConversationEditorData()), conversationStream);
             }
 
-            LocalizationEngine temp = new LocalizationEngine(() => new HashSet<ID<LocalizedText>>(), s => false, s => false, p => !p.Exists, s => true);
+            LocalizationEngine temp = new LocalizationEngine(context, () => new HashSet<ID<LocalizedText>>(), s => false, s => false, p => !p.Exists, s => true);
             localizationFile = LocalizationFile.MakeNew(path.Directory, s => temp.MakeSerializer(s), p => !p.Exists);
 
             //Create the new project
@@ -97,7 +97,7 @@ namespace ConversationEditor
 
             TData data = new TData(conversationPaths, domainPaths, localizationPaths, Enumerable.Empty<string>());
 
-            result = new Project(data, conversationNodeFactory, domainNodeFactory, m, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig, audioCustomization);
+            result = new Project(context, data, conversationNodeFactory, domainNodeFactory, m, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig, audioCustomization);
             return result;
         }
 
@@ -157,7 +157,8 @@ namespace ConversationEditor
             return false;
         }
 
-        public Project(TData data, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, MemoryStream initialData, FileInfo projectFile, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializerFactory, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
+        //TODO: I don't think the project should have to know the localization context
+        public Project(ILocalizationContext context, TData data, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, MemoryStream initialData, FileInfo projectFile, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializerFactory, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
         {
             var soFar = DateTime.Now - Process.GetCurrentProcess().StartTime;
 
@@ -212,46 +213,43 @@ namespace ConversationEditor
                     m_conversations.Load(toLoad);
                 }
                 {
-                    m_localizer = new LocalizationEngine(UsedLocalizations, ShouldContract, ShouldExpand, pathOk, s => CheckFolder(s, Origin));
+                    m_localizer = new LocalizationEngine(context, UsedLocalizations, ShouldContract, ShouldExpand, pathOk, s => CheckFolder(s, Origin));
                     IEnumerable<FileInfo> toLoad = Rerout(localizerPaths);
                     m_localizer.Localizers.Load(toLoad);
-                    m_localizer.SelectLocalizer(m_localizer.Localizers.First()); //TODO: Pick appropriate localizer
+                    context.CurrentLocalization.Value = m_localizer.Localizers.First(); //TODO: Pick appropriate localizer
                 }
+
+                RefreshCallbacks(m_conversations);
+                RefreshCallbacks(m_audioProvider.AudioFiles);
+                RefreshCallbacks(m_localizer.Localizers);
+                RefreshCallbacks(m_domainFiles);
+
+                m_conversations.GotChanged += GotChanged;
+                m_audioProvider.AudioFiles.GotChanged += GotChanged;
+                m_localizer.Localizers.GotChanged += GotChanged;
+                m_domainFiles.GotChanged += GotChanged;
+
+                m_conversations.GotChanged += () => RefreshCallbacks(m_conversations);
+                m_audioProvider.AudioFiles.GotChanged += () => RefreshCallbacks(m_audioProvider.AudioFiles);
+                m_localizer.Localizers.GotChanged += () => RefreshCallbacks(m_localizer.Localizers);
+                m_domainFiles.GotChanged += () => RefreshCallbacks(m_domainFiles);
+
+
+                m_domainFiles.GotChanged += ConversationDatasourceModified;
+                Action<IDomainFile> MaybeConversationDatasourceModified = file => { if (!file.File.Changed()) ConversationDatasourceModified(); };
+                m_domainFiles.Added += argument => { argument.File.SaveStateChanged += () => MaybeConversationDatasourceModified(argument); };
+                m_domainFiles.Reloaded += (_, argument) => { argument.File.SaveStateChanged += () => MaybeConversationDatasourceModified(argument); };
+                m_domainFiles.ForAll(d => d.File.SaveStateChanged += () => MaybeConversationDatasourceModified(d));
+                //m_domainFiles.Added += argument => { argument.File.SaveStateChanged += () => { if (!argument.File.Changed) ReloadDatasource(); }; };
+                //m_domainFiles.Reloaded += (from, to) => { to.File.SaveStateChanged += () => { if (!to.File.Changed) ReloadDatasource(); }; };
+                //m_domainFiles.ForAll(d => d.File.SaveStateChanged += () => { if (!d.File.Changed) ReloadDatasource(); });
+
+                m_domainUsage = new DomainUsage(this);
+
+                var soFar2 = DateTime.Now - Process.GetCurrentProcess().StartTime;
+
                 m_audioProvider.UpdateUsage();
             }
-
-            RefreshCallbacks(m_conversations);
-            RefreshCallbacks(m_audioProvider.AudioFiles);
-            RefreshCallbacks(m_localizer.Localizers);
-            RefreshCallbacks(m_domainFiles);
-
-            m_conversations.GotChanged += GotChanged;
-            m_audioProvider.AudioFiles.GotChanged += GotChanged;
-            m_localizer.Localizers.GotChanged += GotChanged;
-            m_domainFiles.GotChanged += GotChanged;
-
-            m_conversations.GotChanged += () => RefreshCallbacks(m_conversations);
-            m_audioProvider.AudioFiles.GotChanged += () => RefreshCallbacks(m_audioProvider.AudioFiles);
-            m_localizer.Localizers.GotChanged += () => RefreshCallbacks(m_localizer.Localizers);
-            m_domainFiles.GotChanged += () => RefreshCallbacks(m_domainFiles);
-
-
-            m_domainFiles.GotChanged += ConversationDatasourceModified;
-            Action<IDomainFile> MaybeConversationDatasourceModified = file => { if (!file.File.Changed()) ConversationDatasourceModified(); };
-            m_domainFiles.Added += argument => { argument.File.SaveStateChanged += () => MaybeConversationDatasourceModified(argument); };
-            m_domainFiles.Reloaded += (_, argument) => { argument.File.SaveStateChanged += () => MaybeConversationDatasourceModified(argument); };
-            m_domainFiles.ForAll(d => d.File.SaveStateChanged += () => MaybeConversationDatasourceModified(d));
-            //m_domainFiles.Added += argument => { argument.File.SaveStateChanged += () => { if (!argument.File.Changed) ReloadDatasource(); }; };
-            //m_domainFiles.Reloaded += (from, to) => { to.File.SaveStateChanged += () => { if (!to.File.Changed) ReloadDatasource(); }; };
-            //m_domainFiles.ForAll(d => d.File.SaveStateChanged += () => { if (!d.File.Changed) ReloadDatasource(); });
-
-            m_domainUsage = new DomainUsage(this);
-
-            var soFar2 = DateTime.Now - Process.GetCurrentProcess().StartTime;
-
-            Stopwatch w = Stopwatch.StartNew();
-            m_audioProvider.UpdateUsage();
-            w.Stop();
         }
 
         public void RefreshCallbacks<TReal, TInterface>(IProjectElementList<TReal, TInterface> elements)

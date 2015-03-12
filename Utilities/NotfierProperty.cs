@@ -1,0 +1,53 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Utilities
+{
+    public class NotifierProperty<T>
+    {
+        private T m_value;
+        public WeakEvent<Changed<T>> Changed = new WeakEvent<Changed<T>>();
+        public NotifierProperty(T value)
+        {
+            m_value = value;
+        }
+
+        public T Value
+        {
+            get
+            {
+                return m_value;
+            }
+            set
+            {
+                T old = m_value;
+                if (!object.Equals(m_value, value))
+                {
+                    m_value = value;
+                    Changed.Execute(Utilities.Changed.Create(old, m_value));
+                }
+            }
+        }
+    }
+
+    class Changed
+    {
+        public static Changed<T> Create<T>(T from, T to)
+        {
+            return new Changed<T>(from, to);
+        }
+    }
+
+    public struct Changed<T>
+    {
+        public T from;
+        public T to;
+        public Changed(T from, T to)
+        {
+            this.from = from;
+            this.to = to;
+        }
+    }
+}

@@ -25,6 +25,7 @@ namespace ConversationEditor
 
         Dictionary<DirectoryInfoHashed, ContainerItem> m_mapping = new Dictionary<DirectoryInfoHashed, ContainerItem>(10000);
         private ContextMenuStrip m_contextMenu;
+        private SharedContext m_context;
 
         static ProjectExplorer()
         {
@@ -81,6 +82,20 @@ namespace ConversationEditor
             m_buttons.Add(folderFilterButton);
         }
 
+        public void Initialize(SharedContext context)
+        {
+            m_context = context;
+            m_context.CurrentLocalization.Changed.Register(this, (a, change) =>
+            {
+                var localizationItems = m_root.AllItems(VisibilityFilter.Just(Localizations: true)).OfType<RealLeafItem<ILocalizationFile, ILocalizationFile>>();
+                if (localizationItems.Any())
+                {
+                    var match = localizationItems.FirstOrDefault(f => f.Item.Equals(change.to)) ?? localizationItems.First(); //TODO: Which localization to select if the input makes no sense
+                    SelectLocalization(match);
+                }
+            });
+        }
+
         public void InvalidateImage()
         {
             lock (m_imageLock)
@@ -110,6 +125,10 @@ namespace ConversationEditor
             public bool EmptyFolders;
 
             public static VisibilityFilter Everything = new VisibilityFilter { Conversations = true, Domains = true, Localizations = true, Audio = true, EmptyFolders = true };
+            public static VisibilityFilter Just(bool Conversations = true, bool Domains = true, bool Localizations = true, bool Audio = true, bool EmptyFolders = true)
+            {
+                return new VisibilityFilter { Conversations = Conversations, Domains = Domains, Localizations = Localizations, Audio = Audio, EmptyFolders = EmptyFolders };
+            }
         }
         private VisibilityFilter m_visibility = new VisibilityFilter() { Conversations = true, Audio = true, Domains = true, EmptyFolders = true, Localizations = true };
         private VisibilityFilter Visibility
@@ -124,7 +143,13 @@ namespace ConversationEditor
 
         Item m_selectedItem = Item.Null; //The most highlighted thing. Clicking again will rename.
         Item m_selectedEditable = null; //The thing that's being viewed in the main editor
-        RealLeafItem<ILocalizationFile, ILocalizationFile> m_selectedLocalizer;
+        RealLeafItem<ILocalizationFile, ILocalizationFile> m_selectedLocalizer; //Localization file to render as the currently active source of localization
+        private void SelectLocalization(RealLeafItem<ILocalizationFile, ILocalizationFile> loc)
+        {
+            m_selectedLocalizer = loc;
+            InvalidateImage();
+        }
+
         /// <summary>
         /// The item being dragged within the list
         /// </summary>
@@ -178,8 +203,6 @@ namespace ConversationEditor
                 return (m_selectedEditable is LeafItem<IConversationFile>) ? (m_selectedEditable as LeafItem<IConversationFile>).Item : null;
             }
         }
-        public event Action LocalizerSelected;
-        public ILocalizationFile CurrentLocalizer { get { return m_selectedLocalizer.Item; } }
         public IDomainFile CurrentDomainFile { get { return (m_selectedEditable is LeafItem<IDomainFile>) ? (m_selectedEditable as LeafItem<IDomainFile>).Item : null; } }
         public bool ProjectSelected { get { return m_selectedEditable is ProjectItem; } }
 
@@ -216,85 +239,79 @@ namespace ConversationEditor
         object m_imageLock = new object();
         Image m_image = null;
         HashSet<Item> m_drawn = new HashSet<Item>();
+
         private void drawWindow1_Paint(object sender, PaintEventArgs e)
         {
-            bool redraw = false;
             Image image;
             lock (m_imageLock)
             {
                 if (m_image == null)
                 {
                     m_image = new Bitmap(drawWindow1.Width, (int)RectangleForIndex(m_root.AllItems(Visibility).Count()).Bottom);
-                    redraw = true;
                 }
                 image = m_image;
             }
 
             Graphics g = e.Graphics;
-            //if (redraw)
             {
-                //using (Graphics g = Graphics.FromImage(image))
+                var allItems = m_root.AllItems(Visibility).ToArray();
+                int i = 0;
+                List<Tuple<Item, int, RectangleF>> itemsToDraw = new List<Tuple<Item, int, RectangleF>>();
+                foreach (var item in allItems)
                 {
-                    var allItems = m_root.AllItems(Visibility).ToArray();
-                    //Dictionary<Item, int> allItemIndices = new Dictionary<Item, int>();
-                    int i = 0;
-                    List<Tuple<Item, int, RectangleF>> itemsToDraw = new List<Tuple<Item, int, RectangleF>>();
-                    foreach (var item in allItems)
+                    if (!m_drawn.Contains(item))
                     {
-                        if (!m_drawn.Contains(item))
+                        var y0 = IndexToY(i);
+                        y0 -= greyScrollBar1.Value;
+                        var y1 = y0 + Item.HEIGHT;
+                        if (y1 > 0 && y0 < drawWindow1.Height)
                         {
-                            var y0 = IndexToY(i);
-                            y0 -= greyScrollBar1.Value;
-                            var y1 = y0 + Item.HEIGHT;
-                            if (y1 > 0 && y0 < drawWindow1.Height)
-                            {
-                                var rect = new RectangleF((int)TransformToRenderSurface.OffsetX, (int)TransformToRenderSurface.OffsetY+IndexToY(i), Width, Item.HEIGHT);
-                                itemsToDraw.Add(Tuple.Create(item, i, rect));
-                                //m_drawn.Add(item);
-                                //allItemIndices.Add(item, i);
-                            }
+                            var rect = new RectangleF((int)TransformToRenderSurface.OffsetX, (int)TransformToRenderSurface.OffsetY + IndexToY(i), Width, Item.HEIGHT);
+                            itemsToDraw.Add(Tuple.Create(item, i, rect));
                         }
-                        i++;
                     }
+                    i++;
+                }
 
-                    //Func<Item, bool> shouldDraw = item =>
-                    //{
-                    //    //return true; //TODO: 
-                    //    if (m_drawn.Contains(item))
-                    //        return false;
-                    //    var y0 = IndexToY(allItemIndices[item]);
-                    //    y0 -= greyScrollBar1.Value;
-                    //    var y1 = y0 + Item.HEIGHT;
-                    //    return y1 > 0 && y0 < drawWindow1.Height;
-                    //};
+                foreach (var item in itemsToDraw)
+                {
+                    item.Item1.DrawBackground(g, Visibility, item.Item3);
+                }
+                var selected = new[] { m_selectedItem, m_selectedLocalizer, m_selectedEditable };
+                foreach (var item in itemsToDraw)
+                {
+                    if (selected.Any(s => object.ReferenceEquals(s, item.Item1)))
+                        item.Item1.DrawSelection(g, item.Item3, m_selectedItem == item.Item1, m_selectedLocalizer == item.Item1 || m_selectedEditable == item.Item1);
+                }
 
-                    //var itemsToDraw = allItems.Where(shouldDraw).ToArray();
-
-                    foreach (var item in itemsToDraw)
+                //Make sure all ancestors' vertical lines are drawn
+                {
+                    var firstDrawn = itemsToDraw.Last();
+                    uint indent = firstDrawn.Item1.IndentLevel;
+                    for (int j = firstDrawn.Item2; j >= 0; j--)
                     {
-                        item.Item1.DrawBackground(g, Visibility, item.Item3);
-                    }
-                    var selected = new[] { m_selectedItem, m_selectedLocalizer, m_selectedEditable };
-                    foreach (var item in itemsToDraw)
-                    {
-                        if ( selected.Any(s=>object.ReferenceEquals(s, item.Item1) ))
-                            item.Item1.DrawSelection(g, item.Item3, m_selectedItem == item.Item1, m_selectedLocalizer == item.Item1 || m_selectedEditable == item.Item1);
-                    }
-                    foreach (var item in itemsToDraw)
-                    {
-                        item.Item1.Draw(g, Visibility, item.Item3);
-                    }
-                    using (var renderer = new Arthur.NativeTextRenderer(g))
-                    {
-                        foreach (var item in itemsToDraw)
+                        if (allItems[j].IndentLevel < indent)
                         {
-                            item.Item1.DrawText(renderer, Visibility, item.Item3); //Draw the text after everything else as we want to keep our NativeTextRenderer around and it blocks other graphics operations
+                            indent--;
+                            var rect = new RectangleF((int)TransformToRenderSurface.OffsetX, (int)TransformToRenderSurface.OffsetY + IndexToY(j), Width, Item.HEIGHT);
+                            allItems[j].DrawTree(g, allItems[j].CalculateIconRectangle(rect), Visibility);
                         }
+                    }
+                }
+
+                foreach (var item in itemsToDraw)
+                {
+                    item.Item1.Draw(g, Visibility, item.Item3);
+                }
+                using (var renderer = new Arthur.NativeTextRenderer(g))
+                {
+                    foreach (var item in itemsToDraw)
+                    {
+                        item.Item1.DrawText(renderer, Visibility, item.Item3); //Draw the text after everything else as we want to keep our NativeTextRenderer around and it blocks other graphics operations
                     }
                 }
             }
 
-            //e.Graphics.DrawImage(image, new Point((int)TransformToRenderSurface.OffsetX, (int)TransformToRenderSurface.OffsetY));
             e.Graphics.DrawRectangle(ColorScheme.ControlBorder, new Rectangle(new Point(0, 0), new Size(drawWindow1.Width - 1, drawWindow1.Height - 1)));
         }
 
@@ -314,6 +331,7 @@ namespace ConversationEditor
             if (item == null)
             {
                 m_selectedItem = null;
+                m_selectedEditable = null;
             }
             else
             {
@@ -352,7 +370,7 @@ namespace ConversationEditor
                     {
                         if (e.Button == MouseButtons.Left)
                         {
-                            container.Minimized = !container.Minimized;
+                            container.Minimized.Value = !container.Minimized.Value;
                             InvalidateImage();
                         }
                         return;
@@ -389,7 +407,7 @@ namespace ConversationEditor
                 playMenuItem.Visible = m_contextItem is RealLeafItem<AudioFile, IAudioFile>;
                 m_contextMenu.Show(PointToScreen(e.Location));
 
-                foreach (var a in m_contextMenuItemsFactory.ConversationContextMenuItems(a => m_selectedLocalizer.Item.Localize(a)))
+                foreach (var a in m_contextMenuItemsFactory.ConversationContextMenuItems(a => m_context.CurrentLocalization.Value.Localize(a)))
                 {
                     var con = m_contextItem as ConversationItem;
                     var i = new ToolStripMenuItem(a.Name);
@@ -425,9 +443,19 @@ namespace ConversationEditor
                 Clicked(item, e);
         }
 
+        private bool RenameItem(FileSystemObject item, string to)
+        {
+            if (m_root.RenameElement(item, to))
+            {
+                InvalidateImage();
+                return true;
+            }
+            return false;
+        }
+
         private ProjectItem MakeNewProjectItem(IProject p)
         {
-            var result = new ProjectItem(() => RectangleForItem(m_root), p, () => TransformToRenderSurface);
+            var result = new ProjectItem(() => RectangleForItem(m_root), p, () => TransformToRenderSurface, RenameItem);
             result.File.SaveStateChanged += InvalidateImage;
             return result;
         }
@@ -452,8 +480,18 @@ namespace ConversationEditor
                 }
 
                 m_mapping.Clear();
-                m_root.Clear();
+                m_root.ClearProject();
                 m_mapping[new DirectoryInfoHashed(m_root.Path)] = m_root;
+
+
+                //TODO: Should be a better way to query this
+                if (!(m_root.Project is DummyProject)) //If it's a dummy project then A) we don't need to bother and B) getting the parent of the project file will fail
+                {
+                    foreach (var directory in m_root.File.Parent.EnumerateDirectories("*", SearchOption.AllDirectories))
+                    {
+                        FindOrMakeDirectory(directory);
+                    }
+                }
 
                 m_root.Project.AudioFiles.Removed += Remove;
                 m_root.Project.AudioFiles.Reloaded += (from, to) => { Remove(from); Add(to); };
@@ -513,26 +551,22 @@ namespace ConversationEditor
             return a.File.File.FullName == b.File.File.FullName;
         }
 
-        public static Stopwatch timeSpentMakingParents = new Stopwatch();
-
-        
         private void Add<T>(T element) where T : ISaveableFileProvider
         {
-            var definition = ProjectElementDefinition.Get<T>();
-            //Item result = m_root.AllItems(VisibilityFilter.Everything).OfType<LeafItem<T>>().SingleOrDefault(i => SameItem(i.Item, element));
-            if ( m_root.TryAdd(element) )
-            //if (!m_root.m_contents.ContainsKey(element.File.File.FullName))
-            //if (result == null)
+            if (!m_root.Contains(element))
             {
-                //m_root.m_contents[element.File.File.FullName] = element;
-                timeSpentMakingParents.Start();
                 ContainerItem parent = FindOrMakeParent(element.File.File);
-                timeSpentMakingParents.Stop();
                 Item result = null;
                 if (element.File.Exists)
-                    result = definition.MakeElement(() => RectangleForItem(result), element, m_root.Project, parent, () => TransformToRenderSurface);
+                {
+                    result = m_root.MakeElement(() => RectangleForItem(result), element, parent, () => TransformToRenderSurface);
+                    //result = definition.MakeElement(() => RectangleForItem(result), element, m_root.Project, parent, () => TransformToRenderSurface);
+                }
                 else
-                    result = definition.MakeMissingElement(() => RectangleForItem(result), element, m_root.Project, parent, () => TransformToRenderSurface);
+                {
+                    result = m_root.MakeMissingElement(() => RectangleForItem(result), element, parent, () => TransformToRenderSurface);
+                    //result = definition.MakeMissingElement(() => RectangleForItem(result), element, m_root.Project, parent, () => TransformToRenderSurface);
+                }
                 result.File.SaveStateChanged += InvalidateImage;
 
                 if (m_selectedItem == null)
@@ -549,12 +583,12 @@ namespace ConversationEditor
 
         private void Remove<T>(T element) where T : ISaveableFileProvider
         {
-            m_root.m_contents.Remove(element.File.File.FullName);
+            //m_root.m_contents.Remove(element.File.File.FullName);
             Item item = m_root.AllItems(VisibilityFilter.Everything).OfType<LeafItem<T>>().SingleOrDefault(i => SameItem(i.Item, element));
             if (item != null)
             {
                 item.File.SaveStateChanged -= InvalidateImage;
-                m_root.RemoveChild(item);
+                m_root.RemoveProjectChild(item, element.File.File.FullName);
                 if (item == m_selectedItem)
                 {
                     m_selectedItem = null;
@@ -567,7 +601,31 @@ namespace ConversationEditor
 
         private ContainerItem FindOrMakeParent(FileInfo file)
         {
-            var path = FileSystem.PathToFrom(file, m_root.Path);
+            return FindOrMakeDirectory(file.Directory);
+            //var path = FileSystem.PathToFrom(file, m_root.Path);
+            //ContainerItem parent = m_root;
+            //foreach (var folder in path.Skip(1))
+            //{
+            //    DirectoryInfoHashed key = new DirectoryInfoHashed(folder);
+            //    bool add = !m_mapping.ContainsKey(key);
+            //    if (!add)
+            //        parent = m_mapping[key];
+            //    if (add)
+            //    {
+            //        FolderItem child = null;
+            //        child = new FolderItem(() => RectangleForItem(child), folder, m_root.Project, parent, () => TransformToRenderSurface);
+            //        child.MinimizedChanged += () => m_updateScrollbar.TryExecute();
+            //        parent.InsertChildAlphabetically(child);
+            //        parent = child;
+            //        m_mapping[key] = parent;
+            //    }
+            //}
+            //return parent;
+        }
+
+        private ContainerItem FindOrMakeDirectory(DirectoryInfo dir)
+        {
+            var path = FileSystem.PathToFrom(dir, m_root.Path);
             ContainerItem parent = m_root;
             foreach (var folder in path.Skip(1))
             {
@@ -578,9 +636,9 @@ namespace ConversationEditor
                 if (add)
                 {
                     FolderItem child = null;
-                    child = new FolderItem(() => RectangleForItem(child), folder, m_root.Project, parent, () => TransformToRenderSurface);
-                    child.MinimizedChanged += () => m_updateScrollbar.TryExecute();
-                    parent.InsertChildAlphabetically(child);
+                    child = new FolderItem(() => RectangleForItem(child), folder, m_root.Project, parent, () => TransformToRenderSurface, RenameItem);
+                    child.Minimized.Changed.Register(this, (a, b) => m_updateScrollbar.TryExecute());
+                    m_root.InsertProjectChildAlphabetically(parent, child);
                     parent = child;
                     m_mapping[key] = parent;
                 }
@@ -652,9 +710,17 @@ namespace ConversationEditor
                 {
                     var name = DragItem.File.Name;
                     var path = new FileInfo(Path.Combine(destination.Path.FullName, name));
-                    if (path.FullName != DragItem.File.FullName)
+                    if (path.FullName != DragItem.File.FullName) //Don't bother dragging an item back to where it was
                     {
-                        DragItem.MoveTo(destination, path.FullName);
+                        if (!m_root.Contains(path.FullName)) //Can't move a file to a folder that already contains an item by that name
+                        {
+                            if (!m_root.MoveElement(DragItem, destination, path.FullName))
+                                MessageBox.Show("Cannot move file to this location. Possibly a file with this name already exists there.");
+                        }
+                        else
+                        {
+                            MessageBox.Show("The project already contains an element with this name in this location");
+                        }
                     }
                     InvalidateImage();
                 }
@@ -857,27 +923,11 @@ namespace ConversationEditor
                 ExploreBestFolder(folder.Path);
         }
 
-        internal void SelectLocalization(ILocalizationFile loc)
-        {
-            var localizationItems = m_root.AllItems(VisibilityFilter.Everything).OfType<RealLeafItem<ILocalizationFile, ILocalizationFile>>();
-            if (!localizationItems.Any())
-                return; //This can happen for dummy projects
-            var match = localizationItems.FirstOrDefault(f => f.Item.Equals(loc)) ?? localizationItems.First();
-            SelectLocalization(match);
-        }
-
-        private void SelectLocalization(RealLeafItem<ILocalizationFile, ILocalizationFile> loc)
-        {
-            var oldSelected = m_selectedLocalizer;
-            m_selectedLocalizer = loc;
-            if (m_selectedLocalizer != oldSelected)
-                LocalizerSelected.Execute();
-            InvalidateImage();
-        }
 
         private void makeCurrentLocalizationMenuItemClicked(object sender, EventArgs e)
         {
-            SelectLocalization(m_contextItem as RealLeafItem<ILocalizationFile, ILocalizationFile>);
+            var item = m_contextItem as RealLeafItem<ILocalizationFile, ILocalizationFile>;
+            m_context.CurrentLocalization.Value = item.Item;
         }
 
         private void drawWindow2_Paint(object sender, PaintEventArgs e)
@@ -939,8 +989,8 @@ namespace ConversationEditor
             if (newDir != null)
             {
                 ProjectExplorer.FolderItem item = null;
-                item = new ProjectExplorer.FolderItem(() => RectangleForItem(item), newDir, m_root.Project, parent, () => TransformToRenderSurface);
-                parent.InsertChildAlphabetically(item);
+                item = new ProjectExplorer.FolderItem(() => RectangleForItem(item), newDir, m_root.Project, parent, () => TransformToRenderSurface, RenameItem);
+                m_root.InsertProjectChildAlphabetically(parent, item);
                 m_updateScrollbar.TryExecute();
                 InvalidateImage();
             }

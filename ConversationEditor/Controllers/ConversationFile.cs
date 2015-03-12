@@ -34,6 +34,7 @@ namespace ConversationEditor
                     {
                         var val = generateAudio(this);
                         aud.SetValueAction(val).Value.Redo();
+                        m_file.ChangeNoUndo();
                         audioProvider.UpdateUsage(val);
                     }
                 node.UpdateRendererCorruption();

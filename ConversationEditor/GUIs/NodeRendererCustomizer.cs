@@ -83,6 +83,8 @@ namespace ConversationEditor
 
         void AddNode(EditableGenerator node, int indent)
         {
+            //TODO: It would be a lot better if node renderer customization used a traditional combobox rather than a suggestion box
+
             Panel panel = new Panel();
             panel.Height = 30;
             panel.Dock = DockStyle.Top;

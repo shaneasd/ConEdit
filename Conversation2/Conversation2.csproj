@@ -68,6 +68,7 @@
     <Compile Include="Output.cs" />
     <Compile Include="Parameters\AudioParameter.cs" />
     <Compile Include="Parameters\BooleanParameter.cs" />
+    <Compile Include="Parameters\SetParameter.cs" />
     <Compile Include="Parameters\DecimalParameter.cs" />
     <Compile Include="Parameters\DynamicEnumParameter.cs" />
     <Compile Include="Enumeration.cs" />

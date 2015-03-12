@@ -15,8 +15,8 @@ namespace ConversationEditor
             private readonly ISaveableFileProvider m_item;
             public ISaveableFileProvider Item { get { return m_item; } }
             private Func<VisibilityFilter, bool> m_filter;
-            public LeafItem(Func<RectangleF> area, IProject project, ISaveableFile file, ContainerItem parent, Func<VisibilityFilter, bool> filter, ISaveableFileProvider item, Func<Matrix> toControlTransform)
-                : base(new ConstructorParams(area, project, new FileSystemObject(project, file), parent, toControlTransform))
+            public LeafItem(Func<RectangleF> area, IProject project, ISaveableFile file, ContainerItem parent, Func<VisibilityFilter, bool> filter, ISaveableFileProvider item, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
+                : base(new ConstructorParams(area, project, new FileSystemObject(project, file), parent, toControlTransform, rename))
             {
                 m_filter = filter;
                 m_item = item;
@@ -35,7 +35,12 @@ namespace ConversationEditor
 
             public override void DrawTree(Graphics g, RectangleF iconRectangle, VisibilityFilter filter)
             {
-                //This is a leaf node so no tree
+                var start = iconRectangle.Center();
+                float treeBranchX = start.X - HEIGHT + 6; //The x coordinate of the point where this node's connector line joins the parents branch line
+                g.DrawLine(ContainerItem.TreePen, start, new PointF(treeBranchX, start.Y));
+                //g.DrawLine(ContainerItem.TreePen, treeBranchX, start.Y - HEIGHT, treeBranchX, start.Y + 1); //The +1 ensures the lines connect up nicely
+
+                //start, new PointF(start.X, start.Y + HEIGHT * (itemsBeforeLastChild + 1)));
             }
 
             public override ContainerItem SpawnLocation
@@ -50,8 +55,8 @@ namespace ConversationEditor
 
             public new T Item { get { return m_item; } }
 
-            public LeafItem(Func<RectangleF> area, IProject project, T item, ContainerItem parent, Func<VisibilityFilter, bool> filter, Func<Matrix> toControlTransform)
-                : base(area, project, item.File, parent, filter, item, toControlTransform)
+            public LeafItem(Func<RectangleF> area, IProject project, T item, ContainerItem parent, Func<VisibilityFilter, bool> filter, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
+                : base(area, project, item.File, parent, filter, item, toControlTransform, rename)
             {
                 m_item = item;
             }

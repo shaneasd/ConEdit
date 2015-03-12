@@ -160,7 +160,7 @@ namespace ConversationEditor
                 NodeData.ParameterData decimalDefaultParameter = new NodeData.ParameterData("Default", DomainIDs.PARAMETER_DEFAULT, BaseTypeDecimal.PARAMETER_TYPE);
                 NodeData.ParameterData stringDefaultParameter = new NodeData.ParameterData("Default", DomainIDs.PARAMETER_DEFAULT, BaseTypeString.PARAMETER_TYPE);
                 NodeData.ParameterData booleanDefaultParameter = new NodeData.ParameterData("Default", DomainIDs.PARAMETER_DEFAULT, BaseTypeBoolean.PARAMETER_TYPE);
-
+                NodeData.ParameterData enumTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, ENUM_SET_GUID);
 
                 //OutputDefinition parameterOutput = (data) => DomainIDs.PARAMETER_OUTPUT_DEFINITION.MakeWithoutParameters(parameterDefinitionConnector1, data, DomainConnectionRules.Instance);
                 AddNode(BaseType.Integer.ParameterNodeType, "Integer", parameterMenu, config('p', "00aaaa"), parameterOutput.Only().ToList(), new List<NodeData.ParameterData> { nameParameter, integerTypeParameter, integerDefaultParameter });
@@ -170,6 +170,7 @@ namespace ConversationEditor
                 AddNode(BaseType.Boolean.ParameterNodeType, "Boolean", parameterMenu, config('p', "00aaaa"), parameterOutput.Only().ToList(), new List<NodeData.ParameterData> { nameParameter, booleanDefaultParameter });
                 AddNode(BaseType.Audio.ParameterNodeType, "Audio", parameterMenu, config('p', "00aaaa"), parameterOutput.Only().ToList(), new List<NodeData.ParameterData> { nameParameter });
                 AddNode(BaseType.DynamicEnumeration.ParameterNodeType, "Dynamic Enumeration", parameterMenu, config('p', "00aaaa"), parameterOutput.Only().ToList(), new List<NodeData.ParameterData> { nameParameter, dynamicEnumTypeParameter, stringDefaultParameter });
+                AddNode(BaseType.Set.ParameterNodeType, "Set", parameterMenu, config('p', "00aaaa"), parameterOutput.Only().ToList(), new List<NodeData.ParameterData> { nameParameter, enumTypeParameter });
                 AddEnumNode(parameterMenu);
                 //AddNode(BaseType.Enumeration.ParameterNodeType, "Enumeration", parameterMenu, config('p', "00aaaa"), parameterOutput.Only().ToList(),
                 //new List<NodeData.ParameterData> { nameParameter, enumTypeParameter,

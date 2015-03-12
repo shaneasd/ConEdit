@@ -182,7 +182,6 @@ namespace ConversationEditor
                     if (CanRemoveFromData(n, PromptNodeDeletion))
                     {
                         m_nodes.Remove(n);
-                        m_audioProvider.UpdateUsage(n);
                     }
                     foreach (var group in containingGroups)
                         group.Contents.Remove(n.Id);
@@ -269,7 +268,6 @@ namespace ConversationEditor
                         m_nodes.Remove(n);
                         foreach (var group in containingGroups)
                             group.Contents.Remove(n.Id);
-                        m_audioProvider.UpdateUsage(n);
                         NodesDeleted.Execute();
                     });
                 }

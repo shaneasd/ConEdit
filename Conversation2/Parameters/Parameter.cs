@@ -66,6 +66,29 @@ namespace Conversation
     {
     }
 
+    public struct GuidSet
+    {
+        private readonly Guid[] m_values;
+        public GuidSet(params Guid[] values)
+        {
+            m_values = values.Distinct().ToArray();
+        }
+
+        public IEnumerable<Guid> Values { get { return m_values; } }
+    }
+
+    public interface ISetParameter : IParameter<GuidSet>
+    {
+        IEnumerable<Guid> Options { get; }
+
+        /// <summary>
+        /// Return the name associated with the specified value. null if the value isn't assoicated with this enumeration.
+        /// </summary>
+        string GetName(Guid value);
+
+        GuidSet EditorSelected { get; set; }
+    }
+
     public interface IEnumParameter : IParameter<Guid>
     {
         IEnumerable<Guid> Options { get; }

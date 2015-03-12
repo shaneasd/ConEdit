@@ -14,24 +14,27 @@ namespace Tests
         {
             object a = new object();
             bool w1Executed = false;
-            WeakCallback w1 = new WeakCallback<object>(a, A => { w1Executed = true; });
-            w1.Execute();
+            int val = 0;
+            WeakCallback<int> w1 = new WeakCallback<object, int>(a, (A, i) => { w1Executed = true; val = i; });
+            w1.Execute(1);
             Assert.True(w1Executed);
+            Assert.AreEqual(1, val);
             w1Executed = false;
             a = null;
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            w1.Execute();
+            w1.Execute(2);
+            Assert.AreEqual(1, val);
             Assert.False(w1Executed);
 
             object b = new object();
             bool w2Executed = false;
-            WeakCallback w2 = new WeakCallback<object>(b, A => { w2Executed = true; });
+            WeakCallback<int> w2 = new WeakCallback<object, int>(b, (A, i) => { w2Executed = true; val = i; });
 
-            WeakEvent e = new WeakEvent();
+            WeakEvent<int> e = new WeakEvent<int>();
             e.Register(w1);
             e.Register(w2);
-            e.Execute();
+            e.Execute(3);
             Assert.True(w2Executed);
         }
     }

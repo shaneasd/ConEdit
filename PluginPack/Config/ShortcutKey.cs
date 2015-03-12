@@ -11,7 +11,7 @@ namespace PluginPack
     {
         public ID<NodeTypeTemp> Id
         {
-            get { return ID<NodeTypeTemp>.Parse("d2ca0f2a-abed-4000-a41c-7f55a7652585"); }
+            get { return ID<NodeTypeTemp>.Parse("e4914511-fd9d-428f-8e5c-b5c86cf069a9"); }
         }
 
         public string Name

@@ -27,8 +27,8 @@ namespace ConversationEditor
         IEnumerable<ISaveableFileProvider> Elements { get; }
         IEnumerable<ISaveableFileProvider> ElementsExceptThis { get; }
 
-        LocalizationEngine Localizer { get; }
-        IAudioProvider AudioProvider { get; }
+        LocalizationEngine Localizer { get; } //TODO: Move to shared context?
+        IAudioProvider AudioProvider { get; } //TODO: Move to shared context?
         IDomainUsage<ConversationNode, TransitionNoduleUIInfo> DomainUsage { get; }
 
         /// <summary>

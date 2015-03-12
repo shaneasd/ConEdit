@@ -45,7 +45,13 @@ namespace Conversation
 
         public string DisplayValue()
         {
-            return Value.ToString();
+            int lastSlash = Value.LastIndexOf('\\');
+            if (lastSlash == -1)
+                return Value;
+            else if (lastSlash == Value.Length - 1)
+                return "";
+            else
+                return Value.Substring(lastSlash + 1);
         }
     }
 

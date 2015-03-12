@@ -16,6 +16,7 @@ namespace ConversationEditor
     {
         public abstract class Item
         {
+            public const float HEIGHT = 20;
             public static TextureBrush ReadonlyBackgroundBrush;
             static Item()
             {
@@ -37,14 +38,15 @@ namespace ConversationEditor
             protected readonly IProject m_project;
             protected ContainerItem m_parent;
 
+            private Func<RectangleF> m_area;
+            Func<Matrix> ToControlTransform;
+            protected readonly Func<FileSystemObject, string, bool> Rename;
+
             protected static void ChangeParent(Item item, ContainerItem parent)
             {
                 item.m_parent = parent;
             }
-
-            private Func<RectangleF> m_area;
-            //public RectangleF Area { get { return m_area(); } }
-
+            
             public struct ConstructorParams
             {
                 public readonly Func<RectangleF> Area;
@@ -52,14 +54,16 @@ namespace ConversationEditor
                 public readonly FileSystemObject File;
                 public readonly ContainerItem Parent;
                 public readonly Func<Matrix> ToControlTransform;
+                public readonly Func<FileSystemObject, string, bool> Rename;
 
-                public ConstructorParams(Func<RectangleF> area, IProject project, FileSystemObject file, ContainerItem parent, Func<Matrix> toControlTransform)
+                public ConstructorParams(Func<RectangleF> area, IProject project, FileSystemObject file, ContainerItem parent, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
                 {
                     Area = area;
                     Project = project;
                     File = file;
                     Parent = parent;
                     ToControlTransform = toControlTransform;
+                    Rename = rename;
                 }
             }
 
@@ -70,11 +74,11 @@ namespace ConversationEditor
                 m_parent = parameters.Parent;
                 m_area = parameters.Area;
                 ToControlTransform = parameters.ToControlTransform;
+                Rename = parameters.Rename;
             }
 
             public readonly static Item Null = null;
 
-            public const float HEIGHT = 20;
             protected virtual string PermanentText { get { return File.Name; } }
             public string Text
             {
@@ -89,7 +93,7 @@ namespace ConversationEditor
                 g.FillRectangle(ReadonlyBackgroundBrush, area);
             }
 
-            RectangleF CalculateIconRectangle(RectangleF area)
+            public RectangleF CalculateIconRectangle(RectangleF area)
             {
                 return new RectangleF(area.X + CalculateIndent(area) + 3, area.Y + 3, area.Height - 6, area.Height - 6);
             }
@@ -199,11 +203,14 @@ namespace ConversationEditor
             public abstract void DrawIcon(Graphics g, RectangleF iconRectangle);
             public abstract IEnumerable<Item> AllItems(VisibilityFilter filter);
             public abstract IEnumerable<Item> Children(VisibilityFilter filter);
+
             protected uint m_indentLevel = 0;
             public void SetIndentLevel(uint indentLevel)
             {
                 m_indentLevel = indentLevel;
             }
+            public uint IndentLevel { get { return m_indentLevel; } }
+
             public abstract ContainerItem SpawnLocation { get; }
 
             const int CARET_HEIGHT = 15;
@@ -236,7 +243,7 @@ namespace ConversationEditor
                         if (save)
                         {
                             var newPath = File.Parent.FullName + Path.DirectorySeparatorChar + m_textBox.Text;
-                            File.Move(newPath, () => Replace(newPath));
+                            Rename(File, newPath);
                         }
                     }
 
@@ -245,6 +252,7 @@ namespace ConversationEditor
                 }
             }
 
+            //TODO: This shouldn't be here
             public bool Replace(string newPath)
             {
                 if (m_project.Conversations.Any(f => f.File.File.FullName == (new FileInfo(newPath)).FullName))
@@ -258,20 +266,18 @@ namespace ConversationEditor
                 }
             }
 
-            Func<Matrix> ToControlTransform;
-
             public abstract bool CanDelete { get; }
             public abstract bool CanRemove { get; }
             public abstract bool CanSave { get; }
 
-            internal void MoveTo(ContainerItem destination, string path)
-            {
-                if (File.Move(path, () => Replace(path)))
-                {
-                    m_parent.RemoveChild(this);
-                    destination.InsertChildAlphabetically(this);
-                }
-            }
+            //internal void MoveTo(ContainerItem destination, string path)
+            //{
+            //    if (File.Move(path, () => Replace(path)))
+            //    {
+            //        m_parent.RemoveChild(this);
+            //        destination.InsertChildAlphabetically(this);
+            //    }
+            //}
 
             internal virtual bool Select(ref Item m_selectedItem, ref Item m_selectedEditable)
             {
@@ -284,61 +290,6 @@ namespace ConversationEditor
             }
 
             internal virtual string CanSelect() { return null; }
-        }
-
-        private class ProjectItem : ContainerItem
-        {
-            public Dictionary<string, ISaveableFileProvider> m_contents = new Dictionary<string, ISaveableFileProvider>(); //TODO: Private?
-
-            public ProjectItem(Func<RectangleF> area, IProject project, Func<Matrix> toControlTransform)
-                : base(new ConstructorParams(area, project, new FileSystemObject(project, project.File), null, toControlTransform))
-            {
-            }
-
-            public override void Clear()
-            {
-                base.Clear();
-                m_contents.Clear();
-            }
-
-            public IProject Project { get { return m_project; } }
-
-            public override DirectoryInfo Path
-            {
-                get { return m_project.Origin; }
-            }
-
-            public override void DrawIcon(Graphics g, RectangleF iconRectangle)
-            {
-                g.DrawImage(ProjectIcon, iconRectangle);
-            }
-
-            private class DummyProjectItem : ProjectItem
-            {
-                public DummyProjectItem() : base(() => new RectangleF(0, 0, 0, 0), DummyProject.Instance, () => null) { }
-                protected override string PermanentText { get { return ""; } }
-                public override IEnumerable<Item> AllItems(VisibilityFilter filter)
-                {
-                    return Enumerable.Empty<Item>();
-                }
-            }
-
-            public new static readonly ProjectItem Null = new DummyProjectItem();
-
-            public override bool CanDelete { get { return false; } }
-            public override bool CanRemove { get { return false; } }
-
-            public override bool CanSave { get { return Project.File.Writable != null; } }
-
-            public bool TryAdd(ISaveableFileProvider element)
-            {
-                if (!m_contents.ContainsKey(element.File.File.FullName))
-                {
-                    m_contents[element.File.File.FullName] = element;
-                    return true;
-                }
-                return false;
-            }
         }
     }
 }

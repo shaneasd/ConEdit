@@ -19,57 +19,51 @@ namespace ConversationEditor
         private ConfigParameterList<string> m_config;
         private OpenFileDialog m_ofd = new OpenFileDialog() { DefaultExt = "prj", Filter = "Conversation Projects|*.prj|All Files (*.*)|*.*" };
         private SaveFileDialog m_sfd = new SaveFileDialog() { DefaultExt = "prj", Filter = "Conversation Projects|*.prj|All Files (*.*)|*.*" };
-        private IProject m_project;
 
-        public IProject CurrentProject
+        /// <summary>
+        /// Updates the stored (in m_config) list of recently opened projects to ensure that the current project is first in the list
+        /// </summary>
+        private void UpdateRecentlyOpenedConfig()
         {
-            get { return m_project; }
-            set
+            if (m_context.CurrentProject.Value.File.Exists)
             {
-                if (m_project != null)
-                    m_project.File.Moved -= ProjectMoved;
-                m_project = value;
-                m_project.File.Moved += ProjectMoved;
-
-                if (m_project.File.Exists)
+                using (m_config.SuppressCallback())
                 {
-                    using (m_config.SuppressCallback())
-                    {
-                        m_config.Value.Remove(m_project.File.File.FullName);
-                        m_config.Value.Insert(0, m_project.File.File.FullName);
-                    }
+                    m_config.Value.Remove(m_context.CurrentProject.Value.File.File.FullName); //Remove the new project from wherever it was previously in the list (if it was there at all)
+                    m_config.Value.Insert(0, m_context.CurrentProject.Value.File.File.FullName); //And add (or readd) it at the start of the list
                 }
-
-                ProjectChanged.Execute(CurrentProject);
             }
         }
 
+        /// <summary>
+        /// Updates the stored (in m_config) list of recently opened projects to reflect the fact that a project has been renamed from 'from' to 'to'
+        /// </summary>
         private void ProjectMoved(FileInfo from, FileInfo to)
         {
             using (m_config.SuppressCallback())
             {
-                m_config.Value.Remove(from.FullName);
-                m_config.Value.Remove(to.FullName);
-                m_config.Value.Insert(0, to.FullName);
+                int index = m_config.Value.IndexOf(from.FullName);
+                if (index != -1)
+                    m_config.Value[index] = to.FullName;
             }
         }
 
-        public event Action<IProject> ProjectChanged;
         private Action<Action> m_executeInGUIThread;
         private PluginsConfig m_pluginsConfig;
         private Func<IAudioProviderCustomization> m_audioCustomization;
+        SharedContext m_context;
 
-        public ProjectMenuController(ConfigParameterList<string> config, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ProjectExplorer list, Action<IProject> projectChanged, Action<Action> executeInGUIThread, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
+        public ProjectMenuController(SharedContext context, ConfigParameterList<string> config, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ProjectExplorer list, Action<Action> executeInGUIThread, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
         {
+            m_context = context;
             m_executeInGUIThread = executeInGUIThread;
             m_conversationNodeFactory = conversationNodeFactory;
             m_domainNodeFactory = domainNodeFactory;
             m_config = config;
             m_pluginsConfig = pluginsConfig;
             m_audioCustomization = audioCustomization;
-            CurrentProject = DummyProject.Instance;
-
-            ProjectChanged += projectChanged;
+            m_context.ProjectMoved += ProjectMoved;
+            m_context.CurrentProject.Changed.Register(this, (a, b) => UpdateRecentlyOpenedConfig());
 
             var file = m_config.Value.FirstOrDefault(a => true, a => a, "");
             if (File.Exists(file))
@@ -78,7 +72,7 @@ namespace ConversationEditor
 
         public bool CanClose(bool includeProject)
         {
-            var elements = includeProject ? CurrentProject.Elements : CurrentProject.ElementsExceptThis;
+            var elements = includeProject ? m_context.CurrentProject.Value.Elements : m_context.CurrentProject.Value.ElementsExceptThis;
             foreach (var s in elements)
             {
                 try
@@ -136,7 +130,7 @@ namespace ConversationEditor
             {
                 var deserializer = new XMLProject.Deserializer();
                 var projectData = deserializer.Read(m);
-                var project = new Project(projectData, m_conversationNodeFactory, m_domainNodeFactory, m, new FileInfo(path),
+                var project = new Project(m_context, projectData, m_conversationNodeFactory, m_domainNodeFactory, m, new FileInfo(path),
                     new XMLProject.Serializer(),
                     SerializationUtils.ConversationSerializer,
                     SerializationUtils.ConversationSerializerDeserializer,
@@ -150,8 +144,7 @@ namespace ConversationEditor
                         {
                             if (CanClose(false))
                             {
-                                CurrentProject = DummyProject.Instance;
-                                //TODO: Update the GUI to reflect the change in project, in case the load fails.
+                                m_context.CurrentProject.Value = DummyProject.Instance;
                                 OpenProject(project.File.File.FullName);
                             }
                         }
@@ -165,13 +158,13 @@ namespace ConversationEditor
                     }
                 });
                 project.ElementDeletedExternally += (element) => m_executeInGUIThread(() => { MessageBox.Show("Project element " + element.File.File.FullName + " deleted by another application"); });
-                CurrentProject = project;
+                m_context.CurrentProject.Value = project;
             }
         }
 
         public void Save()
         {
-            foreach (var s in CurrentProject.Elements)
+            foreach (var s in m_context.CurrentProject.Value.Elements)
             {
                 try
                 {
@@ -200,7 +193,7 @@ namespace ConversationEditor
                     Project project = null;
                     try
                     {
-                        project = Project.CreateEmpty(new FileInfo(m_sfd.FileName), m_conversationNodeFactory, m_domainNodeFactory,
+                        project = Project.CreateEmpty(m_context, new FileInfo(m_sfd.FileName), m_conversationNodeFactory, m_domainNodeFactory,
                             new XMLProject.Serializer(),
                             SerializationUtils.ConversationSerializer,
                             SerializationUtils.ConversationSerializerDeserializer,
@@ -216,7 +209,7 @@ namespace ConversationEditor
                         return;
                     }
 
-                    CurrentProject = project;
+                    m_context.CurrentProject.Value = project;
                 }
             }
         }
@@ -225,8 +218,7 @@ namespace ConversationEditor
         {
             if (m_sfd.ShowDialog() == DialogResult.OK)
             {
-                CurrentProject.File.Writable.SaveAs(new FileInfo(m_sfd.FileName));
-                ProjectChanged.Execute(CurrentProject);
+                m_context.CurrentProject.Value.File.Writable.SaveAs(new FileInfo(m_sfd.FileName));
                 return true;
             }
             else
@@ -239,7 +231,7 @@ namespace ConversationEditor
         {
             if (CanClose(true))
             {
-                CurrentProject = DummyProject.Instance;
+                m_context.CurrentProject.Value = DummyProject.Instance; //TODO: This would probably be better as null or not changed at all
                 return true;
             }
             return false;

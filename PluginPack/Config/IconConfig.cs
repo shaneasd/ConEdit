@@ -35,7 +35,7 @@ namespace PluginPack
             foreach (var c in config.Where(c => c.Type == GenericNodeConfigDefinition.ID))
             {
                 var data = GenericNodeConfigDefinition.Extract(c);
-                if (string.Compare("Name", data.Key, true) == 0)
+                if (string.Compare("Icon", data.Key, true) == 0)
                 {
                     name = data.Value;
                     return true;

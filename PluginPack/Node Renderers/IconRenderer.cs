@@ -74,11 +74,12 @@ namespace PluginPack
         {
             m_image = null;
             string icon = "";
-            if ( IconConfig.TryGet(Node.Config, ref icon))
+            if (IconConfig.TryGet(Node.Config, ref icon))
             {
                 try
                 {
-                    m_image = new Bitmap(icon);
+                    if (File.Exists(icon))
+                        m_image = new Bitmap(icon);
                 }
                 catch
                 {

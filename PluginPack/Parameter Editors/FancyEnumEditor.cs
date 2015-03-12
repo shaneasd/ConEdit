@@ -116,7 +116,7 @@ namespace PluginPack
             throw new NotImplementedException();
         }
 
-        public event Action Ok;
+        public event Action Ok { add {} remove{} }
         private IEnumParameter m_parameter;
         private Guid m_value;
     }

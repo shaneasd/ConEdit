@@ -201,6 +201,11 @@ namespace Utilities
 
         public override bool Changed { get { return m_undoQueue.Modified; } }
 
+        public void ChangeNoUndo()
+        {
+            m_undoQueue.NeverSaved();
+        }
+
         public void Change(UndoAction actions)
         {
             Change(actions.Actions(), actions.Description);

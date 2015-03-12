@@ -72,7 +72,7 @@ namespace ConversationEditor
 
         LocalizationEngine IProject.Localizer
         {
-            get { return new LocalizationEngine(() => new HashSet<ID<LocalizedText>>(), s => false, s => false, p => true, s => true); }
+            get { return new LocalizationEngine(null, () => new HashSet<ID<LocalizedText>>(), s => false, s => false, p => true, s => true); }
         }
 
         IProjectElementList<AudioFile, IAudioFile> IProject.AudioFiles
