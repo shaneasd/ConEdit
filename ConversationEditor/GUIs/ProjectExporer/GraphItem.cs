@@ -15,8 +15,8 @@ namespace ConversationEditor
     {
         public class ConversationItem : GraphItem<IConversationFile>
         {
-            public ConversationItem(Func<RectangleF> area, IConversationFile item, IProject project, ContainerItem parent, Bitmap icon, Bitmap missingIcon, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
-                : base(area, item, project, parent, icon, missingIcon, f => f.Conversations, toControlTransform, rename)
+            public ConversationItem(ColorScheme scheme, Func<RectangleF> area, IConversationFile item, IProject project, ContainerItem parent, Bitmap icon, Bitmap missingIcon, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
+                : base(scheme, area, item, project, parent, icon, missingIcon, f => f.Conversations, toControlTransform, rename)
             {
             }
 
@@ -28,8 +28,8 @@ namespace ConversationEditor
 
         public class DomainItem : GraphItem<IDomainFile>
         {
-            public DomainItem(Func<RectangleF> area, IDomainFile item, IProject project, ContainerItem parent, Bitmap icon, Bitmap missingIcon, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
-                : base(area, item, project, parent, icon, missingIcon, f => f.Domains, toControlTransform, rename)
+            public DomainItem(ColorScheme scheme, Func<RectangleF> area, IDomainFile item, IProject project, ContainerItem parent, Bitmap icon, Bitmap missingIcon, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
+                : base(scheme, area, item, project, parent, icon, missingIcon, f => f.Domains, toControlTransform, rename)
             {
             }
 
@@ -43,8 +43,8 @@ namespace ConversationEditor
         {
             private Bitmap m_icon;
             private Bitmap m_missingIcon;
-            public GraphItem(Func<RectangleF> area, T item, IProject project, ContainerItem parent, Bitmap icon, Bitmap missingIcon, Func<VisibilityFilter, bool> filter, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
-                : base(area, item, icon, project, parent, filter, toControlTransform, rename)
+            public GraphItem(ColorScheme scheme, Func<RectangleF> area, T item, IProject project, ContainerItem parent, Bitmap icon, Bitmap missingIcon, Func<VisibilityFilter, bool> filter, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
+                : base(scheme, area, item, icon, project, parent, filter, toControlTransform, rename)
             {
                 m_icon = icon;
                 m_missingIcon = missingIcon;

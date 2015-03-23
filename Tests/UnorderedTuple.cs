@@ -12,9 +12,9 @@ namespace Tests
         [NUnit.Framework.Test]
         public static void TestUnorderedTuple()
         {
-            var a = UnordererTuple.Make(0, 1);
-            var A = UnordererTuple.Make(1, 0);
-            var b = UnordererTuple.Make(0, 2);
+            var a = UnorderedTuple.Make(0, 1);
+            var A = UnorderedTuple.Make(1, 0);
+            var b = UnorderedTuple.Make(0, 2);
 
             Assert.AreEqual(a, A);
             Assert.AreEqual(A, a);

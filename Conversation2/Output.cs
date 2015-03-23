@@ -66,7 +66,7 @@ namespace Conversation
 
         private Tuple<Guid, string> Tuple { get { return System.Tuple.Create(m_guid, m_name); } }
 
-        public static ID<ParameterType> ENUM_ID = ID<ParameterType>.Parse("2b075746-9b6e-4d6e-ad39-a083049374f2");
+        public static ParameterType ENUM_ID = ParameterType.Parse("2b075746-9b6e-4d6e-ad39-a083049374f2");
         public static ID<Parameter> PARAMETER_ID = ID<Parameter>.Parse("43903044-1ef9-4c9f-a782-6219fb8e7826");
 
         public static EnumParameter MakeParameter()

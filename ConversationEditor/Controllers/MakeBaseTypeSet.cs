@@ -23,15 +23,15 @@ namespace ConversationEditor
             return result;
         }
 
-        public static Dictionary<Guid, string> BasicTypeMap()
+        public static Dictionary<ParameterType, string> BasicTypeMap()
         {
-            var typeMap = new Dictionary<Guid, string>();
-            typeMap[BaseTypeInteger.PARAMETER_TYPE.Guid] = "Int32";
-            typeMap[BaseTypeDecimal.PARAMETER_TYPE.Guid] = "Decimal";
-            typeMap[BaseTypeString.PARAMETER_TYPE.Guid] = "String";
-            typeMap[BaseTypeLocalizedString.PARAMETER_TYPE.Guid] = "RuntimeConversation.LocalizedString";
-            typeMap[BaseTypeBoolean.PARAMETER_TYPE.Guid] = "Boolean";
-            typeMap[BaseTypeAudio.PARAMETER_TYPE.Guid] = "RuntimeConversation.Audio";
+            var typeMap = new Dictionary<ParameterType, string>();
+            typeMap[BaseTypeInteger.PARAMETER_TYPE] = "Int32";
+            typeMap[BaseTypeDecimal.PARAMETER_TYPE] = "Decimal";
+            typeMap[BaseTypeString.PARAMETER_TYPE] = "String";
+            typeMap[BaseTypeLocalizedString.PARAMETER_TYPE] = "RuntimeConversation.LocalizedString";
+            typeMap[BaseTypeBoolean.PARAMETER_TYPE] = "Boolean";
+            typeMap[BaseTypeAudio.PARAMETER_TYPE] = "RuntimeConversation.Audio";
             return typeMap;
         }
     }

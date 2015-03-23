@@ -15,7 +15,7 @@ namespace Conversation
             public decimal? Min = null;
             public decimal? Max = null;
         }
-        public DecimalParameter(string name, ID<Parameter> id, ID<ParameterType> typeId, Definition definition, string defaultValue = null)
+        public DecimalParameter(string name, ID<Parameter> id, ParameterType typeId, Definition definition, string defaultValue = null)
             : base(name, id, typeId, defaultValue)
         {
             m_definition = definition ?? new Definition();

@@ -149,7 +149,7 @@ namespace ConversationEditor
             m_types.ModifyEnum(data);
         }
 
-        public void RemoveType(ID<ParameterType> id)
+        public void RemoveType(ParameterType id)
         {
             m_types.Remove(id);
         }
@@ -179,12 +179,12 @@ namespace ConversationEditor
             m_types.ModifyInteger(typeData);
         }
 
-        public IEnumerable<ID<ParameterType>> ParameterTypes
+        public IEnumerable<ParameterType> ParameterTypes
         {
             get { return m_types.AllTypes; }
         }
 
-        public string GetTypeName(ID<ParameterType> id)
+        public string GetTypeName(ParameterType id)
         {
             return m_types.GetTypeName(id);
         }
@@ -214,22 +214,22 @@ namespace ConversationEditor
         }
 
         #region GUID Type Queries
-        public bool IsInteger(ID<ParameterType> type)
+        public bool IsInteger(ParameterType type)
         {
             return m_types.IsInteger(type);
         }
 
-        public bool IsDecimal(ID<ParameterType> type)
+        public bool IsDecimal(ParameterType type)
         {
             return m_types.IsDecimal(type);
         }
 
-        public bool IsEnum(ID<ParameterType> type)
+        public bool IsEnum(ParameterType type)
         {
             return m_types.IsEnum(type);
         }
 
-        public bool IsDynamicEnum(ID<ParameterType> type)
+        public bool IsDynamicEnum(ParameterType type)
         {
             return m_types.IsDynamicEnum(type);
         }

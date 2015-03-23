@@ -7,6 +7,180 @@ namespace Conversation
 {
     public abstract class ParameterType
     {
+        public class Basic : ParameterType
+        {
+            Guid m_value;
+            public Basic(Guid value)
+            {
+                m_value = value;
+            }
+
+            public new static ParameterType Parse(string value)
+            {
+                Guid g;
+                if (Guid.TryParse(value, out g))
+                {
+                    return new Basic(g);
+                }
+                return null;
+            }
+
+            public override Guid Guid
+            {
+                get { return m_value; }
+            }
+
+            public override string Serialized()
+            {
+                return Guid.ToString();
+            }
+
+            public static ParameterType New()
+            {
+                return new Basic(Guid.NewGuid());
+            }
+
+            public static ParameterType ConvertFrom<T>(ID<T> type)
+            {
+                return new Basic(type.Guid);
+            }
+
+            public static ParameterType FromGuid(Guid g)
+            {
+                return new Basic(g);
+            }
+
+            public override bool Equals(object obj)
+            {
+                Basic b = obj as Basic;
+                if (b == null)
+                    return false;
+                return b.Guid.Equals(Guid);
+            }
+
+            public override int GetHashCode()
+            {
+                return Guid.GetHashCode();
+            }
+
+            public override bool IsSet
+            {
+                get { return false; }
+            }
+        }
+
+        public class Set : ParameterType
+        {
+            const string SET_PREFIX = "set:";
+            Guid m_of;
+            public Set(Guid of)
+            {
+                m_of = of;
+            }
+
+            public new static ParameterType Parse(string value)
+            {
+                if (value.StartsWith(SET_PREFIX, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    Guid g;
+                    if (Guid.TryParse(value.Substring(SET_PREFIX.Length), out g))
+                    {
+                        return new Set(g);
+                    }
+                }
+                return null;
+            }
+
+            public override Guid Guid
+            {
+                get { return m_of; }
+            }
+
+            public override string Serialized()
+            {
+                return SET_PREFIX + Guid.ToString();
+            }
+
+            public static ParameterType New()
+            {
+                return new Basic(Guid.NewGuid());
+            }
+
+            public static ParameterType ConvertFrom<T>(ID<T> type)
+            {
+                return new Basic(type.Guid);
+            }
+
+            public static ParameterType FromGuid(Guid g)
+            {
+                return new Set(g);
+            }
+
+            public override bool Equals(object obj)
+            {
+                Set b = obj as Set;
+                if (b == null)
+                    return false;
+                return b.Guid.Equals(Guid);
+            }
+
+            public override int GetHashCode()
+            {
+                return Guid.GetHashCode();
+            }
+
+            public static ParameterType Of(ParameterType type)
+            {
+                if (!(type is Basic))
+                    throw new NotImplementedException("Currently only sets of basic types are supported");
+                else
+                    return new Set(type.Guid);
+            }
+
+            public override bool IsSet
+            {
+                get { return true; }
+            }
+        }
+
+        public static ParameterType Parse(string guid)
+        {
+            return Basic.Parse(guid) 
+                ?? Set.Parse(guid)
+                ?? null; //Can add other parsers in a chain of ??
+        }
+
+        public abstract string Serialized();
+
+        public override string ToString()
+        {
+            //We never want to be implicitly converting this to a string
+            throw new NotImplementedException("ParameterType.ToString()");
+        }
+
+        public abstract Guid Guid { get; }
+
+        public static bool operator ==(ParameterType a, ParameterType b)
+        {
+            return object.Equals(a, b);
+        }
+
+        public static bool operator !=(ParameterType a, ParameterType b)
+        {
+            return !(a == b);
+        }
+
+        public override bool Equals(object obj)
+        {
+            throw new NotSupportedException("Implementing classes must override ParameterType.Equals");
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotSupportedException("Implementing classes must override ParameterType.GetHashCode");
+        }
+
+        public abstract bool IsSet { get; }
     }
 
     public class ID<T> : IComparable<ID<T>>
@@ -102,6 +276,11 @@ namespace Conversation
         public int CompareTo(ID<T> other)
         {
             return Guid.CompareTo(other.Guid);
+        }
+
+        public static ID<T> ConvertFrom(ParameterType parameterType)
+        {
+            return new ID<T>(parameterType.Guid);
         }
     }
 

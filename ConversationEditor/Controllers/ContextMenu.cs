@@ -39,7 +39,7 @@ namespace ConversationEditor
     public class ContextMenu<TNode> where TNode : IRenderable<IGUI>, IConversationNode, IConfigurable
     {
         Dictionary<MenuAction2<TNode>, ToolStripMenuItem> m_menuActions = new Dictionary<MenuAction2<TNode>, ToolStripMenuItem>();
-        private readonly ContextMenuStrip m_menu = new ContextMenuStrip() { RenderMode = ToolStripRenderMode.Professional, Renderer = ColorScheme.ContextMenu };
+        private readonly ContextMenuStrip m_menu;
         private Control m_control;
 
         private MouseController<TNode> m_mouseController;
@@ -47,11 +47,12 @@ namespace ConversationEditor
         private readonly Func<bool> ConversationReal;
         public event Action Opening;
 
-        public ContextMenu(MouseController<TNode> mouseController, Func<Point, Point> toGraphSpace, Func<bool> conversationReal)
+        public ContextMenu(ColorScheme scheme, MouseController<TNode> mouseController, Func<Point, Point> toGraphSpace, Func<bool> conversationReal)
         {
             m_mouseController = mouseController;
             ToGraphSpace = toGraphSpace;
             ConversationReal = conversationReal;
+            m_menu = new ContextMenuStrip() { RenderMode = ToolStripRenderMode.Professional, Renderer = scheme.ContextMenu };
             m_menu.Opening += (a, b) => b.Cancel = UpdateContextMenu();
         }
 

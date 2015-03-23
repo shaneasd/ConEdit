@@ -37,7 +37,10 @@ namespace ConversationEditor
 
             public IEnumerator<Tuple<ConversationNode, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>>> MakeEnumerator()
             {
-                return Nodes.Select(n => new Tuple<ConversationNode, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>>(n, File)).InfiniteRepeat().GetEnumerator();
+                if (Nodes.Any())
+                    return Nodes.Select(n => new Tuple<ConversationNode, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>>(n, File)).InfiniteRepeat().GetEnumerator();
+                else
+                    return null;
             }
         }
 
@@ -83,7 +86,8 @@ namespace ConversationEditor
                 if (m_selectedItem != null)
                 {
                     m_nodeIterator = m_selectedItem.Error.MakeEnumerator();
-                    m_nodeIterator.MoveNext();
+                    if (m_nodeIterator != null)
+                        m_nodeIterator.MoveNext();
                 }
                 else
                     m_nodeIterator = null;
@@ -93,7 +97,7 @@ namespace ConversationEditor
                 m_nodeIterator.MoveNext();
             }
 
-            if (m_nodeIterator != null)
+            if (m_nodeIterator != null && m_nodeIterator.Current != null)
             {
                 BoolRef success = true;
                 HightlightNode.Execute(m_nodeIterator.Current.Item1, m_nodeIterator.Current.Item2, success);
@@ -105,7 +109,7 @@ namespace ConversationEditor
             float y = -greyScrollBar1.Value;
             foreach (var item in m_items)
             {
-                item.Draw(e.Graphics, y, drawWindow1.Width - 1, item == m_selectedItem);
+                item.Draw(ColorScheme, e.Graphics, y, drawWindow1.Width - 1, item == m_selectedItem);
                 y += item.Height;
             }
             e.Graphics.DrawRectangle(ColorScheme.ControlBorder, new Rectangle(0, 0, drawWindow1.Width - 1, drawWindow1.Height - 1));
@@ -126,14 +130,14 @@ namespace ConversationEditor
                 m_data = data;
             }
 
-            internal void Draw(Graphics g, float y, float width, bool selected)
+            internal void Draw(ColorScheme scheme, Graphics g, float y, float width, bool selected)
             {
-                using (Brush background = new SolidBrush(selected ? ColorScheme.SelectedConversationListItemSecondaryBackground : ColorScheme.Background))
+                using (Brush background = new SolidBrush(selected ? scheme.SelectedConversationListItemSecondaryBackground : scheme.Background))
                 {
-                    using (Brush text = new SolidBrush(ColorScheme.Foreground))
+                    using (Brush text = new SolidBrush(scheme.Foreground))
                     {
                         g.FillRectangle(background, new RectangleF(0, y, width, HEIGHT));
-                        g.DrawRectangle(ColorScheme.ControlBorder, new RectangleF(0, y, width, HEIGHT));
+                        g.DrawRectangle(scheme.ControlBorder, new RectangleF(0, y, width, HEIGHT));
                         g.DrawString(m_data.Message, SystemFonts.DefaultFont, text, new PointF(4, y + 5));
                     }
                 }
@@ -155,5 +159,7 @@ namespace ConversationEditor
             greyScrollBar1.Maximum = Math.Max(0.0f, totalHeight - Height);
             greyScrollBar1.PercentageCovered = Height / totalHeight;
         }
+
+        public ColorScheme ColorScheme { get; set; }
     }
 }

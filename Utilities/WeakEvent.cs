@@ -13,6 +13,12 @@ namespace Utilities
         {
             return new WeakCallback<TObject, TParameter>(obj, c);
         }
+
+        public static Action<TParameter> Handler<TObject>(TObject o, Action<TObject, TParameter> callback) where TObject : class
+        {
+            var weak = WeakCallback<TParameter>.Create(o, callback);
+            return weak.Execute;
+        }
     }
     public class WeakCallback<TObject, TParameter> : WeakCallback<TParameter> where TObject : class
     {
@@ -35,11 +41,6 @@ namespace Utilities
             if (target != null)
                 Callback(target, value);
         }
-
-        //public static implicit operator Action(WeakCallback<T> a)
-        //{
-        //    return a.Execute;
-        //}
     }
 
     public class WeakEvent<TParameter>

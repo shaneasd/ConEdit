@@ -27,10 +27,13 @@ namespace ConversationEditor
         {
             if (m_context.CurrentProject.Value.File.Exists)
             {
-                using (m_config.SuppressCallback())
+                if (m_config.Value.Any() && m_config.Value[0] != m_context.CurrentProject.Value.File.File.FullName)
                 {
-                    m_config.Value.Remove(m_context.CurrentProject.Value.File.File.FullName); //Remove the new project from wherever it was previously in the list (if it was there at all)
-                    m_config.Value.Insert(0, m_context.CurrentProject.Value.File.File.FullName); //And add (or readd) it at the start of the list
+                    using (m_config.SuppressCallback())
+                    {
+                        m_config.Value.Remove(m_context.CurrentProject.Value.File.File.FullName); //Remove the new project from wherever it was previously in the list (if it was there at all)
+                        m_config.Value.Insert(0, m_context.CurrentProject.Value.File.File.FullName); //And add (or readd) it at the start of the list
+                    }
                 }
             }
         }
@@ -52,9 +55,11 @@ namespace ConversationEditor
         private PluginsConfig m_pluginsConfig;
         private Func<IAudioProviderCustomization> m_audioCustomization;
         SharedContext m_context;
+        ColorScheme m_scheme;
 
-        public ProjectMenuController(SharedContext context, ConfigParameterList<string> config, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ProjectExplorer list, Action<Action> executeInGUIThread, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
+        public ProjectMenuController(ColorScheme scheme, SharedContext context, ConfigParameterList<string> config, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ProjectExplorer list, Action<Action> executeInGUIThread, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
         {
+            m_scheme = scheme;
             m_context = context;
             m_executeInGUIThread = executeInGUIThread;
             m_conversationNodeFactory = conversationNodeFactory;
@@ -62,7 +67,7 @@ namespace ConversationEditor
             m_config = config;
             m_pluginsConfig = pluginsConfig;
             m_audioCustomization = audioCustomization;
-            m_context.ProjectMoved += ProjectMoved;
+            m_context.ProjectMoved += WeakCallback<Changed<FileInfo>>.Handler(this, (me, a) => me.ProjectMoved(a.from, a.to));
             m_context.CurrentProject.Changed.Register(this, (a, b) => UpdateRecentlyOpenedConfig());
 
             var file = m_config.Value.FirstOrDefault(a => true, a => a, "");
@@ -130,10 +135,10 @@ namespace ConversationEditor
             {
                 var deserializer = new XMLProject.Deserializer();
                 var projectData = deserializer.Read(m);
-                var project = new Project(m_context, projectData, m_conversationNodeFactory, m_domainNodeFactory, m, new FileInfo(path),
+                var project = new Project(m_scheme, m_context, projectData, m_conversationNodeFactory, m_domainNodeFactory, m, new FileInfo(path),
                     new XMLProject.Serializer(),
                     SerializationUtils.ConversationSerializer,
-                    SerializationUtils.ConversationSerializerDeserializer,
+                    d => SerializationUtils.ConversationSerializerDeserializer(d, m_scheme),
                     SerializationUtils.DomainSerializer, m_pluginsConfig, m_audioCustomization);
 
                 project.FileDeletedExternally += () => m_executeInGUIThread(() => { MessageBox.Show("Project file deleted by another application"); });
@@ -193,10 +198,10 @@ namespace ConversationEditor
                     Project project = null;
                     try
                     {
-                        project = Project.CreateEmpty(m_context, new FileInfo(m_sfd.FileName), m_conversationNodeFactory, m_domainNodeFactory,
+                        project = Project.CreateEmpty(m_scheme, m_context, new FileInfo(m_sfd.FileName), m_conversationNodeFactory, m_domainNodeFactory,
                             new XMLProject.Serializer(),
                             SerializationUtils.ConversationSerializer,
-                            SerializationUtils.ConversationSerializerDeserializer,
+                            d => SerializationUtils.ConversationSerializerDeserializer(d, m_scheme),
                             SerializationUtils.DomainSerializer, m_pluginsConfig, m_audioCustomization);
                     }
                     catch (MyFileLoadException e)

@@ -7,7 +7,7 @@ namespace Conversation
 {
     public struct DecimalData
     {
-        public DecimalData(string name, ID<ParameterType> typeID, decimal? max = null, decimal? min = null/*, decimal? def = null*/)
+        public DecimalData(string name, ParameterType typeID, decimal? max = null, decimal? min = null/*, decimal? def = null*/)
         {
             Name = name;
             TypeID = typeID;
@@ -16,7 +16,7 @@ namespace Conversation
             //Default = def;
         }
         public string Name;
-        public ID<ParameterType> TypeID;
+        public ParameterType TypeID;
         public decimal? Max;
         public decimal? Min;
         //public decimal? Default;

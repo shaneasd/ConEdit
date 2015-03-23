@@ -75,13 +75,15 @@ namespace ConversationEditor
 
         public static readonly Guid CATEGORY_NONE = Guid.Parse("a5142af5-3d14-4169-9638-df2e52e97963");
 
-        public static readonly ID<ParameterType> CATEGORY_TYPE = ID<ParameterType>.Parse("5d823e77-52bc-46c0-8f47-3ddb1211fdcc");
+        public static readonly ParameterType CATEGORY_TYPE = ParameterType.Parse("5d823e77-52bc-46c0-8f47-3ddb1211fdcc");
 
-        public static readonly ID<ParameterType> TYPES_GUID = ID<ParameterType>.Parse("d1715100-84db-4e16-a119-7cbcfd92109e");
+        public static readonly ParameterType TYPES_GUID = ParameterType.Parse("d1715100-84db-4e16-a119-7cbcfd92109e");
 
         public static Guid CONFIG_MENU = Guid.Parse("8d552ab9-bd06-4cf1-b671-f59455387009");
 
         public static readonly ConnectorDefinitionData PARAMETER_OUTPUT_DEFINITION = new ConnectorDefinitionData("", ID<TConnectorDefinition>.Parse("4124e6cb-63f7-40fd-85b4-c41f080edbd7"), new List<NodeData.ParameterData>(), ConnectorPosition.Top, true);
+        public static readonly ConnectorDefinitionData PARAMETER_CONFIG_CONNECTOR_DEFINITION = new ConnectorDefinitionData("", ID<TConnectorDefinition>.Parse("1551129e-a394-4411-8974-0c3dccab3ba8"), new List<NodeData.ParameterData>(), ConnectorPosition.Right, true);
+
         public static readonly ConnectorDefinitionData CONNECTOR_OUTPUT_DEFINITION = new ConnectorDefinitionData("", ID<TConnectorDefinition>.Parse("a37842f0-52d9-406c-8ef7-56d1be90b7c5"), new List<NodeData.ParameterData>(), ConnectorPosition.Top, true);
         public static readonly ConnectorDefinitionData CONFIG_OUTPUT_DEFINITION = new ConnectorDefinitionData("", ID<TConnectorDefinition>.Parse("8f0329d7-65f4-4e76-bbf8-3999f8adae5f"), new List<NodeData.ParameterData>(), ConnectorPosition.Top, true);
         public static readonly ConnectorDefinitionData NODE_OUTPUT_CONFIG_DEFINITION = new ConnectorDefinitionData("", ID<TConnectorDefinition>.Parse("41352cc9-3228-418b-984e-c9825a35e7ad"), new List<NodeData.ParameterData>(), ConnectorPosition.Bottom, true);

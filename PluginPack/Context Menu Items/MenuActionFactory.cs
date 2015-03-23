@@ -12,7 +12,7 @@ namespace PluginPack
 {
     public class MenuActionFactory : IMenuActionFactory<ConversationNode>
     {
-        public IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(GraphEditorControl<ConversationNode> control)
+        public IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(ColorScheme scheme, GraphEditorControl<ConversationNode> control)
         {
             Action<ConversationNode, Point> jump = (n, p) =>
                 {

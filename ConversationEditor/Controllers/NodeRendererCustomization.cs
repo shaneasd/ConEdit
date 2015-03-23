@@ -20,7 +20,7 @@ namespace ConversationEditor
             m_parameters = new List<Parameter>();
         }
 
-        public NodeRendererCustomization(IDataSource datasource, MapConfig<ID<NodeTypeTemp>, Guid> typeMapConfig, List<NodeUI.IFactory> allRenderers)
+        public NodeRendererCustomization(IDataSource datasource, MapConfig<ID<NodeTypeTemp>, Guid> typeMapConfig, IEnumerable<NodeUI.IFactory> allRenderers)
         {
             m_typeMapConfig = typeMapConfig;
             m_parameters = new List<Parameter>();
@@ -28,7 +28,7 @@ namespace ConversationEditor
             {
                 var options = allRenderers.Where(e => e.WillRender(type.Guid)).Select(e => Tuple.Create(e.Guid, e.DisplayName)).ToList();
                 Guid def = m_typeMapConfig[type.Guid];
-                var enumeration = new Enumeration(options, ID<ParameterType>.ConvertFrom(type.Guid), def);
+                var enumeration = new Enumeration(options, ParameterType.Basic.ConvertFrom(type.Guid), def);
                 var p = new EnumParameter(type.Name, ID<Parameter>.ConvertFrom(type.Guid), enumeration, def.ToString());
                 m_parameters.Add(p);
             }

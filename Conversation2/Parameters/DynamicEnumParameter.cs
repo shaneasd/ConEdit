@@ -31,7 +31,7 @@ namespace Conversation
 
         Source m_source;
 
-        public DynamicEnumParameter(string name, ID<Parameter> id, Source source, ID<ParameterType> typeId, string defaultValue = null)
+        public DynamicEnumParameter(string name, ID<Parameter> id, Source source, ParameterType typeId, string defaultValue = null)
             : base(name, id, typeId, defaultValue)
         {
             m_source = source;

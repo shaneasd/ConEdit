@@ -110,7 +110,9 @@ namespace ConversationEditor
                     foreach (var n in conversationFile.Nodes)
                     {
                         var parameters = n.Parameters;
-                        var filteredParameters = parameters.Where(p => p.TypeId == ID<ParameterType>.ConvertFrom(enumTypeID)).Cast<IEnumParameter>();
+                        var filteredParameters = parameters.Where(p => p.TypeId == ParameterType.Basic.ConvertFrom(enumTypeID)).Cast<IEnumParameter>()
+                                                           .Concat(parameters.Where(p => p.TypeId == ParameterType.Set.ConvertFrom(enumTypeID)).Cast<IEnumParameter>());
+
                         var usingParameters = filteredParameters.Where(p => p.Value == node.Id.Guid);
                         foreach (var p in usingParameters)
                             result.Add(new Usage(n, conversationFile, "Node " + n.Id.Serialized() + " with Enum parameter " + p.Id.Serialized()));

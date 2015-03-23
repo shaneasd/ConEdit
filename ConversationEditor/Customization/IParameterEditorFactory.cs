@@ -9,9 +9,9 @@ namespace ConversationEditor
 {
     public interface IParameterEditorFactory
     {
-        bool WillEdit(ID<ParameterType> type, WillEdit willEdit);
+        bool WillEdit(ParameterType type, WillEdit willEdit);
         string Name { get; }
         Guid Guid { get; }
-        IParameterEditor<Control> Make();
+        IParameterEditor<Control> Make(ColorScheme scheme);
     }
 }

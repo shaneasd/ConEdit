@@ -77,7 +77,7 @@ namespace Utilities
         ToolStripDropDown m_dropDown;
         private bool m_allowCustomText;
 
-        private readonly bool m_HasDropDownButton = false;
+        private readonly bool m_HasDropDownButton = true;
 
         public MyTextBox.ColorOptions TextBoxColors { get { return m_textBox.Colors; } set { m_textBox.Colors = value; } }
 
@@ -106,6 +106,7 @@ namespace Utilities
 
         public override void MouseDown(MouseEventArgs args)
         {
+            Debug.Print(Name + "MouseDown");
             if (m_buttonArea().Contains(args.Location))
                 ButtonMouseDown(args);
             else if (m_textBox.Area.Contains(args.Location))
@@ -147,12 +148,14 @@ namespace Utilities
 
         public override void GotFocus()
         {
+            Debug.Print(Name + "GotFocus");
             m_textBox.GotFocus();
             m_textBox.CursorPos = new MyTextBox.CP(int.MaxValue);
         }
 
         public override void LostFocus()
         {
+            Debug.Print(Name + "LostFocus");
             m_textBox.LostFocus();
         }
 
@@ -170,26 +173,12 @@ namespace Utilities
             m_textBox.KeyDown(args);
         }
 
-        public void SetupCallbacks()
-        {
-            m_control.MouseDown += (a, args) => MouseDown(args);
-            m_control.MouseUp += (a, args) => MouseUp(args);
-            m_control.MouseMove += (a, args) => MouseMove(args);
-            m_control.MouseClick += (a, args) => MouseClick(args);
-            m_control.KeyPress += (a, args) => KeyPress(args);
-            m_control.KeyDown += (a, args) => KeyDown(args);
-            m_control.GotFocus += (a, args) => GotFocus();
-            m_control.LostFocus += (a, args) => LostFocus();
-            m_control.MouseWheel += (a, args) => MouseWheel(args);
-
-            m_control.Paint += (a, args) => Paint(args.Graphics);
-        }
-
         public override void Paint(Graphics graphics)
         {
             m_textBox.Paint(graphics);
 
-            DrawButton(graphics, m_buttonArea());
+            if (m_HasDropDownButton)
+                DrawButton(graphics, m_buttonArea());
         }
 
         private void DrawButton(Graphics graphics, RectangleF buttonArea)

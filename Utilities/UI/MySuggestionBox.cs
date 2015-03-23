@@ -293,6 +293,7 @@ namespace Utilities
         public override void MouseDown(MouseEventArgs args)
         {
             UpdateDropdown();
+            Debug.Print(Name + "MouseDown");
             m_textBox.MouseDown(args);
         }
 
@@ -313,13 +314,15 @@ namespace Utilities
 
         public override void GotFocus()
         {
+            Debug.Print(Name + "Got Focus");
             m_textBox.GotFocus();
             m_textBox.CursorPos = new MyTextBox.CP(int.MaxValue);
-            UpdateDropdown();
+            //UpdateDropdown();
         }
 
         public override void LostFocus()
         {
+            Debug.Print(Name + "Lost Focus");
             m_textBox.LostFocus();
             m_dropDown.Close();
             m_textBox.Text = SelectedItem.DisplayString;

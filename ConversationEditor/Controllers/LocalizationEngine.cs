@@ -10,9 +10,10 @@ using Conversation.Serialization;
 
 namespace ConversationEditor
 {
-    //TODO: This class seems pretty superfluous the only addition value it seems to provide is DuplicateActions and I'm not convinced that belongs here
     public class LocalizationEngine
     {
+        public const string MISSING_LOCALIZATION = "Missing Localization";
+
         ProjectElementList<LocalizationFile, MissingLocalizationFile, ILocalizationFile> m_localizers;
         ILocalizationContext m_context;
 
@@ -37,6 +38,15 @@ namespace ConversationEditor
             Func<DirectoryInfo, LocalizationFile> makeEmpty = path => LocalizationFile.MakeNew(path, MakeSerializer, pathOk);
             Func<FileInfo, MissingLocalizationFile> makeMissing = file => new MissingLocalizationFile(file);
             m_localizers = new ProjectElementList<LocalizationFile, MissingLocalizationFile, ILocalizationFile>(fileLocationOk, load, makeEmpty, makeMissing);
+            m_localizers.GotChanged += () =>
+            {
+                //If there is only one localizer then it must be the current localizer
+                if (m_localizers.Count() == 1) 
+                    m_context.CurrentLocalization.Value = m_localizers.First(); 
+                //If the current localizer is removed from the list of available localizers then select a replacement
+                if (!m_localizers.Contains(m_context.CurrentLocalization.Value))
+                    m_context.CurrentLocalization.Value = Project.SelectNewLocalizer(m_localizers);
+            }; 
         }
 
         public IProjectElementList<LocalizationFile, ILocalizationFile> Localizers { get { return m_localizers; } }
@@ -48,10 +58,10 @@ namespace ConversationEditor
 
         public string Localize(ID<LocalizedText> guid)
         {
-            if (m_context.CanLocalize)
-                return m_context.CurrentLocalization.Value.Localize(guid);
+            if (guid != null)
+                return m_context.CurrentLocalization.Value.Localize(guid) ?? MISSING_LOCALIZATION;
             else
-                return "Missing Localization";
+                return MISSING_LOCALIZATION;
         }
 
         internal Tuple<ID<LocalizedText>, SimpleUndoPair> DuplicateActions(ID<LocalizedText> guid)
@@ -81,6 +91,11 @@ namespace ConversationEditor
         public bool GuidUsed(ID<LocalizedText> guid)
         {
             return m_usedGuids().Contains(guid);
+        }
+
+        public bool CanLocalize
+        {
+            get { return m_localizers.Any(); } //Assume that if localizers exist then one is selected
         }
     }
 }

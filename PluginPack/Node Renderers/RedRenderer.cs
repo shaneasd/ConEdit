@@ -24,7 +24,7 @@ namespace PluginPack
                 get { return "Red Renderer"; }
             }
 
-            public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer)
+            public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
             {
                 return new RedRenderer(n, p, localizer);
             }

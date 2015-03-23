@@ -12,8 +12,29 @@ namespace Utilities
         MyControl LastFocused { get; set; }
     }
 
+    public class FocusProvider : IFocusProvider
+    {
+        private MyControl m_focussed;
+        public FocusProvider(MyControl focussed)
+        {
+            m_focussed = focussed;
+        }
+
+        public MyControl LastFocused
+        {
+            get { return m_focussed; }
+            set { m_focussed = value; }
+        }
+    }
+
     public abstract class MyControl : IDisposable
     {
+        public string Name;
+        public MyControl()
+        {
+            Name = GetHashCode().ToString();
+        }
+
         public abstract void MouseDown(MouseEventArgs args);
         public abstract void MouseUp(MouseEventArgs args);
         public abstract void MouseMove(MouseEventArgs args);
@@ -40,13 +61,13 @@ namespace Utilities
             {
                 if (this.Contains(args.Location))
                 {
-                    this.MouseDown(args);
                     if (focus.LastFocused != this)
                     {
                         focus.LastFocused.LostFocus();
                         focus.LastFocused = this;
                         this.GotFocus();
                     }
+                    this.MouseDown(args);
                 }
             };
 

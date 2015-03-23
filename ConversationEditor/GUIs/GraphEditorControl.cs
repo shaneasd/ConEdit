@@ -70,9 +70,6 @@ namespace ConversationEditor
 
             Colors = new ColorScheme();
 
-            BackColor = ColorScheme.FormBackground;
-            drawWindow.BackColor = ColorScheme.Background;
-
             hScrollBar1.Scrolled += Redraw;
             vScrollBar1.Scrolled += Redraw;
             drawWindow.Paint += paintDrawWindow;
@@ -81,7 +78,7 @@ namespace ConversationEditor
 
         protected override void OnBackColorChanged(EventArgs e)
         {
-            BackColor = ColorScheme.FormBackground;
+            BackColor = m_colorScheme.FormBackground;
         }
 
         IConversationEditorControlData<TNode, TransitionNoduleUIInfo> m_conversation = DummyConversationEditorControlData<TNode, TransitionNoduleUIInfo>.Instance;
@@ -225,7 +222,17 @@ namespace ConversationEditor
 
         public bool ShowIDs { get; set; }
         private ColorScheme m_colorScheme;
-        public ColorScheme Colors { get { return m_colorScheme; } set { m_colorScheme = value; Redraw(); } }
+        public ColorScheme Colors
+        {
+            get { return m_colorScheme; }
+            set
+            {
+                m_colorScheme = value;
+                BackColor = value.FormBackground;
+                drawWindow.BackColor = value.Background;
+                Redraw();
+            }
+        }
 
         /// <summary>
         /// Convert from screen space to graph space
@@ -282,7 +289,7 @@ namespace ConversationEditor
             m_copyPasteController = copyPasteController;
             FileReferences = findReferences;
             InitialiseMouseController();
-            m_contextMenu = new ContextMenu<TNode>(m_mouseController, DrawWindowToGraphSpace, () => CurrentFile != DummyConversationEditorControlData<TNode, TransitionNoduleUIInfo>.Instance && !(CurrentFile is MissingConversationFile));
+            m_contextMenu = new ContextMenu<TNode>(Colors, m_mouseController, DrawWindowToGraphSpace, () => CurrentFile != DummyConversationEditorControlData<TNode, TransitionNoduleUIInfo>.Instance && !(CurrentFile is MissingConversationFile));
             m_contextMenu.AttachTo(drawWindow);
 
             m_toolTip.SetToolTip(drawWindow, null);
@@ -369,11 +376,12 @@ namespace ConversationEditor
 
         private ConfigureResult MyEdit(IEditable data)
         {
-            return Edit(data, new AudioGenerationParameters(CurrentFile, m_project));
+            Func<ID<LocalizedText>, string> localize = id => m_localization.Localize(id);
+            return Edit(data, new AudioGenerationParameters(CurrentFile, m_project, data.Parameters, localize));
         }
         private void InitialiseMouseController()
         {
-            m_mouseController = new MouseController<TNode>(Redraw, shift => Shift(shift), (p, z) => Zoom(p, z), () => CurrentFile.Nodes, () => CurrentFile.Groups, MyEdit, n => CurrentFile.Remove(n.Only(), Enumerable.Empty<NodeGroup>()), Snap, SnapGroup, UIInfo, id => CurrentFile.GetNode(id));
+            m_mouseController = new MouseController<TNode>(Colors, Redraw, shift => Shift(shift), (p, z) => Zoom(p, z), () => CurrentFile.Nodes, () => CurrentFile.Groups, MyEdit, n => CurrentFile.Remove(n.Only(), Enumerable.Empty<NodeGroup>()), Snap, SnapGroup, UIInfo, id => CurrentFile.GetNode(id));
             drawWindow.MouseDown += (a, args) => m_mouseController.MouseDown(DrawWindowToGraphSpace(args.Location), args.Location, args.Button);
             drawWindow.MouseUp += (a, args) => m_mouseController.MouseUp(DrawWindowToGraphSpace(args.Location), args.Location, args.Button);
             drawWindow.MouseMove += (a, args) => m_mouseController.MouseMove(DrawWindowToGraphSpace(args.Location), args.Location);
@@ -414,10 +422,31 @@ namespace ConversationEditor
 
             m_mouseController.HoverNodeChanged += () =>
             {
-                if (m_mouseController.HoverNode != null && ShowIDs)
+                if (m_mouseController.HoverNode != null)
                 {
-                    m_toolTip.Active = true;
-                    m_toolTip.SetToolTip(drawWindow, m_mouseController.HoverNode.Id.Serialized());
+                    if (ShowIDs)
+                    {
+                        m_toolTip.Active = true;
+                        m_toolTip.SetToolTip(drawWindow, m_mouseController.HoverNode.Id.Serialized());
+                        m_toolTip.OwnerDraw = false;
+                    }
+                    else
+                    {
+                        m_toolTip.Active = true;
+                        m_toolTip.OwnerDraw = true;
+                        var node = m_mouseController.HoverNode as ConversationNode<INodeGUI>;
+                        EditableUI renderer = new EditableUI(node, new PointF(0, 0), m_localization.Localize);
+                        renderer.UpdateArea();
+                        m_toolTip.Popup += (sender, e) => { e.ToolTipSize = renderer.Area.Size.ToSize(); };
+                        m_toolTip.Draw += (sender, e) =>
+                        {
+                            var m = new Matrix();
+                            m.Translate(renderer.Area.Width / 2, renderer.Area.Height / 2);
+                            e.Graphics.Transform = m;
+                            renderer.Draw(e.Graphics, false);
+                        };
+                        m_toolTip.SetToolTip(drawWindow, m_mouseController.HoverNode.Id.Serialized());
+                    }
                 }
                 else
                 {
@@ -472,9 +501,9 @@ namespace ConversationEditor
                 PointF lowerBound = mi.TransformPoint(new PointF(0, 0));
                 PointF upperBound = mi.TransformPoint(new PointF(drawWindow.Size.Width, drawWindow.Size.Height));
 
-                using (var pen = new Pen(ColorScheme.MinorGrid))
+                using (var pen = new Pen(m_colorScheme.MinorGrid))
                     DrawGrid(e, pen, MinorGridSpacing, lowerBound, upperBound);
-                using (var pen = new Pen(ColorScheme.Grid))
+                using (var pen = new Pen(m_colorScheme.Grid))
                     DrawGrid(e, pen, MajorGridSpacing, lowerBound, upperBound);
             }
         }
@@ -540,7 +569,7 @@ namespace ConversationEditor
                             {
                                 PointF p1 = UIInfo(t).Area.Center();
                                 PointF p2 = UIInfo(connection).Area.Center();
-                                var pair = UnordererTuple.Make(p1, p2);
+                                var pair = UnorderedTuple.Make(p1, p2);
                                 bool selected = m_mouseController.IsSelected(connection) || m_mouseController.IsSelected(t);
 
                                 if (selected)
@@ -563,7 +592,7 @@ namespace ConversationEditor
                             {
                                 PointF p1 = UIInfo(t).Area.Center();
                                 PointF p2 = UIInfo(connection).Area.Center();
-                                var pair = UnordererTuple.Make(p1, p2);
+                                var pair = UnorderedTuple.Make(p1, p2);
                                 bool selected = m_mouseController.IsSelected(connection) || m_mouseController.IsSelected(t);
 
                                 unselectedNodeConnections.Remove(pair);
@@ -601,7 +630,7 @@ namespace ConversationEditor
                         foreach (var t in node.Connectors)
                         {
                             bool selected = m_mouseController.IsSelected(t);
-                            UIInfo(t).Draw(g, selected ? ColorScheme.Foreground : Colors.Connectors);
+                            UIInfo(t).Draw(g, selected ? Colors.Foreground : Colors.Connectors);
                         }
                     }
 
@@ -620,7 +649,7 @@ namespace ConversationEditor
                         foreach (var t in node.Connectors)
                         {
                             bool selected = m_mouseController.IsSelected(t);
-                            UIInfo(t).Draw(g, selected ? ColorScheme.Foreground : Colors.Connectors);
+                            UIInfo(t).Draw(g, selected ? Colors.Foreground : Colors.Connectors);
                         }
                     }
 
@@ -643,11 +672,11 @@ namespace ConversationEditor
                     }
                 }
 
-                g.DrawRectangle(ColorScheme.ControlBorder, RectangleF.FromLTRB(0, 0, DocumentSize.Width - 1, DocumentSize.Height - 1));
+                g.DrawRectangle(Colors.ControlBorder, RectangleF.FromLTRB(0, 0, DocumentSize.Width - 1, DocumentSize.Height - 1));
 
                 g.Restore(originalState);
 
-                g.DrawRectangle(ColorScheme.ControlBorder, Rectangle.FromLTRB(0, 0, drawWindow.Width - 1, drawWindow.Height - 1));
+                g.DrawRectangle(Colors.ControlBorder, Rectangle.FromLTRB(0, 0, drawWindow.Width - 1, drawWindow.Height - 1));
             }
         }
 
@@ -659,9 +688,8 @@ namespace ConversationEditor
                 Action addNode = () => { CurrentFile.Add(g.Only(), Enumerable.Empty<NodeGroup>()); };
                 g.Configure(MyEdit).Do
                 (
-                    //TODO: I swapped the add and configure here. Really not confident that this order makes sense. However it's needed for the audio parameters to correctly detect that their associated files are being used.
-                    sup => { addNode(); sup.Redo(); }, //Configure the node (doesn't need to be undoable) and add it
-                    b => { if (b != ConfigureResult.Cancel) addNode(); } //Add the node if the user didn't cancel (i.e. no editing was required)
+                    simpleUndoPair => { addNode(); simpleUndoPair.Redo(); }, //Add the node and Configure it. Configure doesn't need to be undoable as we never need to revert the node to an unconfigured state.
+                    resultNotOk => { if (resultNotOk != ConfigureResult.Cancel) addNode(); } //Add the node if the user didn't cancel (i.e. no editing was required)
                 );
             }
         }
@@ -675,7 +703,7 @@ namespace ConversationEditor
 
             foreach (var factory in menuFactories)
             {
-                custom.AddRange(factory.GetMenuActions(this));
+                custom.AddRange(factory.GetMenuActions(Colors, this));
             }
 
             m_contextMenu.ResetCustomNodes(custom.ToArray());
@@ -685,7 +713,7 @@ namespace ConversationEditor
         {
             if (Selected.Nodes.Any())
             {
-                NodeGroup newGroup = NodeGroup.Make(Selected.Nodes.Select(CurrentFile.GetNode));
+                NodeGroup newGroup = NodeGroup.Make(Selected.Nodes.Select(CurrentFile.GetNode), Colors);
                 CurrentFile.Add(Enumerable.Empty<TNode>(), newGroup.Only());
                 SetSelection(Selected.Nodes.Evaluate(), Selected.Groups.Concat(newGroup.Only()).Evaluate());
 
@@ -708,7 +736,7 @@ namespace ConversationEditor
         {
             if (Selected.Nodes.Any() || Selected.Groups.Any())
             {
-                var duplicates = m_copyPasteController.Duplicate(Selected.Nodes.Select(CurrentFile.GetNode), Selected.Groups, DataSource);
+                var duplicates = m_copyPasteController.Duplicate(Selected.Nodes.Select(CurrentFile.GetNode), Selected.Groups, DataSource, Colors);
                 var nodesAndGroups = CurrentFile.DuplicateInto(duplicates.Item1, duplicates.Item2, duplicates.Item3, m_localization);
                 SetSelection(nodesAndGroups.Item1, nodesAndGroups.Item2);
                 Redraw();
@@ -729,7 +757,7 @@ namespace ConversationEditor
 
         public void Paste(Point? p)
         {
-            var additions = m_copyPasteController.Paste(DataSource);
+            var additions = m_copyPasteController.Paste(DataSource, Colors);
 
             Insert(p, additions);
         }

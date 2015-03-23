@@ -19,7 +19,7 @@ namespace ConversationEditor
         SaveableFileUndoable m_file;
         public override ISaveableFileUndoable UndoableFile { get { return m_file; } }
 
-        public ConversationFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ISerializer<TData> serializer, List<Error> errors, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, Audio> generateAudio, IAudioProvider audioProvider)
+        public ConversationFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ISerializer<TData> serializer, List<Error> errors, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio, IAudioProvider audioProvider)
             : base(nodes, groups, errors, nodeFactory, generateAudio, audioProvider)
         {
             m_file = new SaveableFileUndoable(rawData, file, SaveTo);
@@ -32,7 +32,7 @@ namespace ConversationEditor
                 foreach (var aud in audios)
                     if (aud.Corrupted)
                     {
-                        var val = generateAudio(this);
+                        var val = generateAudio(this, node.Parameters);
                         aud.SetValueAction(val).Value.Redo();
                         m_file.ChangeNoUndo();
                         audioProvider.UpdateUsage(val);
@@ -58,7 +58,7 @@ namespace ConversationEditor
             }
         }
 
-        public static ConversationFile CreateEmpty(DirectoryInfo directory, Project project, Func<FileInfo, bool> pathOk, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, Audio> generateAudio, IAudioProvider audioProvider)
+        public static ConversationFile CreateEmpty(DirectoryInfo directory, Project project, Func<FileInfo, bool> pathOk, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio, IAudioProvider audioProvider)
         {
             var file = GetAvailableConversationPath(directory, project.Elements, pathOk);
 
@@ -78,7 +78,7 @@ namespace ConversationEditor
         }
 
         /// <exception cref="MyFileLoadException">If file can't be read</exception>
-        public static ConversationFile Load(FileInfo file, IDataSource datasource, INodeFactory nodeFactory, ISerializerDeserializer<TData> serializer, Func<ISaveableFileProvider, Audio> generateAudio, IAudioProvider audioProvider)
+        public static ConversationFile Load(FileInfo file, IDataSource datasource, INodeFactory nodeFactory, ISerializerDeserializer<TData> serializer, Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio, IAudioProvider audioProvider)
         {
             TData data;
             MemoryStream m;

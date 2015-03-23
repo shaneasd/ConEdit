@@ -35,8 +35,8 @@ namespace ConversationEditor
 
     public abstract class ProjectElementDefinition<T> : ProjectElementDefinition
     {
-        public abstract ProjectExplorer.Item MakeMissingElement(Func<RectangleF> area, T item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename);
-        public abstract ProjectExplorer.Item MakeElement(Func<RectangleF> area, T item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename);
+        public abstract ProjectExplorer.Item MakeMissingElement(ColorScheme scheme, Func<RectangleF> area, T item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename);
+        public abstract ProjectExplorer.Item MakeElement(ColorScheme scheme, Func<RectangleF> area, T item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename);
     }
 
     public class ConversationDefinition : ProjectElementDefinition<IConversationFile>
@@ -64,15 +64,15 @@ namespace ConversationEditor
             get { return m_missingIcon; }
         }
 
-        public override ProjectExplorer.Item MakeMissingElement(Func<RectangleF> area, IConversationFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
+        public override ProjectExplorer.Item MakeMissingElement(ColorScheme scheme, Func<RectangleF> area, IConversationFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
         {
-            var result = new ProjectExplorer.MissingLeafItem<IConversationFile>(area, item, project, MissingIcon, parent, f => f.Conversations, toControlTransform, rename);
+            var result = new ProjectExplorer.MissingLeafItem<IConversationFile>(scheme, area, item, project, MissingIcon, parent, f => f.Conversations, toControlTransform, rename);
             return result;
         }
 
-        public override ProjectExplorer.Item MakeElement(Func<RectangleF> area, IConversationFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
+        public override ProjectExplorer.Item MakeElement(ColorScheme scheme, Func<RectangleF> area, IConversationFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
         {
-            var result = new ProjectExplorer.ConversationItem(area, item, project, parent, Icon, MissingIcon, toControlTransform, rename);
+            var result = new ProjectExplorer.ConversationItem(scheme, area, item, project, parent, Icon, MissingIcon, toControlTransform, rename);
             return result;
         }
 
@@ -107,15 +107,15 @@ namespace ConversationEditor
             get { return m_missingIcon; }
         }
 
-        public override ProjectExplorer.Item MakeMissingElement(Func<RectangleF> area, ILocalizationFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
+        public override ProjectExplorer.Item MakeMissingElement(ColorScheme scheme, Func<RectangleF> area, ILocalizationFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
         {
-            var result = new ProjectExplorer.MissingLeafItem<ILocalizationFile>(area, item, project, MissingIcon, parent, f => f.Localizations, toControlTransform, rename);
+            var result = new ProjectExplorer.MissingLeafItem<ILocalizationFile>(scheme, area, item, project, MissingIcon, parent, f => f.Localizations, toControlTransform, rename);
             return result;
         }
 
-        public override ProjectExplorer.Item MakeElement(Func<RectangleF> area, ILocalizationFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
+        public override ProjectExplorer.Item MakeElement(ColorScheme scheme, Func<RectangleF> area, ILocalizationFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
         {
-            var result = new ProjectExplorer.RealLeafItem<ILocalizationFile, ILocalizationFile>(area, item, Icon, project, parent, f => f.Localizations, toControlTransform, rename);
+            var result = new ProjectExplorer.RealLeafItem<ILocalizationFile, ILocalizationFile>(scheme, area, item, Icon, project, parent, f => f.Localizations, toControlTransform, rename);
             return result;
         }
 
@@ -150,15 +150,15 @@ namespace ConversationEditor
             get { return m_missingIcon; }
         }
 
-        public override ProjectExplorer.Item MakeMissingElement(Func<RectangleF> area, IDomainFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
+        public override ProjectExplorer.Item MakeMissingElement(ColorScheme scheme, Func<RectangleF> area, IDomainFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
         {
-            var result = new ProjectExplorer.MissingLeafItem<IDomainFile>(area, item, project, MissingIcon, parent, f => f.Domains, toControlTransform, rename);
+            var result = new ProjectExplorer.MissingLeafItem<IDomainFile>(scheme, area, item, project, MissingIcon, parent, f => f.Domains, toControlTransform, rename);
             return result;
         }
 
-        public override ProjectExplorer.Item MakeElement(Func<RectangleF> area, IDomainFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
+        public override ProjectExplorer.Item MakeElement(ColorScheme scheme, Func<RectangleF> area, IDomainFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
         {
-            var result = new ProjectExplorer.DomainItem(area, item, project, parent, Icon, MissingIcon, toControlTransform, rename);
+            var result = new ProjectExplorer.DomainItem(scheme, area, item, project, parent, Icon, MissingIcon, toControlTransform, rename);
             return result;
         }
 
@@ -193,15 +193,15 @@ namespace ConversationEditor
             get { return m_missingIcon; }
         }
 
-        public override ProjectExplorer.Item MakeMissingElement(Func<RectangleF> area, IAudioFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
+        public override ProjectExplorer.Item MakeMissingElement(ColorScheme scheme, Func<RectangleF> area, IAudioFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
         {
-            var result = new ProjectExplorer.MissingLeafItem<IAudioFile>(area, item, project, MissingIcon, parent, f => f.Audio, toControlTransform, rename);
+            var result = new ProjectExplorer.MissingLeafItem<IAudioFile>(scheme, area, item, project, MissingIcon, parent, f => f.Audio, toControlTransform, rename);
             return result;
         }
 
-        public override ProjectExplorer.Item MakeElement(Func<RectangleF> area, IAudioFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
+        public override ProjectExplorer.Item MakeElement(ColorScheme scheme, Func<RectangleF> area, IAudioFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
         {
-            var result = new ProjectExplorer.RealLeafItem<IAudioFile, IAudioFile>(area, item, Icon, project, parent, f => f.Audio, toControlTransform, rename);
+            var result = new ProjectExplorer.RealLeafItem<IAudioFile, IAudioFile>(scheme, area, item, Icon, project, parent, f => f.Audio, toControlTransform, rename);
             return result;
         }
 

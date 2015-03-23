@@ -56,7 +56,7 @@ namespace Utilities
     public interface ISaveableFile : ISaveableFileBase
     {
         IUndoQueue UndoQueue { get; }
-        event Action<FileInfo, FileInfo> Moved;
+        event Action<Changed<FileInfo>> Moved;
         event Action Modified;
         event Action SaveStateChanged;
     }
@@ -128,7 +128,7 @@ namespace Utilities
             m_upToDateFile.FileChanged += () => FileModifiedExternally.Execute();
             m_upToDateFile.FileDeleted += () => FileDeletedExternally.Execute();
             Save();
-            Moved.Execute(oldPath, File);
+            Moved.Execute(new Changed<FileInfo>(oldPath, File));
         }
 
         protected abstract void Saved();
@@ -138,7 +138,7 @@ namespace Utilities
             get { return File.Name; }
         }
 
-        public event Action<FileInfo, FileInfo> Moved;
+        public event Action<Changed<FileInfo>> Moved;
 
         public bool Exists
         {
@@ -159,7 +159,7 @@ namespace Utilities
             m_upToDateFile = new UpToDateFile(stream, path, m_saveTo);
             m_upToDateFile.FileChanged += () => FileModifiedExternally.Execute();
             m_upToDateFile.FileDeleted += () => FileDeletedExternally.Execute();
-            Moved.Execute(oldFile, File);
+            Moved.Execute(new Changed<FileInfo>(oldFile, File));
             return true;
         }
 
@@ -169,7 +169,7 @@ namespace Utilities
             m_upToDateFile = new UpToDateFile(m_upToDateFile.Migrate(), newPath, m_saveTo);
             m_upToDateFile.FileChanged += () => FileModifiedExternally.Execute();
             m_upToDateFile.FileDeleted += () => FileDeletedExternally.Execute();
-            Moved.Execute(oldFile, File);
+            Moved.Execute(new Changed<FileInfo>(oldFile, File));
         }
 
         public event Action FileModifiedExternally;
@@ -324,7 +324,7 @@ namespace Utilities
             get { throw new NotImplementedException(); }
         }
 
-        public event Action<FileInfo, FileInfo> Moved;
+        public event Action<Changed<FileInfo>> Moved;
 
         public event Action Modified { add { } remove { } }
 
@@ -347,7 +347,7 @@ namespace Utilities
 
             System.IO.File.Move(oldFile.FullName, path.FullName);
             File = path;
-            Moved.Execute(oldFile, File);
+            Moved.Execute(new Changed<FileInfo>(oldFile, File));
             return true;
         }
 
@@ -355,7 +355,7 @@ namespace Utilities
         {
             var oldFile = File;
             File = newPath;
-            Moved.Execute(oldFile, File);
+            Moved.Execute(new Changed<FileInfo>(oldFile, File));
         }
 
         public bool Changed
@@ -418,7 +418,7 @@ namespace Utilities
             m_upToDateFile = new UpToDateFile(stream, path, s => { });
             m_upToDateFile.FileChanged += () => FileModifiedExternally.Execute();
             m_upToDateFile.FileDeleted += () => FileDeletedExternally.Execute();
-            Moved.Execute(oldFile, File);
+            Moved.Execute(new Changed<FileInfo>(oldFile, File));
             return true;
         }
 
@@ -428,7 +428,7 @@ namespace Utilities
             m_upToDateFile = new UpToDateFile(m_upToDateFile.Migrate(), newPath, s => { });
             m_upToDateFile.FileChanged += () => FileModifiedExternally.Execute();
             m_upToDateFile.FileDeleted += () => FileDeletedExternally.Execute();
-            Moved.Execute(oldFile, File);
+            Moved.Execute(new Changed<FileInfo>(oldFile, File));
         }
 
         public bool Changed
@@ -446,7 +446,7 @@ namespace Utilities
             get { return true; }
         }
 
-        public event Action<FileInfo, FileInfo> Moved;
+        public event Action<Changed<FileInfo>> Moved;
         public event Action Modified { add { } remove { } } //Can't be modified
 
         public void Change(UndoAction actions)

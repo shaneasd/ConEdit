@@ -30,7 +30,7 @@ namespace ConversationEditor
         protected List<Error> m_errors;
 
         private INodeFactory<ConversationNode> m_nodeFactory;
-        private Func<ISaveableFileProvider, Audio> m_generateAudio;
+        private Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> m_generateAudio;
         private IAudioProvider m_audioProvider;
 
         public ConversationNode MakeNode(IEditable e, NodeUIData uiData)
@@ -38,7 +38,7 @@ namespace ConversationEditor
             return m_nodeFactory.MakeNode(e, uiData);
         }
 
-        public GraphFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, List<Error> errors, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, Audio> generateAudio, IAudioProvider audioProvider)
+        public GraphFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, List<Error> errors, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio, IAudioProvider audioProvider)
         {
             m_nodeFactory = nodeFactory;
             m_generateAudio = generateAudio;
@@ -85,7 +85,7 @@ namespace ConversationEditor
                     foreach (var p in node.Parameters.OfType<IAudioParameter>())
                     {
                         //No need to update audio usage as this will occur when the node is added/removed
-                        var audio = m_generateAudio(this);
+                        var audio = m_generateAudio(this, node.Parameters);
                         var actions = p.SetValueAction(audio);
                         undoActions.Add(actions.Value.Undo);
                         redoActions.Add(actions.Value.Redo);

@@ -9,27 +9,27 @@ namespace Conversation
     /// <summary>
     /// Keeps track of all types within a domain.
     /// Can be queried to determine the base type of a typeID
-    /// Can generate a Parameter for a given ID<ParameterType>
+    /// Can generate a Parameter for a given ParameterType
     /// </summary>
     public class TypeSet
     {
-        private Dictionary<ID<ParameterType>, bool> m_hidden = new Dictionary<ID<ParameterType>, bool>();
-        private Dictionary<ID<ParameterType>, Func<string, ID<Parameter>, string, Parameter>> m_types = new Dictionary<ID<ParameterType>, Func<string, ID<Parameter>, string, Parameter>>();
-        private Dictionary<ID<ParameterType>, string> m_typeNames = new Dictionary<ID<ParameterType>, string>();
-        private Dictionary<ID<ParameterType>, DynamicEnumerationData> m_dynamicEnums = new Dictionary<ID<ParameterType>, DynamicEnumerationData>();
-        private Dictionary<ID<ParameterType>, Tuple<string, MutableEnumeration>> m_enums = new Dictionary<ID<ParameterType>, Tuple<string, MutableEnumeration>>();
-        private Dictionary<ID<ParameterType>, IntegerData> m_integers = new Dictionary<ID<ParameterType>, IntegerData>();
-        private Dictionary<ID<ParameterType>, DecimalData> m_decimals = new Dictionary<ID<ParameterType>, DecimalData>();
+        private Dictionary<ParameterType, bool> m_hidden = new Dictionary<ParameterType, bool>();
+        private Dictionary<ParameterType, Func<string, ID<Parameter>, string, Parameter>> m_types = new Dictionary<ParameterType, Func<string, ID<Parameter>, string, Parameter>>();
+        private Dictionary<ParameterType, string> m_typeNames = new Dictionary<ParameterType, string>();
+        private Dictionary<ParameterType, DynamicEnumerationData> m_dynamicEnums = new Dictionary<ParameterType, DynamicEnumerationData>();
+        private Dictionary<ParameterType, Tuple<string, MutableEnumeration>> m_enums = new Dictionary<ParameterType, Tuple<string, MutableEnumeration>>();
+        private Dictionary<ParameterType, IntegerData> m_integers = new Dictionary<ParameterType, IntegerData>();
+        private Dictionary<ParameterType, DecimalData> m_decimals = new Dictionary<ParameterType, DecimalData>();
 
-        public IEnumerable<ID<ParameterType>> AllTypes { get { return m_types.Keys; } }
-        public event Action<ID<ParameterType>> Modified;
+        public IEnumerable<ParameterType> AllTypes { get { return m_types.Keys; } }
+        public event Action<ParameterType> Modified;
 
         public IEnumerable<EnumerationData> VisibleEnums { get { return m_enums.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => GetEnumData(kvp.Key)); } }
         public IEnumerable<DynamicEnumerationData> VisibleDynamicEnums { get { return m_dynamicEnums.Where(kvp => !m_hidden[kvp.Key]).Select(kvp=>kvp.Value); } }
         public IEnumerable<IntegerData> VisiblelIntegers { get { return m_integers.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
         public IEnumerable<DecimalData> VisibleDecimals { get { return m_decimals.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
 
-        public Parameter Make(ID<ParameterType> typeid, string name, ID<Parameter> id, string defaultValue)
+        public Parameter Make(ParameterType typeid, string name, ID<Parameter> id, string defaultValue)
         {
             return m_types[typeid](name, id, defaultValue);
         }
@@ -70,18 +70,23 @@ namespace Conversation
 
         public void AddEnum(EnumerationData typeData, bool hidden = false)
         {
-            m_hidden[typeData.TypeID] = hidden;
+            var enumType = typeData.TypeID;
+            var setType = ParameterType.Set.Of(enumType);
+
+            m_hidden[enumType] = hidden;
             var elements = typeData.Elements.Select(e => Tuple.Create(e.Guid, e.Name));
-            MutableEnumeration enumeration = new MutableEnumeration(elements, typeData.TypeID, "");
-            m_enums.Add(typeData.TypeID, Tuple.Create(typeData.Name, enumeration));
-            m_types.Add(m_enums[typeData.TypeID].Item2.TypeId, m_enums[typeData.TypeID].Item2.Parameter);
-            m_typeNames.Add(typeData.TypeID, typeData.Name);
-            Modified.Execute(typeData.TypeID);
+            MutableEnumeration enumeration = new MutableEnumeration(elements, enumType, "");
+            m_enums.Add(enumType, Tuple.Create(typeData.Name, enumeration));
+            m_types.Add(enumType, m_enums[enumType].Item2.ParameterEnum);
+            m_types.Add(setType, m_enums[enumType].Item2.ParameterSet);
+            m_typeNames.Add(enumType, typeData.Name);
+            m_typeNames.Add(setType, "Set of " + typeData.Name);
+            Modified.Execute(enumType);
         }
 
         public void ModifyEnum(EnumerationData typeData)
         {
-            if (m_enums.ContainsKey(typeData.TypeID)) //If we're removing an entire domain file, an enum declaration can be removed before its values. In this circumstance, when the values are removed, this method will be called but the end wont exist.
+            if (m_enums.ContainsKey(typeData.TypeID)) //If we're removing an entire domain file, an enum declaration can be removed before its values. In this circumstance, when the values are removed, this method will be called but the enum wont exist.
             {
                 var e = m_enums[typeData.TypeID].Item2;
                 e.SetOptions(typeData.Elements);
@@ -89,7 +94,7 @@ namespace Conversation
             }
         }
 
-        public EnumerationData GetEnumData(ID<ParameterType> id)
+        public EnumerationData GetEnumData(ParameterType id)
         {
             return m_enums[id].Item2.GetData(m_enums[id].Item1);
         }
@@ -103,7 +108,7 @@ namespace Conversation
             Modified.Execute(typeData.TypeID);
         }
 
-        public void Remove(ID<ParameterType> id)
+        public void Remove(ParameterType id)
         {
             m_types.Remove(id);
             m_integers.Remove(id);
@@ -113,39 +118,39 @@ namespace Conversation
             Modified.Execute(id);
         }
 
-        public void AddOther(ID<ParameterType> id, string name, Func<string, ID<Parameter>, string, Parameter> factory)
+        public void AddOther(ParameterType id, string name, Func<string, ID<Parameter>, string, Parameter> factory)
         {
             m_types.Add(id, factory);
             m_typeNames.Add(id, name);
             Modified.Execute(id);
         }
 
-        public bool IsInteger(ID<ParameterType> type)
+        public bool IsInteger(ParameterType type)
         {
             return m_integers.ContainsKey(type);
         }
 
-        public bool IsDecimal(ID<ParameterType> type)
+        public bool IsDecimal(ParameterType type)
         {
             return m_decimals.ContainsKey(type);
         }
 
-        public bool IsEnum(ID<ParameterType> type)
+        public bool IsEnum(ParameterType type)
         {
             return m_enums.ContainsKey(type);
         }
 
-        public bool IsDynamicEnum(ID<ParameterType> type)
+        public bool IsDynamicEnum(ParameterType type)
         {
             return m_dynamicEnums.ContainsKey(type);
         }
 
-        public string GetTypeName(ID<ParameterType> guid)
+        public string GetTypeName(ParameterType guid)
         {
             return m_typeNames[guid];
         }
 
-        public void RenameType(ID<ParameterType> guid, string name)
+        public void RenameType(ParameterType guid, string name)
         {
             if (IsInteger(guid))
             {

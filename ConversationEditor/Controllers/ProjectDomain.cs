@@ -10,7 +10,7 @@ namespace ConversationEditor.Controllers
     {
         public static ProjectDomain Instance = new ProjectDomain();
 
-        public IEnumerable<ID<ParameterType>> ParameterTypes
+        public IEnumerable<ParameterType> ParameterTypes
         {
             get { throw new NotImplementedException(); }
         }
@@ -25,22 +25,22 @@ namespace ConversationEditor.Controllers
             throw new NotImplementedException();
         }
 
-        public bool IsInteger(ID<ParameterType> guid)
+        public bool IsInteger(ParameterType guid)
         {
             return false;
         }
 
-        public bool IsDecimal(ID<ParameterType> guid)
+        public bool IsDecimal(ParameterType guid)
         {
             return false;
         }
 
-        public bool IsEnum(ID<ParameterType> guid)
+        public bool IsEnum(ParameterType guid)
         {
             throw new NotImplementedException();
         }
 
-        public bool IsDynamicEnum(ID<ParameterType> guid)
+        public bool IsDynamicEnum(ParameterType guid)
         {
             throw new NotImplementedException();
         }
@@ -66,11 +66,10 @@ namespace ConversationEditor.Controllers
         }
 
 
-        public string GetTypeName(ID<ParameterType> type)
+        public string GetTypeName(ParameterType type)
         {
             throw new NotImplementedException();
         }
-
 
         public Guid GetCategory(ID<NodeTypeTemp> type)
         {

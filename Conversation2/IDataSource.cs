@@ -51,20 +51,20 @@ namespace Conversation
 
     public interface IDataSource
     {
-        IEnumerable<ID<ParameterType>> ParameterTypes { get; }
+        IEnumerable<ParameterType> ParameterTypes { get; }
         INodeType Nodes { get; }
         EditableGenerator GetNode(ID<NodeTypeTemp> guid);
-        bool IsInteger(ID<ParameterType> guid);
-        bool IsDecimal(ID<ParameterType> guid);
-        bool IsEnum(ID<ParameterType> guid);
-        bool IsDynamicEnum(ID<ParameterType> guid);
+        bool IsInteger(ParameterType guid);
+        bool IsDecimal(ParameterType guid);
+        bool IsEnum(ParameterType guid);
+        bool IsDynamicEnum(ParameterType guid);
 
         bool IsCategoryDefinition(ID<NodeTypeTemp> id);
         bool IsTypeDefinition(ID<NodeTypeTemp> id);
         bool IsConnectorDefinition(ID<NodeTypeTemp> id);
         bool IsNodeDefinition(ID<NodeTypeTemp> id);
 
-        string GetTypeName(ID<ParameterType> type);
+        string GetTypeName(ParameterType type);
 
         Guid GetCategory(ID<NodeTypeTemp> type);
     }
@@ -82,9 +82,9 @@ namespace Conversation
         private DummyDataSource() { }
         public static readonly IDataSource Instance = new DummyDataSource();
 
-        IEnumerable<ID<ParameterType>> IDataSource.ParameterTypes
+        IEnumerable<ParameterType> IDataSource.ParameterTypes
         {
-            get { return Enumerable.Empty<ID<ParameterType>>(); }
+            get { return Enumerable.Empty<ParameterType>(); }
         }
 
         INodeType IDataSource.Nodes
@@ -97,22 +97,22 @@ namespace Conversation
             throw new NotImplementedException();
         }
 
-        bool IDataSource.IsInteger(ID<ParameterType> parameterType)
+        bool IDataSource.IsInteger(ParameterType parameterType)
         {
             throw new NotImplementedException();
         }
 
-        bool IDataSource.IsDecimal(ID<ParameterType> parameterType)
+        bool IDataSource.IsDecimal(ParameterType parameterType)
         {
             throw new NotImplementedException();
         }
 
-        bool IDataSource.IsEnum(ID<ParameterType> parameterType)
+        bool IDataSource.IsEnum(ParameterType parameterType)
         {
             throw new NotImplementedException();
         }
 
-        bool IDataSource.IsDynamicEnum(ID<ParameterType> parameterType)
+        bool IDataSource.IsDynamicEnum(ParameterType parameterType)
         {
             throw new NotImplementedException();
         }
@@ -159,7 +159,7 @@ namespace Conversation
             throw new NotImplementedException();
         }
 
-        string IDataSource.GetTypeName(ID<ParameterType> type)
+        string IDataSource.GetTypeName(ParameterType type)
         {
             throw new NotImplementedException();
         }

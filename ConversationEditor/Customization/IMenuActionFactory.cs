@@ -8,6 +8,6 @@ namespace ConversationEditor
 {
     public interface IMenuActionFactory<TNode> where TNode : class, IRenderable<IGUI>, IConversationNode, IConfigurable
     {
-        IEnumerable<MenuAction2<TNode>> GetMenuActions(GraphEditorControl<TNode> control);
+        IEnumerable<MenuAction2<TNode>> GetMenuActions(ColorScheme scheme, GraphEditorControl<TNode> control);
     }
 }

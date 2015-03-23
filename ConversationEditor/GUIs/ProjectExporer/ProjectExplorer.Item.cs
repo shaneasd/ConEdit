@@ -16,6 +16,7 @@ namespace ConversationEditor
     {
         public abstract class Item
         {
+            protected ColorScheme m_scheme;
             public const float HEIGHT = 20;
             public static TextureBrush ReadonlyBackgroundBrush;
             static Item()
@@ -55,8 +56,9 @@ namespace ConversationEditor
                 public readonly ContainerItem Parent;
                 public readonly Func<Matrix> ToControlTransform;
                 public readonly Func<FileSystemObject, string, bool> Rename;
+                public readonly ColorScheme Scheme; //TODO: project explorer items shouldn't need a color scheme
 
-                public ConstructorParams(Func<RectangleF> area, IProject project, FileSystemObject file, ContainerItem parent, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
+                public ConstructorParams(ColorScheme scheme, Func<RectangleF> area, IProject project, FileSystemObject file, ContainerItem parent, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
                 {
                     Area = area;
                     Project = project;
@@ -64,6 +66,7 @@ namespace ConversationEditor
                     Parent = parent;
                     ToControlTransform = toControlTransform;
                     Rename = rename;
+                    Scheme = scheme;
                 }
             }
 
@@ -75,6 +78,7 @@ namespace ConversationEditor
                 m_area = parameters.Area;
                 ToControlTransform = parameters.ToControlTransform;
                 Rename = parameters.Rename;
+                m_scheme = parameters.Scheme;
             }
 
             public readonly static Item Null = null;
@@ -124,7 +128,7 @@ namespace ConversationEditor
                 if (selected)
                 {
                     var selectionArea = new RectangleF(area.X + 2, area.Y + 2, area.Width - 4 - 1, area.Height - 4);
-                    using (var brush = new SolidBrush(ColorScheme.SelectedConversationListItemPrimaryBackground))
+                    using (var brush = new SolidBrush(m_scheme.SelectedConversationListItemPrimaryBackground))
                     {
                         g.FillRectangle(brush, selectionArea);
                     }
@@ -132,7 +136,7 @@ namespace ConversationEditor
                 else if (conversationSelected)
                 {
                     var selectionArea = new RectangleF(area.X + 2, area.Y + 2, area.Width - 4 - 1, area.Height - 4);
-                    using (var brush = new SolidBrush(ColorScheme.SelectedConversationListItemSecondaryBackground))
+                    using (var brush = new SolidBrush(m_scheme.SelectedConversationListItemSecondaryBackground))
                     {
                         g.FillRectangle(brush, selectionArea);
                     }
@@ -167,7 +171,7 @@ namespace ConversationEditor
                     //g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
                     var textArea = CalculateTextArea(area, indent);
 
-                    renderer.DrawString(Text, SystemFonts.MessageBoxFont, ColorScheme.Foreground, textArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE).Round());
+                    renderer.DrawString(Text, SystemFonts.MessageBoxFont, m_scheme.Foreground, textArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE).Round());
                     //TextRenderer.DrawText(g, Text, SystemFonts.MessageBoxFont, textArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE).Round(), ColorScheme.Foreground, Color.Transparent, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix);
 
                     //g.DrawString(Text, SystemFonts.MessageBoxFont, ColorScheme.ForegroundBrush, TextArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE));
@@ -249,20 +253,6 @@ namespace ConversationEditor
 
                     m_textBox.Dispose();
                     m_textBox = null;
-                }
-            }
-
-            //TODO: This shouldn't be here
-            public bool Replace(string newPath)
-            {
-                if (m_project.Conversations.Any(f => f.File.File.FullName == (new FileInfo(newPath)).FullName))
-                {
-                    MessageBox.Show("A file with that name already exists within the project");
-                    return false;
-                }
-                else
-                {
-                    return DialogResult.OK == MessageBox.Show("Replace existing file?", "Replace?", MessageBoxButtons.OKCancel);
                 }
             }
 

@@ -133,6 +133,12 @@
     <Compile Include="Customization\IProjectExporter.cs" />
     <Compile Include="Customization\WrapperContextMenuItemsFactory.cs" />
     <Compile Include="Customization\IProjectExplorerContextMenuItemsFactory.cs" />
+    <Compile Include="GUIs\Default Parameter Editors\DefaultSetEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultSetEditor.Designer.cs">
+      <DependentUpon>DefaultSetEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUIs\Default Parameter Editors\UnknownParameterEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -145,7 +151,7 @@
     <Compile Include="GUIs\ProjectExporer\FileSystemObject.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUIs\ProjectExporer\FoilderItem.cs">
+    <Compile Include="GUIs\ProjectExporer\FolderItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUIs\ProjectExporer\LeafItem.cs">
@@ -154,6 +160,7 @@
     <Compile Include="GUIs\ProjectExporer\ProjectExplorer.ProjectItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="INodeGUIUtils.cs" />
     <Compile Include="Node Graphics\UnknownNodeRenderer.cs" />
     <Compile Include="Node Graphics\EditableRenderer.cs">
       <SubType>Code</SubType>
@@ -161,12 +168,6 @@
     <Compile Include="EditorInterfaces.cs" />
     <Compile Include="Controllers\ErrorCheckerController.cs" />
     <Compile Include="GUIs\DomainNodeRenderer.cs" />
-    <Compile Include="GUIs\FindReferencesDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUIs\FindReferencesDialog.Designer.cs">
-      <DependentUpon>FindReferencesDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUIs\ProjectExporer\RealLeafItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -296,12 +297,6 @@
     <Compile Include="MyComboBoxControl.Designer.cs">
       <DependentUpon>MyComboBoxControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="MyTextBoxControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="MyTextBoxControl.Designer.cs">
-      <DependentUpon>MyTextBoxControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Node Graphics\NodeUIData.cs" />
     <Compile Include="Node Graphics\NodeUI.cs" />
     <Compile Include="Serialization\ConversationEditorData.cs" />
@@ -335,11 +330,11 @@
     <Compile Include="TransitionNoduleUIInfo.cs" />
     <Compile Include="TypeChoice.cs" />
     <EmbeddedResource Include="GenericSystemHover.ico" />
+    <EmbeddedResource Include="GUIs\Default Parameter Editors\DefaultSetEditor.resx">
+      <DependentUpon>DefaultSetEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUIs\Default Parameter Editors\UnknownParameterEditor.resx">
       <DependentUpon>UnknownParameterEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUIs\FindReferencesDialog.resx">
-      <DependentUpon>FindReferencesDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUIs\GraphEditorControl.resx">
       <DependentUpon>GraphEditorControl.cs</DependentUpon>
@@ -402,9 +397,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MyComboBoxControl.resx">
       <DependentUpon>MyComboBoxControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MyTextBoxControl.resx">
-      <DependentUpon>MyTextBoxControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

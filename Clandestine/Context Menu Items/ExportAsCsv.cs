@@ -7,7 +7,7 @@ using Conversation;
 using System.Windows.Forms;
 using System.IO;
 
-namespace PluginPack
+namespace Clandestine
 {
     struct CsvData
     {
@@ -52,7 +52,7 @@ namespace PluginPack
                 Language = node.Parameters.Single(p => p.Id == CsvData.OPTION_LANGUAGE).DisplayValue(localize),
                 Context = conversationInfo != null ? conversationInfo.Parameters.Single(p => p.Id == CsvData.CONVERSATIONINFO_CONTEXT).DisplayValue(localize) : "",
                 Notes = conversationInfo != null ? conversationInfo.Parameters.Single(p => p.Id == CsvData.CONVERSATIONINFO_NOTES).DisplayValue(localize) : "",
-                Audio = node.Parameters.Single(p => p.Id == CsvData.OPTION_AUDIO).DisplayValue(localize),
+                Audio = node.Parameters.Single(p => p.Id == CsvData.OPTION_AUDIO).ValueAsString(),
             };
         }
 
@@ -67,7 +67,7 @@ namespace PluginPack
                 Language = node.Parameters.Single(p => p.Id == CsvData.SPEECH_LANGUAGE).DisplayValue(localize),
                 Context = conversationInfo != null ? conversationInfo.Parameters.Single(p => p.Id == CsvData.CONVERSATIONINFO_CONTEXT).DisplayValue(localize) : "",
                 Notes = conversationInfo != null ? conversationInfo.Parameters.Single(p => p.Id == CsvData.CONVERSATIONINFO_NOTES).DisplayValue(localize) : "",
-                Audio = node.Parameters.Single(p => p.Id == CsvData.SPEECH_AUDIO).DisplayValue(localize),
+                Audio = node.Parameters.Single(p => p.Id == CsvData.SPEECH_AUDIO).ValueAsString(),
             };
         }
 
@@ -82,7 +82,7 @@ namespace PluginPack
                 Language = node.Parameters.Single(p => p.Id == CsvData.SPEECH_LANGUAGE).DisplayValue(localize),
                 Context = conversationInfo != null ? conversationInfo.Parameters.Single(p => p.Id == CsvData.CONVERSATIONINFO_CONTEXT).DisplayValue(localize) : "",
                 Notes = conversationInfo != null ? conversationInfo.Parameters.Single(p => p.Id == CsvData.CONVERSATIONINFO_NOTES).DisplayValue(localize) : "",
-                Audio = node.Parameters.Single(p => p.Id == CsvData.SPEECH_AUDIO).DisplayValue(localize),
+                Audio = node.Parameters.Single(p => p.Id == CsvData.SPEECH_AUDIO).ValueAsString(),
             };
         }
 
@@ -151,6 +151,7 @@ namespace PluginPack
             var allcontent = playerSpeechNodes.Concat(npcSpeechNodes).Concat(radioSpeechNodes).Concat(optionNodes).ToDictionary(kvp => kvp.Key.m_data, kvp => kvp.Value);
             HashSet<IEditable> processed = new HashSet<IEditable>();
 
+            //Depth first iterate through the conversation starting at start nodes
             while (startNodes.Any())
             {
                 var start = startNodes.Pop();
@@ -175,6 +176,21 @@ namespace PluginPack
                 }
 
                 processed.Add(start);
+            }
+
+            //Pick up any leftover nodes that are not connected to a start node
+            foreach (var node in nodes.Select(n => n.m_data))
+            {
+                if (!processed.Contains(node))
+                {
+                    if (allcontent.ContainsKey(node))
+                    {
+                        var row = allcontent[node];
+                        row.Write(Separator, includeName ? conversation.File.File.Name : null, sw);
+                        allcontent.Remove(node);
+                    }
+                    processed.Add(node);
+                }
             }
         }
     }

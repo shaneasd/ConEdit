@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Conversation;
+using Utilities;
 
 namespace ConversationEditor
 {
     using ConversationNode = ConversationNode<INodeGUI>;
-    using Utilities;
 
     public interface IProject
     {
@@ -27,8 +27,8 @@ namespace ConversationEditor
         IEnumerable<ISaveableFileProvider> Elements { get; }
         IEnumerable<ISaveableFileProvider> ElementsExceptThis { get; }
 
-        LocalizationEngine Localizer { get; } //TODO: Move to shared context?
-        IAudioProvider AudioProvider { get; } //TODO: Move to shared context?
+        LocalizationEngine Localizer { get; }
+        IAudioProvider AudioProvider { get; }
         IDomainUsage<ConversationNode, TransitionNoduleUIInfo> DomainUsage { get; }
 
         /// <summary>

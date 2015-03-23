@@ -16,16 +16,16 @@ namespace ConversationEditor
 
     public abstract class CopyPasteController<TNode, TTransitionUI> where TNode : IRenderable<IGUI>
     {
-        public abstract Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, PointF> Duplicate(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups, IDataSource datasource);
+        public abstract Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, PointF> Duplicate(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups, IDataSource datasource, ColorScheme scheme);
         public abstract void Copy(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups);
-        public abstract Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>> Paste(IDataSource datasource);
+        public abstract Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>> Paste(IDataSource datasource, ColorScheme scheme);
     }
 
     public class ConversationCopyPasteController : CopyPasteController<ConversationNode, TransitionNoduleUIInfo>
     {
         public static ConversationCopyPasteController Instance = new ConversationCopyPasteController();
 
-        public override Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, PointF> Duplicate(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups, IDataSource datasource)
+        public override Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, PointF> Duplicate(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups, IDataSource datasource, ColorScheme scheme)
         {
             var area = NodeSet.GetArea(nodes.Concat<IRenderable<IGUI>>(groups));
             PointF loc = (new PointF(50, 50)).Plus(area.Center());
@@ -34,7 +34,7 @@ namespace ConversationEditor
             {
                 CopyToStream(nodes, groups, m);
                 m.Position = 0;
-                var nodesAndGroups = ReadFromStream(datasource, m);
+                var nodesAndGroups = ReadFromStream(datasource, m, scheme);
                 return Tuple.Create(nodesAndGroups.Item1, nodesAndGroups.Item2, loc);
             }
         }
@@ -55,7 +55,7 @@ namespace ConversationEditor
             }
         }
 
-        public override Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>> Paste(IDataSource datasource)
+        public override Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>> Paste(IDataSource datasource, ColorScheme scheme)
         {
             var clipboardData = Clipboard.GetDataObject();
             if (clipboardData.GetDataPresent(typeof(byte[])))
@@ -63,16 +63,16 @@ namespace ConversationEditor
                 var bytes = (byte[])clipboardData.GetData(typeof(byte[]));
                 using (MemoryStream m = new MemoryStream(bytes))
                 {
-                    return ReadFromStream(datasource, m);
+                    return ReadFromStream(datasource, m, scheme);
                 }
             }
             return Tuple.Create(Enumerable.Empty<GraphAndUI<NodeUIData>>(), Enumerable.Empty<NodeGroup>());
         }
 
-        private Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>> ReadFromStream(IDataSource datasource, Stream m)
+        private Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>> ReadFromStream(IDataSource datasource, Stream m, ColorScheme scheme)
         {
-            var serializer = SerializationUtils.ConversationDeserializer(datasource);
-            var data = serializer.Read(m);
+            var deserializer = SerializationUtils.ConversationDeserializer(datasource, scheme);
+            var data = deserializer.Read(m);
             var groups = data.EditorData.Groups;
             return Tuple.Create(data.Nodes, groups);
         }

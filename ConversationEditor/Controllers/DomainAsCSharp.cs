@@ -28,7 +28,18 @@ namespace ConversationEditor.Controllers
                 if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     exportPath.Value = Path.GetDirectoryName(sfd.FileName);
-                    CsDomain<INodeGUI, NodeUIData, ConversationEditorData>.Serializer s = new CsDomain<INodeGUI, NodeUIData, ConversationEditorData>.Serializer(BaseTypeSet.BasicTypeMap(), "MyNamespace");
+                    string @namespace = project.File.File.Name;
+                    @namespace = Path.ChangeExtension(@namespace, null);
+                    @namespace = new string(@namespace.Where(c => char.IsLetterOrDigit(c) || c == '_').ToArray());
+                    if (@namespace.Length == 0)
+                        @namespace = "MyNamespace";
+                    while (char.IsDigit(@namespace.First()))
+                    {
+                        @namespace = @namespace.Substring(1);
+                        if (@namespace.Length == 0)
+                            @namespace = "MyNamespace";
+                    }
+                    CsDomain<INodeGUI, NodeUIData, ConversationEditorData>.Serializer s = new CsDomain<INodeGUI, NodeUIData, ConversationEditorData>.Serializer(BaseTypeSet.BasicTypeMap(), @namespace);
                     using (var stream = new FileStream(sfd.FileName, FileMode.OpenOrCreate, FileAccess.Write))
                     {
                         stream.SetLength(0);

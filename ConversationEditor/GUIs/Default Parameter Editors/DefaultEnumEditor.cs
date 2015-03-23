@@ -19,7 +19,7 @@ namespace ConversationEditor
         public class Factory : IParameterEditorFactory
         {
             public static readonly Guid GUID = Guid.Parse("1e8f8730-a710-4341-be04-2c80272e896c");
-            public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
+            public bool WillEdit(ParameterType type, WillEdit willEdit)
             {
                 return willEdit.IsEnum(type);
             }
@@ -34,9 +34,11 @@ namespace ConversationEditor
                 get { return GUID; }
             }
 
-            public IParameterEditor<Control> Make()
+            public IParameterEditor<Control> Make(ColorScheme scheme)
             {
-                return new DefaultEnumEditor();
+                var result = new DefaultEnumEditor();
+                result.Scheme = scheme;
+                return result;
             }
         }
 
@@ -55,9 +57,6 @@ namespace ConversationEditor
                     MinimumSize = new Size(0, (int)m_comboBox.RequestedArea.Height);
                     Size = m_comboBox.RequestedArea.ToSize();
                 };
-            m_comboBox.TextBoxColors.BorderPen = ColorScheme.ControlBorder;
-            m_comboBox.SelectedBackgroundColor = ColorScheme.SelectedConversationListItemPrimaryBackground;
-            m_comboBox.Renderer = ColorScheme.ContextMenu;
             m_comboBox.SelectionChanged += () => m_parameter.EditorSelected = m_comboBox.SelectedItem.Contents;
             m_comboBox.EnterPressed += () => { Ok.Execute(); };
         }
@@ -115,5 +114,18 @@ namespace ConversationEditor
         //    add { }
         //    remove { }
         //}
+
+        ColorScheme m_scheme;
+        public ColorScheme Scheme
+        {
+            get { return m_scheme; }
+            set
+            {
+                m_scheme = value;
+                m_comboBox.TextBoxColors.BorderPen = value.ControlBorder;
+                m_comboBox.SelectedBackgroundColor = value.SelectedConversationListItemPrimaryBackground;
+                m_comboBox.Renderer = value.ContextMenu;
+            }
+        }
     }
 }

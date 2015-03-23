@@ -36,6 +36,9 @@ namespace Conversation.Serialization
     {
         public class Serializer : ISerializer<IEnumerable<DomainData>>
         {
+            static readonly CSharpCodeProvider generator = new CSharpCodeProvider(new Dictionary<string, string> { { "CompilerVersion", "v3.5" } });
+            private static readonly List<NodeData.ConfigData> ParameterConfig = new List<NodeData.ConfigData>(); //Parameter config is not relevant to parsing of conversations and so is not written out to the C#
+
             private static string RemoveSpaces(string a)
             {
                 var result = a.Replace(' ', '_').Replace('-', '_').Where(c => char.IsLetterOrDigit(c) || c == '_');
@@ -46,8 +49,8 @@ namespace Conversation.Serialization
             }
 
             private readonly string m_namespace;
-            private readonly Dictionary<Guid, string> m_basicTypeMap;
-            public Serializer(Dictionary<Guid, string> basicTypeMap, string @namespace)
+            private readonly Dictionary<ParameterType, string> m_basicTypeMap;
+            public Serializer(Dictionary<ParameterType, string> basicTypeMap, string @namespace)
             {
                 m_namespace = @namespace;
                 m_basicTypeMap = basicTypeMap;
@@ -70,7 +73,7 @@ namespace Conversation.Serialization
 
                 DomainData data = ConvertData(alldata, usedNames);
 
-                Dictionary<Guid, string> basicTypeMap = MakeTypeMap(data);
+                Dictionary<ParameterType, string> basicTypeMap = MakeTypeMap(data);
                 file.Namespaces.Add(GenerateTypes(data));
                 var connectors = GenerateConnectors(data, basicTypeMap);
                 file.Namespaces.Add(connectors.Item1);
@@ -170,7 +173,7 @@ namespace Conversation.Serialization
                     {
                         string name = BestName(b.Name, usedNames);
                         var parameterNames = new HashSet<string>() { name };
-                        List<NodeData.ParameterData> parameters = b.Parameters.Select(p => new NodeData.ParameterData(BestName(p.Name, parameterNames), p.Id, p.Type, p.Default)).ToList();
+                        List<NodeData.ParameterData> parameters = b.Parameters.Select(p => new NodeData.ParameterData(BestName(p.Name, parameterNames), p.Id, p.Type, ParameterConfig, p.Default)).ToList();
                         data.Connectors.Add(new ConnectorDefinitionData(name, b.Id, parameters, b.Position));
                     }
                     foreach (var b in a.Decimals)
@@ -188,7 +191,7 @@ namespace Conversation.Serialization
                     {
                         string name = BestName(b.Name, usedNames);
                         var parameterNames = new HashSet<string>() { name };
-                        List<NodeData.ParameterData> parameters = b.Parameters.Select(p => new NodeData.ParameterData(BestName(p.Name, parameterNames), p.Id, p.Type, p.Default)).ToList();
+                        List<NodeData.ParameterData> parameters = b.Parameters.Select(p => new NodeData.ParameterData(BestName(p.Name, parameterNames), p.Id, p.Type, ParameterConfig, p.Default)).ToList();
                         data.Nodes.Add(new NodeData(name, b.Type, b.Guid, b.Connectors, parameters, b.Config));
                     }
                     foreach (var b in a.NodeTypes)
@@ -204,7 +207,7 @@ namespace Conversation.Serialization
                 return data;
             }
 
-            private Dictionary<ID<NodeTypeTemp>, string> GenerateNodes(DomainData data, Dictionary<Guid, string> basicTypeMap, Tuple<CodeNamespace, Func<ID<TConnectorDefinition>, string>> connectors, Tuple<List<CodeNamespace>, Func<Guid, CodeNamespace>> categoryNameSpaces)
+            private Dictionary<ID<NodeTypeTemp>, string> GenerateNodes(DomainData data, Dictionary<ParameterType, string> basicTypeMap, Tuple<CodeNamespace, Func<ID<TConnectorDefinition>, string>> connectors, Tuple<List<CodeNamespace>, Func<Guid, CodeNamespace>> categoryNameSpaces)
             {
                 {
                     var baseNamespace = categoryNameSpaces.Item2(Guid.Empty);
@@ -275,7 +278,7 @@ namespace Conversation.Serialization
                             foreach (var parameter in c.Parameters)
                             {
                                 string randomVariableName = "_" + Guid.NewGuid().ToString("N");
-                                constructor.Statements.Add(new CodeVariableDeclarationStatement(basicTypeMap[parameter.TypeId.Guid], randomVariableName));
+                                constructor.Statements.Add(new CodeVariableDeclarationStatement(basicTypeMap[parameter.TypeId], randomVariableName));
                                 constructor.Statements.Add(new CodeExpressionStatement(new CodeMethodInvokeExpression(new CodeTypeReferenceExpression("TypeDeserializer"), "Deserialize", new CodeDirectionExpression(FieldDirection.Out, new CodeVariableReferenceExpression(randomVariableName)), new CodePrimitiveExpression(parameter.ValueAsString()))));
                                 makeConnector.Parameters.Add(new CodeVariableReferenceExpression(randomVariableName));
                             }
@@ -321,7 +324,7 @@ namespace Conversation.Serialization
                 return result;
             }
 
-            private Tuple<CodeNamespace, Func<ID<TConnectorDefinition>, string>> GenerateConnectors(DomainData data, Dictionary<Guid, string> basicTypeMap)
+            private Tuple<CodeNamespace, Func<ID<TConnectorDefinition>, string>> GenerateConnectors(DomainData data, Dictionary<ParameterType, string> basicTypeMap)
             {
                 CodeNamespace connectorsNamespace = new CodeNamespace(m_namespace + ".Nodes.Connectors");
                 connectorsNamespace.Imports.Add(new CodeNamespaceImport("System"));
@@ -414,25 +417,46 @@ namespace Conversation.Serialization
                 return new Tuple<List<CodeNamespace>, Func<Guid, CodeNamespace>>(list, guid => categoryNameSpace.ContainsKey(guid) ? categoryNameSpace[guid] : rootNodeNamespace);
             }
 
-            private Dictionary<Guid, string> MakeTypeMap(DomainData data)
+            private Dictionary<ParameterType, string> MakeTypeMap(DomainData data)
             {
-                Dictionary<Guid, string> basicTypeMap = new Dictionary<Guid, string>(m_basicTypeMap);
+                Dictionary<ParameterType, string> basicTypeMap = new Dictionary<ParameterType, string>(m_basicTypeMap);
                 foreach (var x in data.Decimals)
-                    basicTypeMap[x.TypeID.Guid] = x.Name;
+                    basicTypeMap[x.TypeID] = x.Name;
                 foreach (var x in data.DynamicEnumerations)
-                    basicTypeMap[x.TypeID.Guid] = x.Name;
+                    basicTypeMap[x.TypeID] = x.Name;
                 foreach (var x in data.Enumerations)
-                    basicTypeMap[x.TypeID.Guid] = x.Name;
+                {
+                    basicTypeMap[x.TypeID] = x.Name;
+
+                    var name = ReadonlySetOf(x.Name);
+                    basicTypeMap[ParameterType.Set.Of(x.TypeID)] = name;
+                }
                 foreach (var x in data.Integers)
-                    basicTypeMap[x.TypeID.Guid] = x.Name;
+                    basicTypeMap[x.TypeID] = x.Name;
                 return basicTypeMap;
             }
 
-            private CodeMemberField GenerateParameter(Dictionary<Guid, string> basicTypeMap, NodeData.ParameterData parameterData)
+            private static string ReadonlySetOf(string type)
+            {
+                CodeTypeReference c = new CodeTypeReference(typeof(ReadonlySet<>));
+                c.TypeArguments.Add(type);
+                var name = generator.GetTypeOutput(c);
+                return name;
+            }
+
+            public static string ListOf(string type)
+            {
+                CodeTypeReference c = new CodeTypeReference(typeof(List<>));
+                c.TypeArguments.Add(type);
+                var name = generator.GetTypeOutput(c);
+                return name;
+            }
+
+            private CodeMemberField GenerateParameter(Dictionary<ParameterType, string> basicTypeMap, NodeData.ParameterData parameterData)
             {
                 var name = parameterData.Name;
 
-                var typeName = basicTypeMap[parameterData.Type.Guid];
+                var typeName = basicTypeMap[parameterData.Type];
                 CodeTypeReference type = new CodeTypeReference(typeName);
 
                 //var @default = new CodeSnippetExpression(parameterData.Default); //No need to provide a default as the conversation should specify a value for every node
@@ -443,7 +467,7 @@ namespace Conversation.Serialization
                 return result;
             }
 
-            private CodeTypeDeclaration WriteConnectorType(Dictionary<Guid, string> basicTypeMap, ConnectorDefinitionData connectorType)
+            private CodeTypeDeclaration WriteConnectorType(Dictionary<ParameterType, string> basicTypeMap, ConnectorDefinitionData connectorType)
             {
                 CodeTypeDeclaration type = new CodeTypeDeclaration(connectorType.Name) { IsClass = true };
                 type.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(RuntimeConversation.ConnectorTypeIDAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression(connectorType.Id.Guid.ToString()))));
@@ -460,7 +484,7 @@ namespace Conversation.Serialization
                 foreach (var parameter in connectorType.Parameters)
                 {
                     var pname = parameter.Name;
-                    constructor.Parameters.Add(new CodeParameterDeclarationExpression(basicTypeMap[parameter.Type.Guid], pname));
+                    constructor.Parameters.Add(new CodeParameterDeclarationExpression(basicTypeMap[parameter.Type], pname));
                     constructor.Statements.Add(new CodeAssignStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), pname), new CodeArgumentReferenceExpression(pname)));
                 }
                 type.Members.Add(constructor);
@@ -493,21 +517,61 @@ namespace Conversation.Serialization
                 foreach (var enumeration in data.Enumerations)
                 {
                     typesNamespace.Types.Add(GenerateEnum(enumeration));
-                    var name = enumeration.Name;
 
-                    var deserializer = new CodeMemberMethod() { Attributes = MemberAttributes.Public | MemberAttributes.Static, Name = "Deserialize" };
-                    deserializer.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(name), "a") { Direction = FieldDirection.Out });
-                    deserializer.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(string)), "value"));
-                    foreach (var val in enumeration.Elements)
+                    //The enum
                     {
-                        var valName = val.Name;
-                        deserializer.Statements.Add(new CodeConditionStatement(new CodeMethodInvokeExpression(new CodePrimitiveExpression(val.Guid.ToString()), "Equals", new CodeArgumentReferenceExpression("value")),
-                                                                               new CodeAssignStatement(new CodeArgumentReferenceExpression("a"),
-                                                                                                       new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(name), valName)),
-                                                                                                       new CodeMethodReturnStatement()));
+                        var name = enumeration.Name;
+                        var deserializer = new CodeMemberMethod() { Attributes = MemberAttributes.Public | MemberAttributes.Static, Name = "Deserialize" };
+                        deserializer.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(name), "a") { Direction = FieldDirection.Out });
+                        deserializer.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(string)), "value"));
+                        foreach (var val in enumeration.Elements)
+                        {
+                            var valName = val.Name;
+                            deserializer.Statements.Add(new CodeConditionStatement(new CodeMethodInvokeExpression(new CodePrimitiveExpression(val.Guid.ToString()), "Equals", new CodeArgumentReferenceExpression("value")),
+                                                                                   new CodeAssignStatement(new CodeArgumentReferenceExpression("a"),
+                                                                                                           new CodeFieldReferenceExpression(new CodeTypeReferenceExpression(name), valName)),
+                                                                                                           new CodeMethodReturnStatement()));
+                        }
+                        deserializer.Statements.Add(new CodeAssignStatement(new CodeArgumentReferenceExpression("a"), new CodePrimitiveExpression(0)));
+                        TypeDeserializer.Members.Add(deserializer);
                     }
-                    deserializer.Statements.Add(new CodeAssignStatement(new CodeArgumentReferenceExpression("a"), new CodePrimitiveExpression(0)));
-                    TypeDeserializer.Members.Add(deserializer);
+
+                    //Set of the enum
+                    {
+                        var deserializer = new CodeMemberMethod() { Attributes = MemberAttributes.Public | MemberAttributes.Static, Name = "Deserialize" };
+                        deserializer.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(ReadonlySetOf(enumeration.Name)), "a") { Direction = FieldDirection.Out });
+                        deserializer.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(string)), "value"));
+                        //string[] values;
+                        deserializer.Statements.Add(new CodeVariableDeclarationStatement(typeof(string[]), "values"));
+                        //values = value.Split('+');
+                        deserializer.Statements.Add(new CodeAssignStatement(new CodeVariableReferenceExpression("values"), new CodeMethodInvokeExpression(new CodeArgumentReferenceExpression("value"), "Split", new CodePrimitiveExpression('+'))));
+                        //List<T> result = new List<T>();
+                        deserializer.Statements.Add(new CodeVariableDeclarationStatement(ListOf(enumeration.Name), "result", new CodeObjectCreateExpression(ListOf(enumeration.Name))));
+
+                        //for (int i = 0; i < values.Length; i++)
+                        var forloop = new CodeIterationStatement(new CodeVariableDeclarationStatement(typeof(int), "i", new CodePrimitiveExpression(0)),
+                                                                 new CodeBinaryOperatorExpression(new CodeVariableReferenceExpression("i"), CodeBinaryOperatorType.LessThan, new CodePropertyReferenceExpression(new CodeVariableReferenceExpression("values"), "Length")),
+                                                                 new CodeAssignStatement(new CodeVariableReferenceExpression("i"), new CodeBinaryOperatorExpression(new CodeVariableReferenceExpression("i"), CodeBinaryOperatorType.Add, new CodePrimitiveExpression(1))));
+                        deserializer.Statements.Add(forloop);
+                        //{
+                        //string s = values[i];
+                        forloop.Statements.Add(new CodeVariableDeclarationStatement(typeof(string), "s", new CodeIndexerExpression(new CodeVariableReferenceExpression("values"), new CodeVariableReferenceExpression("i"))));
+                        //if (s.Length > 0)
+                        var conditionalAdd = new CodeConditionStatement(new CodeBinaryOperatorExpression(new CodePropertyReferenceExpression(new CodeVariableReferenceExpression("s"), "Length"), CodeBinaryOperatorType.GreaterThan, new CodePrimitiveExpression(0)));
+                        forloop.Statements.Add(conditionalAdd);
+                        //T v;
+                        conditionalAdd.TrueStatements.Add(new CodeVariableDeclarationStatement(enumeration.Name, "v"));
+                        //Deserialize(out v, s);
+                        conditionalAdd.TrueStatements.Add(new CodeMethodInvokeExpression(null, "Deserialize", new CodeDirectionExpression(FieldDirection.Out, new CodeVariableReferenceExpression("v")), new CodeVariableReferenceExpression("s")));
+                        //result.Add(v);
+                        conditionalAdd.TrueStatements.Add(new CodeMethodInvokeExpression(new CodeVariableReferenceExpression("result"), "Add", new CodeVariableReferenceExpression("v")));
+                        //}
+
+                        //a = new Utilities.ReadonlySet<T>(result);
+                        deserializer.Statements.Add(new CodeAssignStatement(new CodeVariableReferenceExpression("a"), new CodeObjectCreateExpression(ReadonlySetOf(enumeration.Name), new CodeVariableReferenceExpression("result"))));
+
+                        TypeDeserializer.Members.Add(deserializer);
+                    }
                 }
                 foreach (var integer in data.Integers)
                 {
@@ -555,7 +619,6 @@ namespace Conversation.Serialization
             private static void WriteToStream(System.IO.Stream stream, CodeCompileUnit file)
             {
                 CodeGeneratorOptions options = new CodeGeneratorOptions() { BracingStyle = "C" };
-                CSharpCodeProvider generator = new CSharpCodeProvider(new Dictionary<string, string> { { "CompilerVersion", "v3.5" } });
                 TextWriter t = new StreamWriter(stream);
                 generator.GenerateCodeFromCompileUnit(file, t, options);
                 t.Flush(); //Never close/dispose t because that would close the underlying stream

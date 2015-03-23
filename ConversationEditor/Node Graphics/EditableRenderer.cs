@@ -27,7 +27,7 @@ namespace ConversationEditor
                 get { return "Default Conversation Node Renderer"; }
             }
 
-            public INodeGUI GetRenderer(ConversationNode n, PointF p, Func<ID<LocalizedText>, string> localizer)
+            public INodeGUI GetRenderer(ConversationNode n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
             {
                 return new EditableUI(n, p, localizer);
             }
@@ -46,12 +46,17 @@ namespace ConversationEditor
 
         public const int TITLE_HEIGHT = 15;
 
+        protected virtual bool ShouldRender(Parameter p)
+        {
+            return true;
+        }
+
         public EditableUI(ConversationNode node, PointF p, Func<ID<LocalizedText>, string> localizer)
             : base(node, p)
         {
             m_titleSection = new TitleSection(node);
             m_outputsSection = new OutputsSection(node);
-            m_parametersSection = new ParametersSection(node, localizer);
+            m_parametersSection = new ParametersSection(node, localizer, ShouldRender);
         }
 
         protected Section m_titleSection;
@@ -215,11 +220,13 @@ namespace ConversationEditor
         class ParametersSection : Section
         {
             Func<ID<LocalizedText>, string> m_localizer;
+            Func<Parameter, bool> ShouldRender;
 
-            public ParametersSection(ConversationNode node, Func<ID<LocalizedText>, string> localizer)
+            public ParametersSection(ConversationNode node, Func<ID<LocalizedText>, string> localizer, Func<Parameter, bool> shouldRender)
                 : base(node)
             {
                 m_localizer = localizer;
+                ShouldRender = shouldRender;
             }
 
             public float MaxWidth
@@ -232,35 +239,36 @@ namespace ConversationEditor
                 }
             }
 
-            private bool ShouldntRender<T>(Parameter p, Func<string, bool> shouldnt) where T : Parameter
-            {
-                var t = p as T;
-                if (t != null)
-                    return shouldnt(t.ValueAsString());
-                return false;
-            }
+            #region Don't render parameters with default values
+            //private bool ShouldntRender<T>(Parameter p, Func<string, bool> shouldnt) where T : Parameter
+            //{
+            //    var t = p as T;
+            //    if (t != null)
+            //        return shouldnt(t.ValueAsString());
+            //    return false;
+            //}
 
-            private bool ShouldntRender(EnumParameter p)
-            {
-                //TODO: filter rendering of enums
-                if (p == null)
-                    return false;
-                //return p.Value == p.Value
-                return false;
-            }
+            //private bool ShouldntRender(EnumParameter p)
+            //{
+            //    if (p == null)
+            //        return false;
+            //    //return p.Value == p.Value
+            //    return false;
+            //}
 
-            private bool ShouldRender(Parameter p)
-            {
-                bool shouldntRender = ShouldntRender<AudioParameter>(p, s => true) ||
-                                      ShouldntRender<BooleanParameter>(p, s => s == false.ToString()) ||
-                                      ShouldntRender<DecimalParameter>(p, s => s == 0m.ToString()) ||
-                                      ShouldntRender<DynamicEnumParameter>(p, s => s == "") ||
-                                      ShouldntRender(p as EnumParameter) ||
-                                      ShouldntRender<IntegerParameter>(p, s => s == 0.ToString()) ||
-                                      ShouldntRender<LocalizedStringParameter>(p, s => s == "") ||
-                                      ShouldntRender<StringParameter>(p, s => s == "");
-                return !shouldntRender;
-            }
+            //private bool ShouldRender(Parameter p)
+            //{
+            //    bool shouldntRender = ShouldntRender<AudioParameter>(p, s => true) ||
+            //                          ShouldntRender<BooleanParameter>(p, s => s == false.ToString()) ||
+            //                          ShouldntRender<DecimalParameter>(p, s => s == 0m.ToString()) ||
+            //                          ShouldntRender<DynamicEnumParameter>(p, s => s == "") ||
+            //                          ShouldntRender(p as EnumParameter) ||
+            //                          ShouldntRender<IntegerParameter>(p, s => s == 0.ToString()) ||
+            //                          ShouldntRender<LocalizedStringParameter>(p, s => s == "") ||
+            //                          ShouldntRender<StringParameter>(p, s => s == "");
+            //    return !shouldntRender;
+            //}
+            #endregion
 
             private IEnumerable<Parameter> ParametersToRender
             {

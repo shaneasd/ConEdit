@@ -15,12 +15,12 @@ namespace ConversationEditor
         {
             m_scheme = scheme;
             Outline = new Pen(new SolidBrush(Color.FromArgb(128, scheme.Connectors)), 2);
+            SelectedOutline = new Pen(new SolidBrush(scheme.SelectedConnectors), 2);
         }
         private readonly Pen Outline;
-
-        //public static readonly Pen Outline = new Pen(new SolidBrush(Color.FromArgb(128, ColorScheme.Connectors)), 2);
-        public static readonly Pen SelectedOutline = new Pen(new SolidBrush(ColorScheme.SelectedConnectors), 2);
+        public readonly Pen SelectedOutline;
         private ColorScheme m_scheme;
+
         public void ConnectPoints(Graphics g, PointF p1, PointF p2, bool selected, IEnumerable<RectangleF> Obstacles = null)
         {
             g.SmoothingMode = SmoothingMode.AntiAlias;

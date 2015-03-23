@@ -14,7 +14,7 @@ namespace ConversationEditor
         {
         }
 
-        public static readonly ID<ParameterType> PARAMETER_TYPE = ID<ParameterType>.Parse("fa7245b2-7bbf-4f31-ad3d-41e78577131e");
+        public static readonly ParameterType PARAMETER_TYPE = ParameterType.Parse("fa7245b2-7bbf-4f31-ad3d-41e78577131e");
         public const string NAME = "Integer";
 
         public static IntegerData Data { get { return new IntegerData(NAME, PARAMETER_TYPE, null, null); } }
@@ -27,7 +27,7 @@ namespace ConversationEditor
             var parameterType = parameterTypeParameter.Value;
             var parameterDefParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_DEFAULT) as IIntegerParameter;
             var parameterDef = parameterDefParameter.Value;
-            return new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), ID<ParameterType>.FromGuid(parameterType), parameterDef.ToString());
+            return new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), ParameterType.Basic.FromGuid(parameterType), ReadConfig(parameterNode), parameterDef.ToString());
         }
 
         public override string Name
@@ -44,7 +44,7 @@ namespace ConversationEditor
         {
         }
 
-        public static readonly ID<ParameterType> PARAMETER_TYPE = ID<ParameterType>.Parse("0222b56d-0e1b-40ac-bf86-5ab6399f6fc2");
+        public static readonly ParameterType PARAMETER_TYPE = ParameterType.Parse("0222b56d-0e1b-40ac-bf86-5ab6399f6fc2");
         public static string NAME = "Decimal";
 
         public static DecimalData Data { get { return new DecimalData(NAME, PARAMETER_TYPE, null, null); } }
@@ -57,7 +57,7 @@ namespace ConversationEditor
             var parameterType = parameterTypeParameter.Value;
             var parameterDefParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_DEFAULT) as IDecimalParameter;
             var parameterDef = parameterDefParameter.Value;
-            return new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), ID<ParameterType>.FromGuid(parameterType), parameterDef.ToString());
+            return new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), ParameterType.Basic.FromGuid(parameterType), ReadConfig(parameterNode), parameterDef.ToString());
         }
 
         public override string Name
@@ -73,13 +73,13 @@ namespace ConversationEditor
         {
         }
 
-        public static readonly ID<ParameterType> PARAMETER_TYPE = StringParameter.PARAMETER_TYPE;
+        public static readonly ParameterType PARAMETER_TYPE = StringParameter.PARAMETER_TYPE;
 
         public override NodeData.ParameterData ReadDomainNode(IEditable parameterNode)
         {
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_NAME) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
-            return new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), PARAMETER_TYPE, null);
+            return new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), PARAMETER_TYPE, ReadConfig(parameterNode), null);
         }
 
         public override string Name
@@ -95,13 +95,13 @@ namespace ConversationEditor
         {
         }
 
-        public static readonly ID<ParameterType> PARAMETER_TYPE = ID<ParameterType>.Parse("c72e8222-3e10-4995-b32b-5b3ebd8e0f20");
+        public static readonly ParameterType PARAMETER_TYPE = ParameterType.Parse("c72e8222-3e10-4995-b32b-5b3ebd8e0f20");
 
         public override NodeData.ParameterData ReadDomainNode(IEditable parameterNode)
         {
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_NAME) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
-            return new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), PARAMETER_TYPE, null);
+            return new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), PARAMETER_TYPE, ReadConfig(parameterNode), null);
         }
 
         public override string Name
@@ -117,7 +117,7 @@ namespace ConversationEditor
         {
         }
 
-        public static readonly ID<ParameterType> PARAMETER_TYPE = ID<ParameterType>.Parse("3a98d216-7427-45ef-a3ca-cd47431835a0");
+        public static readonly ParameterType PARAMETER_TYPE = ParameterType.Parse("3a98d216-7427-45ef-a3ca-cd47431835a0");
 
         public override NodeData.ParameterData ReadDomainNode(IEditable parameterNode)
         {
@@ -125,7 +125,7 @@ namespace ConversationEditor
             var parameterName = parameterNameParameter.Value;
             var parameterDefParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_DEFAULT) as IBooleanParameter;
             var parameterDef = parameterDefParameter.Value;
-            return new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), PARAMETER_TYPE, parameterDef.ToString());
+            return new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), PARAMETER_TYPE, ReadConfig(parameterNode), parameterDef.ToString());
         }
 
         public override string Name
@@ -141,13 +141,13 @@ namespace ConversationEditor
         {
         }
 
-        public static readonly ID<ParameterType> PARAMETER_TYPE = ID<ParameterType>.Parse("05b29166-31c5-449f-bb91-d63a603183db");
+        public static readonly ParameterType PARAMETER_TYPE = ParameterType.Parse("05b29166-31c5-449f-bb91-d63a603183db");
 
         public override NodeData.ParameterData ReadDomainNode(IEditable parameterNode)
         {
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_NAME) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
-            return new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), PARAMETER_TYPE, null);
+            return new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), PARAMETER_TYPE, ReadConfig(parameterNode), null);
         }
 
         public override string Name
@@ -169,11 +169,11 @@ namespace ConversationEditor
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_NAME) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
             var parameterTypeParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_TYPE) as IEnumParameter;
-            var parameterType = ID<ParameterType>.FromGuid(parameterTypeParameter.Value);
+            var parameterType = ParameterType.Basic.FromGuid(parameterTypeParameter.Value);
             var parameterDefParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_DEFAULT) as DomainDomain.EnumDefaultParameter;
             var parameterDef = parameterDefParameter.BetterValue;
-            var data = parameterDef.Transformed(d => new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), parameterType, d.ToString()),
-                                                d => new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), parameterType, d));
+            var data = parameterDef.Transformed(d => new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), parameterType, ReadConfig(parameterNode), d.ToString()),
+                                                d => new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), parameterType, ReadConfig(parameterNode), d));
             return data;
         }
 
@@ -196,11 +196,13 @@ namespace ConversationEditor
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_NAME) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
             var parameterTypeParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_TYPE) as IEnumParameter;
-            var parameterType = ID<ParameterType>.FromGuid(parameterTypeParameter.Value);
-            //TODO: Defaults for this are a bit tricky maybe
+            var parameterType = ParameterType.Set.FromGuid(parameterTypeParameter.Value);
+
+            //TODO: Defaults for sets are a bit tricky maybe
             //var parameterDefParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_DEFAULT) as DomainDomain.EnumDefaultParameter;
             //var parameterDef = parameterDefParameter.BetterValue;
-            var data = new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), parameterType, ""); //Technically "" is a valid Set of zero elements
+
+            var data = new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), parameterType, ReadConfig(parameterNode), ""); //Technically "" is a valid Set of zero elements
             return data;
         }
 
@@ -225,7 +227,7 @@ namespace ConversationEditor
             var parameterType = parameterTypeParameter.Value;
             var parameterDefParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_DEFAULT) as IStringParameter;
             var parameterDef = parameterDefParameter.Value;
-            return new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), ID<ParameterType>.FromGuid(parameterType), parameterDef);
+            return new NodeData.ParameterData(parameterName, ID<Parameter>.ConvertFrom(parameterNode.NodeID), ParameterType.Basic.FromGuid(parameterType), ReadConfig(parameterNode), parameterDef);
         }
 
         public override string Name
@@ -241,7 +243,7 @@ namespace ConversationEditor
     //    {
     //    }
 
-    //    public static readonly ID<ParameterType> PARAMETER_TYPE = ID<ParameterType>.Parse("7509bdd0-0295-4685-87a7-db65cf0357d9");
+    //    public static readonly ParameterType PARAMETER_TYPE = ParameterType.Parse("7509bdd0-0295-4685-87a7-db65cf0357d9");
 
     //    public override NodeData.ParameterData ReadDomainNode(IEditable parameterNode)
     //    {
@@ -310,6 +312,17 @@ namespace ConversationEditor
         public abstract NodeData.ParameterData ReadDomainNode(IEditable parameterNode);
 
         public abstract string Name { get; }
+
+        protected List<NodeData.ConfigData> ReadConfig(IEditable parameterNode)
+        {
+            List<NodeData.ConfigData> config = new List<NodeData.ConfigData>();
+            var configs = parameterNode.Connectors.Single(c => c.m_definition.Id == DomainIDs.PARAMETER_CONFIG_CONNECTOR_DEFINITION.Id).Connections.Select(l => l.Parent);
+            foreach (var configNode in configs)
+            {
+                config.Add(new NodeData.ConfigData(configNode.NodeTypeID, configNode.Parameters));
+            }
+            return config;
+        }
     }
 
 }

@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -41,6 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\ShanesFuckUpRecovery.cs" />
+    <Compile Include="Config\ConfigNodeDefinitions.cs" />
+    <Compile Include="Config\DontRenderConfig.cs" />
     <Compile Include="Context Menu Items\ExportAsCsv.cs" />
     <Compile Include="Factories\ProjectExplorerContextMenu.cs" />
     <Compile Include="ErrorCheckers\CinematicConnectionErrorChecker.cs" />
@@ -48,6 +52,7 @@
     <Compile Include="ErrorCheckers\TodoNodeErrorChecker.cs" />
     <Compile Include="ErrorCheckers\TerminatorErrorChecker.cs" />
     <Compile Include="ErrorCheckers\MultipleConnectionsErrorChecker.cs" />
+    <Compile Include="Node Renderers\PartialRenderer.cs" />
     <Compile Include="Project Explorers\ConversationsAsSsv.cs" />
     <Compile Include="SpecialNodes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

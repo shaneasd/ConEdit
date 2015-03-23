@@ -15,18 +15,13 @@ namespace ConversationEditor
     {
         private CheckList<PluginAssembly> m_list;
         private PluginsConfig m_config;
-
+        
         public PluginSelector()
         {
             InitializeComponent();
 
             m_list = new CheckList<PluginAssembly>(item => item.FileName);
 
-            BackColor = ColorScheme.FormBackground;
-            button1.BackColor = ColorScheme.Background;
-            button2.BackColor = ColorScheme.Background;
-            button1.ForeColor = ColorScheme.Foreground;
-            button2.ForeColor = ColorScheme.Foreground;
             this.greyScrollBar1.Scrolled += () => { drawWindow1.Invalidate(true); };
             Resize += (a, b) => m_list.UpdateScrollBar(greyScrollBar1, drawWindow1.Height);
             FontChanged += (a, b) => m_list.Font = Font;
@@ -53,9 +48,10 @@ namespace ConversationEditor
             m_list.UpdateScrollBar(greyScrollBar1, drawWindow1.Height);
         }
 
-        public void Initalize(PluginsConfig config)
+        public void Initalize(ColorScheme scheme, PluginsConfig config)
         {
             m_config = config;
+            Scheme = scheme;
             PopulatePluginList();
         }
 
@@ -72,14 +68,29 @@ namespace ConversationEditor
 
         private void drawWindow1_Paint(object sender, PaintEventArgs e)
         {
-            m_list.DrawItems(e.Graphics, (int)greyScrollBar1.Value);
-            e.Graphics.DrawRectangle(ColorScheme.ControlBorder, 0, 0, drawWindow1.Width - 1, drawWindow1.Height - 1);
+            m_list.DrawItems(Scheme, e.Graphics, (int)greyScrollBar1.Value);
+            e.Graphics.DrawRectangle(Scheme.ControlBorder, 0, 0, drawWindow1.Width - 1, drawWindow1.Height - 1);
         }
 
         private void drawWindow1_MouseClick(object sender, MouseEventArgs e)
         {
             m_list.MouseClick(e.Location, (int)greyScrollBar1.Value);
             drawWindow1.Invalidate(true);
+        }
+
+        private ColorScheme m_scheme;
+        public ColorScheme Scheme
+        {
+            get { return m_scheme; }
+            set
+            {
+                m_scheme = value;
+                BackColor = value.FormBackground;
+                button1.BackColor = value.Background;
+                button2.BackColor = value.Background;
+                button1.ForeColor = value.Foreground;
+                button2.ForeColor = value.Foreground;
+            }
         }
     }
 
@@ -120,22 +131,22 @@ namespace ConversationEditor
             return new Rectangle(SPACING, 1 + index * (BOX_SIZE + SPACING), BOX_SIZE, BOX_SIZE);
         }
 
-        public void DrawItems(Graphics g, int scroll)
+        public void DrawItems(ColorScheme scheme, Graphics g, int scroll)
         {
             for (int index = 0; index < Items.Count; index++)
             {
-                DrawItem(g, index, scroll);
+                DrawItem(scheme, g, index, scroll);
             }
         }
-        
-        private void DrawItem(Graphics g, int index, int scroll)
+
+        private void DrawItem(ColorScheme scheme, Graphics g, int index, int scroll)
         {
             var item = Items[index];
             bool check = item.Checked;
             var itemBox = ItemBox(index, scroll);
-            DefaultBooleanEditor.DrawCheckBox(g, itemBox, check);
+            DefaultBooleanEditor.DrawCheckBox(scheme, g, itemBox, check);
             var textSize = g.MeasureString(m_stringSelector(item.Element), Font);
-            g.DrawString(m_stringSelector(item.Element), Font, ColorScheme.ForegroundBrush, SPACING + BOX_SIZE + SPACING, itemBox.Y + (BOX_SIZE - textSize.Height) / 2);
+            g.DrawString(m_stringSelector(item.Element), Font, scheme.ForegroundBrush, SPACING + BOX_SIZE + SPACING, itemBox.Y + (BOX_SIZE - textSize.Height) / 2);
         }
 
         public void UpdateScrollBar(GreyScrollBar scrollbar, int height)

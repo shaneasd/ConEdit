@@ -7,7 +7,7 @@ namespace Conversation
 {
     public class LocalizedStringParameter : Parameter<ID<LocalizedText>>, ILocalizedStringParameter
     {
-        public LocalizedStringParameter(string name, ID<Parameter> id, ID<ParameterType> typeId, string defaultValue = null) : base(name, id, typeId, defaultValue) { }
+        public LocalizedStringParameter(string name, ID<Parameter> id, ParameterType typeId, string defaultValue = null) : base(name, id, typeId, defaultValue) { }
 
         protected override bool DeserialiseValue(string value)
         {
@@ -24,7 +24,7 @@ namespace Conversation
 
         public override string DisplayValue(Func<ID<LocalizedText>, string> localize)
         {
-            return localize(m_value) ?? "Missing Localization";
+            return localize(m_value);
         }
 
         protected override void DecorruptFromNull()

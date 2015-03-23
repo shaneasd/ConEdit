@@ -14,10 +14,10 @@ namespace ConversationEditor
 {
     public struct WillEdit
     {
-        public Func<ID<ParameterType>, bool> IsInteger;
-        public Func<ID<ParameterType>, bool> IsDecimal;
-        public Func<ID<ParameterType>, bool> IsEnum;
-        public Func<ID<ParameterType>, bool> IsDynamicEnum;
+        public Func<ParameterType, bool> IsInteger;
+        public Func<ParameterType, bool> IsDecimal;
+        public Func<ParameterType, bool> IsEnum;
+        public Func<ParameterType, bool> IsDynamicEnum;
 
         public static WillEdit Create(IDataSource datasource)
         {
@@ -41,8 +41,8 @@ namespace ConversationEditor
         public Config(string file, WillEdit willEdit)
         {
             m_file = file;
-            ParameterEditors = new MapConfig<ID<ParameterType>, Guid>("ParameterEditors", kvp => new KeyValuePair<string, string>(kvp.Key.Serialized(), kvp.Value.ToString()),
-                                                                      kvp => new KeyValuePair<ID<ParameterType>, Guid>(ID<ParameterType>.Parse(kvp.Key), Guid.Parse(kvp.Value)),
+            ParameterEditors = new MapConfig<ParameterType, Guid>("ParameterEditors", kvp => new KeyValuePair<string, string>(kvp.Key.Serialized(), kvp.Value.ToString()),
+                                                                      kvp => new KeyValuePair<ParameterType, Guid>(ParameterType.Parse(kvp.Key), Guid.Parse(kvp.Value)),
                                                                       a=>ParameterEditorCustomization.DefaultEditor(a,willEdit));
             ConversationNodeRenderers = new MapConfig<ID<NodeTypeTemp>, Guid>("ConversationNodeRenderers", kvp => new KeyValuePair<string, string>(kvp.Key.Serialized(), kvp.Value.ToString()),
                                                                       kvp => new KeyValuePair<ID<NodeTypeTemp>, Guid>(ID<NodeTypeTemp>.Parse(kvp.Key), Guid.Parse(kvp.Value)),
@@ -71,7 +71,7 @@ namespace ConversationEditor
         }
 
         public List<IConfigParameter> m_parameters = new List<IConfigParameter>();
-        public readonly MapConfig<ID<ParameterType>, Guid> ParameterEditors;
+        public readonly MapConfig<ParameterType, Guid> ParameterEditors;
         public readonly MapConfig<ID<NodeTypeTemp>, Guid> ConversationNodeRenderers;
         public readonly ErrorCheckersConfig ErrorCheckers = new ErrorCheckersConfig();
         public readonly GraphViewConfig GraphView = new GraphViewConfig();

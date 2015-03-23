@@ -57,7 +57,7 @@ namespace Conversation
 
     public class AudioParameter : Parameter<Audio>, IAudioParameter
     {
-        public AudioParameter(string name, ID<Parameter> id, ID<ParameterType> typeId, string defaultValue)
+        public AudioParameter(string name, ID<Parameter> id, ParameterType typeId, string defaultValue)
             : base(name, id, typeId, defaultValue)
         {
         }

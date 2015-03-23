@@ -10,15 +10,20 @@ namespace Conversation
     {
         IEnumerable<Guid> Options { get; }
         string GetName(Guid value);
-        ID<ParameterType> TypeId { get; }
+        ParameterType TypeId { get; }
         Or<string, Guid> Default { get; }
     }
 
     public static class EnumerationUtil
     {
-        public static Parameter Parameter(this IEnumeration e, string name, ID<Parameter> id, string defaultValue)
+        public static Parameter ParameterEnum(this IEnumeration e, string name, ID<Parameter> id, string defaultValue)
         {
             return new EnumParameter(name, id, e, defaultValue);
+        }
+
+        public static Parameter ParameterSet(this IEnumeration e, string name, ID<Parameter> id, string defaultValue)
+        {
+            return new SetParameter(name, id, e, defaultValue);
         }
     }
 
@@ -27,9 +32,9 @@ namespace Conversation
     {
         private Func<IEnumerable<Guid>> m_options;
         private Func<Guid, string> m_getName;
-        private ID<ParameterType> m_typeID;
+        private ParameterType m_typeID;
         private Func<Or<string, Guid>> m_default;
-        public WrapperEnumeration(Func<IEnumerable<Guid>> options, Func<Guid, string> getName, Func<Or<string, Guid>> @default, ID<ParameterType> typeId)
+        public WrapperEnumeration(Func<IEnumerable<Guid>> options, Func<Guid, string> getName, Func<Or<string, Guid>> @default, ParameterType typeId)
         {
             m_options = options;
             m_getName = getName;
@@ -47,7 +52,7 @@ namespace Conversation
             return m_getName(value);
         }
 
-        public ID<ParameterType> TypeId
+        public ParameterType TypeId
         {
             get { return m_typeID; }
         }
@@ -71,14 +76,14 @@ namespace Conversation
             return m_options[value];
         }
 
-        public Enumeration(IEnumerable<Tuple<Guid, string>> options, ID<ParameterType> typeId)
+        public Enumeration(IEnumerable<Tuple<Guid, string>> options, ParameterType typeId)
         {
             m_options = options.ToDictionary(t => t.Item1, t => t.Item2);
             m_typeId = typeId;
             Default = Guid.Empty;
         }
 
-        public Enumeration(IEnumerable<Tuple<Guid, string>> options, ID<ParameterType> typeId, Or<string, Guid> def)
+        public Enumeration(IEnumerable<Tuple<Guid, string>> options, ParameterType typeId, Or<string, Guid> def)
             : this(options, typeId)
         {
             Default = def;
@@ -87,13 +92,13 @@ namespace Conversation
         public IEnumerable<Guid> Options { get { return m_options.Keys; } }
         public Or<string, Guid> Default { get; protected set; }
 
-        private readonly ID<ParameterType> m_typeId;
-        public ID<ParameterType> TypeId { get { return m_typeId; } }
+        private readonly ParameterType m_typeId;
+        public ParameterType TypeId { get { return m_typeId; } }
     }
 
     public class MutableEnumeration : Enumeration
     {
-        public MutableEnumeration(IEnumerable<Tuple<Guid, string>> options, ID<ParameterType> typeId, Or<string, Guid> def)
+        public MutableEnumeration(IEnumerable<Tuple<Guid, string>> options, ParameterType typeId, Or<string, Guid> def)
             : base(options, typeId, def)
         {
         }

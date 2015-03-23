@@ -16,7 +16,7 @@ namespace ConversationEditor
         public class Factory : IParameterEditorFactory
         {
             public static readonly Guid GUID = Guid.Parse("846c1908-4e19-4b11-bbb3-ea40b58ef72a");
-            public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
+            public bool WillEdit(ParameterType type, WillEdit willEdit)
             {
                 return willEdit.IsDecimal(type);
             }
@@ -31,9 +31,11 @@ namespace ConversationEditor
                 get { return GUID; }
             }
 
-            public IParameterEditor<Control> Make()
+            public IParameterEditor<Control> Make(ColorScheme scheme)
             {
-                return new DefaultDecimalEditor();
+                var result = new DefaultDecimalEditor();
+                result.Scheme = scheme;
+                return result;
             }
         }
 
@@ -49,7 +51,6 @@ namespace ConversationEditor
                 MinimumSize = new Size(0, (int)m_numericUpDown.RequestedArea.Height);
                 Size = m_numericUpDown.RequestedArea.ToSize();
             };
-            m_numericUpDown.Colors.BorderPen = ColorScheme.ControlBorder;
             m_numericUpDown.SetupCallbacks(drawWindow1);
         }
 
@@ -86,5 +87,16 @@ namespace ConversationEditor
         }
 
         public event Action Ok;
+
+        ColorScheme m_scheme;
+        public ColorScheme Scheme
+        {
+            get { return m_scheme; }
+            set
+            {
+                m_scheme = value;
+                m_numericUpDown.Colors.BorderPen = value.ControlBorder;
+            }
+        }
     }
 }

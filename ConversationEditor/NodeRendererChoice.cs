@@ -37,9 +37,9 @@ namespace ConversationEditor
             }
         }
 
-        public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer)
+        public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
-            return m_factory.GetRenderer(n, p, localizer);
+            return m_factory.GetRenderer(n, p, localizer, datasource);
         }
 
         public static NodeRendererChoice DefaultConversation(ID<NodeTypeTemp> guid)

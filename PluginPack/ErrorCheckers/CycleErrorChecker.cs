@@ -23,9 +23,22 @@ namespace PluginPack
             }
         }
 
+        class NotImplementedCheckerError : ConversationError<T>
+        {
+            public NotImplementedCheckerError()
+                : base(new T[0])
+            {
+            }
+
+            public override string Message
+            {
+                get { return "Cycle error checker not implemented"; }
+            }
+        }
+
         public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities utils)
         {
-            return Enumerable.Empty<ConversationError<T>>(); //TODO: Reimplement this
+            return (new NotImplementedCheckerError()).Only();
             //var connectedNodes = new LinkedList<T>();
             //var disconnectedNodes = new LinkedList<T>(nodes);
 

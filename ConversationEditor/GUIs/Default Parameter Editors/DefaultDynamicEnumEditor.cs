@@ -19,7 +19,7 @@ namespace ConversationEditor
         public class Factory : IParameterEditorFactory
         {
             public static readonly Guid GUID = Guid.Parse("a9083141-9c56-44f1-8d5d-c10479877663");
-            public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
+            public bool WillEdit(ParameterType type, WillEdit willEdit)
             {
                 return willEdit.IsDynamicEnum(type);
             }
@@ -34,9 +34,11 @@ namespace ConversationEditor
                 get { return GUID; }
             }
 
-            public IParameterEditor<Control> Make()
+            public IParameterEditor<Control> Make(ColorScheme scheme)
             {
-                return new DefaultDynamicEnumEditor();
+                var result = new DefaultDynamicEnumEditor();
+                result.Scheme = scheme;
+                return result;
             }
         }
 
@@ -57,9 +59,6 @@ namespace ConversationEditor
                 Size = m_comboBox.RequestedArea.ToSize();
                 Invalidate(true);
             };
-            m_comboBox.TextBoxColors.BorderPen = ColorScheme.ControlBorder;
-            m_comboBox.SelectedBackgroundColor = ColorScheme.SelectedConversationListItemPrimaryBackground;
-            m_comboBox.Renderer = ColorScheme.ContextMenu;
             m_comboBox.EnterPressed += () => { Ok.Execute(); };
         }
 
@@ -87,5 +86,18 @@ namespace ConversationEditor
         }
 
         public event Action Ok;
+
+        ColorScheme m_scheme;
+        public ColorScheme Scheme
+        {
+            get { return m_scheme; }
+            set
+            {
+                m_scheme = value;
+                m_comboBox.TextBoxColors.BorderPen = value.ControlBorder;
+                m_comboBox.SelectedBackgroundColor = value.SelectedConversationListItemPrimaryBackground;
+                m_comboBox.Renderer = value.ContextMenu;
+            }
+        }
     }
 }

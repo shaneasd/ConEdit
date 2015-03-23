@@ -19,7 +19,7 @@ namespace Conversation
             }
         }
 
-        public EnumerationData(string name, ID<ParameterType> guid, IEnumerable<Element> elements)
+        public EnumerationData(string name, ParameterType guid, IEnumerable<Element> elements)
         {
             Name = name;
             TypeID = guid;
@@ -41,7 +41,7 @@ namespace Conversation
         //    Default = def;
         //}
         public string Name;
-        public ID<ParameterType> TypeID;
+        public ParameterType TypeID;
         //public Or<string, Guid> Default; //can be null
         public List<Element> Elements;
 

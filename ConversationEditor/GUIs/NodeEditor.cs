@@ -17,22 +17,31 @@ namespace ConversationEditor
     {
         IEditable m_data;
 
+        ColorScheme m_scheme;
+        ColorScheme Scheme
+        {
+            get { return m_scheme; }
+            set
+            {
+                m_scheme = value;
+                this.BackColor = value.FormBackground;
+                this.okButton.BackColor = value.Background;
+                this.cancelButton.BackColor = value.Background;
+                okButton.ForeColor = value.Foreground;
+                cancelButton.ForeColor = value.Foreground;
+            }
+        }
+
         public NodeEditor()
         {
             InitializeComponent();
-
-            this.BackColor = ColorScheme.FormBackground;
-            this.okButton.BackColor = ColorScheme.Background;
-            this.cancelButton.BackColor = ColorScheme.Background;
-            okButton.ForeColor = ColorScheme.Foreground;
-            cancelButton.ForeColor = ColorScheme.Foreground;
         }
 
-        public static ConfigureResult Edit(IEditable data, AudioGenerationParameters audioContext, Func<ID<ParameterType>, ParameterEditorSetupData, IParameterEditor<Control>> config, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public static ConfigureResult Edit(ColorScheme scheme, IEditable data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, LocalizationEngine localizer, IAudioProvider audioProvider)
         {
             using (Form f = new Form())
             {
-                NodeEditor editor = new NodeEditor(data, audioContext, config, localizer, audioProvider);
+                NodeEditor editor = new NodeEditor(scheme, data, audioContext, config, localizer, audioProvider);
                 f.Text = editor.Title;
                 bool oked = false;
                 editor.Ok += () =>
@@ -95,22 +104,23 @@ namespace ConversationEditor
 
         public string Title { get; private set; }
 
-        public NodeEditor(IEditable data, AudioGenerationParameters audioContext, Func<ID<ParameterType>, ParameterEditorSetupData, IParameterEditor<Control>> config, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public NodeEditor(ColorScheme scheme, IEditable data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, LocalizationEngine localizer, IAudioProvider audioProvider)
             : this()
         {
+            Scheme = scheme;
             m_data = data;
 
             this.SuspendLayout();
             Title = m_data.Name;
             int parameterCount = 0;
-            foreach (Parameter p in m_data.Parameters.OrderBy(p=>p.Name))
+            foreach (Parameter p in m_data.Parameters.OrderBy(p => p.Name))
             {
                 var editorData = new ParameterEditorSetupData(p, localizer, audioProvider, audioContext);
                 if (p is UnknownParameter)
                 {
                     var unknown = p as UnknownParameter;
                     UnknownParameterEditor ed = null;
-                    ed = UnknownParameterEditor.Make(editorData, m_data.RemoveUnknownParameter(unknown),
+                    ed = UnknownParameterEditor.Make(Scheme, editorData, m_data.RemoveUnknownParameter(unknown),
                     () =>
                     {
                         int row = tableLayoutPanel1.GetRow(ed);
@@ -137,6 +147,7 @@ namespace ConversationEditor
             tableLayoutPanel1.RowCount++;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
 
+
             this.ResumeLayout();
         }
 
@@ -147,7 +158,7 @@ namespace ConversationEditor
             label.AutoSize = true;
             label.Dock = DockStyle.Fill;
             label.Text = parameter.Name;
-            label.ForeColor = ColorScheme.Foreground;
+            label.ForeColor = Scheme.Foreground;
 
             editor.AsControl.Dock = DockStyle.Top;
             m_parameterEditors.Add(Tuple.Create(editor, parameter));
@@ -197,10 +208,10 @@ namespace ConversationEditor
             return true;
         }
 
-        public override ConfigureResult Edit(IEditable node, AudioGenerationParameters audioContext, Func<ID<ParameterType>, ParameterEditorSetupData, IParameterEditor<Control>> config, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public override ConfigureResult Edit(ColorScheme scheme, IEditable node, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, LocalizationEngine localizer, IAudioProvider audioProvider)
         {
             if (node.Parameters.Any())
-                return NodeEditor.Edit(node, audioContext, config, localizer, audioProvider);
+                return NodeEditor.Edit(scheme, node, audioContext, config, localizer, audioProvider);
             else
                 return ConfigureResult.NotApplicable;
         }

@@ -257,7 +257,7 @@ namespace Conversation.Serialization
                     ID<TConnector> connector2 = ID<TConnector>.Parse(link.Attribute("connector2").Value);
 
                     if (filteredNodes.Any(n => n.Equals(node1) || n.Equals(node2)))
-                        result.Add(UnordererTuple.Make(Tuple.Create(connector1, node1), Tuple.Create(connector2, node2)));
+                        result.Add(UnorderedTuple.Make(Tuple.Create(connector1, node1), Tuple.Create(connector2, node2)));
                 }
                 return result;
             }
@@ -300,7 +300,7 @@ namespace Conversation.Serialization
                         {
                             var pair1 = Tuple.Create(c.ID, n.GraphData);
                             var pair2 = Tuple.Create(cc.ID, cc.Parent);
-                            links.Add(UnordererTuple.Make(pair1, pair2));
+                            links.Add(UnorderedTuple.Make(pair1, pair2));
                         }
                     }
                 }

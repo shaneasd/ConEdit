@@ -27,7 +27,7 @@ namespace ConversationEditor
                 get { return "Default Domain Node Renderer"; }
             }
 
-            public INodeGUI GetRenderer(ConversationNode n, PointF p, Func<ID<LocalizedText>, string> localizer)
+            public INodeGUI GetRenderer(ConversationNode n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
             {
                 return new DomainNodeRenderer(n, p, localizer);
             }

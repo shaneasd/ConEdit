@@ -61,10 +61,11 @@ namespace ConversationEditor
             m_pluginsConfig = pluginsConfig;
         }
 
-        public void Configure()
+        public void Configure(ColorScheme scheme)
         {
             using (ErrorCheckerSelectorDialog dialog = new ErrorCheckerSelectorDialog())
             {
+                dialog.Scheme = scheme;
                 dialog.Init(m_config, m_pluginsConfig);
                 dialog.ShowDialog();
             }

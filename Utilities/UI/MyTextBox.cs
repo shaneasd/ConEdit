@@ -232,7 +232,7 @@ namespace Utilities
 
         public RectangleF TextRectangle { get { return RectangleF.Inflate(Area, -BORDER_SIZE, -BORDER_SIZE); } }
 
-        public readonly InputFormEnum InputForm;
+        public InputFormEnum InputForm;
 
         public enum InputFormEnum { Text, Decimal, Integer, Path, FileName, None }
 

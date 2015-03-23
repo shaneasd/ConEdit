@@ -67,8 +67,11 @@ namespace ConversationEditor
             get { return m_showGrid; }
             set
             {
-                m_showGrid = value;
-                ValueChanged.Execute();
+                if (value != m_showGrid)
+                {
+                    m_showGrid = value;
+                    ValueChanged.Execute();
+                }
             }
         }
 
@@ -78,8 +81,11 @@ namespace ConversationEditor
             get { return m_snapToGrid; }
             set
             {
-                m_snapToGrid = value;
-                ValueChanged.Execute();
+                if (value != m_snapToGrid)
+                {
+                    m_snapToGrid = value;
+                    ValueChanged.Execute();
+                }
             }
         }
 
@@ -89,8 +95,11 @@ namespace ConversationEditor
             get { return m_showIDs; }
             set
             {
-                m_showIDs = value;
-                ValueChanged.Execute();
+                if (value != m_showIDs)
+                {
+                    m_showIDs = value;
+                    ValueChanged.Execute();
+                }
             }
         }
 
@@ -100,19 +109,25 @@ namespace ConversationEditor
             get { return m_minorGridSpacing; }
             set
             {
-                m_minorGridSpacing = value;
-                ValueChanged.Execute();
+                if (value != m_minorGridSpacing)
+                {
+                    m_minorGridSpacing = value;
+                    ValueChanged.Execute();
+                }
             }
         }
-        private uint m_majorGridSpacing = 80;
 
+        private uint m_majorGridSpacing = 80;
         public uint MajorGridSpacing
         {
             get { return m_majorGridSpacing; }
             set
             {
-                m_majorGridSpacing = value;
-                ValueChanged.Execute();
+                if (value != -m_majorGridSpacing)
+                {
+                    m_majorGridSpacing = value;
+                    ValueChanged.Execute();
+                }
             }
         }
     }

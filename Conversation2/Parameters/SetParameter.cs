@@ -7,21 +7,20 @@ using Utilities;
 
 namespace Conversation
 {
-    public class SetParameter : Parameter<GuidSet>, ISetParameter
+    public class SetParameter : Parameter<ReadonlySet<Guid>>, ISetParameter
     {
         IEnumeration m_enumeration;
         public SetParameter(string name, ID<Parameter> id, IEnumeration enumeration, string defaultValue = null)
-            //: base(name, id, enumeration.TypeId, enumeration.Default.Transformed(a => Guid.Empty.ToString(), a => a.ToString()))
-            : base(name, id, enumeration.TypeId, defaultValue)
+            : base(name, id, ParameterType.Set.Of(enumeration.TypeId), defaultValue)
         {
             m_enumeration = enumeration;
         }
 
-        string m_textOverride = null;
+        string m_textOverride = null; //initial string representation of parameter that failed parsing (or null if parsing succeeded or a new value has been specified.
 
         protected override bool DeserialiseValue(string value)
         {
-            string[] values = value.Split('+');
+            string[] values = value.Split('+').Select(s=>s.Trim()).Where(s=>s.Length > 0).ToArray();
             Guid[] guids = new Guid[values.Length];
             bool valid = true;
             for (int i = 0; i < values.Length; i++)
@@ -30,9 +29,7 @@ namespace Conversation
                 bool v = Guid.TryParse(values[i], out g);
                 guids[i] = v ? g : Guid.Empty;
                 valid &= v;
-            }
-
-            Value = new GuidSet(guids);
+            }            
 
             if (!valid)
             {
@@ -41,12 +38,13 @@ namespace Conversation
             }
             else
             {
+                Value = new ReadonlySet<Guid>(guids);
                 m_textOverride = null;
                 return true;
             }
         }
 
-        public override GuidSet Value
+        public override ReadonlySet<Guid> Value
         {
             get
             {
@@ -55,7 +53,7 @@ namespace Conversation
             set
             {
                 base.Value = value;
-                EditorSelected = value;
+                m_textOverride = null;
             }
         }
 
@@ -63,7 +61,7 @@ namespace Conversation
         {
             if (m_textOverride != null)
                 return m_textOverride;
-            return string.Join("+", m_value.Values.Select(v => v.ToString()));
+            return string.Join("+", m_value.Select(v => v.ToString()));
         }
 
         public IEnumerable<Guid> Options
@@ -86,15 +84,9 @@ namespace Conversation
         {
             if (m_textOverride != null)
                 return m_textOverride;
-            return string.Join(" + ", m_value.Values.Select(v => GetName(v) ?? INVALID_VALUE).OrderBy(a => a));
+            return string.Join(" + ", m_value.Select(v => GetName(v) ?? INVALID_VALUE).OrderBy(a => a));
         }
 
         public const string INVALID_VALUE = "ERROR: Unknown enumeration value";
-
-        public GuidSet EditorSelected
-        {
-            get;
-            set;
-        }
     }
 }

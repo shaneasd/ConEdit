@@ -15,6 +15,10 @@ namespace ConversationEditor
     {
         string Localize(ID<LocalizedText> id);
         SimpleUndoPair SetLocalizationAction(ID<LocalizedText> guid, string p);
+        /// <summary>
+        /// Will this localizer localize to real user specified data?
+        /// </summary>
+        bool IsValid { get; }
     }
 
     public class LocalizationFile : ILocalizationFile
@@ -89,7 +93,7 @@ namespace ConversationEditor
 
         public bool CanRemove(Func<bool> prompt)
         {
-            //TODO: Do we care if a localization is removed
+            //Project does not require there to be a localization file
             return true;
         }
 
@@ -165,6 +169,11 @@ namespace ConversationEditor
         public void Dispose()
         {
             File.Dispose();
+        }
+
+        public bool IsValid
+        {
+            get { return true; }
         }
     }
 }

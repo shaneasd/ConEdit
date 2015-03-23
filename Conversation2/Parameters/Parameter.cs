@@ -13,7 +13,7 @@ namespace Conversation
         /// <summary>
         /// Guid of the underlying type
         /// </summary>
-        ID<ParameterType> TypeId { get; }
+        ParameterType TypeId { get; }
         /// <summary>
         /// Name of the parameter displayed in the editor
         /// </summary>
@@ -66,18 +66,7 @@ namespace Conversation
     {
     }
 
-    public struct GuidSet
-    {
-        private readonly Guid[] m_values;
-        public GuidSet(params Guid[] values)
-        {
-            m_values = values.Distinct().ToArray();
-        }
-
-        public IEnumerable<Guid> Values { get { return m_values; } }
-    }
-
-    public interface ISetParameter : IParameter<GuidSet>
+    public interface ISetParameter : IParameter<ReadonlySet<Guid>>
     {
         IEnumerable<Guid> Options { get; }
 
@@ -85,8 +74,6 @@ namespace Conversation
         /// Return the name associated with the specified value. null if the value isn't assoicated with this enumeration.
         /// </summary>
         string GetName(Guid value);
-
-        GuidSet EditorSelected { get; set; }
     }
 
     public interface IEnumParameter : IParameter<Guid>
@@ -118,9 +105,9 @@ namespace Conversation
         private readonly ID<Parameter> m_id;
         public ID<Parameter> Id { get { return m_id; } }
 
-        private readonly ID<ParameterType> m_typeId;
-        public ID<ParameterType> TypeId { get { return m_typeId; } }
-        public Parameter(string name, ID<Parameter> id, ID<ParameterType> typeid, string value)
+        private readonly ParameterType m_typeId;
+        public ParameterType TypeId { get { return m_typeId; } }
+        public Parameter(string name, ID<Parameter> id, ParameterType typeid, string value)
         {
             m_name = name;
             m_id = id;
@@ -199,7 +186,7 @@ namespace Conversation
 
         string m_defaultValue = null;
 
-        public Parameter(string name, ID<Parameter> id, ID<ParameterType> typeId, string defaultValue)
+        public Parameter(string name, ID<Parameter> id, ParameterType typeId, string defaultValue)
             : base(name, id, typeId, defaultValue)
         {
             m_defaultValue = defaultValue;

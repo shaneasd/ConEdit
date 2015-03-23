@@ -171,6 +171,8 @@ namespace Utilities
 
         public static IEnumerable<T> InfiniteRepeat<T>(this IEnumerable<T> elements)
         {
+            if (!elements.Any())
+                throw new ArgumentException("input must contain at least one element to repeat", "elements");
             while (true)
             {
                 foreach (var element in elements)

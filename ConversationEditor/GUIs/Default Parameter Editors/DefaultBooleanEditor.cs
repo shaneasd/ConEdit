@@ -18,7 +18,7 @@ namespace ConversationEditor
         {
             public static readonly Guid GUID = Guid.Parse("87253284-4ade-4a7d-9043-81f3b58f1ba5");
 
-            public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
+            public bool WillEdit(ParameterType type, WillEdit willEdit)
             {
                 return type == BaseTypeBoolean.PARAMETER_TYPE;
             }
@@ -33,12 +33,14 @@ namespace ConversationEditor
                 get { return GUID; }
             }
 
-            public IParameterEditor<Control> Make()
+            public IParameterEditor<Control> Make(ColorScheme scheme)
             {
-                return new DefaultBooleanEditor();
+                var result= new DefaultBooleanEditor();
+                result.Scheme = scheme;
+                return result;
             }
         }
-
+        public ColorScheme Scheme { get; set; }
         public DefaultBooleanEditor()
         {
             InitializeComponent();
@@ -84,16 +86,16 @@ namespace ConversationEditor
             SizeF textSize = e.Graphics.MeasureString("False", Font);
             Rectangle boxRectangle = BoxRectangle(e.Graphics);
             Point textLocation = new Point((int)boxRectangle.X + (int)boxSize.Width + gap, (int)(drawWindow1.Height - textSize.Height) / 2);
-            e.Graphics.DrawRectangle(ColorScheme.ControlBorder, Rectangle.FromLTRB(0, 0, drawWindow1.Width - 1, drawWindow1.Height - 1));
-            DrawCheckBox(e.Graphics, boxRectangle, Checked);
-            e.Graphics.DrawString(DisplayText, Font, ColorScheme.ForegroundBrush, textLocation);
+            e.Graphics.DrawRectangle(Scheme.ControlBorder, Rectangle.FromLTRB(0, 0, drawWindow1.Width - 1, drawWindow1.Height - 1));
+            DrawCheckBox(Scheme, e.Graphics, boxRectangle, Checked);
+            e.Graphics.DrawString(DisplayText, Font, Scheme.ForegroundBrush, textLocation);
         }
 
-        public static void DrawCheckBox(Graphics g, Rectangle boxRectangle, bool check)
+        public static void DrawCheckBox(ColorScheme scheme, Graphics g, Rectangle boxRectangle, bool check)
         {
-            g.DrawRectangle(ColorScheme.ForegroundPen, boxRectangle);
+            g.DrawRectangle(scheme.ForegroundPen, boxRectangle);
             if (check)
-                g.FillRectangle(ColorScheme.ForegroundBrush, new Rectangle(boxRectangle.X + 2, boxRectangle.Y + 2, boxRectangle.Width - 3, boxRectangle.Height - 3));
+                g.FillRectangle(scheme.ForegroundBrush, new Rectangle(boxRectangle.X + 2, boxRectangle.Y + 2, boxRectangle.Width - 3, boxRectangle.Height - 3));
         }
 
         IBooleanParameter m_parameter;

@@ -18,6 +18,19 @@ namespace ConversationEditor
         private ErrorCheckersConfig m_config;
         private PluginsConfig m_pluginsConfig;
 
+        ColorScheme m_scheme;
+        public ColorScheme Scheme
+        {
+            get { return m_scheme; }
+            set
+            {
+                m_scheme = value;
+                BackColor = m_scheme.FormBackground;
+                btnOk.BackColor = m_scheme.Background;
+                btnOk.ForeColor = m_scheme.Foreground;
+            }
+        }
+
         public ErrorCheckerSelectorDialog()
         {
             InitializeComponent();
@@ -27,9 +40,6 @@ namespace ConversationEditor
             this.greyScrollBar1.Scrolled += () => { drawWindow1.Invalidate(true); };
             Resize += (a, b) => m_list.UpdateScrollBar(greyScrollBar1, drawWindow1.Height);
 
-            BackColor = ColorScheme.FormBackground;
-            btnOk.BackColor = ColorScheme.Background;
-            btnOk.ForeColor = ColorScheme.Foreground;
             FontChanged += (a, b) => m_list.Font = Font;
             m_list.Font = Font;
         }
@@ -85,8 +95,8 @@ namespace ConversationEditor
 
         private void drawWindow1_Paint(object sender, PaintEventArgs e)
         {
-            m_list.DrawItems(e.Graphics, (int)greyScrollBar1.Value);
-            e.Graphics.DrawRectangle(ColorScheme.ControlBorder, new Rectangle(0, 0, drawWindow1.Width - 1, drawWindow1.Height - 1));
+            m_list.DrawItems(m_scheme, e.Graphics, (int)greyScrollBar1.Value);
+            e.Graphics.DrawRectangle(Scheme.ControlBorder, new Rectangle(0, 0, drawWindow1.Width - 1, drawWindow1.Height - 1));
         }
 
         private void drawWindow1_MouseClick(object sender, MouseEventArgs e)

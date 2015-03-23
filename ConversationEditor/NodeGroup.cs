@@ -14,9 +14,12 @@ namespace ConversationEditor
 
     public class NodeGroupRenderer : IGUI
     {
-        public NodeGroupRenderer(RectangleF area)
+        ColorScheme m_scheme;
+
+        public NodeGroupRenderer(RectangleF area, ColorScheme scheme)
         {
             m_area = area;
+            m_scheme = scheme;
         }
 
         RectangleF m_area;
@@ -31,10 +34,10 @@ namespace ConversationEditor
         public void Draw(Graphics g, bool selected)
         {
             if (selected)
-                g.FillRectangle(new SolidBrush(ColorScheme.GroupBackgroundSelected), m_area);
+                g.FillRectangle(new SolidBrush(m_scheme.GroupBackgroundSelected), m_area);
             else
-                g.FillRectangle(new SolidBrush(ColorScheme.GroupBackgroundUnselected), m_area);
-            g.DrawRectangle(ColorScheme.ForegroundPen, m_area);
+                g.FillRectangle(new SolidBrush(m_scheme.GroupBackgroundUnselected), m_area);
+            g.DrawRectangle(m_scheme.ForegroundPen, m_area);
         }
 
         public void MoveTo(PointF point)
@@ -70,24 +73,23 @@ namespace ConversationEditor
     {
         NodeGroupRenderer m_renderer;
 
-        public NodeGroup(RectangleF area, IEnumerable<ID<NodeTemp>> contents)
+        public NodeGroup(RectangleF area, IEnumerable<ID<NodeTemp>> contents, ColorScheme scheme) : this(area, scheme)
         {
-            m_renderer = new NodeGroupRenderer(area);
             Contents.UnionWith(contents);
         }
 
-        public static NodeGroup Make<TNode2>(IEnumerable<TNode2> contents) where TNode2 : class, IGraphNode, IRenderable<IGUI>
+        public static NodeGroup Make<TNode2>(IEnumerable<TNode2> contents, ColorScheme scheme) where TNode2 : class, IGraphNode, IRenderable<IGUI>
         {
             var l = contents.Min(n => n.Renderer.Area.Left) - 20;
             var r = contents.Max(n => n.Renderer.Area.Right) + 20;
             var t = contents.Min(n => n.Renderer.Area.Top) - 20;
             var b = contents.Max(n => n.Renderer.Area.Bottom) + 20;
-            return new NodeGroup(RectangleF.FromLTRB(l, t, r, b), contents.Select(n => n.Id));
+            return new NodeGroup(RectangleF.FromLTRB(l, t, r, b), contents.Select(n => n.Id), scheme);
         }
 
-        public NodeGroup(RectangleF area)
+        public NodeGroup(RectangleF area, ColorScheme scheme)
         {
-            m_renderer = new NodeGroupRenderer(area);
+            m_renderer = new NodeGroupRenderer(area, scheme);
         }
 
         public NodeGroupRenderer Renderer

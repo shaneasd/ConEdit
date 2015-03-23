@@ -6,6 +6,7 @@ using Conversation;
 using Conversation.Serialization;
 using System.Drawing;
 using System.Globalization;
+using Utilities;
 
 namespace RuntimeConversation
 {

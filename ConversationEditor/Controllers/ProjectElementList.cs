@@ -164,7 +164,7 @@ namespace ConversationEditor
         private SuppressibleAction m_suppressibleGotChanged;
         public ProjectElementList(Func<string, bool> fileLocationOk, Func<IEnumerable<FileInfo>, IEnumerable<Or<TReal, TMissing>>> loader, Func<DirectoryInfo, TReal> makeEmpty)
         {
-            m_data = new CallbackDictionary<string,TInterface>();
+            m_data = new CallbackDictionary<string, TInterface>();
             m_data.Removing += (key, element) => { element.Removed(); };
             m_data.Clearing += () => { m_data.Values.ForAll(element => { element.Removed(); }); };
             m_loader = loader;
@@ -209,7 +209,7 @@ namespace ConversationEditor
                 {
                     try
                     {
-                        if (existing.File.CanClose()) //TODO: If the file is modified and you try to load the same file over the top what happens? The message is probably unintuitive
+                        if (existing.File.CanClose())
                         {
                             //Ignore the fact that the new file might be missing stuff the conversation needs
                             m_data.Remove(fileInfo.FullName); //Callback on the list informs the domain file it has been removed thereby triggering domain update

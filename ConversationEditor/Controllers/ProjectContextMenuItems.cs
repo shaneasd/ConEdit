@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ConversationNode = Conversation.ConversationNode<Conversation.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 
 namespace ConversationEditor.Controllers
 {
@@ -15,7 +15,7 @@ namespace ConversationEditor.Controllers
             m_project = project;
         }
 
-        public IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(GraphEditorControl<ConversationNode> control)
+        public IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(ColorScheme scheme, GraphEditorControl<ConversationNode> control)
         {
             yield return new MenuAction2<ConversationNode>("Reset Zoom", (n, p) => null, null, null, (p) => { control.GraphScale = 1; });
             yield return new MenuAction2<ConversationNode>("Delete", (n, p) => () => { Delete(n); }, null, null, null);

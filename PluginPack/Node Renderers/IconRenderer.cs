@@ -26,7 +26,7 @@ namespace PluginPack
                 get { return "Icon Renderer"; }
             }
 
-            public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer)
+            public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
             {
                 return new IconRenderer(n, p, localizer);
             }
@@ -104,7 +104,7 @@ namespace PluginPack
 
             SizeF textSize = g.MeasureString(m_name, Font);
             g.DrawImage(m_image, (int)(Area.X + (Area.Width - m_image.Width) / 2), (int)Area.Y, m_image.Width, m_image.Height);
-            g.DrawString(m_name, Font, ColorScheme.ForegroundBrush, new PointF(Area.X + (Area.Width - textSize.Width) / 2, Area.Y + m_image.Height + NAME_ICON_SPACING));
+            g.DrawString(m_name, Font, Brushes.Black, new PointF(Area.X + (Area.Width - textSize.Width) / 2, Area.Y + m_image.Height + NAME_ICON_SPACING));
         }
 
         protected override SizeF CalculateArea(System.Drawing.Graphics g)

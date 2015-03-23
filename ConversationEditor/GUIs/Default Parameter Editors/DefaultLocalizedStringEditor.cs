@@ -17,7 +17,7 @@ namespace ConversationEditor
         public class Factory : IParameterEditorFactory
         {
             public static readonly Guid GUID = Guid.Parse("df3f30b8-ee05-4972-8b41-fb075d5502a7");
-            public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
+            public bool WillEdit(ParameterType type, WillEdit willEdit)
             {
                 return type == BaseTypeLocalizedString.PARAMETER_TYPE;
             }
@@ -32,9 +32,11 @@ namespace ConversationEditor
                 get { return GUID; }
             }
 
-            public IParameterEditor<Control> Make()
+            public IParameterEditor<Control> Make(ColorScheme scheme)
             {
-                return new DefaultLocalizedStringEditor();
+                var result = new DefaultLocalizedStringEditor();
+                result.Scheme = scheme;
+                return result;
             }
         }
 
@@ -45,7 +47,6 @@ namespace ConversationEditor
             InitializeComponent();
 
             m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), MyTextBox.InputFormEnum.Text);
-            m_textBox.Colors.BorderPen = ColorScheme.ControlBorder;
             m_textBox.RequestedAreaChanged += () =>
             {
                 //Draw window is the whole control so we can just modify the control
@@ -65,9 +66,11 @@ namespace ConversationEditor
             m_parameter = data.Parameter as ILocalizedStringParameter;
             m_localizer = data.Localizer;
             if (!m_parameter.Corrupted)
-                m_textBox.Text = m_localizer.Localize(m_parameter.Value) ?? "Missing Localization";
+                m_textBox.Text = m_localizer.Localize(m_parameter.Value);
             else
-                m_textBox.Text = "Missing Localization";
+                m_textBox.Text = m_localizer.Localize(null);
+            if (!m_localizer.CanLocalize)
+                m_textBox.InputForm = MyTextBox.InputFormEnum.None;
         }
 
         public DefaultLocalizedStringEditor AsControl
@@ -109,5 +112,16 @@ namespace ConversationEditor
         }
 
         public event Action Ok;
+
+        ColorScheme m_scheme;
+        public ColorScheme Scheme
+        {
+            get { return m_scheme; }
+            set
+            {
+                m_scheme = value;
+                m_textBox.Colors.BorderPen = value.ControlBorder;
+            }
+        }
     }
 }

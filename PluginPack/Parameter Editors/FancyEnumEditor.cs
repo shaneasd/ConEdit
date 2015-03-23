@@ -18,7 +18,7 @@ namespace PluginPack
     {
         public class Factory : IParameterEditorFactory
         {
-            public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
+            public bool WillEdit(ParameterType type, WillEdit willEdit)
             {
                 return willEdit.IsEnum(type);
             }
@@ -33,7 +33,7 @@ namespace PluginPack
                 get { return Guid.Parse("20873974-f9de-4fc8-a024-bef48e4c6280"); }
             }
 
-            public IParameterEditor<Control> Make()
+            public IParameterEditor<Control> Make(ConversationEditor.ColorScheme scheme)
             {
                 return new FancyCharacterEditor();
             }

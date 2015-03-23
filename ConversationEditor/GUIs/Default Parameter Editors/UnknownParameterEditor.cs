@@ -24,7 +24,6 @@ namespace ConversationEditor
             const int BUTTON_SIZE = 16;
 
             m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width - BUTTON_SIZE, Math.Max(BUTTON_SIZE, drawWindow1.Height)), MyTextBox.InputFormEnum.None);
-            m_textBox.Colors.BorderPen = ColorScheme.ControlBorder;
             m_textBox.RequestedAreaChanged += () =>
             {
                 //Draw window is the whole control so we can just modify the control
@@ -36,7 +35,7 @@ namespace ConversationEditor
             m_textBox.RegisterCallbacks(this, drawWindow1);
             //MyTextBox.SetupCallbacks(drawWindow1, m_textBox);
 
-            m_button = new CrossButton(() => new RectangleF(drawWindow1.Width - BUTTON_SIZE, (drawWindow1.Height - BUTTON_SIZE) / 2, BUTTON_SIZE, BUTTON_SIZE), () => { Remove.Execute(); m_remove = true; }, ColorScheme.ControlBorder, ColorScheme.BackgroundBrush);
+            m_button = new CrossButton(() => new RectangleF(drawWindow1.Width - BUTTON_SIZE, (drawWindow1.Height - BUTTON_SIZE) / 2, BUTTON_SIZE, BUTTON_SIZE), () => { Remove.Execute(); m_remove = true; }, Scheme.ControlBorder, Scheme.BackgroundBrush);
             m_button.RegisterCallbacks(this, drawWindow1);
 
             LastFocused = m_textBox;
@@ -73,13 +72,25 @@ namespace ConversationEditor
         public event Action Ok { add { } remove { } }
         public event Action Remove;
 
-        internal static UnknownParameterEditor Make(ParameterEditorSetupData data, SimpleUndoPair removeParameter, Action remove)
+        internal static UnknownParameterEditor Make(ColorScheme scheme, ParameterEditorSetupData data, SimpleUndoPair removeParameter, Action remove)
         {
             var result = new UnknownParameterEditor();
+            result.Scheme = scheme;
             result.Setup(data);
             result.m_removeParameter = removeParameter;
             result.Remove += remove;
             return result;
+        }
+
+        ColorScheme m_scheme;
+        public ColorScheme Scheme
+        {
+            get { return m_scheme; }
+            set
+            {
+                m_scheme = value;
+                m_textBox.Colors.BorderPen = value.ControlBorder;
+            }
         }
     }
 }

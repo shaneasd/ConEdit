@@ -8,7 +8,7 @@ using Conversation;
 using Utilities;
 using System.IO;
 
-namespace PluginPack
+namespace Clandestine
 {
     class ConversationsAsSsv : IProjectExporter
     {

@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 
 namespace ConversationEditor
 {
-    public class ColorScheme
+    public class ColorScheme : Utilities.ColorScheme
     {
         private Color m_connectorColor;
 
-        public ColorScheme(Color connectorColor)
+        public ColorScheme(Color connectorColor) : this()
         {
             m_connectorColor = connectorColor;
         }
@@ -19,34 +20,26 @@ namespace ConversationEditor
         public ColorScheme()
         {
             m_connectorColor = Color.Black;
+            ContextMenu = new ToolStripRenderer(this);
+            Hatch = new HatchBrush(HatchStyle.Percent50, SelectionRectangle);
         }
 
-        public static readonly Color SelectionRectangle = Color.FromArgb(128, Color.Blue);
-        public static readonly Pen ControlBorder = new Pen(Color.Black, 1);
-        public static readonly Color FormBackground = Color.FromArgb(45, 45, 45);
-        public static readonly Color Background = Color.FromArgb(56, 56, 56);
-        public static readonly Color Foreground = Color.FromArgb(205, 205, 205);
-        public static readonly Pen ForegroundPen = new Pen(Foreground);
-        public static readonly SolidBrush ForegroundBrush = new SolidBrush(Foreground);
-        public static readonly SolidBrush BackgroundBrush = new SolidBrush(Background);
-        public static readonly Color GroupBackgroundSelected = Color.FromArgb(92, Color.White);
-        public static readonly Color GroupBackgroundUnselected = Color.FromArgb(51, Color.White);
-        public static readonly Color Grid = Color.FromArgb(42, 42, 42);
-        public static readonly Color MinorGrid = Color.FromArgb(49, 49, 49);
         public Color Connectors { get { return m_connectorColor; } }
-        //public static readonly Color Connectors = Color.Black;
-        public static readonly Color SelectedConnectors = Foreground;
-        public static readonly Color SelectedConversationListItemBorder = Color.Black;
-        public static readonly Color SelectedConversationListItemPrimaryBackground = Color.FromArgb(96, 96, 96);
-        public static readonly Color SelectedConversationListItemSecondaryBackground = Color.FromArgb(76, 76, 76);
-        public static readonly Color SelectedText = Color.Blue;
-        public static readonly ToolStripProfessionalRenderer ContextMenu = new ToolStripRenderer();
+        public readonly Color SelectedConnectors = Defaults.Foreground;
+        public readonly Color SelectedConversationListItemBorder = Color.Black;
+        public readonly Color SelectedConversationListItemPrimaryBackground = Color.FromArgb(96, 96, 96);
+        public readonly Color SelectedConversationListItemSecondaryBackground = Color.FromArgb(76, 76, 76);
+        public readonly Brush Hatch;
+        public readonly ToolStripProfessionalRenderer ContextMenu;
+        public readonly Pen TreePen = new Pen(Defaults.Foreground) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dot };
 
         private class ToolStripRenderer : ToolStripProfessionalRenderer
         {
-            public ToolStripRenderer()
-                : base(new ContextMenuClass())
+            private ColorScheme m_scheme;
+            public ToolStripRenderer(ColorScheme scheme)
+                : base(new ContextMenuClass(scheme))
             {
+                m_scheme = scheme;
             }
 
             //protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
@@ -60,7 +53,7 @@ namespace ConversationEditor
             {
                 if (e.Item.Selected && e.Item.IsOnDropDown)
                 {
-                    using (Brush b = new SolidBrush(SelectedConversationListItemPrimaryBackground))
+                    using (Brush b = new SolidBrush(m_scheme.SelectedConversationListItemPrimaryBackground))
                         e.Graphics.FillRectangle(b, Rectangle.FromLTRB(-99999, -99999, 99999, 99999));
                 }
                 else
@@ -69,13 +62,13 @@ namespace ConversationEditor
 
             protected override void OnRenderArrow(ToolStripArrowRenderEventArgs e)
             {
-                e.ArrowColor = Foreground;
+                e.ArrowColor = m_scheme.Foreground;
                 base.OnRenderArrow(e);
             }
 
             protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
             {
-                e.TextColor = Foreground;
+                e.TextColor = m_scheme.Foreground;
                 base.OnRenderItemText(e);
             }
 
@@ -87,11 +80,17 @@ namespace ConversationEditor
 
         private class ContextMenuClass : ProfessionalColorTable
         {
+            ColorScheme m_scheme;
+            public ContextMenuClass(ColorScheme scheme)
+            {
+                m_scheme = scheme;
+            }
+
             public override Color ToolStripDropDownBackground
             {
                 get
                 {
-                    return ColorScheme.Background;
+                    return m_scheme.Background;
                 }
             }
 
@@ -99,7 +98,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return ColorScheme.Background;
+                    return m_scheme.Background;
                 }
             }
 
@@ -107,7 +106,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return ColorScheme.Background;
+                    return m_scheme.Background;
                 }
             }
 
@@ -115,7 +114,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return SelectedConversationListItemPrimaryBackground;
+                    return m_scheme.SelectedConversationListItemPrimaryBackground;
                 }
             }
 
@@ -139,7 +138,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return SelectedConversationListItemPrimaryBackground;
+                    return m_scheme.SelectedConversationListItemPrimaryBackground;
                 }
             }
 
@@ -147,7 +146,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return SelectedConversationListItemPrimaryBackground;
+                    return m_scheme.SelectedConversationListItemPrimaryBackground;
                 }
             }
 
@@ -155,7 +154,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return SelectedConversationListItemPrimaryBackground;
+                    return m_scheme.SelectedConversationListItemPrimaryBackground;
                 }
             }
 
@@ -163,7 +162,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return SelectedConversationListItemPrimaryBackground;
+                    return m_scheme.SelectedConversationListItemPrimaryBackground;
                 }
             }
 
@@ -171,7 +170,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return SelectedConversationListItemPrimaryBackground;
+                    return m_scheme.SelectedConversationListItemPrimaryBackground;
                 }
             }
 
@@ -179,7 +178,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return SelectedConversationListItemPrimaryBackground;
+                    return m_scheme.SelectedConversationListItemPrimaryBackground;
                 }
             }
 
@@ -187,7 +186,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return SelectedConversationListItemPrimaryBackground;
+                    return m_scheme.SelectedConversationListItemPrimaryBackground;
                 }
             }
 
@@ -203,7 +202,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return SelectedConversationListItemPrimaryBackground;
+                    return m_scheme.SelectedConversationListItemPrimaryBackground;
                 }
             }
 
@@ -211,7 +210,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return SelectedConversationListItemPrimaryBackground;
+                    return m_scheme.SelectedConversationListItemPrimaryBackground;
                 }
             }
 
@@ -219,7 +218,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return SelectedConversationListItemPrimaryBackground;
+                    return m_scheme.SelectedConversationListItemPrimaryBackground;
                 }
             }
 
@@ -227,7 +226,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return SelectedConversationListItemPrimaryBackground;
+                    return m_scheme.SelectedConversationListItemPrimaryBackground;
                 }
             }
 
@@ -235,7 +234,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return SelectedConversationListItemPrimaryBackground;
+                    return m_scheme.SelectedConversationListItemPrimaryBackground;
                 }
             }
 
@@ -243,7 +242,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return SelectedConversationListItemPrimaryBackground;
+                    return m_scheme.SelectedConversationListItemPrimaryBackground;
                 }
             }
 
@@ -259,7 +258,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return ColorScheme.Foreground;
+                    return m_scheme.Foreground;
                 }
             }
 
@@ -267,7 +266,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return ColorScheme.Foreground;
+                    return m_scheme.Foreground;
                 }
             }
 
@@ -379,7 +378,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return SelectedConversationListItemPrimaryBackground;
+                    return m_scheme.SelectedConversationListItemPrimaryBackground;
                 }
             }
 
@@ -387,7 +386,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return SelectedConversationListItemPrimaryBackground;
+                    return m_scheme.SelectedConversationListItemPrimaryBackground;
                 }
             }
 
@@ -395,7 +394,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return SelectedConversationListItemBorder;
+                    return m_scheme.SelectedConversationListItemBorder;
                 }
             }
 
@@ -404,7 +403,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return SelectedConversationListItemPrimaryBackground;
+                    return m_scheme.SelectedConversationListItemPrimaryBackground;
                 }
             }
 

@@ -10,6 +10,13 @@ namespace Utilities
 {
     public class DrawWindow : UserControl
     {
+        ColorScheme m_colorScheme = new ColorScheme();
+        ColorScheme ColorScheme
+        {
+            set { m_colorScheme = value; BackColor = value.Background; }
+            get { return m_colorScheme; }
+        }
+
         public DrawWindow()
             : base()
         {

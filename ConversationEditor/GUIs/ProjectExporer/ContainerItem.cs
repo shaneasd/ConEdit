@@ -12,7 +12,9 @@ namespace ConversationEditor
     {
         public abstract class ContainerItem : Item
         {
-            public ContainerItem(ConstructorParams parameters) : base(parameters) { }
+            public ContainerItem(ConstructorParams parameters) : base(parameters) 
+            {
+            }
 
             private List<Item> m_subItems = new List<Item>();
 
@@ -94,33 +96,31 @@ namespace ConversationEditor
             public readonly NotifierProperty<bool> Minimized = new NotifierProperty<bool>(false);
 
             #region Drawing
-            public static Pen TreePen = new Pen(ColorScheme.Foreground) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dot };
             public override void DrawTree(Graphics g, RectangleF iconRectangle, VisibilityFilter filter)
             {
-                //var start = iconRectangle.Center();
-                //float treeBranchX = start.X - HEIGHT + 6; //The x coordinate of the point where this node's connector line joins the parents branch line
-                //g.DrawLine(ContainerItem.TreePen, start, new PointF(treeBranchX, start.Y));
-                //g.DrawLine(ContainerItem.TreePen, treeBranchX, start.Y - HEIGHT, treeBranchX, start.Y + 1); //The +1 ensures the lines connect up nicely
-
                 var start = iconRectangle.Center();
+
+                float treeBranchX = start.X - HEIGHT + 6; //The x coordinate of the point where this node's connector line joins the parents branch line
+                g.DrawLine(m_scheme.TreePen, start, new PointF(treeBranchX, start.Y));
+
                 Func<Item, int> itemsBefore = (child) => Children(filter).TakeWhile(i => i != child).Select(c => c.AllItems(filter).Count()).Sum();
 
                 //Draw vertical line
                 if (Children(filter).Any())
                 {
                     int itemsBeforeLastChild = itemsBefore(Children(filter).Last());
-                    g.DrawLine(ContainerItem.TreePen, start, new PointF(start.X, start.Y + HEIGHT * (itemsBeforeLastChild + 1) + 1));
+                    g.DrawLine(m_scheme.TreePen, start, new PointF(start.X, start.Y + HEIGHT * (itemsBeforeLastChild + 1) + 1));
                 }
             }
             protected override void DrawMinimizeIcon(Graphics g, RectangleF minimizeIconRectangle, VisibilityFilter filter)
             {
                 if (m_subItems.Any(a => a.AllItems(filter).Any()))
                 {
-                    g.FillRectangle(ColorScheme.BackgroundBrush, minimizeIconRectangle);
-                    g.DrawRectangle(ColorScheme.ForegroundPen, minimizeIconRectangle);
-                    g.DrawLine(ColorScheme.ForegroundPen, new PointF(minimizeIconRectangle.Left + 2, minimizeIconRectangle.Y + minimizeIconRectangle.Height / 2), new PointF(minimizeIconRectangle.Right - 2, minimizeIconRectangle.Y + minimizeIconRectangle.Height / 2));
+                    g.FillRectangle(m_scheme.BackgroundBrush, minimizeIconRectangle);
+                    g.DrawRectangle(m_scheme.ForegroundPen, minimizeIconRectangle);
+                    g.DrawLine(m_scheme.ForegroundPen, new PointF(minimizeIconRectangle.Left + 2, minimizeIconRectangle.Y + minimizeIconRectangle.Height / 2), new PointF(minimizeIconRectangle.Right - 2, minimizeIconRectangle.Y + minimizeIconRectangle.Height / 2));
                     if (Minimized.Value)
-                        g.DrawLine(ColorScheme.ForegroundPen, new PointF(minimizeIconRectangle.Left + minimizeIconRectangle.Width / 2, minimizeIconRectangle.Top + 2), new PointF(minimizeIconRectangle.Right - minimizeIconRectangle.Width / 2, minimizeIconRectangle.Bottom - 2));
+                        g.DrawLine(m_scheme.ForegroundPen, new PointF(minimizeIconRectangle.Left + minimizeIconRectangle.Width / 2, minimizeIconRectangle.Top + 2), new PointF(minimizeIconRectangle.Right - minimizeIconRectangle.Width / 2, minimizeIconRectangle.Bottom - 2));
                 }
             }
             #endregion

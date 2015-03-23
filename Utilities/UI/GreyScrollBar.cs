@@ -51,12 +51,6 @@ namespace Utilities
                 ScrollbarBottomPressedIcon = new Bitmap(stream);
         }
 
-        //TODO: Make sure greyscrollbars have the right backcolor
-        //protected override void OnBackColorChanged(EventArgs e)
-        //{
-        //    BackColor = ColorScheme.FormBackground;
-        //}
-
         const int BUTTON_SIZE = 15;
         public GreyScrollBar()
         {

@@ -5,7 +5,7 @@ using System.Text;
 using ConversationEditor;
 using Conversation;
 
-namespace PluginPack
+namespace Clandestine
 {
     public class ProjectExplorerContextMenu : IProjectExplorerContextMenuItemsFactory
     {

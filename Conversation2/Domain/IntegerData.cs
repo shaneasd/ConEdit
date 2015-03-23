@@ -7,7 +7,7 @@ namespace Conversation
 {
     public struct IntegerData
     {
-        public IntegerData(string name, ID<ParameterType> typeID, int? max = null, int? min = null/*, int? def = null*/)
+        public IntegerData(string name, ParameterType typeID, int? max = null, int? min = null/*, int? def = null*/)
         {
             Name = name;
             TypeID = typeID;
@@ -16,7 +16,7 @@ namespace Conversation
             //Default = def;
         }
         public string Name;
-        public ID<ParameterType> TypeID;
+        public ParameterType TypeID;
         public int? Max;
         public int? Min;
         //public int? Default;

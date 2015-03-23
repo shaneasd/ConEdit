@@ -26,7 +26,7 @@ namespace ConversationEditor
                 get { return "Start Node Renderer"; }
             }
 
-            public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer)
+            public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
             {
                 return new StartGUI(n, p, localizer);
             }

@@ -16,6 +16,7 @@ namespace Conversation
         List<NodeData.ConfigData> Config { get; }
         IEnumerable<Func<IEditable, Output>> MakeConnectors();
         List<Parameter> MakeParameters(List<EditableGenerator.ParameterData> parameterData);
+        List<NodeData.ConfigData> GetParameterConfig(ID<Parameter> parameterID);
     }
 
     //public class CorruptEditableGenerator : IEditableGenerator
@@ -57,6 +58,7 @@ namespace Conversation
         public abstract List<NodeData.ConfigData> Config { get; }
         public abstract IEnumerable<Func<IEditable, Output>> MakeConnectors();
         public abstract List<Parameter> MakeParameters(List<EditableGenerator.ParameterData> parameterData);
+        public abstract List<NodeData.ConfigData> GetParameterConfig(ID<Parameter> parameterID);
         public struct ParameterData
         {
             public readonly ID<Parameter> Guid;
@@ -125,6 +127,12 @@ namespace Conversation
                 }
             }
             return result;
+        }
+
+        public override List<NodeData.ConfigData> GetParameterConfig(ID<Parameter> parameterID)
+        {
+            var parameterDefinition = m_data.Parameters.Single(p => p.Id == parameterID);
+            return parameterDefinition.Config;
         }
 
         public override IEditable Generate(ID<NodeTemp> id, List<EditableGenerator.ParameterData> parameterData)

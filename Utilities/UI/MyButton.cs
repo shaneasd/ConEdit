@@ -105,8 +105,8 @@ namespace Utilities
 
     public class HighlightableImageButton : MyButton
     {
-        private Pen SelectionPen;
-        private Brush HighlightBackground;
+        public Pen SelectionPen;
+        public Brush HighlightBackground;
         private Image Image;
 
         private bool m_highlighted;
@@ -153,8 +153,8 @@ namespace Utilities
 
     public class CrossButton : MyButton
     {
-        private Pen Foreground;
-        private Brush Background;
+        public Pen Foreground;
+        public Brush Background;
         public CrossButton(Func<RectangleF> area, Action callback, Pen foreground, Brush background)
             : base(area, callback)
         {

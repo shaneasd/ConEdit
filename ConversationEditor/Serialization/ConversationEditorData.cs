@@ -36,6 +36,13 @@ namespace ConversationEditor
 
         public class Deserializer : IDeserializerXml<ConversationEditorData>
         {
+            private ColorScheme m_colorScheme; //TODO: Shouldn't really need this to deserialize
+
+            public Deserializer(ColorScheme scheme)
+            {
+                m_colorScheme = scheme;
+            }
+
             public ConversationEditorData Read(XElement node)
             {
                 var groupsResult = new List<NodeGroup>();
@@ -43,7 +50,7 @@ namespace ConversationEditor
                 {
                     var contents = g.Elements("Node").Select(n => ID<NodeTemp>.Parse(n.Attribute("Id").Value));
                     System.Drawing.RectangleF area = NodeUIDataSerializerXml.ReadArea(g);
-                    groupsResult.Add(new NodeGroup(area, contents));
+                    groupsResult.Add(new NodeGroup(area, contents, m_colorScheme));
                 }
                 return new ConversationEditorData() { Groups = groupsResult };
             }
@@ -53,10 +60,10 @@ namespace ConversationEditor
         {
             private Serializer m_serializer;
             private Deserializer m_deserializer;
-            public SerializerDeserializer()
+            public SerializerDeserializer(ColorScheme scheme)
             {
                 m_serializer = new Serializer();
-                m_deserializer = new Deserializer();
+                m_deserializer = new Deserializer(scheme);
             }
 
             public void Write(ConversationEditorData data, XElement node)

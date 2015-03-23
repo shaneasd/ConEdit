@@ -46,28 +46,35 @@ namespace Conversation
 
         public struct ParameterData
         {
-            public ParameterData(string name, ID<Parameter> id, ID<ParameterType> type)
+            public ParameterData(string name, ID<Parameter> id, ParameterType type, List<ConfigData> config)
             {
+                if (config == null)
+                    throw new Exception("Parameter config cannot be null (A)");
                 Type = type;
                 Name = name;
                 Id = id;
                 Default = null;
+                Config = config;
             }
 
-            public ParameterData(string name, ID<Parameter> id, ID<ParameterType> type, string def)
+            public ParameterData(string name, ID<Parameter> id, ParameterType type, List<ConfigData> config, string def)
             {
+                if (config == null)
+                    throw new Exception("Parameter config cannot be null (B)");
                 Type = type;
                 Name = name;
                 Id = id;
                 Default = def;
+                Config = config;
             }
 
-            public ID<ParameterType> Type;
+            public ParameterType Type;
             public string Name;
             public ID<Parameter> Id;
             public string Default; //Can be null, string form of the default value
+            public List<ConfigData> Config;
 
-            public Parameter Make(Func<ID<ParameterType>, string, ID<Parameter>, string, Parameter> parameterFactory)
+            public Parameter Make(Func<ParameterType, string, ID<Parameter>, string, Parameter> parameterFactory)
             {
                 var result = parameterFactory(Type, Name, Id, Default);
                 //var @default = ;

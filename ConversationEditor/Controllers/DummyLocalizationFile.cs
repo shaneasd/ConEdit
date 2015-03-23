@@ -12,36 +12,39 @@ namespace ConversationEditor
 
         public string Localize(Conversation.ID<Conversation.LocalizedText> id)
         {
-            return "Missing Localization";
+            return LocalizationEngine.MISSING_LOCALIZATION;
         }
 
         public Utilities.SimpleUndoPair SetLocalizationAction(Conversation.ID<Conversation.LocalizedText> guid, string p)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException("Attempting to modify localization values of a dummy localization file");
         }
 
         public bool CanRemove(Func<bool> prompt)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException(); //Can never be in a project
         }
 
         public void Removed()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException(); // Can never be in a project
         }
 
         public Utilities.ISaveableFile File
         {
-            get { throw new NotImplementedException(); }
+            get { return null; } //No corresponding file
         }
 
-        public event Action FileModifiedExternally;
+        public event Action FileModifiedExternally { add { } remove { } } //Doesn't exist on disk
 
-        public event Action FileDeletedExternally;
+        public event Action FileDeletedExternally { add { } remove { } } //Doesn't exist on disk
 
-        public void Dispose()
+        public void Dispose() { } //No resources to clean up
+
+
+        public bool IsValid
         {
-            throw new NotImplementedException();
+            get { return false; }
         }
     }
 }

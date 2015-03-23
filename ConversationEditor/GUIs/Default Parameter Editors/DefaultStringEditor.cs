@@ -16,7 +16,7 @@ namespace ConversationEditor
         public class Factory : IParameterEditorFactory
         {
             public static readonly Guid GUID = Guid.Parse("b3948691-425b-4220-ba6e-9ef00c5bc0f7");
-            public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
+            public bool WillEdit(ParameterType type, WillEdit willEdit)
             {
                 return type == BaseTypeString.PARAMETER_TYPE;
             }
@@ -31,9 +31,11 @@ namespace ConversationEditor
                 get { return GUID; }
             }
 
-            public IParameterEditor<Control> Make()
+            public IParameterEditor<Control> Make(ColorScheme scheme)
             {
-                return new DefaultStringEditor();
+                var result = new DefaultStringEditor();
+                result.Scheme = scheme;
+                return result;
             }
         }
 
@@ -44,7 +46,6 @@ namespace ConversationEditor
             InitializeComponent();
 
             m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), MyTextBox.InputFormEnum.Text);
-            m_textBox.Colors.BorderPen = ColorScheme.ControlBorder;
             m_textBox.RequestedAreaChanged += () =>
             {
                 //Draw window is the whole control so we can just modify the control
@@ -80,5 +81,16 @@ namespace ConversationEditor
         }
 
         public event Action Ok;
+
+        ColorScheme m_scheme;
+        public ColorScheme Scheme
+        {
+            get { return m_scheme; }
+            set
+            {
+                m_scheme = value;
+                m_textBox.Colors.BorderPen = value.ControlBorder;
+            }
+        }
     }
 }

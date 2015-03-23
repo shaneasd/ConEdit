@@ -12,7 +12,7 @@ namespace ConversationEditor
     public abstract class NodeEditorFactory
     {
         public abstract bool WillEdit(ID<NodeTypeTemp> guid);
-        public abstract ConfigureResult Edit(IEditable node, AudioGenerationParameters audioContext, Func<ID<ParameterType>, ParameterEditorSetupData, IParameterEditor<Control>> config, LocalizationEngine localizer, IAudioProvider audioProvider);
+        public abstract ConfigureResult Edit(ColorScheme scheme, IEditable node, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, LocalizationEngine localizer, IAudioProvider audioProvider);
         public abstract string DisplayName { get; }
     }
 

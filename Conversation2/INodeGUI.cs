@@ -14,17 +14,4 @@ namespace Conversation
         void Draw(Graphics g, bool selected);
         void MoveTo(PointF point);
     }
-
-    public static class INodeGUIUtils
-    {
-        public static void Offset(this IGUI node, PointF offset)
-        {
-            node.MoveTo(node.Area.Center().Plus(offset));
-        }
-    }
-
-    public interface INodeGUI : INodeUI<INodeGUI>, IGUI
-    {
-        string DisplayName { get; }
-    }
 }

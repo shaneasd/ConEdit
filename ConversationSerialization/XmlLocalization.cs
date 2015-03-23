@@ -109,7 +109,7 @@ namespace Conversation.Serialization
                         {
                             var bestLocalization = m_bestLocalization(guid);
                             if (bestLocalization != null)
-                                elements.Add(guid, new XElement("Localize", new XAttribute("id", guid), new XAttribute("localized", "0"), bestLocalization));
+                                elements.Add(guid, new XElement("Localize", new XAttribute("id", guid.Serialized()), new XAttribute("localized", "0"), bestLocalization));
                         }
                     }
                 }

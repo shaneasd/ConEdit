@@ -17,7 +17,7 @@ namespace Conversation
             m_enumeration = enumeration;
         }
 
-        string m_textOverride = null;
+        string m_textOverride = null; //initial string representation of parameter that failed parsing (or null if parsing succeeded or a new value has been specified.
 
         protected override bool DeserialiseValue(string value)
         {
@@ -29,13 +29,14 @@ namespace Conversation
             }
             else
             {
+                Value = guid;
                 m_textOverride = null;
             }
             //return false;
             //TODO: Should this cause it to fail? Or be corrupt?
             //if ( !m_enumeration.Options.Contains(guid))
             //    return false;
-            Value = guid;
+            //Value = guid;
             return true;
         }
 
@@ -49,11 +50,14 @@ namespace Conversation
             {
                 base.Value = value;
                 EditorSelected = value;
+                m_textOverride = null;
             }
         }
 
         protected override string InnerValueAsString()
         {
+            if (m_textOverride != null)
+                return m_textOverride;
             return m_value.ToString();
         }
 

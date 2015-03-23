@@ -22,6 +22,14 @@ namespace ConversationEditor
 
     public class Project : IProject, ISaveableFileProvider
     {
+        public static ILocalizationFile SelectNewLocalizer(IProjectElementList<LocalizationFile, ILocalizationFile> localizers)
+        {
+            if (localizers.Any())
+                return localizers.First();
+            else
+                return DummyLocalizationFile.Instance;
+        }
+
         public class TData
         {
             public TData(IEnumerable<string> conversations, IEnumerable<string> domains, IEnumerable<string> localizations, IEnumerable<string> audios)
@@ -62,7 +70,7 @@ namespace ConversationEditor
         private ConversationDataSource m_conversationDataSource;
         SaveableFileNotUndoable m_file;
 
-        public static Project CreateEmpty(ILocalizationContext context, FileInfo path, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializer, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
+        public static Project CreateEmpty(ColorScheme scheme, ILocalizationContext context, FileInfo path, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializer, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
         {
             Project result = null;
             FileInfo conversationFile;
@@ -97,7 +105,7 @@ namespace ConversationEditor
 
             TData data = new TData(conversationPaths, domainPaths, localizationPaths, Enumerable.Empty<string>());
 
-            result = new Project(context, data, conversationNodeFactory, domainNodeFactory, m, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig, audioCustomization);
+            result = new Project(scheme, context, data, conversationNodeFactory, domainNodeFactory, m, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig, audioCustomization);
             return result;
         }
 
@@ -157,8 +165,8 @@ namespace ConversationEditor
             return false;
         }
 
-        //TODO: I don't think the project should have to know the localization context
-        public Project(ILocalizationContext context, TData data, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, MemoryStream initialData, FileInfo projectFile, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializerFactory, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
+        //TODO: Project shouldn't need colorscheme
+        public Project(ColorScheme scheme, ILocalizationContext context, TData data, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, MemoryStream initialData, FileInfo projectFile, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializerFactory, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
         {
             var soFar = DateTime.Now - Process.GetCurrentProcess().StartTime;
 
@@ -189,7 +197,7 @@ namespace ConversationEditor
                     m_domainDataSource = new DomainDomain(pluginsConfig);
                     Func<IEnumerable<FileInfo>, IEnumerable<Or<DomainFile, MissingDomainFile>>> loader = paths =>
                     {
-                        var result = DomainFile.Load(paths, m_domainDataSource, null, DomainSerializerDeserializer.Make(m_domainDataSource), DomainNodeFactory, () => DomainUsage).Evaluate();
+                        var result = DomainFile.Load(paths, m_domainDataSource, null, DomainSerializerDeserializer.Make(m_domainDataSource, scheme), DomainNodeFactory, () => DomainUsage).Evaluate();
                         result.ForAll(a => a.Do(b => b.ConversationDomainModified += ConversationDatasourceModified, null));
                         return result;
                     };
@@ -200,10 +208,18 @@ namespace ConversationEditor
                 }
                 m_conversationDataSource = new ConversationDataSource(BaseTypeSet.Make(), m_domainFiles.Select(df => df.Data));
 
+
                 {
-                    Func<ISaveableFileProvider, Audio> audio = c =>
+                    m_localizer = new LocalizationEngine(context, UsedLocalizations, ShouldContract, ShouldExpand, pathOk, s => CheckFolder(s, Origin));
+                    IEnumerable<FileInfo> toLoad = Rerout(localizerPaths);
+                    m_localizer.Localizers.Load(toLoad);
+                }
+
+                {
+                    Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> audio = (c, p) =>
                     {
-                        return m_audioProvider.Generate(new AudioGenerationParameters(c, this));
+                        Func<ID<LocalizedText>, string> localize = id => context.CurrentLocalization.Value.Localize(id);
+                        return m_audioProvider.Generate(new AudioGenerationParameters(c, this, p, localize));
                     };
                     Func<IEnumerable<FileInfo>, IEnumerable<ConversationFile>> loadConversation = files => files.Select(file => ConversationFile.Load(file, m_conversationDataSource, ConversationNodeFactory, m_conversationSerializerFactory(m_conversationDataSource), audio, m_audioProvider));
                     Func<DirectoryInfo, ConversationFile> makeEmpty = path => ConversationFile.CreateEmpty(path, this, pathOk, ConversationNodeFactory, audio, m_audioProvider);
@@ -211,12 +227,6 @@ namespace ConversationEditor
                     m_conversations = new ProjectElementList<ConversationFile, MissingConversationFile, IConversationFile>(s => CheckFolder(s, Origin), loadConversation, makeEmpty, makeMissing);
                     IEnumerable<FileInfo> toLoad = Rerout(conversationPaths);
                     m_conversations.Load(toLoad);
-                }
-                {
-                    m_localizer = new LocalizationEngine(context, UsedLocalizations, ShouldContract, ShouldExpand, pathOk, s => CheckFolder(s, Origin));
-                    IEnumerable<FileInfo> toLoad = Rerout(localizerPaths);
-                    m_localizer.Localizers.Load(toLoad);
-                    context.CurrentLocalization.Value = m_localizer.Localizers.First(); //TODO: Pick appropriate localizer
                 }
 
                 RefreshCallbacks(m_conversations);
@@ -272,9 +282,9 @@ namespace ConversationEditor
             }
         }
 
-        public void OnElementMoved(FileInfo from, FileInfo to)
+        public void OnElementMoved(Changed<FileInfo> change)
         {
-            if (from.FullName != to.FullName)
+            if (change.from.FullName != change.to.FullName)
                 GotChanged();
         }
 

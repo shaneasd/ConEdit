@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Utilities
 {
-    public static class UnordererTuple
+    public static class UnorderedTuple
     {
         public static UnorderedTuple2<T> Make<T>(T a, T b)
         {

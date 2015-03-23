@@ -27,6 +27,24 @@ namespace ConversationEditor
         private ContextMenuStrip m_contextMenu;
         private SharedContext m_context;
 
+        ColorScheme m_scheme;
+        public ColorScheme Scheme
+        {
+            get { return m_scheme; }
+            set
+            {
+                m_scheme = value;
+                drawWindow1.BackColor = value.Background;
+                m_contextMenu.Renderer = value.ContextMenu;
+
+                foreach (var button in m_buttons)
+                {
+                    button.SelectionPen = Scheme.ForegroundPen;
+                    button.HighlightBackground = Scheme.ForegroundBrush;
+                }
+            }
+        }
+
         static ProjectExplorer()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
@@ -42,6 +60,8 @@ namespace ConversationEditor
         {
             InitializeComponent();
 
+            UpdateSelectedLocalizer = new SuppressibleAction(UnsuppressibleUpdateSelectedLocalizer);
+
             m_updateScrollbar = new SuppressibleAction(() =>
             {
                 greyScrollBar1.Minimum = 0;
@@ -50,9 +70,7 @@ namespace ConversationEditor
                 greyScrollBar1.PercentageCovered = drawWindow1.Height / listSize;
             });
 
-            drawWindow1.BackColor = ColorScheme.Background;
             m_contextMenu = this.contextMenuStrip1;
-            m_contextMenu.Renderer = ColorScheme.ContextMenu;
             drawWindow1.Resize += (a, b) => this.InvalidateImage();
 
             greyScrollBar1.Scrolled += () => drawWindow1.Invalidate(true);
@@ -62,7 +80,7 @@ namespace ConversationEditor
             Func<Image, HighlightableImageButton> makeButton = icon =>
                 {
                     var thisoffset = offset;
-                    var result = HighlightableImageButton.Create(() => new RectangleF(thisoffset, 0, icon.Width + 4, icon.Height + 4), ColorScheme.ForegroundPen, ColorScheme.ForegroundBrush, icon);
+                    var result = HighlightableImageButton.Create(() => new RectangleF(thisoffset, 0, icon.Width + 4, icon.Height + 4), Pens.Aqua, Brushes.LightGreen, icon);
                     offset += icon.Width + 4 + 2;
                     return result;
                 };
@@ -82,31 +100,28 @@ namespace ConversationEditor
             m_buttons.Add(folderFilterButton);
         }
 
+        private void UnsuppressibleUpdateSelectedLocalizer()
+        {
+            var localizationItems = m_root.AllItems(VisibilityFilter.Just(Localizations: true)).OfType<RealLeafItem<ILocalizationFile, ILocalizationFile>>();
+            if (localizationItems.Any())
+            {
+                m_selectedLocalizer = localizationItems.FirstOrDefault(f => f.Item.Equals(m_context.CurrentLocalization.Value));
+                InvalidateImage();
+            }
+        }
+
+        SuppressibleAction UpdateSelectedLocalizer;
+
         public void Initialize(SharedContext context)
         {
             m_context = context;
-            m_context.CurrentLocalization.Changed.Register(this, (a, change) =>
-            {
-                var localizationItems = m_root.AllItems(VisibilityFilter.Just(Localizations: true)).OfType<RealLeafItem<ILocalizationFile, ILocalizationFile>>();
-                if (localizationItems.Any())
-                {
-                    var match = localizationItems.FirstOrDefault(f => f.Item.Equals(change.to)) ?? localizationItems.First(); //TODO: Which localization to select if the input makes no sense
-                    SelectLocalization(match);
-                }
-            });
+            m_context.CurrentLocalization.Changed.Register(this, (a, change) => UpdateSelectedLocalizer.TryExecute());
         }
 
         public void InvalidateImage()
         {
-            lock (m_imageLock)
-            {
-                if (m_image != null)
-                {
-                    m_image.Dispose();
-                    m_drawn.Clear();
-                    m_image = null;
-                }
-            }
+            m_drawn.Clear();
+
             Action invalidate = () => Invalidate(true);
             if (InvokeRequired)
                 Invoke(invalidate);
@@ -144,11 +159,6 @@ namespace ConversationEditor
         Item m_selectedItem = Item.Null; //The most highlighted thing. Clicking again will rename.
         Item m_selectedEditable = null; //The thing that's being viewed in the main editor
         RealLeafItem<ILocalizationFile, ILocalizationFile> m_selectedLocalizer; //Localization file to render as the currently active source of localization
-        private void SelectLocalization(RealLeafItem<ILocalizationFile, ILocalizationFile> loc)
-        {
-            m_selectedLocalizer = loc;
-            InvalidateImage();
-        }
 
         /// <summary>
         /// The item being dragged within the list
@@ -236,22 +246,10 @@ namespace ConversationEditor
             }
         }
 
-        object m_imageLock = new object();
-        Image m_image = null;
         HashSet<Item> m_drawn = new HashSet<Item>();
 
         private void drawWindow1_Paint(object sender, PaintEventArgs e)
         {
-            Image image;
-            lock (m_imageLock)
-            {
-                if (m_image == null)
-                {
-                    m_image = new Bitmap(drawWindow1.Width, (int)RectangleForIndex(m_root.AllItems(Visibility).Count()).Bottom);
-                }
-                image = m_image;
-            }
-
             Graphics g = e.Graphics;
             {
                 var allItems = m_root.AllItems(Visibility).ToArray();
@@ -285,6 +283,7 @@ namespace ConversationEditor
                 }
 
                 //Make sure all ancestors' vertical lines are drawn
+                if (itemsToDraw.Any())
                 {
                     var firstDrawn = itemsToDraw.Last();
                     uint indent = firstDrawn.Item1.IndentLevel;
@@ -312,7 +311,7 @@ namespace ConversationEditor
                 }
             }
 
-            e.Graphics.DrawRectangle(ColorScheme.ControlBorder, new Rectangle(new Point(0, 0), new Size(drawWindow1.Width - 1, drawWindow1.Height - 1)));
+            e.Graphics.DrawRectangle(Scheme.ControlBorder, new Rectangle(new Point(0, 0), new Size(drawWindow1.Width - 1, drawWindow1.Height - 1)));
         }
 
         private int IndexOf(Item item)
@@ -330,7 +329,8 @@ namespace ConversationEditor
         {
             if (item == null)
             {
-                m_selectedItem = null;
+                m_selectedItem = Item.Null;
+                //m_selectedItem = null;
                 m_selectedEditable = null;
             }
             else
@@ -400,9 +400,9 @@ namespace ConversationEditor
                 m_contextItem = item;
                 m_cleanContextMenu();
                 m_cleanContextMenu = () => { };
-                saveToolStripMenuItem.Visible = m_selectedItem.CanSave;
-                removeToolStripMenuItem.Visible = m_selectedItem.CanRemove;
-                deleteToolStripMenuItem.Visible = m_selectedItem.CanDelete;
+                saveToolStripMenuItem.Visible = m_selectedItem != null && m_selectedItem.CanSave;
+                removeToolStripMenuItem.Visible = m_selectedItem != null && m_selectedItem.CanRemove;
+                deleteToolStripMenuItem.Visible = m_selectedItem != null && m_selectedItem.CanDelete;
                 makeCurrentLocalizationMenuItem.Visible = m_contextItem is RealLeafItem<ILocalizationFile, ILocalizationFile>;
                 playMenuItem.Visible = m_contextItem is RealLeafItem<AudioFile, IAudioFile>;
                 m_contextMenu.Show(PointToScreen(e.Location));
@@ -410,11 +410,14 @@ namespace ConversationEditor
                 foreach (var a in m_contextMenuItemsFactory.ConversationContextMenuItems(a => m_context.CurrentLocalization.Value.Localize(a)))
                 {
                     var con = m_contextItem as ConversationItem;
-                    var i = new ToolStripMenuItem(a.Name);
-                    i.Click += (x, y) => a.Execute(con.Item, new ErrorCheckerUtils(m_root.Project.ConversationDataSource));
-                    m_contextMenu.Items.Insert(m_contextMenu.Items.IndexOf(importConversationToolStripMenuItem), i);
-                    var temp = m_cleanContextMenu;
-                    m_cleanContextMenu = () => { temp(); m_contextMenu.Items.Remove(i); };
+                    if (con != null)
+                    {
+                        var i = new ToolStripMenuItem(a.Name);
+                        i.Click += (x, y) => a.Execute(con.Item, new ErrorCheckerUtils(m_root.Project.ConversationDataSource));
+                        m_contextMenu.Items.Insert(m_contextMenu.Items.IndexOf(importConversationToolStripMenuItem), i);
+                        var temp = m_cleanContextMenu;
+                        m_cleanContextMenu = () => { temp(); m_contextMenu.Items.Remove(i); };
+                    }
                 }
             }
         }
@@ -443,9 +446,22 @@ namespace ConversationEditor
                 Clicked(item, e);
         }
 
+        public bool ShouldReplaceFile(string newPath)
+        {
+            if (m_root.Project.Conversations.Any(f => f.File.File.FullName == (new FileInfo(newPath)).FullName))
+            {
+                MessageBox.Show("A file with that name already exists within the project");
+                return false;
+            }
+            else
+            {
+                return DialogResult.OK == MessageBox.Show("Replace existing file?", "Replace?", MessageBoxButtons.OKCancel);
+            }
+        }
+
         private bool RenameItem(FileSystemObject item, string to)
         {
-            if (m_root.RenameElement(item, to))
+            if (m_root.RenameElement(item, to, ShouldReplaceFile))
             {
                 InvalidateImage();
                 return true;
@@ -455,7 +471,7 @@ namespace ConversationEditor
 
         private ProjectItem MakeNewProjectItem(IProject p)
         {
-            var result = new ProjectItem(() => RectangleForItem(m_root), p, () => TransformToRenderSurface, RenameItem);
+            var result = new ProjectItem(Scheme, () => RectangleForItem(m_root), p, () => TransformToRenderSurface, RenameItem);
             result.File.SaveStateChanged += InvalidateImage;
             return result;
         }
@@ -483,9 +499,7 @@ namespace ConversationEditor
                 m_root.ClearProject();
                 m_mapping[new DirectoryInfoHashed(m_root.Path)] = m_root;
 
-
-                //TODO: Should be a better way to query this
-                if (!(m_root.Project is DummyProject)) //If it's a dummy project then A) we don't need to bother and B) getting the parent of the project file will fail
+                if (m_root.Project.File.Exists) //If it's a dummy project then A) we don't need to bother and B) getting the parent of the project file will fail
                 {
                     foreach (var directory in m_root.File.Parent.EnumerateDirectories("*", SearchOption.AllDirectories))
                     {
@@ -524,9 +538,12 @@ namespace ConversationEditor
                 m_root.Project.LocalizationFiles.Removed += Remove;
                 m_root.Project.LocalizationFiles.Reloaded += (from, to) => { Remove(from); Add(to); };
                 m_root.Project.LocalizationFiles.Added += Add;
-                foreach (var localizationFile in m_root.Project.LocalizationFiles)
+                using (UpdateSelectedLocalizer.SuppressCallback())
                 {
-                    Add(localizationFile);
+                    foreach (var localizationFile in m_root.Project.LocalizationFiles)
+                    {
+                        Add(localizationFile);
+                    }
                 }
 
                 if (m_root.Project.File.Exists) //If it's not a real project then don't try and enumerate directories
@@ -539,6 +556,7 @@ namespace ConversationEditor
                 }
 
                 SelectItem(null);
+                UpdateSelectedLocalizer.TryExecute();
 
                 m_updateScrollbar.TryExecute();
             }
@@ -576,6 +594,10 @@ namespace ConversationEditor
                     ItemSelected.Execute();
                 }
 
+                if (element is ILocalizationFile)
+                {
+                    UpdateSelectedLocalizer.TryExecute(); //If this is a localizer being added then it wasn't in the list when the selection changed callback was triggered
+                }
                 m_updateScrollbar.TryExecute();
                 InvalidateImage();
             }
@@ -591,7 +613,8 @@ namespace ConversationEditor
                 m_root.RemoveProjectChild(item, element.File.File.FullName);
                 if (item == m_selectedItem)
                 {
-                    m_selectedItem = null;
+                    m_selectedItem = Item.Null;
+                    //m_selectedItem = null;
                     m_selectedEditable = null;
                     ItemSelected.Execute();
                 }
@@ -636,7 +659,7 @@ namespace ConversationEditor
                 if (add)
                 {
                     FolderItem child = null;
-                    child = new FolderItem(() => RectangleForItem(child), folder, m_root.Project, parent, () => TransformToRenderSurface, RenameItem);
+                    child = new FolderItem(Scheme, () => RectangleForItem(child), folder, m_root.Project, parent, () => TransformToRenderSurface, RenameItem);
                     child.Minimized.Changed.Register(this, (a, b) => m_updateScrollbar.TryExecute());
                     m_root.InsertProjectChildAlphabetically(parent, child);
                     parent = child;
@@ -714,7 +737,7 @@ namespace ConversationEditor
                     {
                         if (!m_root.Contains(path.FullName)) //Can't move a file to a folder that already contains an item by that name
                         {
-                            if (!m_root.MoveElement(DragItem, destination, path.FullName))
+                            if (!m_root.MoveElement(DragItem, destination, path.FullName, ShouldReplaceFile))
                                 MessageBox.Show("Cannot move file to this location. Possibly a file with this name already exists there.");
                         }
                         else
@@ -989,7 +1012,7 @@ namespace ConversationEditor
             if (newDir != null)
             {
                 ProjectExplorer.FolderItem item = null;
-                item = new ProjectExplorer.FolderItem(() => RectangleForItem(item), newDir, m_root.Project, parent, () => TransformToRenderSurface, RenameItem);
+                item = new ProjectExplorer.FolderItem(Scheme, () => RectangleForItem(item), newDir, m_root.Project, parent, () => TransformToRenderSurface, RenameItem);
                 m_root.InsertProjectChildAlphabetically(parent, item);
                 m_updateScrollbar.TryExecute();
                 InvalidateImage();

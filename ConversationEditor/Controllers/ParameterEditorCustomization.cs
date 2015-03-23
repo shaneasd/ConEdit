@@ -8,7 +8,7 @@ namespace ConversationEditor
 {
     class ParameterEditorCustomization : IEditable
     {
-        public static Guid DefaultEditor(ID<ParameterType> type, WillEdit willEdit)
+        public static Guid DefaultEditor(ParameterType type, WillEdit willEdit)
         {
             if (willEdit.IsDecimal(type))
                 return DefaultDecimalEditor.Factory.GUID;
@@ -26,19 +26,21 @@ namespace ConversationEditor
                 return DefaultLocalizedStringEditor.Factory.GUID;
             else if (type == BaseTypeAudio.PARAMETER_TYPE)
                 return DefaultAudioEditor.Factory.GUID;
+            else if (type.IsSet)
+                return DefaultSetEditor.Factory.GUID;
             else
                 return Guid.Empty;
         }
 
         private List<Parameter> m_parameters;
-        private MapConfig<ID<ParameterType>, Guid> m_typeMapConfig;
+        private MapConfig<ParameterType, Guid> m_typeMapConfig;
         public ParameterEditorCustomization()
         {
             m_parameters = new List<Parameter>();
-            m_parameters.Add(new EnumParameter("Character", ID<Parameter>.New(), new Enumeration(new[] { Tuple.Create(Guid.NewGuid(), "value") }, ID<ParameterType>.New())));
+            m_parameters.Add(new EnumParameter("Character", ID<Parameter>.New(), new Enumeration(new[] { Tuple.Create(Guid.NewGuid(), "value") }, ParameterType.Basic.New())));
         }
 
-        public ParameterEditorCustomization(IDataSource datasource, MapConfig<ID<ParameterType>, Guid> typeMapConfig, List<IParameterEditorFactory> allEditors)
+        public ParameterEditorCustomization(IDataSource datasource, MapConfig<ParameterType, Guid> typeMapConfig, IEnumerable<IParameterEditorFactory> allEditors)
         {
             m_typeMapConfig = typeMapConfig;
             m_parameters = new List<Parameter>();

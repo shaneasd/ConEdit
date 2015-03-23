@@ -167,8 +167,15 @@ namespace ConversationEditor
             else if (m_datasource.IsConfig(node.Type))
             {
                 var nodeConnector = node.Connectors.Single(c => c.m_definition.Id == DomainIDs.CONFIG_OUTPUT_DEFINITION.Id);
-                var nodes = nodeConnector.Connections.Select(c => c.Parent).Where(n => n.NodeTypeID == DomainIDs.NODE_GUID);
+                var connected = nodeConnector.Connections.Select(c => c.Parent);
+
+                var nodes = connected.Where(n => n.NodeTypeID == DomainIDs.NODE_GUID);
                 DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction);
+
+                //Don't currently need to handle parameter config affecting nodes
+                //var parameters = connected.Where(n => m_datasource.IsParameter(n.NodeTypeID));
+                //var nodes2 = parameters.SelectMany(p=>p.Connectors.Where(c=>c.m_definition.Id == DomainIDs.PARAMETER_OUTPUT_DEFINITION.Id))
+                //DomainDomain.ForEachNode
             }
             else
             {

@@ -66,12 +66,12 @@ namespace Conversation
 
             public bool CanConnect(ID<TConnectorDefinition> a, ID<TConnectorDefinition> b)
             {
-                return m_rules.Contains(UnordererTuple.Make(a, b));
+                return m_rules.Contains(UnorderedTuple.Make(a, b));
             }
 
             public void Allow(ID<TConnectorDefinition> a, ID<TConnectorDefinition> b)
             {
-                m_rules.Add(UnordererTuple.Make(a, b));
+                m_rules.Add(UnorderedTuple.Make(a, b));
             }
         }
 

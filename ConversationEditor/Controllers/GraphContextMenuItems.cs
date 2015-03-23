@@ -18,9 +18,9 @@ namespace ConversationEditor
         {
         }
 
-        public override IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(GraphEditorControl<ConversationNode> control)
+        public override IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(ColorScheme scheme, GraphEditorControl<ConversationNode> control)
         {
-            foreach (var action in base.GetMenuActions(control))
+            foreach (var action in base.GetMenuActions(scheme, control))
                 yield return action;
             yield return new MenuAction2<ConversationNode>("Find References", (n, p) => () => FileReferences(n), null, null, null);
         }
@@ -34,7 +34,7 @@ namespace ConversationEditor
             FileReferences = findReferences;
         }
 
-        public virtual IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(GraphEditorControl<ConversationNode> control)
+        public virtual IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(ColorScheme scheme, GraphEditorControl<ConversationNode> control)
         {
             MenuAction2<ConversationNode> addNodes = new MenuAction2<ConversationNode>("Add Node", (n, p) => null, null, null, p => { });
             AddNodeMenuItem(addNodes, control.DataSource.Nodes, control);
@@ -43,7 +43,7 @@ namespace ConversationEditor
             yield return new MenuAction2<ConversationNode>("Reset Zoom", (n, p) => null, null, null, (p) => { control.GraphScale = 1; });
             yield return new MenuAction2<ConversationNode>("Paste", (n, p) => null, null, null, (p) => { control.Paste(p); });
             yield return new MenuAction2<ConversationNode>("Delete", (n, p) => () => { control.CurrentFile.Remove(n.Only(), Enumerable.Empty<NodeGroup>()); }, null, null, null);
-            yield return new MenuAction2<ConversationNode>("Remove Links", (n, p) => null, (i, p) => { control.CurrentFile.RemoveLinks(i); }, null, null);
+            yield return new MenuAction2<ConversationNode>("Remove Links", (n, p) => () => { foreach (var c in n.Connectors) control.CurrentFile.RemoveLinks(c); }, (i, p) => { control.CurrentFile.RemoveLinks(i); }, null, null);
             yield return new MenuAction2<ConversationNode>("Copy ID", (n, p) => control.ShowIDs ? () => Clipboard.SetText(n.Id.Serialized()) : (Action)null, null, null, null);
         }
 

@@ -59,5 +59,11 @@ namespace ConversationEditor
         {
             m_file.Dispose();
         }
+
+
+        public bool IsValid
+        {
+            get { return false; }
+        }
     }
 }

@@ -43,7 +43,7 @@ namespace ConversationEditor
 
         public event Action Modified { add { } remove { } } //Missing file cannot be modified
 
-        public event Action<System.IO.FileInfo, System.IO.FileInfo> Moved { add { } remove { } } //Missing file cannot be moved
+        public event Action<Changed<System.IO.FileInfo>> Moved { add { } remove { } } //Missing file cannot be moved
 
         public event Action SaveStateChanged { add { } remove { } } //Can't be modified
 

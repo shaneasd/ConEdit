@@ -12,13 +12,17 @@ namespace ConversationEditor
 {
     public class AudioGenerationParameters
     {
-        public AudioGenerationParameters(ISaveableFileProvider file, IProject project)
+        public AudioGenerationParameters(ISaveableFileProvider file, IProject project, IEnumerable<Parameter> parameters, Func<ID<LocalizedText>, string> localize)
         {
             File = file;
             Project = project;
+            Parameters = parameters.ToArray();
+            Localize = localize;
         }
         public readonly ISaveableFileProvider File;
         public readonly IProject Project;
+        public readonly Parameter[] Parameters;
+        public readonly Func<ID<LocalizedText>, string> Localize;
     }
 
     public interface IAudioProvider
@@ -208,45 +212,36 @@ namespace ConversationEditor
 
         public void UpdateUsage()
         {
-            //Func<IEnumerable<FileInfo>, int> CalculateAudioFilesHash = files =>
-            //{
-            //    int hash = 0;
-            //    foreach (var file in files)
-            //    {
-            //        unchecked
-            //        {
-            //            //Accumulate all the hashes using addition. I didn't want to use xor because I intuite that it might be quite sensitive to
-            //            //false matches (an unintentional birthday attack). However I did need something that was commutative so that the order of
-            //            //the lists doesn't matter. Unchecked signed integer addition seems to use modulo arithmetic and so is commutative over addition
-            //            hash += file.FullName.GetHashCode();
-            //        }
-            //    }
-            //    return hash;
-            //};
-
-            //int oldHash = CalculateAudioFilesHash(AudioFiles.Select(a => a.File.File));
-            //int newHash = CalculateAudioFilesHash(UsedAudio().Select(GetPath));
-
-            //We make the (potentially incorrect) assumption that if the hash of all the files hasn't changed
-            //Then the list of files hasn't changed. This will probably always hold but due to the primitive
-            //hashing function there could be some peculiar cases.
-            //if (oldHash != newHash)
-            //{
             m_updateAll = true;
             UpdateQueued.TryExecute();
-            //return true;
-            //}
-            //else
-            //{
-            //    return false;
-            //}
         }
 
         private void ReallyUpdateUsage()
         {
             if (m_updateAll)
             {
-                m_project.AudioFiles.Load(UsedAudio().Select(GetPath));
+                var fileInfoComparer = new GenericEqualityComparer<FileInfo>((a, b) => a.FullName == b.FullName, a => a.FullName.GetHashCode());
+                HashSet<FileInfo> usedAudioPaths = new HashSet<FileInfo>(fileInfoComparer);
+                HashSet<FileInfo> existing = new HashSet<FileInfo>(AudioFiles.Select(a => a.File.File), fileInfoComparer);
+
+                List<FileInfo> toLoad = new List<FileInfo>();
+                foreach (var path in UsedAudio().Select(GetPath))
+                {
+                    if (!usedAudioPaths.Add(path))
+                    {
+                        MessageBox.Show("The path " + path + " is refered to by more than one audio parameter!", "Duplicate audio field", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+                    }
+                    else
+                    {
+                        if (!existing.Contains(path))
+                            toLoad.Add(path);
+                    }
+                }
+
+                if (toLoad.Any())
+                {
+                    m_project.AudioFiles.Load(toLoad);
+                }
             }
             else if (m_toUpdate.Any())
             {

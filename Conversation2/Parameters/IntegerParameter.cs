@@ -14,7 +14,7 @@ namespace Conversation
             public int? Min = null;
         }
 
-        public IntegerParameter(string name, ID<Parameter> id, ID<ParameterType> typeId, Definition definition, string defaultValue = null)
+        public IntegerParameter(string name, ID<Parameter> id, ParameterType typeId, Definition definition, string defaultValue = null)
             : base(name, id, typeId, defaultValue)
         {
             m_definition = definition ?? new Definition();

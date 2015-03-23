@@ -17,7 +17,7 @@ namespace ConversationEditor
         public class Factory : IParameterEditorFactory
         {
             public static readonly Guid GUID = Guid.Parse("b5d1b3ea-5998-4e53-bf78-f09311f81405");
-            public bool WillEdit(ID<ParameterType> type, WillEdit willEdit)
+            public bool WillEdit(ParameterType type, WillEdit willEdit)
             {
                 return type == BaseTypeAudio.PARAMETER_TYPE;
             }
@@ -32,9 +32,11 @@ namespace ConversationEditor
                 get { return GUID; }
             }
 
-            public IParameterEditor<Control> Make()
+            public IParameterEditor<Control> Make(ColorScheme scheme)
             {
-                return new DefaultAudioEditor();
+                var result =  new DefaultAudioEditor();
+                result.Scheme = scheme;
+                return result;
             }
         }
 
@@ -43,10 +45,8 @@ namespace ConversationEditor
         public DefaultAudioEditor()
         {
             InitializeComponent();
-            ForeColor = ColorScheme.Foreground;
 
             m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), MyTextBox.InputFormEnum.Path);
-            m_textBox.Colors.BorderPen = ColorScheme.ControlBorder;
             m_textBox.RequestedAreaChanged += () =>
             {
                 int extraHeight = (Size.Height - drawWindow1.Size.Height).Clamp(0, int.MaxValue);
@@ -75,7 +75,7 @@ namespace ConversationEditor
             m_audioProvider = data.AudioProvider;
             m_audioGenerationParameters = data.AudioGenerationParameters;
             if (!data.Parameter.Corrupted)
-                m_textBox.Text = m_parameter.Value.DisplayValue();
+                m_textBox.Text = m_parameter.Value.Value;
             else if (m_parameter.Value.Value == null)
                 Generate();
         }
@@ -127,6 +127,18 @@ namespace ConversationEditor
         private void btnGenerate_Click(object sender, EventArgs e)
         {
             Generate();
+        }
+
+        private ColorScheme m_scheme;
+        public ColorScheme Scheme
+        {
+            get { return m_scheme; }
+            set
+            {
+                m_scheme = value;
+                m_textBox.Colors.BorderPen = value.ControlBorder;
+                ForeColor = value.Foreground;
+            }
         }
     }
 }
