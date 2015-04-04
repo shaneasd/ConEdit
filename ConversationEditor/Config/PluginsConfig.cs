@@ -10,16 +10,31 @@ using Conversation;
 
 namespace ConversationEditor
 {
+    /// <summary>
+    /// Whether to consider the main assembly or just plugin assemblies when importing factories
+    /// </summary>
+    public enum MainAssembly
+    {
+        Include,
+        Ignore,
+    }
+
     public class PluginsConfig : IConfigParameter
     {
         private List<PluginAssembly> m_filteredAssemblies = new List<PluginAssembly>();
         public IEnumerable<PluginAssembly> FilteredAssemblies { get { return m_filteredAssemblies; } }
-        public IEnumerable<PluginAssembly> UnfilteredAssemblies { get { return PluginSelector.AllPlugins.Except(FilteredAssemblies); } }
+        public IEnumerable<PluginAssembly> UnfilteredAssemblies(MainAssembly mainAssembly)
+        {
+            var allAssemblies = PluginSelector.AllPlugins;
+            if (mainAssembly == MainAssembly.Include)
+                allAssemblies = allAssemblies.Concat(new PluginAssembly(Assembly.GetExecutingAssembly(), true).Only());
+            return allAssemblies.Except(FilteredAssemblies);
+        }
         public IEnumerable<NodeRendererChoice> NodeRenderers
         {
             get
             {
-                var assemblies = new[] { Assembly.GetAssembly(typeof(EditableUI)), Assembly.GetAssembly(typeof(DomainNodeRenderer)) }.Concat(UnfilteredAssemblies.Select(a => a.Assembly));
+                var assemblies = UnfilteredAssemblies(MainAssembly.Include).Select(a => a.Assembly);
 
                 foreach (Assembly assembly in assemblies)
                 {
@@ -39,7 +54,7 @@ namespace ConversationEditor
         {
             get
             {
-                var assemblies = Assembly.GetAssembly(typeof(DefaultNodeEditorFactory)).Only().Concat(UnfilteredAssemblies.Select(a => a.Assembly));
+                var assemblies = UnfilteredAssemblies(MainAssembly.Include).Select(a => a.Assembly);
                 foreach (Assembly assembly in assemblies)
                 {
                     var types = assembly.GetExportedTypes();
@@ -64,13 +79,13 @@ namespace ConversationEditor
 
         public IEnumerable<IConfigNodeDefinition> GetConfigDefinitions()
         {
-            foreach (var assembly in Assembly.GetAssembly(typeof(ConfigNodeDefinitions)).Only().Concat(UnfilteredAssemblies.Select(a => a.Assembly)))
+            foreach (var assembly in UnfilteredAssemblies(MainAssembly.Include).Select(a => a.Assembly))
             {
                 var factories = assembly.GetExportedTypes().Where(t => t.GetInterfaces().Contains(typeof(IConfigNodeDefinitionFactory)));
                 foreach (var factoryType in factories)
                 {
                     var constructor = factoryType.GetConstructor(Type.EmptyTypes);
-                    var factory = constructor.Invoke(new object [0]) as IConfigNodeDefinitionFactory;
+                    var factory = constructor.Invoke(new object[0]) as IConfigNodeDefinitionFactory;
                     foreach (var configNodeDefinition in factory.ConfigNodeDefinitions())
                         yield return configNodeDefinition;
                 }
@@ -106,7 +121,9 @@ namespace ConversationEditor
             root.Add(node);
             foreach (var assembly in m_filteredAssemblies)
             {
-                var assemblyNode = new XElement("Assembly", new XAttribute("filename", assembly.FileName));
+                XElement assemblyNode = assembly.FileName == null ?
+                                        new XElement("ExecutingAssembly") :
+                                        new XElement("Assembly", new XAttribute("filename", assembly.FileName));
                 node.Add(assemblyNode);
             }
         }

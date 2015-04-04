@@ -10,17 +10,17 @@ namespace Utilities
 {
     public class DrawWindow : UserControl
     {
+        bool m_colorSchemeAssigned = false;
         ColorScheme m_colorScheme = new ColorScheme();
-        ColorScheme ColorScheme
+        public ColorScheme ColorScheme
         {
-            set { m_colorScheme = value; BackColor = value.Background; }
+            set { m_colorScheme = value; BackColor = value.Background; m_colorSchemeAssigned = true; }
             get { return m_colorScheme; }
         }
 
         public DrawWindow()
             : base()
         {
-            //BackColor = ColorScheme.Background; //TODO: Make sure drawwindows have the right background color
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             SetStyle(ControlStyles.UserPaint, true);
@@ -29,6 +29,8 @@ namespace Utilities
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (!m_colorSchemeAssigned && !DesignMode)
+                throw new Exception("drawnwindow not given a color scheme");
             base.OnPaint(e);
         }
 

@@ -138,6 +138,7 @@ namespace ConversationEditor
                 m_scheme = value;
                 m_textBox.Colors.BorderPen = value.ControlBorder;
                 ForeColor = value.Foreground;
+                drawWindow1.ColorScheme = value;
             }
         }
     }

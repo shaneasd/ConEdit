@@ -56,9 +56,8 @@ namespace ConversationEditor
                 public readonly ContainerItem Parent;
                 public readonly Func<Matrix> ToControlTransform;
                 public readonly Func<FileSystemObject, string, bool> Rename;
-                public readonly ColorScheme Scheme; //TODO: project explorer items shouldn't need a color scheme
 
-                public ConstructorParams(ColorScheme scheme, Func<RectangleF> area, IProject project, FileSystemObject file, ContainerItem parent, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
+                public ConstructorParams(Func<RectangleF> area, IProject project, FileSystemObject file, ContainerItem parent, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
                 {
                     Area = area;
                     Project = project;
@@ -66,7 +65,6 @@ namespace ConversationEditor
                     Parent = parent;
                     ToControlTransform = toControlTransform;
                     Rename = rename;
-                    Scheme = scheme;
                 }
             }
 
@@ -78,7 +76,6 @@ namespace ConversationEditor
                 m_area = parameters.Area;
                 ToControlTransform = parameters.ToControlTransform;
                 Rename = parameters.Rename;
-                m_scheme = parameters.Scheme;
             }
 
             public readonly static Item Null = null;
@@ -123,12 +120,12 @@ namespace ConversationEditor
                                       minimizeRectangleSize, minimizeRectangleSize);
             }
 
-            public void DrawSelection(Graphics g, RectangleF area, bool selected, bool conversationSelected)
+            public void DrawSelection(Graphics g, RectangleF area, bool selected, bool conversationSelected, ColorScheme scheme)
             {
                 if (selected)
                 {
                     var selectionArea = new RectangleF(area.X + 2, area.Y + 2, area.Width - 4 - 1, area.Height - 4);
-                    using (var brush = new SolidBrush(m_scheme.SelectedConversationListItemPrimaryBackground))
+                    using (var brush = new SolidBrush(scheme.SelectedConversationListItemPrimaryBackground))
                     {
                         g.FillRectangle(brush, selectionArea);
                     }
@@ -136,19 +133,19 @@ namespace ConversationEditor
                 else if (conversationSelected)
                 {
                     var selectionArea = new RectangleF(area.X + 2, area.Y + 2, area.Width - 4 - 1, area.Height - 4);
-                    using (var brush = new SolidBrush(m_scheme.SelectedConversationListItemSecondaryBackground))
+                    using (var brush = new SolidBrush(scheme.SelectedConversationListItemSecondaryBackground))
                     {
                         g.FillRectangle(brush, selectionArea);
                     }
                 }
             }
 
-            public void Draw(Graphics g, VisibilityFilter filter, RectangleF area)
+            public void Draw(Graphics g, VisibilityFilter filter, RectangleF area, ColorScheme scheme)
             {
                 float indent = CalculateIndent(area);
                 var iconRectangle = CalculateIconRectangle(area);
-                DrawMinimizeIcon(g, MinimizedIconRectangle(g, area, indent), filter);
-                DrawTree(g, iconRectangle, filter);
+                DrawMinimizeIcon(g, MinimizedIconRectangle(g, area, indent), filter, scheme);
+                DrawTree(g, iconRectangle, filter, scheme);
                 DrawIcon(g, iconRectangle);
             }
 
@@ -160,7 +157,7 @@ namespace ConversationEditor
                 }
             }
 
-            public void DrawText(Arthur.NativeTextRenderer renderer, VisibilityFilter Visibility, RectangleF area)
+            public void DrawText(Arthur.NativeTextRenderer renderer, VisibilityFilter Visibility, RectangleF area, ColorScheme scheme)
             {
                 //g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
                 //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
@@ -171,14 +168,14 @@ namespace ConversationEditor
                     //g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
                     var textArea = CalculateTextArea(area, indent);
 
-                    renderer.DrawString(Text, SystemFonts.MessageBoxFont, m_scheme.Foreground, textArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE).Round());
+                    renderer.DrawString(Text, SystemFonts.MessageBoxFont, scheme.Foreground, textArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE).Round());
                     //TextRenderer.DrawText(g, Text, SystemFonts.MessageBoxFont, textArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE).Round(), ColorScheme.Foreground, Color.Transparent, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix);
 
                     //g.DrawString(Text, SystemFonts.MessageBoxFont, ColorScheme.ForegroundBrush, TextArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE));
                 }
             }
 
-            protected virtual void DrawMinimizeIcon(Graphics g, RectangleF minimizeIconRectangle, VisibilityFilter filter) { }
+            protected virtual void DrawMinimizeIcon(Graphics g, RectangleF minimizeIconRectangle, VisibilityFilter filter,ColorScheme scheme) { }
 
             public int CursorPosition(float x, Graphics g)
             {
@@ -203,7 +200,7 @@ namespace ConversationEditor
                 return Text.Length;
             }
 
-            public abstract void DrawTree(Graphics g, RectangleF iconRectangle, VisibilityFilter filter);
+            public abstract void DrawTree(Graphics g, RectangleF iconRectangle, VisibilityFilter filter, ColorScheme scheme);
             public abstract void DrawIcon(Graphics g, RectangleF iconRectangle);
             public abstract IEnumerable<Item> AllItems(VisibilityFilter filter);
             public abstract IEnumerable<Item> Children(VisibilityFilter filter);

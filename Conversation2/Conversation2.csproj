@@ -47,6 +47,7 @@
     <Compile Include="ConversationError.cs" />
     <Compile Include="ConversationNode.cs" />
     <Compile Include="Customization\IConfigNodeDefinitionFactory.cs" />
+    <Compile Include="Domain\ConnectionDefinitionData.cs" />
     <Compile Include="Domain\ConnectorDefinitionData.cs" />
     <Compile Include="Domain\DecimalData.cs" />
     <Compile Include="Domain\DomainData.cs" />
@@ -61,7 +62,6 @@
     <Compile Include="ID.cs" />
     <Compile Include="ILocalizer.cs" />
     <Compile Include="INodeFactory.cs" />
-    <Compile Include="INodeGUI.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Nodes\IConfigNodeDefinitionFactory.cs" />
     <Compile Include="Nodes\NodeGenerator.cs" />

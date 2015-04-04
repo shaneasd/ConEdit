@@ -240,6 +240,10 @@ namespace ConversationEditor
             {
                 return ConnectorDefinitionsUsages(ID<TConnectorDefinition>.ConvertFrom(node.Id).Only());
             }
+            else if (id == DomainIDs.CONNECTION_DEFINITION_GUID)
+            {
+                return Enumerable.Empty<Usage>(); //TODO: Figure out usage implications of
+            }
             //It's a parameter
             else if (BaseType.BaseTypes.Any(t => t.ParameterNodeType == id))
             {
@@ -259,7 +263,7 @@ namespace ConversationEditor
             }
             else
             {
-                //This node is of a type unknown to the domain domain (i.e. it's presumably in the conversation domain
+                //This node is of a type unknown to the domain domain (i.e. it's presumably in the conversation domain)
                 return Enumerable.Empty<Usage>();
             }
         }

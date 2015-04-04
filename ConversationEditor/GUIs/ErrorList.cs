@@ -11,7 +11,7 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    using ConversationNode = Conversation.ConversationNode<Conversation.INodeGUI>;
+    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 
     public partial class ErrorList : UserControl
     {
@@ -160,6 +160,16 @@ namespace ConversationEditor
             greyScrollBar1.PercentageCovered = Height / totalHeight;
         }
 
-        public ColorScheme ColorScheme { get; set; }
+        ColorScheme m_scheme;
+        public ColorScheme ColorScheme
+        {
+            get { return m_scheme; }
+            set
+            {
+                m_scheme = value;
+                greyScrollBar1.ColorScheme = value;
+                drawWindow1.ColorScheme = value;
+            }
+        }
     }
 }

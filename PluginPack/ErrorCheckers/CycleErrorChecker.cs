@@ -8,7 +8,7 @@ using Conversation;
 namespace PluginPack
 {
     public class CycleErrorChecker<T> : ErrorChecker<T>
-        where T : IConversationNode
+        where T : class, IConversationNode
     {
         class CycleError : ConversationError<T>
         {
@@ -36,7 +36,7 @@ namespace PluginPack
             }
         }
 
-        public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities utils)
+        public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
         {
             return (new NotImplementedCheckerError()).Only();
             //var connectedNodes = new LinkedList<T>();

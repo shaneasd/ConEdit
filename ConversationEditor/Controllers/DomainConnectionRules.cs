@@ -20,6 +20,7 @@ namespace ConversationEditor
             UnorderedTuple.Make(DomainIDs.CONNECTOR_OUTPUT_DEFINITION.Id, DomainIDs.NODE_OUTPUT_CONNECTORS_DEFINITION.Id), //Connect node declaration with connectors for that node type
 
             UnorderedTuple.Make(DomainIDs.CONNECTOR_DEFINITION_OUTPUT_DEFINITION.Id, DomainIDs.PARAMETER_OUTPUT_DEFINITION.Id), //Connect connector declaration with parameters for that connector type
+            //UnorderedTuple.Make(DomainIDs.CONNECTOR_DEFINITION_CONNECTION_DEFINITION.Id, DomainIDs.CONNECTION_DEFINITION_CONNECTOR.Id), //Connect connector declaration with connection declaration
         };
 
         public static readonly DomainConnectionRules Instance = new DomainConnectionRules();

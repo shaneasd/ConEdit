@@ -6,6 +6,7 @@ using Conversation;
 
 namespace ConversationEditor
 {
+    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
     public interface IDomainContextMenuItem
     {
         string Name { get; }
@@ -15,7 +16,7 @@ namespace ConversationEditor
     public interface IConversationContextMenuItem
     {
         string Name { get; }
-        void Execute(IConversationFile conversation, IErrorCheckerUtilities util);
+        void Execute(IConversationFile conversation, IErrorCheckerUtilities<IConversationNode> util);
     }
 
     public interface ILocalizationContextMenuItem

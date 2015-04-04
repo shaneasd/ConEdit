@@ -8,9 +8,9 @@ namespace ConversationEditor
 {
     public class WrapperContextMenuItemsFactory : IProjectExplorerContextMenuItemsFactory
     {
-        private Func<IEnumerable<PluginAssembly>> m_plugins;
+        private Func<MainAssembly, IEnumerable<PluginAssembly>> m_plugins;
 
-        public WrapperContextMenuItemsFactory(Func<IEnumerable<PluginAssembly>> plugins)
+        public WrapperContextMenuItemsFactory(Func<MainAssembly, IEnumerable<PluginAssembly>> plugins)
         {
             m_plugins = plugins;
         }
@@ -18,7 +18,7 @@ namespace ConversationEditor
         private IEnumerable<IProjectExplorerContextMenuItemsFactory> PluginContextMenuFactories()
         {
             List<IProjectExplorerContextMenuItemsFactory> result = new List<IProjectExplorerContextMenuItemsFactory>();
-            foreach (var pa in m_plugins())
+            foreach (var pa in m_plugins(MainAssembly.Include))
             {
                 var factories = pa.Assembly.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(IProjectExplorerContextMenuItemsFactory)));
                 foreach (var factory in factories)

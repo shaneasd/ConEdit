@@ -127,6 +127,14 @@ namespace Conversation
         bool CanConnect(ID<TConnectorDefinition> a, ID<TConnectorDefinition> b);
     }
 
+    public enum ConnectionConsiderations
+    {
+        None = 0,
+        SameNode = 1,
+        RedundantConnection = 2,
+        RuleViolation = 4,
+    }
+
     public class Output
     {
         public readonly ConnectorDefinitionData m_definition;
@@ -155,26 +163,35 @@ namespace Conversation
         public event Action Connected;
         public event Action Disconnected;
 
-        public bool CanConnectTo(Output other)
+        public bool CanConnectTo(Output other, ConnectionConsiderations ignore)
         {
-            //Can't connect a nodes output to its own input
-            if (object.ReferenceEquals(other.Parent.NodeID, Parent.NodeID))
-                return false;
+            if ((ignore & ConnectionConsiderations.SameNode) == ConnectionConsiderations.None)
+            {
+                //Can't connect two connectors belonging to the same node
+                if (object.ReferenceEquals(other.Parent.NodeID, Parent.NodeID))
+                    return false;
+            }
 
-            //Can't connect redundantly to an input this output is already connected to
-            if (m_connections.Contains(other))
-                return false;
+            if ((ignore & ConnectionConsiderations.RedundantConnection) == ConnectionConsiderations.None)
+            {
+                //Can't connect redundantly to an input this output is already connected to
+                if (m_connections.Contains(other))
+                    return false;
+            }
 
-            //Can only connect connectors whose types can be paired according to the rules
-            if (!Rules.CanConnect(this.m_definition.Id, other.m_definition.Id))
-                return false;
+            if ((ignore & ConnectionConsiderations.RuleViolation) == ConnectionConsiderations.None)
+            {
+                //Can only connect connectors whose types can be paired according to the rules
+                if (!Rules.CanConnect(this.m_definition.Id, other.m_definition.Id))
+                    return false;
+            }
 
             return true;
         }
 
-        private bool CounterConnect(Output other)
+        private bool CounterConnect(Output other, bool force)
         {
-            if (!CanConnectTo(other))
+            if (!CanConnectTo(other, force ? ConnectionConsiderations.RuleViolation : ConnectionConsiderations.None))
                 return false;
 
             m_connections.Add(other);
@@ -182,11 +199,17 @@ namespace Conversation
             return true;
         }
 
-        public bool ConnectTo(Output other)
+        /// <summary>
+        /// Connect this connector with another connector
+        /// </summary>
+        /// <param name="other">the connector to connect with this connector</param>
+        /// <param name="force">true -> ignore connection rules and connect even if rules forbid connection</param>
+        /// <returns></returns>
+        public bool ConnectTo(Output other, bool force)
         {
-            if (other.CounterConnect(this))
+            if (other.CounterConnect(this, force))
             {
-                return CounterConnect(other);
+                return CounterConnect(other, force);
             }
             else
             {
@@ -221,7 +244,7 @@ namespace Conversation
                 Undo = () =>
                 {
                     foreach (var connection in connections)
-                        ConnectTo(connection);
+                        ConnectTo(connection, true); //no need to check rules. we're just readding a connection that already existed
                 }
             };
         }
@@ -241,8 +264,14 @@ namespace Conversation
 
         public string GetName()
         {
-            var name = Parameters.Where(p => p.Id == ConnectorDefinitionData.OUTPUT_NAME).Select(p => p as IStringParameter).Select(p => p.Value).SingleOrDefault() ?? "";
-            return name;
+            string name = Parameters.Where(p => p.Id == ConnectorDefinitionData.OUTPUT_NAME).Select(p => p as IStringParameter).Select(p => p.Value).SingleOrDefault();
+            if (name == null)
+            {
+                var stringParameters = Parameters.OfType<IStringParameter>();
+                if (stringParameters.CountEquals(1))
+                    name = stringParameters.Single().Value;
+            }
+            return name ?? "";
         }
     }
 }

@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace ConversationEditor
 {
-    using ConversationNode = Conversation.ConversationNode<Conversation.INodeGUI>;
+    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 
     public class ErrorCheckerController
     {
@@ -71,7 +71,7 @@ namespace ConversationEditor
             }
         }
 
-        internal IEnumerable<ConversationError<ConversationNode>> CheckForErrors(IEnumerable<ConversationNode> nodes, IErrorCheckerUtilities utils)
+        internal IEnumerable<ConversationError<ConversationNode>> CheckForErrors(IEnumerable<ConversationNode> nodes, IErrorCheckerUtilities<ConversationNode> utils)
         {
             m_config.RefreshConfig(m_pluginsConfig);
             foreach (var assembly in m_config.Assemblies)

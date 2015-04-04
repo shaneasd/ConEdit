@@ -15,8 +15,8 @@ namespace ConversationEditor
         {
             private HashSet<string> m_contents = new HashSet<string>();
 
-            public ProjectItem(ColorScheme scheme, Func<RectangleF> area, IProject project, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
-                : base(new ConstructorParams(scheme, area, project, new FileSystemObject(project, project.File), null, toControlTransform, rename))
+            public ProjectItem(Func<RectangleF> area, IProject project, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
+                : base(new ConstructorParams(area, project, new FileSystemObject(project, project.File), null, toControlTransform, rename))
             {
             }
 
@@ -53,7 +53,7 @@ namespace ConversationEditor
 
             private class DummyProjectItem : ProjectItem
             {
-                public DummyProjectItem() : base(new ColorScheme(), () => new RectangleF(0, 0, 0, 0), DummyProject.Instance, () => null, (f, s) => { throw new NotImplementedException(); }) { }
+                public DummyProjectItem() : base(() => new RectangleF(0, 0, 0, 0), DummyProject.Instance, () => null, (f, s) => { throw new NotImplementedException(); }) { }
                 protected override string PermanentText { get { return ""; } }
                 public override IEnumerable<Item> AllItems(VisibilityFilter filter)
                 {
@@ -71,7 +71,7 @@ namespace ConversationEditor
             public Item MakeElement<T>(Func<RectangleF> area, T item, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform) where T : ISaveableFileProvider
             {
                 var definition = ProjectElementDefinition.Get<T>();
-                var result = definition.MakeElement(m_scheme, area, item, Project, parent, toControlTransform, Rename);
+                var result = definition.MakeElement(area, item, Project, parent, toControlTransform, Rename);
                 InsertProjectChildAlphabetically(parent, result);
                 return result;
             }
@@ -79,7 +79,7 @@ namespace ConversationEditor
             public Item MakeMissingElement<T>(Func<RectangleF> area, T item, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform) where T : ISaveableFileProvider
             {
                 var definition = ProjectElementDefinition.Get<T>();
-                var result = definition.MakeMissingElement(m_scheme, area, item, Project, parent, toControlTransform, Rename);
+                var result = definition.MakeMissingElement(area, item, Project, parent, toControlTransform, Rename);
                 InsertProjectChildAlphabetically(parent, result);
                 return result;
             }

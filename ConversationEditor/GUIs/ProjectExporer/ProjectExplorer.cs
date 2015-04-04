@@ -11,12 +11,13 @@ using System.IO;
 using System.Reflection;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using ConversationNode = Conversation.ConversationNode<Conversation.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 using System.Drawing.Drawing2D;
 
 namespace ConversationEditor
 {
     //TODO: Background color given to DrawText is wrong when the item is selected
+    //TODO: Scroll an item into view when it's selected programatically (e.g. when clicking an error in the error list)
 
     public partial class ProjectExplorer : UserControl
     {
@@ -34,7 +35,9 @@ namespace ConversationEditor
             set
             {
                 m_scheme = value;
-                drawWindow1.BackColor = value.Background;
+                greyScrollBar1.ColorScheme = value;
+                drawWindow1.ColorScheme = value;
+                drawWindow2.ColorScheme = value;
                 m_contextMenu.Renderer = value.ContextMenu;
 
                 foreach (var button in m_buttons)
@@ -279,7 +282,7 @@ namespace ConversationEditor
                 foreach (var item in itemsToDraw)
                 {
                     if (selected.Any(s => object.ReferenceEquals(s, item.Item1)))
-                        item.Item1.DrawSelection(g, item.Item3, m_selectedItem == item.Item1, m_selectedLocalizer == item.Item1 || m_selectedEditable == item.Item1);
+                        item.Item1.DrawSelection(g, item.Item3, m_selectedItem == item.Item1, m_selectedLocalizer == item.Item1 || m_selectedEditable == item.Item1, m_scheme);
                 }
 
                 //Make sure all ancestors' vertical lines are drawn
@@ -293,20 +296,20 @@ namespace ConversationEditor
                         {
                             indent--;
                             var rect = new RectangleF((int)TransformToRenderSurface.OffsetX, (int)TransformToRenderSurface.OffsetY + IndexToY(j), Width, Item.HEIGHT);
-                            allItems[j].DrawTree(g, allItems[j].CalculateIconRectangle(rect), Visibility);
+                            allItems[j].DrawTree(g, allItems[j].CalculateIconRectangle(rect), Visibility, m_scheme);
                         }
                     }
                 }
 
                 foreach (var item in itemsToDraw)
                 {
-                    item.Item1.Draw(g, Visibility, item.Item3);
+                    item.Item1.Draw(g, Visibility, item.Item3, m_scheme);
                 }
                 using (var renderer = new Arthur.NativeTextRenderer(g))
                 {
                     foreach (var item in itemsToDraw)
                     {
-                        item.Item1.DrawText(renderer, Visibility, item.Item3); //Draw the text after everything else as we want to keep our NativeTextRenderer around and it blocks other graphics operations
+                        item.Item1.DrawText(renderer, Visibility, item.Item3, m_scheme); //Draw the text after everything else as we want to keep our NativeTextRenderer around and it blocks other graphics operations
                     }
                 }
             }
@@ -413,7 +416,7 @@ namespace ConversationEditor
                     if (con != null)
                     {
                         var i = new ToolStripMenuItem(a.Name);
-                        i.Click += (x, y) => a.Execute(con.Item, new ErrorCheckerUtils(m_root.Project.ConversationDataSource));
+                        i.Click += (x, y) => a.Execute(con.Item, m_context.ErrorCheckerUtils());
                         m_contextMenu.Items.Insert(m_contextMenu.Items.IndexOf(importConversationToolStripMenuItem), i);
                         var temp = m_cleanContextMenu;
                         m_cleanContextMenu = () => { temp(); m_contextMenu.Items.Remove(i); };
@@ -471,7 +474,7 @@ namespace ConversationEditor
 
         private ProjectItem MakeNewProjectItem(IProject p)
         {
-            var result = new ProjectItem(Scheme, () => RectangleForItem(m_root), p, () => TransformToRenderSurface, RenameItem);
+            var result = new ProjectItem(() => RectangleForItem(m_root), p, () => TransformToRenderSurface, RenameItem);
             result.File.SaveStateChanged += InvalidateImage;
             return result;
         }
@@ -659,7 +662,7 @@ namespace ConversationEditor
                 if (add)
                 {
                     FolderItem child = null;
-                    child = new FolderItem(Scheme, () => RectangleForItem(child), folder, m_root.Project, parent, () => TransformToRenderSurface, RenameItem);
+                    child = new FolderItem(() => RectangleForItem(child), folder, m_root.Project, parent, () => TransformToRenderSurface, RenameItem);
                     child.Minimized.Changed.Register(this, (a, b) => m_updateScrollbar.TryExecute());
                     m_root.InsertProjectChildAlphabetically(parent, child);
                     parent = child;
@@ -1012,7 +1015,7 @@ namespace ConversationEditor
             if (newDir != null)
             {
                 ProjectExplorer.FolderItem item = null;
-                item = new ProjectExplorer.FolderItem(Scheme, () => RectangleForItem(item), newDir, m_root.Project, parent, () => TransformToRenderSurface, RenameItem);
+                item = new ProjectExplorer.FolderItem(() => RectangleForItem(item), newDir, m_root.Project, parent, () => TransformToRenderSurface, RenameItem);
                 m_root.InsertProjectChildAlphabetically(parent, item);
                 m_updateScrollbar.TryExecute();
                 InvalidateImage();

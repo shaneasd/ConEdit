@@ -55,11 +55,9 @@ namespace ConversationEditor
         private PluginsConfig m_pluginsConfig;
         private Func<IAudioProviderCustomization> m_audioCustomization;
         SharedContext m_context;
-        ColorScheme m_scheme;
-
-        public ProjectMenuController(ColorScheme scheme, SharedContext context, ConfigParameterList<string> config, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ProjectExplorer list, Action<Action> executeInGUIThread, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
+        
+        public ProjectMenuController(SharedContext context, ConfigParameterList<string> config, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ProjectExplorer list, Action<Action> executeInGUIThread, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
         {
-            m_scheme = scheme;
             m_context = context;
             m_executeInGUIThread = executeInGUIThread;
             m_conversationNodeFactory = conversationNodeFactory;
@@ -135,10 +133,10 @@ namespace ConversationEditor
             {
                 var deserializer = new XMLProject.Deserializer();
                 var projectData = deserializer.Read(m);
-                var project = new Project(m_scheme, m_context, projectData, m_conversationNodeFactory, m_domainNodeFactory, m, new FileInfo(path),
+                var project = new Project(m_context, projectData, m_conversationNodeFactory, m_domainNodeFactory, m, new FileInfo(path),
                     new XMLProject.Serializer(),
                     SerializationUtils.ConversationSerializer,
-                    d => SerializationUtils.ConversationSerializerDeserializer(d, m_scheme),
+                    d => SerializationUtils.ConversationSerializerDeserializer(d),
                     SerializationUtils.DomainSerializer, m_pluginsConfig, m_audioCustomization);
 
                 project.FileDeletedExternally += () => m_executeInGUIThread(() => { MessageBox.Show("Project file deleted by another application"); });
@@ -198,10 +196,10 @@ namespace ConversationEditor
                     Project project = null;
                     try
                     {
-                        project = Project.CreateEmpty(m_scheme, m_context, new FileInfo(m_sfd.FileName), m_conversationNodeFactory, m_domainNodeFactory,
+                        project = Project.CreateEmpty(m_context, new FileInfo(m_sfd.FileName), m_conversationNodeFactory, m_domainNodeFactory,
                             new XMLProject.Serializer(),
                             SerializationUtils.ConversationSerializer,
-                            d => SerializationUtils.ConversationSerializerDeserializer(d, m_scheme),
+                            d => SerializationUtils.ConversationSerializerDeserializer(d),
                             SerializationUtils.DomainSerializer, m_pluginsConfig, m_audioCustomization);
                     }
                     catch (MyFileLoadException e)
@@ -236,7 +234,7 @@ namespace ConversationEditor
         {
             if (CanClose(true))
             {
-                m_context.CurrentProject.Value = DummyProject.Instance; //TODO: This would probably be better as null or not changed at all
+                m_context.CurrentProject.Value = DummyProject.Instance;
                 return true;
             }
             return false;

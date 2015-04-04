@@ -56,7 +56,7 @@ namespace ConversationEditor
         }
 
 
-        public void Draw(Graphics g, bool selected)
+        public void Draw(Graphics g, bool selected, ColorScheme scheme)
         {
             UpdateArea();
 

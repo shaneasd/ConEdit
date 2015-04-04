@@ -14,5 +14,6 @@ namespace Conversation
         public List<IntegerData> Integers = new List<IntegerData>();
         public List<NodeData> Nodes = new List<NodeData>();
         public List<ConnectorDefinitionData> Connectors = new List<ConnectorDefinitionData>();
+        public List<ConnectionDefinitionData> Connections = new List<ConnectionDefinitionData>();
     }
 }

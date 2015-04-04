@@ -15,7 +15,7 @@ using Conversation;
 using ConversationEditor.Controllers;
 using ConversationEditor;
 using Utilities;
-using ConversationNode = Conversation.ConversationNode<Conversation.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 using Conversation.Serialization;
 using System.Xml.Linq;
 
@@ -149,7 +149,7 @@ namespace ConversationEditor
             errorList1.ForeColor = m_scheme.Foreground;
             errorList1.BackColor = m_scheme.Background;
 
-            projectExplorer.m_contextMenuItemsFactory = new WrapperContextMenuItemsFactory(() => m_config.Plugins.UnfilteredAssemblies);
+            projectExplorer.m_contextMenuItemsFactory = new WrapperContextMenuItemsFactory((mainAssembly) => m_config.Plugins.UnfilteredAssemblies(mainAssembly));
         }
 
         private void InitialiseNodeFactory()
@@ -195,15 +195,6 @@ namespace ConversationEditor
         }
 
         /// <summary>
-        /// Whether to consider the main assembly or just plugin assemblies when importing factories
-        /// </summary>
-        enum MainAssembly
-        {
-            Include,
-            Ignore,
-        }
-
-        /// <summary>
         /// Search plugin assemblies for all classes implementing interface T
         /// </summary>
         /// <typeparam name="T">The interface that must be implemented</typeparam>
@@ -211,11 +202,7 @@ namespace ConversationEditor
         private IEnumerable<T> GetAllOfType<T>(MainAssembly mainAssembly = MainAssembly.Include) where T : class
         {
             List<T> result = new List<T>();
-            var assemblies = m_config.Plugins.UnfilteredAssemblies.Select(a => a.Assembly);
-            if (mainAssembly == MainAssembly.Include)
-            {
-                assemblies = assemblies.Concat(Assembly.GetExecutingAssembly().Only());
-            }
+            var assemblies = m_config.Plugins.UnfilteredAssemblies(mainAssembly).Select(a => a.Assembly);
             foreach (var pa in assemblies)
             {
                 var factories = pa.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(T)));
@@ -254,7 +241,7 @@ namespace ConversationEditor
                 editor.SnapToGrid = m_config.GraphView.SnapToGrid;
                 editor.ShowGrid = m_config.GraphView.ShowGrid;
                 editor.ShowIDs = m_config.GraphView.ShowIDs;
-                editor.Colors = m_config.ColorScheme.Colors;
+                m_scheme.Connectors = m_config.ColorScheme.ConnectorColor;
                 editor.MinorGridSpacing = m_config.GraphView.MinorGridSpacing;
                 editor.MajorGridSpacing = m_config.GraphView.MajorGridSpacing;
             };
@@ -399,7 +386,7 @@ namespace ConversationEditor
             //};
 
             m_context.CurrentProject.Changed.Register(this, (a, b) => a.ProjectChanged(b.from, b.to));
-            m_projectMenuController = new ProjectMenuController(m_scheme, m_context, m_config.ProjectHistory, m_conversationNodeFactory, m_domainNodeFactory, projectExplorer, a => Invoke(a), m_config.Plugins, GetAudioCustomizer);
+            m_projectMenuController = new ProjectMenuController(m_context, m_config.ProjectHistory, m_conversationNodeFactory, m_domainNodeFactory, projectExplorer, a => Invoke(a), m_config.Plugins, GetAudioCustomizer);
 
             this.projectSaveMenuItem.Click += (a, b) => m_projectMenuController.Save();
             this.projectNewMenuItem.Click += (a, b) => m_projectMenuController.New();
@@ -473,11 +460,13 @@ namespace ConversationEditor
                 return m_config.NodeEditors[data.NodeTypeID].GetEditorFactory().Edit(m_scheme, data, audioContext, GetParameterEditor, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value.AudioProvider);
         }
 
+        
+
         private void errorCheckToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //TODO: Error checking for domain files
 
-            var errors = m_errorCheckerController.CheckForErrors(CurrentFile.Nodes, new ErrorCheckerUtils(m_context.CurrentProject.Value.ConversationDataSource));
+            var errors = m_errorCheckerController.CheckForErrors(CurrentFile.Nodes, m_context.ErrorCheckerUtils());
             errorList1.SetErrors(errors.Select(error => new ErrorList.Element(error, CurrentFile)));
         }
 
@@ -485,7 +474,7 @@ namespace ConversationEditor
         {
             var conversations = m_context.CurrentProject.Value.Conversations;
             var errors = conversations.SelectMany(
-                            c => m_errorCheckerController.CheckForErrors(c.Nodes, new ErrorCheckerUtils(m_context.CurrentProject.Value.ConversationDataSource)).Select(
+                            c => m_errorCheckerController.CheckForErrors(c.Nodes, m_context.ErrorCheckerUtils()).Select(
                                 error => new ErrorList.Element(error, c)));
             errorList1.SetErrors(errors);
         }
@@ -789,7 +778,7 @@ namespace ConversationEditor
         private List<T> GetAllFactories<T>() where T : class
         {
             List<T> result = new List<T>();
-            foreach (var pa in m_config.Plugins.UnfilteredAssemblies.Select(a => a.Assembly).Concat(Assembly.GetExecutingAssembly().Only()))
+            foreach (var pa in m_config.Plugins.UnfilteredAssemblies(MainAssembly.Include).Select(a => a.Assembly).Concat(Assembly.GetExecutingAssembly().Only()))
             {
                 var factories = pa.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(T)));
                 foreach (var factory in factories)
@@ -811,7 +800,7 @@ namespace ConversationEditor
                 item.Click += (a, b) =>
                 {
                     if (m_context.CurrentLocalization.Value.IsValid)
-                        e.Export(m_context.CurrentProject.Value, m_config.ExportPath, l => m_context.CurrentLocalization.Value.Localize(l), new ErrorCheckerUtils(m_context.CurrentProject.Value.ConversationDataSource));
+                        e.Export(m_context.CurrentProject.Value, m_config.ExportPath, l => m_context.CurrentLocalization.Value.Localize(l), m_context.ErrorCheckerUtils());
                     else
                         MessageBox.Show("Cannot export as there is no currently selected localizer");
                 };

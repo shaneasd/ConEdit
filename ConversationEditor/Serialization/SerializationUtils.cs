@@ -32,14 +32,14 @@ namespace ConversationEditor
             EverythingDeserializer = everythingDeserializer;
         }
 
-        public static DomainSerializerDeserializer Make(IDataSource d, ColorScheme scheme)
+        public static DomainSerializerDeserializer Make(IDataSource d)
         {
             var Serializer = SerializationUtils.DomainSerializer;
             var CategoriesDeserializer = XMLDomain<NodeUIData, ConversationEditorData>.Deserializer.Categories(d, NodeUIDataSerializerXml.Instance);
             var TypesDeserializer = XMLDomain<NodeUIData, ConversationEditorData>.Deserializer.Types(d, NodeUIDataSerializerXml.Instance);
             var ConnectorsDeserializer = XMLDomain<NodeUIData, ConversationEditorData>.Deserializer.Connectors(d, NodeUIDataSerializerXml.Instance);
             var NodesDeserializer = XMLDomain<NodeUIData, ConversationEditorData>.Deserializer.Nodes(d, NodeUIDataSerializerXml.Instance);
-            var EditorDataDeserializer = XMLDomain<NodeUIData, ConversationEditorData>.Deserializer.UI(d, NodeUIDataSerializerXml.Instance, new ConversationEditorData.Deserializer(scheme));
+            var EditorDataDeserializer = XMLDomain<NodeUIData, ConversationEditorData>.Deserializer.UI(d, NodeUIDataSerializerXml.Instance, new ConversationEditorData.Deserializer());
             var ErrorDeserializer = XMLDomain<NodeUIData, ConversationEditorData>.Deserializer.Everything(d, NodeUIDataSerializerXml.Instance);
             return new DomainSerializerDeserializer(Serializer, CategoriesDeserializer, TypesDeserializer, ConnectorsDeserializer, NodesDeserializer, EditorDataDeserializer, ErrorDeserializer);
         }
@@ -75,14 +75,14 @@ namespace ConversationEditor
             }
         }
 
-        public static ISerializerDeserializer<XmlGraphData<NodeUIData, ConversationEditorData>> ConversationSerializerDeserializer(IDataSource d, ColorScheme scheme)
+        public static ISerializerDeserializer<XmlGraphData<NodeUIData, ConversationEditorData>> ConversationSerializerDeserializer(IDataSource d)
         {
-            return new XMLConversation<NodeUIData, ConversationEditorData>.SerializerDeserializer(d, NodeUIDataSerializerXml.Instance, new ConversationEditorData.Serializer(), new ConversationEditorData.Deserializer(scheme));
+            return new XMLConversation<NodeUIData, ConversationEditorData>.SerializerDeserializer(d, NodeUIDataSerializerXml.Instance, new ConversationEditorData.Serializer(), new ConversationEditorData.Deserializer());
         }
 
-        public static IDeserializer<XmlGraphData<NodeUIData, ConversationEditorData>> ConversationDeserializer(IDataSource d, ColorScheme scheme)
+        public static IDeserializer<XmlGraphData<NodeUIData, ConversationEditorData>> ConversationDeserializer(IDataSource d)
         {
-            return new XMLConversation<NodeUIData, ConversationEditorData>.Deserializer(d, NodeUIDataSerializerXml.Instance, new ConversationEditorData.Deserializer(scheme));
+            return new XMLConversation<NodeUIData, ConversationEditorData>.Deserializer(d, NodeUIDataSerializerXml.Instance, new ConversationEditorData.Deserializer());
         }
 
         public static XmlGraphData<NodeUIData, ConversationEditorData> MakeConversationData(IEnumerable<ConversationNode<INodeGUI>> nodes, ConversationEditorData data)

@@ -229,7 +229,10 @@ namespace ConversationEditor
             {
                 m_colorScheme = value;
                 BackColor = value.FormBackground;
-                drawWindow.BackColor = value.Background;
+                drawWindow.ColorScheme = value;
+                hScrollBar1.ColorScheme = value;
+                vScrollBar1.ColorScheme = value;
+                zoomBar.ColorScheme = value;
                 Redraw();
             }
         }
@@ -443,7 +446,7 @@ namespace ConversationEditor
                             var m = new Matrix();
                             m.Translate(renderer.Area.Width / 2, renderer.Area.Height / 2);
                             e.Graphics.Transform = m;
-                            renderer.Draw(e.Graphics, false);
+                            renderer.Draw(e.Graphics, false, m_colorScheme);
                         };
                         m_toolTip.SetToolTip(drawWindow, m_mouseController.HoverNode.Id.Serialized());
                     }
@@ -612,7 +615,7 @@ namespace ConversationEditor
                     //Draw all the groups
                     foreach (NodeGroup group in CurrentFile.Groups.Reverse())
                     {
-                        group.Renderer.Draw(g, m_mouseController.Selected.Groups.Contains(group));
+                        group.Renderer.Draw(g, m_mouseController.Selected.Groups.Contains(group), m_colorScheme);
                     }
 
                     //Draw all the connections for unselected nodes
@@ -626,7 +629,7 @@ namespace ConversationEditor
                     //Draw all the unselected nodes
                     foreach (TNode node in orderedUnselectedNodes)
                     {
-                        node.Renderer.Draw(g, m_mouseController.Selected.Nodes.Contains(node.Id));
+                        node.Renderer.Draw(g, m_mouseController.Selected.Nodes.Contains(node.Id), m_colorScheme);
                         foreach (var t in node.Connectors)
                         {
                             bool selected = m_mouseController.IsSelected(t);
@@ -645,7 +648,7 @@ namespace ConversationEditor
                     //Draw all the selected nodes
                     foreach (TNode node in orderedSelectedNodes)
                     {
-                        node.Renderer.Draw(g, m_mouseController.Selected.Nodes.Contains(node.Id));
+                        node.Renderer.Draw(g, m_mouseController.Selected.Nodes.Contains(node.Id), m_colorScheme);
                         foreach (var t in node.Connectors)
                         {
                             bool selected = m_mouseController.IsSelected(t);
@@ -703,7 +706,7 @@ namespace ConversationEditor
 
             foreach (var factory in menuFactories)
             {
-                custom.AddRange(factory.GetMenuActions(Colors, this));
+                custom.AddRange(factory.GetMenuActions(this));
             }
 
             m_contextMenu.ResetCustomNodes(custom.ToArray());
@@ -713,7 +716,7 @@ namespace ConversationEditor
         {
             if (Selected.Nodes.Any())
             {
-                NodeGroup newGroup = NodeGroup.Make(Selected.Nodes.Select(CurrentFile.GetNode), Colors);
+                NodeGroup newGroup = NodeGroup.Make(Selected.Nodes.Select(CurrentFile.GetNode));
                 CurrentFile.Add(Enumerable.Empty<TNode>(), newGroup.Only());
                 SetSelection(Selected.Nodes.Evaluate(), Selected.Groups.Concat(newGroup.Only()).Evaluate());
 
@@ -736,7 +739,7 @@ namespace ConversationEditor
         {
             if (Selected.Nodes.Any() || Selected.Groups.Any())
             {
-                var duplicates = m_copyPasteController.Duplicate(Selected.Nodes.Select(CurrentFile.GetNode), Selected.Groups, DataSource, Colors);
+                var duplicates = m_copyPasteController.Duplicate(Selected.Nodes.Select(CurrentFile.GetNode), Selected.Groups, DataSource);
                 var nodesAndGroups = CurrentFile.DuplicateInto(duplicates.Item1, duplicates.Item2, duplicates.Item3, m_localization);
                 SetSelection(nodesAndGroups.Item1, nodesAndGroups.Item2);
                 Redraw();
@@ -757,7 +760,7 @@ namespace ConversationEditor
 
         public void Paste(Point? p)
         {
-            var additions = m_copyPasteController.Paste(DataSource, Colors);
+            var additions = m_copyPasteController.Paste(DataSource);
 
             Insert(p, additions);
         }

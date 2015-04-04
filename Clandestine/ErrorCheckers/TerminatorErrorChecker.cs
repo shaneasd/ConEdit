@@ -8,7 +8,7 @@ using Conversation;
 namespace Clandestine
 {
     public class TerminatorErrorChecker<T> : ErrorChecker<T>
-        where T : IConversationNode
+        where T : class, IConversationNode
     {
         class TerminatorError : ConversationError<T>
         {
@@ -36,7 +36,7 @@ namespace Clandestine
             }
         }
 
-        private IEnumerable<ConversationError<T>> CheckStart(IEnumerable<T> nodes, IErrorCheckerUtilities utils)
+        private IEnumerable<ConversationError<T>> CheckStart(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
         {
             HashSet<T> connected = new HashSet<T>(nodes.Where(n => Clandestine.Util.IsStartNode(n.Type, utils)));
 
@@ -66,7 +66,7 @@ namespace Clandestine
             }
         }
 
-        private IEnumerable<ConversationError<T>> CheckEnd(IEnumerable<T> nodes, IErrorCheckerUtilities utils)
+        private IEnumerable<ConversationError<T>> CheckEnd(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
         {
             HashSet<T> connected = new HashSet<T>(nodes.Where(n => n.Type == SpecialNodes.TERMINATOR_GUID));
 
@@ -96,7 +96,7 @@ namespace Clandestine
             }
         }
 
-        public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities utils)
+        public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
         {
             var start = CheckStart(nodes, utils);
             var end = CheckEnd(nodes, utils);

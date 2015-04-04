@@ -9,7 +9,7 @@ using Conversation.Serialization;
 
 namespace ConversationEditor
 {
-    using ConversationNode = Conversation.ConversationNode<Conversation.INodeGUI>;
+    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 
     public interface IConversationFile : IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>, IInProject
     {

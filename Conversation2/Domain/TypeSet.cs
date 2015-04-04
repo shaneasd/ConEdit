@@ -6,6 +6,7 @@ using Utilities;
 
 namespace Conversation
 {
+    public delegate Parameter ParameterGenerator(string name, ID<Parameter> id, string value);
     /// <summary>
     /// Keeps track of all types within a domain.
     /// Can be queried to determine the base type of a typeID
@@ -14,7 +15,7 @@ namespace Conversation
     public class TypeSet
     {
         private Dictionary<ParameterType, bool> m_hidden = new Dictionary<ParameterType, bool>();
-        private Dictionary<ParameterType, Func<string, ID<Parameter>, string, Parameter>> m_types = new Dictionary<ParameterType, Func<string, ID<Parameter>, string, Parameter>>();
+        private Dictionary<ParameterType, ParameterGenerator> m_types = new Dictionary<ParameterType, ParameterGenerator>();
         private Dictionary<ParameterType, string> m_typeNames = new Dictionary<ParameterType, string>();
         private Dictionary<ParameterType, DynamicEnumerationData> m_dynamicEnums = new Dictionary<ParameterType, DynamicEnumerationData>();
         private Dictionary<ParameterType, Tuple<string, MutableEnumeration>> m_enums = new Dictionary<ParameterType, Tuple<string, MutableEnumeration>>();
@@ -118,7 +119,7 @@ namespace Conversation
             Modified.Execute(id);
         }
 
-        public void AddOther(ParameterType id, string name, Func<string, ID<Parameter>, string, Parameter> factory)
+        public void AddOther(ParameterType id, string name, ParameterGenerator factory)
         {
             m_types.Add(id, factory);
             m_typeNames.Add(id, name);

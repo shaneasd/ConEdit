@@ -15,5 +15,7 @@ namespace Utilities.UI
         {
             InitializeComponent();
         }
+
+        public ColorScheme ColorScheme { get { return greyScrollBar1.ColorScheme; } set { greyScrollBar1.ColorScheme = value; } }
     }
 }

@@ -94,7 +94,7 @@ namespace Conversation
 
         public SimpleUndoPair RemoveUnknownParameter(UnknownParameter p)
         {
-            throw new NotImplementedException(); //TODO: Should we allow this?
+            throw new NotSupportedException("Editing of unknown editables is not supported. Please recover the definition of the node type or delete the node");
         }
     }
 }

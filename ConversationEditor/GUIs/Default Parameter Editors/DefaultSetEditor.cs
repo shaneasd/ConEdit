@@ -178,6 +178,7 @@ namespace ConversationEditor
                     b.Foreground = Scheme.ControlBorder;
                     b.Background = Scheme.BackgroundBrush;
                 }
+                drawWindow1.ColorScheme = value;
             }
         }
 

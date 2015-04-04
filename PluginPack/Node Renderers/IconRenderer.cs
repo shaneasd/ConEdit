@@ -41,7 +41,7 @@ namespace PluginPack
         string m_name;
         Bitmap m_image;
 
-        public IconRenderer(ConversationNode<Conversation.INodeGUI> node, PointF p, Func<ID<LocalizedText>, string> localizer) :
+        public IconRenderer(ConversationNode<ConversationEditor.INodeGUI> node, PointF p, Func<ID<LocalizedText>, string> localizer) :
             base(node, p)
         {
             m_localizer = localizer;

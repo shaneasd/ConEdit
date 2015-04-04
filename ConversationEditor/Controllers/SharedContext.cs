@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Utilities;
 using System.IO;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+using Conversation;
 
 namespace ConversationEditor
 {
@@ -21,6 +23,13 @@ namespace ConversationEditor
         public event Action<Changed<FileInfo>> ProjectMoved;
         public NotifierProperty<ILocalizationFile> CurrentLocalization { get { return m_currentLocalization; } }
         private readonly NotifierProperty<ILocalizationFile> m_currentLocalization = new NotifierProperty<ILocalizationFile>(DummyLocalizationFile.Instance);
+
+        public ErrorCheckerUtils<ConversationNode> ErrorCheckerUtils()
+        {
+            //TODO: Should have a concept of current conversation so we don't have to search the whole project
+            Func<IEditable, ConversationNode> reverseLookup = f => CurrentProject.Value.Conversations.SelectMany(c => c.Nodes).Where(n => n.m_data == f).First();
+            return new ErrorCheckerUtils<ConversationNode>(CurrentProject.Value.ConversationDataSource, reverseLookup);
+        }
 
         private void OnProjectMoved(Changed<FileInfo> change)
         {

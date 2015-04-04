@@ -81,6 +81,7 @@ namespace Conversation
         protected override void DecorruptFromNull()
         {
             //TODO: Something here?
+            //TODO: we want to return TryDeserialiseValue(m_defaultValue) but we can't because audioparameters' defaults are not in line with the audio path generation rules (currently)
         }
     }
 }

@@ -20,7 +20,6 @@ namespace Conversation
 
         string NodeName { get; }
 
-        //IEnumerable<Output> Outputs { get; }
         IEnumerable<Output> Connectors { get; }
     }
 

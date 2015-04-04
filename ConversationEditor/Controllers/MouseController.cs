@@ -173,9 +173,11 @@ namespace ConversationEditor
 
                 private void Connect(Output inConnector, Output outConnector)
                 {
+                    if (object.Equals(null, inConnector) || object.Equals(outConnector, null))
+                        return;
                     if (!outConnector.Connections.Contains(inConnector))
                     {
-                        Action redo = () => { outConnector.ConnectTo(inConnector); };
+                        Action redo = () => { outConnector.ConnectTo(inConnector, false); };
                         Action undo = () => { outConnector.Disconnect(inConnector); };
                         m_parent.Changed.Execute(new GenericUndoAction(undo, redo, "Connected nodes"));
                     }
@@ -207,7 +209,7 @@ namespace ConversationEditor
                     }
                     else
                     {
-                        var x = m_parent.BestConnector(m_parent.UIInfo(LinkingTransition).Area.Center(), client, a => a.CanConnectTo(LinkingTransition));
+                        var x = m_parent.BestConnector(m_parent.UIInfo(LinkingTransition).Area.Center(), client, a => a.CanConnectTo(LinkingTransition, ConnectionConsiderations.None));
                         if (x != LinkingTransition)
                             Connect(LinkingTransition, x);
                         else
@@ -235,7 +237,7 @@ namespace ConversationEditor
                     if (Control.ModifierKeys.HasFlag(Keys.Shift))
                     {
                         var p0 = m_lastClientPos;
-                        Output x = m_parent.BestConnector(m_parent.UIInfo(LinkingTransition).Area.Center(), p0, a => a.CanConnectTo(LinkingTransition));
+                        Output x = m_parent.BestConnector(m_parent.UIInfo(LinkingTransition).Area.Center(), p0, a => a.CanConnectTo(LinkingTransition, ConnectionConsiderations.None));
                         if (x != null)
                             connections.Add(m_parent.UIInfo(x).Area.Center(), m_parent.UIInfo(LinkingTransition).Area.Center(), false);
                     }
@@ -485,16 +487,20 @@ namespace ConversationEditor
 
                 public override void Draw(Graphics g, ConnectionDrawer connections)
                 {
-                    foreach (Output connection in SelectedTransition.Connections)
+                    if (Control.ModifierKeys.HasFlag(Keys.Shift))
                     {
-                        if (Control.ModifierKeys.HasFlag(Keys.Shift))
-                        {
-                            var p0 = m_lastClientPos;
-                            Output x = m_parent.BestConnector(null, p0, a => a.CanConnectTo(connection));
-                            if (x != null)
+                        var p0 = m_lastClientPos;
+                        Output x = m_parent.BestConnector(null, p0, a => SelectedTransition.Connections.All(b => a.CanConnectTo(b, ConnectionConsiderations.RedundantConnection)));
+
+                        if (x != null)
+                            foreach (Output connection in SelectedTransition.Connections)
+                            {
                                 connections.Add(m_parent.UIInfo(x).Area.Center(), m_parent.UIInfo(connection).Area.Center(), true);
-                        }
-                        else
+                            }
+                    }
+                    else
+                    {
+                        foreach (Output connection in SelectedTransition.Connections)
                         {
                             connections.Add(Util.Center(m_parent.UIInfo(connection).Area), m_lastClientPos, true);
                         }
@@ -523,7 +529,7 @@ namespace ConversationEditor
                                 }
                                 foreach (var connection in removeConnections)
                                 {
-                                    selectedTransition.ConnectTo(connection);
+                                    selectedTransition.ConnectTo(connection, true); //This is an undo action so we don't need to recheck the rules
                                 }
                             };
                             Action redo = () =>
@@ -534,7 +540,7 @@ namespace ConversationEditor
                                 }
                                 foreach (var connection in addConnections)
                                 {
-                                    x.ConnectTo(connection);
+                                    x.ConnectTo(connection, false);
                                 }
                             };
                             m_parent.Changed.Execute(new GenericUndoAction(undo, redo, "Moved links"));
@@ -543,7 +549,7 @@ namespace ConversationEditor
 
                     if (Control.ModifierKeys.HasFlag(Keys.Shift))
                     {
-                        var best = m_parent.BestConnector(null, client, a => SelectedTransition.Connections.All(c => a.CanConnectTo(c)));
+                        var best = m_parent.BestConnector(null, client, a => SelectedTransition.Connections.All(c => a.CanConnectTo(c, ConnectionConsiderations.RedundantConnection)));
                         action(best);
                     }
                     m_parent.ForClickedOn(client, x => { }, action, (a, b) => { }, x => { }, () => { });
@@ -576,7 +582,11 @@ namespace ConversationEditor
                 {
                     Output a = SelectedConnection.Item1;
                     Output b = SelectedConnection.Item2;
-                    return new SimpleUndoPair { Undo = () => { a.ConnectTo(b); }, Redo = () => { a.Disconnect(b); } };
+                    return new SimpleUndoPair
+                    {
+                        Undo = () => { a.ConnectTo(b, true); }, //Reverting to a previous state so we can ignore the connection rules
+                        Redo = () => { a.Disconnect(b); }
+                    };
                 }
 
                 public override void Draw(Graphics g, ConnectionDrawer connections)

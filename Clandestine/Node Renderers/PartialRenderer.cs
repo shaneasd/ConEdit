@@ -39,7 +39,7 @@ namespace Clandestine
             }
         }
 
-        public PartialRenderer(ConversationNode<Conversation.INodeGUI> node, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource) :
+        public PartialRenderer(ConversationNode<ConversationEditor.INodeGUI> node, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource) :
             base(node, p, localizer)
         {
             m_datasource = datasource;

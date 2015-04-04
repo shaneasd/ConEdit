@@ -13,7 +13,7 @@ namespace Utilities
         }
     }
 
-    public class UnorderedTuple2<T>
+    public class UnorderedTuple2<T> : IEnumerable<T>
     {
         public readonly T Item1;
         public readonly T Item2;
@@ -43,6 +43,18 @@ namespace Utilities
         public bool Contains(T val)
         {
             return object.Equals(Item1, val) || object.Equals(Item2, val);
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            yield return Item1;
+            yield return Item2;
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            yield return Item1;
+            yield return Item2;
         }
     }
 }

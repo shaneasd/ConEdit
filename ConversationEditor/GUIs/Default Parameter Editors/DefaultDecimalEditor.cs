@@ -96,6 +96,7 @@ namespace ConversationEditor
             {
                 m_scheme = value;
                 m_numericUpDown.Colors.BorderPen = value.ControlBorder;
+                drawWindow1.ColorScheme = value;
             }
         }
     }

@@ -78,7 +78,8 @@ namespace Utilities
 
         public static void ForAll<T>(this IEnumerable<T> e, Action<T> a)
         {
-            e.ToList().ForEach(a);
+            foreach (var x in e)
+                a(x);
         }
 
         public static IEnumerable<U> Collapse<T, U>(this T root, Func<T, IEnumerable<T>> subNodeSelector, Func<T, IEnumerable<U>> valueSelector)
@@ -230,6 +231,14 @@ namespace Utilities
                 return data[key];
             else
                 return def;
+        }
+
+        public static bool CountEquals<T>(this IEnumerable<T> data, int value)
+        {
+            int count = 0;
+            for (var e = data.GetEnumerator(); e.MoveNext() && count < value + 1; )
+                count++;
+            return count == value;
         }
     }
 }

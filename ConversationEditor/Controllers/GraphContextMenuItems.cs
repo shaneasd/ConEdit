@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ConversationEditor.Controllers;
-using ConversationNode = Conversation.ConversationNode<Conversation.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 using Utilities;
 using Conversation;
 using System.Windows.Forms;
@@ -18,9 +18,9 @@ namespace ConversationEditor
         {
         }
 
-        public override IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(ColorScheme scheme, GraphEditorControl<ConversationNode> control)
+        public override IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(GraphEditorControl<ConversationNode> control)
         {
-            foreach (var action in base.GetMenuActions(scheme, control))
+            foreach (var action in base.GetMenuActions(control))
                 yield return action;
             yield return new MenuAction2<ConversationNode>("Find References", (n, p) => () => FileReferences(n), null, null, null);
         }
@@ -34,7 +34,7 @@ namespace ConversationEditor
             FileReferences = findReferences;
         }
 
-        public virtual IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(ColorScheme scheme, GraphEditorControl<ConversationNode> control)
+        public virtual IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(GraphEditorControl<ConversationNode> control)
         {
             MenuAction2<ConversationNode> addNodes = new MenuAction2<ConversationNode>("Add Node", (n, p) => null, null, null, p => { });
             AddNodeMenuItem(addNodes, control.DataSource.Nodes, control);

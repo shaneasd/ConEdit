@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ConversationEditor;
 using ConversationEditor.Controllers;
-using ConversationNode = Conversation.ConversationNode<Conversation.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 using System.Drawing;
 using Conversation;
 
@@ -12,7 +12,7 @@ namespace PluginPack
 {
     public class MenuActionFactory : IMenuActionFactory<ConversationNode>
     {
-        public IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(ColorScheme scheme, GraphEditorControl<ConversationNode> control)
+        public IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(GraphEditorControl<ConversationNode> control)
         {
             Action<ConversationNode, Point> jump = (n, p) =>
                 {

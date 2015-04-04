@@ -15,7 +15,7 @@ namespace Clandestine
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class MultipleConnectionsErrorChecker<T> : ErrorChecker<T>
-        where T : IConversationNode
+        where T : class, IConversationNode
     {
         public class NonOptionSiblingsError : ConversationError<T>
         {
@@ -29,7 +29,7 @@ namespace Clandestine
             }
         }
 
-        public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities utils)
+        public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
         {
             var filteredNodes = nodes.Where(n => !Clandestine.Util.IsAIBark(n.Type, utils) && n.Type != SpecialNodes.RANDOM_GUID);
             foreach (var n in filteredNodes)

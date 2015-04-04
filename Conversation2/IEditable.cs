@@ -28,8 +28,6 @@ namespace Conversation
         event Action Linked;
 
         /// <summary>
-
-        /// <summary>
         /// Change the node's ID. Be careful about doing this as things refering to the node by ID will have dangling pointers
         /// </summary>
         /// <param name="id">the new ID</param>

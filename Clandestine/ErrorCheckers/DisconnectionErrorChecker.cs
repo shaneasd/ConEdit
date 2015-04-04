@@ -8,7 +8,7 @@ using ConversationEditor;
 
 namespace Clandestine
 {
-    public class DisconnectionErrorChecker<T> : ErrorChecker<T> where T : IConversationNode
+    public class DisconnectionErrorChecker<T> : ErrorChecker<T> where T : class, IConversationNode
     {
         public class DisconnectedInputError : ConversationError<T>
         {
@@ -28,7 +28,7 @@ namespace Clandestine
             }
         }
 
-        public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities utils)
+        public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
         {
             foreach (var node in nodes)
             {

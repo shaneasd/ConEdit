@@ -5,7 +5,7 @@ using System.Text;
 using Conversation;
 using Utilities;
 
-using ConversationNode = Conversation.ConversationNode<Conversation.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 
 namespace ConversationEditor
 {
@@ -39,6 +39,12 @@ namespace ConversationEditor
 
             EnumerationData categoryData = new EnumerationData("Categories", DomainIDs.CATEGORY_TYPE, new[] { new EnumerationData.Element("None", DomainIDs.CATEGORY_NONE) });
             m_typeSet.AddEnum(categoryData, true);
+
+            var connectorOptions = new[] { new EnumerationData.Element(SpecialConnectors.Input.Name, SpecialConnectors.Input.Id.Guid),
+                                           new EnumerationData.Element(SpecialConnectors.Output.Name, SpecialConnectors.Output.Id.Guid), };
+            EnumerationData connectionData = new EnumerationData("Connections", DomainIDs.CONNECTION_TYPE, connectorOptions);
+            m_typeSet.AddEnum(connectionData, true);
+
             //m_types.Enumerations.Add(categoryData.Guid, categoryData.Name, categoryData);
             m_typeSet.AddEnum(ConnectorPosition.PositionConnectorDefinition, true);
             EnumerationData allEnums = new EnumerationData("Enumerations", ENUM_SET_GUID, new List<EnumerationData.Element>());
@@ -141,6 +147,7 @@ namespace ConversationEditor
             List<NodeData.ConnectorData> connectorDefinitionConnectors = new List<NodeData.ConnectorData>()
             {
                 new NodeData.ConnectorData(ID<TConnector>.Parse("9231f7d0-9831-4a99-b59a-3479b2716f7d"), DomainIDs.CONNECTOR_DEFINITION_OUTPUT_DEFINITION.Id, new List<Parameter>()),
+                //new NodeData.ConnectorData(ID<TConnector>.Parse("5b52871e-183c-409f-a4fd-7be3f7fab82a"), DomainIDs.CONNECTOR_DEFINITION_CONNECTION_DEFINITION.Id, new List<Parameter>()),
             };
             List<NodeData.ParameterData> connectorDefinitionParameters = new List<NodeData.ParameterData>()
             {
@@ -148,6 +155,15 @@ namespace ConversationEditor
                 new NodeData.ParameterData("Position", ConnectorPosition.PARAMETER_ID, ConnectorPosition.ENUM_ID, NO_CONFIG, ConnectorPosition.Bottom.Element.Guid.ToString()),
             };
             AddNode(DomainIDs.CONNECTOR_DEFINITION_GUID, "Connector", m_nodeHeirarchy, config('o', "ffff00"), connectorDefinitionConnectors, connectorDefinitionParameters);
+
+            List<NodeData.ParameterData> connectionDefinitionParameters = new List<NodeData.ParameterData>()
+            {
+                new NodeData.ParameterData("Connector1", DomainIDs.CONNECTION_DEFINITION_CONNECTOR1, DomainIDs.CONNECTION_TYPE, NO_CONFIG),
+                new NodeData.ParameterData("Connector2", DomainIDs.CONNECTION_DEFINITION_CONNECTOR2, DomainIDs.CONNECTION_TYPE, NO_CONFIG),
+            };
+            AddNode(DomainIDs.CONNECTION_DEFINITION_GUID, "Connection", m_nodeHeirarchy, config('o', "ffbb00"), NO_CONNECTORS, connectionDefinitionParameters);
+
+
             m_connectorsMenu = new NodeType("Connectors", DomainIDs.NODE_MENU);
             m_nodeMenu.m_childTypes.Add(m_connectorsMenu);
 
@@ -492,11 +508,11 @@ namespace ConversationEditor
             //m_types.RemoveType(baseType, guid);
         }
 
-        public static void ForEachNode(IEnumerable<ConversationNode> nodes, Action<NodeTypeData> categoryAction, Action<IntegerData> integerAction, Action<DecimalData> decimalAction, Action<DynamicEnumerationData> dynamicEnumAction, Action<EnumerationData> enumerationAction, Action<EnumerationData> enumerationValueAction, Action<NodeData> nodeAction, Action<ConnectorDefinitionData> connectorAction)
+        public static void ForEachNode(IEnumerable<ConversationNode> nodes, Action<NodeTypeData> categoryAction, Action<IntegerData> integerAction, Action<DecimalData> decimalAction, Action<DynamicEnumerationData> dynamicEnumAction, Action<EnumerationData> enumerationAction, Action<EnumerationData> enumerationValueAction, Action<NodeData> nodeAction, Action<ConnectorDefinitionData> connectorAction, Action<ConnectionDefinitionData> connectionAction)
         {
-            ForEachNode(nodes.Select(n => n.m_data), categoryAction, integerAction, decimalAction, dynamicEnumAction, enumerationAction, enumerationValueAction, nodeAction, connectorAction);
+            ForEachNode(nodes.Select(n => n.m_data), categoryAction, integerAction, decimalAction, dynamicEnumAction, enumerationAction, enumerationValueAction, nodeAction, connectorAction, connectionAction);
         }
-        public static void ForEachNode(IEnumerable<IEditable> nodes, Action<NodeTypeData> categoryAction, Action<IntegerData> integerAction, Action<DecimalData> decimalAction, Action<DynamicEnumerationData> dynamicEnumAction, Action<EnumerationData> enumerationAction, Action<EnumerationData> enumerationValueAction, Action<NodeData> nodeAction, Action<ConnectorDefinitionData> connectorAction)
+        public static void ForEachNode(IEnumerable<IEditable> nodes, Action<NodeTypeData> categoryAction, Action<IntegerData> integerAction, Action<DecimalData> decimalAction, Action<DynamicEnumerationData> dynamicEnumAction, Action<EnumerationData> enumerationAction, Action<EnumerationData> enumerationValueAction, Action<NodeData> nodeAction, Action<ConnectorDefinitionData> connectorAction, Action<ConnectionDefinitionData> connectionAction)
         {
             foreach (var node in nodes.OrderBy(n => n.NodeTypeID == DomainIDs.NODE_GUID ? 2 : 1))
             {
@@ -593,6 +609,12 @@ namespace ConversationEditor
 
                     connectorAction(new ConnectorDefinitionData(name, ID<TConnectorDefinition>.ConvertFrom(node.NodeID), parameters, ConnectorPosition.Read(positionParameter)));
                 }
+                else if (node.NodeTypeID == DomainIDs.CONNECTION_DEFINITION_GUID)
+                {
+                    var connector1Parameter = node.Parameters.Single(p => p.Id == DomainIDs.CONNECTION_DEFINITION_CONNECTOR1) as IEnumParameter;
+                    var connector2Parameter = node.Parameters.Single(p => p.Id == DomainIDs.CONNECTION_DEFINITION_CONNECTOR2) as IEnumParameter;
+                    connectionAction(new ConnectionDefinitionData(UnorderedTuple.Make(ID<TConnectorDefinition>.FromGuid(connector1Parameter.Value), ID<TConnectorDefinition>.FromGuid(connector2Parameter.Value))));
+                }
             }
         }
 
@@ -648,19 +670,34 @@ namespace ConversationEditor
         //private GenericEditableGenerator m_inputConnector;
         //private GenericEditableGenerator m_outputConnector;
 
-        internal void ModifyConnector(ConnectorDefinitionData data)
+        internal void ModifyConnector(ConnectorDefinitionData cdd)
         {
-            ConnectorDefinitions[data.Id] = data;
+            ConnectorDefinitions[cdd.Id] = cdd;
+
+            EnumerationData data = m_typeSet.GetEnumData(DomainIDs.CONNECTION_TYPE);
+            var index = data.Elements.IndexOf(e => e.Guid == cdd.Id.Guid);
+            var option = data.Elements[index];
+            option.Name = cdd.Name;
+            data.Elements[index] = option;
+            UpdateEnumeration(data);
         }
 
-        internal void AddConnector(ConnectorDefinitionData data)
+        internal void AddConnector(ConnectorDefinitionData cdd)
         {
-            ConnectorDefinitions.Add(data.Id, data);
+            ConnectorDefinitions.Add(cdd.Id, cdd);
+
+            EnumerationData data = m_typeSet.GetEnumData(DomainIDs.CONNECTION_TYPE);
+            data.Elements.Add(new EnumerationData.Element(cdd.Name, cdd.Id.Guid));
+            UpdateEnumeration(data);
         }
 
-        internal void RemoveConnector(ConnectorDefinitionData data)
+        internal void RemoveConnector(ConnectorDefinitionData cdd)
         {
-            ConnectorDefinitions.Remove(data.Id);
+            ConnectorDefinitions.Remove(cdd.Id);
+
+            EnumerationData data = m_typeSet.GetEnumData(DomainIDs.CONNECTION_TYPE);
+            data.Elements.RemoveAll(e => e.Guid == cdd.Id.Guid);
+            UpdateEnumeration(data);
         }
 
         private void RefreshConnectorsMenu()
@@ -779,6 +816,8 @@ namespace ConversationEditor
             { DomainIDs.CONNECTOR_DEFINITION_OUTPUT_DEFINITION                     .Id,       DomainIDs.CONNECTOR_DEFINITION_OUTPUT_DEFINITION          },
             { DomainIDs.ENUM_VALUE_OUTPUT_DEFINITION                               .Id,       DomainIDs.ENUM_VALUE_OUTPUT_DEFINITION                    },
             { DomainIDs.ENUM_OUTPUT_DEFINITION                                     .Id,       DomainIDs.ENUM_OUTPUT_DEFINITION                          },
+            //{ DomainIDs.CONNECTOR_DEFINITION_CONNECTION_DEFINITION                 .Id,       DomainIDs.CONNECTOR_DEFINITION_CONNECTION_DEFINITION      },
+            //{ DomainIDs.CONNECTION_DEFINITION_CONNECTOR                            .Id,       DomainIDs.CONNECTION_DEFINITION_CONNECTOR                 },
         };
         private PluginsConfig m_pluginsConfig;
 

@@ -7,7 +7,7 @@ using Utilities;
 using Conversation;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using ConversationNode = Conversation.ConversationNode<Conversation.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 
 namespace ConversationEditor
 {

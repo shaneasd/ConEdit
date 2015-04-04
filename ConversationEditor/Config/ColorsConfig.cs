@@ -59,14 +59,6 @@ namespace ConversationEditor
                 ValueChanged.Execute();
             }
         }
-
-        public ColorScheme Colors
-        {
-            get
-            {
-                return new ColorScheme(ConnectorColor);
-            }
-        }
     }
 }
 

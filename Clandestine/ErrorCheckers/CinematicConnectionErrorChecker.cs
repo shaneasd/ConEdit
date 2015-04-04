@@ -8,7 +8,7 @@ using Utilities;
 namespace Clandestine.ErrorCheckers
 {
     public class CinematicConnectionErrorChecker<T> : ErrorChecker<T>
-        where T : IConversationNode
+        where T : class, IConversationNode
     {
         public class CinematicControllerConnectionError : ConversationError<T>
         {
@@ -36,7 +36,7 @@ namespace Clandestine.ErrorCheckers
 
         ID<TConnectorDefinition> CINEMATIC = ID<TConnectorDefinition>.Parse("430e6b72-0caa-476e-8da6-8bd1f127127a");
         ID<TConnectorDefinition> CONTROLLER = ID<TConnectorDefinition>.Parse("5c80f036-9bf8-43b7-afd5-0c4d619917c1");
-        public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> conversationFile, IErrorCheckerUtilities utils)
+        public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> conversationFile, IErrorCheckerUtilities<T> utils)
         {
             foreach (var node in conversationFile)
             {

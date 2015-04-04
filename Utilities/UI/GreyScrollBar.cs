@@ -59,10 +59,9 @@ namespace Utilities
             InitializeComponent();
             Action CreateButtons = () =>
                 {
-                    //TODO: ColorScheme.FormBackground
-                    TopButton = new Button(new Point(0, 0), !Horizontal ? Button.Direction.Up : Button.Direction.Left, () => m_state, () => BackColor);
+                    TopButton = new Button(new Point(0, 0), !Horizontal ? Button.Direction.Up : Button.Direction.Left, () => m_state, () => ColorScheme.Background);
                     var location = Horizontal ? new Point(Width - BUTTON_SIZE, 0) : new Point(0, Height - BUTTON_SIZE);
-                    BottomButton = new Button(location, !Horizontal ? Button.Direction.Down : Button.Direction.Right, () => m_state, () => BackColor);
+                    BottomButton = new Button(location, !Horizontal ? Button.Direction.Down : Button.Direction.Right, () => m_state, () => ColorScheme.Background);
                 };
             CreateButtons();
             SizeChanged += (a, b) => CreateButtons();
@@ -142,6 +141,17 @@ namespace Utilities
         {
             get { return m_percentageCovered; }
             set { m_percentageCovered = value; Invalidate(true); }
+        }
+
+        private ColorScheme m_colorScheme;
+        public ColorScheme ColorScheme
+        {
+            get { return m_colorScheme; }
+            set
+            {
+                m_colorScheme = value;
+                drawWindow1.ColorScheme = value;
+            }
         }
 
         public enum StateEnum { None, HoldingScrollDownButton, HoldingScrollUpButton, Dragging, EmptyScrollDown, EmptyScrollUp }
@@ -319,7 +329,7 @@ namespace Utilities
         {
             get
             {
-                return RatioValue * (Range - BarLength) + BUTTON_SIZE-1;
+                return RatioValue * (Range - BarLength) + BUTTON_SIZE - 1;
             }
         }
 
@@ -327,7 +337,7 @@ namespace Utilities
         {
             get
             {
-                return RatioValue * (Range - BarLength) + TopButton.Area.Height + BarLength+1;
+                return RatioValue * (Range - BarLength) + TopButton.Area.Height + BarLength + 1;
             }
         }
 

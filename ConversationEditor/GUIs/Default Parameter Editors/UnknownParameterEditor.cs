@@ -90,6 +90,7 @@ namespace ConversationEditor
             {
                 m_scheme = value;
                 m_textBox.Colors.BorderPen = value.ControlBorder;
+                drawWindow1.ColorScheme = value;
             }
         }
     }

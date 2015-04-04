@@ -77,8 +77,6 @@ namespace Conversation
                 connector.Disconnected += OnOutputLinked;
             }
 
-            //TODO: Assert that connectors match node definition?
-
             m_generator = generator;
         }
 

@@ -7,7 +7,7 @@ using Conversation;
 
 namespace PluginPack
 {
-    public class JumpsErrorChecker<T> : ErrorChecker<T> where T : IConversationNode
+    public class JumpsErrorChecker<T> : ErrorChecker<T> where T : class, IConversationNode
     {
         public static string GetID(T node)
         {
@@ -54,7 +54,7 @@ namespace PluginPack
             }
         }
 
-        public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities utils)
+        public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
         {
             var targetnodes = nodes.Where(a => a.Type == SpecialNodes.JUMP_TARGET_GUID);
             var jumpnodes = nodes.Where(a => a.Type == SpecialNodes.JUMP_TO_GUID);

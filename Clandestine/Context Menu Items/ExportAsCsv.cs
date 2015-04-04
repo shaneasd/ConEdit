@@ -116,7 +116,7 @@ namespace Clandestine
 
         public abstract string Separator { get; }
 
-        public void Execute(IConversationFile conversation, IErrorCheckerUtilities util)
+        public void Execute(IConversationFile conversation, IErrorCheckerUtilities<IConversationNode> util)
         {
             using (SaveFileDialog sfd = new SaveFileDialog())
             {
@@ -136,7 +136,7 @@ namespace Clandestine
             }
         }
 
-        public void WriteConversation(IConversationFile conversation, StreamWriter sw, bool includeName, IErrorCheckerUtilities util)
+        public void WriteConversation(IConversationFile conversation, StreamWriter sw, bool includeName, IErrorCheckerUtilities<IConversationNode> util)
         {
             var nodes = conversation.Nodes;
 

@@ -6,16 +6,25 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    class ErrorCheckerUtils : IErrorCheckerUtilities
+    public class ErrorCheckerUtils<T> : IErrorCheckerUtilities<T> where T : class, IConversationNode
     {
         private IDataSource m_dataSource;
-        public ErrorCheckerUtils(IDataSource datasource)
+        private Func<IEditable, T> m_reverseLookup;
+
+        public ErrorCheckerUtils(IDataSource datasource, Func<IEditable, T> reverseLookup)
         {
             m_dataSource = datasource;
+            m_reverseLookup = reverseLookup;
         }
+
         public Guid GetCategory(ID<NodeTypeTemp> type)
         {
             return m_dataSource.GetCategory(type);
+        }
+
+        public T ReverseLookup(IEditable data)
+        {
+            return m_reverseLookup(data);
         }
     }
 }

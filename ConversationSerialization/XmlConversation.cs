@@ -170,10 +170,12 @@ namespace Conversation.Serialization
                             errors.Add(new Error("Connector does not exist"));
                         else
                         {
-                            bool success = connector1.ConnectTo(connector2);
+                            bool success = connector1.ConnectTo(connector2, false);
                             if (!success)
                             {
-                                errors.Add(new Error("Tried to connect two connectors that could not be connected"));
+                                success = connector1.ConnectTo(connector2, true);
+                                if (!success)
+                                    errors.Add(new Error("Tried to connect two connectors that could not be connected"));
                             }
                         }
                     }
@@ -185,6 +187,7 @@ namespace Conversation.Serialization
                     ID<NodeTypeTemp> nodeType = ID<NodeTypeTemp>.Parse(node.Attribute("Guid").Value);
                     int outputIndex = 0; //no idea where the output guids come from so just assume they're ordered
 
+                    //TODO: Remove support for legacy linking
                     foreach (var output in node.Elements("Output"))
                     {
                         ID<TConnector> outputGuid = ID<TConnector>.Parse(output.Attribute("guid").Value);
@@ -202,9 +205,13 @@ namespace Conversation.Serialization
                                 foreach (var outputConnector in outputConnectors)
                                 {
                                     if (success) break;
-                                    if (connector.ConnectTo(outputConnector))
+                                    if (connector.ConnectTo(outputConnector, false))
                                     {
                                         success = true;
+                                    }
+                                    else
+                                    {
+                                        connector.ConnectTo(outputConnector, true);
                                     }
                                 }
                             }

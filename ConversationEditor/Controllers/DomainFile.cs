@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using Conversation;
 using Utilities;
-using ConversationNode = Conversation.ConversationNode<Conversation.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 using Conversation.Serialization;
 
 namespace ConversationEditor
@@ -151,18 +151,22 @@ namespace ConversationEditor
                 //Update conversation datasource?
                 m_datasource.ModifyConnector(data);
             };
+            Action<ConnectionDefinitionData> connectionAction = data =>
+            {
+                //Doesn't affect the domain domain
+            };
 
             if (m_datasource.IsConnector(node.Type))
             {
                 var nodeConnector = node.Connectors.Single(c => c.m_definition.Id == DomainIDs.CONNECTOR_OUTPUT_DEFINITION.Id);
                 var nodes = nodeConnector.Connections.Select(c => c.Parent).Where(n => n.NodeTypeID == DomainIDs.NODE_GUID);
-                DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction);
+                DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             }
             else if (m_datasource.IsParameter(node.Type))
             {
                 var nodeConnector = node.Connectors.Single(c => c.m_definition.Id == DomainIDs.PARAMETER_OUTPUT_DEFINITION.Id);
                 var nodes = nodeConnector.Connections.Select(c => c.Parent).Where(n => n.NodeTypeID == DomainIDs.NODE_GUID);
-                DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction);
+                DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             }
             else if (m_datasource.IsConfig(node.Type))
             {
@@ -170,7 +174,7 @@ namespace ConversationEditor
                 var connected = nodeConnector.Connections.Select(c => c.Parent);
 
                 var nodes = connected.Where(n => n.NodeTypeID == DomainIDs.NODE_GUID);
-                DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction);
+                DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
 
                 //Don't currently need to handle parameter config affecting nodes
                 //var parameters = connected.Where(n => m_datasource.IsParameter(n.NodeTypeID));
@@ -179,7 +183,7 @@ namespace ConversationEditor
             }
             else
             {
-                DomainDomain.ForEachNode(node.Only(), categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction);
+                DomainDomain.ForEachNode(node.Only(), categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             }
             ConversationDomainModified.Execute(); //No need to be picky about false positives
         }
@@ -209,7 +213,8 @@ namespace ConversationEditor
                 m_datasource.ModifyConnector(data);
                 //update conversation datasource when connector definition is linked to a parameter
             };
-            DomainDomain.ForEachNode(node.Only(), categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction);
+            Action<ConnectionDefinitionData> connectionAction = data => { }; //Can't line connection definitions to anything
+            DomainDomain.ForEachNode(node.Only(), categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             ConversationDomainModified.Execute(); //No need to be picky about false positives
         }
 
@@ -250,7 +255,11 @@ namespace ConversationEditor
                 datasource.AddConnector(data);
                 //conversationDatasource.AddConnector(data);
             };
-            DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction);
+            Action<ConnectionDefinitionData> connectionAction = data =>
+            {
+                //No action required as it doesn't affect the domain domain
+            };
+            DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
         }
 
         /// <summary>
@@ -298,7 +307,11 @@ namespace ConversationEditor
                 m_datasource.RemoveConnector(data);
                 //m_conversationDatasource.RemoveConnector(data.Id);
             };
-            DomainDomain.ForEachNode(node.Only(), categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction);
+            Action<ConnectionDefinitionData> connectionAction = data =>
+            {
+                //Doesn't affect domain domain
+            };
+            DomainDomain.ForEachNode(node.Only(), categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             ConversationDomainModified.Execute(); //No need to be picky about false positives
         }
 
@@ -328,7 +341,7 @@ namespace ConversationEditor
             get
             {
                 DomainData data = new DomainData();
-                DomainDomain.ForEachNode(m_nodes, data.NodeTypes.Add, data.Integers.Add, data.Decimals.Add, data.DynamicEnumerations.Add, data.Enumerations.Add, a => { }, data.Nodes.Add, data.Connectors.Add);
+                DomainDomain.ForEachNode(m_nodes, data.NodeTypes.Add, data.Integers.Add, data.Decimals.Add, data.DynamicEnumerations.Add, data.Enumerations.Add, a => { }, data.Nodes.Add, data.Connectors.Add, data.Connections.Add);
                 return data;
             }
         }
@@ -362,11 +375,11 @@ namespace ConversationEditor
 
             foreach (var sp in streamsAndPaths)
             {
-                sp.Do( stream =>
+                sp.Do(stream =>
                 {
                     var categoryData = serializerdeserializer.CategoriesDeserializer.Read(stream.Item1);
                     DomainFile.AddToData(categoryData.Nodes.Select(n => n.GraphData), source);
-                }, a=>{});
+                }, a => { });
             }
             foreach (var sp in streamsAndPaths)
             {
@@ -374,7 +387,7 @@ namespace ConversationEditor
                 {
                     var typeData = serializerdeserializer.TypesDeserializer.Read(stream.Item1);
                     DomainFile.AddToData(typeData.Nodes.Select(n => n.GraphData), source);
-                }, a=>{});
+                }, a => { });
             }
             foreach (var sp in streamsAndPaths)
             {
@@ -382,7 +395,7 @@ namespace ConversationEditor
                 {
                     var connectorData = serializerdeserializer.ConnectorsDeserializer.Read(stream.Item1);
                     DomainFile.AddToData(connectorData.Nodes.Select(n => n.GraphData), source);
-                }, a=>{});
+                }, a => { });
             }
             foreach (var sp in streamsAndPaths)
             {
@@ -390,7 +403,7 @@ namespace ConversationEditor
                 {
                     var nodeData = serializerdeserializer.NodesDeserializer.Read(stream.Item1);
                     DomainFile.AddToData(nodeData.Nodes.Select(n => n.GraphData), source);
-                }, a=>{});
+                }, a => { });
             }
 
             return streamsAndPaths.Select(a => a.TransformedOr(stream =>

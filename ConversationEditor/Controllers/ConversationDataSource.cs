@@ -10,6 +10,7 @@ namespace ConversationEditor
 {
     public class ConversationDataSource : IDataSource
     {
+        ConversationConnectionRules m_connectionRules = new ConversationConnectionRules();
         TypeSet m_types;
 
         private CallbackDictionary<ID<NodeTypeTemp>, Tuple<Guid, GenericEditableGenerator2>> m_nodes = new CallbackDictionary<ID<NodeTypeTemp>, Tuple<Guid, GenericEditableGenerator2>>();
@@ -61,6 +62,8 @@ namespace ConversationEditor
             {
                 AddNodeType(node);
             }
+
+            m_connectionRules.SetRules(domains.SelectMany(d => d.Connections));
         }
 
         void m_nodes_Removing(ID<NodeTypeTemp> id, Tuple<Guid, GenericEditableGenerator2> generator)
@@ -70,7 +73,7 @@ namespace ConversationEditor
 
         public void AddNodeType(NodeData node)
         {
-            var nodeGenerator = new GenericEditableGenerator2(node, m_types, m_connectorDefinitions, ConversationConnectionRules.Instance);
+            var nodeGenerator = new GenericEditableGenerator2(node, m_types, m_connectorDefinitions, m_connectionRules);
             m_nodes[node.Guid] = new Tuple<Guid, GenericEditableGenerator2>(node.Type.GetValueOrDefault(DomainIDs.CATEGORY_NONE), nodeGenerator);
         }
 

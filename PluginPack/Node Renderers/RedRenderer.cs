@@ -36,7 +36,7 @@ namespace PluginPack
             }
         }
 
-        public RedRenderer(ConversationNode<Conversation.INodeGUI> node, PointF p, Func<ID<LocalizedText>, string> localizer) :
+        public RedRenderer(ConversationNode<ConversationEditor.INodeGUI> node, PointF p, Func<ID<LocalizedText>, string> localizer) :
             base(node, p)
         {
         }

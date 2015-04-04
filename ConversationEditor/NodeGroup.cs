@@ -9,17 +9,14 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    using ConversationNode = Conversation.ConversationNode<Conversation.INodeGUI>;
+    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
     using System.Diagnostics;
 
     public class NodeGroupRenderer : IGUI
     {
-        ColorScheme m_scheme;
-
-        public NodeGroupRenderer(RectangleF area, ColorScheme scheme)
+        public NodeGroupRenderer(RectangleF area)
         {
             m_area = area;
-            m_scheme = scheme;
         }
 
         RectangleF m_area;
@@ -31,13 +28,13 @@ namespace ConversationEditor
 
         public void UpdateArea() { } //The area isn't calculated automatically
 
-        public void Draw(Graphics g, bool selected)
+        public void Draw(Graphics g, bool selected, ColorScheme scheme)
         {
             if (selected)
-                g.FillRectangle(new SolidBrush(m_scheme.GroupBackgroundSelected), m_area);
+                g.FillRectangle(new SolidBrush(scheme.GroupBackgroundSelected), m_area);
             else
-                g.FillRectangle(new SolidBrush(m_scheme.GroupBackgroundUnselected), m_area);
-            g.DrawRectangle(m_scheme.ForegroundPen, m_area);
+                g.FillRectangle(new SolidBrush(scheme.GroupBackgroundUnselected), m_area);
+            g.DrawRectangle(scheme.ForegroundPen, m_area);
         }
 
         public void MoveTo(PointF point)
@@ -73,23 +70,23 @@ namespace ConversationEditor
     {
         NodeGroupRenderer m_renderer;
 
-        public NodeGroup(RectangleF area, IEnumerable<ID<NodeTemp>> contents, ColorScheme scheme) : this(area, scheme)
+        public NodeGroup(RectangleF area, IEnumerable<ID<NodeTemp>> contents) : this(area)
         {
             Contents.UnionWith(contents);
         }
 
-        public static NodeGroup Make<TNode2>(IEnumerable<TNode2> contents, ColorScheme scheme) where TNode2 : class, IGraphNode, IRenderable<IGUI>
+        public static NodeGroup Make<TNode2>(IEnumerable<TNode2> contents) where TNode2 : class, IGraphNode, IRenderable<IGUI>
         {
             var l = contents.Min(n => n.Renderer.Area.Left) - 20;
             var r = contents.Max(n => n.Renderer.Area.Right) + 20;
             var t = contents.Min(n => n.Renderer.Area.Top) - 20;
             var b = contents.Max(n => n.Renderer.Area.Bottom) + 20;
-            return new NodeGroup(RectangleF.FromLTRB(l, t, r, b), contents.Select(n => n.Id), scheme);
+            return new NodeGroup(RectangleF.FromLTRB(l, t, r, b), contents.Select(n => n.Id));
         }
 
-        public NodeGroup(RectangleF area, ColorScheme scheme)
+        public NodeGroup(RectangleF area)
         {
-            m_renderer = new NodeGroupRenderer(area, scheme);
+            m_renderer = new NodeGroupRenderer(area);
         }
 
         public NodeGroupRenderer Renderer

@@ -139,6 +139,9 @@ namespace Conversation
             return !Corrupted;
         }
 
+        /// <summary>
+        /// Make up a value (most likely the default value) if no value has been specified (valid or otherwise)
+        /// </summary>
         protected abstract void DecorruptFromNull();
 
         /// <summary>

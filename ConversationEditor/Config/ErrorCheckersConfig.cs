@@ -47,7 +47,9 @@ namespace ConversationEditor
             root.Add(node);
             foreach (var assembly in m_assemblies)
             {
-                var assemblyNode = new XElement("Assembly", new XAttribute("filename", assembly.m_assembly.FileName));
+                XElement assemblyNode = assembly.m_assembly.FileName == null ?
+                                        new XElement("ExecutingAssembly") :
+                                        new XElement("Assembly", new XAttribute("filename", assembly.m_assembly.FileName));
                 node.Add(assemblyNode);
 
                 foreach (var checker in assembly.Types)
@@ -74,7 +76,7 @@ namespace ConversationEditor
 
         public void RefreshConfig(PluginsConfig pluginsConfig)
         {
-            foreach (var pluginAssembly in pluginsConfig.UnfilteredAssemblies)
+            foreach (var pluginAssembly in pluginsConfig.UnfilteredAssemblies(MainAssembly.Include))
             {
                 ErrorCheckerAssembly configECA = GetAssembly(pluginAssembly);
 

@@ -133,6 +133,7 @@
     <Compile Include="Customization\IProjectExporter.cs" />
     <Compile Include="Customization\WrapperContextMenuItemsFactory.cs" />
     <Compile Include="Customization\IProjectExplorerContextMenuItemsFactory.cs" />
+    <Compile Include="Error Checkers\InvalidConnectionErrorChecker.cs" />
     <Compile Include="GUIs\Default Parameter Editors\DefaultSetEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -507,6 +508,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\ReadOnly.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

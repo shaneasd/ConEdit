@@ -11,7 +11,7 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    using ConversationNode = Conversation.ConversationNode<Conversation.INodeGUI>;
+    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 
     public partial class ErrorList2 : UserControl
     {

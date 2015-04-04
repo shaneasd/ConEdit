@@ -70,7 +70,7 @@ namespace ConversationEditor
         private ConversationDataSource m_conversationDataSource;
         SaveableFileNotUndoable m_file;
 
-        public static Project CreateEmpty(ColorScheme scheme, ILocalizationContext context, FileInfo path, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializer, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
+        public static Project CreateEmpty(ILocalizationContext context, FileInfo path, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializer, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
         {
             Project result = null;
             FileInfo conversationFile;
@@ -105,7 +105,7 @@ namespace ConversationEditor
 
             TData data = new TData(conversationPaths, domainPaths, localizationPaths, Enumerable.Empty<string>());
 
-            result = new Project(scheme, context, data, conversationNodeFactory, domainNodeFactory, m, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig, audioCustomization);
+            result = new Project(context, data, conversationNodeFactory, domainNodeFactory, m, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig, audioCustomization);
             return result;
         }
 
@@ -165,8 +165,7 @@ namespace ConversationEditor
             return false;
         }
 
-        //TODO: Project shouldn't need colorscheme
-        public Project(ColorScheme scheme, ILocalizationContext context, TData data, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, MemoryStream initialData, FileInfo projectFile, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializerFactory, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
+        public Project(ILocalizationContext context, TData data, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, MemoryStream initialData, FileInfo projectFile, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializerFactory, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
         {
             var soFar = DateTime.Now - Process.GetCurrentProcess().StartTime;
 
@@ -197,7 +196,7 @@ namespace ConversationEditor
                     m_domainDataSource = new DomainDomain(pluginsConfig);
                     Func<IEnumerable<FileInfo>, IEnumerable<Or<DomainFile, MissingDomainFile>>> loader = paths =>
                     {
-                        var result = DomainFile.Load(paths, m_domainDataSource, null, DomainSerializerDeserializer.Make(m_domainDataSource, scheme), DomainNodeFactory, () => DomainUsage).Evaluate();
+                        var result = DomainFile.Load(paths, m_domainDataSource, null, DomainSerializerDeserializer.Make(m_domainDataSource), DomainNodeFactory, () => DomainUsage).Evaluate();
                         result.ForAll(a => a.Do(b => b.ConversationDomainModified += ConversationDatasourceModified, null));
                         return result;
                     };

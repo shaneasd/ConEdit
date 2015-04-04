@@ -10,21 +10,14 @@ namespace ConversationEditor
 {
     public class ColorScheme : Utilities.ColorScheme
     {
-        private Color m_connectorColor;
-
-        public ColorScheme(Color connectorColor) : this()
-        {
-            m_connectorColor = connectorColor;
-        }
-
         public ColorScheme()
         {
-            m_connectorColor = Color.Black;
+            Connectors = Color.Black;
             ContextMenu = new ToolStripRenderer(this);
             Hatch = new HatchBrush(HatchStyle.Percent50, SelectionRectangle);
         }
 
-        public Color Connectors { get { return m_connectorColor; } }
+        public Color Connectors { get; set; }
         public readonly Color SelectedConnectors = Defaults.Foreground;
         public readonly Color SelectedConversationListItemBorder = Color.Black;
         public readonly Color SelectedConversationListItemPrimaryBackground = Color.FromArgb(96, 96, 96);

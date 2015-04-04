@@ -7,3 +7,5 @@
 */obj/*
 Installer/out/*
 *.suo
+Project2.VisualState.xml
+TestResult.xml

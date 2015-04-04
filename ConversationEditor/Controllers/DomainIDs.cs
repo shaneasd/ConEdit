@@ -8,32 +8,6 @@ namespace ConversationEditor
 {
     public static class DomainIDs
     {
-        public static IEnumerable<ID<NodeTypeTemp>> NodeTypes
-        {
-            get
-            {
-                //Defining a node category
-                yield return CATEGORY_GUID;
-
-                //Defining new data types
-                yield return ENUMERATION_VALUE_DECLARATION;
-                foreach (var baseType in BaseType.BaseTypes)
-                    if (baseType.NodeType != null)
-                        yield return baseType.NodeType;
-
-                //Defining a custom connector type
-                yield return CONNECTOR_DEFINITION_GUID;
-
-                //Defining the various aspects of a node
-                yield return CONFIG_GUID;
-                yield return NODE_GUID;
-                foreach (var baseType in BaseType.BaseTypes)
-                    yield return baseType.ParameterNodeType;
-
-                //Glaring ommision of connectors
-            }
-        }
-
         public static readonly ID<NodeTypeTemp> CATEGORY_GUID = ID<NodeTypeTemp>.Parse("88cb9861-9a78-4da5-bd9d-88840ee2085c");
         public static readonly ID<Parameter> CATEGORY_NAME = ID<Parameter>.Parse("a55c1343-1e54-4b84-a6ba-a0ecd31d7839");
         public static readonly ID<Parameter> CATEGORY_PARENT = ID<Parameter>.Parse("54c1256d-8229-432f-a2ba-2897abb71c67");
@@ -73,9 +47,14 @@ namespace ConversationEditor
         public static readonly ID<NodeTypeTemp> CONNECTOR_DEFINITION_GUID = ID<NodeTypeTemp>.Parse("844bbe9e-726f-4020-bd8c-c252a34103a0");
         public static readonly ID<Parameter> CONNECTOR_DEFINITION_NAME = ID<Parameter>.Parse("9b33ce7c-40c3-4000-a0cc-a65f5186c17c");
 
+        public static readonly ID<NodeTypeTemp> CONNECTION_DEFINITION_GUID = ID<NodeTypeTemp>.Parse("a530d784-7cea-4df6-b189-1bc1ae801bc0");
+        public static readonly ID<Parameter> CONNECTION_DEFINITION_CONNECTOR1 = ID<Parameter>.Parse("928841b6-8e5a-4f45-a643-c6ea4449b1d2");
+        public static readonly ID<Parameter> CONNECTION_DEFINITION_CONNECTOR2 = ID<Parameter>.Parse("63a9a8da-9086-4b67-beb0-1281760c2b9e");
+
         public static readonly Guid CATEGORY_NONE = Guid.Parse("a5142af5-3d14-4169-9638-df2e52e97963");
 
         public static readonly ParameterType CATEGORY_TYPE = ParameterType.Parse("5d823e77-52bc-46c0-8f47-3ddb1211fdcc");
+        public static readonly ParameterType CONNECTION_TYPE = ParameterType.Parse("36829fb5-0cdd-439d-930c-f9128022f9c2");
 
         public static readonly ParameterType TYPES_GUID = ParameterType.Parse("d1715100-84db-4e16-a119-7cbcfd92109e");
 
@@ -91,6 +70,8 @@ namespace ConversationEditor
         public static readonly ConnectorDefinitionData NODE_OUTPUT_CONNECTORS_DEFINITION = new ConnectorDefinitionData("", ID<TConnectorDefinition>.Parse("3825e67f-fd0f-44b6-a3bc-0e001ea3a519"), new List<NodeData.ParameterData>(), ConnectorPosition.Bottom, true);
 
         public static readonly ConnectorDefinitionData CONNECTOR_DEFINITION_OUTPUT_DEFINITION = new ConnectorDefinitionData("", ID<TConnectorDefinition>.Parse("d27006af-d400-4631-a67b-5bd61188c13d"), new List<NodeData.ParameterData>(), ConnectorPosition.Bottom, true);
+        //public static readonly ConnectorDefinitionData CONNECTOR_DEFINITION_CONNECTION_DEFINITION = new ConnectorDefinitionData("", ID<TConnectorDefinition>.Parse("18c7e5b3-1486-44f3-b603-72d4240930de"), new List<NodeData.ParameterData>(), ConnectorPosition.Right, true);
+        //public static readonly ConnectorDefinitionData CONNECTION_DEFINITION_CONNECTOR = new ConnectorDefinitionData("", ID<TConnectorDefinition>.Parse("7be72853-e334-4cb1-bc74-38ed747ddfb2"), new List<NodeData.ParameterData>(), ConnectorPosition.Right, true);
 
         public static readonly ConnectorDefinitionData ENUM_VALUE_OUTPUT_DEFINITION = new ConnectorDefinitionData("", ID<TConnectorDefinition>.Parse("4fc9bf16-a7cb-4e4c-bd16-6084e6ebee7b"), new List<NodeData.ParameterData>(), ConnectorPosition.Top, true);
         public static readonly ConnectorDefinitionData ENUM_OUTPUT_DEFINITION = new ConnectorDefinitionData("", ID<TConnectorDefinition>.Parse("fcca13e8-149e-43e9-a2a8-03d3675e98b9"), new List<NodeData.ParameterData>(), ConnectorPosition.Bottom, true);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ConversationEditor.Controllers;
-using ConversationNode = Conversation.ConversationNode<Conversation.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 using System.Reflection;
 using System.IO;
 using ConversationEditor;
@@ -13,13 +13,13 @@ namespace PluginPack
 {
     class TemplatesMenuActions : IMenuActionFactory<ConversationNode>
     {
-        public IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(ColorScheme scheme, ConversationEditor.GraphEditorControl<ConversationNode> control)
+        public IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(ConversationEditor.GraphEditorControl<ConversationNode> control)
         {
             XmlGraphData<NodeUIData, ConversationEditorData> data;
             Assembly assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream("PluginPack.Templates.Basic Conversation.xml"))
             {
-                data = SerializationUtils.ConversationDeserializer(control.DataSource, scheme).Read(stream);
+                data = SerializationUtils.ConversationDeserializer(control.DataSource).Read(stream);
             }
 
             yield return new MenuAction2<ConversationNode>("Basic Conversation", (a, b) => null, null, null, p =>

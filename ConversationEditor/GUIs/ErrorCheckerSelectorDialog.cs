@@ -25,9 +25,11 @@ namespace ConversationEditor
             set
             {
                 m_scheme = value;
-                BackColor = m_scheme.FormBackground;
-                btnOk.BackColor = m_scheme.Background;
-                btnOk.ForeColor = m_scheme.Foreground;
+                BackColor = value.FormBackground;
+                btnOk.BackColor = value.Background;
+                btnOk.ForeColor = value.Foreground;
+                greyScrollBar1.ColorScheme = value;
+                drawWindow1.ColorScheme = value;
             }
         }
 
@@ -46,7 +48,7 @@ namespace ConversationEditor
 
         private void PopulateListBox()
         {
-            foreach (var pluginAssembly in m_pluginsConfig.UnfilteredAssemblies)
+            foreach (var pluginAssembly in m_pluginsConfig.UnfilteredAssemblies(MainAssembly.Include))
             {
                 ErrorCheckerAssembly configECA = m_config.GetAssembly(pluginAssembly);
                 ErrorCheckerAssembly eca = new ErrorCheckerAssembly(pluginAssembly);
@@ -75,7 +77,7 @@ namespace ConversationEditor
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            foreach (var pluginAssembly in m_pluginsConfig.UnfilteredAssemblies)
+            foreach (var pluginAssembly in m_pluginsConfig.UnfilteredAssemblies(MainAssembly.Include))
             {
                 ErrorCheckerAssembly configECA = m_config.GetAssembly(pluginAssembly);
                 if (configECA == null)

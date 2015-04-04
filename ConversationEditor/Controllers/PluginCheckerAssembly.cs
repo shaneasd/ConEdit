@@ -9,17 +9,23 @@ using System.IO;
 
 namespace ConversationEditor
 {
-    using ConversationNode = Conversation.ConversationNode<Conversation.INodeGUI>;
+    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 
     public class PluginAssembly
     {
-        public readonly string FileName;
+        public readonly string FileName; //Null if main assembly
         public readonly Assembly Assembly;
         public PluginAssembly(string fileName)
         {
             FileName = fileName;
             FileInfo file = new FileInfo(@".\Plugins\" + fileName);
             Assembly = Assembly.LoadFile(file.FullName);
+        }
+
+        public PluginAssembly(Assembly assembly, bool mainAssembly)
+        {
+            Assembly = assembly;
+            FileName = null;
         }
 
         public override string ToString()
@@ -37,6 +43,8 @@ namespace ConversationEditor
 
         public override int GetHashCode()
         {
+            if (FileName == null)
+                return 0;
             return FileName.GetHashCode();
         }
     }
@@ -72,10 +80,18 @@ namespace ConversationEditor
                 {
                     if (t.IsGenericTypeDefinition)
                     {
-                        var concrete = t.MakeGenericType(typeof(ConversationNode));
-                        if (concrete.IsSubclassOf(typeof(ErrorChecker<ConversationNode>)))
+                        var args = t.GetGenericArguments();
+                        if (args.Length == 1)
                         {
-                            result.Add(concrete);
+                            var constraints = args[0].GetGenericParameterConstraints();
+                            if (constraints.Any(c => c.IsAssignableFrom(typeof(ConversationNode))))
+                            {
+                                var concrete = t.MakeGenericType(typeof(ConversationNode));
+                                if (concrete.IsSubclassOf(typeof(ErrorChecker<ConversationNode>)))
+                                {
+                                    result.Add(concrete);
+                                }
+                            }
                         }
                     }
                 }

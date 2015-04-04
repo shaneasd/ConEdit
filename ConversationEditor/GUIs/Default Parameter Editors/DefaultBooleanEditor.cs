@@ -35,12 +35,21 @@ namespace ConversationEditor
 
             public IParameterEditor<Control> Make(ColorScheme scheme)
             {
-                var result= new DefaultBooleanEditor();
+                var result = new DefaultBooleanEditor();
                 result.Scheme = scheme;
                 return result;
             }
         }
-        public ColorScheme Scheme { get; set; }
+        ColorScheme m_colorScheme;
+        public ColorScheme Scheme
+        {
+            get { return m_colorScheme; }
+            set
+            {
+                m_colorScheme = value;
+                drawWindow1.ColorScheme = value;
+            }
+        }
         public DefaultBooleanEditor()
         {
             InitializeComponent();
