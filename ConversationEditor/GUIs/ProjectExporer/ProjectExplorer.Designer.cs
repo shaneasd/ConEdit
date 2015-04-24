@@ -7,19 +7,6 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
         #region Component Designer generated code
 
         /// <summary> 
@@ -47,9 +34,9 @@
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.drawWindow1 = new Utilities.DrawWindow();
-            this.greyScrollBar1 = new Utilities.GreyScrollBar();
-            this.drawWindow2 = new Utilities.DrawWindow();
+            this.drawWindow1 = new Utilities.UI.DrawWindow();
+            this.greyScrollBar1 = new Utilities.UI.GreyScrollBar();
+            this.drawWindow2 = new Utilities.UI.DrawWindow();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -255,7 +242,7 @@
 
         #endregion
 
-        private Utilities.DrawWindow drawWindow1;
+        private Utilities.UI.DrawWindow drawWindow1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem newConversationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importConversationToolStripMenuItem;
@@ -265,7 +252,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem newDomainToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importDomainToolStripMenuItem;
-        private Utilities.GreyScrollBar greyScrollBar1;
+        private Utilities.UI.GreyScrollBar greyScrollBar1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem importAudioToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
@@ -274,7 +261,7 @@
         private System.Windows.Forms.ToolStripMenuItem makeCurrentLocalizationMenuItem;
         private System.Windows.Forms.ToolStripMenuItem playMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showInExplorerToolStripMenuItem;
-        private Utilities.DrawWindow drawWindow2;
+        private Utilities.UI.DrawWindow drawWindow2;
         private System.Windows.Forms.ToolStripMenuItem newFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
     }

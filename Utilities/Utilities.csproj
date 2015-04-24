@@ -30,6 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>ShanesKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -47,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Algorithm\ReadonlySet.cs" />
     <Compile Include="AssemblyUtils.cs" />
+    <Compile Include="Disposable.cs" />
     <Compile Include="IO\DirectoryEqualityComparer.cs" />
     <Compile Include="IO\ISaveableFile.cs" />
     <Compile Include="IO\UpToDateFile.cs" />
@@ -81,7 +88,6 @@
     <Compile Include="UI\ScrollPanel.Designer.cs">
       <DependentUpon>ScrollPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Unused\Identities.cs" />
     <Compile Include="UI\InvisibleControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -103,9 +109,7 @@
     <Compile Include="Unused\NotNullable.cs" />
     <Compile Include="Serialization\NullDeserializer.cs" />
     <Compile Include="Algorithm\O1LookupWrapper.cs" />
-    <Compile Include="Algorithm\O1Tree.cs" />
     <Compile Include="Or.cs" />
-    <Compile Include="Unused\Polygon.cs" />
     <Compile Include="Math\Polynomial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Algorithm\QuickLookupCollection.cs" />
@@ -154,6 +158,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\Resources\UpArrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ShanesKey.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

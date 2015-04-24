@@ -8,10 +8,11 @@ using System.Text;
 using System.Windows.Forms;
 using Conversation;
 using Utilities;
+using Utilities.UI;
 
 namespace ConversationEditor
 {
-    public class NodeRendererCustomizer : NodeCustomizer<NodeRendererChoice>
+    internal class NodeRendererCustomizer : NodeCustomizer<NodeRendererChoice>
     {
         public NodeRendererCustomizer(IDataSource datasource, TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice> config, PluginsConfig pluginsConfig)
             : base(datasource, config, pluginsConfig)
@@ -29,7 +30,7 @@ namespace ConversationEditor
         }
     }
 
-    public class NodeEditorCustomizer : NodeCustomizer<NodeEditorChoice>
+    internal class NodeEditorCustomizer : NodeCustomizer<NodeEditorChoice>
     {
         public NodeEditorCustomizer(IDataSource datasource, TypeMapConfig<ID<NodeTypeTemp>, NodeEditorChoice> config, PluginsConfig pluginsConfig)
             : base(datasource, config, pluginsConfig)
@@ -47,10 +48,10 @@ namespace ConversationEditor
         }
     }
 
-    public abstract partial class NodeCustomizer<TChoice> : Form
+    internal abstract partial class NodeCustomizer<TChoice> : Form
         where TChoice : TypeChoice
     {
-        public NodeCustomizer()
+        protected NodeCustomizer()
         {
             InitializeComponent();
         }
@@ -59,7 +60,7 @@ namespace ConversationEditor
         TypeMapConfig<ID<NodeTypeTemp>, TChoice> m_config;
         protected PluginsConfig m_pluginsConfig;
 
-        public NodeCustomizer(IDataSource datasource, TypeMapConfig<ID<NodeTypeTemp>, TChoice> config, PluginsConfig pluginsConfig)
+        protected NodeCustomizer(IDataSource datasource, TypeMapConfig<ID<NodeTypeTemp>, TChoice> config, PluginsConfig pluginsConfig)
             : this()
         {
             m_datasource = datasource;
@@ -81,7 +82,7 @@ namespace ConversationEditor
 
         protected abstract IEnumerable<TChoice> GetItemsFor(ID<NodeTypeTemp> guid);
 
-        void AddNode(EditableGenerator node, int indent)
+        void AddNode(IEditableGenerator node, int indent)
         {
             //TODO: It would be a lot better if node renderer customization used a traditional combobox rather than a suggestion box
 
@@ -120,7 +121,7 @@ namespace ConversationEditor
         {
             this.SuspendLayout();
 
-            IEnumerable<EditableGenerator> nodeGenerators = Collection.Collapse(m_datasource.Nodes, t => t.ChildTypes, t => t.Nodes);
+            IEnumerable<IEditableGenerator> nodeGenerators = Collection.Collapse(m_datasource.Nodes, t => t.ChildTypes, t => t.Nodes);
 
             foreach (EditableGenerator nodeType in nodeGenerators)
             {

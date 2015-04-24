@@ -3,48 +3,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
-using Utilities;
-using Conversation;
 using System.Drawing.Drawing2D;
-using System.Windows.Forms;
-using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+using Conversation;
+using Utilities;
 
 namespace ConversationEditor
 {
-    public class EditableUI : NodeUI
+    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+
+    public class EditableUIFactory : NodeUI.IFactory
     {
-        public class Factory : NodeUI.IFactory
+        public static EditableUIFactory Instance = new EditableUIFactory();
+
+        public bool WillRender(ID<NodeTypeTemp> nodeType)
         {
-            public static Factory Instance = new Factory();
-
-            public bool WillRender(ID<NodeTypeTemp> nodeType)
-            {
-                return nodeType != SpecialNodes.START_GUID;
-            }
-
-            public string DisplayName
-            {
-                get { return "Default Conversation Node Renderer"; }
-            }
-
-            public INodeGUI GetRenderer(ConversationNode n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
-            {
-                return new EditableUI(n, p, localizer);
-            }
-
-            static Guid m_guid = Guid.Parse("2cbbf5fa-4e42-4670-9c10-c3578a2400eb");
-            public Guid Guid
-            {
-                get { return m_guid; }
-            }
+            return nodeType != SpecialNodes.Start;
         }
 
+        public string DisplayName
+        {
+            get { return "Default Conversation Node Renderer"; }
+        }
+
+        public INodeGUI GetRenderer(ConversationNode n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        {
+            return new EditableUI(n, p, localizer);
+        }
+
+        static Guid m_guid = Guid.Parse("2cbbf5fa-4e42-4670-9c10-c3578a2400eb");
+        public Guid Guid
+        {
+            get { return m_guid; }
+        }
+    }
+
+    public class EditableUI : NodeUI
+    {
         public readonly static Font Font = SystemFonts.DefaultFont;
         public readonly static Font BoldFont = new Font(SystemFonts.DefaultFont, FontStyle.Bold);
         public readonly static Pen thin = new Pen(Brushes.Black, 1);
         public readonly static Pen thick = new Pen(Brushes.White, 3);
-
-        public const int TITLE_HEIGHT = 15;
 
         protected virtual bool ShouldRender(Parameter p)
         {
@@ -63,7 +61,7 @@ namespace ConversationEditor
         protected Section m_parametersSection;
         protected Section m_outputsSection;
 
-        GraphicsPath RoundedRectangle(RectangleF notRounded, int radius)
+        static GraphicsPath RoundedRectangle(RectangleF notRounded, int radius)
         {
             GraphicsPath result = new GraphicsPath(FillMode.Winding);
             var o = notRounded.Location;
@@ -81,12 +79,12 @@ namespace ConversationEditor
             return result;
         }
 
-        public abstract class Section
+        protected abstract class Section
         {
             protected SizeF m_size;
             protected ConversationNode Node;
 
-            public Section(ConversationNode node)
+            protected Section(ConversationNode node)
             {
                 Node = node;
             }
@@ -95,13 +93,14 @@ namespace ConversationEditor
             {
                 get
                 {
-                    Color result = Color.Gray;
                     if (Node != null)
                     {
-                        BackgroundColor.TryGet(Node.Config, ref result);
+                        Color result;
+                        result = BackgroundColor.TryGet(Node.Config) ?? Color.Gray;
                         result = Color.FromArgb(result.R, result.G, result.B);
+                        return result;
                     }
-                    return result;
+                    return Color.Gray;
                 }
             }
 
@@ -135,19 +134,7 @@ namespace ConversationEditor
             public float Width { get { return m_size.Width; } }
         }
 
-        protected void DrawChunk(Graphics g, Color baseColor, float brightnessFactor, float darknessFactor, RectangleF area)
-        {
-            if (area.Height > 0)
-            {
-                using (var theRestGradient = CalculateGradient(baseColor, brightnessFactor, darknessFactor, area))
-                {
-                    g.FillRectangle(theRestGradient, area);
-                }
-                g.DrawRectangle(thin, Rectangle.Round(area));
-            }
-        }
-
-        class TitleSection : Section
+        protected class TitleSection : Section
         {
             public TitleSection(ConversationNode node) : base(node) { }
             public override SizeF Measure(Graphics g)
@@ -164,7 +151,7 @@ namespace ConversationEditor
             }
         }
 
-        class OutputsSection : Section
+        protected class OutputsSection : Section
         {
             public OutputsSection(ConversationNode node) : base(node) { }
 
@@ -178,7 +165,7 @@ namespace ConversationEditor
 
             public override SizeF Measure(Graphics g)
             {
-                if (BottomNodes.Any(o => GetName(o) != ""))
+                if (BottomNodes.Any(o => GetName(o).Length != 0))
                 {
                     float largestWidth = BottomNodes.Max(o => g.MeasureString(GetName(o), Font).Width) + 4;
                     float largestHeight = BottomNodes.Max(o => g.MeasureString(GetName(o), Font).Height) + 4;
@@ -209,7 +196,7 @@ namespace ConversationEditor
                 }
             }
 
-            public string GetName(Output connector)
+            public static string GetName(Output connector)
             {
                 return connector.GetName();
                 //var name = connector.Parameters.Where(p => p.Id == ConnectorDefinitionData.OUTPUT_NAME).Select(p => p as IStringParameter).Select(p => p.Value).SingleOrDefault() ?? "";
@@ -217,7 +204,7 @@ namespace ConversationEditor
             }
         }
 
-        class ParametersSection : Section
+        protected class ParametersSection : Section
         {
             Func<ID<LocalizedText>, string> m_localizer;
             Func<Parameter, bool> ShouldRender;
@@ -233,9 +220,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    float result = EditableUI.MAX_WIDTH;
-                    MaxWidthConfig.TryGet(Node.Config, ref result);
-                    return result;
+                    return MaxWidthConfig.TryGet(Node.Config) ?? EditableUI.MaxWidth;
                 }
             }
 
@@ -282,7 +267,7 @@ namespace ConversationEditor
             {
                 if (ParametersToRender.Any())
                 {
-                    IEnumerable<SizeF> titleSizes = ParametersToRender.Select(p => g.MeasureString(p.Name + " ", BoldFont, MAX_TITLE_WIDTH));
+                    IEnumerable<SizeF> titleSizes = ParametersToRender.Select(p => g.MeasureString(p.Name + " ", BoldFont, MaxTitleWidth));
                     float headingWidth = titleSizes.Max(s => s.Width + 2);
 
                     IEnumerable<SizeF> dataSizes = ParametersToRender.Select(p => g.MeasureString(p.DisplayValue(m_localizer), Font, (int)(MaxWidth - headingWidth)));
@@ -309,7 +294,7 @@ namespace ConversationEditor
                     DrawChunk(g, brightnessFactor, darknessFactor, location);
                     PointF renderAt = new PointF(location.X + 2, location.Y + 2);
 
-                    IEnumerable<SizeF> titleSizes = ParametersToRender.Select(p => g.MeasureString(p.Name + " ", BoldFont, MAX_TITLE_WIDTH));
+                    IEnumerable<SizeF> titleSizes = ParametersToRender.Select(p => g.MeasureString(p.Name + " ", BoldFont, MaxTitleWidth));
                     float headingWidth = titleSizes.Max(s => s.Width + 2);
 
                     foreach (var parameter in ParametersToRender)
@@ -317,7 +302,7 @@ namespace ConversationEditor
                         var name = parameter.Name;
                         var data = parameter.DisplayValue(m_localizer);
 
-                        SizeF headingSize = g.MeasureString(name + " ", BoldFont, MAX_TITLE_WIDTH);
+                        SizeF headingSize = g.MeasureString(name + " ", BoldFont, MaxTitleWidth);
                         SizeF dataSize = g.MeasureString(data, Font, (int)MaxWidth - (int)(Math.Ceiling(headingWidth)));
 
                         g.DrawString(name, BoldFont, Brushes.Black, new RectangleF(renderAt, headingSize));
@@ -368,13 +353,11 @@ namespace ConversationEditor
         {
             get
             {
-                bool rounded = false;
-                RoundedConfig.TryGet(Node.Config, ref rounded);
-                return rounded;
+                return RoundedConfig.TryGet(Node.Config) ?? false;
             }
         }
 
-        private void DrawBorder(Graphics g, GraphicsPath nodeShape, bool selected)
+        private static void DrawBorder(Graphics g, GraphicsPath nodeShape, bool selected)
         {
             if (selected)
             {
@@ -442,8 +425,8 @@ namespace ConversationEditor
             return new LinearGradientBrush(new RectangleF(0, area.Y - (int)(area.Height * (brightnessFactor)), 1, (int)(area.Height * (brightnessFactor + darknessFactor + 1))), Color.White, baseColor, LinearGradientMode.Vertical);
         }
 
-        public const int MAX_TITLE_WIDTH = 200;
-        public const int MAX_WIDTH = 500;
+        private const int MaxTitleWidth = 200;
+        private const int MaxWidth = 500;
 
         /// <summary>
         /// Increase the area of the node to include all the text
@@ -465,7 +448,7 @@ namespace ConversationEditor
 
         public override string DisplayName
         {
-            get { return Factory.Instance.DisplayName; }
+            get { return EditableUIFactory.Instance.DisplayName; }
         }
 
     }

@@ -9,39 +9,39 @@ using System.Windows.Forms;
 using Conversation;
 using Utilities;
 
-using TControl = Utilities.MySuggestionBox<System.Guid>;
+using TControl = Utilities.UI.MySuggestionBox<System.Guid>;
 //using TControl = Utilities.MyComboBox<System.Guid>;
 
 namespace ConversationEditor
 {
-    public partial class DefaultEnumEditor : UserControl, IParameterEditor<DefaultEnumEditor>
+    public class DefaultEnumEditorFactory : IParameterEditorFactory
     {
-        public class Factory : IParameterEditorFactory
+        public static readonly Guid StaticId = Guid.Parse("1e8f8730-a710-4341-be04-2c80272e896c");
+        public bool WillEdit(ParameterType type, WillEdit willEdit)
         {
-            public static readonly Guid GUID = Guid.Parse("1e8f8730-a710-4341-be04-2c80272e896c");
-            public bool WillEdit(ParameterType type, WillEdit willEdit)
-            {
-                return willEdit.IsEnum(type);
-            }
-
-            public string Name
-            {
-                get { return "Default Enumeration Editor"; }
-            }
-
-            public Guid Guid
-            {
-                get { return GUID; }
-            }
-
-            public IParameterEditor<Control> Make(ColorScheme scheme)
-            {
-                var result = new DefaultEnumEditor();
-                result.Scheme = scheme;
-                return result;
-            }
+            return willEdit.IsEnum(type);
         }
 
+        public string Name
+        {
+            get { return "Default Enumeration Editor"; }
+        }
+
+        public Guid Guid
+        {
+            get { return StaticId; }
+        }
+
+        public IParameterEditor<Control> Make(ColorScheme scheme)
+        {
+            var result = new DefaultEnumEditor();
+            result.Scheme = scheme;
+            return result;
+        }
+    }
+
+    internal partial class DefaultEnumEditor : UserControl, IParameterEditor<DefaultEnumEditor>
+    {
         TControl m_comboBox;
         List<TControl.Item> m_comboBoxItems = new List<TControl.Item>();
         IEnumParameter m_parameter;
@@ -87,7 +87,7 @@ namespace ConversationEditor
                 if (valueName != null)
                     m_comboBox.SelectedItem = new TControl.Item(valueName, m_parameter.Value);
                 else
-                    m_comboBox.SelectedItem = new TControl.Item(EnumParameter.INVALID_VALUE);
+                    m_comboBox.SelectedItem = new TControl.Item(EnumParameter.InvalidValue);
             }
         }
 

@@ -6,7 +6,7 @@ using Conversation;
 
 namespace Clandestine
 {
-    public static class Util
+    internal static class Util
     {
         internal static bool IsAIBark(ID<NodeTypeTemp> type, IErrorCheckerUtilities<IConversationNode> utils)
         {
@@ -15,7 +15,7 @@ namespace Clandestine
 
         internal static bool IsStartNode(ID<NodeTypeTemp> type, IErrorCheckerUtilities<IConversationNode> utils)
         {
-            return type == SpecialNodes.START_GUID || type == SpecialNodes.START_RADIO_GUID || IsAIBark(type, utils);
+            return type == SpecialNodes.Start || type == SpecialNodes.StartRadio || IsAIBark(type, utils);
         }
     }
 }

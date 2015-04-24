@@ -10,38 +10,39 @@ using Conversation;
 using Utilities;
 
 //using TControl = Utilities.MySuggestionBox<System.Guid>;
-using TControl = Utilities.MyComboBox<System.Guid>;
+using TControl = Utilities.UI.MyComboBox<System.Guid>;
+using Utilities.UI;
 
 namespace ConversationEditor
 {
-    public partial class DefaultSetEditor : UserControl, IParameterEditor<DefaultSetEditor>
+    public class DefaultSetEditorFactory : IParameterEditorFactory
     {
-        public class Factory : IParameterEditorFactory
+        public static readonly Guid StaticId = Guid.Parse("7f171542-ddff-42dd-a253-161947eebebb");
+        public bool WillEdit(ParameterType type, WillEdit willEdit)
         {
-            public static readonly Guid GUID = Guid.Parse("7f171542-ddff-42dd-a253-161947eebebb");
-            public bool WillEdit(ParameterType type, WillEdit willEdit)
-            {
-                return type.IsSet;
-            }
-
-            public string Name
-            {
-                get { return "Default Set Editor"; }
-            }
-
-            public Guid Guid
-            {
-                get { return GUID; }
-            }
-
-            public IParameterEditor<Control> Make(ColorScheme scheme)
-            {
-                var result = new DefaultSetEditor();
-                result.Scheme = scheme;
-                return result;
-            }
+            return type.IsSet;
         }
 
+        public string Name
+        {
+            get { return "Default Set Editor"; }
+        }
+
+        public Guid Guid
+        {
+            get { return StaticId; }
+        }
+
+        public IParameterEditor<Control> Make(ColorScheme scheme)
+        {
+            var result = new DefaultSetEditor();
+            result.Scheme = scheme;
+            return result;
+        }
+    }
+
+    internal partial class DefaultSetEditor : UserControl, IParameterEditor<DefaultSetEditor>
+    {
         List<TControl> m_comboBoxes = new List<TControl>();
         List<CrossButton> m_buttons = new List<CrossButton>();
         List<TControl.Item> m_comboBoxItems = new List<TControl.Item>();
@@ -125,7 +126,7 @@ namespace ConversationEditor
                     if (valueName != null)
                         comboBox.SelectedItem = new TControl.Item(valueName, selection);
                     else
-                        comboBox.SelectedItem = new TControl.Item(EnumParameter.INVALID_VALUE);
+                        comboBox.SelectedItem = new TControl.Item(EnumParameter.InvalidValue);
                 }
             }
 

@@ -30,7 +30,7 @@
         {
             this.button1 = new System.Windows.Forms.Button();
             this.btnGenerate = new System.Windows.Forms.Button();
-            this.drawWindow1 = new Utilities.DrawWindow();
+            this.drawWindow1 = new Utilities.UI.DrawWindow();
             this.SuspendLayout();
             // 
             // button1
@@ -84,7 +84,7 @@
 
         #endregion
 
-        private Utilities.DrawWindow drawWindow1;
+        private Utilities.UI.DrawWindow drawWindow1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnGenerate;
     }

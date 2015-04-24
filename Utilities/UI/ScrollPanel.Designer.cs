@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.greyScrollBar1 = new Utilities.GreyScrollBar();
+            this.greyScrollBar1 = new Utilities.UI.GreyScrollBar();
             this.SuspendLayout();
             // 
             // greyScrollBar1

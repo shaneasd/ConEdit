@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using Conversation;
 using ConversationEditor;
+using System.Globalization;
+using System.Collections.ObjectModel;
 
 namespace PluginPack
 {
     public class NameConfig : IConfigNodeDefinition
     {
-        public static readonly ID<NodeTypeTemp> ID = ID<NodeTypeTemp>.Parse("271466d3-aef4-4d35-884c-f079de48c2a4");
+        private static readonly ID<NodeTypeTemp> ID = ID<NodeTypeTemp>.Parse("271466d3-aef4-4d35-884c-f079de48c2a4");
         public ID<NodeTypeTemp> Id
         {
             get { return ID; }
@@ -22,26 +24,27 @@ namespace PluginPack
 
         public IEnumerable<Parameter> MakeParameters()
         {
-            yield return new StringParameter("Name", ID<Parameter>.Parse("d5428350-4ece-4d7d-bc62-6a1b9c76fb9d"), BaseTypeString.PARAMETER_TYPE);
+            yield return new StringParameter("Name", ID<Parameter>.Parse("d5428350-4ece-4d7d-bc62-6a1b9c76fb9d"), StringParameter.ParameterType);
         }
 
-        public static bool TryGet(List<NodeData.ConfigData> config, ref string name)
+        /// <summary>
+        /// Search the input config for a suitable "name" and return it if found. Otherwise return nulls
+        /// </summary>
+        public static string TryGet(ReadOnlyCollection<NodeData.ConfigData> config)
         {
             foreach (var c in config.Where(c => c.Type == ID))
             {
-                name = (c.Parameters.Single() as IStringParameter).Value;
-                return true;
+                return (c.Parameters.Single() as IStringParameter).Value;
             }
-            foreach (var c in config.Where(c => c.Type == GenericNodeConfigDefinition.ID))
+            foreach (var c in config.Where(c => c.Type == GenericNodeConfigDefinition.StaticId))
             {
                 var data = GenericNodeConfigDefinition.Extract(c);
-                if (string.Compare("Name", data.Key, true) == 0)
+                if (string.Compare("Name", data.Key, StringComparison.OrdinalIgnoreCase) == 0)
                 {
-                    name = data.Value;
-                    return true;
+                    return data.Value;
                 }
             }
-            return false;
+            return null;
         }
     }
 

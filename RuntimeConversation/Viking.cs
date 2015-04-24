@@ -15,244 +15,244 @@ namespace Viking.Types
     using System.Runtime.InteropServices;
     
     
-    [RuntimeConversation.TypeIDAttribute("c1292dd1-92bd-43a7-b444-d6db4c10d491")]
+    [RuntimeConversation.TypeIdAttribute("c1292dd1-92bd-43a7-b444-d6db4c10d491")]
     public enum Character
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("b3113a30-4961-4d77-b437-cb8e38d2d9cf")]
+        [RuntimeConversation.EnumValueIdAttribute("b3113a30-4961-4d77-b437-cb8e38d2d9cf")]
         Player,
         
-        [RuntimeConversation.EnumValueIDAttribute("ee8acee3-43a3-438e-a2b1-2a5dcd7adcb6")]
+        [RuntimeConversation.EnumValueIdAttribute("ee8acee3-43a3-438e-a2b1-2a5dcd7adcb6")]
         Sif,
         
-        [RuntimeConversation.EnumValueIDAttribute("b881e10a-a0e7-4758-8adb-2ceed3b73a93")]
+        [RuntimeConversation.EnumValueIdAttribute("b881e10a-a0e7-4758-8adb-2ceed3b73a93")]
         Eydis,
         
-        [RuntimeConversation.EnumValueIDAttribute("c7ed3153-b5ee-48c1-a448-db1c1bad18f2")]
+        [RuntimeConversation.EnumValueIdAttribute("c7ed3153-b5ee-48c1-a448-db1c1bad18f2")]
         Asleifr,
         
-        [RuntimeConversation.EnumValueIDAttribute("28ece7dc-5d62-42e1-88e3-7f2c34bea288")]
+        [RuntimeConversation.EnumValueIdAttribute("28ece7dc-5d62-42e1-88e3-7f2c34bea288")]
         Ketill,
     }
     
-    [RuntimeConversation.TypeIDAttribute("06060e9e-02a0-4ff1-b58f-abf1ea647723")]
+    [RuntimeConversation.TypeIdAttribute("06060e9e-02a0-4ff1-b58f-abf1ea647723")]
     public enum Personality_Trait
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("998c5904-9ba1-4e02-ba76-ca2a1e5b32e8")]
+        [RuntimeConversation.EnumValueIdAttribute("998c5904-9ba1-4e02-ba76-ca2a1e5b32e8")]
         Honourable,
         
-        [RuntimeConversation.EnumValueIDAttribute("662e8eab-1774-46e0-af32-db6567084f83")]
+        [RuntimeConversation.EnumValueIdAttribute("662e8eab-1774-46e0-af32-db6567084f83")]
         Nidding,
         
-        [RuntimeConversation.EnumValueIDAttribute("963fd59c-756d-4e31-836d-be34a5852c47")]
+        [RuntimeConversation.EnumValueIdAttribute("963fd59c-756d-4e31-836d-be34a5852c47")]
         OpenMinded,
         
-        [RuntimeConversation.EnumValueIDAttribute("cab6e84e-04cf-4d6f-9aab-abe51d6cbe3c")]
+        [RuntimeConversation.EnumValueIdAttribute("cab6e84e-04cf-4d6f-9aab-abe51d6cbe3c")]
         Conceited,
         
-        [RuntimeConversation.EnumValueIDAttribute("b98168c2-506b-4941-9b55-bf47a0bcc975")]
+        [RuntimeConversation.EnumValueIdAttribute("b98168c2-506b-4941-9b55-bf47a0bcc975")]
         Superstitious,
         
-        [RuntimeConversation.EnumValueIDAttribute("14efb3f3-ad73-4a9f-922b-0ad40bdc0f82")]
+        [RuntimeConversation.EnumValueIdAttribute("14efb3f3-ad73-4a9f-922b-0ad40bdc0f82")]
         Sceptical,
         
-        [RuntimeConversation.EnumValueIDAttribute("417993b1-ce29-4b46-8c82-8c04c242cf34")]
+        [RuntimeConversation.EnumValueIdAttribute("417993b1-ce29-4b46-8c82-8c04c242cf34")]
         Aggressive,
         
-        [RuntimeConversation.EnumValueIDAttribute("637fb252-b22e-46f3-891d-e560dc9126d7")]
+        [RuntimeConversation.EnumValueIdAttribute("637fb252-b22e-46f3-891d-e560dc9126d7")]
         Peaceful,
         
-        [RuntimeConversation.EnumValueIDAttribute("a3151427-d3ec-457c-a96a-4a16e830499c")]
+        [RuntimeConversation.EnumValueIdAttribute("a3151427-d3ec-457c-a96a-4a16e830499c")]
         Courageous,
         
-        [RuntimeConversation.EnumValueIDAttribute("2e18cd60-3f80-44e6-861e-33ad3e42e5ff")]
+        [RuntimeConversation.EnumValueIdAttribute("2e18cd60-3f80-44e6-861e-33ad3e42e5ff")]
         Cautious,
         
-        [RuntimeConversation.EnumValueIDAttribute("1a06b894-ad25-42dc-a2ab-1b31e78ee61c")]
+        [RuntimeConversation.EnumValueIdAttribute("1a06b894-ad25-42dc-a2ab-1b31e78ee61c")]
         Altruistic,
         
-        [RuntimeConversation.EnumValueIDAttribute("5673ec94-838f-49b3-9759-488c6190e2a4")]
+        [RuntimeConversation.EnumValueIdAttribute("5673ec94-838f-49b3-9759-488c6190e2a4")]
         Greedy,
         
-        [RuntimeConversation.EnumValueIDAttribute("7bbfbde6-34e0-462d-9844-32b6dee3c0bf")]
+        [RuntimeConversation.EnumValueIdAttribute("7bbfbde6-34e0-462d-9844-32b6dee3c0bf")]
         Foresighted,
         
-        [RuntimeConversation.EnumValueIDAttribute("137f95a4-b4f6-4181-9255-69733623a9f2")]
+        [RuntimeConversation.EnumValueIdAttribute("137f95a4-b4f6-4181-9255-69733623a9f2")]
         DetailOriented,
         
-        [RuntimeConversation.EnumValueIDAttribute("f00f4d82-d4f2-4343-b595-e255433301d7")]
+        [RuntimeConversation.EnumValueIdAttribute("f00f4d82-d4f2-4343-b595-e255433301d7")]
         Cooperative,
         
-        [RuntimeConversation.EnumValueIDAttribute("cf1debf0-3082-4921-94a6-81f88a858951")]
+        [RuntimeConversation.EnumValueIdAttribute("cf1debf0-3082-4921-94a6-81f88a858951")]
         Independent,
         
-        [RuntimeConversation.EnumValueIDAttribute("e2a7a378-8143-41da-a084-008099a7961b")]
+        [RuntimeConversation.EnumValueIdAttribute("e2a7a378-8143-41da-a084-008099a7961b")]
         Empathetic,
         
-        [RuntimeConversation.EnumValueIDAttribute("09fa10a2-c5ce-42b7-9ddd-b34b7942c730")]
+        [RuntimeConversation.EnumValueIdAttribute("09fa10a2-c5ce-42b7-9ddd-b34b7942c730")]
         Cynical,
         
-        [RuntimeConversation.EnumValueIDAttribute("acbd5ab3-c862-4dcc-9641-13d28cda66a8")]
+        [RuntimeConversation.EnumValueIdAttribute("acbd5ab3-c862-4dcc-9641-13d28cda66a8")]
         Adventurous,
         
-        [RuntimeConversation.EnumValueIDAttribute("3d7bddb4-003a-46ee-ac2f-5e600eaa15f6")]
+        [RuntimeConversation.EnumValueIdAttribute("3d7bddb4-003a-46ee-ac2f-5e600eaa15f6")]
         Narcissistic,
         
-        [RuntimeConversation.EnumValueIDAttribute("371e2ee8-26e9-45fe-a8b2-8ef254b7ceba")]
+        [RuntimeConversation.EnumValueIdAttribute("371e2ee8-26e9-45fe-a8b2-8ef254b7ceba")]
         Stubborn,
         
-        [RuntimeConversation.EnumValueIDAttribute("53544dc4-af86-4989-9a23-8f77c2ac08c0")]
+        [RuntimeConversation.EnumValueIdAttribute("53544dc4-af86-4989-9a23-8f77c2ac08c0")]
         Diligent,
         
-        [RuntimeConversation.EnumValueIDAttribute("5e503758-59a0-4f36-be9d-6337e1a11d19")]
+        [RuntimeConversation.EnumValueIdAttribute("5e503758-59a0-4f36-be9d-6337e1a11d19")]
         Cruel,
         
-        [RuntimeConversation.EnumValueIDAttribute("8d2c9fe6-7a66-4658-9c34-6eeb2b206fc9")]
+        [RuntimeConversation.EnumValueIdAttribute("8d2c9fe6-7a66-4658-9c34-6eeb2b206fc9")]
         Stoic,
         
-        [RuntimeConversation.EnumValueIDAttribute("b0f602c2-d366-4423-8ce0-e70737478a2b")]
+        [RuntimeConversation.EnumValueIdAttribute("b0f602c2-d366-4423-8ce0-e70737478a2b")]
         Empty,
     }
     
-    [RuntimeConversation.TypeIDAttribute("a621341f-d13e-4f10-9c0c-cf768b6aadbf")]
+    [RuntimeConversation.TypeIdAttribute("a621341f-d13e-4f10-9c0c-cf768b6aadbf")]
     public enum Emotion
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("bb5e1064-6563-4d1c-981d-892745360ca7")]
+        [RuntimeConversation.EnumValueIdAttribute("bb5e1064-6563-4d1c-981d-892745360ca7")]
         Neutral,
         
-        [RuntimeConversation.EnumValueIDAttribute("bc902a31-99ca-49e2-8092-c65847e6dd35")]
+        [RuntimeConversation.EnumValueIdAttribute("bc902a31-99ca-49e2-8092-c65847e6dd35")]
         FriendlyPleased,
         
-        [RuntimeConversation.EnumValueIDAttribute("6a02c53a-8cba-471b-a751-e12b7ab84978")]
+        [RuntimeConversation.EnumValueIdAttribute("6a02c53a-8cba-471b-a751-e12b7ab84978")]
         Angry,
         
-        [RuntimeConversation.EnumValueIDAttribute("0a2982e9-e7a9-4881-8611-cae866dee1d7")]
+        [RuntimeConversation.EnumValueIdAttribute("0a2982e9-e7a9-4881-8611-cae866dee1d7")]
         NervousWorried,
         
-        [RuntimeConversation.EnumValueIDAttribute("74b7210d-bd26-4f45-9c76-9eea3444d7b6")]
+        [RuntimeConversation.EnumValueIdAttribute("74b7210d-bd26-4f45-9c76-9eea3444d7b6")]
         Scared,
         
-        [RuntimeConversation.EnumValueIDAttribute("2603486e-dc63-46ab-92dd-2ce3edc3188a")]
+        [RuntimeConversation.EnumValueIdAttribute("2603486e-dc63-46ab-92dd-2ce3edc3188a")]
         Annoyed,
     }
     
-    [RuntimeConversation.TypeIDAttribute("58dfb28e-86c7-4627-9494-8c42c0bec4fb")]
+    [RuntimeConversation.TypeIdAttribute("58dfb28e-86c7-4627-9494-8c42c0bec4fb")]
     public enum CameraTarget
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("42b4894d-a05c-46a6-883d-9a6aea44fca6")]
+        [RuntimeConversation.EnumValueIdAttribute("42b4894d-a05c-46a6-883d-9a6aea44fca6")]
         Speaker,
         
-        [RuntimeConversation.EnumValueIDAttribute("7d959a7c-4f39-4f1f-9c68-eab88166bf20")]
+        [RuntimeConversation.EnumValueIdAttribute("7d959a7c-4f39-4f1f-9c68-eab88166bf20")]
         Listener,
     }
     
-    [RuntimeConversation.TypeIDAttribute("51ef0223-3574-4c0b-a01c-182a07e00b21")]
+    [RuntimeConversation.TypeIdAttribute("51ef0223-3574-4c0b-a01c-182a07e00b21")]
     public enum IntegerFlag
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("ca066421-bfa3-40bc-8e0a-03c819efca8d")]
+        [RuntimeConversation.EnumValueIdAttribute("ca066421-bfa3-40bc-8e0a-03c819efca8d")]
         PartyKills,
     }
     
-    [RuntimeConversation.TypeIDAttribute("16ebf380-6464-4dc1-b957-3ff5e32535f7")]
+    [RuntimeConversation.TypeIdAttribute("16ebf380-6464-4dc1-b957-3ff5e32535f7")]
     public enum BooleanFlag
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("0ad076e0-41e4-4e6b-b5c8-fd64df2bd806")]
+        [RuntimeConversation.EnumValueIdAttribute("0ad076e0-41e4-4e6b-b5c8-fd64df2bd806")]
         _Dead,
     }
     
-    [RuntimeConversation.TypeIDAttribute("ebfa534c-c036-407c-9c5f-4e63698dde87")]
+    [RuntimeConversation.TypeIdAttribute("ebfa534c-c036-407c-9c5f-4e63698dde87")]
     public enum Item
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("83c6b4e7-f53f-4d05-9139-3a9842190880")]
+        [RuntimeConversation.EnumValueIdAttribute("83c6b4e7-f53f-4d05-9139-3a9842190880")]
         Weapon,
     }
     
-    [RuntimeConversation.TypeIDAttribute("030bf942-ca1b-4af6-9ede-3e084fb99177")]
+    [RuntimeConversation.TypeIdAttribute("030bf942-ca1b-4af6-9ede-3e084fb99177")]
     public enum CameraFraming
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("bb95b161-3163-46bd-a953-55501502e381")]
+        [RuntimeConversation.EnumValueIdAttribute("bb95b161-3163-46bd-a953-55501502e381")]
         Random,
         
-        [RuntimeConversation.EnumValueIDAttribute("8ae42984-3ec0-496d-8ba9-d51ee739cb5a")]
+        [RuntimeConversation.EnumValueIdAttribute("8ae42984-3ec0-496d-8ba9-d51ee739cb5a")]
         Close_Up_45,
         
-        [RuntimeConversation.EnumValueIDAttribute("68664d91-26ad-48be-bb22-4968efc3a9f1")]
+        [RuntimeConversation.EnumValueIdAttribute("68664d91-26ad-48be-bb22-4968efc3a9f1")]
         Close_Up_Straight,
         
-        [RuntimeConversation.EnumValueIDAttribute("73430f42-7f33-40f9-b5a1-b259146b01db")]
+        [RuntimeConversation.EnumValueIdAttribute("73430f42-7f33-40f9-b5a1-b259146b01db")]
         Close_Up_Side,
         
-        [RuntimeConversation.EnumValueIDAttribute("263e2151-b778-4070-a9b1-276c990ef337")]
+        [RuntimeConversation.EnumValueIdAttribute("263e2151-b778-4070-a9b1-276c990ef337")]
         OTS_Close,
         
-        [RuntimeConversation.EnumValueIDAttribute("78b3c26b-b42b-4376-9e5f-94fcb30bbbcc")]
+        [RuntimeConversation.EnumValueIdAttribute("78b3c26b-b42b-4376-9e5f-94fcb30bbbcc")]
         OTS_Medium,
         
-        [RuntimeConversation.EnumValueIDAttribute("9597f223-d01a-4270-873a-8b9508664a7f")]
+        [RuntimeConversation.EnumValueIdAttribute("9597f223-d01a-4270-873a-8b9508664a7f")]
         OTS_Long,
         
-        [RuntimeConversation.EnumValueIDAttribute("eca54faf-7cae-4d02-be3a-359461871683")]
+        [RuntimeConversation.EnumValueIdAttribute("eca54faf-7cae-4d02-be3a-359461871683")]
         Side_Long,
         
-        [RuntimeConversation.EnumValueIDAttribute("2fcc6412-08e2-4f6a-a47b-35075b071445")]
+        [RuntimeConversation.EnumValueIdAttribute("2fcc6412-08e2-4f6a-a47b-35075b071445")]
         Top_Down,
         
-        [RuntimeConversation.EnumValueIDAttribute("edd6f840-24c9-4bae-b788-9036395d35cd")]
+        [RuntimeConversation.EnumValueIdAttribute("edd6f840-24c9-4bae-b788-9036395d35cd")]
         Close_Up_Low,
         
-        [RuntimeConversation.EnumValueIDAttribute("41ebdcea-70cb-4f71-a9c9-450f44efed3a")]
+        [RuntimeConversation.EnumValueIdAttribute("41ebdcea-70cb-4f71-a9c9-450f44efed3a")]
         Close_Up_High,
         
-        [RuntimeConversation.EnumValueIDAttribute("6e62c25b-e35d-41f8-858d-b1a5f3bdbf35")]
+        [RuntimeConversation.EnumValueIdAttribute("6e62c25b-e35d-41f8-858d-b1a5f3bdbf35")]
         Side_Medium,
     }
     
-    [RuntimeConversation.TypeIDAttribute("9be467f6-d921-4629-8785-772549c76091")]
+    [RuntimeConversation.TypeIdAttribute("9be467f6-d921-4629-8785-772549c76091")]
     public enum CameraAnimation
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("02ad4376-d1a5-419e-9e7f-a2ae8582ecfd")]
+        [RuntimeConversation.EnumValueIdAttribute("02ad4376-d1a5-419e-9e7f-a2ae8582ecfd")]
         None,
         
-        [RuntimeConversation.EnumValueIDAttribute("cb285c27-bdf4-4c07-ab26-a9e60475e40f")]
+        [RuntimeConversation.EnumValueIdAttribute("cb285c27-bdf4-4c07-ab26-a9e60475e40f")]
         Rotate_In,
         
-        [RuntimeConversation.EnumValueIDAttribute("4c2ecd43-40e3-4eb8-8f00-5aebb8b88839")]
+        [RuntimeConversation.EnumValueIdAttribute("4c2ecd43-40e3-4eb8-8f00-5aebb8b88839")]
         Rotate_Out,
         
-        [RuntimeConversation.EnumValueIDAttribute("f7325ca0-1051-41b2-9899-795468b56b2d")]
+        [RuntimeConversation.EnumValueIdAttribute("f7325ca0-1051-41b2-9899-795468b56b2d")]
         Pan_In,
         
-        [RuntimeConversation.EnumValueIDAttribute("39582f4a-7a0e-4974-a38b-b7bd2eb121b8")]
+        [RuntimeConversation.EnumValueIdAttribute("39582f4a-7a0e-4974-a38b-b7bd2eb121b8")]
         Pan_Out,
         
-        [RuntimeConversation.EnumValueIDAttribute("7d6add52-f441-4ca4-8013-e762175d9493")]
+        [RuntimeConversation.EnumValueIdAttribute("7d6add52-f441-4ca4-8013-e762175d9493")]
         Track_In,
         
-        [RuntimeConversation.EnumValueIDAttribute("e0f7e418-e303-4a79-923b-f3e5d597f6d3")]
+        [RuntimeConversation.EnumValueIdAttribute("e0f7e418-e303-4a79-923b-f3e5d597f6d3")]
         Track_Out,
         
-        [RuntimeConversation.EnumValueIDAttribute("536e0557-c81f-499c-8004-35dc4454bf16")]
+        [RuntimeConversation.EnumValueIdAttribute("536e0557-c81f-499c-8004-35dc4454bf16")]
         Ped_Up,
         
-        [RuntimeConversation.EnumValueIDAttribute("4e682766-4565-424b-ac24-a74b0ca73496")]
+        [RuntimeConversation.EnumValueIdAttribute("4e682766-4565-424b-ac24-a74b0ca73496")]
         Ped_Down,
         
-        [RuntimeConversation.EnumValueIDAttribute("998779e8-b3a3-4096-a28c-a1d546e758b3")]
+        [RuntimeConversation.EnumValueIdAttribute("998779e8-b3a3-4096-a28c-a1d546e758b3")]
         Tracking_Shot,
         
-        [RuntimeConversation.EnumValueIDAttribute("1eb9d639-ba0e-4b24-b7c6-11ab61a2e079")]
+        [RuntimeConversation.EnumValueIdAttribute("1eb9d639-ba0e-4b24-b7c6-11ab61a2e079")]
         Reverse_Tracking_Shot,
     }
     
-    [RuntimeConversation.TypeIDAttribute("a5d909aa-e7f5-40dc-8282-3f8148ada279")]
+    [RuntimeConversation.TypeIdAttribute("a5d909aa-e7f5-40dc-8282-3f8148ada279")]
     public struct NonNegativeInteger
     {
         
@@ -304,7 +304,7 @@ public static implicit operator System.Int32(NonNegativeInteger value) { return 
         }
     }
     
-    [RuntimeConversation.TypeIDAttribute("14070908-6bba-49f3-90fe-c2c884b1ad09")]
+    [RuntimeConversation.TypeIdAttribute("14070908-6bba-49f3-90fe-c2c884b1ad09")]
     public struct Time
     {
         
@@ -356,7 +356,7 @@ public static implicit operator System.Decimal(Time value) { return value.m_valu
         }
     }
     
-    [RuntimeConversation.TypeIDAttribute("b339e8a9-19ab-44ff-8816-06776f62fc96")]
+    [RuntimeConversation.TypeIdAttribute("b339e8a9-19ab-44ff-8816-06776f62fc96")]
     public struct Angle
     {
         
@@ -408,7 +408,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
         }
     }
     
-    [RuntimeConversation.TypeIDAttribute("53920eee-6266-4085-9b4f-67d35e202468")]
+    [RuntimeConversation.TypeIdAttribute("53920eee-6266-4085-9b4f-67d35e202468")]
     public struct Percentage
     {
         
@@ -460,12 +460,12 @@ public static implicit operator System.Decimal(Percentage value) { return value.
         }
     }
     
-    [RuntimeConversation.TypeIDAttribute("d1d20f40-f63d-4465-acce-fcb33279c92e")]
+    [RuntimeConversation.TypeIdAttribute("d1d20f40-f63d-4465-acce-fcb33279c92e")]
     public enum Jump_IDs
     {
     }
     
-    [RuntimeConversation.TypeIDAttribute("40f345e0-beef-43fc-a59a-a96c8c289139")]
+    [RuntimeConversation.TypeIdAttribute("40f345e0-beef-43fc-a59a-a96c8c289139")]
     public enum LocalVars
     {
     }
@@ -1075,7 +1075,7 @@ namespace Viking.Nodes.Connectors
         }
     }
     
-    [RuntimeConversation.ConnectorTypeIDAttribute("73e5cff2-7d6c-45e8-8f0e-08bcb780acc9")]
+    [RuntimeConversation.ConnectorTypeIdAttribute("73e5cff2-7d6c-45e8-8f0e-08bcb780acc9")]
     public class Input : Connector
     {
         
@@ -1085,11 +1085,11 @@ namespace Viking.Nodes.Connectors
         }
     }
     
-    [RuntimeConversation.ConnectorTypeIDAttribute("a800357f-5013-44c1-8637-c8a60cff240b")]
+    [RuntimeConversation.ConnectorTypeIdAttribute("a800357f-5013-44c1-8637-c8a60cff240b")]
     public class Output : Connector
     {
         
-        [RuntimeConversation.ParameterIDAttribute("ec0c0b5c-57d9-484b-8946-c8dcf3e09b38")]
+        [RuntimeConversation.ParameterIdAttribute("ec0c0b5c-57d9-484b-8946-c8dcf3e09b38")]
         public String Name;
         
         public Output(Node parent, Conversation.ID<Conversation.TConnector> id, String Name) : 
@@ -1129,7 +1129,7 @@ namespace Viking.Nodes
         public abstract Connector Connector(Conversation.ID<Conversation.TConnector> connector);
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("196dc521-8336-4714-93b7-77ac09b3abd7")]
+    [RuntimeConversation.NodeTypeIdAttribute("196dc521-8336-4714-93b7-77ac09b3abd7")]
     public class NPC_Speech : Node
     {
         
@@ -1137,19 +1137,19 @@ namespace Viking.Nodes
         
         public Viking.Nodes.Connectors.Input id2784a61493054bf6a9962d8a7e097866;
         
-        [RuntimeConversation.ParameterIDAttribute("af08c7f7-33e9-4429-9e1f-cd786a73041b")]
+        [RuntimeConversation.ParameterIdAttribute("af08c7f7-33e9-4429-9e1f-cd786a73041b")]
         public Character Speaker;
         
-        [RuntimeConversation.ParameterIDAttribute("507ed24d-3aa0-44e5-984c-22677f7ac8aa")]
+        [RuntimeConversation.ParameterIdAttribute("507ed24d-3aa0-44e5-984c-22677f7ac8aa")]
         public Character Listener;
         
-        [RuntimeConversation.ParameterIDAttribute("dba8a094-f51e-4432-9159-b5f764e7c3b2")]
+        [RuntimeConversation.ParameterIdAttribute("dba8a094-f51e-4432-9159-b5f764e7c3b2")]
         public Emotion Emotion;
         
-        [RuntimeConversation.ParameterIDAttribute("ebfd4c15-c4ca-4b10-b10b-dffec08ffd96")]
+        [RuntimeConversation.ParameterIdAttribute("ebfd4c15-c4ca-4b10-b10b-dffec08ffd96")]
         public RuntimeConversation.LocalizedString Description;
         
-        [RuntimeConversation.ParameterIDAttribute("8987655a-92fe-4eca-8c50-8769a7edcf04")]
+        [RuntimeConversation.ParameterIdAttribute("8987655a-92fe-4eca-8c50-8769a7edcf04")]
         public RuntimeConversation.LocalizedString Speech;
         
         public NPC_Speech(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1184,8 +1184,8 @@ namespace Viking.Nodes
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
             TypeDeserializer.Deserialize(out Speaker, GetParameter(parameters, new System.Guid("af08c7f7-33e9-4429-9e1f-cd786a73041b")));
             TypeDeserializer.Deserialize(out Listener, GetParameter(parameters, new System.Guid("507ed24d-3aa0-44e5-984c-22677f7ac8aa")));
@@ -1195,7 +1195,7 @@ namespace Viking.Nodes
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("86524441-8da7-4e19-9ff3-c8df67e09f8f")]
+    [RuntimeConversation.NodeTypeIdAttribute("86524441-8da7-4e19-9ff3-c8df67e09f8f")]
     public class Option : Node
     {
         
@@ -1203,16 +1203,16 @@ namespace Viking.Nodes
         
         public Viking.Nodes.Connectors.Input idb579f35fa56a455ca971884f555d0a29;
         
-        [RuntimeConversation.ParameterIDAttribute("05e42f73-2da9-4849-b9b0-feaeb82c6293")]
+        [RuntimeConversation.ParameterIdAttribute("05e42f73-2da9-4849-b9b0-feaeb82c6293")]
         public Utilities.ReadonlySet<Personality_Trait> Disapprove;
         
-        [RuntimeConversation.ParameterIDAttribute("2c551592-0343-4909-b24b-fd27012cf0cf")]
+        [RuntimeConversation.ParameterIdAttribute("2c551592-0343-4909-b24b-fd27012cf0cf")]
         public Utilities.ReadonlySet<Personality_Trait> Approve;
         
-        [RuntimeConversation.ParameterIDAttribute("b9950a3d-14d9-46d0-94dd-4217ed1573ad")]
+        [RuntimeConversation.ParameterIdAttribute("b9950a3d-14d9-46d0-94dd-4217ed1573ad")]
         public RuntimeConversation.LocalizedString Choice_Text;
         
-        [RuntimeConversation.ParameterIDAttribute("740c779d-c64a-4f58-abe3-a3a0419868a7")]
+        [RuntimeConversation.ParameterIdAttribute("740c779d-c64a-4f58-abe3-a3a0419868a7")]
         public Boolean Action;
         
         public Option(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1247,8 +1247,8 @@ namespace Viking.Nodes
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
             TypeDeserializer.Deserialize(out Disapprove, GetParameter(parameters, new System.Guid("05e42f73-2da9-4849-b9b0-feaeb82c6293")));
             TypeDeserializer.Deserialize(out Approve, GetParameter(parameters, new System.Guid("2c551592-0343-4909-b24b-fd27012cf0cf")));
@@ -1257,7 +1257,7 @@ namespace Viking.Nodes
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("656a48b2-324e-4484-a1b1-c3b91ad10c3e")]
+    [RuntimeConversation.NodeTypeIdAttribute("656a48b2-324e-4484-a1b1-c3b91ad10c3e")]
     public class Start : Node
     {
         
@@ -1290,13 +1290,13 @@ namespace Viking.Nodes
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("b2626790-c010-43d8-b1fb-d2093fd9328c")]
+    [RuntimeConversation.NodeTypeIdAttribute("b2626790-c010-43d8-b1fb-d2093fd9328c")]
     public class Terminator : Node
     {
         
@@ -1327,8 +1327,8 @@ namespace Viking.Nodes
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
         }
     }
@@ -1342,7 +1342,7 @@ namespace Viking.Nodes.Condition
     using Viking.Types;
     
     
-    [RuntimeConversation.NodeTypeIDAttribute("df8c4ddb-616b-4481-b0bc-07eb8236f7fb")]
+    [RuntimeConversation.NodeTypeIdAttribute("df8c4ddb-616b-4481-b0bc-07eb8236f7fb")]
     public class Character_Alive : Node
     {
         
@@ -1352,7 +1352,7 @@ namespace Viking.Nodes.Condition
         
         public Viking.Nodes.Connectors.Input idee1b251dacab476eb788efb1bd1c05c7;
         
-        [RuntimeConversation.ParameterIDAttribute("afe33600-ec07-4a01-a4ed-76d278a5aa24")]
+        [RuntimeConversation.ParameterIdAttribute("afe33600-ec07-4a01-a4ed-76d278a5aa24")]
         public Character Character;
         
         public Character_Alive(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1394,14 +1394,14 @@ namespace Viking.Nodes.Condition
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
             TypeDeserializer.Deserialize(out Character, GetParameter(parameters, new System.Guid("afe33600-ec07-4a01-a4ed-76d278a5aa24")));
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("0ff6290f-13da-4f7a-8584-9a3daa95fc23")]
+    [RuntimeConversation.NodeTypeIdAttribute("0ff6290f-13da-4f7a-8584-9a3daa95fc23")]
     public class Check_Boolean : Node
     {
         
@@ -1409,7 +1409,7 @@ namespace Viking.Nodes.Condition
         
         public Viking.Nodes.Connectors.Output idd20ba0d84a4d498f82c12938789a7196;
         
-        [RuntimeConversation.ParameterIDAttribute("9fd6f445-9517-4b76-ad68-f8518d0199b3")]
+        [RuntimeConversation.ParameterIdAttribute("9fd6f445-9517-4b76-ad68-f8518d0199b3")]
         public BooleanFlag Flag;
         
         public Check_Boolean(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1446,14 +1446,14 @@ namespace Viking.Nodes.Condition
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
             TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("9fd6f445-9517-4b76-ad68-f8518d0199b3")));
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("08727d6a-da44-430b-8caf-a58cfdfe251c")]
+    [RuntimeConversation.NodeTypeIdAttribute("08727d6a-da44-430b-8caf-a58cfdfe251c")]
     public class Check_Integer : Node
     {
         
@@ -1465,10 +1465,10 @@ namespace Viking.Nodes.Condition
         
         public Viking.Nodes.Connectors.Input idee53636aa7d847a7842547f88cc624aa;
         
-        [RuntimeConversation.ParameterIDAttribute("7bc072f7-a8db-46ee-90c2-b6b4ed71dd68")]
+        [RuntimeConversation.ParameterIdAttribute("7bc072f7-a8db-46ee-90c2-b6b4ed71dd68")]
         public Int32 Amount;
         
-        [RuntimeConversation.ParameterIDAttribute("1785b9d2-80f9-4a5a-a553-50625ca31f3d")]
+        [RuntimeConversation.ParameterIdAttribute("1785b9d2-80f9-4a5a-a553-50625ca31f3d")]
         public IntegerFlag Flag;
         
         public Check_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1517,15 +1517,15 @@ namespace Viking.Nodes.Condition
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
             TypeDeserializer.Deserialize(out Amount, GetParameter(parameters, new System.Guid("7bc072f7-a8db-46ee-90c2-b6b4ed71dd68")));
             TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("1785b9d2-80f9-4a5a-a553-50625ca31f3d")));
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("e8a66001-6237-411a-830b-976477ee9701")]
+    [RuntimeConversation.NodeTypeIdAttribute("e8a66001-6237-411a-830b-976477ee9701")]
     public class Character_Health : Node
     {
         
@@ -1537,10 +1537,10 @@ namespace Viking.Nodes.Condition
         
         public Viking.Nodes.Connectors.Input id36e21978b1a943b98d687be70965c3cd;
         
-        [RuntimeConversation.ParameterIDAttribute("63d5290a-28b5-47f7-b0da-4ec650100b5e")]
+        [RuntimeConversation.ParameterIdAttribute("63d5290a-28b5-47f7-b0da-4ec650100b5e")]
         public Character Character;
         
-        [RuntimeConversation.ParameterIDAttribute("beaac6ff-0de4-4af7-bb9c-2f581403247f")]
+        [RuntimeConversation.ParameterIdAttribute("beaac6ff-0de4-4af7-bb9c-2f581403247f")]
         public Percentage Percent;
         
         public Character_Health(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1589,15 +1589,15 @@ namespace Viking.Nodes.Condition
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
             TypeDeserializer.Deserialize(out Character, GetParameter(parameters, new System.Guid("63d5290a-28b5-47f7-b0da-4ec650100b5e")));
             TypeDeserializer.Deserialize(out Percent, GetParameter(parameters, new System.Guid("beaac6ff-0de4-4af7-bb9c-2f581403247f")));
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("f10f8ebc-616c-4061-be2d-4e392cd15396")]
+    [RuntimeConversation.NodeTypeIdAttribute("f10f8ebc-616c-4061-be2d-4e392cd15396")]
     public class Player_Sex : Node
     {
         
@@ -1646,13 +1646,13 @@ namespace Viking.Nodes.Condition
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("6f6392be-efaa-4e1a-9594-e4696c782067")]
+    [RuntimeConversation.NodeTypeIdAttribute("6f6392be-efaa-4e1a-9594-e4696c782067")]
     public class Player_Inventory : Node
     {
         
@@ -1662,7 +1662,7 @@ namespace Viking.Nodes.Condition
         
         public Viking.Nodes.Connectors.Output idd20ba0d84a4d498f82c12938789a7196;
         
-        [RuntimeConversation.ParameterIDAttribute("e95f9349-68e8-4c3a-b18f-c8e0d643b207")]
+        [RuntimeConversation.ParameterIdAttribute("e95f9349-68e8-4c3a-b18f-c8e0d643b207")]
         public Item Contains;
         
         public Player_Inventory(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1704,8 +1704,8 @@ namespace Viking.Nodes.Condition
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
             TypeDeserializer.Deserialize(out Contains, GetParameter(parameters, new System.Guid("e95f9349-68e8-4c3a-b18f-c8e0d643b207")));
         }
@@ -1720,7 +1720,7 @@ namespace Viking.Nodes.Dev
     using Viking.Types;
     
     
-    [RuntimeConversation.NodeTypeIDAttribute("3a0cf660-90d4-4e06-9d61-6769c3b93211")]
+    [RuntimeConversation.NodeTypeIdAttribute("3a0cf660-90d4-4e06-9d61-6769c3b93211")]
     public class TODO : Node
     {
         
@@ -1728,7 +1728,7 @@ namespace Viking.Nodes.Dev
         
         public Viking.Nodes.Connectors.Input id5e37d69b1d12487cb26f81aad52bfab4;
         
-        [RuntimeConversation.ParameterIDAttribute("73bdecc0-8f41-42ed-853b-5b31ff623f15")]
+        [RuntimeConversation.ParameterIdAttribute("73bdecc0-8f41-42ed-853b-5b31ff623f15")]
         public String Description;
         
         public TODO(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1763,20 +1763,20 @@ namespace Viking.Nodes.Dev
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
             TypeDeserializer.Deserialize(out Description, GetParameter(parameters, new System.Guid("73bdecc0-8f41-42ed-853b-5b31ff623f15")));
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("78589f5b-07f8-41d7-820a-318ec2989a40")]
+    [RuntimeConversation.NodeTypeIdAttribute("78589f5b-07f8-41d7-820a-318ec2989a40")]
     public class Error : Node
     {
         
         public Viking.Nodes.Connectors.Input id8ee7ec496e3b41a99c1e3d07473c666c;
         
-        [RuntimeConversation.ParameterIDAttribute("a83ddc54-0696-4856-8d7d-dfb15953b5d9")]
+        [RuntimeConversation.ParameterIdAttribute("a83ddc54-0696-4856-8d7d-dfb15953b5d9")]
         public String Message;
         
         public Error(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1804,14 +1804,14 @@ namespace Viking.Nodes.Dev
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
             TypeDeserializer.Deserialize(out Message, GetParameter(parameters, new System.Guid("a83ddc54-0696-4856-8d7d-dfb15953b5d9")));
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("28023421-4d83-486b-b4ac-7b820bd634c4")]
+    [RuntimeConversation.NodeTypeIdAttribute("28023421-4d83-486b-b4ac-7b820bd634c4")]
     public class Description : Node
     {
         
@@ -1819,7 +1819,7 @@ namespace Viking.Nodes.Dev
         
         public Viking.Nodes.Connectors.Input ide6cfd63700004ea68a5c4f17c094ca37;
         
-        [RuntimeConversation.ParameterIDAttribute("3be5b7bd-35b9-4dae-bea5-f60b10862276")]
+        [RuntimeConversation.ParameterIdAttribute("3be5b7bd-35b9-4dae-bea5-f60b10862276")]
         public String Description_;
         
         public Description(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1854,8 +1854,8 @@ namespace Viking.Nodes.Dev
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
             TypeDeserializer.Deserialize(out Description_, GetParameter(parameters, new System.Guid("3be5b7bd-35b9-4dae-bea5-f60b10862276")));
         }
@@ -1870,13 +1870,13 @@ namespace Viking.Nodes.Jumps
     using Viking.Types;
     
     
-    [RuntimeConversation.NodeTypeIDAttribute("dd02c832-4896-4f25-9a49-3884d6146fa3")]
+    [RuntimeConversation.NodeTypeIdAttribute("dd02c832-4896-4f25-9a49-3884d6146fa3")]
     public class Jump_To : Node
     {
         
         public Viking.Nodes.Connectors.Input ide04efd81ea02402f8b16f270f44daaf6;
         
-        [RuntimeConversation.ParameterIDAttribute("70dea536-f654-40ec-a738-c1f0caec5d9e")]
+        [RuntimeConversation.ParameterIdAttribute("70dea536-f654-40ec-a738-c1f0caec5d9e")]
         public Jump_IDs Target;
         
         public Jump_To(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1904,20 +1904,20 @@ namespace Viking.Nodes.Jumps
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
             TypeDeserializer.Deserialize(out Target, GetParameter(parameters, new System.Guid("70dea536-f654-40ec-a738-c1f0caec5d9e")));
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("17cf0309-8377-4e3e-9d8d-46d0a7cef943")]
+    [RuntimeConversation.NodeTypeIdAttribute("17cf0309-8377-4e3e-9d8d-46d0a7cef943")]
     public class Jump_Target : Node
     {
         
         public Viking.Nodes.Connectors.Output id41c4957558e347d9ad447e39df3ac7cc;
         
-        [RuntimeConversation.ParameterIDAttribute("60d947e7-2fc8-4acb-8f00-9e590da242c6")]
+        [RuntimeConversation.ParameterIdAttribute("60d947e7-2fc8-4acb-8f00-9e590da242c6")]
         public Jump_IDs ID;
         
         public Jump_Target(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1947,8 +1947,8 @@ namespace Viking.Nodes.Jumps
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
             TypeDeserializer.Deserialize(out ID, GetParameter(parameters, new System.Guid("60d947e7-2fc8-4acb-8f00-9e590da242c6")));
         }
@@ -1963,23 +1963,23 @@ namespace Viking.Nodes.Metadata
     using Viking.Types;
     
     
-    [RuntimeConversation.NodeTypeIDAttribute("d5974ffe-777b-419c-b9bc-bde980cb99a6")]
+    [RuntimeConversation.NodeTypeIdAttribute("d5974ffe-777b-419c-b9bc-bde980cb99a6")]
     public class Conversation_Info : Node
     {
         
-        [RuntimeConversation.ParameterIDAttribute("64a44b9e-1dad-4f4d-b785-e90f8fd0f860")]
+        [RuntimeConversation.ParameterIdAttribute("64a44b9e-1dad-4f4d-b785-e90f8fd0f860")]
         public String Creator;
         
-        [RuntimeConversation.ParameterIDAttribute("6940a618-5905-4e81-a59b-281d92a90782")]
+        [RuntimeConversation.ParameterIdAttribute("6940a618-5905-4e81-a59b-281d92a90782")]
         public String Context;
         
-        [RuntimeConversation.ParameterIDAttribute("cb4a4ac9-a5e9-444f-a7b0-b8f15e31e77a")]
+        [RuntimeConversation.ParameterIdAttribute("cb4a4ac9-a5e9-444f-a7b0-b8f15e31e77a")]
         public String Notes;
         
-        [RuntimeConversation.ParameterIDAttribute("10fc350d-2c7e-430b-bf49-24f6b5580dca")]
+        [RuntimeConversation.ParameterIdAttribute("10fc350d-2c7e-430b-bf49-24f6b5580dca")]
         public Boolean Only_Play_Once;
         
-        [RuntimeConversation.ParameterIDAttribute("15d39743-755c-4776-87a8-0f756593c074")]
+        [RuntimeConversation.ParameterIdAttribute("15d39743-755c-4776-87a8-0f756593c074")]
         public Boolean Proximity_Triggered;
         
         public Conversation_Info(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -2002,8 +2002,8 @@ namespace Viking.Nodes.Metadata
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
             TypeDeserializer.Deserialize(out Creator, GetParameter(parameters, new System.Guid("64a44b9e-1dad-4f4d-b785-e90f8fd0f860")));
             TypeDeserializer.Deserialize(out Context, GetParameter(parameters, new System.Guid("6940a618-5905-4e81-a59b-281d92a90782")));
@@ -2022,7 +2022,7 @@ namespace Viking.Nodes.Randomise
     using Viking.Types;
     
     
-    [RuntimeConversation.NodeTypeIDAttribute("03f66e93-bc0c-4713-ae07-dd249d85078d")]
+    [RuntimeConversation.NodeTypeIdAttribute("03f66e93-bc0c-4713-ae07-dd249d85078d")]
     public class Random : Node
     {
         
@@ -2062,13 +2062,13 @@ namespace Viking.Nodes.Randomise
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("9c764213-48f0-4f68-acb4-cc416edc66ae")]
+    [RuntimeConversation.NodeTypeIdAttribute("9c764213-48f0-4f68-acb4-cc416edc66ae")]
     public class Probability : Node
     {
         
@@ -2078,7 +2078,7 @@ namespace Viking.Nodes.Randomise
         
         public Viking.Nodes.Connectors.Input id06803b592a0040ec89c2448e0937c38c;
         
-        [RuntimeConversation.ParameterIDAttribute("914df4a8-e857-49d0-bf76-3bd9f6615193")]
+        [RuntimeConversation.ParameterIdAttribute("914df4a8-e857-49d0-bf76-3bd9f6615193")]
         public Percentage Percent;
         
         public Probability(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -2120,8 +2120,8 @@ namespace Viking.Nodes.Randomise
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
             TypeDeserializer.Deserialize(out Percent, GetParameter(parameters, new System.Guid("914df4a8-e857-49d0-bf76-3bd9f6615193")));
         }
@@ -2136,7 +2136,7 @@ namespace Viking.Nodes.Trigger
     using Viking.Types;
     
     
-    [RuntimeConversation.NodeTypeIDAttribute("4e0b5433-898b-42cf-989f-dd1adc7efd87")]
+    [RuntimeConversation.NodeTypeIdAttribute("4e0b5433-898b-42cf-989f-dd1adc7efd87")]
     public class Exit_Dialogue : Node
     {
         
@@ -2176,13 +2176,13 @@ namespace Viking.Nodes.Trigger
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("0bd4f09f-702a-4ae3-a801-38493653be5d")]
+    [RuntimeConversation.NodeTypeIdAttribute("0bd4f09f-702a-4ae3-a801-38493653be5d")]
     public class Enter_Dialogue : Node
     {
         
@@ -2222,13 +2222,13 @@ namespace Viking.Nodes.Trigger
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("00b12526-aa16-4258-95b5-fd1e9927c271")]
+    [RuntimeConversation.NodeTypeIdAttribute("00b12526-aa16-4258-95b5-fd1e9927c271")]
     public class Increment_Integer : Node
     {
         
@@ -2236,10 +2236,10 @@ namespace Viking.Nodes.Trigger
         
         public Viking.Nodes.Connectors.Input id7710fc42fc43454b8288838a06fbc8b9;
         
-        [RuntimeConversation.ParameterIDAttribute("015fc115-b8a5-4cd5-8f41-6c13a8b77643")]
+        [RuntimeConversation.ParameterIdAttribute("015fc115-b8a5-4cd5-8f41-6c13a8b77643")]
         public IntegerFlag Flag;
         
-        [RuntimeConversation.ParameterIDAttribute("e3e1497f-bd0c-468e-aadd-8db9ed593700")]
+        [RuntimeConversation.ParameterIdAttribute("e3e1497f-bd0c-468e-aadd-8db9ed593700")]
         public Int32 By;
         
         public Increment_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -2274,15 +2274,15 @@ namespace Viking.Nodes.Trigger
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
             TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("015fc115-b8a5-4cd5-8f41-6c13a8b77643")));
             TypeDeserializer.Deserialize(out By, GetParameter(parameters, new System.Guid("e3e1497f-bd0c-468e-aadd-8db9ed593700")));
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("78c38356-d036-418c-be97-b757e4792c4a")]
+    [RuntimeConversation.NodeTypeIdAttribute("78c38356-d036-418c-be97-b757e4792c4a")]
     public class Set_Boolean : Node
     {
         
@@ -2290,10 +2290,10 @@ namespace Viking.Nodes.Trigger
         
         public Viking.Nodes.Connectors.Input idd1d99b283eb14386a8c6f4ba664040ee;
         
-        [RuntimeConversation.ParameterIDAttribute("32fad20d-6ca6-4fc3-8c7a-e3a3cd84061b")]
+        [RuntimeConversation.ParameterIdAttribute("32fad20d-6ca6-4fc3-8c7a-e3a3cd84061b")]
         public Boolean Value;
         
-        [RuntimeConversation.ParameterIDAttribute("70ce28d8-9284-4bab-8bb7-47ef421a18dd")]
+        [RuntimeConversation.ParameterIdAttribute("70ce28d8-9284-4bab-8bb7-47ef421a18dd")]
         public BooleanFlag Flag;
         
         public Set_Boolean(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -2328,15 +2328,15 @@ namespace Viking.Nodes.Trigger
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
             TypeDeserializer.Deserialize(out Value, GetParameter(parameters, new System.Guid("32fad20d-6ca6-4fc3-8c7a-e3a3cd84061b")));
             TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("70ce28d8-9284-4bab-8bb7-47ef421a18dd")));
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("7adc2a07-f50e-439a-bca4-58aa80ed24b1")]
+    [RuntimeConversation.NodeTypeIdAttribute("7adc2a07-f50e-439a-bca4-58aa80ed24b1")]
     public class Set_Integer : Node
     {
         
@@ -2344,10 +2344,10 @@ namespace Viking.Nodes.Trigger
         
         public Viking.Nodes.Connectors.Output id3dee23b1b1a04457b2f736fdfe67cdf2;
         
-        [RuntimeConversation.ParameterIDAttribute("490c4c46-d25a-4605-99cd-237b94679e95")]
+        [RuntimeConversation.ParameterIdAttribute("490c4c46-d25a-4605-99cd-237b94679e95")]
         public Int32 Value;
         
-        [RuntimeConversation.ParameterIDAttribute("b30054dd-f984-41a7-b245-aaed6bac39f8")]
+        [RuntimeConversation.ParameterIdAttribute("b30054dd-f984-41a7-b245-aaed6bac39f8")]
         public IntegerFlag Flag;
         
         public Set_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -2382,15 +2382,15 @@ namespace Viking.Nodes.Trigger
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
             TypeDeserializer.Deserialize(out Value, GetParameter(parameters, new System.Guid("490c4c46-d25a-4605-99cd-237b94679e95")));
             TypeDeserializer.Deserialize(out Flag, GetParameter(parameters, new System.Guid("b30054dd-f984-41a7-b245-aaed6bac39f8")));
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("9c4a1f4c-7313-46a1-bb46-d5b4131549aa")]
+    [RuntimeConversation.NodeTypeIdAttribute("9c4a1f4c-7313-46a1-bb46-d5b4131549aa")]
     public class Give_Item : Node
     {
         
@@ -2398,13 +2398,13 @@ namespace Viking.Nodes.Trigger
         
         public Viking.Nodes.Connectors.Input id4264c31346ac4abba19d628d5572f67d;
         
-        [RuntimeConversation.ParameterIDAttribute("8b323b83-0e96-4442-89b9-f031c842c051")]
+        [RuntimeConversation.ParameterIdAttribute("8b323b83-0e96-4442-89b9-f031c842c051")]
         public Character To;
         
-        [RuntimeConversation.ParameterIDAttribute("eaebb3c0-805e-4cd7-b5e6-93912bbdb9b7")]
+        [RuntimeConversation.ParameterIdAttribute("eaebb3c0-805e-4cd7-b5e6-93912bbdb9b7")]
         public Int32 Amount;
         
-        [RuntimeConversation.ParameterIDAttribute("578f6dbd-a218-462e-8ec4-fc5a7c96db7d")]
+        [RuntimeConversation.ParameterIdAttribute("578f6dbd-a218-462e-8ec4-fc5a7c96db7d")]
         public Item Object;
         
         public Give_Item(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -2439,8 +2439,8 @@ namespace Viking.Nodes.Trigger
         {
             return processor.ProcessNode(this);
         }
-        
-        public virtual void GetParameters(System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters)
+
+        public virtual void GetParameters(System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters)
         {
             TypeDeserializer.Deserialize(out To, GetParameter(parameters, new System.Guid("8b323b83-0e96-4442-89b9-f031c842c051")));
             TypeDeserializer.Deserialize(out Amount, GetParameter(parameters, new System.Guid("eaebb3c0-805e-4cd7-b5e6-93912bbdb9b7")));
@@ -2466,11 +2466,11 @@ namespace Viking
         
         public virtual RuntimeConversation.Conversation Read(System.IO.Stream stream)
         {
-            Conversation.Serialization.CustomDeserializer backend = new Conversation.Serialization.CustomDeserializer(GetNode);
+            RuntimeConversation.CustomDeserializer backend = new RuntimeConversation.CustomDeserializer(GetNode);
             return backend.Read(stream);
         }
-        
-        private Utilities.Or<RuntimeConversation.NodeBase, Conversation.Serialization.Error> GetNode(Conversation.ID<Conversation.NodeTypeTemp> typeid, Conversation.ID<Conversation.NodeTemp> id, System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters, System.Drawing.PointF position)
+
+        private Utilities.Or<RuntimeConversation.NodeBase, Conversation.Serialization.LoadError> GetNode(Conversation.ID<Conversation.NodeTypeTemp> typeid, Conversation.ID<Conversation.NodeTemp> id, System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters, System.Drawing.PointF position)
         {
             if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("196dc521-8336-4714-93b7-77ac09b3abd7")))
             {
@@ -2616,7 +2616,7 @@ namespace Viking
                 node.GetParameters(parameters);
                 return node;
             }
-            return new Conversation.Serialization.Error("Failed to create node");
+            return new Conversation.Serialization.LoadError("Failed to create node");
         }
     }
     

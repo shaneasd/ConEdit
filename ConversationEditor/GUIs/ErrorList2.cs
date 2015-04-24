@@ -13,7 +13,7 @@ namespace ConversationEditor
 {
     using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 
-    public partial class ErrorList2 : UserControl
+    internal partial class ErrorList2 : UserControl
     {
         public ErrorList2()
         {

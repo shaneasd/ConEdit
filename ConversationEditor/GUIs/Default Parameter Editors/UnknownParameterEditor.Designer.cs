@@ -7,19 +7,6 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
         #region Component Designer generated code
 
         /// <summary> 
@@ -28,7 +15,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.drawWindow1 = new Utilities.DrawWindow();
+            this.drawWindow1 = new Utilities.UI.DrawWindow();
             this.SuspendLayout();
             // 
             // drawWindow1
@@ -54,6 +41,6 @@
 
         #endregion
 
-        private Utilities.DrawWindow drawWindow1;
+        private Utilities.UI.DrawWindow drawWindow1;
     }
 }

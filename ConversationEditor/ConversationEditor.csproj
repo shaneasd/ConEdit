@@ -40,6 +40,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -65,19 +67,19 @@
   <PropertyGroup>
     <ApplicationIcon>GenericSystemHover.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>ShanesKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ConfigNodeDefinitions.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Config\ColorsConfig.cs" />
     <Compile Include="Config\ConfigParameterColor.cs" />
     <Compile Include="Config\ConfigParameterList.cs" />
     <Compile Include="Config\ConfigParameterUint.cs" />
     <Compile Include="Controllers\AudioProvider.cs" />
-    <Compile Include="Colors.cs" />
-    <Compile Include="Config\ConfigParameter.cs" />
     <Compile Include="Config\ConfigParameterStringList.cs" />
-    <Compile Include="Config\ConfigParameterString.cs" />
     <Compile Include="Config\ErrorCheckersConfig.cs" />
     <Compile Include="Config\Config.cs" />
     <Compile Include="Config\GraphViewConfig.cs" />
@@ -92,7 +94,11 @@
     <Compile Include="Controllers\ConversationConnectionRules.cs" />
     <Compile Include="Controllers\ConversationFile.cs" />
     <Compile Include="Controllers\DummyLocalizationFile.cs" />
+    <Compile Include="Controllers\DummyProjectElementList.cs" />
     <Compile Include="Controllers\ErrorCheckerUtils.cs" />
+    <Compile Include="Controllers\IAudioProvider.cs" />
+    <Compile Include="Controllers\IProject.cs" />
+    <Compile Include="Controllers\IProjectElementList.cs" />
     <Compile Include="Controllers\NodeRendererCustomization.cs" />
     <Compile Include="Controllers\DanglingAudioError.cs" />
     <Compile Include="Controllers\DomainAsCSharp.cs" />
@@ -105,8 +111,6 @@
     <Compile Include="Controllers\DomainDomain.cs" />
     <Compile Include="Controllers\DummyConversationEditorControlData.cs" />
     <Compile Include="Controllers\DummyConversationFile.cs" />
-    <Compile Include="Controllers\IConversationFile.cs" />
-    <Compile Include="Controllers\IProject.cs" />
     <Compile Include="Controllers\LocalizationEngine.cs" />
     <Compile Include="Controllers\LocalizationFile.cs" />
     <Compile Include="Controllers\MakeBaseTypeSet.cs" />
@@ -125,14 +129,7 @@
     <Compile Include="Controllers\ProjectMenuController.cs" />
     <Compile Include="Controllers\ConversationDataSource.cs" />
     <Compile Include="Controllers\SharedContext.cs" />
-    <Compile Include="Controllers\SpecialConnectors.cs" />
-    <Compile Include="Customization\IAudioProviderCustomization.cs" />
-    <Compile Include="Customization\IExportMode.cs" />
-    <Compile Include="Customization\IMenuActionFactory.cs" />
-    <Compile Include="Customization\IParameterEditorFactory.cs" />
-    <Compile Include="Customization\IProjectExporter.cs" />
     <Compile Include="Customization\WrapperContextMenuItemsFactory.cs" />
-    <Compile Include="Customization\IProjectExplorerContextMenuItemsFactory.cs" />
     <Compile Include="Error Checkers\InvalidConnectionErrorChecker.cs" />
     <Compile Include="GUIs\Default Parameter Editors\DefaultSetEditor.cs">
       <SubType>UserControl</SubType>
@@ -163,10 +160,6 @@
     </Compile>
     <Compile Include="INodeGUIUtils.cs" />
     <Compile Include="Node Graphics\UnknownNodeRenderer.cs" />
-    <Compile Include="Node Graphics\EditableRenderer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="EditorInterfaces.cs" />
     <Compile Include="Controllers\ErrorCheckerController.cs" />
     <Compile Include="GUIs\DomainNodeRenderer.cs" />
     <Compile Include="GUIs\ProjectExporer\RealLeafItem.cs">
@@ -178,7 +171,7 @@
     <Compile Include="GUIs\GraphEditorControl.Designer.cs">
       <DependentUpon>GraphEditorControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUIs\MissingLeafItem.cs">
+    <Compile Include="GUIs\ProjectExporer\MissingLeafItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GUIs\ProjectExporer\ProjectExplorer.cs">
@@ -201,12 +194,6 @@
     </Compile>
     <Compile Include="GUIs\Default Parameter Editors\DefaultLocalizedStringEditor.Designer.cs">
       <DependentUpon>DefaultLocalizedStringEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GUIs\ErrorList2.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GUIs\ErrorList2.Designer.cs">
-      <DependentUpon>ErrorList2.cs</DependentUpon>
     </Compile>
     <Compile Include="GUIs\ErrorCheckerSelectorDialog.cs">
       <SubType>Form</SubType>
@@ -283,7 +270,6 @@
     <Compile Include="GUIs\ProjectExporer\ProjectExplorer.Item.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUIs\WM.cs" />
     <Compile Include="LineDrawer.cs" />
     <Compile Include="GUIs\NodeEditor.cs">
       <SubType>UserControl</SubType>
@@ -292,16 +278,6 @@
       <DependentUpon>NodeEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Controllers\CopyPasteController.cs" />
-    <Compile Include="MyComboBoxControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="MyComboBoxControl.Designer.cs">
-      <DependentUpon>MyComboBoxControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Node Graphics\NodeUIData.cs" />
-    <Compile Include="Node Graphics\NodeUI.cs" />
-    <Compile Include="Serialization\ConversationEditorData.cs" />
-    <Compile Include="Serialization\NodeUIDataSerializerXml.cs" />
     <Compile Include="GUIs\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -311,14 +287,12 @@
     <Compile Include="Node Graphics\CorruptedNodeRenderer.cs" />
     <Compile Include="Node Graphics\NodeFactory.cs" />
     <Compile Include="NodeEditorChoice.cs" />
-    <Compile Include="NodeGroup.cs" />
     <Compile Include="NodeRendererChoice.cs" />
     <Compile Include="NodeSet.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Controllers\Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\MouseController.cs" />
-    <Compile Include="Serialization\SerializationUtils.cs" />
     <Compile Include="Serialization\XmlProject.cs" />
     <Compile Include="Node Graphics\StartGUI.cs" />
     <Compile Include="Node Graphics\TerminatorGUI.cs" />
@@ -328,7 +302,6 @@
     <Compile Include="testform.Designer.cs">
       <DependentUpon>testform.cs</DependentUpon>
     </Compile>
-    <Compile Include="TransitionNoduleUIInfo.cs" />
     <Compile Include="TypeChoice.cs" />
     <EmbeddedResource Include="GenericSystemHover.ico" />
     <EmbeddedResource Include="GUIs\Default Parameter Editors\DefaultSetEditor.resx">
@@ -348,9 +321,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUIs\Default Parameter Editors\DefaultLocalizedStringEditor.resx">
       <DependentUpon>DefaultLocalizedStringEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUIs\ErrorList2.resx">
-      <DependentUpon>ErrorList2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUIs\ErrorCheckerSelectorDialog.resx">
       <DependentUpon>ErrorCheckerSelectorDialog.cs</DependentUpon>
@@ -396,9 +366,6 @@
       <DependentUpon>PluginSelector.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="MyComboBoxControl.resx">
-      <DependentUpon>MyComboBoxControl.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -422,6 +389,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="ShanesKey.snk" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -444,6 +412,10 @@
     <ProjectReference Include="..\Conversation2\Conversation2.csproj">
       <Project>{6B83BE91-796D-4ABC-98F8-4220B6151A3D}</Project>
       <Name>Conversation2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConversationEditor.PluginBase\ConversationEditor.PluginBase.csproj">
+      <Project>{02B54812-8646-46FB-9F6F-EEF9F36DDF9C}</Project>
+      <Name>ConversationEditor.PluginBase</Name>
     </ProjectReference>
     <ProjectReference Include="..\ConversationSerialization\ConversationSerialization.csproj">
       <Project>{ABEF494E-1FDB-427A-BA80-1BD98C82F041}</Project>

@@ -12,7 +12,7 @@ namespace Conversation
         IEnumeration m_enumeration;
         public EnumParameter(string name, ID<Parameter> id, IEnumeration enumeration, string defaultValue = null)
             //: base(name, id, enumeration.TypeId, enumeration.Default.Transformed(a => Guid.Empty.ToString(), a => a.ToString()))
-            : base(name, id, enumeration.TypeId, defaultValue)
+            : base(name, id, enumeration.TypeId,  defaultValue)
         {
             m_enumeration = enumeration;
         }
@@ -79,10 +79,10 @@ namespace Conversation
 
         public override string DisplayValue(Func<ID<LocalizedText>, string> localize)
         {
-            return GetName(m_value) ?? INVALID_VALUE;
+            return GetName(m_value) ?? InvalidValue;
         }
 
-        public const string INVALID_VALUE = "ERROR: Unknown enumeration value";
+        public const string InvalidValue = "ERROR: Unknown enumeration value";
 
 
         public Guid EditorSelected

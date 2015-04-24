@@ -10,7 +10,7 @@ using System.Net.Mail;
 
 namespace ConversationEditor
 {
-    public partial class ErrorForm : Form
+    internal partial class ErrorForm : Form
     {
         public ErrorForm()
         {

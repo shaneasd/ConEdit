@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Utilities
 {
-    public class UpToDateFile : IDisposable
+    public class UpToDateFile : Disposable
     {
         public FileInfo File { get { return m_file; } }
 
@@ -62,7 +62,7 @@ namespace Utilities
             {
                 while (true)
                 {
-                    var condition = WaitHandle.WaitAny(new WaitHandle[] { m_abort.WaitHandle, m_deleted.WaitHandle, m_reopen });
+                    WaitHandle.WaitAny(new WaitHandle[] { m_abort.WaitHandle, m_deleted.WaitHandle, m_reopen });
                     if (m_abort.IsSet)
                         return;
                     else if (m_deleted.IsSet)
@@ -126,22 +126,20 @@ namespace Utilities
             }
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            m_abort.Set();
-            bool success = m_aborted.Wait(100000); //Wait a second. If we were unlucky and in the middle of a stream comparison it could take a while.
-            DisposeContents();
-        }
-
-        private void DisposeContents()
-        {
-            m_watcher.Dispose();
-            m_reopen.Dispose();
-            if (m_onDisk != null)
-                m_onDisk.Dispose();
-            m_abort.Dispose();
-            m_aborted.Dispose();
-            m_deleted.Dispose();
+            if (disposing)
+            {
+                m_abort.Set();
+                m_aborted.Wait(1000); //Wait a second. If we were unlucky and in the middle of a stream comparison it could take a while.
+                m_watcher.Dispose();
+                m_reopen.Dispose();
+                if (m_onDisk != null)
+                    m_onDisk.Dispose();
+                m_abort.Dispose();
+                m_aborted.Dispose();
+                m_deleted.Dispose();
+            }
         }
 
         public MemoryStream Migrate()

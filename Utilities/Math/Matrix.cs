@@ -7,13 +7,16 @@ namespace Utilities
 {
     public struct Mat
     {
-        double[] m_data;
-        public readonly uint Rows;
-        public readonly uint Columns;
-        public Mat(uint rows, uint columns, IEnumerable<double> terms)
+        readonly double[] m_data;
+        private readonly int m_rows;
+        private readonly int m_columns;
+        public int Rows { get { return m_rows; } }
+        public int Columns { get { return m_columns; } }
+
+        public Mat(int rows, int columns, IEnumerable<double> terms)
         {
-            Rows = rows;
-            Columns = columns;
+            m_rows = rows;
+            m_columns = columns;
             m_data = terms.ToArray();
             //var it = terms.GetEnumerator();
             //m_data = new double[rows * columns];

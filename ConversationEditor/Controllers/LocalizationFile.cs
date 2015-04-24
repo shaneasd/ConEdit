@@ -11,17 +11,7 @@ using Conversation.Serialization;
 
 namespace ConversationEditor
 {
-    public interface ILocalizationFile : IInProject, ISaveableFileProvider
-    {
-        string Localize(ID<LocalizedText> id);
-        SimpleUndoPair SetLocalizationAction(ID<LocalizedText> guid, string p);
-        /// <summary>
-        /// Will this localizer localize to real user specified data?
-        /// </summary>
-        bool IsValid { get; }
-    }
-
-    public class LocalizationFile : ILocalizationFile
+    internal class LocalizationFile : Disposable, ILocalizationFile
     {
         public delegate bool ShouldSaveQuery(ID<LocalizedText> guid);
         private LocalizerData m_data;
@@ -166,9 +156,12 @@ namespace ConversationEditor
             remove { (this as ISaveableFileProvider).File.FileDeletedExternally -= value; }
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            File.Dispose();
+            if (disposing)
+            {
+                File.Dispose();
+            }
         }
 
         public bool IsValid

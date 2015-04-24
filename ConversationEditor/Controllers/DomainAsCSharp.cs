@@ -8,14 +8,14 @@ using Utilities;
 
 namespace ConversationEditor.Controllers
 {
-    class DomainAsCSharp : IProjectExporter
+    internal class DomainAsCSharp : IProjectExporter
     {
-        public void Export(IProject project, ConfigParameterString exportPath, Func<ID<LocalizedText>, string> localize, IErrorCheckerUtilities<IConversationNode> util)
+        public void Export(IProject2 project, ConfigParameterString exportPath, Func<ID<LocalizedText>, string> localize, IErrorCheckerUtilities<IConversationNode> util)
         {
             DomainData builtIn = new DomainData();
             builtIn.Connectors.Add(SpecialConnectors.Input);
             builtIn.Connectors.Add(SpecialConnectors.Output);
-            var data = project.DomainFiles.Select(d => d.Data).Concat(builtIn.Only());
+            var data = project.DomainFilesCollection.Select(d => d.Data).Concat(builtIn.Only());
             using (var sfd = new SaveFileDialog())
             {
                 sfd.DefaultExt = "*.cs";
@@ -39,7 +39,7 @@ namespace ConversationEditor.Controllers
                         if (@namespace.Length == 0)
                             @namespace = "MyNamespace";
                     }
-                    CsDomain<INodeGUI, NodeUIData, ConversationEditorData>.Serializer s = new CsDomain<INodeGUI, NodeUIData, ConversationEditorData>.Serializer(BaseTypeSet.BasicTypeMap(), @namespace);
+                    CsDomainSerializer<INodeGUI, NodeUIData, ConversationEditorData> s = new CsDomainSerializer<INodeGUI, NodeUIData, ConversationEditorData>(BaseTypeSet.BasicTypeMap(), @namespace);
                     using (var stream = new FileStream(sfd.FileName, FileMode.OpenOrCreate, FileAccess.Write))
                     {
                         stream.SetLength(0);

@@ -9,36 +9,9 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    public class MenuAction2<TNode> where TNode : IRenderable<IGUI>, IConversationNode, IConfigurable
+    internal class ContextMenu<TNode> where TNode : IRenderable<IGUI>, IConversationNode, IConfigurable
     {
-        public readonly string Name;
-        public readonly Func<TNode, Point, Action> NodeAction;
-        public readonly Action<Output, Point> TransitionAction;
-        public readonly Action<NodeGroup, Point> GroupAction;
-        public readonly Action<Point> EmptySpaceAction;
-        public IEnumerable<MenuAction2<TNode>> Children { get { return m_children; } }
-        private List<MenuAction2<TNode>> m_children = new List<MenuAction2<TNode>>();
-
-        public MenuAction2<TNode> Add(MenuAction2<TNode> child)
-        {
-            m_children.Add(child);
-            return child;
-        }
-
-        public MenuAction2(string name, Func<TNode, Point, Action> nodeAction, Action<Output, Point> transitionAction,
-            Action<NodeGroup, Point> groupAction, Action<Point> emptySpaceAction)
-        {
-            Name = name;
-            NodeAction = nodeAction;
-            TransitionAction = transitionAction;
-            GroupAction = groupAction;
-            EmptySpaceAction = emptySpaceAction;
-        }
-    }
-
-    public class ContextMenu<TNode> where TNode : IRenderable<IGUI>, IConversationNode, IConfigurable
-    {
-        Dictionary<MenuAction2<TNode>, ToolStripMenuItem> m_menuActions = new Dictionary<MenuAction2<TNode>, ToolStripMenuItem>();
+        Dictionary<MenuAction<TNode>, ToolStripMenuItem> m_menuActions = new Dictionary<MenuAction<TNode>, ToolStripMenuItem>();
         private readonly ContextMenuStrip m_menu;
         private Control m_control;
 
@@ -71,7 +44,7 @@ namespace ConversationEditor
             var point = ToGraphSpace(MenuPosition);
 
             bool showone = false;
-            foreach (MenuAction2<TNode> mm in m_menuActions.Keys)
+            foreach (MenuAction<TNode> mm in m_menuActions.Keys)
             {
                 var m = mm;
                 bool show = false;
@@ -84,7 +57,7 @@ namespace ConversationEditor
             return !showone;
         }
 
-        internal void ResetCustomNodes(params MenuAction2<TNode>[] newActions2)
+        internal void ResetCustomNodes(params MenuAction<TNode>[] newActions2)
         {
             m_menuActions.Clear();
             m_menu.Items.Clear();
@@ -92,7 +65,7 @@ namespace ConversationEditor
                 AddCustomNode(item, m_menu.Items);
         }
 
-        private void AddCustomNode(MenuAction2<TNode> node, ToolStripItemCollection tsic)
+        private void AddCustomNode(MenuAction<TNode> node, ToolStripItemCollection tsic)
         {
             EventHandler OnClick = (s, e) =>
             {

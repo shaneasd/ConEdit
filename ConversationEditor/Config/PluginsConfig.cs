@@ -13,28 +13,31 @@ namespace ConversationEditor
     /// <summary>
     /// Whether to consider the main assembly or just plugin assemblies when importing factories
     /// </summary>
-    public enum MainAssembly
+    internal enum MainAssemblies
     {
         Include,
         Ignore,
     }
 
-    public class PluginsConfig : IConfigParameter
+    internal class PluginsConfig : IConfigParameter
     {
         private List<PluginAssembly> m_filteredAssemblies = new List<PluginAssembly>();
         public IEnumerable<PluginAssembly> FilteredAssemblies { get { return m_filteredAssemblies; } }
-        public IEnumerable<PluginAssembly> UnfilteredAssemblies(MainAssembly mainAssembly)
+        public IEnumerable<PluginAssembly> UnfilteredAssemblies(MainAssemblies mainAssembly)
         {
             var allAssemblies = PluginSelector.AllPlugins;
-            if (mainAssembly == MainAssembly.Include)
-                allAssemblies = allAssemblies.Concat(new PluginAssembly(Assembly.GetExecutingAssembly(), true).Only());
+            if (mainAssembly == MainAssemblies.Include)
+            {
+                allAssemblies = allAssemblies.Concat(new PluginAssembly(Assembly.GetExecutingAssembly()).Only());
+                allAssemblies = allAssemblies.Concat(new PluginAssembly(typeof(EditableUI).Assembly).Only());
+            }
             return allAssemblies.Except(FilteredAssemblies);
         }
         public IEnumerable<NodeRendererChoice> NodeRenderers
         {
             get
             {
-                var assemblies = UnfilteredAssemblies(MainAssembly.Include).Select(a => a.Assembly);
+                var assemblies = UnfilteredAssemblies(MainAssemblies.Include).Select(a => a.Assembly);
 
                 foreach (Assembly assembly in assemblies)
                 {
@@ -54,7 +57,7 @@ namespace ConversationEditor
         {
             get
             {
-                var assemblies = UnfilteredAssemblies(MainAssembly.Include).Select(a => a.Assembly);
+                var assemblies = UnfilteredAssemblies(MainAssemblies.Include).Select(a => a.Assembly);
                 foreach (Assembly assembly in assemblies)
                 {
                     var types = assembly.GetExportedTypes();
@@ -79,14 +82,14 @@ namespace ConversationEditor
 
         public IEnumerable<IConfigNodeDefinition> GetConfigDefinitions()
         {
-            foreach (var assembly in UnfilteredAssemblies(MainAssembly.Include).Select(a => a.Assembly))
+            foreach (var assembly in UnfilteredAssemblies(MainAssemblies.Include).Select(a => a.Assembly))
             {
                 var factories = assembly.GetExportedTypes().Where(t => t.GetInterfaces().Contains(typeof(IConfigNodeDefinitionFactory)));
                 foreach (var factoryType in factories)
                 {
                     var constructor = factoryType.GetConstructor(Type.EmptyTypes);
                     var factory = constructor.Invoke(new object[0]) as IConfigNodeDefinitionFactory;
-                    foreach (var configNodeDefinition in factory.ConfigNodeDefinitions())
+                    foreach (var configNodeDefinition in factory.GetConfigNodeDefinitions())
                         yield return configNodeDefinition;
                 }
             }
@@ -107,7 +110,7 @@ namespace ConversationEditor
                         var assembly = new PluginAssembly(filename);
                         m_filteredAssemblies.Add(assembly);
                     }
-                    catch
+                    catch //TODO: Should really limit this to catching failures to load the assembly
                     {
                         MessageBox.Show("Failed to load assembly '" + filename + "'. This assembly will not be saved in the config file.");
                     }

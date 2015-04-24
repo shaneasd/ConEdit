@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace ConversationEditor
 {
-    public class NodeRendererChoice : TypeChoice
+    internal class NodeRendererChoice : TypeChoice
     {
         NodeUI.IFactory m_factory;
 
@@ -44,17 +44,17 @@ namespace ConversationEditor
 
         public static NodeRendererChoice DefaultConversation(ID<NodeTypeTemp> guid)
         {
-            if (guid == SpecialNodes.START_GUID)
-                return new NodeRendererChoice(StartGUI.Factory.Instance);
-            else if (guid == SpecialNodes.TERMINATOR_GUID)
-                return new NodeRendererChoice(TerminatorGUI.Factory.Instance);
+            if (guid == SpecialNodes.Start)
+                return new NodeRendererChoice(StartGUIFactory.Instance);
+            else if (guid == SpecialNodes.Terminator)
+                return new NodeRendererChoice(TerminatorGUIFactory.Instance);
             else
-                return new NodeRendererChoice(EditableUI.Factory.Instance);
+                return new NodeRendererChoice(EditableUIFactory.Instance);
         }
 
         public static NodeRendererChoice DefaultDomain(ID<NodeTypeTemp> guid)
         {
-                return new NodeRendererChoice(DomainNodeRenderer.Factory.Instance);
+                return new NodeRendererChoice(DomainNodeRendererFactory.Instance);
         }
     }
 }

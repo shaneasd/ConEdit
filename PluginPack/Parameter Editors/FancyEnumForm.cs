@@ -14,7 +14,7 @@ namespace PluginPack
         public FancyEnumForm()
         {
             InitializeComponent();
-            greyScrollBar1.ColorScheme = new Utilities.ColorScheme();
+            greyScrollBar1.ColorScheme = new Utilities.UI.ColorScheme();
         }
 
         private void FancyEnumForm_Leave(object sender, EventArgs e)

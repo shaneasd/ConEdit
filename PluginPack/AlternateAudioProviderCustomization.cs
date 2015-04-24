@@ -6,7 +6,7 @@ using ConversationEditor;
 
 namespace PluginPack
 {
-    class AlternateAudioProviderCustomization : IAudioProviderCustomization
+    public class AlternateAudioProviderCustomization : IAudioProviderCustomization
     {
         public Conversation.Audio Generate(AudioGenerationParameters parameters)
         {

@@ -12,27 +12,9 @@ using System.Reflection;
 
 namespace ConversationEditor
 {
-    public struct WillEdit
+    internal class Config
     {
-        public Func<ParameterType, bool> IsInteger;
-        public Func<ParameterType, bool> IsDecimal;
-        public Func<ParameterType, bool> IsEnum;
-        public Func<ParameterType, bool> IsDynamicEnum;
-
-        public static WillEdit Create(IDataSource datasource)
-        {
-            return new WillEdit
-            {
-                IsInteger = type => datasource.IsInteger(type),
-                IsDecimal = type => datasource.IsDecimal(type),
-                IsEnum = type => datasource.IsEnum(type),
-                IsDynamicEnum = type => datasource.IsDynamicEnum(type),
-            };
-        }
-    }
-
-    public class Config
-    {
+        [Serializable]
         public class LoadFailedException : Exception
         {
         }
@@ -46,7 +28,7 @@ namespace ConversationEditor
                                                                       a=>ParameterEditorCustomization.DefaultEditor(a,willEdit));
             ConversationNodeRenderers = new MapConfig<ID<NodeTypeTemp>, Guid>("ConversationNodeRenderers", kvp => new KeyValuePair<string, string>(kvp.Key.Serialized(), kvp.Value.ToString()),
                                                                       kvp => new KeyValuePair<ID<NodeTypeTemp>, Guid>(ID<NodeTypeTemp>.Parse(kvp.Key), Guid.Parse(kvp.Value)),
-                                                                      a => EditableUI.Factory.Instance.Guid);
+                                                                      a => EditableUIFactory.Instance.Guid);
             InitParameters();
             LoadRoot(file);
         }

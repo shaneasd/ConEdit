@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace ConversationEditor
 {
-    public class ErrorCheckersConfig : IConfigParameter
+    internal class ErrorCheckersConfig : IConfigParameter
     {
         private List<ErrorCheckerAssembly> m_assemblies = new List<ErrorCheckerAssembly>();
         public IEnumerable<ErrorCheckerAssembly> Assemblies { get { return m_assemblies; } }
@@ -76,7 +76,7 @@ namespace ConversationEditor
 
         public void RefreshConfig(PluginsConfig pluginsConfig)
         {
-            foreach (var pluginAssembly in pluginsConfig.UnfilteredAssemblies(MainAssembly.Include))
+            foreach (var pluginAssembly in pluginsConfig.UnfilteredAssemblies(MainAssemblies.Include))
             {
                 ErrorCheckerAssembly configECA = GetAssembly(pluginAssembly);
 

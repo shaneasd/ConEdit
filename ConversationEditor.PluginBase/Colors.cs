@@ -8,23 +8,31 @@ using System.Drawing.Drawing2D;
 
 namespace ConversationEditor
 {
-    public class ColorScheme : Utilities.ColorScheme
+    public class ColorScheme : Utilities.UI.ColorScheme
     {
         public ColorScheme()
         {
             Connectors = Color.Black;
-            ContextMenu = new ToolStripRenderer(this);
-            Hatch = new HatchBrush(HatchStyle.Percent50, SelectionRectangle);
+            m_contextMenu = new ToolStripRenderer(this);
+            m_hatch = new HatchBrush(HatchStyle.Percent50, SelectionRectangle);
         }
 
         public Color Connectors { get; set; }
-        public readonly Color SelectedConnectors = Defaults.Foreground;
-        public readonly Color SelectedConversationListItemBorder = Color.Black;
-        public readonly Color SelectedConversationListItemPrimaryBackground = Color.FromArgb(96, 96, 96);
-        public readonly Color SelectedConversationListItemSecondaryBackground = Color.FromArgb(76, 76, 76);
-        public readonly Brush Hatch;
-        public readonly ToolStripProfessionalRenderer ContextMenu;
-        public readonly Pen TreePen = new Pen(Defaults.Foreground) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dot };
+        private readonly Color m_selectedConnectors = Defaults.Foreground;
+        private readonly Color m_selectedConversationListItemBorder = Color.Black;
+        private readonly Color m_selectedConversationListItemPrimaryBackground = Color.FromArgb(96, 96, 96);
+        private readonly Color m_selectedConversationListItemSecondaryBackground = Color.FromArgb(76, 76, 76);
+        private readonly Brush m_hatch;
+        private readonly ToolStripProfessionalRenderer m_contextMenu;
+        private readonly Pen m_treePen = new Pen(Defaults.Foreground) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dot };
+
+        public Color SelectedConnectors { get { return m_selectedConnectors; } }
+        public Color SelectedConversationListItemBorder { get { return m_selectedConversationListItemBorder; } }
+        public Color SelectedConversationListItemPrimaryBackground { get { return m_selectedConversationListItemPrimaryBackground; } }
+        public Color SelectedConversationListItemSecondaryBackground { get { return m_selectedConversationListItemSecondaryBackground; } }
+        public Brush Hatch { get { return m_hatch; } }
+        public ToolStripProfessionalRenderer ContextMenu { get { return m_contextMenu; } }
+        public Pen TreePen { get { return m_treePen; } }
 
         private class ToolStripRenderer : ToolStripProfessionalRenderer
         {

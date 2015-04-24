@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.drawWindow1 = new Utilities.DrawWindow();
-            this.greyScrollBar1 = new Utilities.GreyScrollBar();
+            this.drawWindow1 = new Utilities.UI.DrawWindow();
+            this.greyScrollBar1 = new Utilities.UI.GreyScrollBar();
             this.SuspendLayout();
             // 
             // drawWindow1
@@ -72,7 +72,7 @@
 
         #endregion
 
-        private Utilities.GreyScrollBar greyScrollBar1;
-        private Utilities.DrawWindow drawWindow1;
+        private Utilities.UI.GreyScrollBar greyScrollBar1;
+        private Utilities.UI.DrawWindow drawWindow1;
     }
 }

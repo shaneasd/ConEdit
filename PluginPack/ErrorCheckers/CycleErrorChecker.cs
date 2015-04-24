@@ -10,18 +10,18 @@ namespace PluginPack
     public class CycleErrorChecker<T> : ErrorChecker<T>
         where T : class, IConversationNode
     {
-        class CycleError : ConversationError<T>
-        {
-            public CycleError(T node)
-                : base(node.Only())
-            {
-            }
+        //class CycleError : ConversationError<T>
+        //{
+        //    public CycleError(T node)
+        //        : base(node.Only())
+        //    {
+        //    }
 
-            public override string Message
-            {
-                get { return "Conversation node not connected via any path to a terminator"; }
-            }
-        }
+        //    public override string Message
+        //    {
+        //        get { return "Conversation node not connected via any path to a terminator"; }
+        //    }
+        //}
 
         class NotImplementedCheckerError : ConversationError<T>
         {
@@ -90,9 +90,9 @@ namespace PluginPack
             //return disconnectedNodes.Select(n => new CycleError(n));
         }
 
-        public override string GetName()
+        public override string Name
         {
-            return "Cycle error checker";
+            get { return "Cycle error checker"; }
         }
     }
 }

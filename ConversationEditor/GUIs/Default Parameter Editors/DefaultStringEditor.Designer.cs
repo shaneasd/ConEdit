@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.drawWindow1 = new Utilities.DrawWindow();
+            this.drawWindow1 = new Utilities.UI.DrawWindow();
             this.SuspendLayout();
             // 
             // drawWindow1
@@ -54,6 +54,6 @@
 
         #endregion
 
-        private Utilities.DrawWindow drawWindow1;
+        private Utilities.UI.DrawWindow drawWindow1;
     }
 }

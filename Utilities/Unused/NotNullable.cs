@@ -17,6 +17,30 @@ namespace Utilities
     {
         private T Value;
 
+        public override bool Equals(object obj)
+        {
+            if (obj is NotNullable<T>)
+            {
+                return object.Equals(((NotNullable<T>)obj).Value, Value);
+            }
+            return false;
+        }
+
+        public static bool operator ==(NotNullable<T> a, NotNullable<T> b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(NotNullable<T> a, NotNullable<T> b)
+        {
+            return !a.Equals(b);
+        }
+
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
+        }
+
         internal NotNullable(T value)
         {
             Value = value;

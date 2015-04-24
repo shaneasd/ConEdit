@@ -8,7 +8,7 @@ using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeG
 
 namespace ConversationEditor
 {
-    class PointlessAudioError : ConversationError<ConversationNode>
+    internal class PointlessAudioError : ConversationError<ConversationNode>
     {
         private string m_file;
         public PointlessAudioError(string file)

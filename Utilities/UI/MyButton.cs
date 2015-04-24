@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace Utilities
+namespace Utilities.UI
 {
     public class MyButton : MyControl
     {

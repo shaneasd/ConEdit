@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace ConversationEditor
 {
-    public abstract class TypeChoice
+    internal abstract class TypeChoice
     {
         public readonly Type m_type;
         public readonly string m_typeName;
@@ -25,7 +25,7 @@ namespace ConversationEditor
             return 0;
         }
 
-        public TypeChoice(Type type)
+        protected TypeChoice(Type type)
         {
             if (type == null)
                 throw new ArgumentNullException("type");
@@ -34,7 +34,7 @@ namespace ConversationEditor
             m_assembly = type.Assembly.Location;
         }
 
-        public TypeChoice(string assembly, string type)
+        protected TypeChoice(string assembly, string type)
              : this(Assembly.LoadFrom(assembly).GetType(type))
         {
         }

@@ -10,7 +10,7 @@ namespace ConversationEditor
 {
     using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 
-    public class ErrorCheckerController
+    internal class ErrorCheckerController
     {
         /// <summary>
         /// Represents a type defined in a plugin assembly
@@ -31,7 +31,7 @@ namespace ConversationEditor
             private static string GetName(Type concrete)
             {
                 dynamic instance = concrete.GetConstructor(Type.EmptyTypes).Invoke(new object[0]);
-                string name = instance.GetName();
+                string name = instance.Name;
                 return name;
             }
 

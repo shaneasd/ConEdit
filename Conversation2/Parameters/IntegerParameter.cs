@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Utilities;
+using System.Globalization;
 
 namespace Conversation
 {
@@ -15,7 +16,7 @@ namespace Conversation
         }
 
         public IntegerParameter(string name, ID<Parameter> id, ParameterType typeId, Definition definition, string defaultValue = null)
-            : base(name, id, typeId, defaultValue)
+            : base(name, id, typeId,  defaultValue)
         {
             m_definition = definition ?? new Definition();
             TryDecorrupt(); //The first setting will always be corrupt because definition is null
@@ -37,7 +38,7 @@ namespace Conversation
 
         protected override string InnerValueAsString()
         {
-            return m_value.ToString();
+            return m_value.ToString(CultureInfo.InvariantCulture);
         }
 
         private Definition m_definition;
@@ -53,7 +54,7 @@ namespace Conversation
 
         public override string DisplayValue(Func<ID<LocalizedText>, string> localize)
         {
-            return m_value.ToString();
+            return m_value.ToString(CultureInfo.CurrentCulture);
         }
     }
 }

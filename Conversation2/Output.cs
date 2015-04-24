@@ -127,6 +127,7 @@ namespace Conversation
         bool CanConnect(ID<TConnectorDefinition> a, ID<TConnectorDefinition> b);
     }
 
+    [FlagsAttribute]
     public enum ConnectionConsiderations
     {
         None = 0,
@@ -168,7 +169,7 @@ namespace Conversation
             if ((ignore & ConnectionConsiderations.SameNode) == ConnectionConsiderations.None)
             {
                 //Can't connect two connectors belonging to the same node
-                if (object.ReferenceEquals(other.Parent.NodeID, Parent.NodeID))
+                if (object.ReferenceEquals(other.Parent.NodeId, Parent.NodeId))
                     return false;
             }
 
@@ -264,7 +265,7 @@ namespace Conversation
 
         public string GetName()
         {
-            string name = Parameters.Where(p => p.Id == ConnectorDefinitionData.OUTPUT_NAME).Select(p => p as IStringParameter).Select(p => p.Value).SingleOrDefault();
+            string name = Parameters.Where(p => p.Id == ConnectorDefinitionData.OutputName).Select(p => p as IStringParameter).Select(p => p.Value).SingleOrDefault();
             if (name == null)
             {
                 var stringParameters = Parameters.OfType<IStringParameter>();

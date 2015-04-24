@@ -6,10 +6,11 @@ using System.Text;
 using Conversation;
 using Utilities;
 using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+using Utilities.UI;
 
 namespace ConversationEditor
 {
-    public class CorruptedNodeRenderer : NodeUI
+    internal class CorruptedNodeRenderer : NodeUI
     {
         static Font Font = SystemFonts.DefaultFont;
 
@@ -26,10 +27,10 @@ namespace ConversationEditor
         protected override void InnerDraw(System.Drawing.Graphics g, bool selected)
         {
             g.FillRectangle(Brushes.White, Area);
-            var l = Area.Location.X;
-            var r = Area.Location.X + Area.Width;
-            var t = Area.Location.Y;
-            var b = Area.Location.Y + Area.Height;
+            //var l = Area.Location.X;
+            //var r = Area.Location.X + Area.Width;
+            //var t = Area.Location.Y;
+            //var b = Area.Location.Y + Area.Height;
             var pen = new Pen(Brushes.Red, 2);
             g.DrawRectangle(pen, Area);
             //g.DrawLine(pen, l, t, r, b);

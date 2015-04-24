@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using Utilities;
+using System.Collections.ObjectModel;
 
 namespace Conversation
 {
-    public class ExternalFunction : IEditable
+    internal class ExternalFunction : IEditable
     {
         private ID<NodeTemp> m_id;
         private readonly IEditableGenerator m_generator;
         private List<Parameter> m_parameters;
         private readonly IEnumerable<Output> m_connectors;
 
-        public ID<NodeTypeTemp> NodeTypeID
+        public ID<NodeTypeTemp> NodeTypeId
         {
             get { return m_generator.Guid; }
         }
@@ -24,7 +25,7 @@ namespace Conversation
             get { return m_generator.Name; }
         }
 
-        public List<NodeData.ConfigData> Config
+        public ReadOnlyCollection<NodeData.ConfigData> Config
         {
             get { return m_generator.Config; }
         }
@@ -58,7 +59,7 @@ namespace Conversation
             }
         }
 
-        public ID<NodeTemp> NodeID { get { return m_id; } }
+        public ID<NodeTemp> NodeId { get { return m_id; } }
 
         public event Action Linked;
         protected void OnOutputLinked()
@@ -89,17 +90,6 @@ namespace Conversation
                 Redo = () => { m_parameters.Remove(p); },
                 Undo = () => { m_parameters.Insert(index, p); },
             };
-        }
-
-        private List<EditableGenerator.ParameterData> ParameterData()
-        {
-            return Parameters.Select(p => new EditableGenerator.ParameterData(p.Id, p.ValueAsString())).ToList();
-        }
-
-        public void GeneratorChanged()
-        {
-            m_parameters = m_generator.MakeParameters(ParameterData());
-            //TODO: Update connectors
         }
     }
 }

@@ -11,16 +11,16 @@ using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeG
 
 namespace ConversationEditor
 {
-    public interface INodeFactory<TNode> : INodeFactory<TNode, NodeUIData> where TNode : IGraphNode, IConfigurable
+    internal interface INodeFactory<TNode> : INodeFactory<TNode, NodeUIData> where TNode : IGraphNode, IConfigurable
     {
     }
 
 
-    public interface INodeFactory : INodeFactory<ConversationNode>
+    internal interface INodeFactory : INodeFactory<ConversationNode>
     {
     }
 
-    public class NodeFactory : INodeFactory
+    internal class NodeFactory : INodeFactory
     {
         private Func<ID<NodeTypeTemp>, ConversationNode, PointF, INodeGUI> GetNodeRendererChoice;
 
@@ -36,7 +36,6 @@ namespace ConversationEditor
             GetNodeRendererChoice = (id, n, p) => nodeRenderers[config[id]].GetRenderer(n, p, localizer, datasource);
             changedCallback(UpdateRenderers);
         }
-
 
         private List<ConversationNode> m_toUpdate = new List<ConversationNode>();
         public void UpdateRenderers()
@@ -58,7 +57,7 @@ namespace ConversationEditor
             return GetNodeRendererChoice(n.Type, n, p);
         }
 
-        public INodeGUI MakeCorruptedRenderer(ConversationNode n, PointF p)
+        private INodeGUI MakeCorruptedRenderer(ConversationNode n, PointF p)
         {
             if (n.m_data is UnknownEditable)
                 return new UnknownNodeRenderer(n, p);

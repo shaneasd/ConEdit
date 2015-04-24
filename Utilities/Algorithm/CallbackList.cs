@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Utilities
 {
+    //TODO: Replace with the seemingly equivalent class in ObjectModel
     public class CallbackList<T> : IList<T>
     {
         List<T> m_base;

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Utilities
+namespace Utilities.UI
 {
-    public class ToStringWrapper
+    public static class ToStringWrapper
     {
         public static ToStringWrapper<T> Make<T>(T value, string toString)
         {

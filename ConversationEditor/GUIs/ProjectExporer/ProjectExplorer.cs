@@ -13,13 +13,15 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 using System.Drawing.Drawing2D;
+using Utilities.UI;
 
 namespace ConversationEditor
 {
     //TODO: Background color given to DrawText is wrong when the item is selected
     //TODO: Scroll an item into view when it's selected programatically (e.g. when clicking an error in the error list)
+    //TODO: Readonly background is misaligned sometimes
 
-    public partial class ProjectExplorer : UserControl
+    internal partial class ProjectExplorer : UserControl
     {
         public static Bitmap ProjectIcon;
         public static Bitmap FolderIcon;
@@ -179,8 +181,8 @@ namespace ConversationEditor
             public bool fIcon;
             public int xHotspot;
             public int yHotspot;
-            public IntPtr hbmMask;
-            public IntPtr hbmColor;
+            private IntPtr hbmMask;
+            private IntPtr hbmColor;
         }
 
         [DllImport("user32.dll")]
@@ -219,14 +221,13 @@ namespace ConversationEditor
         public IDomainFile CurrentDomainFile { get { return (m_selectedEditable is LeafItem<IDomainFile>) ? (m_selectedEditable as LeafItem<IDomainFile>).Item : null; } }
         public bool ProjectSelected { get { return m_selectedEditable is ProjectItem; } }
 
-        private float IndexToY(int i)
+        private static float IndexToY(int i)
         {
             return i * Item.HEIGHT;
         }
 
         private int YToIndex(float y)
         {
-            Refresh();
             return (int)((y + greyScrollBar1.Value) / Item.HEIGHT);
             //return (int)((y) / Item.HEIGHT);
         }
@@ -289,7 +290,7 @@ namespace ConversationEditor
                 if (itemsToDraw.Any())
                 {
                     var firstDrawn = itemsToDraw.Last();
-                    uint indent = firstDrawn.Item1.IndentLevel;
+                    int indent = firstDrawn.Item1.IndentLevel;
                     for (int j = firstDrawn.Item2; j >= 0; j--)
                     {
                         if (allItems[j].IndentLevel < indent)
@@ -1037,6 +1038,23 @@ namespace ConversationEditor
                 domainItem.Item.File.Writable.Save();
             else
                 throw new Exception("attempted to save a file that isn't saveable from the project explorer menu");
+        }
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            if (disposing)
+            {
+                m_updateScrollbar.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

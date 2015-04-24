@@ -10,8 +10,11 @@ using System.IO;
 
 namespace Utilities
 {
+    [Serializable]
     public class MyFileLoadException : Exception
     {
+        public MyFileLoadException() { }
+
         public MyFileLoadException(Exception inner)
             : base("error loading file", inner)
         {

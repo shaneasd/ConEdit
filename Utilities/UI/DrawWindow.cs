@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
 
-namespace Utilities
+namespace Utilities.UI
 {
     public class DrawWindow : UserControl
     {
@@ -25,6 +25,8 @@ namespace Utilities
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             SetStyle(ControlStyles.UserPaint, true);
             SetStyle(ControlStyles.ResizeRedraw, true);
+
+            InitializeComponent();
         }
 
         protected override void OnPaint(PaintEventArgs e)

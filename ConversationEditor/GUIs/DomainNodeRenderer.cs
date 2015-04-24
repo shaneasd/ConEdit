@@ -11,40 +11,39 @@ using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeG
 
 namespace ConversationEditor
 {
-    public class DomainNodeRenderer : NodeUI
+    public class DomainNodeRendererFactory : NodeUI.IFactory
     {
-        public class Factory : NodeUI.IFactory
+        public static DomainNodeRendererFactory Instance = new DomainNodeRendererFactory();
+
+        public bool WillRender(ID<NodeTypeTemp> nodeType)
         {
-            public static Factory Instance = new Factory();
-
-            public bool WillRender(ID<NodeTypeTemp> nodeType)
-            {
-                return true;
-            }
-
-            public string DisplayName
-            {
-                get { return "Default Domain Node Renderer"; }
-            }
-
-            public INodeGUI GetRenderer(ConversationNode n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
-            {
-                return new DomainNodeRenderer(n, p, localizer);
-            }
-
-            static Guid m_guid = Guid.Parse("3a724c77-1707-479b-a256-7dc319f229b4");
-            public Guid Guid
-            {
-                get { return m_guid; }
-            }
+            return true;
         }
 
-        public readonly static Font Font = SystemFonts.DefaultFont;
-        public readonly static Font BoldFont = new Font(SystemFonts.DefaultFont, FontStyle.Bold);
-        public readonly static Pen thin = new Pen(Brushes.Black, 1);
-        public readonly static Pen thick = new Pen(Brushes.White, 3);
+        public string DisplayName
+        {
+            get { return "Default Domain Node Renderer"; }
+        }
 
-        public const int TITLE_HEIGHT = 15;
+        public INodeGUI GetRenderer(ConversationNode n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        {
+            return new DomainNodeRenderer(n, p, localizer);
+        }
+
+        static Guid m_guid = Guid.Parse("3a724c77-1707-479b-a256-7dc319f229b4");
+        public Guid Guid
+        {
+            get { return m_guid; }
+        }
+    }
+
+    internal class DomainNodeRenderer : NodeUI
+    {
+
+        private readonly static Font Font = SystemFonts.DefaultFont;
+        private readonly static Font BoldFont = new Font(SystemFonts.DefaultFont, FontStyle.Bold);
+        private readonly static Pen Thin = new Pen(Brushes.Black, 1);
+        private readonly static Pen Thick = new Pen(Brushes.White, 3);
 
         public DomainNodeRenderer(ConversationNode node, PointF p, Func<ID<LocalizedText>, string> localizer)
             : base(node, p)
@@ -81,13 +80,13 @@ namespace ConversationEditor
             protected SizeF m_size;
             protected ConversationNode Node;
             Color baseColor = Color.Gray;
-            public Section(ConversationNode node)
+            protected Section(ConversationNode node)
             {
                 Node = node;
 
                 if (node != null)
                 {
-                    BackgroundColor.TryGet(Node.Config, ref baseColor);
+                    baseColor = BackgroundColor.TryGet(Node.Config) ?? baseColor;
                     baseColor = Color.FromArgb(baseColor.R, baseColor.G, baseColor.B);
                 }
             }
@@ -114,7 +113,7 @@ namespace ConversationEditor
                     {
                         g.FillRectangle(theRestGradient, area);
                     }
-                    g.DrawRectangle(thin, Rectangle.Round(area));
+                    g.DrawRectangle(Thin, Rectangle.Round(area));
                 }
             }
 
@@ -130,7 +129,7 @@ namespace ConversationEditor
                 {
                     g.FillRectangle(theRestGradient, area);
                 }
-                g.DrawRectangle(thin, Rectangle.Round(area));
+                g.DrawRectangle(Thin, Rectangle.Round(area));
             }
         }
 
@@ -165,7 +164,7 @@ namespace ConversationEditor
 
             public override SizeF Measure(Graphics g)
             {
-                if (BottomNodes.Any(o => GetName(o) != ""))
+                if (BottomNodes.Any(o => GetName(o).Length != 0))
                 {
                     float largestWidth = BottomNodes.Max(o => g.MeasureString(GetName(o), Font).Width) + 4;
                     float largestHeight = BottomNodes.Max(o => g.MeasureString(GetName(o), Font).Height) + 4;
@@ -198,13 +197,13 @@ namespace ConversationEditor
 
             public string GetName(Output connector)
             {
-                if (connector.m_definition.Id == DomainIDs.NODE_OUTPUT_CONFIG_DEFINITION.Id)
+                if (connector.m_definition.Id == DomainIDs.NodeOutputConfigDefinition.Id)
                     return "Config";
-                else if (connector.m_definition.Id == DomainIDs.NODE_OUTPUT_PARAMETERS_DEFINITION.Id)
+                else if (connector.m_definition.Id == DomainIDs.NodeOutputParametersDefinition.Id)
                     return "Parameters";
-                else if (connector.m_definition.Id == DomainIDs.NODE_OUTPUT_CONNECTORS_DEFINITION.Id)
+                else if (connector.m_definition.Id == DomainIDs.NodeOutputConnectorsDefinition.Id)
                     return "Connectors";
-                else 
+                else
                     return "";
             }
         }
@@ -223,9 +222,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    float result = DomainNodeRenderer.MAX_WIDTH;
-                    MaxWidthConfig.TryGet(Node.Config, ref result);
-                    return result;
+                    return MaxWidthConfig.TryGet(Node.Config) ?? DomainNodeRenderer.MaxWidth;
                 }
             }
 
@@ -233,7 +230,7 @@ namespace ConversationEditor
             {
                 if (Node.Parameters.Any())
                 {
-                    IEnumerable<SizeF> titleSizes = Node.Parameters.Select(p => g.MeasureString(p.Name + " ", BoldFont, MAX_TITLE_WIDTH));
+                    IEnumerable<SizeF> titleSizes = Node.Parameters.Select(p => g.MeasureString(p.Name + " ", BoldFont, MaxTitleWidth));
                     float headingWidth = titleSizes.Max(s => s.Width + 2);
 
                     IEnumerable<SizeF> dataSizes = Node.Parameters.Select(p => g.MeasureString(p.DisplayValue(m_localizer), Font, (int)(MaxWidth - headingWidth)));
@@ -260,7 +257,7 @@ namespace ConversationEditor
                     DrawChunk(g, brightnessFactor, darknessFactor, location);
                     PointF renderAt = new PointF(location.X + 2, location.Y + 2);
 
-                    IEnumerable<SizeF> titleSizes = Node.Parameters.Select(p => g.MeasureString(p.Name + " ", BoldFont, MAX_TITLE_WIDTH));
+                    IEnumerable<SizeF> titleSizes = Node.Parameters.Select(p => g.MeasureString(p.Name + " ", BoldFont, MaxTitleWidth));
                     float headingWidth = titleSizes.Max(s => s.Width + 2);
 
                     foreach (var parameter in Node.Parameters)
@@ -268,7 +265,7 @@ namespace ConversationEditor
                         var name = parameter.Name;
                         var data = parameter.DisplayValue(m_localizer);
 
-                        SizeF headingSize = g.MeasureString(name + " ", BoldFont, MAX_TITLE_WIDTH);
+                        SizeF headingSize = g.MeasureString(name + " ", BoldFont, MaxTitleWidth);
                         SizeF dataSize = g.MeasureString(data, Font, (int)MaxWidth - (int)(Math.Ceiling(headingWidth)));
 
                         g.DrawString(name, BoldFont, Brushes.Black, new RectangleF(renderAt, headingSize));
@@ -295,7 +292,7 @@ namespace ConversationEditor
 
                     g.Restore(savedState);
 
-                    DrawShadow(g, selected);
+                    DrawShadow(g);
                     DrawBorder(g, nodeShape, selected);
                 }
             }
@@ -319,9 +316,7 @@ namespace ConversationEditor
         {
             get
             {
-                bool rounded = false;
-                RoundedConfig.TryGet(Node.Config, ref rounded);
-                return rounded;
+                return RoundedConfig.TryGet(Node.Config) ?? false;
             }
         }
 
@@ -329,16 +324,16 @@ namespace ConversationEditor
         {
             if (selected)
             {
-                g.DrawPath(thick, nodeShape);
-                g.DrawPath(thin, nodeShape);
+                g.DrawPath(Thick, nodeShape);
+                g.DrawPath(Thin, nodeShape);
             }
             else
             {
-                g.DrawPath(thin, nodeShape);
+                g.DrawPath(Thin, nodeShape);
             }
         }
 
-        private void DrawShadow(Graphics g, bool selected)
+        private void DrawShadow(Graphics g)
         {
             Color shadowDark = Color.FromArgb(0x40, Color.Black);
             Color shadowLight = Color.FromArgb(0x00, Color.Black);
@@ -393,8 +388,8 @@ namespace ConversationEditor
             return new LinearGradientBrush(new RectangleF(0, area.Y - (int)(area.Height * (brightnessFactor)), 1, (int)(area.Height * (brightnessFactor + darknessFactor + 1))), Color.White, baseColor, LinearGradientMode.Vertical);
         }
 
-        public const int MAX_TITLE_WIDTH = 200;
-        public const int MAX_WIDTH = 500;
+        private const int MaxTitleWidth = 200;
+        private const int MaxWidth = 500;
 
         /// <summary>
         /// Increase the area of the node to include all the text
@@ -416,7 +411,7 @@ namespace ConversationEditor
 
         public override string DisplayName
         {
-            get { return Factory.Instance.DisplayName; }
+            get { return DomainNodeRendererFactory.Instance.DisplayName; }
         }
 
     }

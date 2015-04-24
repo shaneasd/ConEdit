@@ -8,11 +8,11 @@ using System.Drawing.Drawing2D;
 using System.Text.RegularExpressions;
 using System.IO;
 
-namespace Utilities
+namespace Utilities.UI
 {
     public class MyTextBox : MyControl, IDisposable
     {
-        public const uint BORDER_SIZE = 4;
+        public const int BorderSize = 4;
         private class UndoAction : Utilities.UndoAction
         {
             private State m_undoState;
@@ -155,7 +155,7 @@ namespace Utilities
             {
                 var uv = GetUV(lines);
                 int before = lines.Take(uv.Y).Select(l => l.Length).Concat(0.Only()).Sum();
-                if (lines[uv.Y].EndsWith("\n"))
+                if (lines[uv.Y].EndsWith("\n", StringComparison.Ordinal))
                     return new CP(before + lines[uv.Y].Length - 1);
                 else
                     return new CP(before + lines[uv.Y].Length, true);
@@ -172,8 +172,7 @@ namespace Utilities
                 if (value.Pos > Text.Length)
                     value.Pos = Text.Length;
                 m_state.CursorPos = value;
-                using (var g = m_control.CreateGraphics())
-                    MoveCaret(g);
+                MoveCaret();
                 Redraw();
             }
         }
@@ -203,12 +202,9 @@ namespace Utilities
         public RectangleF Area { get { return m_area(); } }
         private void UpdateRequestedArea()
         {
-            using (Graphics g = m_control.CreateGraphics())
-            {
-                RectangleF size = GetTextBounds(g);
-                size.Inflate(BORDER_SIZE, BORDER_SIZE);
-                RequestedArea = new SizeF(Area.Width, size.Height);
-            }
+            RectangleF size = GetTextBounds();
+            size.Inflate(BorderSize, BorderSize);
+            RequestedArea = new SizeF(Area.Width, size.Height);
         }
 
         public override event Action RequestedAreaChanged;
@@ -227,10 +223,11 @@ namespace Utilities
         }
 
         private Control m_control;
+        private Caret m_caret;
 
         const int CARET_HEIGHT = 13;
 
-        public RectangleF TextRectangle { get { return RectangleF.Inflate(Area, -BORDER_SIZE, -BORDER_SIZE); } }
+        public RectangleF TextRectangle { get { return RectangleF.Inflate(Area, -BorderSize, -BorderSize); } }
 
         public InputFormEnum InputForm;
 
@@ -263,7 +260,7 @@ namespace Utilities
             return StringUtil.GetLines(Text, Font, TextRectangle.Width, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding);
         }
 
-        private RectangleF GetTextBounds(Graphics g)
+        private RectangleF GetTextBounds()
         {
             var lines = GetLines().ToList();
             return new RectangleF(0, 0, lines.Select(l => MeasureText(l)).Concat(0.Only()).Max(), lines.Count * Font.Height);
@@ -275,7 +272,7 @@ namespace Utilities
                  - TextRenderer.MeasureText(".", Font, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix).Width;
         }
 
-        public PointF CursorToXY(Point characterPos, Graphics g)
+        public PointF CursorToXY(Point characterPos)
         {
             float y = (characterPos.Y + 0.5f) * Font.Height + TextRectangle.Top;
             var lines = GetLines().ToList();
@@ -285,7 +282,7 @@ namespace Utilities
             return new PointF(x, y);
         }
 
-        public CP XYToCursor(float x, float y, Graphics g)
+        public CP XYToCursor(float x, float y)
         {
             if (Text.Length == 0)
                 return new CP(0);
@@ -342,8 +339,8 @@ namespace Utilities
                         int minx = p1.Y == y ? p1.X : 0;
                         int maxx = p2.Y == y ? p2.X : lines[y].Length;
 
-                        float startx = CursorToXY(new Point(minx, y), g).X;
-                        float endx = CursorToXY(new Point(maxx, y), g).X;
+                        float startx = CursorToXY(new Point(minx, y)).X;
+                        float endx = CursorToXY(new Point(maxx, y)).X;
                         using (g.SaveState())
                         {
                             Region r = new Region(RectangleF.FromLTRB(startx, y * Font.Height + TextRectangle.Y, endx, (1 + y) * Font.Height + TextRectangle.Y));
@@ -362,12 +359,8 @@ namespace Utilities
         {
             if (Area.Contains(args.Location))
             {
-                using (var g = m_control.CreateGraphics())
-                {
-                    var loc = args.Location.Take(Area.Location.Round());
-                    CursorPos = XYToCursor(args.X, args.Y, g);
-                    SelectionLength = 0;
-                }
+                CursorPos = XYToCursor(args.X, args.Y);
+                SelectionLength = 0;
                 m_selecting = true;
             }
         }
@@ -381,12 +374,9 @@ namespace Utilities
         {
             if (m_selecting)
             {
-                using (var g = m_control.CreateGraphics())
-                {
-                    var selectionEnd = GetCursorPosInt() + SelectionLength;
-                    CursorPos = XYToCursor(args.X, args.Y, g);
-                    SelectionLength = selectionEnd - GetCursorPosInt();
-                }
+                var selectionEnd = GetCursorPosInt() + SelectionLength;
+                CursorPos = XYToCursor(args.X, args.Y);
+                SelectionLength = selectionEnd - GetCursorPosInt();
                 Redraw();
             }
         }
@@ -397,29 +387,19 @@ namespace Utilities
             {
                 if (args.Button == MouseButtons.Left)
                 {
-                    using (var g = m_control.CreateGraphics())
-                    {
-                        CursorPos = XYToCursor(args.X, args.Y, g);
-                    }
+                    CursorPos = XYToCursor(args.X, args.Y);
                 }
             }
         }
 
-        private void MoveCaret(Graphics g)
+        private void MoveCaret()
         {
             //if (InputForm != InputFormEnum.None)
             {
-                var pos = CursorToXY(CursorPos.GetUV(GetLines().ToList()), g);
-                Caret.SetCaretPos((int)(pos.X), (int)pos.Y - Font.Height / 2);
+                var pos = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
+                if (m_caret != null)
+                    m_caret.MoveTo((int)(pos.X), (int)pos.Y - Font.Height / 2);
             }
-        }
-
-        private int PosForChar(float x, float y, RectangleF charBound, int i)
-        {
-            if (x * 2 < charBound.Left + charBound.Right)
-                return i;
-            else
-                return i + 1;
         }
 
         public void DeleteSelection()
@@ -485,16 +465,21 @@ namespace Utilities
         {
             if (InputForm != InputFormEnum.None)
             {
-                Caret.CreateCaret(m_control.Handle, IntPtr.Zero, 2, CARET_HEIGHT);
-                using (var g = m_control.CreateGraphics())
-                    MoveCaret(g);
-                Caret.ShowCaret(m_control.Handle);
+                m_caret = new Caret(m_control, 2, CARET_HEIGHT);
+                MoveCaret();
+                m_caret.Show();
             }
         }
 
         public override void LostFocus()
         {
-            Caret.DestroyCaret();
+            ClearCaret();
+        }
+
+        private void ClearCaret()
+        {
+            m_caret.Dispose();
+            m_caret = null;
         }
 
         public bool SpecialEnter { get; set; }
@@ -606,48 +591,42 @@ namespace Utilities
             }
             else if (e.KeyCode.IsSet(Keys.Up))
             {
-                using (Graphics g = m_control.CreateGraphics())
+                if (e.Shift)
                 {
-                    if (e.Shift)
-                    {
-                        var selectionEnd = GetCursorPosInt() + SelectionLength;
-                        var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()), g);
-                        point.Y -= Font.Height;
-                        CursorPos = XYToCursor(point.X, point.Y, g);
-                        SelectionLength = selectionEnd - GetCursorPosInt();
-                    }
-                    else
-                    {
-                        SelectionLength = 0;
-                        var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()), g);
-                        point.Y -= Font.Height;
-                        CursorPos = XYToCursor(point.X, point.Y, g);
-                    }
-                    Redraw();
+                    var selectionEnd = GetCursorPosInt() + SelectionLength;
+                    var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
+                    point.Y -= Font.Height;
+                    CursorPos = XYToCursor(point.X, point.Y);
+                    SelectionLength = selectionEnd - GetCursorPosInt();
                 }
+                else
+                {
+                    SelectionLength = 0;
+                    var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
+                    point.Y -= Font.Height;
+                    CursorPos = XYToCursor(point.X, point.Y);
+                }
+                Redraw();
                 m_additionUndoAction = null;
             }
             else if (e.KeyCode.IsSet(Keys.Down))
             {
-                using (Graphics g = m_control.CreateGraphics())
+                if (e.Shift)
                 {
-                    if (e.Shift)
-                    {
-                        var selectionEnd = GetCursorPosInt() + SelectionLength;
-                        var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()), g);
-                        point.Y += Font.Height;
-                        CursorPos = XYToCursor(point.X, point.Y, g);
-                        SelectionLength = selectionEnd - GetCursorPosInt();
-                    }
-                    else
-                    {
-                        SelectionLength = 0;
-                        var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()), g);
-                        point.Y += Font.Height;
-                        CursorPos = XYToCursor(point.X, point.Y, g);
-                    }
-                    Redraw();
+                    var selectionEnd = GetCursorPosInt() + SelectionLength;
+                    var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
+                    point.Y += Font.Height;
+                    CursorPos = XYToCursor(point.X, point.Y);
+                    SelectionLength = selectionEnd - GetCursorPosInt();
                 }
+                else
+                {
+                    SelectionLength = 0;
+                    var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
+                    point.Y += Font.Height;
+                    CursorPos = XYToCursor(point.X, point.Y);
+                }
+                Redraw();
                 m_additionUndoAction = null;
             }
             else if (e.KeyCode.IsSet(Keys.Delete))
@@ -817,10 +796,10 @@ namespace Utilities
             return Area.Contains(point);
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose();
-            Caret.DestroyCaret();
+            base.Dispose(disposing);
+            ClearCaret();
         }
     }
 }

@@ -24,12 +24,12 @@ namespace Clandestine
 
         public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
         {
-            return nodes.Where(e => e.Type == SpecialNodes.TODO_GUID).Select(node => new TodoError(node));
+            return nodes.Where(e => e.Type == SpecialNodes.ToDo).Select(node => new TodoError(node));
         }
 
-        public override string GetName()
+        public override string Name
         {
-            return "TODO nodes";
+            get { return "TODO nodes"; }
         }
     }
 }

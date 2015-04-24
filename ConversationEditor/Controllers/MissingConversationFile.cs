@@ -10,18 +10,14 @@ using Utilities;
 namespace ConversationEditor
 {
     using ConversationNode = ConversationNode<INodeGUI>;
+    using System.Collections.ObjectModel;
 
-    public class MissingConversationFile : IConversationFile
+    internal sealed class MissingConversationFile : IConversationFile
     {
         private MissingFile m_file;
         public MissingConversationFile(FileInfo file) 
         {
             m_file = new MissingFile(file);
-        }
-
-        public UndoQueue UndoQueue
-        {
-            get { return new UndoQueue(); }
         }
 
         public IEnumerableReversible<ConversationNode> Nodes
@@ -39,19 +35,14 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public void Change(Utilities.UndoAction revert)
-        {
-            throw new NotImplementedException();
-        }
-
         public void RemoveLinks(Output o)
         {
             throw new NotImplementedException();
         }
 
-        public List<Error> Errors
+        public ReadOnlyCollection<LoadError> Errors
         {
-            get { return new List<Error>(); } //A missing file inherently has no errors within its data (though it is a project error to have missing files)
+            get { return new ReadOnlyCollection<LoadError>(new LoadError[0]); } //A missing file inherently has no errors within its data (though it is a project error to have missing files)
         }
 
         public void ClearErrors()
@@ -113,7 +104,7 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, System.Drawing.PointF location, LocalizationEngine localization)
+        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, System.Drawing.PointF location, ILocalizationEngine localization)
         {
             throw new NotImplementedException();
         }

@@ -10,6 +10,7 @@ namespace ConversationEditor
 {
     using DomainSerializer = ISerializer<XmlGraphData<NodeUIData, ConversationEditorData>>;
     using DomainDeserializer = IDeserializer<XmlGraphData<NodeUIData, ConversationEditorData>>;
+    using System.IO;
 
     public class DomainSerializerDeserializer
     {
@@ -35,23 +36,23 @@ namespace ConversationEditor
         public static DomainSerializerDeserializer Make(IDataSource d)
         {
             var Serializer = SerializationUtils.DomainSerializer;
-            var CategoriesDeserializer = XMLDomain<NodeUIData, ConversationEditorData>.Deserializer.Categories(d, NodeUIDataSerializerXml.Instance);
-            var TypesDeserializer = XMLDomain<NodeUIData, ConversationEditorData>.Deserializer.Types(d, NodeUIDataSerializerXml.Instance);
-            var ConnectorsDeserializer = XMLDomain<NodeUIData, ConversationEditorData>.Deserializer.Connectors(d, NodeUIDataSerializerXml.Instance);
-            var NodesDeserializer = XMLDomain<NodeUIData, ConversationEditorData>.Deserializer.Nodes(d, NodeUIDataSerializerXml.Instance);
-            var EditorDataDeserializer = XMLDomain<NodeUIData, ConversationEditorData>.Deserializer.UI(d, NodeUIDataSerializerXml.Instance, new ConversationEditorData.Deserializer());
-            var ErrorDeserializer = XMLDomain<NodeUIData, ConversationEditorData>.Deserializer.Everything(d, NodeUIDataSerializerXml.Instance);
+            var CategoriesDeserializer = XmlDomain<NodeUIData, ConversationEditorData>.Deserializer.Categories(d, NodeUIDataSerializerXml.Instance);
+            var TypesDeserializer = XmlDomain<NodeUIData, ConversationEditorData>.Deserializer.Types(d, NodeUIDataSerializerXml.Instance);
+            var ConnectorsDeserializer = XmlDomain<NodeUIData, ConversationEditorData>.Deserializer.Connectors(d, NodeUIDataSerializerXml.Instance);
+            var NodesDeserializer = XmlDomain<NodeUIData, ConversationEditorData>.Deserializer.Nodes(d, NodeUIDataSerializerXml.Instance);
+            var EditorDataDeserializer = XmlDomain<NodeUIData, ConversationEditorData>.Deserializer.UI(d, NodeUIDataSerializerXml.Instance, new ConversationEditorData.Deserializer());
+            var ErrorDeserializer = XmlDomain<NodeUIData, ConversationEditorData>.Deserializer.Everything(d, NodeUIDataSerializerXml.Instance);
             return new DomainSerializerDeserializer(Serializer, CategoriesDeserializer, TypesDeserializer, ConnectorsDeserializer, NodesDeserializer, EditorDataDeserializer, ErrorDeserializer);
         }
     }
 
-    public class SerializationUtils
+    public static class SerializationUtils
     {
         public static ISerializer<XmlGraphData<NodeUIData, ConversationEditorData>> DomainSerializer
         {
             get
             {
-                return new XMLDomain<NodeUIData, ConversationEditorData>.Serializer(NodeUIDataSerializerXml.Instance, new ConversationEditorData.Serializer());
+                return new XmlDomain<NodeUIData, ConversationEditorData>.Serializer(NodeUIDataSerializerXml.Instance, new ConversationEditorData.Serializer());
             }
         }
 
@@ -71,18 +72,18 @@ namespace ConversationEditor
         {
             get
             {
-                return new XMLConversation<NodeUIData, ConversationEditorData>.Serializer(NodeUIDataSerializerXml.Instance, new ConversationEditorData.Serializer());
+                return new XmlConversation<NodeUIData, ConversationEditorData>.Serializer(NodeUIDataSerializerXml.Instance, new ConversationEditorData.Serializer());
             }
         }
 
         public static ISerializerDeserializer<XmlGraphData<NodeUIData, ConversationEditorData>> ConversationSerializerDeserializer(IDataSource d)
         {
-            return new XMLConversation<NodeUIData, ConversationEditorData>.SerializerDeserializer(d, NodeUIDataSerializerXml.Instance, new ConversationEditorData.Serializer(), new ConversationEditorData.Deserializer());
+            return new XmlConversation<NodeUIData, ConversationEditorData>.SerializerDeserializer(d, NodeUIDataSerializerXml.Instance, new ConversationEditorData.Serializer(), new ConversationEditorData.Deserializer());
         }
 
         public static IDeserializer<XmlGraphData<NodeUIData, ConversationEditorData>> ConversationDeserializer(IDataSource d)
         {
-            return new XMLConversation<NodeUIData, ConversationEditorData>.Deserializer(d, NodeUIDataSerializerXml.Instance, new ConversationEditorData.Deserializer());
+            return new XmlConversation<NodeUIData, ConversationEditorData>.Deserializer(d, NodeUIDataSerializerXml.Instance, new ConversationEditorData.Deserializer());
         }
 
         public static XmlGraphData<NodeUIData, ConversationEditorData> MakeConversationData(IEnumerable<ConversationNode<INodeGUI>> nodes, ConversationEditorData data)

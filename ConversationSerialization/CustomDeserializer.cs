@@ -10,16 +10,21 @@ using System.IO;
 using System.Globalization;
 using System.Drawing;
 
-namespace Conversation.Serialization
+namespace RuntimeConversation
 {
+    public struct CustomDeserializerParameter
+    {
+        public Guid Guid;
+        public string Value;
+    }
+
     public class CustomDeserializer : IDeserializer<RuntimeConversation.Conversation>
     {
         private static readonly string[] XML_VERSION_READ = new[] { "1.0", "1.1" };
 
-        private Func<ID<NodeTypeTemp>, ID<NodeTemp>, IEnumerable<Parameter>, PointF, Or<RuntimeConversation.NodeBase, Error>> m_datasource;
-        public struct Parameter { public Guid Guid; public string Value; }
+        private Func<ID<NodeTypeTemp>, ID<NodeTemp>, IEnumerable<CustomDeserializerParameter>, PointF, Or<RuntimeConversation.NodeBase, LoadError>> m_datasource;
 
-        public CustomDeserializer(Func<ID<NodeTypeTemp>, ID<NodeTemp>, IEnumerable<Parameter>, PointF, Or<RuntimeConversation.NodeBase, Error>> datasource)
+        public CustomDeserializer(Func<ID<NodeTypeTemp>, ID<NodeTemp>, IEnumerable<CustomDeserializerParameter>, PointF, Or<RuntimeConversation.NodeBase, LoadError>> datasource)
         {
             m_datasource = datasource;
         }
@@ -28,20 +33,20 @@ namespace Conversation.Serialization
         {
             stream.Position = 0;
             var d = XDocument.Load(stream);
-            var root = d.Element(XMLConversation<object, object>.ROOT);
+            var root = d.Element(XmlConversation<object, object>.Root);
 
             if (root.Attribute("xmlversion") == null || !XML_VERSION_READ.Contains(root.Attribute("xmlversion").Value))
                 throw new Exception("unrecognised conversation xml version");
 
-            IEnumerable<Or<RuntimeConversation.NodeBase, Error>> editables = root.Elements("Node").Select(n => ReadEditable(n, m_datasource)).Evaluate();
+            IEnumerable<Or<RuntimeConversation.NodeBase, LoadError>> editables = root.Elements("Node").Select(n => ReadEditable(n, m_datasource)).Evaluate();
             var allnodes = new Dictionary<ID<NodeTemp>, RuntimeConversation.NodeBase>();
-            var errors = new List<Error>();
+            var errors = new List<LoadError>();
 
             foreach (var editable in editables)
             {
                 editable.Do(e =>
                 {
-                    allnodes[e.ID] = e;
+                    allnodes[e.Id] = e;
                 }, a =>
                 {
                     errors.Add(a);
@@ -65,11 +70,11 @@ namespace Conversation.Serialization
             return new RuntimeConversation.Conversation(allnodes.Values.Cast<RuntimeConversation.NodeBase>(), errors);
         }
 
-        private Or<RuntimeConversation.NodeBase, Error> ReadEditable(XElement node, Func<ID<NodeTypeTemp>, ID<NodeTemp>, IEnumerable<Parameter>, PointF, Or<RuntimeConversation.NodeBase, Error>> datasource)
+        private static Or<RuntimeConversation.NodeBase, LoadError> ReadEditable(XElement node, Func<ID<NodeTypeTemp>, ID<NodeTemp>, IEnumerable<CustomDeserializerParameter>, PointF, Or<RuntimeConversation.NodeBase, LoadError>> datasource)
         {
             ID<NodeTemp> id = ID<NodeTemp>.Parse(node.Attribute("Id").Value);
             ID<NodeTypeTemp> guid = ID<NodeTypeTemp>.Parse(node.Attribute("Guid").Value);
-            var parameters = node.Elements("Parameter").Select(e => new Parameter() { Guid = Guid.Parse(e.Attribute("guid").Value), Value = e.Attribute("value").Value });
+            var parameters = node.Elements("Parameter").Select(e => new CustomDeserializerParameter() { Guid = Guid.Parse(e.Attribute("guid").Value), Value = e.Attribute("value").Value });
             node = node.Element("Area");
             float x = float.Parse(node.Attribute("X").Value, CultureInfo.InvariantCulture);
             float y = float.Parse(node.Attribute("Y").Value, CultureInfo.InvariantCulture);

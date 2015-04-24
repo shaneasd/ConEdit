@@ -107,7 +107,7 @@ namespace Conversation
 
         private readonly ParameterType m_typeId;
         public ParameterType TypeId { get { return m_typeId; } }
-        public Parameter(string name, ID<Parameter> id, ParameterType typeid, string value)
+        protected Parameter(string name, ID<Parameter> id, ParameterType typeid, string value)
         {
             m_name = name;
             m_id = id;
@@ -189,7 +189,7 @@ namespace Conversation
 
         string m_defaultValue = null;
 
-        public Parameter(string name, ID<Parameter> id, ParameterType typeId, string defaultValue)
+        protected Parameter(string name, ID<Parameter> id, ParameterType typeId, string defaultValue)
             : base(name, id, typeId, defaultValue)
         {
             m_defaultValue = defaultValue;

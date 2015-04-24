@@ -8,9 +8,12 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Reflection;
+using System.Globalization;
 
-namespace Utilities
+namespace Utilities.UI
 {
+    //TODO: Some sort of visual indication that items are being filtered out
+
     //TODO: Refactor commonality out of MyComboBox
     public class MySuggestionBox<T> : MyControl
     {
@@ -43,13 +46,24 @@ namespace Utilities
             {
                 m_width = width;
                 m_clicked = clicked;
-                DisplayStyle = ToolStripItemDisplayStyle.Image;
                 Image = up ? UpArrow : DownArrow;
                 this.ImageTransparentColor = Color.Magenta;
                 this.ImageAlign = ContentAlignment.MiddleCenter;
                 this.ImageScaling = ToolStripItemImageScaling.None;
                 this.Padding = new Padding { All = 0 };
                 this.Margin =  new Padding { All = 0 };
+            }
+
+            public override ToolStripItemDisplayStyle DisplayStyle
+            {
+                get
+                {
+                    return ToolStripItemDisplayStyle.Image;
+                }
+                set
+                {
+                    //Ignore that shit
+                }
             }
 
             //public override Size GetPreferredSize(Size constrainingSize)
@@ -193,20 +207,23 @@ namespace Utilities
 
         public class Item
         {
-            public readonly string DisplayString;
-            public readonly T Contents;
-            public bool SourcedValue;
+            private readonly string m_displayString;
+            private readonly T m_contents;
+
+            public string DisplayString { get { return m_displayString; } }
+            public T Contents { get { return m_contents; } }
+            private bool m_sourcedValue;
             public Item(string displayString, T contents)
             {
-                DisplayString = displayString;
-                Contents = contents;
-                SourcedValue = true;
+                m_displayString = displayString;
+                m_contents = contents;
+                m_sourcedValue = true;
             }
             public Item(string displayString)
             {
-                DisplayString = displayString;
-                Contents = default(T);
-                SourcedValue = false;
+                m_displayString = displayString;
+                m_contents = default(T);
+                m_sourcedValue = false;
             }
             public override string ToString()
             {
@@ -217,9 +234,9 @@ namespace Utilities
                 var other = obj as Item;
                 if (other == null)
                     return false;
-                else if (SourcedValue != other.SourcedValue)
+                else if (m_sourcedValue != other.m_sourcedValue)
                     return false;
-                else if (SourcedValue)
+                else if (m_sourcedValue)
                     return object.Equals(Contents, other.Contents);
                 else
                     return object.Equals(DisplayString, other.DisplayString);
@@ -436,12 +453,12 @@ namespace Utilities
             m_control.Paint += (a, args) => Paint(args.Graphics);
         }
 
-        public override void Paint(Graphics graphics)
+        public override void Paint(Graphics g)
         {
-            m_textBox.Paint(graphics);
+            m_textBox.Paint(g);
 
             if (m_HasDropDownButton)
-                DrawButton(graphics, m_buttonArea());
+                DrawButton(g, m_buttonArea());
         }
 
         private void DrawButton(Graphics graphics, RectangleF buttonArea)
@@ -506,8 +523,8 @@ namespace Utilities
             var height = m_dropDown.Font.Height + 4;
             m_dropDown.Items.Clear();
             m_dropDown.Items.Add(new UpArrowItem(width, () => { m_dropDownWindow--; UpdateDropdown(); }, true));
-            var matches = Items.Where(i => i.DisplayString.ToUpper().Contains(m_textBox.Text.ToUpper()));
-            var sorted = matches.OrderBy(i => !i.DisplayString.ToUpper().StartsWith(m_textBox.Text.ToUpper())).ThenBy(i => i.DisplayString.ToUpper());
+            var matches = Items.Where(i => i.DisplayString.IndexOf(m_textBox.Text, StringComparison.CurrentCultureIgnoreCase) != -1);
+            var sorted = matches.OrderBy(i => !i.DisplayString.StartsWith(m_textBox.Text, StringComparison.CurrentCultureIgnoreCase)).ThenBy(i => i.DisplayString.ToUpper(CultureInfo.CurrentCulture));
             var strictSorted = sorted.ToList();
             if (m_dropDownWindow + WINDOW_SIZE > strictSorted.Count)
                 m_dropDownWindow = strictSorted.Count - WINDOW_SIZE;

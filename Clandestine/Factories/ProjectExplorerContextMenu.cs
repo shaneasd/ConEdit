@@ -14,10 +14,10 @@ namespace Clandestine
             get { return Enumerable.Empty<IDomainContextMenuItem>(); }
         }
 
-        public IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<ID<LocalizedText>, string> localize)
+        public IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<ID<LocalizedText>, string> localizer)
         {
-            yield return new ExportAsCsv(localize);
-            yield return new ExportAsSsv(localize);
+            yield return new ExportAsCsv(localizer);
+            yield return new ExportAsSsv(localizer);
         }
 
         public IEnumerable<ILocalizationContextMenuItem> LocalizationContextMenuItems

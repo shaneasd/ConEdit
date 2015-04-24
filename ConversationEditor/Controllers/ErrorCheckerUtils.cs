@@ -6,7 +6,7 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    public class ErrorCheckerUtils<T> : IErrorCheckerUtilities<T> where T : class, IConversationNode
+    internal class ErrorCheckerUtils<T> : IErrorCheckerUtilities<T> where T : class, IConversationNode
     {
         private IDataSource m_dataSource;
         private Func<IEditable, T> m_reverseLookup;

@@ -7,23 +7,21 @@ using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeG
 namespace ConversationEditor.Controllers
 {
     //This is a half complete class for a graph editor for projects
-    public class ProjectContextMenuItems : IMenuActionFactory<ConversationNode>
+    internal class ProjectContextMenuItems : IMenuActionFactory<ConversationNode>
     {
-        private IProject m_project;
-        public ProjectContextMenuItems(IProject project)
+        public ProjectContextMenuItems()
         {
-            m_project = project;
         }
 
-        public IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(GraphEditorControl<ConversationNode> control)
+        public IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control)
         {
-            yield return new MenuAction2<ConversationNode>("Reset Zoom", (n, p) => null, null, null, (p) => { control.GraphScale = 1; });
-            yield return new MenuAction2<ConversationNode>("Delete", (n, p) => () => { Delete(n); }, null, null, null);
-            yield return new MenuAction2<ConversationNode>("Remove Links", (n, p) => null, (i, p) => { control.CurrentFile.RemoveLinks(i); }, null, null);
+            yield return new MenuAction<ConversationNode>("Reset Zoom", (n, p) => null, null, null, (p) => { control.GraphScale = 1; });
+            //yield return new MenuAction2<ConversationNode>("Delete", (n, p) => () => { Delete(n); }, null, null, null);
+            //yield return new MenuAction2<ConversationNode>("Remove Links", (n, p) => null, (i, p) => { control.CurrentFile.RemoveLinks(i); }, null, null);
         }
 
-        private void Delete(ConversationNode node)
-        {
-        }
+        //private void Delete(ConversationNode node)
+        //{
+        //}
     }
 }

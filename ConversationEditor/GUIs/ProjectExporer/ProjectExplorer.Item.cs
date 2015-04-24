@@ -9,15 +9,16 @@ using Utilities;
 using System.Drawing.Drawing2D;
 using System.Reflection;
 using System.Diagnostics;
+using Utilities.UI;
 
 namespace ConversationEditor
 {
-    public partial class ProjectExplorer
+    partial class ProjectExplorer
     {
-        public abstract class Item
+        public abstract class Item : Disposable
         {
-            protected ColorScheme m_scheme;
             public const float HEIGHT = 20;
+            const int CARET_HEIGHT = 15;
             public static TextureBrush ReadonlyBackgroundBrush;
             static Item()
             {
@@ -42,6 +43,8 @@ namespace ConversationEditor
             private Func<RectangleF> m_area;
             Func<Matrix> ToControlTransform;
             protected readonly Func<FileSystemObject, string, bool> Rename;
+            protected int m_indentLevel = 0;
+            MyTextBox m_textBox = null;
 
             protected static void ChangeParent(Item item, ContainerItem parent)
             {
@@ -68,7 +71,7 @@ namespace ConversationEditor
                 }
             }
 
-            public Item(ConstructorParams parameters)
+            protected Item(ConstructorParams parameters)
             {
                 m_project = parameters.Project;
                 File = parameters.File;
@@ -168,7 +171,7 @@ namespace ConversationEditor
                     //g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
                     var textArea = CalculateTextArea(area, indent);
 
-                    renderer.DrawString(Text, SystemFonts.MessageBoxFont, scheme.Foreground, textArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE).Round());
+                    renderer.DrawString(Text, SystemFonts.MessageBoxFont, scheme.Foreground, textArea.Location.Plus(MyTextBox.BorderSize, MyTextBox.BorderSize).Round());
                     //TextRenderer.DrawText(g, Text, SystemFonts.MessageBoxFont, textArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE).Round(), ColorScheme.Foreground, Color.Transparent, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix);
 
                     //g.DrawString(Text, SystemFonts.MessageBoxFont, ColorScheme.ForegroundBrush, TextArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE));
@@ -205,18 +208,13 @@ namespace ConversationEditor
             public abstract IEnumerable<Item> AllItems(VisibilityFilter filter);
             public abstract IEnumerable<Item> Children(VisibilityFilter filter);
 
-            protected uint m_indentLevel = 0;
-            public void SetIndentLevel(uint indentLevel)
+            public void SetIndentLevel(int indentLevel)
             {
                 m_indentLevel = indentLevel;
             }
-            public uint IndentLevel { get { return m_indentLevel; } }
+            public int IndentLevel { get { return m_indentLevel; } }
 
             public abstract ContainerItem SpawnLocation { get; }
-
-            const int CARET_HEIGHT = 15;
-
-            MyTextBox m_textBox = null;
 
             public void StartRenaming(int cursorPos, Graphics g, Control control)
             {
@@ -277,6 +275,14 @@ namespace ConversationEditor
             }
 
             internal virtual string CanSelect() { return null; }
+
+            protected override void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+                    m_textBox.Dispose();
+                }
+            }
         }
     }
 }

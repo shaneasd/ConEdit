@@ -8,10 +8,11 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using Utilities;
+using Utilities.UI;
 
 namespace ConversationEditor
 {
-    public partial class PluginSelector : Form
+    internal partial class PluginSelector : Form
     {
         private CheckList<PluginAssembly> m_list;
         private PluginsConfig m_config;

@@ -8,15 +8,15 @@ using System.Drawing.Drawing2D;
 
 namespace ConversationEditor
 {
-    public partial class ProjectExplorer
+    partial class ProjectExplorer
     {
         public abstract class LeafItem : Item
         {
             private readonly ISaveableFileProvider m_item;
             public ISaveableFileProvider Item { get { return m_item; } }
             private Func<VisibilityFilter, bool> m_filter;
-            public LeafItem(Func<RectangleF> area, IProject project, ISaveableFile file, ContainerItem parent, Func<VisibilityFilter, bool> filter, ISaveableFileProvider item, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
-                : base(new ConstructorParams(area, project, new FileSystemObject(project, file), parent, toControlTransform, rename))
+            protected LeafItem(Func<RectangleF> area, IProject project, ISaveableFile file, ContainerItem parent, Func<VisibilityFilter, bool> filter, ISaveableFileProvider item, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
+                : base(new ConstructorParams(area, project, new FileSystemObject( file), parent, toControlTransform, rename))
             {
                 m_filter = filter;
                 m_item = item;
@@ -55,7 +55,7 @@ namespace ConversationEditor
 
             public new T Item { get { return m_item; } }
 
-            public LeafItem(Func<RectangleF> area, IProject project, T item, ContainerItem parent, Func<VisibilityFilter, bool> filter, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
+            protected LeafItem(Func<RectangleF> area, IProject project, T item, ContainerItem parent, Func<VisibilityFilter, bool> filter, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
                 : base(area, project, item.File, parent, filter, item, toControlTransform, rename)
             {
                 m_item = item;

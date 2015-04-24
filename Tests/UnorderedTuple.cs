@@ -16,12 +16,9 @@ namespace Tests
             var A = UnorderedTuple.Make(1, 0);
             var b = UnorderedTuple.Make(0, 2);
 
-            Assert.AreEqual(a, A);
-            Assert.AreEqual(A, a);
-            Assert.AreNotEqual(a, b);
-            Assert.AreNotEqual(b, a);
-            Assert.AreNotEqual(A, b);
-            Assert.AreNotEqual(b, A);
+            Assert.That(a.Equals(A));
+            Assert.That(A.Equals(a));
+            Assert.That(!a.Equals(b));
         }
     }
 }

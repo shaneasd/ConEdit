@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Conversation;
+using System.Collections.ObjectModel;
 
 namespace ConversationEditor
 {
-    class NodeRendererCustomization : IEditable
+    internal class NodeRendererCustomization : IEditable
     {
         //public static Guid DefaultRenderer(ID<NodeTypeTemp> nodeType)
         //{
@@ -39,12 +40,12 @@ namespace ConversationEditor
             get { return m_parameters; }
         }
 
-        public ID<NodeTemp> NodeID
+        public ID<NodeTemp> NodeId
         {
             get { throw new NotImplementedException(); }
         }
 
-        public ID<NodeTypeTemp> NodeTypeID
+        public ID<NodeTypeTemp> NodeTypeId
         {
             get { throw new NotImplementedException(); }
         }
@@ -54,7 +55,7 @@ namespace ConversationEditor
             get { return "Customize node renderers"; }
         }
 
-        public List<NodeData.ConfigData> Config
+        public ReadOnlyCollection<NodeData.ConfigData> Config
         {
             get { throw new NotImplementedException(); }
         }

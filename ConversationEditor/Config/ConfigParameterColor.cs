@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Xml.Linq;
+using System.Globalization;
 
 namespace ConversationEditor
 {
-    public class ConfigParameterColor : ConfigParameter<Color>
+    internal class ConfigParameterColor : ConfigParameter<Color>
     {
         string m_name;
         public ConfigParameterColor(string name)
@@ -23,13 +24,13 @@ namespace ConversationEditor
             {
                 var b = a.Attribute("value");
                 if (b != null)
-                    InnerValue = Color.FromArgb(int.Parse(b.Value, System.Globalization.NumberStyles.HexNumber));
+                    InnerValue = Color.FromArgb(int.Parse(b.Value, System.Globalization.NumberStyles.HexNumber, CultureInfo.InvariantCulture));
             }
         }
 
         public override void Write(XElement root)
         {
-            var @string = InnerValue.ToArgb().ToString("X");
+            var @string = InnerValue.ToArgb().ToString("X", CultureInfo.InvariantCulture);
             root.Add(new XElement(m_name, new XAttribute("value", @string)));
         }
     }

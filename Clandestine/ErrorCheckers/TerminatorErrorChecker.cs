@@ -49,7 +49,7 @@ namespace Clandestine
                 var connections = node.Connectors.SelectMany(c => c.Connections).Select(c => c.Parent);
                 foreach (var connection in connections)
                 {
-                    var x = editableMapping[connection.NodeID];
+                    var x = editableMapping[connection.NodeId];
                     if (!connected.Contains(x))
                     {
                         toProcess.Add(x);
@@ -68,7 +68,7 @@ namespace Clandestine
 
         private IEnumerable<ConversationError<T>> CheckEnd(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
         {
-            HashSet<T> connected = new HashSet<T>(nodes.Where(n => n.Type == SpecialNodes.TERMINATOR_GUID));
+            HashSet<T> connected = new HashSet<T>(nodes.Where(n => n.Type == SpecialNodes.Terminator));
 
             var editableMapping = nodes.ToDictionary(n => n.Id, n => n);
 
@@ -79,7 +79,7 @@ namespace Clandestine
                 var connections = node.Connectors.SelectMany(c => c.Connections).Select(c => c.Parent);
                 foreach (var connection in connections)
                 {
-                    var x = editableMapping[connection.NodeID];
+                    var x = editableMapping[connection.NodeId];
                     if (!connected.Contains(x))
                     {
                         toProcess.Add(x);
@@ -103,9 +103,9 @@ namespace Clandestine
             return start.Concat(end);
         }
 
-        public override string GetName()
+        public override string Name
         {
-            return "Node not in valid path";
+            get { return "Node not in valid path"; }
         }
     }
 }

@@ -9,14 +9,14 @@ using System.IO;
 
 namespace ConversationEditor
 {
-    public partial class ProjectExplorer
+    partial class ProjectExplorer
     {
         private class ProjectItem : ContainerItem
         {
             private HashSet<string> m_contents = new HashSet<string>();
 
             public ProjectItem(Func<RectangleF> area, IProject project, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
-                : base(new ConstructorParams(area, project, new FileSystemObject(project, project.File), null, toControlTransform, rename))
+                : base(new ConstructorParams(area, project, new FileSystemObject(project.File), null, toControlTransform, rename))
             {
             }
 

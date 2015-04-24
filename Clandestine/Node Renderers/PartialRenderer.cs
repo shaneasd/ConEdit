@@ -10,34 +10,35 @@ using Utilities;
 
 namespace Clandestine
 {
+    public class PartialRendererFactory : NodeUI.IFactory
+    {
+        private static readonly PartialRendererFactory m_instance = new PartialRendererFactory();
+        public static PartialRendererFactory Instance { get { return m_instance; } }
+
+        public bool WillRender(ID<NodeTypeTemp> nodeType)
+        {
+            return true;
+        }
+
+        public string DisplayName
+        {
+            get { return "Partial Renderer"; }
+        }
+
+        public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        {
+            return new PartialRenderer(n, p, localizer, datasource);
+        }
+
+        public Guid Guid
+        {
+            get { return Guid.Parse("a24b2f32-571d-4e3b-b091-2712d412ac5e"); }
+        }
+    }
+
     public class PartialRenderer : EditableUI
     {
         private Func<IDataSource> m_datasource;
-        new public class Factory : NodeUI.IFactory
-        {
-            public static Factory Instance = new Factory();
-
-            public bool WillRender(ID<NodeTypeTemp> nodeType)
-            {
-                return true;
-            }
-
-            public string DisplayName
-            {
-                get { return "Partial Renderer"; }
-            }
-
-            public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
-            {
-                return new PartialRenderer(n, p, localizer, datasource);
-            }
-
-            static Guid m_guid = Guid.Parse("a24b2f32-571d-4e3b-b091-2712d412ac5e");
-            public Guid Guid
-            {
-                get { return m_guid; }
-            }
-        }
 
         public PartialRenderer(ConversationNode<ConversationEditor.INodeGUI> node, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource) :
             base(node, p, localizer)
@@ -48,12 +49,12 @@ namespace Clandestine
         protected override bool ShouldRender(Parameter p)
         {
             var config = m_datasource().GetNode(Node.Type).GetParameterConfig(p.Id);
-            return !DontRenderConfig.TryGet(config);
+            return !DoNotRenderConfig.TryGet(config);
         }
         
         public override string DisplayName
         {
-            get { return Factory.Instance.DisplayName; }
+            get { return PartialRendererFactory.Instance.DisplayName; }
         }
     }
 }

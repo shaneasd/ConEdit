@@ -15,393 +15,393 @@ namespace MyNamespace.Types
     using System.Runtime.InteropServices;
     
     
-    [RuntimeConversation.TypeIDAttribute("2ac4cc58-7361-42b6-9937-25874c2a5319")]
+    [RuntimeConversation.TypeIdAttribute("2ac4cc58-7361-42b6-9937-25874c2a5319")]
     public enum GameMode
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("ee7875c8-6b8d-4794-bff4-667076270189")]
+        [RuntimeConversation.EnumValueIdAttribute("ee7875c8-6b8d-4794-bff4-667076270189")]
         Survivor,
         
-        [RuntimeConversation.EnumValueIDAttribute("51188fbf-4578-46f3-a174-554a2189a62e")]
+        [RuntimeConversation.EnumValueIdAttribute("51188fbf-4578-46f3-a174-554a2189a62e")]
         Ghost,
         
-        [RuntimeConversation.EnumValueIDAttribute("94f5ad40-a5a3-4be4-9a6f-5c5c0c18c060")]
+        [RuntimeConversation.EnumValueIdAttribute("94f5ad40-a5a3-4be4-9a6f-5c5c0c18c060")]
         Exfiltrate,
         
-        [RuntimeConversation.EnumValueIDAttribute("ab1fc4ed-4a35-4333-8929-93ec1b66405a")]
+        [RuntimeConversation.EnumValueIdAttribute("ab1fc4ed-4a35-4333-8929-93ec1b66405a")]
         Cleaner,
         
-        [RuntimeConversation.EnumValueIDAttribute("9f63e8a3-d524-4a84-9a9f-26066b0c28c4")]
+        [RuntimeConversation.EnumValueIdAttribute("9f63e8a3-d524-4a84-9a9f-26066b0c28c4")]
         SmashAndGrab,
         
-        [RuntimeConversation.EnumValueIDAttribute("fceb226e-ab52-469b-a8db-45d5d9f3e7b3")]
+        [RuntimeConversation.EnumValueIdAttribute("fceb226e-ab52-469b-a8db-45d5d9f3e7b3")]
         Story,
     }
     
-    [RuntimeConversation.TypeIDAttribute("712bbc30-1e41-4caf-8b65-0cdb36b34071")]
+    [RuntimeConversation.TypeIdAttribute("712bbc30-1e41-4caf-8b65-0cdb36b34071")]
     public enum DecimalFlag
     {
     }
     
-    [RuntimeConversation.TypeIDAttribute("29bee9ca-90a4-4e72-a2b9-a482baff749d")]
+    [RuntimeConversation.TypeIdAttribute("29bee9ca-90a4-4e72-a2b9-a482baff749d")]
     public enum AnimationExpression
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("3ee0b0dc-53c6-4095-8f06-082418d9402a")]
+        [RuntimeConversation.EnumValueIdAttribute("3ee0b0dc-53c6-4095-8f06-082418d9402a")]
         Sneer,
         
-        [RuntimeConversation.EnumValueIDAttribute("f66c65fd-e96a-49af-a20d-1f7d32a90aaa")]
+        [RuntimeConversation.EnumValueIdAttribute("f66c65fd-e96a-49af-a20d-1f7d32a90aaa")]
         Bite_Lip,
         
-        [RuntimeConversation.EnumValueIDAttribute("c571f27c-7f27-42a5-8486-1ec40f557a3f")]
+        [RuntimeConversation.EnumValueIdAttribute("c571f27c-7f27-42a5-8486-1ec40f557a3f")]
         Interest,
         
-        [RuntimeConversation.EnumValueIDAttribute("1321d98e-4453-4b0a-8590-32e2c16075ff")]
+        [RuntimeConversation.EnumValueIdAttribute("1321d98e-4453-4b0a-8590-32e2c16075ff")]
         Surprise,
         
-        [RuntimeConversation.EnumValueIDAttribute("0ce707b3-35f3-4d57-91fc-6729ae0739ff")]
+        [RuntimeConversation.EnumValueIdAttribute("0ce707b3-35f3-4d57-91fc-6729ae0739ff")]
         Laugh,
         
-        [RuntimeConversation.EnumValueIDAttribute("a02fac0b-b816-43e0-ab2c-2c1f5555160f")]
+        [RuntimeConversation.EnumValueIdAttribute("a02fac0b-b816-43e0-ab2c-2c1f5555160f")]
         Eyeroll,
     }
     
-    [RuntimeConversation.TypeIDAttribute("c1292dd1-92bd-43a7-b444-d6db4c10d491")]
+    [RuntimeConversation.TypeIdAttribute("c1292dd1-92bd-43a7-b444-d6db4c10d491")]
     public enum Character
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("63ee29d6-45d5-4a51-ab56-8a9f206342b0")]
+        [RuntimeConversation.EnumValueIdAttribute("63ee29d6-45d5-4a51-ab56-8a9f206342b0")]
         BlasiusKapustin,
         
-        [RuntimeConversation.EnumValueIDAttribute("68166c8e-ff5f-4c17-bff0-3ba1704a3dea")]
+        [RuntimeConversation.EnumValueIdAttribute("68166c8e-ff5f-4c17-bff0-3ba1704a3dea")]
         VeselinVatkov,
         
-        [RuntimeConversation.EnumValueIDAttribute("d3786941-15c0-4118-85ff-ed5861cc4f21")]
+        [RuntimeConversation.EnumValueIdAttribute("d3786941-15c0-4118-85ff-ed5861cc4f21")]
         MiloslavHoloubek,
         
-        [RuntimeConversation.EnumValueIDAttribute("8caabeae-f528-4bb6-b406-969ae9433dd8")]
+        [RuntimeConversation.EnumValueIdAttribute("8caabeae-f528-4bb6-b406-969ae9433dd8")]
         Grishin,
         
-        [RuntimeConversation.EnumValueIDAttribute("e9359663-ec41-477a-88db-fad270c92c0b")]
+        [RuntimeConversation.EnumValueIdAttribute("e9359663-ec41-477a-88db-fad270c92c0b")]
         RichardBaxter,
         
-        [RuntimeConversation.EnumValueIDAttribute("adaf781d-5026-4ab4-85f1-3466e5c93ad7")]
+        [RuntimeConversation.EnumValueIdAttribute("adaf781d-5026-4ab4-85f1-3466e5c93ad7")]
         WenZhi,
         
-        [RuntimeConversation.EnumValueIDAttribute("f5e791bb-755e-456f-bf12-d36972882a9b")]
+        [RuntimeConversation.EnumValueIdAttribute("f5e791bb-755e-456f-bf12-d36972882a9b")]
         SpencerCoates,
         
-        [RuntimeConversation.EnumValueIDAttribute("91bc3b20-1a36-46bd-824b-c191c85fd851")]
+        [RuntimeConversation.EnumValueIdAttribute("91bc3b20-1a36-46bd-824b-c191c85fd851")]
         EmmanuelAndreyev_,
         
-        [RuntimeConversation.EnumValueIDAttribute("fb2b1a8b-19c6-4d4e-9299-0cf07ab10963")]
+        [RuntimeConversation.EnumValueIdAttribute("fb2b1a8b-19c6-4d4e-9299-0cf07ab10963")]
         SecurityPhone,
         
-        [RuntimeConversation.EnumValueIDAttribute("b9365342-f571-49b5-baec-2ea5b16d3648")]
+        [RuntimeConversation.EnumValueIdAttribute("b9365342-f571-49b5-baec-2ea5b16d3648")]
         LukasBecker,
         
-        [RuntimeConversation.EnumValueIDAttribute("45b33905-c0ea-4111-bf1e-69fc4c7dfb08")]
+        [RuntimeConversation.EnumValueIdAttribute("45b33905-c0ea-4111-bf1e-69fc4c7dfb08")]
         DorofeiKotov,
         
-        [RuntimeConversation.EnumValueIDAttribute("8179b575-cd03-47c6-9078-1608a7c8fa7d")]
+        [RuntimeConversation.EnumValueIdAttribute("8179b575-cd03-47c6-9078-1608a7c8fa7d")]
         MuratVoronov,
         
-        [RuntimeConversation.EnumValueIDAttribute("b03359d0-f8b9-4441-b62f-fb05b822bdb5")]
+        [RuntimeConversation.EnumValueIdAttribute("b03359d0-f8b9-4441-b62f-fb05b822bdb5")]
         DamianAnisimov,
         
-        [RuntimeConversation.EnumValueIDAttribute("ba1c5931-c3c5-4989-8f89-b163922423cc")]
+        [RuntimeConversation.EnumValueIdAttribute("ba1c5931-c3c5-4989-8f89-b163922423cc")]
         CelinaBorkowska,
         
-        [RuntimeConversation.EnumValueIDAttribute("94754888-e338-4acc-8ee1-4ddfc6ef0869")]
+        [RuntimeConversation.EnumValueIdAttribute("94754888-e338-4acc-8ee1-4ddfc6ef0869")]
         PhilemonPirogov,
         
-        [RuntimeConversation.EnumValueIDAttribute("ebf49e6b-072a-41b9-a3ae-78e39f7b6c56")]
+        [RuntimeConversation.EnumValueIdAttribute("ebf49e6b-072a-41b9-a3ae-78e39f7b6c56")]
         RajmundNowak,
         
-        [RuntimeConversation.EnumValueIDAttribute("0261c6dd-5ede-46bc-b4fb-c7f90100c01b")]
+        [RuntimeConversation.EnumValueIdAttribute("0261c6dd-5ede-46bc-b4fb-c7f90100c01b")]
         IsaacDemidov,
         
-        [RuntimeConversation.EnumValueIDAttribute("d0a75648-302f-4c9a-b170-41c3fda31400")]
+        [RuntimeConversation.EnumValueIdAttribute("d0a75648-302f-4c9a-b170-41c3fda31400")]
         StefciaWojciechowska,
         
-        [RuntimeConversation.EnumValueIDAttribute("b9733cb6-d3a6-4807-884a-36a594747602")]
+        [RuntimeConversation.EnumValueIdAttribute("b9733cb6-d3a6-4807-884a-36a594747602")]
         ApolinaryCzarnecki,
         
-        [RuntimeConversation.EnumValueIDAttribute("2b0d603f-31e5-420c-8f80-a00b5df09aa2")]
+        [RuntimeConversation.EnumValueIdAttribute("2b0d603f-31e5-420c-8f80-a00b5df09aa2")]
         SerafinNowicki,
         
-        [RuntimeConversation.EnumValueIDAttribute("6fc5679e-f4e0-4b96-855e-7689fb3309ea")]
+        [RuntimeConversation.EnumValueIdAttribute("6fc5679e-f4e0-4b96-855e-7689fb3309ea")]
         JerzyKwiatkowski,
         
-        [RuntimeConversation.EnumValueIDAttribute("20e28b72-4d98-4243-bc41-c96c9282aede")]
+        [RuntimeConversation.EnumValueIdAttribute("20e28b72-4d98-4243-bc41-c96c9282aede")]
         ArchiveGuard,
         
-        [RuntimeConversation.EnumValueIDAttribute("3c5711cc-1d77-479d-a690-342ee3c50eb8")]
+        [RuntimeConversation.EnumValueIdAttribute("3c5711cc-1d77-479d-a690-342ee3c50eb8")]
         SecurityGuard,
         
-        [RuntimeConversation.EnumValueIDAttribute("d2f28e41-b3c0-4dcc-a2b8-16854f5785fa")]
+        [RuntimeConversation.EnumValueIdAttribute("d2f28e41-b3c0-4dcc-a2b8-16854f5785fa")]
         ElizabethAlix,
         
-        [RuntimeConversation.EnumValueIDAttribute("2b41f85f-108c-4e06-baf9-26eb7b308b7f")]
+        [RuntimeConversation.EnumValueIdAttribute("2b41f85f-108c-4e06-baf9-26eb7b308b7f")]
         Reinhardt,
         
-        [RuntimeConversation.EnumValueIDAttribute("9e73e6ec-2280-4fd6-9e67-dc755c339681")]
+        [RuntimeConversation.EnumValueIdAttribute("9e73e6ec-2280-4fd6-9e67-dc755c339681")]
         Daniel,
         
-        [RuntimeConversation.EnumValueIDAttribute("daa7eb14-970e-4c6c-82d9-ec7f0b64c5a6")]
+        [RuntimeConversation.EnumValueIdAttribute("daa7eb14-970e-4c6c-82d9-ec7f0b64c5a6")]
         Radko,
         
-        [RuntimeConversation.EnumValueIDAttribute("346403bf-4335-402e-886e-6497a00cfa15")]
+        [RuntimeConversation.EnumValueIdAttribute("346403bf-4335-402e-886e-6497a00cfa15")]
         Sarah,
         
-        [RuntimeConversation.EnumValueIDAttribute("824cc286-8d34-4c0b-93bc-0c466b128da5")]
+        [RuntimeConversation.EnumValueIdAttribute("824cc286-8d34-4c0b-93bc-0c466b128da5")]
         Josiah,
         
-        [RuntimeConversation.EnumValueIDAttribute("e15c0530-d6b3-4f75-9b8a-72a018b1e868")]
+        [RuntimeConversation.EnumValueIdAttribute("e15c0530-d6b3-4f75-9b8a-72a018b1e868")]
         PoliceRadio,
         
-        [RuntimeConversation.EnumValueIDAttribute("846d1c8c-93dd-4837-9ecf-79f54d88b3b7")]
+        [RuntimeConversation.EnumValueIdAttribute("846d1c8c-93dd-4837-9ecf-79f54d88b3b7")]
         PoliceDanishStreet,
         
-        [RuntimeConversation.EnumValueIDAttribute("b3113a30-4961-4d77-b437-cb8e38d2d9cf")]
+        [RuntimeConversation.EnumValueIdAttribute("b3113a30-4961-4d77-b437-cb8e38d2d9cf")]
         Player,
         
-        [RuntimeConversation.EnumValueIDAttribute("c7ed3153-b5ee-48c1-a448-db1c1bad18f2")]
+        [RuntimeConversation.EnumValueIdAttribute("c7ed3153-b5ee-48c1-a448-db1c1bad18f2")]
         Martin,
         
-        [RuntimeConversation.EnumValueIDAttribute("28ece7dc-5d62-42e1-88e3-7f2c34bea288")]
+        [RuntimeConversation.EnumValueIdAttribute("28ece7dc-5d62-42e1-88e3-7f2c34bea288")]
         Katya,
         
-        [RuntimeConversation.EnumValueIDAttribute("3b8115fa-c4ef-4a60-b270-f0e761eaed95")]
+        [RuntimeConversation.EnumValueIdAttribute("3b8115fa-c4ef-4a60-b270-f0e761eaed95")]
         PoliceDanish01,
         
-        [RuntimeConversation.EnumValueIDAttribute("476c5753-082a-4ddf-9fe4-94ccf98764ca")]
+        [RuntimeConversation.EnumValueIdAttribute("476c5753-082a-4ddf-9fe4-94ccf98764ca")]
         PoliceDanish02,
         
-        [RuntimeConversation.EnumValueIDAttribute("1866c7d0-f794-4fc7-8251-6bbd267d311f")]
+        [RuntimeConversation.EnumValueIdAttribute("1866c7d0-f794-4fc7-8251-6bbd267d311f")]
         PoliceDanish03,
         
-        [RuntimeConversation.EnumValueIDAttribute("29d26bc7-e61d-4d4d-bcfb-46c19c25c8fe")]
+        [RuntimeConversation.EnumValueIdAttribute("29d26bc7-e61d-4d4d-bcfb-46c19c25c8fe")]
         PoliceDanish04,
         
-        [RuntimeConversation.EnumValueIDAttribute("e2ff92ff-2874-4346-8d50-e90677649410")]
+        [RuntimeConversation.EnumValueIdAttribute("e2ff92ff-2874-4346-8d50-e90677649410")]
         PoliceDanish05,
         
-        [RuntimeConversation.EnumValueIDAttribute("b58726b4-0b61-4859-b8c9-beed76e3b1d8")]
+        [RuntimeConversation.EnumValueIdAttribute("b58726b4-0b61-4859-b8c9-beed76e3b1d8")]
         PoliceDanish06,
         
-        [RuntimeConversation.EnumValueIDAttribute("b9f32455-7de5-45f5-a5d0-4a7e96965446")]
+        [RuntimeConversation.EnumValueIdAttribute("b9f32455-7de5-45f5-a5d0-4a7e96965446")]
         PoliceDanishA,
         
-        [RuntimeConversation.EnumValueIDAttribute("5e7b4ad1-acc3-4f3b-89b9-ee172cc5090d")]
+        [RuntimeConversation.EnumValueIdAttribute("5e7b4ad1-acc3-4f3b-89b9-ee172cc5090d")]
         PoliceDanishB,
         
-        [RuntimeConversation.EnumValueIDAttribute("42d950af-2f59-49d6-8a46-16a7bda6f94c")]
+        [RuntimeConversation.EnumValueIdAttribute("42d950af-2f59-49d6-8a46-16a7bda6f94c")]
         PoliceDanish07,
         
-        [RuntimeConversation.EnumValueIDAttribute("fea2c3c9-dfb4-405a-b389-c4a2ea56c539")]
+        [RuntimeConversation.EnumValueIdAttribute("fea2c3c9-dfb4-405a-b389-c4a2ea56c539")]
         PoliceDanish08,
         
-        [RuntimeConversation.EnumValueIDAttribute("11f79894-afdb-4075-89ab-13fb1ee9798c")]
+        [RuntimeConversation.EnumValueIdAttribute("11f79894-afdb-4075-89ab-13fb1ee9798c")]
         PoliceDanish09,
         
-        [RuntimeConversation.EnumValueIDAttribute("15788380-1323-4019-b95d-4e47aa75b7c7")]
+        [RuntimeConversation.EnumValueIdAttribute("15788380-1323-4019-b95d-4e47aa75b7c7")]
         PoliceDanish10,
     }
     
-    [RuntimeConversation.TypeIDAttribute("66ad4085-be79-4b8b-a0a6-16bbb0922e35")]
+    [RuntimeConversation.TypeIdAttribute("66ad4085-be79-4b8b-a0a6-16bbb0922e35")]
     public enum AnimationGesture
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("c5ddc2fc-b297-4ee6-8f1d-0384667f302e")]
+        [RuntimeConversation.EnumValueIdAttribute("c5ddc2fc-b297-4ee6-8f1d-0384667f302e")]
         Knockout,
         
-        [RuntimeConversation.EnumValueIDAttribute("94cc9a34-a514-481c-981c-26c91506d2bd")]
+        [RuntimeConversation.EnumValueIdAttribute("94cc9a34-a514-481c-981c-26c91506d2bd")]
         Woah,
         
-        [RuntimeConversation.EnumValueIDAttribute("66d1e3c7-4a82-4d63-8097-8678bb8e3555")]
+        [RuntimeConversation.EnumValueIdAttribute("66d1e3c7-4a82-4d63-8097-8678bb8e3555")]
         Unsure,
         
-        [RuntimeConversation.EnumValueIDAttribute("cb40eaf5-4971-4a89-ac15-1ebee9013854")]
+        [RuntimeConversation.EnumValueIdAttribute("cb40eaf5-4971-4a89-ac15-1ebee9013854")]
         Head_Nod,
         
-        [RuntimeConversation.EnumValueIDAttribute("1b47a478-0268-4f9f-8351-f8d73730d908")]
+        [RuntimeConversation.EnumValueIdAttribute("1b47a478-0268-4f9f-8351-f8d73730d908")]
         Head_Shake,
         
-        [RuntimeConversation.EnumValueIDAttribute("6b301d70-6d47-4788-a421-1de9bf8e8e57")]
+        [RuntimeConversation.EnumValueIdAttribute("6b301d70-6d47-4788-a421-1de9bf8e8e57")]
         Laugh,
         
-        [RuntimeConversation.EnumValueIDAttribute("9fae3573-620d-4a7c-bcec-c571f890b168")]
+        [RuntimeConversation.EnumValueIdAttribute("9fae3573-620d-4a7c-bcec-c571f890b168")]
         Shrug,
         
-        [RuntimeConversation.EnumValueIDAttribute("9a1b228d-a4ba-4652-9a1d-4f7c83180f0d")]
+        [RuntimeConversation.EnumValueIdAttribute("9a1b228d-a4ba-4652-9a1d-4f7c83180f0d")]
         Take,
         
-        [RuntimeConversation.EnumValueIDAttribute("8667456b-9cf9-47d8-a176-5a3325f7e834")]
+        [RuntimeConversation.EnumValueIdAttribute("8667456b-9cf9-47d8-a176-5a3325f7e834")]
         Give,
         
-        [RuntimeConversation.EnumValueIDAttribute("74bf3c46-2d5b-463f-95de-f3ffd2f66e6e")]
+        [RuntimeConversation.EnumValueIdAttribute("74bf3c46-2d5b-463f-95de-f3ffd2f66e6e")]
         Point,
     }
     
-    [RuntimeConversation.TypeIDAttribute("baecdea6-4173-46d8-844e-4f45b7498e09")]
+    [RuntimeConversation.TypeIdAttribute("baecdea6-4173-46d8-844e-4f45b7498e09")]
     public enum AnimationAttitude
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("6e83c269-93de-4605-b9eb-9f788c7dcf92")]
+        [RuntimeConversation.EnumValueIdAttribute("6e83c269-93de-4605-b9eb-9f788c7dcf92")]
         Phone,
         
-        [RuntimeConversation.EnumValueIDAttribute("aca46b9c-aa20-40b8-adcc-5d5007a6c482")]
+        [RuntimeConversation.EnumValueIdAttribute("aca46b9c-aa20-40b8-adcc-5d5007a6c482")]
         Surrender,
         
-        [RuntimeConversation.EnumValueIDAttribute("c0913d77-a506-48cd-b573-3f22bbf15cae")]
+        [RuntimeConversation.EnumValueIdAttribute("c0913d77-a506-48cd-b573-3f22bbf15cae")]
         Gunpoint,
         
-        [RuntimeConversation.EnumValueIDAttribute("5b789b51-af8c-4b15-900d-1e1b54eb85c5")]
+        [RuntimeConversation.EnumValueIdAttribute("5b789b51-af8c-4b15-900d-1e1b54eb85c5")]
         Interested,
         
-        [RuntimeConversation.EnumValueIDAttribute("7136834a-def9-4830-8baa-78610961064c")]
+        [RuntimeConversation.EnumValueIdAttribute("7136834a-def9-4830-8baa-78610961064c")]
         Radio,
         
-        [RuntimeConversation.EnumValueIDAttribute("418fd464-e4c6-48f8-ab3b-461a1e7d303b")]
+        [RuntimeConversation.EnumValueIdAttribute("418fd464-e4c6-48f8-ab3b-461a1e7d303b")]
         Neutral,
         
-        [RuntimeConversation.EnumValueIDAttribute("7f42aa4d-bd84-4089-b98a-a0326ac04282")]
+        [RuntimeConversation.EnumValueIdAttribute("7f42aa4d-bd84-4089-b98a-a0326ac04282")]
         Guarded,
         
-        [RuntimeConversation.EnumValueIDAttribute("3e5aa76c-debb-4937-95d8-5d3ac5905ff5")]
+        [RuntimeConversation.EnumValueIdAttribute("3e5aa76c-debb-4937-95d8-5d3ac5905ff5")]
         Aggressive,
     }
     
-    [RuntimeConversation.TypeIDAttribute("84611c39-a6ed-420a-a10b-9c339a2f2017")]
+    [RuntimeConversation.TypeIdAttribute("84611c39-a6ed-420a-a10b-9c339a2f2017")]
     public enum AnimationEmotion
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("4e22cda9-2155-4a12-b086-381cf1ddf5c4")]
+        [RuntimeConversation.EnumValueIdAttribute("4e22cda9-2155-4a12-b086-381cf1ddf5c4")]
         Scared,
         
-        [RuntimeConversation.EnumValueIDAttribute("74aa2051-de8a-486a-8d0e-d2d60c99a2d6")]
+        [RuntimeConversation.EnumValueIdAttribute("74aa2051-de8a-486a-8d0e-d2d60c99a2d6")]
         Pleased,
         
-        [RuntimeConversation.EnumValueIDAttribute("6449be72-9e59-4ae8-94ab-904f10c2a123")]
+        [RuntimeConversation.EnumValueIdAttribute("6449be72-9e59-4ae8-94ab-904f10c2a123")]
         Nervous,
         
-        [RuntimeConversation.EnumValueIDAttribute("882510f3-d572-4997-817d-8380eb4de902")]
+        [RuntimeConversation.EnumValueIdAttribute("882510f3-d572-4997-817d-8380eb4de902")]
         Contemplative,
         
-        [RuntimeConversation.EnumValueIDAttribute("be16963f-dfa0-47a4-9f8e-8555aeccf243")]
+        [RuntimeConversation.EnumValueIdAttribute("be16963f-dfa0-47a4-9f8e-8555aeccf243")]
         Annoyed,
         
-        [RuntimeConversation.EnumValueIDAttribute("f7c9d1b2-d968-43f4-85f4-6bc812699361")]
+        [RuntimeConversation.EnumValueIdAttribute("f7c9d1b2-d968-43f4-85f4-6bc812699361")]
         Angry,
         
-        [RuntimeConversation.EnumValueIDAttribute("20125ed8-90e9-4a9f-89e5-1b4b0abd7468")]
+        [RuntimeConversation.EnumValueIdAttribute("20125ed8-90e9-4a9f-89e5-1b4b0abd7468")]
         Sarcastic,
         
-        [RuntimeConversation.EnumValueIDAttribute("8bfd402f-0489-4262-80c1-2be9239716cc")]
+        [RuntimeConversation.EnumValueIdAttribute("8bfd402f-0489-4262-80c1-2be9239716cc")]
         Neutral,
     }
     
-    [RuntimeConversation.TypeIDAttribute("16ebf380-6464-4dc1-b957-3ff5e32535f7")]
+    [RuntimeConversation.TypeIdAttribute("16ebf380-6464-4dc1-b957-3ff5e32535f7")]
     public enum BooleanFlag
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("31c05575-54b7-484e-b413-654853ce8301")]
+        [RuntimeConversation.EnumValueIdAttribute("31c05575-54b7-484e-b413-654853ce8301")]
         WenZhi_Dead,
         
-        [RuntimeConversation.EnumValueIDAttribute("f90b679a-6bf9-4005-82b3-8f3250ffbdee")]
+        [RuntimeConversation.EnumValueIdAttribute("f90b679a-6bf9-4005-82b3-8f3250ffbdee")]
         Copenhagen_FinansministerietCamerasDown,
         
-        [RuntimeConversation.EnumValueIDAttribute("9ca68a50-96b8-4bd2-8ac0-30c1aa2ed6b5")]
+        [RuntimeConversation.EnumValueIdAttribute("9ca68a50-96b8-4bd2-8ac0-30c1aa2ed6b5")]
         SecurityRoomClear,
         
-        [RuntimeConversation.EnumValueIDAttribute("cadd864e-9298-4889-9916-91847f6a4c3b")]
+        [RuntimeConversation.EnumValueIdAttribute("cadd864e-9298-4889-9916-91847f6a4c3b")]
         RichardBaxter_Dead,
     }
     
-    [RuntimeConversation.TypeIDAttribute("51ef0223-3574-4c0b-a01c-182a07e00b21")]
+    [RuntimeConversation.TypeIdAttribute("51ef0223-3574-4c0b-a01c-182a07e00b21")]
     public enum IntegerFlag
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("e1447051-1368-4da8-81df-88203bf90771")]
+        [RuntimeConversation.EnumValueIdAttribute("e1447051-1368-4da8-81df-88203bf90771")]
         PlayerFootprint,
         
-        [RuntimeConversation.EnumValueIDAttribute("e6a6caa5-58c1-4da5-8d31-e47f843a9f3e")]
+        [RuntimeConversation.EnumValueIdAttribute("e6a6caa5-58c1-4da5-8d31-e47f843a9f3e")]
         CharacterRandomiser,
         
-        [RuntimeConversation.EnumValueIDAttribute("43e4a01d-0997-4bff-9120-fd0ff54f03b7")]
+        [RuntimeConversation.EnumValueIdAttribute("43e4a01d-0997-4bff-9120-fd0ff54f03b7")]
         PressurePointRandomiser,
         
-        [RuntimeConversation.EnumValueIDAttribute("ca066421-bfa3-40bc-8e0a-03c819efca8d")]
+        [RuntimeConversation.EnumValueIdAttribute("ca066421-bfa3-40bc-8e0a-03c819efca8d")]
         PlayerKills,
     }
     
-    [RuntimeConversation.TypeIDAttribute("ebfa534c-c036-407c-9c5f-4e63698dde87")]
+    [RuntimeConversation.TypeIdAttribute("ebfa534c-c036-407c-9c5f-4e63698dde87")]
     public enum Item
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("83c6b4e7-f53f-4d05-9139-3a9842190880")]
+        [RuntimeConversation.EnumValueIdAttribute("83c6b4e7-f53f-4d05-9139-3a9842190880")]
         WeaponMK23,
         
-        [RuntimeConversation.EnumValueIDAttribute("04eb8b5e-5487-4f2a-8281-c31e2eae427a")]
+        [RuntimeConversation.EnumValueIdAttribute("04eb8b5e-5487-4f2a-8281-c31e2eae427a")]
         AmmoMK23,
         
-        [RuntimeConversation.EnumValueIDAttribute("7cf0daa3-1094-4442-ae87-91b7a617d358")]
+        [RuntimeConversation.EnumValueIdAttribute("7cf0daa3-1094-4442-ae87-91b7a617d358")]
         AmmoPPK,
         
-        [RuntimeConversation.EnumValueIDAttribute("d33e4ae4-133c-4318-9af9-ba96a7b6ece1")]
+        [RuntimeConversation.EnumValueIdAttribute("d33e4ae4-133c-4318-9af9-ba96a7b6ece1")]
         WeaponPPK,
     }
     
-    [RuntimeConversation.TypeIDAttribute("030bf942-ca1b-4af6-9ede-3e084fb99177")]
+    [RuntimeConversation.TypeIdAttribute("030bf942-ca1b-4af6-9ede-3e084fb99177")]
     public enum CameraFraming
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("bb95b161-3163-46bd-a953-55501502e381")]
+        [RuntimeConversation.EnumValueIdAttribute("bb95b161-3163-46bd-a953-55501502e381")]
         Random,
         
-        [RuntimeConversation.EnumValueIDAttribute("8ae42984-3ec0-496d-8ba9-d51ee739cb5a")]
+        [RuntimeConversation.EnumValueIdAttribute("8ae42984-3ec0-496d-8ba9-d51ee739cb5a")]
         Close_Up_45,
         
-        [RuntimeConversation.EnumValueIDAttribute("263e2151-b778-4070-a9b1-276c990ef337")]
+        [RuntimeConversation.EnumValueIdAttribute("263e2151-b778-4070-a9b1-276c990ef337")]
         OTS_Close,
         
-        [RuntimeConversation.EnumValueIDAttribute("78b3c26b-b42b-4376-9e5f-94fcb30bbbcc")]
+        [RuntimeConversation.EnumValueIdAttribute("78b3c26b-b42b-4376-9e5f-94fcb30bbbcc")]
         OTS_Medium,
     }
     
-    [RuntimeConversation.TypeIDAttribute("9be467f6-d921-4629-8785-772549c76091")]
+    [RuntimeConversation.TypeIdAttribute("9be467f6-d921-4629-8785-772549c76091")]
     public enum CameraAnimation
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("02ad4376-d1a5-419e-9e7f-a2ae8582ecfd")]
+        [RuntimeConversation.EnumValueIdAttribute("02ad4376-d1a5-419e-9e7f-a2ae8582ecfd")]
         None,
         
-        [RuntimeConversation.EnumValueIDAttribute("cb285c27-bdf4-4c07-ab26-a9e60475e40f")]
+        [RuntimeConversation.EnumValueIdAttribute("cb285c27-bdf4-4c07-ab26-a9e60475e40f")]
         Rotate_In,
         
-        [RuntimeConversation.EnumValueIDAttribute("4c2ecd43-40e3-4eb8-8f00-5aebb8b88839")]
+        [RuntimeConversation.EnumValueIdAttribute("4c2ecd43-40e3-4eb8-8f00-5aebb8b88839")]
         Rotate_Out,
         
-        [RuntimeConversation.EnumValueIDAttribute("7d6add52-f441-4ca4-8013-e762175d9493")]
+        [RuntimeConversation.EnumValueIdAttribute("7d6add52-f441-4ca4-8013-e762175d9493")]
         Track_In,
         
-        [RuntimeConversation.EnumValueIDAttribute("e0f7e418-e303-4a79-923b-f3e5d597f6d3")]
+        [RuntimeConversation.EnumValueIdAttribute("e0f7e418-e303-4a79-923b-f3e5d597f6d3")]
         Track_Out,
     }
     
-    [RuntimeConversation.TypeIDAttribute("58dfb28e-86c7-4627-9494-8c42c0bec4fb")]
+    [RuntimeConversation.TypeIdAttribute("58dfb28e-86c7-4627-9494-8c42c0bec4fb")]
     public enum CameraTarget
     {
         
-        [RuntimeConversation.EnumValueIDAttribute("42b4894d-a05c-46a6-883d-9a6aea44fca6")]
+        [RuntimeConversation.EnumValueIdAttribute("42b4894d-a05c-46a6-883d-9a6aea44fca6")]
         Speaker,
         
-        [RuntimeConversation.EnumValueIDAttribute("7d959a7c-4f39-4f1f-9c68-eab88166bf20")]
+        [RuntimeConversation.EnumValueIdAttribute("7d959a7c-4f39-4f1f-9c68-eab88166bf20")]
         Listener,
     }
     
-    [RuntimeConversation.TypeIDAttribute("a5d909aa-e7f5-40dc-8282-3f8148ada279")]
+    [RuntimeConversation.TypeIdAttribute("a5d909aa-e7f5-40dc-8282-3f8148ada279")]
     public struct NonNegativeInteger
     {
         
@@ -453,7 +453,7 @@ public static implicit operator System.Int32(NonNegativeInteger value) { return 
         }
     }
     
-    [RuntimeConversation.TypeIDAttribute("14070908-6bba-49f3-90fe-c2c884b1ad09")]
+    [RuntimeConversation.TypeIdAttribute("14070908-6bba-49f3-90fe-c2c884b1ad09")]
     public struct Time
     {
         
@@ -505,7 +505,7 @@ public static implicit operator System.Decimal(Time value) { return value.m_valu
         }
     }
     
-    [RuntimeConversation.TypeIDAttribute("b339e8a9-19ab-44ff-8816-06776f62fc96")]
+    [RuntimeConversation.TypeIdAttribute("b339e8a9-19ab-44ff-8816-06776f62fc96")]
     public struct Angle
     {
         
@@ -557,7 +557,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
         }
     }
     
-    [RuntimeConversation.TypeIDAttribute("53920eee-6266-4085-9b4f-67d35e202468")]
+    [RuntimeConversation.TypeIdAttribute("53920eee-6266-4085-9b4f-67d35e202468")]
     public struct Percentage
     {
         
@@ -609,7 +609,7 @@ public static implicit operator System.Decimal(Percentage value) { return value.
         }
     }
     
-    [RuntimeConversation.TypeIDAttribute("40f345e0-beef-43fc-a59a-a96c8c289139")]
+    [RuntimeConversation.TypeIdAttribute("40f345e0-beef-43fc-a59a-a96c8c289139")]
     public enum LocalVars
     {
     }
@@ -1287,7 +1287,7 @@ namespace MyNamespace.Nodes.Connectors
         }
     }
     
-    [RuntimeConversation.ConnectorTypeIDAttribute("5c80f036-9bf8-43b7-afd5-0c4d619917c1")]
+    [RuntimeConversation.ConnectorTypeIdAttribute("5c80f036-9bf8-43b7-afd5-0c4d619917c1")]
     public class Controller : Connector
     {
         
@@ -1297,7 +1297,7 @@ namespace MyNamespace.Nodes.Connectors
         }
     }
     
-    [RuntimeConversation.ConnectorTypeIDAttribute("430e6b72-0caa-476e-8da6-8bd1f127127a")]
+    [RuntimeConversation.ConnectorTypeIdAttribute("430e6b72-0caa-476e-8da6-8bd1f127127a")]
     public class Cinematic : Connector
     {
         
@@ -1307,7 +1307,7 @@ namespace MyNamespace.Nodes.Connectors
         }
     }
     
-    [RuntimeConversation.ConnectorTypeIDAttribute("65f33e2b-fee8-4123-8853-1fec780471ea")]
+    [RuntimeConversation.ConnectorTypeIdAttribute("65f33e2b-fee8-4123-8853-1fec780471ea")]
     public class Waiting : Connector
     {
         
@@ -1317,7 +1317,7 @@ namespace MyNamespace.Nodes.Connectors
         }
     }
     
-    [RuntimeConversation.ConnectorTypeIDAttribute("73e5cff2-7d6c-45e8-8f0e-08bcb780acc9")]
+    [RuntimeConversation.ConnectorTypeIdAttribute("73e5cff2-7d6c-45e8-8f0e-08bcb780acc9")]
     public class Input : Connector
     {
         
@@ -1327,11 +1327,11 @@ namespace MyNamespace.Nodes.Connectors
         }
     }
     
-    [RuntimeConversation.ConnectorTypeIDAttribute("a800357f-5013-44c1-8637-c8a60cff240b")]
+    [RuntimeConversation.ConnectorTypeIdAttribute("a800357f-5013-44c1-8637-c8a60cff240b")]
     public class Output : Connector
     {
         
-        [RuntimeConversation.ParameterIDAttribute("ec0c0b5c-57d9-484b-8946-c8dcf3e09b38")]
+        [RuntimeConversation.ParameterIdAttribute("ec0c0b5c-57d9-484b-8946-c8dcf3e09b38")]
         public String Name;
         
         public Output(Node parent, Conversation.ID<Conversation.TConnector> id, String Name) : 
@@ -1371,7 +1371,7 @@ namespace MyNamespace.Nodes
         public abstract Connector Connector(Conversation.ID<Conversation.TConnector> connector);
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("52ac74bd-fbe8-4783-bc91-8d6533b99b2b")]
+    [RuntimeConversation.NodeTypeIdAttribute("52ac74bd-fbe8-4783-bc91-8d6533b99b2b")]
     public class Prompt_Option : Node
     {
         
@@ -1381,10 +1381,10 @@ namespace MyNamespace.Nodes
         
         public MyNamespace.Nodes.Connectors.Input id4b3001666ef24de6b17327f7694f79c5;
         
-        [RuntimeConversation.ParameterIDAttribute("619f732b-f466-4d8b-8475-690b3def59c3")]
+        [RuntimeConversation.ParameterIdAttribute("619f732b-f466-4d8b-8475-690b3def59c3")]
         public Boolean AI_selection;
         
-        [RuntimeConversation.ParameterIDAttribute("8bee0e7a-0a1a-4ea6-9cf4-907cb57a902b")]
+        [RuntimeConversation.ParameterIdAttribute("8bee0e7a-0a1a-4ea6-9cf4-907cb57a902b")]
         public RuntimeConversation.LocalizedString Command;
         
         public Prompt_Option(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1432,7 +1432,7 @@ namespace MyNamespace.Nodes
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("86524441-8da7-4e19-9ff3-c8df67e09f8f")]
+    [RuntimeConversation.NodeTypeIdAttribute("86524441-8da7-4e19-9ff3-c8df67e09f8f")]
     public class Option : Node
     {
         
@@ -1442,19 +1442,19 @@ namespace MyNamespace.Nodes
         
         public MyNamespace.Nodes.Connectors.Input idb579f35fa56a455ca971884f555d0a29;
         
-        [RuntimeConversation.ParameterIDAttribute("2c398f2c-4b17-4ec4-b8d1-a5c68b6c4e94")]
+        [RuntimeConversation.ParameterIdAttribute("2c398f2c-4b17-4ec4-b8d1-a5c68b6c4e94")]
         public Int32 Priority;
         
-        [RuntimeConversation.ParameterIDAttribute("b9950a3d-14d9-46d0-94dd-4217ed1573ad")]
+        [RuntimeConversation.ParameterIdAttribute("b9950a3d-14d9-46d0-94dd-4217ed1573ad")]
         public RuntimeConversation.LocalizedString Subtitles;
         
-        [RuntimeConversation.ParameterIDAttribute("b85bd615-4aba-43c1-a6c4-4c116a686955")]
+        [RuntimeConversation.ParameterIdAttribute("b85bd615-4aba-43c1-a6c4-4c116a686955")]
         public Boolean Only_once;
         
-        [RuntimeConversation.ParameterIDAttribute("e8b15360-c500-434e-856c-bd1090c1b4a2")]
+        [RuntimeConversation.ParameterIdAttribute("e8b15360-c500-434e-856c-bd1090c1b4a2")]
         public String Script;
         
-        [RuntimeConversation.ParameterIDAttribute("a4f77304-57b1-4e25-849a-3e199f0f1795")]
+        [RuntimeConversation.ParameterIdAttribute("a4f77304-57b1-4e25-849a-3e199f0f1795")]
         public String Direction;
         
         public Option(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1505,7 +1505,7 @@ namespace MyNamespace.Nodes
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("196dc521-8336-4714-93b7-77ac09b3abd7")]
+    [RuntimeConversation.NodeTypeIdAttribute("196dc521-8336-4714-93b7-77ac09b3abd7")]
     public class NPC_Speech : Node
     {
         
@@ -1515,19 +1515,19 @@ namespace MyNamespace.Nodes
         
         public MyNamespace.Nodes.Connectors.Input id2784a61493054bf6a9962d8a7e097866;
         
-        [RuntimeConversation.ParameterIDAttribute("98401421-e713-4014-8489-b8675c566179")]
+        [RuntimeConversation.ParameterIdAttribute("98401421-e713-4014-8489-b8675c566179")]
         public String Direction;
         
-        [RuntimeConversation.ParameterIDAttribute("0154fe0e-5f53-4657-acae-b983ea9030a0")]
+        [RuntimeConversation.ParameterIdAttribute("0154fe0e-5f53-4657-acae-b983ea9030a0")]
         public String Script;
         
-        [RuntimeConversation.ParameterIDAttribute("8987655a-92fe-4eca-8c50-8769a7edcf04")]
+        [RuntimeConversation.ParameterIdAttribute("8987655a-92fe-4eca-8c50-8769a7edcf04")]
         public RuntimeConversation.LocalizedString Subtitles;
         
-        [RuntimeConversation.ParameterIDAttribute("af08c7f7-33e9-4429-9e1f-cd786a73041b")]
+        [RuntimeConversation.ParameterIdAttribute("af08c7f7-33e9-4429-9e1f-cd786a73041b")]
         public Character Speaker;
         
-        [RuntimeConversation.ParameterIDAttribute("507ed24d-3aa0-44e5-984c-22677f7ac8aa")]
+        [RuntimeConversation.ParameterIdAttribute("507ed24d-3aa0-44e5-984c-22677f7ac8aa")]
         public Character Listener;
         
         public NPC_Speech(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1578,7 +1578,7 @@ namespace MyNamespace.Nodes
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("da1dfd60-28e4-48f6-93e6-298f3a68b67c")]
+    [RuntimeConversation.NodeTypeIdAttribute("da1dfd60-28e4-48f6-93e6-298f3a68b67c")]
     public class Player_Speech : Node
     {
         
@@ -1588,16 +1588,16 @@ namespace MyNamespace.Nodes
         
         public MyNamespace.Nodes.Connectors.Input id675684c5ae5d49c992123b8f9057da47;
         
-        [RuntimeConversation.ParameterIDAttribute("98401421-e713-4014-8489-b8675c566179")]
+        [RuntimeConversation.ParameterIdAttribute("98401421-e713-4014-8489-b8675c566179")]
         public String Direction;
         
-        [RuntimeConversation.ParameterIDAttribute("0154fe0e-5f53-4657-acae-b983ea9030a0")]
+        [RuntimeConversation.ParameterIdAttribute("0154fe0e-5f53-4657-acae-b983ea9030a0")]
         public String Script;
         
-        [RuntimeConversation.ParameterIDAttribute("8987655a-92fe-4eca-8c50-8769a7edcf04")]
+        [RuntimeConversation.ParameterIdAttribute("8987655a-92fe-4eca-8c50-8769a7edcf04")]
         public RuntimeConversation.LocalizedString Subtitles;
         
-        [RuntimeConversation.ParameterIDAttribute("19577d79-42ca-46e9-a47b-640cdecfbd6c")]
+        [RuntimeConversation.ParameterIdAttribute("19577d79-42ca-46e9-a47b-640cdecfbd6c")]
         public Character Listener;
         
         public Player_Speech(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1647,7 +1647,7 @@ namespace MyNamespace.Nodes
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("836eeb03-2730-4830-b192-3fc9ce41503e")]
+    [RuntimeConversation.NodeTypeIdAttribute("836eeb03-2730-4830-b192-3fc9ce41503e")]
     public class Radio_Message : Node
     {
         
@@ -1657,16 +1657,16 @@ namespace MyNamespace.Nodes
         
         public MyNamespace.Nodes.Connectors.Input id066ce97d7d9742b6983a8f1a219cccf2;
         
-        [RuntimeConversation.ParameterIDAttribute("98401421-e713-4014-8489-b8675c566179")]
+        [RuntimeConversation.ParameterIdAttribute("98401421-e713-4014-8489-b8675c566179")]
         public String Direction;
         
-        [RuntimeConversation.ParameterIDAttribute("0154fe0e-5f53-4657-acae-b983ea9030a0")]
+        [RuntimeConversation.ParameterIdAttribute("0154fe0e-5f53-4657-acae-b983ea9030a0")]
         public String Script;
         
-        [RuntimeConversation.ParameterIDAttribute("8987655a-92fe-4eca-8c50-8769a7edcf04")]
+        [RuntimeConversation.ParameterIdAttribute("8987655a-92fe-4eca-8c50-8769a7edcf04")]
         public RuntimeConversation.LocalizedString Subtitles;
         
-        [RuntimeConversation.ParameterIDAttribute("af08c7f7-33e9-4429-9e1f-cd786a73041b")]
+        [RuntimeConversation.ParameterIdAttribute("af08c7f7-33e9-4429-9e1f-cd786a73041b")]
         public Character Speaker;
         
         public Radio_Message(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1716,13 +1716,13 @@ namespace MyNamespace.Nodes
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("9d485bf4-3e7a-4562-b4c2-33b7a881f702")]
+    [RuntimeConversation.NodeTypeIdAttribute("9d485bf4-3e7a-4562-b4c2-33b7a881f702")]
     public class Start_Radio_Message : Node
     {
         
         public MyNamespace.Nodes.Connectors.Output id892f56f2754f46bd9a7e0cc2f272877b;
         
-        [RuntimeConversation.ParameterIDAttribute("235ef592-3f96-4577-989f-9155b0b7c793")]
+        [RuntimeConversation.ParameterIdAttribute("235ef592-3f96-4577-989f-9155b0b7c793")]
         public String Tag;
         
         public Start_Radio_Message(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1759,7 +1759,7 @@ namespace MyNamespace.Nodes
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("656a48b2-324e-4484-a1b1-c3b91ad10c3e")]
+    [RuntimeConversation.NodeTypeIdAttribute("656a48b2-324e-4484-a1b1-c3b91ad10c3e")]
     public class Start : Node
     {
         
@@ -1798,7 +1798,7 @@ namespace MyNamespace.Nodes
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("b2626790-c010-43d8-b1fb-d2093fd9328c")]
+    [RuntimeConversation.NodeTypeIdAttribute("b2626790-c010-43d8-b1fb-d2093fd9328c")]
     public class Terminator : Node
     {
         
@@ -1835,13 +1835,13 @@ namespace MyNamespace.Nodes
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("53169cb6-eccd-4dc5-8be9-a2c2ae6286e4")]
+    [RuntimeConversation.NodeTypeIdAttribute("53169cb6-eccd-4dc5-8be9-a2c2ae6286e4")]
     public class Timing : Node
     {
         
         public MyNamespace.Nodes.Connectors.Controller id7f69909d1b4a4283b3ad123d6deddbc7;
         
-        [RuntimeConversation.ParameterIDAttribute("403de045-20ed-43e3-8dcf-0bcefbfedd96")]
+        [RuntimeConversation.ParameterIdAttribute("403de045-20ed-43e3-8dcf-0bcefbfedd96")]
         public Decimal Time_Modifier;
         
         public Timing(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -1885,7 +1885,7 @@ namespace MyNamespace.Nodes.AI_Barks
     using MyNamespace.Types;
     
     
-    [RuntimeConversation.NodeTypeIDAttribute("3a75e7ae-80ac-40a8-b14c-7c91ce1011f1")]
+    [RuntimeConversation.NodeTypeIdAttribute("3a75e7ae-80ac-40a8-b14c-7c91ce1011f1")]
     public class PC_AI_Takedown_Steampipe : Node
     {
         
@@ -1924,7 +1924,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("a9070db4-e4cb-4d06-99cb-536c19be5daf")]
+    [RuntimeConversation.NodeTypeIdAttribute("a9070db4-e4cb-4d06-99cb-536c19be5daf")]
     public class PC_AI_Takedown_Transformer : Node
     {
         
@@ -1963,7 +1963,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("2e389da5-0334-4a97-ba94-b1f68668b4ae")]
+    [RuntimeConversation.NodeTypeIdAttribute("2e389da5-0334-4a97-ba94-b1f68668b4ae")]
     public class PC_AI_Takedown_Nonlethal : Node
     {
         
@@ -2002,7 +2002,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("630b9f53-29bd-4680-82d0-0b3d63c4267f")]
+    [RuntimeConversation.NodeTypeIdAttribute("630b9f53-29bd-4680-82d0-0b3d63c4267f")]
     public class PC_AI_Takedown_Lethal_Post : Node
     {
         
@@ -2041,7 +2041,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("5d5e1ebd-cfb5-4023-b6fa-4baf46f75ee3")]
+    [RuntimeConversation.NodeTypeIdAttribute("5d5e1ebd-cfb5-4023-b6fa-4baf46f75ee3")]
     public class PC_AI_Takedown_Nonlethal_Post : Node
     {
         
@@ -2080,7 +2080,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("72ff1592-f78b-401f-b9d3-287342dbc336")]
+    [RuntimeConversation.NodeTypeIdAttribute("72ff1592-f78b-401f-b9d3-287342dbc336")]
     public class PC_AI_Takedown_Lethal : Node
     {
         
@@ -2119,7 +2119,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("84594d80-3ee7-4c3a-8f2f-26896cd364bf")]
+    [RuntimeConversation.NodeTypeIdAttribute("84594d80-3ee7-4c3a-8f2f-26896cd364bf")]
     public class AI_Surprised : Node
     {
         
@@ -2158,7 +2158,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("13b439cb-4e61-46cd-9f59-0de825899a22")]
+    [RuntimeConversation.NodeTypeIdAttribute("13b439cb-4e61-46cd-9f59-0de825899a22")]
     public class AI_Alarmed_Investigation : Node
     {
         
@@ -2197,7 +2197,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("6093a776-f2c6-464b-8e6f-6c1f454752db")]
+    [RuntimeConversation.NodeTypeIdAttribute("6093a776-f2c6-464b-8e6f-6c1f454752db")]
     public class AI_Bribed_Caught : Node
     {
         
@@ -2236,7 +2236,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("3f198013-c7c2-4f4f-b805-c6adcf23e55f")]
+    [RuntimeConversation.NodeTypeIdAttribute("3f198013-c7c2-4f4f-b805-c6adcf23e55f")]
     public class AI_Grenade_Throw : Node
     {
         
@@ -2275,7 +2275,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("d89cefcb-aab2-44dc-b3c7-581ca73250eb")]
+    [RuntimeConversation.NodeTypeIdAttribute("d89cefcb-aab2-44dc-b3c7-581ca73250eb")]
     public class AI_Damage : Node
     {
         
@@ -2314,7 +2314,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("72f16b7b-222c-4995-8ac5-310182911794")]
+    [RuntimeConversation.NodeTypeIdAttribute("72f16b7b-222c-4995-8ac5-310182911794")]
     public class AI_Reloading : Node
     {
         
@@ -2353,7 +2353,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("3ac2461a-3e04-473b-a346-de0212a49d52")]
+    [RuntimeConversation.NodeTypeIdAttribute("3ac2461a-3e04-473b-a346-de0212a49d52")]
     public class AI_Attacking : Node
     {
         
@@ -2392,7 +2392,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("8a83ed34-474e-4866-884c-2ee64bba782a")]
+    [RuntimeConversation.NodeTypeIdAttribute("8a83ed34-474e-4866-884c-2ee64bba782a")]
     public class AI_Curious : Node
     {
         
@@ -2431,7 +2431,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("0330c8f7-5ca8-42fd-9112-46e4a7569402")]
+    [RuntimeConversation.NodeTypeIdAttribute("0330c8f7-5ca8-42fd-9112-46e4a7569402")]
     public class AI_Disrepair : Node
     {
         
@@ -2470,7 +2470,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("08541ccf-4b11-4e64-b1c2-c0d78c23f004")]
+    [RuntimeConversation.NodeTypeIdAttribute("08541ccf-4b11-4e64-b1c2-c0d78c23f004")]
     public class AI_Carcass : Node
     {
         
@@ -2509,7 +2509,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("7af10c4b-c961-4336-aced-825c9b6fa5a8")]
+    [RuntimeConversation.NodeTypeIdAttribute("7af10c4b-c961-4336-aced-825c9b6fa5a8")]
     public class AI_Enemy_Lost : Node
     {
         
@@ -2548,7 +2548,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("18bd0870-ee09-47e9-95b0-1702707ee9bf")]
+    [RuntimeConversation.NodeTypeIdAttribute("18bd0870-ee09-47e9-95b0-1702707ee9bf")]
     public class AI_Bribed_Spotted : Node
     {
         
@@ -2587,7 +2587,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("f3237a51-faae-442f-89d0-4ea9760ee193")]
+    [RuntimeConversation.NodeTypeIdAttribute("f3237a51-faae-442f-89d0-4ea9760ee193")]
     public class AI_Crime : Node
     {
         
@@ -2626,7 +2626,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("b2ad422d-1e6c-431b-bd7b-227bcb98abf4")]
+    [RuntimeConversation.NodeTypeIdAttribute("b2ad422d-1e6c-431b-bd7b-227bcb98abf4")]
     public class AI_Reinforcements : Node
     {
         
@@ -2665,7 +2665,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("41c77bb7-89a6-4484-bce2-26f680be0806")]
+    [RuntimeConversation.NodeTypeIdAttribute("41c77bb7-89a6-4484-bce2-26f680be0806")]
     public class AI_Arresting : Node
     {
         
@@ -2704,7 +2704,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("168ae438-d892-4451-8980-31a9c6ce70c3")]
+    [RuntimeConversation.NodeTypeIdAttribute("168ae438-d892-4451-8980-31a9c6ce70c3")]
     public class AI_Idle : Node
     {
         
@@ -2743,7 +2743,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("e17be920-8234-489d-9521-5717e2b8c7f4")]
+    [RuntimeConversation.NodeTypeIdAttribute("e17be920-8234-489d-9521-5717e2b8c7f4")]
     public class AI_Futz : Node
     {
         
@@ -2782,7 +2782,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("b6c800dd-103b-4695-beb3-b380f54b1010")]
+    [RuntimeConversation.NodeTypeIdAttribute("b6c800dd-103b-4695-beb3-b380f54b1010")]
     public class AI_Noise : Node
     {
         
@@ -2821,7 +2821,7 @@ namespace MyNamespace.Nodes.AI_Barks
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("79ba63f0-f75d-4734-9ab2-cc119545b6b5")]
+    [RuntimeConversation.NodeTypeIdAttribute("79ba63f0-f75d-4734-9ab2-cc119545b6b5")]
     public class AI_Weapon : Node
     {
         
@@ -2869,16 +2869,16 @@ namespace MyNamespace.Nodes.Camera
     using MyNamespace.Types;
     
     
-    [RuntimeConversation.NodeTypeIDAttribute("71ed7f8d-ade5-4f10-98ea-aadeac0da197")]
+    [RuntimeConversation.NodeTypeIdAttribute("71ed7f8d-ade5-4f10-98ea-aadeac0da197")]
     public class Custom_Camera : Node
     {
         
         public MyNamespace.Nodes.Connectors.Controller idab8a4a357c694caeaa888d89f2ebd433;
         
-        [RuntimeConversation.ParameterIDAttribute("b7f56dcc-c3a8-41d4-a0e1-9ce40403bb83")]
+        [RuntimeConversation.ParameterIdAttribute("b7f56dcc-c3a8-41d4-a0e1-9ce40403bb83")]
         public String Object_Tag;
         
-        [RuntimeConversation.ParameterIDAttribute("8c6ceeae-52ab-4a32-8293-f92f405b2115")]
+        [RuntimeConversation.ParameterIdAttribute("8c6ceeae-52ab-4a32-8293-f92f405b2115")]
         public Decimal Delay;
         
         public Custom_Camera(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -2914,22 +2914,22 @@ namespace MyNamespace.Nodes.Camera
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("b0eea80e-74e4-4e09-a9a1-f1b80b9a4289")]
+    [RuntimeConversation.NodeTypeIdAttribute("b0eea80e-74e4-4e09-a9a1-f1b80b9a4289")]
     public class Change_Camera : Node
     {
         
         public MyNamespace.Nodes.Connectors.Controller idab8a4a357c694caeaa888d89f2ebd433;
         
-        [RuntimeConversation.ParameterIDAttribute("8c6ceeae-52ab-4a32-8293-f92f405b2115")]
+        [RuntimeConversation.ParameterIdAttribute("8c6ceeae-52ab-4a32-8293-f92f405b2115")]
         public Decimal Delay;
         
-        [RuntimeConversation.ParameterIDAttribute("0496a871-9567-4ab2-a417-5b97b1cba97e")]
+        [RuntimeConversation.ParameterIdAttribute("0496a871-9567-4ab2-a417-5b97b1cba97e")]
         public CameraAnimation Animation;
         
-        [RuntimeConversation.ParameterIDAttribute("a32616b8-b68e-4802-a60c-2843a61fdc0c")]
+        [RuntimeConversation.ParameterIdAttribute("a32616b8-b68e-4802-a60c-2843a61fdc0c")]
         public CameraFraming Framing;
         
-        [RuntimeConversation.ParameterIDAttribute("9db15260-e109-45d1-9c7a-47b57ddddbbb")]
+        [RuntimeConversation.ParameterIdAttribute("9db15260-e109-45d1-9c7a-47b57ddddbbb")]
         public CameraTarget Target;
         
         public Change_Camera(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -2967,13 +2967,13 @@ namespace MyNamespace.Nodes.Camera
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("1f470d56-c46f-432c-ade9-4650630d6e59")]
+    [RuntimeConversation.NodeTypeIdAttribute("1f470d56-c46f-432c-ade9-4650630d6e59")]
     public class Reset_Camera : Node
     {
         
         public MyNamespace.Nodes.Connectors.Controller idab8a4a357c694caeaa888d89f2ebd433;
         
-        [RuntimeConversation.ParameterIDAttribute("8c6ceeae-52ab-4a32-8293-f92f405b2115")]
+        [RuntimeConversation.ParameterIdAttribute("8c6ceeae-52ab-4a32-8293-f92f405b2115")]
         public Decimal Delay;
         
         public Reset_Camera(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -3017,7 +3017,7 @@ namespace MyNamespace.Nodes.Condition
     using MyNamespace.Types;
     
     
-    [RuntimeConversation.NodeTypeIDAttribute("a1578ae6-f73d-497e-8dce-3b741562ae3e")]
+    [RuntimeConversation.NodeTypeIdAttribute("a1578ae6-f73d-497e-8dce-3b741562ae3e")]
     public class Game_Mode : Node
     {
         
@@ -3027,7 +3027,7 @@ namespace MyNamespace.Nodes.Condition
         
         public MyNamespace.Nodes.Connectors.Output id7f184d2bd8844ae38f0b3a93f9e3a241;
         
-        [RuntimeConversation.ParameterIDAttribute("15510795-34a7-4a76-8761-0dac14cdf5e7")]
+        [RuntimeConversation.ParameterIdAttribute("15510795-34a7-4a76-8761-0dac14cdf5e7")]
         public GameMode Game_Mode_;
         
         public Game_Mode(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -3076,7 +3076,7 @@ namespace MyNamespace.Nodes.Condition
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("3d5cfc7b-f605-4f35-a43d-b0c1c9ed2276")]
+    [RuntimeConversation.NodeTypeIdAttribute("3d5cfc7b-f605-4f35-a43d-b0c1c9ed2276")]
     public class Check_Local_Decimal : Node
     {
         
@@ -3088,10 +3088,10 @@ namespace MyNamespace.Nodes.Condition
         
         public MyNamespace.Nodes.Connectors.Output idce18fc018b7e452e9cda7eec8bc16286;
         
-        [RuntimeConversation.ParameterIDAttribute("849bff94-fd4a-4080-8dbc-391d1cfda3aa")]
+        [RuntimeConversation.ParameterIdAttribute("849bff94-fd4a-4080-8dbc-391d1cfda3aa")]
         public DecimalFlag Flag;
         
-        [RuntimeConversation.ParameterIDAttribute("acb4c3ab-cbe9-4685-8a42-0c4f65bd5d09")]
+        [RuntimeConversation.ParameterIdAttribute("acb4c3ab-cbe9-4685-8a42-0c4f65bd5d09")]
         public Decimal Amount;
         
         public Check_Local_Decimal(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -3148,7 +3148,7 @@ namespace MyNamespace.Nodes.Condition
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("8fca70c8-2e1b-4d59-80b4-0c7219625899")]
+    [RuntimeConversation.NodeTypeIdAttribute("8fca70c8-2e1b-4d59-80b4-0c7219625899")]
     public class Check_Story_Decimal : Node
     {
         
@@ -3160,10 +3160,10 @@ namespace MyNamespace.Nodes.Condition
         
         public MyNamespace.Nodes.Connectors.Output idce18fc018b7e452e9cda7eec8bc16286;
         
-        [RuntimeConversation.ParameterIDAttribute("849bff94-fd4a-4080-8dbc-391d1cfda3aa")]
+        [RuntimeConversation.ParameterIdAttribute("849bff94-fd4a-4080-8dbc-391d1cfda3aa")]
         public DecimalFlag Flag;
         
-        [RuntimeConversation.ParameterIDAttribute("acb4c3ab-cbe9-4685-8a42-0c4f65bd5d09")]
+        [RuntimeConversation.ParameterIdAttribute("acb4c3ab-cbe9-4685-8a42-0c4f65bd5d09")]
         public Decimal Amount;
         
         public Check_Story_Decimal(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -3220,7 +3220,7 @@ namespace MyNamespace.Nodes.Condition
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("bca29176-1034-4310-9864-b949dd64b4d0")]
+    [RuntimeConversation.NodeTypeIdAttribute("bca29176-1034-4310-9864-b949dd64b4d0")]
     public class Check_Local_Boolean : Node
     {
         
@@ -3230,7 +3230,7 @@ namespace MyNamespace.Nodes.Condition
         
         public MyNamespace.Nodes.Connectors.Output id7f184d2bd8844ae38f0b3a93f9e3a241;
         
-        [RuntimeConversation.ParameterIDAttribute("a1b79285-b7da-4cb6-b7c3-a8ed228b6461")]
+        [RuntimeConversation.ParameterIdAttribute("a1b79285-b7da-4cb6-b7c3-a8ed228b6461")]
         public BooleanFlag Flag;
         
         public Check_Local_Boolean(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -3279,7 +3279,7 @@ namespace MyNamespace.Nodes.Condition
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("42842463-2c60-4220-b231-ae82ea711d78")]
+    [RuntimeConversation.NodeTypeIdAttribute("42842463-2c60-4220-b231-ae82ea711d78")]
     public class Check_Story_Boolean : Node
     {
         
@@ -3289,7 +3289,7 @@ namespace MyNamespace.Nodes.Condition
         
         public MyNamespace.Nodes.Connectors.Output id7f184d2bd8844ae38f0b3a93f9e3a241;
         
-        [RuntimeConversation.ParameterIDAttribute("a1b79285-b7da-4cb6-b7c3-a8ed228b6461")]
+        [RuntimeConversation.ParameterIdAttribute("a1b79285-b7da-4cb6-b7c3-a8ed228b6461")]
         public BooleanFlag Flag;
         
         public Check_Story_Boolean(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -3338,7 +3338,7 @@ namespace MyNamespace.Nodes.Condition
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("965d6f95-b871-49cf-8568-16197fee8524")]
+    [RuntimeConversation.NodeTypeIdAttribute("965d6f95-b871-49cf-8568-16197fee8524")]
     public class Check_Story_Integer : Node
     {
         
@@ -3350,10 +3350,10 @@ namespace MyNamespace.Nodes.Condition
         
         public MyNamespace.Nodes.Connectors.Output idce18fc018b7e452e9cda7eec8bc16286;
         
-        [RuntimeConversation.ParameterIDAttribute("1785b9d2-80f9-4a5a-a553-50625ca31f3d")]
+        [RuntimeConversation.ParameterIdAttribute("1785b9d2-80f9-4a5a-a553-50625ca31f3d")]
         public IntegerFlag Flag;
         
-        [RuntimeConversation.ParameterIDAttribute("7bc072f7-a8db-46ee-90c2-b6b4ed71dd68")]
+        [RuntimeConversation.ParameterIdAttribute("7bc072f7-a8db-46ee-90c2-b6b4ed71dd68")]
         public Int32 Amount;
         
         public Check_Story_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -3410,7 +3410,7 @@ namespace MyNamespace.Nodes.Condition
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("08727d6a-da44-430b-8caf-a58cfdfe251c")]
+    [RuntimeConversation.NodeTypeIdAttribute("08727d6a-da44-430b-8caf-a58cfdfe251c")]
     public class Check_Local_Integer : Node
     {
         
@@ -3422,10 +3422,10 @@ namespace MyNamespace.Nodes.Condition
         
         public MyNamespace.Nodes.Connectors.Output id4947fa04ff924f5e81dceb38d73ba500;
         
-        [RuntimeConversation.ParameterIDAttribute("7bc072f7-a8db-46ee-90c2-b6b4ed71dd68")]
+        [RuntimeConversation.ParameterIdAttribute("7bc072f7-a8db-46ee-90c2-b6b4ed71dd68")]
         public Int32 Amount;
         
-        [RuntimeConversation.ParameterIDAttribute("1785b9d2-80f9-4a5a-a553-50625ca31f3d")]
+        [RuntimeConversation.ParameterIdAttribute("1785b9d2-80f9-4a5a-a553-50625ca31f3d")]
         public IntegerFlag Flag;
         
         public Check_Local_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -3482,7 +3482,7 @@ namespace MyNamespace.Nodes.Condition
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("df8c4ddb-616b-4481-b0bc-07eb8236f7fb")]
+    [RuntimeConversation.NodeTypeIdAttribute("df8c4ddb-616b-4481-b0bc-07eb8236f7fb")]
     public class Is_Alive : Node
     {
         
@@ -3492,7 +3492,7 @@ namespace MyNamespace.Nodes.Condition
         
         public MyNamespace.Nodes.Connectors.Output idbd570e148ca844c1a1e213d4252f8833;
         
-        [RuntimeConversation.ParameterIDAttribute("afe33600-ec07-4a01-a4ed-76d278a5aa24")]
+        [RuntimeConversation.ParameterIdAttribute("afe33600-ec07-4a01-a4ed-76d278a5aa24")]
         public Character Character;
         
         public Is_Alive(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -3541,7 +3541,7 @@ namespace MyNamespace.Nodes.Condition
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("5537e9df-d749-4c67-ab24-cf50acb36689")]
+    [RuntimeConversation.NodeTypeIdAttribute("5537e9df-d749-4c67-ab24-cf50acb36689")]
     public class Character_Nearby : Node
     {
         
@@ -3551,7 +3551,7 @@ namespace MyNamespace.Nodes.Condition
         
         public MyNamespace.Nodes.Connectors.Output id7f184d2bd8844ae38f0b3a93f9e3a241;
         
-        [RuntimeConversation.ParameterIDAttribute("67a333c5-a3cd-4b42-92ed-32f03cdf42a3")]
+        [RuntimeConversation.ParameterIdAttribute("67a333c5-a3cd-4b42-92ed-32f03cdf42a3")]
         public Character Character;
         
         public Character_Nearby(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -3600,7 +3600,7 @@ namespace MyNamespace.Nodes.Condition
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("f10f8ebc-616c-4061-be2d-4e392cd15396")]
+    [RuntimeConversation.NodeTypeIdAttribute("f10f8ebc-616c-4061-be2d-4e392cd15396")]
     public class Player_Character : Node
     {
         
@@ -3655,7 +3655,7 @@ namespace MyNamespace.Nodes.Condition
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("4ec0e4c2-c0b5-4507-97eb-3d1e10fd6315")]
+    [RuntimeConversation.NodeTypeIdAttribute("4ec0e4c2-c0b5-4507-97eb-3d1e10fd6315")]
     public class Player_Outfit : Node
     {
         
@@ -3710,7 +3710,7 @@ namespace MyNamespace.Nodes.Condition
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("6f6392be-efaa-4e1a-9594-e4696c782067")]
+    [RuntimeConversation.NodeTypeIdAttribute("6f6392be-efaa-4e1a-9594-e4696c782067")]
     public class Player_Inventory : Node
     {
         
@@ -3720,7 +3720,7 @@ namespace MyNamespace.Nodes.Condition
         
         public MyNamespace.Nodes.Connectors.Output id7f184d2bd8844ae38f0b3a93f9e3a241;
         
-        [RuntimeConversation.ParameterIDAttribute("e95f9349-68e8-4c3a-b18f-c8e0d643b207")]
+        [RuntimeConversation.ParameterIdAttribute("e95f9349-68e8-4c3a-b18f-c8e0d643b207")]
         public Item Contains;
         
         public Player_Inventory(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -3769,7 +3769,7 @@ namespace MyNamespace.Nodes.Condition
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("e8a66001-6237-411a-830b-976477ee9701")]
+    [RuntimeConversation.NodeTypeIdAttribute("e8a66001-6237-411a-830b-976477ee9701")]
     public class Player_Health : Node
     {
         
@@ -3781,7 +3781,7 @@ namespace MyNamespace.Nodes.Condition
         
         public MyNamespace.Nodes.Connectors.Output idce18fc018b7e452e9cda7eec8bc16286;
         
-        [RuntimeConversation.ParameterIDAttribute("beaac6ff-0de4-4af7-bb9c-2f581403247f")]
+        [RuntimeConversation.ParameterIdAttribute("beaac6ff-0de4-4af7-bb9c-2f581403247f")]
         public Percentage Percent;
         
         public Player_Health(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -3846,7 +3846,7 @@ namespace MyNamespace.Nodes.Dev
     using MyNamespace.Types;
     
     
-    [RuntimeConversation.NodeTypeIDAttribute("3a0cf660-90d4-4e06-9d61-6769c3b93211")]
+    [RuntimeConversation.NodeTypeIdAttribute("3a0cf660-90d4-4e06-9d61-6769c3b93211")]
     public class TODO : Node
     {
         
@@ -3854,7 +3854,7 @@ namespace MyNamespace.Nodes.Dev
         
         public MyNamespace.Nodes.Connectors.Input id5e37d69b1d12487cb26f81aad52bfab4;
         
-        [RuntimeConversation.ParameterIDAttribute("73bdecc0-8f41-42ed-853b-5b31ff623f15")]
+        [RuntimeConversation.ParameterIdAttribute("73bdecc0-8f41-42ed-853b-5b31ff623f15")]
         public String Description;
         
         public TODO(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -3896,13 +3896,13 @@ namespace MyNamespace.Nodes.Dev
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("78589f5b-07f8-41d7-820a-318ec2989a40")]
+    [RuntimeConversation.NodeTypeIdAttribute("78589f5b-07f8-41d7-820a-318ec2989a40")]
     public class Error : Node
     {
         
         public MyNamespace.Nodes.Connectors.Input id8ee7ec496e3b41a99c1e3d07473c666c;
         
-        [RuntimeConversation.ParameterIDAttribute("a83ddc54-0696-4856-8d7d-dfb15953b5d9")]
+        [RuntimeConversation.ParameterIdAttribute("a83ddc54-0696-4856-8d7d-dfb15953b5d9")]
         public String Message;
         
         public Error(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -3937,7 +3937,7 @@ namespace MyNamespace.Nodes.Dev
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("28023421-4d83-486b-b4ac-7b820bd634c4")]
+    [RuntimeConversation.NodeTypeIdAttribute("28023421-4d83-486b-b4ac-7b820bd634c4")]
     public class Description : Node
     {
         
@@ -3945,7 +3945,7 @@ namespace MyNamespace.Nodes.Dev
         
         public MyNamespace.Nodes.Connectors.Input ide6cfd63700004ea68a5c4f17c094ca37;
         
-        [RuntimeConversation.ParameterIDAttribute("3be5b7bd-35b9-4dae-bea5-f60b10862276")]
+        [RuntimeConversation.ParameterIdAttribute("3be5b7bd-35b9-4dae-bea5-f60b10862276")]
         public String Description_;
         
         public Description(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -3996,26 +3996,26 @@ namespace MyNamespace.Nodes.Metadata
     using MyNamespace.Types;
     
     
-    [RuntimeConversation.NodeTypeIDAttribute("d5974ffe-777b-419c-b9bc-bde980cb99a6")]
+    [RuntimeConversation.NodeTypeIdAttribute("d5974ffe-777b-419c-b9bc-bde980cb99a6")]
     public class Conversation_Info : Node
     {
         
-        [RuntimeConversation.ParameterIDAttribute("64a44b9e-1dad-4f4d-b785-e90f8fd0f860")]
+        [RuntimeConversation.ParameterIdAttribute("64a44b9e-1dad-4f4d-b785-e90f8fd0f860")]
         public String Creator;
         
-        [RuntimeConversation.ParameterIDAttribute("6940a618-5905-4e81-a59b-281d92a90782")]
+        [RuntimeConversation.ParameterIdAttribute("6940a618-5905-4e81-a59b-281d92a90782")]
         public String Context;
         
-        [RuntimeConversation.ParameterIDAttribute("cb4a4ac9-a5e9-444f-a7b0-b8f15e31e77a")]
+        [RuntimeConversation.ParameterIdAttribute("cb4a4ac9-a5e9-444f-a7b0-b8f15e31e77a")]
         public String Notes;
         
-        [RuntimeConversation.ParameterIDAttribute("15d39743-755c-4776-87a8-0f756593c074")]
+        [RuntimeConversation.ParameterIdAttribute("15d39743-755c-4776-87a8-0f756593c074")]
         public Boolean Proximity_Triggered;
         
-        [RuntimeConversation.ParameterIDAttribute("1220ba35-d92e-4d3c-9c18-34c23a1a83b0")]
+        [RuntimeConversation.ParameterIdAttribute("1220ba35-d92e-4d3c-9c18-34c23a1a83b0")]
         public Boolean Requires_LOS;
         
-        [RuntimeConversation.ParameterIDAttribute("10fc350d-2c7e-430b-bf49-24f6b5580dca")]
+        [RuntimeConversation.ParameterIdAttribute("10fc350d-2c7e-430b-bf49-24f6b5580dca")]
         public Boolean Only_Play_Once;
         
         public Conversation_Info(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -4050,17 +4050,17 @@ namespace MyNamespace.Nodes.Metadata
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("2162436e-5462-41e6-82ec-af29e45a4b70")]
+    [RuntimeConversation.NodeTypeIdAttribute("2162436e-5462-41e6-82ec-af29e45a4b70")]
     public class Character_Info : Node
     {
         
-        [RuntimeConversation.ParameterIDAttribute("4c82e2fd-e2f1-4ff7-8f86-f3aa25429359")]
+        [RuntimeConversation.ParameterIdAttribute("4c82e2fd-e2f1-4ff7-8f86-f3aa25429359")]
         public Character BindName;
         
-        [RuntimeConversation.ParameterIDAttribute("0e05e38d-5d1d-4b23-bc93-ad4ce674bc2a")]
+        [RuntimeConversation.ParameterIdAttribute("0e05e38d-5d1d-4b23-bc93-ad4ce674bc2a")]
         public Character Bark_BindName;
         
-        [RuntimeConversation.ParameterIDAttribute("e2937b9d-b290-4f2a-84ad-b6ca7289258e")]
+        [RuntimeConversation.ParameterIdAttribute("e2937b9d-b290-4f2a-84ad-b6ca7289258e")]
         public RuntimeConversation.LocalizedString Display_Name;
         
         public Character_Info(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -4101,7 +4101,7 @@ namespace MyNamespace.Nodes.Trigger
     using MyNamespace.Types;
     
     
-    [RuntimeConversation.NodeTypeIDAttribute("1df455bd-8f7f-4b7b-aee9-e56c73129ba0")]
+    [RuntimeConversation.NodeTypeIdAttribute("1df455bd-8f7f-4b7b-aee9-e56c73129ba0")]
     public class Teleport_Character : Node
     {
         
@@ -4109,10 +4109,10 @@ namespace MyNamespace.Nodes.Trigger
         
         public MyNamespace.Nodes.Connectors.Input id5b4b96e9726141428d3dea441bc8b956;
         
-        [RuntimeConversation.ParameterIDAttribute("670cc652-f371-4d60-b307-af4152803a80")]
+        [RuntimeConversation.ParameterIdAttribute("670cc652-f371-4d60-b307-af4152803a80")]
         public String Target_Object_Tag;
         
-        [RuntimeConversation.ParameterIDAttribute("633af747-8234-4ba1-9e63-a1a1ba08d750")]
+        [RuntimeConversation.ParameterIdAttribute("633af747-8234-4ba1-9e63-a1a1ba08d750")]
         public Character Character;
         
         public Teleport_Character(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -4155,7 +4155,7 @@ namespace MyNamespace.Nodes.Trigger
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("92938a3c-3a12-46dd-af6a-f5c0092bea52")]
+    [RuntimeConversation.NodeTypeIdAttribute("92938a3c-3a12-46dd-af6a-f5c0092bea52")]
     public class Decrement_Integer : Node
     {
         
@@ -4163,10 +4163,10 @@ namespace MyNamespace.Nodes.Trigger
         
         public MyNamespace.Nodes.Connectors.Input idea33295e1c6b4cf993480743e98087cb;
         
-        [RuntimeConversation.ParameterIDAttribute("053f8c9d-59f5-4dff-8065-18dafff32f22")]
+        [RuntimeConversation.ParameterIdAttribute("053f8c9d-59f5-4dff-8065-18dafff32f22")]
         public IntegerFlag Flag;
         
-        [RuntimeConversation.ParameterIDAttribute("860e00c0-808d-4792-b782-34b0be953a1a")]
+        [RuntimeConversation.ParameterIdAttribute("860e00c0-808d-4792-b782-34b0be953a1a")]
         public Int32 By;
         
         public Decrement_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -4209,7 +4209,7 @@ namespace MyNamespace.Nodes.Trigger
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("00b12526-aa16-4258-95b5-fd1e9927c271")]
+    [RuntimeConversation.NodeTypeIdAttribute("00b12526-aa16-4258-95b5-fd1e9927c271")]
     public class Increment_Integer : Node
     {
         
@@ -4217,10 +4217,10 @@ namespace MyNamespace.Nodes.Trigger
         
         public MyNamespace.Nodes.Connectors.Input id7710fc42fc43454b8288838a06fbc8b9;
         
-        [RuntimeConversation.ParameterIDAttribute("015fc115-b8a5-4cd5-8f41-6c13a8b77643")]
+        [RuntimeConversation.ParameterIdAttribute("015fc115-b8a5-4cd5-8f41-6c13a8b77643")]
         public IntegerFlag Flag;
         
-        [RuntimeConversation.ParameterIDAttribute("e3e1497f-bd0c-468e-aadd-8db9ed593700")]
+        [RuntimeConversation.ParameterIdAttribute("e3e1497f-bd0c-468e-aadd-8db9ed593700")]
         public Int32 By;
         
         public Increment_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -4263,7 +4263,7 @@ namespace MyNamespace.Nodes.Trigger
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("78c38356-d036-418c-be97-b757e4792c4a")]
+    [RuntimeConversation.NodeTypeIdAttribute("78c38356-d036-418c-be97-b757e4792c4a")]
     public class Set_Story_Boolean : Node
     {
         
@@ -4271,10 +4271,10 @@ namespace MyNamespace.Nodes.Trigger
         
         public MyNamespace.Nodes.Connectors.Input idd1d99b283eb14386a8c6f4ba664040ee;
         
-        [RuntimeConversation.ParameterIDAttribute("70ce28d8-9284-4bab-8bb7-47ef421a18dd")]
+        [RuntimeConversation.ParameterIdAttribute("70ce28d8-9284-4bab-8bb7-47ef421a18dd")]
         public BooleanFlag Flag;
         
-        [RuntimeConversation.ParameterIDAttribute("32fad20d-6ca6-4fc3-8c7a-e3a3cd84061b")]
+        [RuntimeConversation.ParameterIdAttribute("32fad20d-6ca6-4fc3-8c7a-e3a3cd84061b")]
         public Boolean To;
         
         public Set_Story_Boolean(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -4317,7 +4317,7 @@ namespace MyNamespace.Nodes.Trigger
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("7adc2a07-f50e-439a-bca4-58aa80ed24b1")]
+    [RuntimeConversation.NodeTypeIdAttribute("7adc2a07-f50e-439a-bca4-58aa80ed24b1")]
     public class Set_Story_Integer : Node
     {
         
@@ -4325,10 +4325,10 @@ namespace MyNamespace.Nodes.Trigger
         
         public MyNamespace.Nodes.Connectors.Input id9a358db500e245d4934d7b1dd059f89b;
         
-        [RuntimeConversation.ParameterIDAttribute("35890f6b-dd40-46a3-a395-cb5e0fa2b154")]
+        [RuntimeConversation.ParameterIdAttribute("35890f6b-dd40-46a3-a395-cb5e0fa2b154")]
         public IntegerFlag Variable;
         
-        [RuntimeConversation.ParameterIDAttribute("490c4c46-d25a-4605-99cd-237b94679e95")]
+        [RuntimeConversation.ParameterIdAttribute("490c4c46-d25a-4605-99cd-237b94679e95")]
         public Int32 Value;
         
         public Set_Story_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -4371,7 +4371,7 @@ namespace MyNamespace.Nodes.Trigger
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("1abd75ed-6040-4d6b-a75e-5297c6f56aac")]
+    [RuntimeConversation.NodeTypeIdAttribute("1abd75ed-6040-4d6b-a75e-5297c6f56aac")]
     public class Set_Local_Boolean : Node
     {
         
@@ -4379,10 +4379,10 @@ namespace MyNamespace.Nodes.Trigger
         
         public MyNamespace.Nodes.Connectors.Input idc0a5db6d8053474c94f8e1458d64d7f9;
         
-        [RuntimeConversation.ParameterIDAttribute("89ce91b7-1e7d-45a1-9052-f1dee3430142")]
+        [RuntimeConversation.ParameterIdAttribute("89ce91b7-1e7d-45a1-9052-f1dee3430142")]
         public BooleanFlag Flag;
         
-        [RuntimeConversation.ParameterIDAttribute("20da7b1e-e62b-4336-a35f-134d782bfe3f")]
+        [RuntimeConversation.ParameterIdAttribute("20da7b1e-e62b-4336-a35f-134d782bfe3f")]
         public Boolean To;
         
         public Set_Local_Boolean(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -4425,7 +4425,7 @@ namespace MyNamespace.Nodes.Trigger
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("03129c91-4dc8-4ba3-a957-8a8b4ca0442d")]
+    [RuntimeConversation.NodeTypeIdAttribute("03129c91-4dc8-4ba3-a957-8a8b4ca0442d")]
     public class Set_Story_Decimal : Node
     {
         
@@ -4433,10 +4433,10 @@ namespace MyNamespace.Nodes.Trigger
         
         public MyNamespace.Nodes.Connectors.Input idd1d0ea049f0b45d9920b36adc755f232;
         
-        [RuntimeConversation.ParameterIDAttribute("7845d7f1-92b3-4abb-829d-62c2c4784ad3")]
+        [RuntimeConversation.ParameterIdAttribute("7845d7f1-92b3-4abb-829d-62c2c4784ad3")]
         public DecimalFlag Variable;
         
-        [RuntimeConversation.ParameterIDAttribute("bc3f2fff-75ac-4a61-9684-8b6ffb7699c0")]
+        [RuntimeConversation.ParameterIdAttribute("bc3f2fff-75ac-4a61-9684-8b6ffb7699c0")]
         public Decimal Value;
         
         public Set_Story_Decimal(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -4479,7 +4479,7 @@ namespace MyNamespace.Nodes.Trigger
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("5a78105e-7a5e-4f12-afcd-033f792ec045")]
+    [RuntimeConversation.NodeTypeIdAttribute("5a78105e-7a5e-4f12-afcd-033f792ec045")]
     public class Set_Local_Decimal : Node
     {
         
@@ -4487,10 +4487,10 @@ namespace MyNamespace.Nodes.Trigger
         
         public MyNamespace.Nodes.Connectors.Input ide0dfde9b42f34b8592450adb941ee92f;
         
-        [RuntimeConversation.ParameterIDAttribute("5214d582-e7e9-48d4-9b77-30658e7d1c44")]
+        [RuntimeConversation.ParameterIdAttribute("5214d582-e7e9-48d4-9b77-30658e7d1c44")]
         public DecimalFlag Variable;
         
-        [RuntimeConversation.ParameterIDAttribute("413f2094-0b2e-46f0-93a4-a876befc25bb")]
+        [RuntimeConversation.ParameterIdAttribute("413f2094-0b2e-46f0-93a4-a876befc25bb")]
         public Decimal Value;
         
         public Set_Local_Decimal(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -4533,7 +4533,7 @@ namespace MyNamespace.Nodes.Trigger
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("77248380-deec-439f-9b25-902b3bd5ebf0")]
+    [RuntimeConversation.NodeTypeIdAttribute("77248380-deec-439f-9b25-902b3bd5ebf0")]
     public class Set_Local_Integer : Node
     {
         
@@ -4541,10 +4541,10 @@ namespace MyNamespace.Nodes.Trigger
         
         public MyNamespace.Nodes.Connectors.Input id3b1078e7b6b34ae9ae74bfc9876d514c;
         
-        [RuntimeConversation.ParameterIDAttribute("c181dc13-1d96-4155-a6ff-03dfde59f0b7")]
+        [RuntimeConversation.ParameterIdAttribute("c181dc13-1d96-4155-a6ff-03dfde59f0b7")]
         public IntegerFlag Variable;
         
-        [RuntimeConversation.ParameterIDAttribute("3f6d6c23-afd2-4830-b372-badfe77cbdc5")]
+        [RuntimeConversation.ParameterIdAttribute("3f6d6c23-afd2-4830-b372-badfe77cbdc5")]
         public Int32 Value;
         
         public Set_Local_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -4587,7 +4587,7 @@ namespace MyNamespace.Nodes.Trigger
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("1d210c12-f969-4f07-bf89-1ddbefe8f77d")]
+    [RuntimeConversation.NodeTypeIdAttribute("1d210c12-f969-4f07-bf89-1ddbefe8f77d")]
     public class Begin_Patrol : Node
     {
         
@@ -4595,7 +4595,7 @@ namespace MyNamespace.Nodes.Trigger
         
         public MyNamespace.Nodes.Connectors.Input idde8ffaedbc224fbd9a707badce0e9cc4;
         
-        [RuntimeConversation.ParameterIDAttribute("1439018b-0358-4162-acae-adc94bbbc2e3")]
+        [RuntimeConversation.ParameterIdAttribute("1439018b-0358-4162-acae-adc94bbbc2e3")]
         public Character Character;
         
         public Begin_Patrol(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -4637,7 +4637,7 @@ namespace MyNamespace.Nodes.Trigger
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("5158e4f2-8375-42b3-b56b-655fa6dca2b5")]
+    [RuntimeConversation.NodeTypeIdAttribute("5158e4f2-8375-42b3-b56b-655fa6dca2b5")]
     public class Console_Message : Node
     {
         
@@ -4645,7 +4645,7 @@ namespace MyNamespace.Nodes.Trigger
         
         public MyNamespace.Nodes.Connectors.Input idd9517feb8c3a45ddba4c62aa6a733dc9;
         
-        [RuntimeConversation.ParameterIDAttribute("ac942223-154b-4ec5-9f78-26b360163a78")]
+        [RuntimeConversation.ParameterIdAttribute("ac942223-154b-4ec5-9f78-26b360163a78")]
         public RuntimeConversation.LocalizedString Message;
         
         public Console_Message(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -4687,7 +4687,7 @@ namespace MyNamespace.Nodes.Trigger
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("bcf0b4b7-5c61-4098-a2ee-a0d7ae81a2e6")]
+    [RuntimeConversation.NodeTypeIdAttribute("bcf0b4b7-5c61-4098-a2ee-a0d7ae81a2e6")]
     public class Prompt : Node
     {
         
@@ -4699,10 +4699,10 @@ namespace MyNamespace.Nodes.Trigger
         
         public MyNamespace.Nodes.Connectors.Input id17ebe05d0b114f93974853483f69b3aa;
         
-        [RuntimeConversation.ParameterIDAttribute("f5af79a2-0a18-4d04-afda-dcbdf489d694")]
+        [RuntimeConversation.ParameterIdAttribute("f5af79a2-0a18-4d04-afda-dcbdf489d694")]
         public NonNegativeInteger Time_Limit;
         
-        [RuntimeConversation.ParameterIDAttribute("9081e6dc-c2a5-4f93-9c0d-50bcdb835209")]
+        [RuntimeConversation.ParameterIdAttribute("9081e6dc-c2a5-4f93-9c0d-50bcdb835209")]
         public RuntimeConversation.LocalizedString Prompt_text;
         
         public Prompt(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -4757,7 +4757,7 @@ namespace MyNamespace.Nodes.Trigger
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("9c4a1f4c-7313-46a1-bb46-d5b4131549aa")]
+    [RuntimeConversation.NodeTypeIdAttribute("9c4a1f4c-7313-46a1-bb46-d5b4131549aa")]
     public class Give_Item : Node
     {
         
@@ -4765,13 +4765,13 @@ namespace MyNamespace.Nodes.Trigger
         
         public MyNamespace.Nodes.Connectors.Input id4264c31346ac4abba19d628d5572f67d;
         
-        [RuntimeConversation.ParameterIDAttribute("8b323b83-0e96-4442-89b9-f031c842c051")]
+        [RuntimeConversation.ParameterIdAttribute("8b323b83-0e96-4442-89b9-f031c842c051")]
         public Character To;
         
-        [RuntimeConversation.ParameterIDAttribute("578f6dbd-a218-462e-8ec4-fc5a7c96db7d")]
+        [RuntimeConversation.ParameterIdAttribute("578f6dbd-a218-462e-8ec4-fc5a7c96db7d")]
         public Item Object;
         
-        [RuntimeConversation.ParameterIDAttribute("eaebb3c0-805e-4cd7-b5e6-93912bbdb9b7")]
+        [RuntimeConversation.ParameterIdAttribute("eaebb3c0-805e-4cd7-b5e6-93912bbdb9b7")]
         public Int32 Amount;
         
         public Give_Item(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -4815,7 +4815,7 @@ namespace MyNamespace.Nodes.Trigger
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("3a869944-a54f-4090-9896-18d780840a06")]
+    [RuntimeConversation.NodeTypeIdAttribute("3a869944-a54f-4090-9896-18d780840a06")]
     public class Change_Bindname : Node
     {
         
@@ -4823,10 +4823,10 @@ namespace MyNamespace.Nodes.Trigger
         
         public MyNamespace.Nodes.Connectors.Input id2b0f4c46735b4f7db6bfc355b2cf87c3;
         
-        [RuntimeConversation.ParameterIDAttribute("e15ca972-b8de-4698-81c4-eae0ab22b7a8")]
+        [RuntimeConversation.ParameterIdAttribute("e15ca972-b8de-4698-81c4-eae0ab22b7a8")]
         public Character Target;
         
-        [RuntimeConversation.ParameterIDAttribute("af6e8208-0cb4-4d5a-90b4-6dd0ab19b56e")]
+        [RuntimeConversation.ParameterIdAttribute("af6e8208-0cb4-4d5a-90b4-6dd0ab19b56e")]
         public Character Change_To;
         
         public Change_Bindname(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -4869,7 +4869,7 @@ namespace MyNamespace.Nodes.Trigger
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("bb0091bc-a5e9-43e6-9733-fb391f79170a")]
+    [RuntimeConversation.NodeTypeIdAttribute("bb0091bc-a5e9-43e6-9733-fb391f79170a")]
     public class Trigger_Game_Object : Node
     {
         
@@ -4877,7 +4877,7 @@ namespace MyNamespace.Nodes.Trigger
         
         public MyNamespace.Nodes.Connectors.Input idc060f2729254499cb270ea905a75cf39;
         
-        [RuntimeConversation.ParameterIDAttribute("675c068a-6e45-4c4b-bd8e-c926103b9f6d")]
+        [RuntimeConversation.ParameterIdAttribute("675c068a-6e45-4c4b-bd8e-c926103b9f6d")]
         public String Object_Tag;
         
         public Trigger_Game_Object(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -4928,19 +4928,19 @@ namespace MyNamespace.Nodes.Animation
     using MyNamespace.Types;
     
     
-    [RuntimeConversation.NodeTypeIDAttribute("7f668a0a-fc68-4aeb-b9de-c4069e91b0fe")]
+    [RuntimeConversation.NodeTypeIdAttribute("7f668a0a-fc68-4aeb-b9de-c4069e91b0fe")]
     public class Trigger_Expression : Node
     {
         
         public MyNamespace.Nodes.Connectors.Controller id96bf0cefb0ec4ad5bf74c6fe43ce238f;
         
-        [RuntimeConversation.ParameterIDAttribute("84086ce7-4e89-48d0-a0e3-142e2adf1283")]
+        [RuntimeConversation.ParameterIdAttribute("84086ce7-4e89-48d0-a0e3-142e2adf1283")]
         public AnimationExpression Expression;
         
-        [RuntimeConversation.ParameterIDAttribute("8f448b36-80bf-491a-88e8-2b45515e1f0b")]
+        [RuntimeConversation.ParameterIdAttribute("8f448b36-80bf-491a-88e8-2b45515e1f0b")]
         public CameraTarget Actor;
         
-        [RuntimeConversation.ParameterIDAttribute("1be995ff-175f-4429-9a0f-548228f6b0db")]
+        [RuntimeConversation.ParameterIdAttribute("1be995ff-175f-4429-9a0f-548228f6b0db")]
         public Decimal Delay;
         
         public Trigger_Expression(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -4977,19 +4977,19 @@ namespace MyNamespace.Nodes.Animation
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("62ce5a50-079e-4897-b5c8-10f4f9a6cef2")]
+    [RuntimeConversation.NodeTypeIdAttribute("62ce5a50-079e-4897-b5c8-10f4f9a6cef2")]
     public class Trigger_Gesture : Node
     {
         
         public MyNamespace.Nodes.Connectors.Controller id96bf0cefb0ec4ad5bf74c6fe43ce238f;
         
-        [RuntimeConversation.ParameterIDAttribute("d4cfde03-9620-4399-8958-483206f8b5b3")]
+        [RuntimeConversation.ParameterIdAttribute("d4cfde03-9620-4399-8958-483206f8b5b3")]
         public AnimationGesture Gesture;
         
-        [RuntimeConversation.ParameterIDAttribute("8f448b36-80bf-491a-88e8-2b45515e1f0b")]
+        [RuntimeConversation.ParameterIdAttribute("8f448b36-80bf-491a-88e8-2b45515e1f0b")]
         public CameraTarget Actor;
         
-        [RuntimeConversation.ParameterIDAttribute("1be995ff-175f-4429-9a0f-548228f6b0db")]
+        [RuntimeConversation.ParameterIdAttribute("1be995ff-175f-4429-9a0f-548228f6b0db")]
         public Decimal Delay;
         
         public Trigger_Gesture(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -5026,19 +5026,19 @@ namespace MyNamespace.Nodes.Animation
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("b85a4491-0391-408e-afa5-995cf6d59a79")]
+    [RuntimeConversation.NodeTypeIdAttribute("b85a4491-0391-408e-afa5-995cf6d59a79")]
     public class Set_Emotion : Node
     {
         
         public MyNamespace.Nodes.Connectors.Controller id96bf0cefb0ec4ad5bf74c6fe43ce238f;
         
-        [RuntimeConversation.ParameterIDAttribute("1be995ff-175f-4429-9a0f-548228f6b0db")]
+        [RuntimeConversation.ParameterIdAttribute("1be995ff-175f-4429-9a0f-548228f6b0db")]
         public Decimal Delay;
         
-        [RuntimeConversation.ParameterIDAttribute("8f448b36-80bf-491a-88e8-2b45515e1f0b")]
+        [RuntimeConversation.ParameterIdAttribute("8f448b36-80bf-491a-88e8-2b45515e1f0b")]
         public CameraTarget Actor;
         
-        [RuntimeConversation.ParameterIDAttribute("6ca360a6-7dfa-4306-bd47-7a06616eed60")]
+        [RuntimeConversation.ParameterIdAttribute("6ca360a6-7dfa-4306-bd47-7a06616eed60")]
         public AnimationEmotion Emotion;
         
         public Set_Emotion(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -5075,19 +5075,19 @@ namespace MyNamespace.Nodes.Animation
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("a7c20180-3178-44d3-9765-9098e093cc90")]
+    [RuntimeConversation.NodeTypeIdAttribute("a7c20180-3178-44d3-9765-9098e093cc90")]
     public class Set_Attitude : Node
     {
         
         public MyNamespace.Nodes.Connectors.Controller id96bf0cefb0ec4ad5bf74c6fe43ce238f;
         
-        [RuntimeConversation.ParameterIDAttribute("72e20359-2d15-422c-a1e6-7e539abe246c")]
+        [RuntimeConversation.ParameterIdAttribute("72e20359-2d15-422c-a1e6-7e539abe246c")]
         public AnimationAttitude Attitude;
         
-        [RuntimeConversation.ParameterIDAttribute("1be995ff-175f-4429-9a0f-548228f6b0db")]
+        [RuntimeConversation.ParameterIdAttribute("1be995ff-175f-4429-9a0f-548228f6b0db")]
         public Decimal Delay;
         
-        [RuntimeConversation.ParameterIDAttribute("8f448b36-80bf-491a-88e8-2b45515e1f0b")]
+        [RuntimeConversation.ParameterIdAttribute("8f448b36-80bf-491a-88e8-2b45515e1f0b")]
         public CameraTarget Actor;
         
         public Set_Attitude(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -5133,7 +5133,7 @@ namespace MyNamespace.Nodes.Branch
     using MyNamespace.Types;
     
     
-    [RuntimeConversation.NodeTypeIDAttribute("9c764213-48f0-4f68-acb4-cc416edc66ae")]
+    [RuntimeConversation.NodeTypeIdAttribute("9c764213-48f0-4f68-acb4-cc416edc66ae")]
     public class Probability : Node
     {
         
@@ -5143,7 +5143,7 @@ namespace MyNamespace.Nodes.Branch
         
         public MyNamespace.Nodes.Connectors.Output id2b2c53380db74cc78403931b08f4a64b;
         
-        [RuntimeConversation.ParameterIDAttribute("914df4a8-e857-49d0-bf76-3bd9f6615193")]
+        [RuntimeConversation.ParameterIdAttribute("914df4a8-e857-49d0-bf76-3bd9f6615193")]
         public Percentage Percent;
         
         public Probability(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -5192,7 +5192,7 @@ namespace MyNamespace.Nodes.Branch
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("4a77a85d-306b-44e1-97d2-c23843eaf0b0")]
+    [RuntimeConversation.NodeTypeIdAttribute("4a77a85d-306b-44e1-97d2-c23843eaf0b0")]
     public class Cycle : Node
     {
         
@@ -5208,7 +5208,7 @@ namespace MyNamespace.Nodes.Branch
         
         public MyNamespace.Nodes.Connectors.Output id155e8a71d1a04357bafe52c863ef3ec7;
         
-        [RuntimeConversation.ParameterIDAttribute("dee1392b-4f4e-4c33-9a86-f4d97f45452a")]
+        [RuntimeConversation.ParameterIdAttribute("dee1392b-4f4e-4c33-9a86-f4d97f45452a")]
         public Boolean Loop;
         
         public Cycle(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
@@ -5278,7 +5278,7 @@ namespace MyNamespace.Nodes.Branch
         }
     }
     
-    [RuntimeConversation.NodeTypeIDAttribute("03f66e93-bc0c-4713-ae07-dd249d85078d")]
+    [RuntimeConversation.NodeTypeIdAttribute("03f66e93-bc0c-4713-ae07-dd249d85078d")]
     public class Random : Node
     {
         
@@ -5348,7 +5348,7 @@ namespace MyNamespace
             return backend.Read(stream);
         }
         
-        private Utilities.Or<RuntimeConversation.NodeBase, Conversation.Serialization.Error> GetNode(Conversation.ID<Conversation.NodeTypeTemp> typeid, Conversation.ID<Conversation.NodeTemp> id, System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters, System.Drawing.PointF position)
+        private Utilities.Or<RuntimeConversation.NodeBase, Conversation.Serialization.LoadError> GetNode(Conversation.ID<Conversation.NodeTypeTemp> typeid, Conversation.ID<Conversation.NodeTemp> id, System.Collections.Generic.IEnumerable<Conversation.Serialization.CustomDeserializer.Parameter> parameters, System.Drawing.PointF position)
         {
             if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("3a75e7ae-80ac-40a8-b14c-7c91ce1011f1")))
             {
@@ -5812,7 +5812,7 @@ namespace MyNamespace
                 node.GetParameters(parameters);
                 return node;
             }
-            return new Conversation.Serialization.Error("Failed to create node");
+            return new Conversation.Serialization.LoadError("Failed to create node");
         }
     }
     

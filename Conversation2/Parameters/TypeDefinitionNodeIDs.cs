@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Conversation
 {
-    public static class TypeDefinitionNodeIDs
+    public static class TypeDefinitionNodeIds
     {
         public static readonly ID<NodeTypeTemp> Enumeration = ID<NodeTypeTemp>.Parse("05e2be46-7feb-48ed-a66f-2e81153cfd4b");
         public static readonly ID<NodeTypeTemp> Integer = ID<NodeTypeTemp>.Parse("e8d6ea71-382c-446b-828f-c1bc3a6065d2");

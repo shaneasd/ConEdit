@@ -10,7 +10,7 @@ namespace ConversationEditor
 {
     //using TData = Tuple<IEnumerable<string>, IEnumerable<string>, IEnumerable<string>>;
 
-    public class XMLProject
+    internal static class XMLProject
     {
         public const string XML_VERSION = "1.0";
         public const string ROOT = "Root";

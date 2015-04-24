@@ -8,7 +8,7 @@ using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeG
 
 namespace ConversationEditor
 {
-    class DanglingAudioError : ConversationError<ConversationNode>
+    internal class DanglingAudioError : ConversationError<ConversationNode>
     {
         private string m_file;
         public DanglingAudioError(string file, ConversationNode node)

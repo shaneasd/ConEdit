@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Conversation;
-using System.Windows.Forms;
-using System.Reflection;
 using Utilities;
+using Conversation;
 
 namespace ConversationEditor
 {
@@ -26,9 +24,20 @@ namespace ConversationEditor
         }
     }
 
+    public interface ILocalizationEngine
+    {
+        Tuple<ID<LocalizedText>, SimpleUndoPair> DuplicateActions(ID<LocalizedText> iD);
+
+        bool CanLocalize { get; }
+
+        string Localize(ID<LocalizedText> id);
+
+        SimpleUndoPair SetLocalizationAction(ID<LocalizedText> id, string p);
+    }
+
     public class ParameterEditorSetupData
     {
-        public ParameterEditorSetupData(IParameter parameter, LocalizationEngine localizer, IAudioProvider audioProvider, AudioGenerationParameters audioGenerationParameters)
+        public ParameterEditorSetupData(IParameter parameter, ILocalizationEngine localizer, IAudioProvider2 audioProvider, AudioGenerationParameters audioGenerationParameters)
         {
             Parameter = parameter;
             Localizer = localizer;
@@ -36,11 +45,10 @@ namespace ConversationEditor
             AudioGenerationParameters = audioGenerationParameters;
         }
         public readonly IParameter Parameter;
-        public readonly LocalizationEngine Localizer;
-        public readonly IAudioProvider AudioProvider;
+        public readonly ILocalizationEngine Localizer;
+        public readonly IAudioProvider2 AudioProvider;
         public readonly AudioGenerationParameters AudioGenerationParameters;
     }
-
     public interface IParameterEditor<out TUI>
     {
         void Setup(ParameterEditorSetupData data);

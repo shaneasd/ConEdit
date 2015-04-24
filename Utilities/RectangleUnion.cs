@@ -183,7 +183,6 @@ namespace Utilities
 
         internal void Draw(Graphics g)
         {
-            Color cc = Color.FromKnownColor((KnownColor)((m_rectangles[0].Left * 1987 + m_rectangles[0].Top + 1) % 174));
             foreach (var rr in AllRectangles)
             {
                 Color c = Color.FromKnownColor((KnownColor)((rr.Left * 1987 + rr.Top + 1) % 174));

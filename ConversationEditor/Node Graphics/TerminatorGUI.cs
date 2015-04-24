@@ -7,37 +7,38 @@ using System.Drawing;
 using Utilities;
 using System.Reflection;
 using System.IO;
+using Utilities.UI;
 
 namespace ConversationEditor
 {
-    public class TerminatorGUI : NodeUI
+    public class TerminatorGUIFactory : NodeUI.IFactory
     {
-        public class Factory : NodeUI.IFactory
+        public static TerminatorGUIFactory Instance = new TerminatorGUIFactory();
+
+        public bool WillRender(ID<NodeTypeTemp> nodeType)
         {
-            public static Factory Instance = new Factory();
-
-            public bool WillRender(ID<NodeTypeTemp> nodeType)
-            {
-                return nodeType == SpecialNodes.TERMINATOR_GUID;
-            }
-
-            public string DisplayName
-            {
-                get { return "Terminator Node Renderer"; }
-            }
-
-            public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
-            {
-                return new TerminatorGUI(n, p, localizer);
-            }
-
-            Guid m_guid = Guid.Parse("aacda2b5-bd9e-4fd2-ad0c-5f6a4d764702");
-            public Guid Guid
-            {
-                get { return m_guid; }
-            }
+            return nodeType == SpecialNodes.Terminator;
         }
 
+        public string DisplayName
+        {
+            get { return "Terminator Node Renderer"; }
+        }
+
+        public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        {
+            return new TerminatorGUI(n, p, localizer);
+        }
+
+        Guid m_guid = Guid.Parse("aacda2b5-bd9e-4fd2-ad0c-5f6a4d764702");
+        public Guid Guid
+        {
+            get { return m_guid; }
+        }
+    }
+
+    internal class TerminatorGUI : NodeUI
+    {
         Image image;
         public TerminatorGUI(ConversationNode<INodeGUI> node, PointF p, Func<ID<LocalizedText>, string> localizer)
             : base(node, p)
@@ -64,7 +65,7 @@ namespace ConversationEditor
 
         public override string DisplayName
         {
-            get { return Factory.Instance.DisplayName; }
+            get { return TerminatorGUIFactory.Instance.DisplayName; }
         }
     }
 }

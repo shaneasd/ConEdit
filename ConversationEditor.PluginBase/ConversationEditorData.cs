@@ -9,7 +9,7 @@ using System.Xml.Linq;
 namespace ConversationEditor
 {
     using ConversationNode = ConversationNode<INodeGUI>;
-    using XMLConversationData = Conversation.Serialization.XmlGraphData<NodeUIData, ConversationEditorData>;
+    using XmlConversationData = Conversation.Serialization.XmlGraphData<NodeUIData, ConversationEditorData>;
     using Conversation.Serialization;
 
     public class ConversationEditorData
@@ -24,7 +24,7 @@ namespace ConversationEditor
                     Write(group, node);
             }
 
-            public void Write(NodeGroup group, XElement root)
+            public void Write(NodeGroup group, XContainer root)
             {
                 var g = new XElement("Group");
                 foreach (var node in group.Contents)

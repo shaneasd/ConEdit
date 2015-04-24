@@ -5,9 +5,9 @@ using System.Text;
 using Conversation;
 using Utilities;
 
-namespace ConversationEditor.Error_Checkers
+namespace ConversationEditor.ErrorCheckers
 {
-    public class InvalidConnectionErrorChecker<T> : ErrorChecker<T> where T : class, IConversationNode
+    internal class InvalidConnectionErrorChecker<T> : ErrorChecker<T> where T : class, IConversationNode
     {
         class InvalidConnectionError : ConversationError<T>
         {
@@ -22,10 +22,10 @@ namespace ConversationEditor.Error_Checkers
             }
         }
 
-        public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> conversationFile, IErrorCheckerUtilities<T> utils)
+        public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
         {
             HashSet<UnorderedTuple2<T>> results = new HashSet<UnorderedTuple2<T>>();
-            foreach (var node in conversationFile)
+            foreach (var node in nodes)
             {
                 foreach (var c in node.Connectors)
                 {
@@ -40,9 +40,9 @@ namespace ConversationEditor.Error_Checkers
             return results.Select(r => new InvalidConnectionError(r));
         }
 
-        public override string GetName()
+        public override string Name
         {
-            return "Invalid Connections";
+            get { return "Invalid Connections"; }
         }
     }
 }

@@ -7,37 +7,39 @@ using System.Drawing;
 using Utilities;
 using System.Reflection;
 using System.IO;
+using Utilities.UI;
 
 namespace ConversationEditor
 {
-    public class StartGUI : NodeUI
+    public class StartGUIFactory : NodeUI.IFactory
     {
-        public class Factory : NodeUI.IFactory
+        private static StartGUIFactory m_instance = new StartGUIFactory();
+        public static StartGUIFactory Instance { get { return m_instance; } }
+
+        public bool WillRender(ID<NodeTypeTemp> nodeType)
         {
-            public static Factory Instance = new Factory();
-
-            public bool WillRender(ID<NodeTypeTemp> nodeType)
-            {
-                return nodeType == SpecialNodes.START_GUID;
-            }
-
-            public string DisplayName
-            {
-                get { return "Start Node Renderer"; }
-            }
-
-            public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
-            {
-                return new StartGUI(n, p, localizer);
-            }
-
-            static Guid m_guid = Guid.Parse("346ac22d-6393-4958-8d36-fedff89b40c0");
-            public Guid Guid
-            {
-                get { return m_guid; }
-            }
+            return nodeType == SpecialNodes.Start;
         }
 
+        public string DisplayName
+        {
+            get { return "Start Node Renderer"; }
+        }
+
+        public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        {
+            return new StartGUI(n, p, localizer);
+        }
+
+        static Guid m_guid = Guid.Parse("346ac22d-6393-4958-8d36-fedff89b40c0");
+        public Guid Guid
+        {
+            get { return m_guid; }
+        }
+    }
+
+    internal class StartGUI : NodeUI
+    {
         Image image;
         public StartGUI(ConversationNode<INodeGUI> node, PointF p, Func<ID<LocalizedText>, string> localizer)
             : base(node, p)
@@ -64,7 +66,7 @@ namespace ConversationEditor
 
         public override string DisplayName
         {
-            get { return Factory.Instance.DisplayName; }
+            get { return StartGUIFactory.Instance.DisplayName; }
         }
-            }
+    }
 }

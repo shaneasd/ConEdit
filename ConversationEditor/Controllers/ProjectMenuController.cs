@@ -12,7 +12,7 @@ namespace ConversationEditor
 {
     using ConversationNode = ConversationNode<INodeGUI>;
 
-    public class ProjectMenuController
+    internal class ProjectMenuController
     {
         private INodeFactory m_conversationNodeFactory;
         private INodeFactory m_domainNodeFactory;
@@ -55,7 +55,7 @@ namespace ConversationEditor
         private PluginsConfig m_pluginsConfig;
         private Func<IAudioProviderCustomization> m_audioCustomization;
         SharedContext m_context;
-        
+
         public ProjectMenuController(SharedContext context, ConfigParameterList<string> config, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ProjectExplorer list, Action<Action> executeInGUIThread, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
         {
             m_context = context;
@@ -136,7 +136,7 @@ namespace ConversationEditor
                 var project = new Project(m_context, projectData, m_conversationNodeFactory, m_domainNodeFactory, m, new FileInfo(path),
                     new XMLProject.Serializer(),
                     SerializationUtils.ConversationSerializer,
-                    d => SerializationUtils.ConversationSerializerDeserializer(d),
+                    SerializationUtils.ConversationSerializerDeserializer,
                     SerializationUtils.DomainSerializer, m_pluginsConfig, m_audioCustomization);
 
                 project.FileDeletedExternally += () => m_executeInGUIThread(() => { MessageBox.Show("Project file deleted by another application"); });
@@ -160,7 +160,17 @@ namespace ConversationEditor
                         reload();
                     }
                 });
-                project.ElementDeletedExternally += (element) => m_executeInGUIThread(() => { MessageBox.Show("Project element " + element.File.File.FullName + " deleted by another application"); });
+                project.ElementDeletedExternally += (element) => m_executeInGUIThread(() =>
+                {
+                    //We never actually remove this callback so if the file is deleted this callback will trigger
+                    //informing the user that the file they just deleted was just deleted. As this is pointless
+                    //we check if the project in question is in the project. We could simply detach the callback at
+                    //the appropriate time but this way seems more resilient to potential bugs
+                    if ( m_context.CurrentProject.Value.Conversations.Contains(element))
+                    {
+                        MessageBox.Show("Project element " + element.File.File.FullName + " deleted by another application"); 
+                    }
+                });
                 m_context.CurrentProject.Value = project;
             }
         }
@@ -199,7 +209,7 @@ namespace ConversationEditor
                         project = Project.CreateEmpty(m_context, new FileInfo(m_sfd.FileName), m_conversationNodeFactory, m_domainNodeFactory,
                             new XMLProject.Serializer(),
                             SerializationUtils.ConversationSerializer,
-                            d => SerializationUtils.ConversationSerializerDeserializer(d),
+                            SerializationUtils.ConversationSerializerDeserializer,
                             SerializationUtils.DomainSerializer, m_pluginsConfig, m_audioCustomization);
                     }
                     catch (MyFileLoadException e)

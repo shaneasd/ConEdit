@@ -3,23 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Conversation;
-using ConversationEditor;
 
 namespace Clandestine
 {
-    public class ConfigNodeDefinitions : IConfigNodeDefinitionFactory
+    public sealed class ConfigNodeDefinitionsFactory : IConfigNodeDefinitionFactory
     {
-        public ConfigNodeDefinitions()
+        public ConfigNodeDefinitionsFactory()
         {
         }
 
-        IEnumerable<IConfigNodeDefinition> IConfigNodeDefinitionFactory.ConfigNodeDefinitions()
+        public IEnumerable<IConfigNodeDefinition> GetConfigNodeDefinitions()
         {
-            yield return new DontRenderConfig();
+            yield return new DoNotRenderConfig();
         }
     }
-
-
-
-
 }

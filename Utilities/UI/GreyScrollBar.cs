@@ -12,21 +12,21 @@ using System.Diagnostics;
 using System.Reflection;
 using System.IO;
 
-namespace Utilities
+namespace Utilities.UI
 {
     public partial class GreyScrollBar : UserControl
     {
-        public static Bitmap ScrollbarUpIcon;
-        public static Bitmap ScrollbarUpPressedIcon;
-        public static Bitmap ScrollbarBackgroundVerticalIcon;
-        public static Bitmap FolderIcon;
+        public readonly static Bitmap ScrollbarUpIcon;
+        public readonly static Bitmap ScrollbarUpPressedIcon;
+        public readonly static Bitmap ScrollbarBackgroundVerticalIcon;
+        public readonly static Bitmap FolderIcon;
 
-        public static Bitmap ScrollbarMiddleIcon;
-        public static Bitmap ScrollbarMiddlePressedIcon;
-        public static Bitmap ScrollbarTopIcon;
-        public static Bitmap ScrollbarTopPressedIcon;
-        public static Bitmap ScrollbarBottomIcon;
-        public static Bitmap ScrollbarBottomPressedIcon;
+        public readonly static Bitmap ScrollbarMiddleIcon;
+        public readonly static Bitmap ScrollbarMiddlePressedIcon;
+        public readonly static Bitmap ScrollbarTopIcon;
+        public readonly static Bitmap ScrollbarTopPressedIcon;
+        public readonly static Bitmap ScrollbarBottomIcon;
+        public readonly static Bitmap ScrollbarBottomPressedIcon;
 
         static GreyScrollBar()
         {
@@ -59,9 +59,9 @@ namespace Utilities
             InitializeComponent();
             Action CreateButtons = () =>
                 {
-                    TopButton = new Button(new Point(0, 0), !Horizontal ? Button.Direction.Up : Button.Direction.Left, () => m_state, () => ColorScheme.Background);
+                    TopButton = new Button(new Point(0, 0), !Horizontal ? Button.Direction.Up : Button.Direction.Left, () => ColorScheme.Background);
                     var location = Horizontal ? new Point(Width - BUTTON_SIZE, 0) : new Point(0, Height - BUTTON_SIZE);
-                    BottomButton = new Button(location, !Horizontal ? Button.Direction.Down : Button.Direction.Right, () => m_state, () => ColorScheme.Background);
+                    BottomButton = new Button(location, !Horizontal ? Button.Direction.Down : Button.Direction.Right, () => ColorScheme.Background);
                 };
             CreateButtons();
             SizeChanged += (a, b) => CreateButtons();
@@ -154,7 +154,7 @@ namespace Utilities
             }
         }
 
-        public enum StateEnum { None, HoldingScrollDownButton, HoldingScrollUpButton, Dragging, EmptyScrollDown, EmptyScrollUp }
+        private enum StateEnum { None, HoldingScrollDownButton, HoldingScrollUpButton, Dragging, EmptyScrollDown, EmptyScrollUp }
         StateEnum m_state;
         float m_dragStart;
         float m_dragValue;
@@ -256,13 +256,11 @@ namespace Utilities
             public enum Direction { Up, Down, Left, Right }
             private Rectangle m_rectangle;
             private Direction m_direction;
-            Func<StateEnum> m_state;
             private Func<Color> m_backColor;
-            public Button(Point location, Direction direction, Func<StateEnum> state, Func<Color> backColor)
+            public Button(Point location, Direction direction, Func<Color> backColor)
             {
                 m_rectangle = new Rectangle(location, new Size(BUTTON_SIZE, BUTTON_SIZE));
                 m_direction = direction;
-                m_state = state;
                 m_backColor = backColor;
             }
 

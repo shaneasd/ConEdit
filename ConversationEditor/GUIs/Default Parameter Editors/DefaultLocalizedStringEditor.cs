@@ -9,37 +9,38 @@ using System.Windows.Forms;
 using Conversation;
 using Utilities;
 using System.Text.RegularExpressions;
+using Utilities.UI;
 
 namespace ConversationEditor
 {
-    public partial class DefaultLocalizedStringEditor : UserControl, IParameterEditor<DefaultLocalizedStringEditor>
+    public class DefaultLocalizedStringEditorFactory : IParameterEditorFactory
     {
-        public class Factory : IParameterEditorFactory
+        public static readonly Guid StaticId = Guid.Parse("df3f30b8-ee05-4972-8b41-fb075d5502a7");
+        public bool WillEdit(ParameterType type, WillEdit willEdit)
         {
-            public static readonly Guid GUID = Guid.Parse("df3f30b8-ee05-4972-8b41-fb075d5502a7");
-            public bool WillEdit(ParameterType type, WillEdit willEdit)
-            {
-                return type == BaseTypeLocalizedString.PARAMETER_TYPE;
-            }
-
-            public string Name
-            {
-                get { return "Default Localized String Editor"; }
-            }
-
-            public Guid Guid
-            {
-                get { return GUID; }
-            }
-
-            public IParameterEditor<Control> Make(ColorScheme scheme)
-            {
-                var result = new DefaultLocalizedStringEditor();
-                result.Scheme = scheme;
-                return result;
-            }
+            return type == BaseTypeLocalizedString.PARAMETER_TYPE;
         }
 
+        public string Name
+        {
+            get { return "Default Localized String Editor"; }
+        }
+
+        public Guid Guid
+        {
+            get { return StaticId; }
+        }
+
+        public IParameterEditor<Control> Make(ColorScheme scheme)
+        {
+            var result = new DefaultLocalizedStringEditor();
+            result.Scheme = scheme;
+            return result;
+        }
+    }
+
+    internal partial class DefaultLocalizedStringEditor : UserControl, IParameterEditor<DefaultLocalizedStringEditor>
+    {
         private MyTextBox m_textBox;
 
         public DefaultLocalizedStringEditor()
@@ -58,7 +59,7 @@ namespace ConversationEditor
             MyTextBox.SetupCallbacks(drawWindow1, m_textBox);
         }
 
-        LocalizationEngine m_localizer;
+        ILocalizationEngine m_localizer;
 
         ILocalizedStringParameter m_parameter;
         public void Setup(ParameterEditorSetupData data)

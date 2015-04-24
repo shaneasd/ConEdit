@@ -30,8 +30,8 @@
         {
             this.btnOk = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.drawWindow1 = new Utilities.DrawWindow();
-            this.greyScrollBar1 = new Utilities.GreyScrollBar();
+            this.drawWindow1 = new Utilities.UI.DrawWindow();
+            this.greyScrollBar1 = new Utilities.UI.GreyScrollBar();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -120,8 +120,8 @@
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Button btnOk;
-        private Utilities.DrawWindow drawWindow1;
-        private Utilities.GreyScrollBar greyScrollBar1;
+        private Utilities.UI.DrawWindow drawWindow1;
+        private Utilities.UI.GreyScrollBar greyScrollBar1;
         private System.Windows.Forms.Panel panel1;
     }
 }

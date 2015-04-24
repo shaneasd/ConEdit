@@ -3,31 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Conversation;
+using System.Collections.ObjectModel;
 
 namespace ConversationEditor
 {
-    class ParameterEditorCustomization : IEditable
+    internal class ParameterEditorCustomization : IEditable
     {
         public static Guid DefaultEditor(ParameterType type, WillEdit willEdit)
         {
             if (willEdit.IsDecimal(type))
-                return DefaultDecimalEditor.Factory.GUID;
+                return DefaultDecimalEditorFactory.StaticId;
             else if (willEdit.IsDynamicEnum(type))
-                return DefaultDynamicEnumEditor.Factory.GUID;
+                return DefaultDynamicEnumEditorFactory.StaticId;
             else if (willEdit.IsEnum(type))
-                return DefaultEnumEditor.Factory.GUID;
+                return DefaultEnumEditorFactory.StaticId;
             else if (willEdit.IsInteger(type))
-                return DefaultIntegerEditor.Factory.GUID;
+                return DefaultIntegerEditorFactory.StaticId;
             else if (type == BaseTypeBoolean.PARAMETER_TYPE)
-                return DefaultBooleanEditor.Factory.GUID;
-            else if (type == BaseTypeString.PARAMETER_TYPE)
-                return DefaultStringEditor.Factory.GUID;
+                return DefaultBooleanEditorFactory.StaticId;
+            else if (type == BaseTypeString.ParameterType)
+                return DefaultStringEditorFactory.StaticId;
             else if (type == BaseTypeLocalizedString.PARAMETER_TYPE)
-                return DefaultLocalizedStringEditor.Factory.GUID;
+                return DefaultLocalizedStringEditorFactory.StaticId;
             else if (type == BaseTypeAudio.PARAMETER_TYPE)
-                return DefaultAudioEditor.Factory.GUID;
+                return DefaultAudioEditorFactory.StaticId;
             else if (type.IsSet)
-                return DefaultSetEditor.Factory.GUID;
+                return DefaultSetEditorFactory.StaticId;
             else
                 return Guid.Empty;
         }
@@ -59,12 +60,12 @@ namespace ConversationEditor
             get { return m_parameters; }
         }
 
-        public ID<NodeTemp> NodeID
+        public ID<NodeTemp> NodeId
         {
             get { throw new NotImplementedException(); }
         }
 
-        public ID<NodeTypeTemp> NodeTypeID
+        public ID<NodeTypeTemp> NodeTypeId
         {
             get { throw new NotImplementedException(); }
         }
@@ -74,7 +75,7 @@ namespace ConversationEditor
             get { return "Customize parameter editors"; }
         }
 
-        public List<NodeData.ConfigData> Config
+        public ReadOnlyCollection<NodeData.ConfigData> Config
         {
             get { throw new NotImplementedException(); }
         }

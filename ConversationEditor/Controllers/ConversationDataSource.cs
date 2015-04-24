@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace ConversationEditor
 {
-    public class ConversationDataSource : IDataSource
+    internal class ConversationDataSource : IDataSource
     {
         ConversationConnectionRules m_connectionRules = new ConversationConnectionRules();
         TypeSet m_types;
@@ -74,7 +74,7 @@ namespace ConversationEditor
         public void AddNodeType(NodeData node)
         {
             var nodeGenerator = new GenericEditableGenerator2(node, m_types, m_connectorDefinitions, m_connectionRules);
-            m_nodes[node.Guid] = new Tuple<Guid, GenericEditableGenerator2>(node.Type.GetValueOrDefault(DomainIDs.CATEGORY_NONE), nodeGenerator);
+            m_nodes[node.Guid] = new Tuple<Guid, GenericEditableGenerator2>(node.Type.GetValueOrDefault(DomainIDs.CategoryNone), nodeGenerator);
         }
 
         internal void RemoveNodeType(ID<NodeTypeTemp> id)
@@ -95,7 +95,7 @@ namespace ConversationEditor
         private void GenerateCategories(List<NodeTypeData> nodeTypeData)
         {
             nodeTypeData = nodeTypeData.ToList(); //Copy that shit because we don't want to break m_categories
-            m_nodeHeirarchy = new NodeType(null, DomainIDs.CATEGORY_NONE);
+            m_nodeHeirarchy = new NodeType(null, DomainIDs.CategoryNone);
 
             var duplicates = nodeTypeData.GroupBy(a => a.Guid).Where(g => g.Count() > 1);
             if (duplicates.Any())

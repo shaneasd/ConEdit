@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using System.Globalization;
 
 namespace ConversationEditor
 {
-    public class ConfigParameterUint : ConfigParameter<uint>
+    //Doesn't look like anything's using this class at the moment
+    internal class ConfigParameterUint : ConfigParameter<uint>
     {
         string m_name;
         public ConfigParameterUint(string name, uint @default)
@@ -26,7 +28,7 @@ namespace ConversationEditor
 
         public override void Write(XElement root)
         {
-            var @string = InnerValue.ToString();
+            var @string = InnerValue.ToString(CultureInfo.InvariantCulture);
             root.Add(new XElement(m_name, new XAttribute("value", @string)));
         }
     }

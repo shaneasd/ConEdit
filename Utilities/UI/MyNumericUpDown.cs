@@ -6,8 +6,9 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Globalization;
 
-namespace Utilities
+namespace Utilities.UI
 {
     public class MyNumericUpDown<T> : MyControl
     {
@@ -48,7 +49,7 @@ namespace Utilities
             m_textBox.RequestedAreaChanged += () => { RequestedArea = new SizeF(Area.Width, m_textBox.RequestedArea.Height); };
             m_textBox.TextChanged += (string oldText) =>
                 {
-                    if (m_textBox.Text == "" || m_textBox.Text == "-")
+                    if (m_textBox.Text.Length == 0 || m_textBox.Text == "-")
                         m_value = 0;
                     else
                     {
@@ -218,7 +219,7 @@ namespace Utilities
                 if (value != m_value)
                 {
                     m_value = value;
-                    m_textBox.Text = m_value.ToString();
+                    m_textBox.Text = m_value.ToString(CultureInfo.CurrentCulture);
                     m_textBox.CursorPos = new MyTextBox.CP(int.MaxValue);
                 }
             }

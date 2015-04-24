@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.zoomBar = new Utilities.GreyScrollBar();
-            this.hScrollBar1 = new Utilities.GreyScrollBar();
-            this.vScrollBar1 = new Utilities.GreyScrollBar();
-            this.drawWindow = new Utilities.DrawWindow();
+            this.zoomBar = new Utilities.UI.GreyScrollBar();
+            this.hScrollBar1 = new Utilities.UI.GreyScrollBar();
+            this.vScrollBar1 = new Utilities.UI.GreyScrollBar();
+            this.drawWindow = new Utilities.UI.DrawWindow();
             this.SuspendLayout();
             // 
             // zoomBar
@@ -109,9 +109,9 @@
 
         #endregion
 
-        private Utilities.DrawWindow drawWindow;
-        private Utilities.GreyScrollBar vScrollBar1;
-        private Utilities.GreyScrollBar hScrollBar1;
-        private Utilities.GreyScrollBar zoomBar;
+        private Utilities.UI.DrawWindow drawWindow;
+        private Utilities.UI.GreyScrollBar vScrollBar1;
+        private Utilities.UI.GreyScrollBar hScrollBar1;
+        private Utilities.UI.GreyScrollBar zoomBar;
     }
 }

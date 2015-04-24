@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace Utilities
+namespace Utilities.UI
 {
     public class MyComboBox<T> : MyControl
     {

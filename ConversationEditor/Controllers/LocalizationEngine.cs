@@ -10,7 +10,7 @@ using Conversation.Serialization;
 
 namespace ConversationEditor
 {
-    public class LocalizationEngine
+    internal class LocalizationEngine : ILocalizationEngine
     {
         public const string MISSING_LOCALIZATION = "Missing Localization";
 
@@ -64,7 +64,7 @@ namespace ConversationEditor
                 return MISSING_LOCALIZATION;
         }
 
-        internal Tuple<ID<LocalizedText>, SimpleUndoPair> DuplicateActions(ID<LocalizedText> guid)
+        public Tuple<ID<LocalizedText>, SimpleUndoPair> DuplicateActions(ID<LocalizedText> guid)
         {
             ID<LocalizedText> result = new ID<LocalizedText>();
             List<SimpleUndoPair> actions = new List<SimpleUndoPair>();
@@ -75,7 +75,7 @@ namespace ConversationEditor
             return Tuple.Create(result, new SimpleUndoPair { Redo = ()=>actions.ForEach(a=>a.Redo()), Undo = ()=> actions.ForEach(a=>a.Undo())});
         }
 
-        internal SimpleUndoPair SetLocalizationAction(ID<LocalizedText> guid, string value)
+        public SimpleUndoPair SetLocalizationAction(ID<LocalizedText> guid, string value)
         {
             return m_context.CurrentLocalization.Value.SetLocalizationAction(guid, value);
         }

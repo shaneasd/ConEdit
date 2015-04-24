@@ -10,18 +10,14 @@ using Utilities;
 namespace ConversationEditor
 {
     using ConversationNode = ConversationNode<INodeGUI>;
+    using System.Collections.ObjectModel;
 
-    public class DummyConversationFile : IConversationFile
+    internal sealed class DummyConversationFile : IConversationFile
     {
         public static IConversationFile Instance = new DummyConversationFile();
         private DummyConversationFile() { }
 
         public bool Remove(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Change(UndoAction revert)
         {
             throw new NotImplementedException();
         }
@@ -41,14 +37,9 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public UndoQueue UndoQueue
-        {
-            get { return new UndoQueue(); }
-        }
-
         public event Action<FileInfo, FileInfo> Moved { add { } remove { } }
 
-        public List<Error> Errors
+        public ReadOnlyCollection<LoadError> Errors
         {
             get { throw new NotImplementedException(); }
         }
@@ -111,7 +102,7 @@ namespace ConversationEditor
         }
 
 
-        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, System.Drawing.PointF location, LocalizationEngine localization)
+        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, System.Drawing.PointF location, ILocalizationEngine localization)
         {
             throw new NotImplementedException();
         }

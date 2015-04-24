@@ -21,14 +21,13 @@ using System.Xml.Linq;
 
 namespace ConversationEditor
 {
-    public partial class Form1 : Form
+    internal partial class Form1 : Form
     {
         ErrorCheckerController m_errorCheckerController;
         SharedContext m_context;
         Config m_config;
         INodeFactory m_conversationNodeFactory;
         INodeFactory m_domainNodeFactory;
-        INodeFactory m_projectNodeFactory;
         ProjectMenuController m_projectMenuController;
 
         ConversationEditorControl m_domainEditor2 = new ConversationEditorControl() { Dock = DockStyle.Fill, ShowGrid = true };
@@ -156,7 +155,6 @@ namespace ConversationEditor
         {
             m_conversationNodeFactory = new NodeFactory(m_config.ConversationNodeRenderers, GetAllOfType<NodeUI.IFactory>(), a => m_config.ConversationNodeRenderers.ValueChanged += a, guid => m_context.CurrentProject.Value.Localizer.Localize(guid), () => m_context.CurrentProject.Value.ConversationDataSource);
             m_domainNodeFactory = new NodeFactory(m_config.DomainNodeRenderers, guid => m_context.CurrentProject.Value.Localizer.Localize(guid), () => m_context.CurrentProject.Value.DomainDataSource);
-            m_projectNodeFactory = new NodeFactory(m_config.ProjectNodeRenderers, guid => m_context.CurrentProject.Value.Localizer.Localize(guid), null);
         }
 
         private void InitialiseOptionsMenu()
@@ -199,10 +197,10 @@ namespace ConversationEditor
         /// </summary>
         /// <typeparam name="T">The interface that must be implemented</typeparam>
         /// <returns>All classes that implement T</returns>
-        private IEnumerable<T> GetAllOfType<T>(MainAssembly mainAssembly = MainAssembly.Include) where T : class
+        private IEnumerable<T> GetAllOfType<T>(MainAssemblies mainAssemblies = MainAssemblies.Include) where T : class
         {
             List<T> result = new List<T>();
-            var assemblies = m_config.Plugins.UnfilteredAssemblies(mainAssembly).Select(a => a.Assembly);
+            var assemblies = m_config.Plugins.UnfilteredAssemblies(mainAssemblies).Select(a => a.Assembly);
             foreach (var pa in assemblies)
             {
                 var factories = pa.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(T)));
@@ -217,24 +215,24 @@ namespace ConversationEditor
 
         private void InitialiseConversationEditor()
         {
-            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_conversationNodeFactory, m_context.CurrentProject.Value.ConversationDataSource, conversationEditorControl1, new GraphContextMenuItems(FindReferences));
+            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_context.CurrentProject.Value.ConversationDataSource, conversationEditorControl1, new GraphContextMenuItems(FindReferences));
         }
 
         private void InitializeDomainEditor()
         {
-            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_domainNodeFactory, m_context.CurrentProject.Value.DomainDataSource, m_domainEditor2, new DomainContextMenuItems(FindReferences));
+            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_context.CurrentProject.Value.DomainDataSource, m_domainEditor2, new DomainContextMenuItems(FindReferences));
         }
 
         private void InitializeProjectEditor()
         {
-            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_projectNodeFactory, ProjectDomain.Instance, m_projectGraphEditor, new ProjectContextMenuItems(m_context.CurrentProject.Value));
+            InitializeGraphEditor(ConversationCopyPasteController.Instance, ProjectDomain.Instance, m_projectGraphEditor, new ProjectContextMenuItems());
         }
 
-        private void InitializeGraphEditor(ConversationCopyPasteController copyPasteController, INodeFactory nodefactory, IDataSource datasource, GraphEditorControl<ConversationNode> editor, IMenuActionFactory<ConversationNode> basicItems)
+        private void InitializeGraphEditor(ConversationCopyPasteController copyPasteController, IDataSource datasource, GraphEditorControl<ConversationNode> editor, IMenuActionFactory<ConversationNode> basicItems)
         {
-            editor.Initialise(Edit, nodefactory, copyPasteController, FindReferences);
+            editor.Initialise(Edit, copyPasteController);
             editor.SetContext(datasource, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value);
-            editor.m_contextMenu.Opening += () => editor.RefreshContextMenu(basicItems.Only().Concat(GetAllOfType<IMenuActionFactory<ConversationNode>>(MainAssembly.Ignore)));
+            editor.m_contextMenu.Opening += () => editor.RefreshContextMenu(basicItems.Only().Concat(GetAllOfType<IMenuActionFactory<ConversationNode>>(MainAssemblies.Ignore)));
 
             Action updateGraphViewFromConfig = () =>
             {
@@ -332,7 +330,7 @@ namespace ConversationEditor
             }
         }
 
-        void ProjectChanged(IProject old, IProject project)
+        void ProjectChanged(IProject project)
         {
             Project.TConfig projectConfig = ReadProjectConfig(project);
 
@@ -363,7 +361,6 @@ namespace ConversationEditor
                 else
                     CurrentEditor = null;
                 Func<ILocalizationFile, bool> matchesLastLocalization = c => c.File.File.FullName == (p.Rerout(projectConfig.LastLocalization.Only()).Single()).FullName;
-                IEnumerable<ILocalizationFile> allLocalizers = project.LocalizationFiles;
                 if (projectConfig.LastLocalization != null)
                 {
                     var match = project.LocalizationFiles.FirstOrDefault(matchesLastLocalization);
@@ -385,7 +382,7 @@ namespace ConversationEditor
             //        m_dataSourceController.LoadFromXml();
             //};
 
-            m_context.CurrentProject.Changed.Register(this, (a, b) => a.ProjectChanged(b.from, b.to));
+            m_context.CurrentProject.Changed.Register(this, (a, b) => a.ProjectChanged(b.to));
             m_projectMenuController = new ProjectMenuController(m_context, m_config.ProjectHistory, m_conversationNodeFactory, m_domainNodeFactory, projectExplorer, a => Invoke(a), m_config.Plugins, GetAudioCustomizer);
 
             this.projectSaveMenuItem.Click += (a, b) => m_projectMenuController.Save();
@@ -457,10 +454,10 @@ namespace ConversationEditor
                 return ConfigureResult.NotApplicable;
             }
             else
-                return m_config.NodeEditors[data.NodeTypeID].GetEditorFactory().Edit(m_scheme, data, audioContext, GetParameterEditor, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value.AudioProvider);
+                return m_config.NodeEditors[data.NodeTypeId].GetEditorFactory().Edit(m_scheme, data, audioContext, GetParameterEditor, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value.AudioProvider);
         }
 
-        
+
 
         private void errorCheckToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -531,6 +528,8 @@ namespace ConversationEditor
                 e.Cancel = true;
             else
             {
+                if (m_currentEditor != null)
+                    m_currentEditor.CurrentFile = DummyConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>.Instance;
                 if (configPath != null)
                 {
                     var config = new XElement("Config");
@@ -778,7 +777,7 @@ namespace ConversationEditor
         private List<T> GetAllFactories<T>() where T : class
         {
             List<T> result = new List<T>();
-            foreach (var pa in m_config.Plugins.UnfilteredAssemblies(MainAssembly.Include).Select(a => a.Assembly).Concat(Assembly.GetExecutingAssembly().Only()))
+            foreach (var pa in m_config.Plugins.UnfilteredAssemblies(MainAssemblies.Include).Select(a => a.Assembly))
             {
                 var factories = pa.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(T)));
                 foreach (var factory in factories)

@@ -11,7 +11,7 @@ namespace ConversationEditor
 {
     using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 
-    public class PluginAssembly
+    internal class PluginAssembly
     {
         public readonly string FileName; //Null if main assembly
         public readonly Assembly Assembly;
@@ -22,7 +22,7 @@ namespace ConversationEditor
             Assembly = Assembly.LoadFile(file.FullName);
         }
 
-        public PluginAssembly(Assembly assembly, bool mainAssembly)
+        public PluginAssembly(Assembly assembly)
         {
             Assembly = assembly;
             FileName = null;
@@ -38,18 +38,21 @@ namespace ConversationEditor
             var other = obj as PluginAssembly;
             if (other == null)
                 return false;
-            return object.Equals(FileName, other.FileName);
+            if (FileName != null)
+                return object.Equals(FileName, other.FileName);
+            else
+                return this.Assembly.GetName().Equals(other.Assembly.GetName());
         }
 
         public override int GetHashCode()
         {
             if (FileName == null)
-                return 0;
+                return Assembly.GetName().GetHashCode();
             return FileName.GetHashCode();
         }
     }
 
-    public class ErrorCheckerAssembly
+    internal class ErrorCheckerAssembly
     {
         public readonly PluginAssembly m_assembly;
         public readonly QuickLookupCollection<ErrorCheckerController.ErrorCheckerData, string> Types = new QuickLookupCollection<ErrorCheckerController.ErrorCheckerData, string>(a => a.SerializeName);

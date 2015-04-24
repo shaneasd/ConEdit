@@ -8,7 +8,7 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    public class MissingLocalizationFile : ILocalizationFile
+    internal sealed class MissingLocalizationFile : ILocalizationFile
     {
         private MissingFile m_file;
 

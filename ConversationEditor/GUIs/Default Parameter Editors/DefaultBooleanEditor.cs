@@ -12,34 +12,35 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    public partial class DefaultBooleanEditor : UserControl, IParameterEditor<DefaultBooleanEditor>
+    public class DefaultBooleanEditorFactory : IParameterEditorFactory
     {
-        public class Factory : IParameterEditorFactory
+        public static readonly Guid StaticId = Guid.Parse("87253284-4ade-4a7d-9043-81f3b58f1ba5");
+
+        public bool WillEdit(ParameterType type, WillEdit willEdit)
         {
-            public static readonly Guid GUID = Guid.Parse("87253284-4ade-4a7d-9043-81f3b58f1ba5");
-
-            public bool WillEdit(ParameterType type, WillEdit willEdit)
-            {
-                return type == BaseTypeBoolean.PARAMETER_TYPE;
-            }
-
-            public string Name
-            {
-                get { return "Default Boolean Editor"; }
-            }
-
-            public Guid Guid
-            {
-                get { return GUID; }
-            }
-
-            public IParameterEditor<Control> Make(ColorScheme scheme)
-            {
-                var result = new DefaultBooleanEditor();
-                result.Scheme = scheme;
-                return result;
-            }
+            return type == BaseTypeBoolean.PARAMETER_TYPE;
         }
+
+        public string Name
+        {
+            get { return "Default Boolean Editor"; }
+        }
+
+        public Guid Guid
+        {
+            get { return StaticId; }
+        }
+
+        public IParameterEditor<Control> Make(ColorScheme scheme)
+        {
+            var result = new DefaultBooleanEditor();
+            result.Scheme = scheme;
+            return result;
+        }
+    }
+
+    internal partial class DefaultBooleanEditor : UserControl, IParameterEditor<DefaultBooleanEditor>
+    {
         ColorScheme m_colorScheme;
         public ColorScheme Scheme
         {
@@ -100,7 +101,7 @@ namespace ConversationEditor
             e.Graphics.DrawString(DisplayText, Font, Scheme.ForegroundBrush, textLocation);
         }
 
-        public static void DrawCheckBox(ColorScheme scheme, Graphics g, Rectangle boxRectangle, bool check)
+        public static void DrawCheckBox(Utilities.UI.ColorScheme scheme, Graphics g, Rectangle boxRectangle, bool check)
         {
             g.DrawRectangle(scheme.ForegroundPen, boxRectangle);
             if (check)

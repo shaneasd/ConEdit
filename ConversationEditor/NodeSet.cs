@@ -11,7 +11,7 @@ namespace ConversationEditor
     using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
     //using ConversationNode = IRenderable<ConversationEditor.INodeGUI>;
 
-    public class NodeSet : IReadonlyNodeSet
+    internal class NodeSet : IReadonlyNodeSet
     {
         public static RectangleF GetArea(IEnumerable<IRenderable<IGUI>> data)
         {
@@ -131,12 +131,5 @@ namespace ConversationEditor
             foreach (var group in Groups)
                 yield return group;
         }
-    }
-
-    public interface IReadonlyNodeSet
-    {
-        IEnumerable<ID<NodeTemp>> Nodes { get; }
-        IEnumerable<NodeGroup> Groups { get; }
-        int Count();
     }
 }

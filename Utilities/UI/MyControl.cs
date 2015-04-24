@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Globalization;
 
-namespace Utilities
+namespace Utilities.UI
 {
     public interface IFocusProvider
     {
@@ -27,12 +28,12 @@ namespace Utilities
         }
     }
 
-    public abstract class MyControl : IDisposable
+    public abstract class MyControl : Disposable, IDisposable
     {
         public string Name;
-        public MyControl()
+        protected MyControl()
         {
-            Name = GetHashCode().ToString();
+            Name = GetHashCode().ToString(CultureInfo.InvariantCulture);
         }
 
         public abstract void MouseDown(MouseEventArgs args);
@@ -134,13 +135,16 @@ namespace Utilities
             });
         }
 
-        public virtual void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            foreach (var action in m_disposeActions)
+            if (disposing)
             {
-                action();
+                foreach (var action in m_disposeActions)
+                {
+                    action();
+                }
+                m_disposeActions.Clear();
             }
-            m_disposeActions.Clear();
         }
 
         protected Stack<Action> m_disposeActions = new Stack<Action>();

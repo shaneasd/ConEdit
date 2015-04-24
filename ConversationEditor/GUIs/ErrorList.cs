@@ -8,12 +8,13 @@ using System.Text;
 using System.Windows.Forms;
 using Utilities;
 using Conversation;
+using Utilities.UI;
 
 namespace ConversationEditor
 {
     using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 
-    public partial class ErrorList : UserControl
+    internal partial class ErrorList : UserControl
     {
         public class Element
         {

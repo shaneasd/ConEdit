@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ConversationEditor.Controllers;
 using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 using System.Reflection;
 using System.IO;
@@ -13,7 +12,7 @@ namespace PluginPack
 {
     class TemplatesMenuActions : IMenuActionFactory<ConversationNode>
     {
-        public IEnumerable<MenuAction2<ConversationNode>> GetMenuActions(ConversationEditor.GraphEditorControl<ConversationNode> control)
+        public IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control)
         {
             XmlGraphData<NodeUIData, ConversationEditorData> data;
             Assembly assembly = Assembly.GetExecutingAssembly();
@@ -22,7 +21,7 @@ namespace PluginPack
                 data = SerializationUtils.ConversationDeserializer(control.DataSource).Read(stream);
             }
 
-            yield return new MenuAction2<ConversationNode>("Basic Conversation", (a, b) => null, null, null, p =>
+            yield return new MenuAction<ConversationNode>("Basic Conversation", (a, b) => null, null, null, p =>
             {
                 control.Insert(p, Tuple.Create(data.Nodes, data.EditorData.Groups));
             });

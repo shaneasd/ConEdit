@@ -30,6 +30,6 @@ namespace Conversation
 
     public interface IConfigurable
     {
-        ConfigureResult Configure(Func<IEditable, ConfigureResult> configure);
+        ConfigureResult Configure(Func<IEditable, ConfigureResult> configureData);
     }
 }

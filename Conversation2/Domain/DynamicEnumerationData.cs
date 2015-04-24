@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Utilities;
+using System.IO;
 
 namespace Conversation
 {
     public struct DynamicEnumerationData
     {
+        //TODO: WTF? Fix this please
         //Global variables evil. This is a hack to get around the fact that every time you call DomainFile.Data this type gets recreated from the nodes so there's no permanent mapping between dynamic enumeration and source
         public static Dictionary<ParameterType, DynamicEnumParameter.Source> sourcesHack = new Dictionary<ParameterType, DynamicEnumParameter.Source>();
 

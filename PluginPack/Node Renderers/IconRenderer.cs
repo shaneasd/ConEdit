@@ -10,34 +10,35 @@ using Utilities;
 
 namespace PluginPack
 {
-    public class IconRenderer : NodeUI
+    public class IconRendererFactory : NodeUI.IFactory
     {
-        public class Factory : NodeUI.IFactory
+        private static readonly IconRendererFactory m_instance = new IconRendererFactory();
+        public static IconRendererFactory Instance { get { return m_instance; } }
+
+        public bool WillRender(ID<NodeTypeTemp> nodeType)
         {
-            public static Factory Instance = new Factory();
-
-            public bool WillRender(ID<NodeTypeTemp> nodeType)
-            {
-                return true;
-            }
-
-            public string DisplayName
-            {
-                get { return "Icon Renderer"; }
-            }
-
-            public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
-            {
-                return new IconRenderer(n, p, localizer);
-            }
-
-            static Guid m_guid = Guid.Parse("d629f0cb-58e5-4123-aab5-89617dabab31");
-            public Guid Guid
-            {
-                get { return m_guid; }
-            }
+            return true;
         }
 
+        public string DisplayName
+        {
+            get { return "Icon Renderer"; }
+        }
+
+        public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        {
+            return new IconRenderer(n, p, localizer);
+        }
+
+        static Guid m_guid = Guid.Parse("d629f0cb-58e5-4123-aab5-89617dabab31");
+        public Guid Guid
+        {
+            get { return m_guid; }
+        }
+    }
+
+    public class IconRenderer : NodeUI, IDisposable
+    {
         string m_name;
         Bitmap m_image;
 
@@ -51,8 +52,8 @@ namespace PluginPack
         private void SetName()
         {
             m_name = "Node name not found";
-            string parameterName = "";
-            if (NameConfig.TryGet(Node.Config, ref parameterName))
+            string parameterName = NameConfig.TryGet(Node.Config);
+            if (parameterName != null)
             {
                 var stringParameters = Node.Parameters.OfType<IStringParameter>().Where(p => p.Name == parameterName);
                 if (stringParameters.Any())
@@ -73,15 +74,15 @@ namespace PluginPack
         private void SetIcon()
         {
             m_image = null;
-            string icon = "";
-            if (IconConfig.TryGet(Node.Config, ref icon))
+            string icon = IconConfig.TryGet(Node.Config);
+            if (icon != null)
             {
                 try
                 {
                     if (File.Exists(icon))
                         m_image = new Bitmap(icon);
                 }
-                catch
+                catch (Exception) //Can't be any more specific msdn?
                 {
                 }
             }
@@ -95,7 +96,7 @@ namespace PluginPack
 
         public override string DisplayName
         {
-            get { return Factory.Instance.DisplayName; }
+            get { return IconRendererFactory.Instance.DisplayName; }
         }
 
         protected override void InnerDraw(System.Drawing.Graphics g, bool selected)
@@ -117,5 +118,19 @@ namespace PluginPack
         static readonly Font Font = SystemFonts.DefaultFont;
         const float NAME_ICON_SPACING = 2;
         private Func<ID<LocalizedText>, string> m_localizer;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (m_image != null)
+                    m_image.Dispose();
+            }
+        }
     }
 }

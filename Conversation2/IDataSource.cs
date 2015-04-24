@@ -9,7 +9,7 @@ namespace Conversation
     public interface INodeType
     {
         IEnumerable<INodeType> ChildTypes { get; }
-        IEnumerable<EditableGenerator> Nodes { get; }
+        IEnumerable<IEditableGenerator> Nodes { get; }
         string Name { get; }
         Guid Guid { get; }
     }
@@ -31,7 +31,7 @@ namespace Conversation
         }
 
         public readonly List<EditableGenerator> m_nodes = new List<EditableGenerator>();
-        public IEnumerable<EditableGenerator> Nodes
+        public IEnumerable<IEditableGenerator> Nodes
         {
             get { return m_nodes; }
         }
@@ -54,10 +54,10 @@ namespace Conversation
         IEnumerable<ParameterType> ParameterTypes { get; }
         INodeType Nodes { get; }
         EditableGenerator GetNode(ID<NodeTypeTemp> guid);
-        bool IsInteger(ParameterType guid);
-        bool IsDecimal(ParameterType guid);
-        bool IsEnum(ParameterType guid);
-        bool IsDynamicEnum(ParameterType guid);
+        bool IsInteger(ParameterType type);
+        bool IsDecimal(ParameterType type);
+        bool IsEnum(ParameterType type);
+        bool IsDynamicEnum(ParameterType type);
 
         bool IsCategoryDefinition(ID<NodeTypeTemp> id);
         bool IsTypeDefinition(ID<NodeTypeTemp> id);
@@ -71,13 +71,13 @@ namespace Conversation
 
     public static class DataSourceUtils
     {
-        public static IEnumerable<EditableGenerator> AllNodes(this IDataSource datasource)
+        public static IEnumerable<IEditableGenerator> AllNodes(this IDataSource datasource)
         {
             return datasource.Nodes.Collapse(n => n.ChildTypes, n => n.Nodes);
         }
     }
 
-    public class DummyDataSource : IDataSource
+    public sealed class DummyDataSource : IDataSource
     {
         private DummyDataSource() { }
         public static readonly IDataSource Instance = new DummyDataSource();
@@ -97,47 +97,25 @@ namespace Conversation
             throw new NotImplementedException();
         }
 
-        bool IDataSource.IsInteger(ParameterType parameterType)
+        bool IDataSource.IsInteger(ParameterType type)
         {
             throw new NotImplementedException();
         }
 
-        bool IDataSource.IsDecimal(ParameterType parameterType)
+        bool IDataSource.IsDecimal(ParameterType type)
         {
             throw new NotImplementedException();
         }
 
-        bool IDataSource.IsEnum(ParameterType parameterType)
+        bool IDataSource.IsEnum(ParameterType type)
         {
             throw new NotImplementedException();
         }
 
-        bool IDataSource.IsDynamicEnum(ParameterType parameterType)
+        bool IDataSource.IsDynamicEnum(ParameterType type)
         {
             throw new NotImplementedException();
         }
-
-
-        public bool IsCategoryDefinition(ID<NodeTypeTemp> id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsTypeDefinition(ID<NodeTypeTemp> id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsConnectorDefinition(ID<NodeTypeTemp> id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsNodeDefinition(ID<NodeTypeTemp> id)
-        {
-            throw new NotImplementedException();
-        }
-
 
         bool IDataSource.IsCategoryDefinition(ID<NodeTypeTemp> id)
         {

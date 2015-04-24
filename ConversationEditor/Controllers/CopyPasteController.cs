@@ -14,14 +14,14 @@ namespace ConversationEditor
     using ConversationNode = ConversationNode<INodeGUI>;
     using TData = Tuple<IEnumerable<ConversationNode<INodeGUI>>, ConversationEditorData>;
 
-    public abstract class CopyPasteController<TNode, TTransitionUI> where TNode : IRenderable<IGUI>
+    internal abstract class CopyPasteController<TNode, TTransitionUI> where TNode : IRenderable<IGUI>
     {
         public abstract Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, PointF> Duplicate(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups, IDataSource datasource);
         public abstract void Copy(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups);
         public abstract Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>> Paste(IDataSource datasource);
     }
 
-    public class ConversationCopyPasteController : CopyPasteController<ConversationNode, TransitionNoduleUIInfo>
+    internal class ConversationCopyPasteController : CopyPasteController<ConversationNode, TransitionNoduleUIInfo>
     {
         public static ConversationCopyPasteController Instance = new ConversationCopyPasteController();
 

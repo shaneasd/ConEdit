@@ -10,13 +10,13 @@ namespace ConversationEditor
     using ConversationNode = ConversationNode<INodeGUI>;
     using Utilities;
 
-    public class DummyProject : IProject
+    internal sealed class DummyProject : IProject
     {
         public static readonly IProject Instance = new DummyProject();
 
         private DummyProject() { }
 
-        ISaveableFile IProject.File { get { return new MissingFile(null); } }
+        public ISaveableFile File { get { return new MissingFile(null); } }
 
         IAudioProvider IProject.AudioProvider { get { return null; } }
 
@@ -30,12 +30,12 @@ namespace ConversationEditor
             get { return DummyDataSource.Instance; }
         }
 
-        IProjectElementList<ConversationFile, IConversationFile> IProject.Conversations
+        public IProjectElementList<ConversationFile, IConversationFile> Conversations
         {
             get { return DummyProjectElementList<ConversationFile, IConversationFile>.Instance; }
         }
 
-        IProjectElementList<DomainFile, IDomainFile> IProject.DomainFiles
+        public IProjectElementList<DomainFile, IDomainFile> DomainFiles
         {
             get { return DummyProjectElementList<DomainFile, IDomainFile>.Instance; }
         }
@@ -93,6 +93,24 @@ namespace ConversationEditor
         bool IProject.ReloadConversationDatasourceIfRequired()
         {
             return false;
+        }
+
+        public IEnumerable<IDomainFile> DomainFilesCollection
+        {
+            get { return DomainFiles; }
+        }
+
+        public IEnumerable<IConversationFile> ConversationFilesCollection
+        {
+            get { return Conversations; }
+        }
+
+        public event Action FileModifiedExternally { add { } remove { } }
+
+        public event Action FileDeletedExternally { add { } remove { } }
+
+        public void Dispose()
+        {
         }
     }
 }

@@ -8,12 +8,7 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    public interface IAudioFile : IInProject, ISaveableFileProvider
-    {
-        void Play();
-    }
-
-    public class AudioFile : IAudioFile
+    internal class AudioFile : Disposable, IAudioFile
     {
         ReadonlyFileUnmonitored m_file;
         private AudioProvider m_provider;
@@ -61,13 +56,16 @@ namespace ConversationEditor
             remove { (this as ISaveableFileProvider).File.FileDeletedExternally -= value; }
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            File.Dispose();
+            if (disposing)
+            {
+                File.Dispose();
+            }
         }
     }
 
-    public class MissingAudioFile : IAudioFile
+    internal sealed class MissingAudioFile : IAudioFile
     {
         private MissingFile m_file;
         private AudioProvider m_provider;

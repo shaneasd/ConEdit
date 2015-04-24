@@ -11,15 +11,16 @@ namespace ConversationEditor
 {
     using ConversationNode = ConversationNode<INodeGUI>;
     using TData = XmlGraphData<NodeUIData, ConversationEditorData>;
+    using System.Collections.ObjectModel;
 
-    public class ConversationFile : GraphFile, IConversationFile
+    internal class ConversationFile : GraphFile, IConversationFile
     {
         private ISerializer<TData> m_serializer;
 
         SaveableFileUndoable m_file;
         public override ISaveableFileUndoable UndoableFile { get { return m_file; } }
 
-        public ConversationFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ISerializer<TData> serializer, List<Error> errors, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio, IAudioProvider audioProvider)
+        public ConversationFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ISerializer<TData> serializer, ReadOnlyCollection<LoadError> errors, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio, IAudioProvider audioProvider)
             : base(nodes, groups, errors, nodeFactory, generateAudio, audioProvider)
         {
             m_file = new SaveableFileUndoable(rawData, file, SaveTo);
@@ -28,7 +29,6 @@ namespace ConversationEditor
             foreach (var node in m_nodes)
             {
                 var audios = node.Parameters.OfType<IAudioParameter>();
-                var localized = node.Parameters.OfType<ILocalizedStringParameter>();
                 foreach (var aud in audios)
                     if (aud.Corrupted)
                     {
@@ -74,11 +74,11 @@ namespace ConversationEditor
                 m.CopyTo(stream);
             }
 
-            return new ConversationFile(nodes, groups, m, file, project.ConversationSerializer, new List<Error>(), nodeFactory, generateAudio, audioProvider);
+            return new ConversationFile(nodes, groups, m, file, project.ConversationSerializer, new ReadOnlyCollection<LoadError>(new LoadError[0]), nodeFactory, generateAudio, audioProvider);
         }
 
         /// <exception cref="MyFileLoadException">If file can't be read</exception>
-        public static ConversationFile Load(FileInfo file, IDataSource datasource, INodeFactory nodeFactory, ISerializerDeserializer<TData> serializer, Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio, IAudioProvider audioProvider)
+        public static ConversationFile Load(FileInfo file, INodeFactory nodeFactory, ISerializerDeserializer<TData> serializer, Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio, IAudioProvider audioProvider)
         {
             TData data;
             MemoryStream m;

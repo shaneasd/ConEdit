@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Utilities
 {
-    public class Null
+    public sealed class Null
     {
         private Null()
         {

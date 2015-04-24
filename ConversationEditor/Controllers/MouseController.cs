@@ -12,7 +12,7 @@ using ConversationEditor.Controllers;
 
 namespace ConversationEditor
 {
-    public class MouseController<TNode> where TNode : IRenderable<IGUI>, IGraphNode, IConfigurable
+    internal class MouseController<TNode> where TNode : IRenderable<IGUI>, IGraphNode, IConfigurable
     {
         public class State
         {

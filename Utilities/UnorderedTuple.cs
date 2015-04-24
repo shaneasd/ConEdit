@@ -56,5 +56,10 @@ namespace Utilities
             yield return Item1;
             yield return Item2;
         }
+
+        public override string ToString()
+        {
+            return Item1.ToString() + Item2.ToString();
+        }
     }
 }

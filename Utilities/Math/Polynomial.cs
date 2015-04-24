@@ -21,8 +21,8 @@ namespace Utilities
             m_deriv = new Lazy<Polynomial>(() => new Polynomial(Coefficients.Select((t, i) => i * t).Skip(1)));
         }
 
-        public uint Order { get { return (uint)Coefficients.Length - 1; } }
-        public uint Indices { get { return (uint)Coefficients.Length; } }
+        public int Order { get { return Coefficients.Length - 1; } }
+        public int Indices { get { return Coefficients.Length; } }
 
         Lazy<Polynomial> m_deriv;
         public Polynomial Derivative
@@ -239,7 +239,6 @@ namespace Utilities
 
         public static Polynomial operator *(Polynomial a, Polynomial b)
         {
-            Polynomial longer = a.Order > b.Order ? a : b;
             double[] coefficients = new double[a.Order + b.Order + 1];
             for (uint i = 0; i <= a.Order; i++)
             {

@@ -14,7 +14,8 @@ using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeG
 namespace ConversationEditor
 {
     using TData = IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>;
-    public partial class FindAndReplaceDialog : Form
+    using System.Globalization;
+    internal partial class FindAndReplaceDialog : Form
     {
         private IEnumerable<TData> m_search;
         private LocalizationEngine m_localizer;
@@ -48,10 +49,10 @@ namespace ConversationEditor
                     if (char.IsUpper(s[0]))
                     {
                         if (s.All(c => char.IsUpper(c)))
-                            return with.ToUpper();
+                            return with.ToUpper(CultureInfo.CurrentCulture);
                         else if (s.Skip(1).All(c => !char.IsUpper(c)))
                         {
-                            return char.ToUpper(with[0]) + with.Substring(1);
+                            return char.ToUpper(with[0], CultureInfo.CurrentCulture) + with.Substring(1);
                         }
                     }
                     return with;

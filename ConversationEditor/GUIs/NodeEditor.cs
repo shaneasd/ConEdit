@@ -13,7 +13,7 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    public partial class NodeEditor : UserControl
+    internal partial class NodeEditor : UserControl
     {
         IEditable m_data;
 
@@ -37,7 +37,7 @@ namespace ConversationEditor
             InitializeComponent();
         }
 
-        public static ConfigureResult Edit(ColorScheme scheme, IEditable data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public static ConfigureResult Edit(ColorScheme scheme, IEditable data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioProvider2 audioProvider)
         {
             using (Form f = new Form())
             {
@@ -104,7 +104,7 @@ namespace ConversationEditor
 
         public string Title { get; private set; }
 
-        public NodeEditor(ColorScheme scheme, IEditable data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public NodeEditor(ColorScheme scheme, IEditable data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioProvider2 audioProvider)
             : this()
         {
             Scheme = scheme;
@@ -202,13 +202,13 @@ namespace ConversationEditor
 
     public class DefaultNodeEditorFactory : NodeEditorFactory
     {
-        public override bool WillEdit(ID<NodeTypeTemp> guid)
+        public override bool WillEdit(ID<NodeTypeTemp> typeId)
         {
             //The default node editor can handle any node. You may not want it to.
             return true;
         }
 
-        public override ConfigureResult Edit(ColorScheme scheme, IEditable node, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public override ConfigureResult Edit(ColorScheme scheme, IEditable node, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioProvider2 audioProvider)
         {
             if (node.Parameters.Any())
                 return NodeEditor.Edit(scheme, node, audioContext, config, localizer, audioProvider);

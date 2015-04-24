@@ -9,39 +9,39 @@ using System.Windows.Forms;
 using Conversation;
 using Utilities;
 
-using TControl = Utilities.MySuggestionBox<string>;
+using TControl = Utilities.UI.MySuggestionBox<string>;
 //using TControl = Utilities.MyComboBox<string>;
 
 namespace ConversationEditor
 {
-    public partial class DefaultDynamicEnumEditor : UserControl, IParameterEditor<DefaultDynamicEnumEditor>
+    public class DefaultDynamicEnumEditorFactory : IParameterEditorFactory
     {
-        public class Factory : IParameterEditorFactory
+        public static readonly Guid StaticId = Guid.Parse("a9083141-9c56-44f1-8d5d-c10479877663");
+        public bool WillEdit(ParameterType type, WillEdit willEdit)
         {
-            public static readonly Guid GUID = Guid.Parse("a9083141-9c56-44f1-8d5d-c10479877663");
-            public bool WillEdit(ParameterType type, WillEdit willEdit)
-            {
-                return willEdit.IsDynamicEnum(type);
-            }
-
-            public string Name
-            {
-                get { return "Default Dynamic Enumeration Editor"; }
-            }
-
-            public Guid Guid
-            {
-                get { return GUID; }
-            }
-
-            public IParameterEditor<Control> Make(ColorScheme scheme)
-            {
-                var result = new DefaultDynamicEnumEditor();
-                result.Scheme = scheme;
-                return result;
-            }
+            return willEdit.IsDynamicEnum(type);
         }
 
+        public string Name
+        {
+            get { return "Default Dynamic Enumeration Editor"; }
+        }
+
+        public Guid Guid
+        {
+            get { return StaticId; }
+        }
+
+        public IParameterEditor<Control> Make(ColorScheme scheme)
+        {
+            var result = new DefaultDynamicEnumEditor();
+            result.Scheme = scheme;
+            return result;
+        }
+    }
+
+    internal partial class DefaultDynamicEnumEditor : UserControl, IParameterEditor<DefaultDynamicEnumEditor>
+    {
         private TControl m_comboBox;
         private IEnumerable<TControl.Item> m_comboBoxItems;
 
@@ -99,6 +99,23 @@ namespace ConversationEditor
                 m_comboBox.Renderer = value.ContextMenu;
                 drawWindow1.ColorScheme = value;
             }
+        }
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                m_comboBox.Dispose();
+            }
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

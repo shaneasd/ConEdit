@@ -6,6 +6,6 @@ using Utilities;
 
 namespace Conversation
 {
+    //TODO: This needs a rename
     public sealed class NodeTemp { }
-
 }

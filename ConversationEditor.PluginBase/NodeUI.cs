@@ -21,7 +21,7 @@ namespace ConversationEditor
             INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource);
         }
 
-        public NodeUI(ConversationNode<INodeGUI> node, PointF p)
+        protected NodeUI(ConversationNode<INodeGUI> node, PointF p)
         {
             m_node = node;
             m_pos = p;

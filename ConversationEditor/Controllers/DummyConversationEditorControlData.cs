@@ -4,20 +4,16 @@ using System.Linq;
 using System.Text;
 using Conversation;
 using Utilities;
+using System.Collections.ObjectModel;
 
 namespace ConversationEditor.Controllers
 {
-    class DummyConversationEditorControlData<TNode, TTransitionUI> : IConversationEditorControlData<TNode, TTransitionUI> where TNode : IRenderable<IGUI>
+    internal sealed class DummyConversationEditorControlData<TNode, TTransitionUI> : IConversationEditorControlData<TNode, TTransitionUI> where TNode : IRenderable<IGUI>
     {
         public static IConversationEditorControlData<TNode, TTransitionUI> Instance = new DummyConversationEditorControlData<TNode, TTransitionUI>();
         private DummyConversationEditorControlData() { }
 
         public bool Remove(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Change(Utilities.UndoAction revert)
         {
             throw new NotImplementedException();
         }
@@ -37,11 +33,6 @@ namespace ConversationEditor.Controllers
             throw new NotImplementedException();
         }
 
-        public UndoQueue UndoQueue
-        {
-            get { return new UndoQueue(); }
-        }
-
         ISaveableFileUndoable ISaveableFileUndoableProvider.UndoableFile
         {
             get { throw new NotImplementedException(); }
@@ -50,7 +41,7 @@ namespace ConversationEditor.Controllers
         ISaveableFile ISaveableFileProvider.File { get { return new MissingFile(null); } }
 
 
-        public List<Conversation.Serialization.Error> Errors
+        public ReadOnlyCollection<Conversation.Serialization.LoadError> Errors
         {
             get { throw new NotImplementedException(); }
         }
@@ -95,7 +86,7 @@ namespace ConversationEditor.Controllers
             throw new NotImplementedException();
         }
 
-        Tuple<IEnumerable<TNode>, IEnumerable<NodeGroup>> IConversationEditorControlData<TNode, TTransitionUI>.DuplicateInto(IEnumerable<Conversation.Serialization.GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, System.Drawing.PointF location, LocalizationEngine localization)
+        Tuple<IEnumerable<TNode>, IEnumerable<NodeGroup>> IConversationEditorControlData<TNode, TTransitionUI>.DuplicateInto(IEnumerable<Conversation.Serialization.GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, System.Drawing.PointF location, ILocalizationEngine localization)
         {
             throw new NotImplementedException();
         }

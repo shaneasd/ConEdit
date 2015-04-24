@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Conversation;
 using System.Drawing;
-using System.Drawing.Drawing2D;
+using Conversation;
 using Utilities;
+using Utilities.UI;
 
 namespace ConversationEditor
 {
     using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
-    using System.Diagnostics;
 
     public class NodeGroupRenderer : IGUI
     {
@@ -70,7 +69,8 @@ namespace ConversationEditor
     {
         NodeGroupRenderer m_renderer;
 
-        public NodeGroup(RectangleF area, IEnumerable<ID<NodeTemp>> contents) : this(area)
+        public NodeGroup(RectangleF area, IEnumerable<ID<NodeTemp>> contents)
+            : this(area)
         {
             Contents.UnionWith(contents);
         }

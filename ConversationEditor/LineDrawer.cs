@@ -9,17 +9,15 @@ using System.Drawing.Drawing2D;
 
 namespace ConversationEditor
 {
-    public class LineDrawer
+    internal class LineDrawer : Disposable
     {
         public LineDrawer(ColorScheme scheme)
         {
-            m_scheme = scheme;
             Outline = new Pen(new SolidBrush(Color.FromArgb(128, scheme.Connectors)), 2);
             SelectedOutline = new Pen(new SolidBrush(scheme.SelectedConnectors), 2);
         }
         private readonly Pen Outline;
         public readonly Pen SelectedOutline;
-        private ColorScheme m_scheme;
 
         public void ConnectPoints(Graphics g, PointF p1, PointF p2, bool selected, IEnumerable<RectangleF> Obstacles = null)
         {
@@ -73,7 +71,7 @@ namespace ConversationEditor
                     float dif21 = a2 - a1; if (dif21 < 0) dif21 += 360;
                     float dif12 = a1 - a2; if (dif12 < 0) dif12 += 360;
 
-                    path.AddArc(arcLocation.X, arcLocation.Y, radius * 2, radius * 2, a1 + dif12, Math.Abs(-dif12) < Math.Abs(dif21) ? -dif12 : dif21);
+                    path.AddArc(arcLocation.X, arcLocation.Y, radius * 2.0f, radius * 2.0f, a1 + dif12, Math.Abs(-dif12) < Math.Abs(dif21) ? -dif12 : dif21);
                     //path.AddArc(arcLocation.X, arcLocation.Y, radius, radius, a1, dif12);
 
                     lastQ = Q;
@@ -141,6 +139,15 @@ namespace ConversationEditor
                 PointF control1 = new PointF((p2.X * directness + p1.X * (1 - directness)), p1.Y);
                 PointF control2 = new PointF((p1.X * directness + p2.X * (1 - directness)), p2.Y);
                 return new Bezier(p1, control1, control2, p2);
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Outline.Dispose();
+                SelectedOutline.Dispose();
             }
         }
     }

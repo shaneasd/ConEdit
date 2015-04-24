@@ -9,7 +9,7 @@ namespace ConversationEditor
 {
     using ConversationNode = ConversationNode<INodeGUI>;
 
-    public abstract class IDomainUsage<TNode, TTransition> where TNode : IRenderable<IGUI>
+    internal abstract class IDomainUsage<TNode, TTransition> where TNode : IRenderable<IGUI>
     {
         public abstract IEnumerable<Usage> Usages(IConversationNode node);
 
@@ -27,7 +27,7 @@ namespace ConversationEditor
         }
     }
 
-    public class DomainUsage : IDomainUsage<ConversationNode, TransitionNoduleUIInfo>
+    internal class DomainUsage : IDomainUsage<ConversationNode, TransitionNoduleUIInfo>
     {
         private Project m_project;
         public DomainUsage(Project project)
@@ -41,20 +41,20 @@ namespace ConversationEditor
             foreach (var domainFile in m_project.DomainFiles.Evaluate())
             {
                 var domainNodes = domainFile.Nodes;
-                var categoryNodes = domainNodes.Where(n => n.Type == DomainIDs.CATEGORY_GUID);
+                var categoryNodes = domainNodes.Where(n => n.Type == DomainIDs.CategoryGuid);
                 foreach (var categoryNode in categoryNodes)
                 {
-                    var parentParameter = categoryNode.Parameters.Single(p => p.Id == DomainIDs.CATEGORY_PARENT) as IEnumParameter;
+                    var parentParameter = categoryNode.Parameters.Single(p => p.Id == DomainIDs.CategoryParent) as IEnumParameter;
                     if (parentParameter.Value == id.Guid)
                     {
                         result.Add(new Usage(categoryNode, domainFile, "Category definition " + categoryNode.Id.Serialized()));
                     }
                 }
 
-                var nodeDefinitionNodes = domainNodes.Where(n => n.Type == DomainIDs.NODE_GUID);
+                var nodeDefinitionNodes = domainNodes.Where(n => n.Type == DomainIDs.NodeGuid);
                 foreach (var nodeDefinitionNode in nodeDefinitionNodes)
                 {
-                    var category = nodeDefinitionNode.Parameters.Single(p => p.Id == DomainIDs.NODE_CATEGORY) as IEnumParameter;
+                    var category = nodeDefinitionNode.Parameters.Single(p => p.Id == DomainIDs.NodeCategory) as IEnumParameter;
                     if (category.Value == id.Guid)
                     {
                         result.Add(new Usage(nodeDefinitionNode, domainFile, "Node definition " + nodeDefinitionNode.Id.Serialized()));
@@ -98,11 +98,11 @@ namespace ConversationEditor
         {
             List<Usage> result = new List<Usage>();
             //Find all the enum declarations for which this is a value
-            var enumDeclarationNodes = node.Connectors.SelectMany(t => t.Connections).Select(t => t.Parent).Where(n => n.NodeTypeID == BaseType.Enumeration.NodeType);
+            var enumDeclarationNodes = node.Connectors.SelectMany(t => t.Connections).Select(t => t.Parent).Where(n => n.NodeTypeId == BaseType.Enumeration.NodeType);
 
             foreach (var enumDeclarationNode in enumDeclarationNodes)
             {
-                var enumTypeID = enumDeclarationNode.NodeID;
+                var enumTypeID = enumDeclarationNode.NodeId;
 
                 //All the nodes in the conversation that have parameters with this value
                 foreach (var conversationFile in m_project.Conversations)
@@ -131,8 +131,8 @@ namespace ConversationEditor
                             var typeParameter = n.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_TYPE) as IEnumParameter;
                             if (typeParameter.Value == enumTypeID.Guid)
                             {
-                                var defaultParameter = n.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_DEFAULT) as IDynamicEnumParameter;
-                                var expectedValue = (node.Parameters.Single(p => p.Id == DomainIDs.ENUMERATION_VALUE_PARAMETER) as IStringParameter).Value;
+                                var defaultParameter = n.Parameters.Single(p => p.Id == DomainIDs.ParameterDefault) as IDynamicEnumParameter;
+                                var expectedValue = (node.Parameters.Single(p => p.Id == DomainIDs.EnumerationValueParameter) as IStringParameter).Value;
                                 if (defaultParameter.Value == expectedValue)
                                     result.Add(new Usage(n, domainFile, "Enum definition " + n.Id.Serialized()));
                             }
@@ -162,7 +162,7 @@ namespace ConversationEditor
         private IEnumerable<Usage> ConnectedNodesUsages(IConversationNode node)
         {
             HashSet<ID<NodeTypeTemp>> nodeIds = new HashSet<ID<NodeTypeTemp>>();
-            nodeIds.UnionWith(node.Connectors.SelectMany(t => t.Connections).Select(t => t.Parent).Where(n => n.NodeTypeID == DomainIDs.NODE_GUID).Select(n => ID<NodeTypeTemp>.ConvertFrom(n.NodeID)));
+            nodeIds.UnionWith(node.Connectors.SelectMany(t => t.Connections).Select(t => t.Parent).Where(n => n.NodeTypeId == DomainIDs.NodeGuid).Select(n => ID<NodeTypeTemp>.ConvertFrom(n.NodeId)));
             return NodeDefinitionsUsages(nodeIds);
         }
 
@@ -221,7 +221,7 @@ namespace ConversationEditor
 
 
             //It's a category
-            if (id == DomainIDs.CATEGORY_GUID)
+            if (id == DomainIDs.CategoryGuid)
             {
                 return CategoryUsage(node.Id);
             }
@@ -231,23 +231,23 @@ namespace ConversationEditor
                 return DerivedTypeUsage(node.Id, type);
             }
             //It's an enum value defintion (i.e. part of a type definition but also usable as a default value
-            else if (id == DomainIDs.ENUMERATION_VALUE_DECLARATION)
+            else if (id == DomainIDs.EnumerationValueDeclaration)
             {
                 return EnumerationValueUsage(node);
             }
             //It's a connector definition used to define custom connectors
-            else if (id == DomainIDs.CONNECTOR_DEFINITION_GUID)
+            else if (id == DomainIDs.ConnectorDefinitionGuid)
             {
                 return ConnectorDefinitionsUsages(ID<TConnectorDefinition>.ConvertFrom(node.Id).Only());
             }
-            else if (id == DomainIDs.CONNECTION_DEFINITION_GUID)
+            else if (id == DomainIDs.ConnectionDefinitionGuid)
             {
-                return Enumerable.Empty<Usage>(); //TODO: Figure out usage implications of
+                return Enumerable.Empty<Usage>(); //TODO: Figure out usage implications of connection definitions on usage
             }
             //It's a parameter
             else if (BaseType.BaseTypes.Any(t => t.ParameterNodeType == id))
             {
-                var connectors = ConnectorDefinitionsUsages(node.Connectors.SelectMany(t => t.Connections).Select(t => t.Parent).Where(n => n.NodeTypeID == DomainIDs.CONNECTOR_DEFINITION_GUID).Select(a => ID<TConnectorDefinition>.ConvertFrom(a.NodeID)));
+                var connectors = ConnectorDefinitionsUsages(node.Connectors.SelectMany(t => t.Connections).Select(t => t.Parent).Where(n => n.NodeTypeId == DomainIDs.ConnectorDefinitionGuid).Select(a => ID<TConnectorDefinition>.ConvertFrom(a.NodeId)));
                 var nodes = ConnectedNodesUsages(node);
                 return connectors.Concat(nodes);
             }
@@ -257,7 +257,7 @@ namespace ConversationEditor
                 return ConnectedNodesUsages(node);
             }
             //It's a plain old node definition
-            else if (id == DomainIDs.NODE_GUID)
+            else if (id == DomainIDs.NodeGuid)
             {
                 return NodeDefinitionsUsages(ID<NodeTypeTemp>.ConvertFrom(node.Id).Only());
             }

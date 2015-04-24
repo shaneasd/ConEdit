@@ -9,37 +9,38 @@ using System.Windows.Forms;
 using Conversation;
 using Utilities;
 using System.IO;
+using Utilities.UI;
 
 namespace ConversationEditor
 {
-    public partial class DefaultAudioEditor : UserControl, IParameterEditor<DefaultAudioEditor>
+    public class DefaultAudioEditorFactory : IParameterEditorFactory
     {
-        public class Factory : IParameterEditorFactory
+        public static readonly Guid StaticId = Guid.Parse("b5d1b3ea-5998-4e53-bf78-f09311f81405");
+        public bool WillEdit(ParameterType type, WillEdit willEdit)
         {
-            public static readonly Guid GUID = Guid.Parse("b5d1b3ea-5998-4e53-bf78-f09311f81405");
-            public bool WillEdit(ParameterType type, WillEdit willEdit)
-            {
-                return type == BaseTypeAudio.PARAMETER_TYPE;
-            }
-
-            public string Name
-            {
-                get { return "Default Audio Editor"; }
-            }
-
-            public Guid Guid
-            {
-                get { return GUID; }
-            }
-
-            public IParameterEditor<Control> Make(ColorScheme scheme)
-            {
-                var result =  new DefaultAudioEditor();
-                result.Scheme = scheme;
-                return result;
-            }
+            return type == BaseTypeAudio.PARAMETER_TYPE;
         }
 
+        public string Name
+        {
+            get { return "Default Audio Editor"; }
+        }
+
+        public Guid Guid
+        {
+            get { return StaticId; }
+        }
+
+        public IParameterEditor<Control> Make(ColorScheme scheme)
+        {
+            var result = new DefaultAudioEditor();
+            result.Scheme = scheme;
+            return result;
+        }
+    }
+
+    internal partial class DefaultAudioEditor : UserControl, IParameterEditor<DefaultAudioEditor>
+    {
         private MyTextBox m_textBox;
 
         public DefaultAudioEditor()
@@ -68,7 +69,7 @@ namespace ConversationEditor
         public event Action Ok;
         AudioGenerationParameters m_audioGenerationParameters;
         IAudioParameter m_parameter;
-        IAudioProvider m_audioProvider;
+        IAudioProvider2 m_audioProvider;
         public void Setup(ParameterEditorSetupData data)
         {
             m_parameter = data.Parameter as IAudioParameter;

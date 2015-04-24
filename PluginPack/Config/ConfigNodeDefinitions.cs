@@ -7,13 +7,13 @@ using ConversationEditor;
 
 namespace PluginPack
 {
-    public class ConfigNodeDefinitions : IConfigNodeDefinitionFactory
+    public class ConfigNodeDefinitionsFactory : IConfigNodeDefinitionFactory
     {
-        public ConfigNodeDefinitions()
+        public ConfigNodeDefinitionsFactory()
         {
         }
 
-        IEnumerable<IConfigNodeDefinition> IConfigNodeDefinitionFactory.ConfigNodeDefinitions()
+        public IEnumerable<IConfigNodeDefinition> GetConfigNodeDefinitions()
         {
             yield return new IconConfig();
             yield return new ShortcutKey();

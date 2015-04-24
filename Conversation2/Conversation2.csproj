@@ -32,6 +32,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>ShanesKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -46,7 +52,6 @@
     <Compile Include="ConfigureResult.cs" />
     <Compile Include="ConversationError.cs" />
     <Compile Include="ConversationNode.cs" />
-    <Compile Include="Customization\IConfigNodeDefinitionFactory.cs" />
     <Compile Include="Domain\ConnectionDefinitionData.cs" />
     <Compile Include="Domain\ConnectorDefinitionData.cs" />
     <Compile Include="Domain\DecimalData.cs" />
@@ -63,7 +68,6 @@
     <Compile Include="ILocalizer.cs" />
     <Compile Include="INodeFactory.cs" />
     <Compile Include="Node.cs" />
-    <Compile Include="Nodes\IConfigNodeDefinitionFactory.cs" />
     <Compile Include="Nodes\NodeGenerator.cs" />
     <Compile Include="Nodes\SpecialNodes.cs" />
     <Compile Include="Nodes\UnknownEditable.cs" />
@@ -91,6 +95,12 @@
       <Project>{BC0871BD-3134-40F0-8E74-0D3AAF3BF65B}</Project>
       <Name>Utilities</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ShanesKey.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Customization\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

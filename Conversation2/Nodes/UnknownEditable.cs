@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Utilities;
+using System.Collections.ObjectModel;
 
 namespace Conversation
 {
@@ -20,12 +21,12 @@ namespace Conversation
             m_parameters = parameters.ToList();
         }
 
-        public ID<NodeTemp> NodeID
+        public ID<NodeTemp> NodeId
         {
             get { return m_nodeID; }
         }
 
-        public ID<NodeTypeTemp> NodeTypeID
+        public ID<NodeTypeTemp> NodeTypeId
         {
             get { return m_nodeTypeID; }
         }
@@ -35,9 +36,9 @@ namespace Conversation
             get { return "Unknown Node"; }
         }
 
-        public List<NodeData.ConfigData> Config
+        public ReadOnlyCollection<NodeData.ConfigData> Config
         {
-            get { return new List<NodeData.ConfigData>(); }
+            get { return new ReadOnlyCollection<NodeData.ConfigData>(new NodeData.ConfigData[0]); }
         }
 
         public IEnumerable<Parameter> Parameters

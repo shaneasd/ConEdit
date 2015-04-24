@@ -14,6 +14,8 @@ namespace Arthur
     /// <remarks>
     /// http://theartofdev.com/2013/08/12/using-native-gdi-for-text-rendering-in-c/<br/>
     /// The MIT License (MIT) Copyright (c) 2014 Arthur Teplitzki.
+    /// 
+    /// Some changes made by Shane for P/Invoke fxcop compliance
     /// </remarks>
     public sealed class NativeTextRenderer : IDisposable
     {
@@ -127,7 +129,7 @@ namespace Arthur
         /// <param name="color">the text color to set</param>
         /// <param name="rect">the rectangle in which the text is to be formatted</param>
         /// <param name="flags">The method of formatting the text</param>
-        public void DrawString(String str, Font font, Color color, Rectangle rect, TextFormatFlags flags)
+        internal void DrawString(String str, Font font, Color color, Rectangle rect, TextFormatFlags flags)
         {
             SetFont(font);
             SetTextColor(color);
@@ -254,8 +256,8 @@ namespace Arthur
         [DllImport("gdi32.dll")]
         private static extern int SetBkMode(IntPtr hdc, int mode);
 
-        [DllImport("gdi32.dll")]
-        private static extern int SelectObject(IntPtr hdc, IntPtr hgdiObj);
+        [DllImport("gdi32.dll", EntryPoint = "SelectObject")]
+        private static extern IntPtr SelectObject([In] IntPtr hdc, [In] IntPtr hgdiobj);
 
         [DllImport("gdi32.dll")]
         private static extern int SetTextColor(IntPtr hdc, int color);
@@ -264,9 +266,11 @@ namespace Arthur
         private static extern int GetTextExtentPoint32(IntPtr hdc, [MarshalAs(UnmanagedType.LPWStr)] string str, int len, ref Size size);
 
         [DllImport("gdi32.dll", EntryPoint = "GetTextExtentExPointW")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool GetTextExtentExPoint(IntPtr hDc, [MarshalAs(UnmanagedType.LPWStr)]string str, int nLength, int nMaxExtent, int[] lpnFit, int[] alpDx, ref Size size);
 
         [DllImport("gdi32.dll", EntryPoint = "TextOutW")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool TextOut(IntPtr hdc, int x, int y, [MarshalAs(UnmanagedType.LPWStr)] string str, int len);
 
         [DllImport("user32.dll", EntryPoint = "DrawTextW")]
@@ -276,16 +280,19 @@ namespace Arthur
         private static extern int SelectClipRgn(IntPtr hdc, IntPtr hrgn);
 
         [DllImport("gdi32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool DeleteObject(IntPtr hObject);
 
         [DllImport("gdi32.dll", ExactSpelling = true, SetLastError = true)]
-        public static extern bool DeleteDC(IntPtr hdc);
-
-        [DllImport("gdi32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool BitBlt(IntPtr hdc, int nXDest, int nYDest, int nWidth, int nHeight, IntPtr hdcSrc, int nXSrc, int nYSrc, long dwRop);
+        private static extern bool DeleteDC(IntPtr hdc);
+
+        [DllImport("gdi32.dll", EntryPoint = "BitBlt", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool BitBlt([In] IntPtr hdc, int nXDest, int nYDest, int nWidth, int nHeight, [In] IntPtr hdcSrc, int nXSrc, int nYSrc, uint dwRop);
 
         [DllImport("gdi32.dll", EntryPoint = "GdiAlphaBlend")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool AlphaBlend(IntPtr hdcDest, int nXOriginDest, int nYOriginDest, int nWidthDest, int nHeightDest, IntPtr hdcSrc, int nXOriginSrc, int nYOriginSrc, int nWidthSrc, int nHeightSrc, BlendFunction blendFunction);
 
         [DllImport("gdi32.dll", ExactSpelling = true, SetLastError = true)]
@@ -358,7 +365,7 @@ namespace Arthur
     /// See http://msdn.microsoft.com/en-us/library/windows/desktop/dd162498(v=vs.85).aspx
     /// </summary>
     [Flags]
-    public enum TextFormatFlags : uint
+    internal enum TextFormatFlags : uint
     {
         Default = 0x00000000,
         Center = 0x00000001,

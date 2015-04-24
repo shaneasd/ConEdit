@@ -66,20 +66,17 @@ namespace Utilities
         void Change(UndoAction actions);
     }
 
-    public abstract class SaveableFile : ISaveableFileBase, IWritable, IDisposable
+    public abstract class SaveableFile : Disposable, ISaveableFileBase, IWritable, IDisposable
     {
         private UpToDateFile m_upToDateFile;
-
-        private MemoryStream m_lastSavedOrLoaded;
         private Action<Stream> m_saveTo;
 
-        public SaveableFile(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo)
+        protected SaveableFile(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo)
         {
             m_upToDateFile = new UpToDateFile(initialContent, path, saveTo);
             m_upToDateFile.FileChanged += () => FileModifiedExternally.Execute();
             m_upToDateFile.FileDeleted += () => FileDeletedExternally.Execute();
             m_saveTo = saveTo;
-            m_lastSavedOrLoaded = initialContent;
         }
 
         public FileInfo File
@@ -176,9 +173,12 @@ namespace Utilities
 
         public event Action FileDeletedExternally;
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            m_upToDateFile.Dispose();
+            if (disposing)
+            {
+                m_upToDateFile.Dispose();
+            }
         }
 
         public IWritable Writable
@@ -250,10 +250,9 @@ namespace Utilities
 
         public void Change()
         {
-            var changed = m_changed();
             if (!m_lastChanged)
             {
-                m_lastChanged = true;
+                m_lastChanged = m_changed();
                 SaveStateChanged.Execute();
             }
             Modified.Execute();
@@ -312,7 +311,7 @@ namespace Utilities
         public event Action Modified;
     }
 
-    public class ReadonlyFileUnmonitored : ISaveableFile
+    public class ReadonlyFileUnmonitored : Disposable, ISaveableFile
     {
         public ReadonlyFileUnmonitored(FileInfo path)
         {
@@ -358,11 +357,6 @@ namespace Utilities
             Moved.Execute(new Changed<FileInfo>(oldFile, File));
         }
 
-        public bool Changed
-        {
-            get { return false; }
-        }
-
         public bool CanClose()
         {
             return true;
@@ -382,12 +376,12 @@ namespace Utilities
 
         public event Action FileDeletedExternally { add { } remove { } }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
         }
     }
 
-    public class ReadonlyFile : ISaveableFile
+    public class ReadonlyFile : Disposable, ISaveableFile
     {
         private UpToDateFile m_upToDateFile;
 
@@ -431,11 +425,6 @@ namespace Utilities
             Moved.Execute(new Changed<FileInfo>(oldFile, File));
         }
 
-        public bool Changed
-        {
-            get { return false; }
-        }
-
         public bool CanClose()
         {
             return true;
@@ -449,11 +438,6 @@ namespace Utilities
         public event Action<Changed<FileInfo>> Moved;
         public event Action Modified { add { } remove { } } //Can't be modified
 
-        public void Change(UndoAction actions)
-        {
-            throw new NotSupportedException("Cannot modify a readonly file");
-        }
-
         public IUndoQueue UndoQueue
         {
             get { return new NoUndoQueue(); }
@@ -465,7 +449,7 @@ namespace Utilities
 
         public event Action FileDeletedExternally;
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
             m_upToDateFile.Dispose();
         }

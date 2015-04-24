@@ -8,37 +8,38 @@ using System.Text;
 using System.Windows.Forms;
 using Conversation;
 using Utilities;
+using Utilities.UI;
 
 namespace ConversationEditor
 {
-    public partial class DefaultStringEditor : UserControl, IParameterEditor<DefaultStringEditor>
+    public class DefaultStringEditorFactory : IParameterEditorFactory
     {
-        public class Factory : IParameterEditorFactory
+        public static readonly Guid StaticId = Guid.Parse("b3948691-425b-4220-ba6e-9ef00c5bc0f7");
+        public bool WillEdit(ParameterType type, WillEdit willEdit)
         {
-            public static readonly Guid GUID = Guid.Parse("b3948691-425b-4220-ba6e-9ef00c5bc0f7");
-            public bool WillEdit(ParameterType type, WillEdit willEdit)
-            {
-                return type == BaseTypeString.PARAMETER_TYPE;
-            }
-
-            public string Name
-            {
-                get { return "Default String Editor"; }
-            }
-
-            public Guid Guid
-            {
-                get { return GUID; }
-            }
-
-            public IParameterEditor<Control> Make(ColorScheme scheme)
-            {
-                var result = new DefaultStringEditor();
-                result.Scheme = scheme;
-                return result;
-            }
+            return type == BaseTypeString.ParameterType;
         }
 
+        public string Name
+        {
+            get { return "Default String Editor"; }
+        }
+
+        public Guid Guid
+        {
+            get { return StaticId; }
+        }
+
+        public IParameterEditor<Control> Make(ColorScheme scheme)
+        {
+            var result = new DefaultStringEditor();
+            result.Scheme = scheme;
+            return result;
+        }
+    }
+
+    internal partial class DefaultStringEditor : UserControl, IParameterEditor<DefaultStringEditor>
+    {
         private MyTextBox m_textBox;
 
         public DefaultStringEditor()

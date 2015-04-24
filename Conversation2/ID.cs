@@ -80,7 +80,7 @@ namespace Conversation
 
             public new static ParameterType Parse(string value)
             {
-                if (value.StartsWith(SET_PREFIX, StringComparison.InvariantCultureIgnoreCase))
+                if (value.StartsWith(SET_PREFIX, StringComparison.OrdinalIgnoreCase))
                 {
                     Guid g;
                     if (Guid.TryParse(value.Substring(SET_PREFIX.Length), out g))

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Utilities;
 using System.Drawing;
+using System.Collections.ObjectModel;
 
 namespace Conversation
 {
@@ -73,11 +74,11 @@ namespace Conversation
 
         public readonly IEditable m_data;
         #region Thin wrapper around m_data
-        public ID<NodeTemp> Id { get { return m_data.NodeID; } }
-        public ID<NodeTypeTemp> Type { get { return m_data.NodeTypeID; } }
+        public ID<NodeTemp> Id { get { return m_data.NodeId; } }
+        public ID<NodeTypeTemp> Type { get { return m_data.NodeTypeId; } }
         public event Action Linked { add { m_data.Linked += value; } remove { m_data.Linked -= value; } }
         public IEnumerable<Parameter> Parameters { get { return m_data.Parameters; } }
-        public List<NodeData.ConfigData> Config { get { return m_data.Config; } }
+        public ReadOnlyCollection<NodeData.ConfigData> Config { get { return m_data.Config; } }
         public IEnumerable<Output> Connectors { get { return m_data.Connectors; } }
         public string NodeName { get { return m_data.Name; } }
         public void ChangeId(ID<NodeTemp> id) { m_data.ChangeId(id); }
@@ -85,9 +86,9 @@ namespace Conversation
 
         public event Action Modified;
 
-        public ConfigureResult Configure(Func<IEditable, ConfigureResult> configure)
+        public ConfigureResult Configure(Func<IEditable, ConfigureResult> configureData)
         {
-            ConfigureResult result = configure(m_data);
+            ConfigureResult result = configureData(m_data);
             return result.Transformed<ConfigureResult>(sup => new SimpleUndoPair
             {
                 Redo = () =>

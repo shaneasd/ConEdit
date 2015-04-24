@@ -30,6 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>ShanesKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -53,18 +59,6 @@
     <Compile Include="ErrorCheckers\JumpsErrorChecker.cs" />
     <Compile Include="Context Menu Items\MenuActionFactory.cs" />
     <Compile Include="Config\IconConfig.cs" />
-    <Compile Include="Parameter Editors\FancyEnumEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Parameter Editors\FancyEnumEditor.Designer.cs">
-      <DependentUpon>FancyEnumEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Parameter Editors\FancyEnumForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Parameter Editors\FancyEnumForm.Designer.cs">
-      <DependentUpon>FancyEnumForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -77,12 +71,6 @@
     <Compile Include="UneditableNodeEditorFactory.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Parameter Editors\FancyEnumEditor.resx">
-      <DependentUpon>FancyEnumEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Parameter Editors\FancyEnumForm.resx">
-      <DependentUpon>FancyEnumForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -91,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\neil.png" />
+    <None Include="ShanesKey.snk" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\tammy.png" />
@@ -110,9 +99,9 @@
       <Name>Conversation2</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\ConversationEditor\ConversationEditor.csproj">
-      <Project>{D904BED7-0716-4B54-8BBE-D53A7F938C8D}</Project>
-      <Name>ConversationEditor</Name>
+    <ProjectReference Include="..\ConversationEditor.PluginBase\ConversationEditor.PluginBase.csproj">
+      <Project>{02B54812-8646-46FB-9F6F-EEF9F36DDF9C}</Project>
+      <Name>ConversationEditor.PluginBase</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\ConversationSerialization\ConversationSerialization.csproj">
@@ -135,6 +124,7 @@
     <EmbeddedResource Include="Templates\Basic Conversation.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Parameter Editors\" />
     <Folder Include="Project Exporters\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

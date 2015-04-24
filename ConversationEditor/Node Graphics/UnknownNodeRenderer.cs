@@ -7,10 +7,11 @@ using Conversation;
 using Utilities;
 using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
 using System.Drawing.Drawing2D;
+using Utilities.UI;
 
 namespace ConversationEditor
 {
-    public class UnknownNodeRenderer : NodeUI
+    internal class UnknownNodeRenderer : NodeUI
     {
         static Font Font = SystemFonts.DefaultFont;
 

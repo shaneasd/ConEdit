@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Utilities;
+using System.Collections.ObjectModel;
 
 namespace Conversation
 {
@@ -46,7 +47,7 @@ namespace Conversation
 
         public struct ParameterData
         {
-            public ParameterData(string name, ID<Parameter> id, ParameterType type, List<ConfigData> config)
+            public ParameterData(string name, ID<Parameter> id, ParameterType type, ReadOnlyCollection<ConfigData> config)
             {
                 if (config == null)
                     throw new Exception("Parameter config cannot be null (A)");
@@ -57,7 +58,7 @@ namespace Conversation
                 Config = config;
             }
 
-            public ParameterData(string name, ID<Parameter> id, ParameterType type, List<ConfigData> config, string def)
+            public ParameterData(string name, ID<Parameter> id, ParameterType type, ReadOnlyCollection<ConfigData> config, string def)
             {
                 if (config == null)
                     throw new Exception("Parameter config cannot be null (B)");
@@ -72,7 +73,7 @@ namespace Conversation
             public string Name;
             public ID<Parameter> Id;
             public string Default; //Can be null, string form of the default value
-            public List<ConfigData> Config;
+            public ReadOnlyCollection<ConfigData> Config;
 
             public Parameter Make(Func<ParameterType, string, ID<Parameter>, string, Parameter> parameterFactory)
             {

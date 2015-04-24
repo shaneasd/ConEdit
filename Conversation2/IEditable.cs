@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using Utilities;
+using System.Collections.ObjectModel;
 
 namespace Conversation
 {
@@ -12,12 +13,12 @@ namespace Conversation
         /// <summary>
         /// ID of the actual node instance in the graph
         /// </summary>
-        ID<NodeTemp> NodeID { get; }
+        ID<NodeTemp> NodeId { get; }
 
         //Node type information
-        ID<NodeTypeTemp> NodeTypeID { get; }
+        ID<NodeTypeTemp> NodeTypeId { get; }
         string Name { get; }
-        List<NodeData.ConfigData> Config { get; }
+        ReadOnlyCollection<NodeData.ConfigData> Config { get; }
 
         IEnumerable<Parameter> Parameters { get; }
         IEnumerable<Output> Connectors { get; }

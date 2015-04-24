@@ -7,13 +7,12 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    public class ConfigParameterList<TValue> : IConfigParameter
+    internal class ConfigParameterList<TValue> : Disposable, IConfigParameter, IDisposable
     {
         private readonly string m_name;
         private readonly Func<ConfigParameter<TValue>> m_nodeFactory;
         private readonly CallbackList<TValue> m_data = new CallbackList<TValue>();
         SuppressibleAction m_suppressibleValueChanged;
-        private CallbackList<IDisposable> m_callbackSuppressors = new CallbackList<IDisposable>();
 
         public ConfigParameterList(string name, Func<ConfigParameter<TValue>> nodeFactory)
         {
@@ -68,6 +67,14 @@ namespace ConversationEditor
         public IDisposable SuppressCallback()
         {
             return m_suppressibleValueChanged.SuppressCallback();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                m_suppressibleValueChanged.Dispose();
+            }
         }
     }
 }

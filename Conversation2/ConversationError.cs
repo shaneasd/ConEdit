@@ -16,7 +16,7 @@ namespace Conversation
         {
             return Message;
         }
-        public ConversationError(IEnumerable<T> nodes)
+        protected ConversationError(IEnumerable<T> nodes)
         {
             m_nodes = nodes;
         }

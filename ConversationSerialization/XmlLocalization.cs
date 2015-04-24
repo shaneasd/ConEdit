@@ -6,14 +6,18 @@ using Conversation;
 using System.Xml.Linq;
 using System.IO;
 using Utilities;
+using System.Globalization;
 
 namespace Conversation.Serialization
 {
-    public class XmlLocalization
+    public static class XmlLocalization
     {
         const string XML_VERSION = "1.0";
         const string ROOT = "Root";
 
+        /// <summary>
+        /// Deserialize only the localization data required by a conversation player (i.e the mapping of id to text)
+        /// </summary>
         public class ClientDeserializer : IDeserializer<Dictionary<ID<LocalizedText>, string>>
         {
             public Dictionary<ID<LocalizedText>, string> Read(Stream stream)
@@ -47,7 +51,7 @@ namespace Conversation.Serialization
                 foreach (var node in nodes)
                 {
                     var id = ID<LocalizedText>.Parse(node.Attribute("id").Value);
-                    DateTime localized = new DateTime(long.Parse(node.Attribute("localized").Value));
+                    DateTime localized = new DateTime(long.Parse(node.Attribute("localized").Value, CultureInfo.InvariantCulture));
                     string data = node.Value;
                     result.m_data[id] = new LocalizationElement(localized, data);
                 }
@@ -87,7 +91,7 @@ namespace Conversation.Serialization
 
                 foreach (var kvp in used)
                 {
-                    elements.Add(kvp.Key, new XElement("Localize", new XAttribute("id", kvp.Key.Serialized()), new XAttribute("localized", kvp.Value.Localized.Ticks.ToString()), kvp.Value.Text));
+                    elements.Add(kvp.Key, new XElement("Localize", new XAttribute("id", kvp.Key.Serialized()), new XAttribute("localized", kvp.Value.Localized.Ticks.ToString(CultureInfo.InvariantCulture)), kvp.Value.Text));
                 }
 
                 if (unused.Any())
@@ -96,7 +100,7 @@ namespace Conversation.Serialization
                     {
                         foreach (var kvp in unused)
                         {
-                            elements.Add(kvp.Key, new XElement("Localize", new XAttribute("id", kvp.Key.Serialized()), new XAttribute("localized", kvp.Value.Localized.Ticks.ToString()), kvp.Value.Text));
+                            elements.Add(kvp.Key, new XElement("Localize", new XAttribute("id", kvp.Key.Serialized()), new XAttribute("localized", kvp.Value.Localized.Ticks.ToString(CultureInfo.InvariantCulture)), kvp.Value.Text));
                         }
                     }
                 }

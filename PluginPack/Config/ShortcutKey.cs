@@ -21,7 +21,7 @@ namespace PluginPack
 
         public IEnumerable<Parameter> MakeParameters()
         {
-            yield return new StringParameter("Key", ID<Parameter>.Parse("70de2664-9d86-470d-b3b5-2a23e5afae91"), BaseTypeString.PARAMETER_TYPE);
+            yield return new StringParameter("Key", ID<Parameter>.Parse("70de2664-9d86-470d-b3b5-2a23e5afae91"), StringParameter.ParameterType);
         }
     }
 }

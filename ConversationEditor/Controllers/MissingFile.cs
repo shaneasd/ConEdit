@@ -7,7 +7,7 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    public class MissingFile : ISaveableFile
+    internal class MissingFile : Disposable, ISaveableFile
     {
         private FileInfo m_file;
 
@@ -31,11 +31,6 @@ namespace ConversationEditor
             m_file = newPath;
         }
 
-        public bool Changed
-        {
-            get { return false; }
-        }
-
         public bool CanClose()
         {
             return true;
@@ -55,20 +50,14 @@ namespace ConversationEditor
             get { return false; }
         }
 
-        public void Change(Utilities.UndoAction actions)
-        {
-            throw new NotSupportedException("Cannot modify a missing file");
-        }
-
         public IUndoQueue UndoQueue
         {
             get { return new NoUndoQueue(); }
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
         }
-
 
         public IWritable Writable
         {

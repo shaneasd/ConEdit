@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Globalization;
 
 namespace Utilities
 {
@@ -40,7 +41,7 @@ namespace Utilities
             return 0 == String.Compare(
                     dir1.FullName.TrimEnd('\\'),
                     dir2.FullName.TrimEnd('\\'),
-                    StringComparison.InvariantCultureIgnoreCase);
+                    StringComparison.OrdinalIgnoreCase);
         }
 
         public bool Equals(DirectoryInfo x, DirectoryInfo y)
@@ -53,9 +54,9 @@ namespace Utilities
             return GetHashCodeStatic(obj);
         }
 
-        public static int GetHashCodeStatic(DirectoryInfo obj)
+        public static int GetHashCodeStatic(FileSystemInfo obj)
         {
-            return obj.FullName.TrimEnd('\\').ToUpper().GetHashCode();
+            return obj.FullName.TrimEnd('\\').ToUpper(CultureInfo.InvariantCulture).GetHashCode();
         }
     }
 }

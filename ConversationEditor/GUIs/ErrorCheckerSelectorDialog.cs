@@ -12,7 +12,7 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    public partial class ErrorCheckerSelectorDialog : Form
+    internal partial class ErrorCheckerSelectorDialog : Form
     {
         private CheckList<ErrorCheckerController.ErrorCheckerData> m_list;
         private ErrorCheckersConfig m_config;
@@ -48,7 +48,7 @@ namespace ConversationEditor
 
         private void PopulateListBox()
         {
-            foreach (var pluginAssembly in m_pluginsConfig.UnfilteredAssemblies(MainAssembly.Include))
+            foreach (var pluginAssembly in m_pluginsConfig.UnfilteredAssemblies(MainAssemblies.Include))
             {
                 ErrorCheckerAssembly configECA = m_config.GetAssembly(pluginAssembly);
                 ErrorCheckerAssembly eca = new ErrorCheckerAssembly(pluginAssembly);
@@ -77,7 +77,7 @@ namespace ConversationEditor
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            foreach (var pluginAssembly in m_pluginsConfig.UnfilteredAssemblies(MainAssembly.Include))
+            foreach (var pluginAssembly in m_pluginsConfig.UnfilteredAssemblies(MainAssemblies.Include))
             {
                 ErrorCheckerAssembly configECA = m_config.GetAssembly(pluginAssembly);
                 if (configECA == null)

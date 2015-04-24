@@ -17,7 +17,7 @@ namespace Clandestine
     public class MultipleConnectionsErrorChecker<T> : ErrorChecker<T>
         where T : class, IConversationNode
     {
-        public class NonOptionSiblingsError : ConversationError<T>
+        private class NonOptionSiblingsError : ConversationError<T>
         {
             public NonOptionSiblingsError(T node)
                 : base(node.Only())
@@ -31,15 +31,15 @@ namespace Clandestine
 
         public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
         {
-            var filteredNodes = nodes.Where(n => !Clandestine.Util.IsAIBark(n.Type, utils) && n.Type != SpecialNodes.RANDOM_GUID);
+            var filteredNodes = nodes.Where(n => !Clandestine.Util.IsAIBark(n.Type, utils) && n.Type != SpecialNodes.Random);
             foreach (var n in filteredNodes)
             {
                 var outputs = n.Connectors.Where(c => c.m_definition.Id == SpecialConnectors.Output.Id);
                 foreach (var transitionOut in outputs)
                 {
                     var connectedNodes = transitionOut.Connections.Select(c => c.Parent).Evaluate();
-                    bool hasOption = connectedNodes.Any(a => a.NodeTypeID == SpecialNodes.OPTION_GUID);
-                    int countNonOption = connectedNodes.Count(a => a.NodeTypeID != SpecialNodes.OPTION_GUID);
+                    bool hasOption = connectedNodes.Any(a => a.NodeTypeId == SpecialNodes.Option);
+                    int countNonOption = connectedNodes.Count(a => a.NodeTypeId != SpecialNodes.Option);
                     if (countNonOption + (hasOption ? 1 : 0) > 1)
                     {
                         yield return new NonOptionSiblingsError(n);
@@ -48,9 +48,9 @@ namespace Clandestine
             }
         }
 
-        public override string GetName()
+        public override string Name
         {
-            return "Multiple connection";
+            get { return "Multiple connection"; }
         }
     }
 }

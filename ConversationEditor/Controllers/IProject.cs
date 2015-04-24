@@ -10,14 +10,13 @@ namespace ConversationEditor
 {
     using ConversationNode = ConversationNode<INodeGUI>;
 
-    public interface IProject
+    internal interface IProject : IProject2
     {
         IDataSource DomainDataSource { get; }
         IDataSource ConversationDataSource { get; }
         bool ReloadConversationDatasourceIfRequired();
         DirectoryInfo Origin { get; }
 
-        ISaveableFile File { get; }
         void GotChanged();
 
         IProjectElementList<ConversationFile, IConversationFile> Conversations { get; }

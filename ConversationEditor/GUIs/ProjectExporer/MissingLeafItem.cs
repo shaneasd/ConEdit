@@ -8,7 +8,7 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    public partial class ProjectExplorer
+    partial class ProjectExplorer
     {
         public class MissingLeafItem<T> : LeafItem<T> where T : ISaveableFileProvider
         {

@@ -5,10 +5,11 @@ using System.Text;
 using System.Xml.Linq;
 using Utilities;
 using System.Drawing;
+using System.Globalization;
 
 namespace ConversationEditor
 {
-    public class ColorsConfig : IConfigParameter
+    internal class ColorsConfig : IConfigParameter
     {
         public void Load(XElement root)
         {
@@ -36,16 +37,16 @@ namespace ConversationEditor
                 var b = a.Attribute("value");
                 if (b != null)
                 {
-                    value = Color.FromArgb(int.Parse(b.Value, System.Globalization.NumberStyles.HexNumber));
+                    value = Color.FromArgb(int.Parse(b.Value, System.Globalization.NumberStyles.HexNumber, CultureInfo.InvariantCulture));
                     return true;
                 }
             }
             return false;
         }
 
-        public void WriteColor(XElement root, string name, Color value)
+        public void WriteColor(XContainer root, string name, Color value)
         {
-            var @string = value.ToArgb().ToString("X");
+            var @string = value.ToArgb().ToString("X", CultureInfo.InvariantCulture);
             root.Add(new XElement(name, new XAttribute("value", @string)));
         }
 

@@ -7,7 +7,7 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    public class ConnectionDrawer : IDisposable
+    internal class ConnectionDrawer : Disposable
     {
         private List<Tuple<PointF, PointF, bool>> m_connections = new List<Tuple<PointF, PointF, bool>>();
         private LineDrawer m_drawer;
@@ -38,8 +38,12 @@ namespace ConversationEditor
             m_connections.Add(Tuple.Create(from, to, selected));
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
+            if (disposing)
+            {
+                m_drawer.Dispose();
+            }
         }
     }
 }

@@ -13,14 +13,9 @@ namespace ConversationEditor
 {
     using TData = XmlGraphData<NodeUIData, ConversationEditorData>;
     using System.Windows;
+    using System.Collections.ObjectModel;
 
-    public interface IDomainFile : IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>, IInProject
-    {
-        DomainData Data { get; }
-        event Action ConversationDomainModified;
-    }
-
-    public class DomainFile : GraphFile, IDomainFile
+    internal class DomainFile : GraphFile, IDomainFile
     {
         DomainDomain m_datasource;
         //ConversationDataSource m_conversationDatasource;
@@ -63,7 +58,7 @@ namespace ConversationEditor
                 RemoveFromData(node);
         }
 
-        public DomainFile(List<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, List<Error> errors, DomainDomain datasource, ConversationDataSource conversationDataSource, ISerializer<TData> serializer, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage)
+        public DomainFile(List<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ReadOnlyCollection<LoadError> errors, DomainDomain datasource, ISerializer<TData> serializer, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage)
             : base(nodes, groups, errors, nodeFactory, null, NoAudio.Instance)
         {
             m_file = new SaveableFileUndoable(rawData, file, SaveTo);
@@ -88,7 +83,7 @@ namespace ConversationEditor
             m_serializer = serializer;
         }
 
-        public static DomainFile CreateEmpty(DirectoryInfo directory, DomainDomain datasource, ConversationDataSource conversationDatasource, ISerializer<TData> serializer, Func<FileInfo, bool> pathOk, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage)
+        public static DomainFile CreateEmpty(DirectoryInfo directory, DomainDomain datasource, ISerializer<TData> serializer, Func<FileInfo, bool> pathOk, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage)
         {
             //Create a stream under an available filename
             FileInfo path = null;
@@ -106,7 +101,7 @@ namespace ConversationEditor
                 m.CopyTo(stream);
             }
 
-            return new DomainFile(new List<GraphAndUI<NodeUIData>>(), new List<NodeGroup>(), m, path, new List<Error>(), datasource, conversationDatasource, serializer, nodeFactory, domainUsage);
+            return new DomainFile(new List<GraphAndUI<NodeUIData>>(), new List<NodeGroup>(), m, path, new ReadOnlyCollection<LoadError>(new LoadError[0]), datasource, serializer, nodeFactory, domainUsage);
         }
 
         private void NodeModified(ConversationNode node)
@@ -158,22 +153,22 @@ namespace ConversationEditor
 
             if (m_datasource.IsConnector(node.Type))
             {
-                var nodeConnector = node.Connectors.Single(c => c.m_definition.Id == DomainIDs.CONNECTOR_OUTPUT_DEFINITION.Id);
-                var nodes = nodeConnector.Connections.Select(c => c.Parent).Where(n => n.NodeTypeID == DomainIDs.NODE_GUID);
+                var nodeConnector = node.Connectors.Single(c => c.m_definition.Id == DomainIDs.ConnectorOutputDefinition.Id);
+                var nodes = nodeConnector.Connections.Select(c => c.Parent).Where(n => n.NodeTypeId == DomainIDs.NodeGuid);
                 DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             }
             else if (m_datasource.IsParameter(node.Type))
             {
-                var nodeConnector = node.Connectors.Single(c => c.m_definition.Id == DomainIDs.PARAMETER_OUTPUT_DEFINITION.Id);
-                var nodes = nodeConnector.Connections.Select(c => c.Parent).Where(n => n.NodeTypeID == DomainIDs.NODE_GUID);
+                var nodeConnector = node.Connectors.Single(c => c.m_definition.Id == DomainIDs.ParameterOutputDefinition.Id);
+                var nodes = nodeConnector.Connections.Select(c => c.Parent).Where(n => n.NodeTypeId == DomainIDs.NodeGuid);
                 DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             }
             else if (m_datasource.IsConfig(node.Type))
             {
-                var nodeConnector = node.Connectors.Single(c => c.m_definition.Id == DomainIDs.CONFIG_OUTPUT_DEFINITION.Id);
+                var nodeConnector = node.Connectors.Single(c => c.m_definition.Id == DomainIDs.ConfigOutputDefinition.Id);
                 var connected = nodeConnector.Connections.Select(c => c.Parent);
 
-                var nodes = connected.Where(n => n.NodeTypeID == DomainIDs.NODE_GUID);
+                var nodes = connected.Where(n => n.NodeTypeId == DomainIDs.NodeGuid);
                 DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
 
                 //Don't currently need to handle parameter config affecting nodes
@@ -346,7 +341,7 @@ namespace ConversationEditor
             }
         }
 
-        public static IEnumerable<Or<DomainFile, MissingDomainFile>> Load(IEnumerable<FileInfo> paths, DomainDomain source, ConversationDataSource conversationDatasource, DomainSerializerDeserializer serializerdeserializer, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage)
+        internal static IEnumerable<Or<DomainFile, MissingDomainFile>> Load(IEnumerable<FileInfo> paths, DomainDomain source, Func<FileInfo, DomainSerializerDeserializer> serializerdeserializer, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage)
         {
             //List<FileStream> streams = new List<FileStream>();
 
@@ -377,7 +372,7 @@ namespace ConversationEditor
             {
                 sp.Do(stream =>
                 {
-                    var categoryData = serializerdeserializer.CategoriesDeserializer.Read(stream.Item1);
+                    var categoryData = serializerdeserializer(stream.Item2).CategoriesDeserializer.Read(stream.Item1);
                     DomainFile.AddToData(categoryData.Nodes.Select(n => n.GraphData), source);
                 }, a => { });
             }
@@ -385,7 +380,7 @@ namespace ConversationEditor
             {
                 sp.Do(stream =>
                 {
-                    var typeData = serializerdeserializer.TypesDeserializer.Read(stream.Item1);
+                    var typeData = serializerdeserializer(stream.Item2).TypesDeserializer.Read(stream.Item1);
                     DomainFile.AddToData(typeData.Nodes.Select(n => n.GraphData), source);
                 }, a => { });
             }
@@ -393,7 +388,7 @@ namespace ConversationEditor
             {
                 sp.Do(stream =>
                 {
-                    var connectorData = serializerdeserializer.ConnectorsDeserializer.Read(stream.Item1);
+                    var connectorData = serializerdeserializer(stream.Item2).ConnectorsDeserializer.Read(stream.Item1);
                     DomainFile.AddToData(connectorData.Nodes.Select(n => n.GraphData), source);
                 }, a => { });
             }
@@ -401,17 +396,17 @@ namespace ConversationEditor
             {
                 sp.Do(stream =>
                 {
-                    var nodeData = serializerdeserializer.NodesDeserializer.Read(stream.Item1);
+                    var nodeData = serializerdeserializer(stream.Item2).NodesDeserializer.Read(stream.Item1);
                     DomainFile.AddToData(nodeData.Nodes.Select(n => n.GraphData), source);
                 }, a => { });
             }
 
             return streamsAndPaths.Select(a => a.TransformedOr(stream =>
                 {
-                    var editorData = serializerdeserializer.EditorDataDeserializer.Read(stream.Item1);
+                    var editorData = serializerdeserializer(stream.Item2).EditorDataDeserializer.Read(stream.Item1);
                     DomainFile.AddToData(editorData.Nodes.Select(n => n.GraphData), source);
-                    var allData = serializerdeserializer.EverythingDeserializer.Read(stream.Item1);
-                    return new DomainFile(allData.Nodes.ToList(), editorData.EditorData.Groups.ToList(), stream.Item1, stream.Item2, allData.Errors.ToList(), source, conversationDatasource, serializerdeserializer.Serializer, nodeFactory, domainUsage);
+                    var allData = serializerdeserializer(stream.Item2).EverythingDeserializer.Read(stream.Item1);
+                    return new DomainFile(allData.Nodes.ToList(), editorData.EditorData.Groups.ToList(), stream.Item1, stream.Item2, allData.Errors, source, serializerdeserializer(stream.Item2).Serializer, nodeFactory, domainUsage);
                 }, b => b));
             //var data = streams.Select(stream =>
             //{

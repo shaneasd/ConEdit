@@ -9,10 +9,11 @@ namespace Utilities
     /// Implements a fixed length immutable set of unique elements.
     /// The expectation is that the number of elements would be resonably small such that a HashSet would be overkill
     /// </summary>
-    public struct ReadonlySet<T> : IEnumerable<T>
+    public class ReadonlySet<T> : IEnumerable<T>
     {
         private readonly T[] m_values;
-        public ReadonlySet(params T[] values) : this((IEnumerable<T>)values)
+        public ReadonlySet(params T[] values)
+            : this((IEnumerable<T>)values)
         {
         }
         public ReadonlySet(IEnumerable<T> values)
@@ -33,12 +34,12 @@ namespace Utilities
 
         public override bool Equals(object obj)
         {
-            if (obj is ReadonlySet<T>)
+            var other = obj as ReadonlySet<T>;
+            if (other != null)
             {
-                var other = (ReadonlySet<T>)obj;
                 if (other.m_values.Length != m_values.Length)
                     return false;
-                foreach (var v in m_values )
+                foreach (var v in m_values)
                 {
                     if (!other.m_values.Contains(v))
                         return false;

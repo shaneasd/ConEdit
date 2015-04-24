@@ -16,7 +16,7 @@ namespace Conversation
             public decimal? Max = null;
         }
         public DecimalParameter(string name, ID<Parameter> id, ParameterType typeId, Definition definition, string defaultValue = null)
-            : base(name, id, typeId, defaultValue)
+            : base(name, id, typeId,  defaultValue)
         {
             m_definition = definition ?? new Definition();
             TryDecorrupt(); //The first setting will always be corrupt because definition is null
@@ -51,14 +51,9 @@ namespace Conversation
             get { return m_definition.Min ?? decimal.MinValue; }
         }
 
-        public override string ToString()
-        {
-            return m_value.ToString("F" + Misc.GetDecimalPlaces(m_value));
-        }
-
         public override string DisplayValue(Func<ID<LocalizedText>, string> localize)
         {
-            return m_value.ToString();
+            return m_value.ToString(CultureInfo.CurrentCulture);
         }
     }
 }

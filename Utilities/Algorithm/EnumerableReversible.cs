@@ -43,7 +43,7 @@ namespace Utilities
         }
     }
 
-    public class LinkedListReverseEnumerator<T> : IEnumerator<T>
+    public class LinkedListReverseEnumerator<T> : Disposable, IEnumerator<T>
     {
         private LinkedListNode<T> m_current = null;
         private LinkedList<T> m_data;
@@ -57,7 +57,7 @@ namespace Utilities
             get { return m_current.Value; }
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
         }
 

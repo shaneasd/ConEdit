@@ -9,31 +9,36 @@ using System.Xml.Linq;
 using Conversation;
 using Utilities;
 using System.Drawing;
+using System.Collections.ObjectModel;
 
 namespace Conversation.Serialization
 {
-    public class Error
+    public class LoadError
     {
-        public string Message;
-        public Error()
+        private string m_message;
+        public string Message { get { return m_message; } }
+        public LoadError()
         {
-            Message = ""; //Will be assigned later presumably. Not critical.
+            m_message = ""; //Will be assigned later presumably. Not critical.
         }
-        public Error(string message)
+        public LoadError(string message)
         {
-            Message = message;
+            m_message = message;
         }
     }
 
     public class GraphAndUI<TUIRawData>
     {
-        public readonly IEditable GraphData;
-        public readonly TUIRawData UIData;
+        public IEditable GraphData { get { return m_graphData; } }
+        public TUIRawData UIData { get { return m_uiData; } }
+
+        private readonly IEditable m_graphData;
+        private readonly TUIRawData m_uiData;
 
         public GraphAndUI(IEditable graphData, TUIRawData uiData)
         {
-            GraphData = graphData;
-            UIData = uiData;
+            m_graphData = graphData;
+            m_uiData = uiData;
         }
     }
 
@@ -42,30 +47,34 @@ namespace Conversation.Serialization
     /// </summary>
     public class XmlGraphData<TUIRawData, TEditorData>
     {
-        public XmlGraphData(IEnumerable<GraphAndUI<TUIRawData>> nodes, TEditorData editorData, List<Error> errors)
+        public XmlGraphData(IEnumerable<GraphAndUI<TUIRawData>> nodes, TEditorData editorData, ReadOnlyCollection<LoadError> errors)
         {
-            Nodes = nodes;
-            EditorData = editorData;
-            Errors = errors;
+            m_nodes = nodes;
+            m_editorData = editorData;
+            m_errors = errors;
         }
 
         public XmlGraphData(IEnumerable<GraphAndUI<TUIRawData>> nodes, TEditorData editorData)
         {
-            Nodes = nodes;
-            EditorData = editorData;
-            Errors = new List<Error>();
+            m_nodes = nodes;
+            m_editorData = editorData;
+            m_errors = new ReadOnlyCollection<LoadError>(new LoadError[0]);
         }
 
-        public readonly IEnumerable<GraphAndUI<TUIRawData>> Nodes;
-        public readonly TEditorData EditorData;
-        public readonly List<Error> Errors;
+        private readonly IEnumerable<GraphAndUI<TUIRawData>> m_nodes;
+        private readonly TEditorData m_editorData;
+        private readonly ReadOnlyCollection<LoadError> m_errors;
+
+        public IEnumerable<GraphAndUI<TUIRawData>> Nodes { get { return m_nodes; } }
+        public TEditorData EditorData { get { return m_editorData; } }
+        public ReadOnlyCollection<LoadError> Errors { get { return m_errors; } }
     }
 
-    public static class XMLConversation<TUIRawData, TEditorData>
+    public static class XmlConversation<TUIRawData, TEditorData>
     {
-        private static readonly string[] XML_VERSION_READ = new[] { "1.0", "1.1" };
-        const string XML_VERSION_WRITE = "1.1";
-        public const string ROOT = "Root";
+        private static readonly string[] XmlVersionRead = new[] { "1.0", "1.1" };
+        const string XmlVersionWrite = "1.1";
+        public const string Root = "Root";
 
         public class SerializerDeserializer : ISerializerDeserializer<XmlGraphData<TUIRawData, TEditorData>>
         {
@@ -108,20 +117,21 @@ namespace Conversation.Serialization
             {
                 stream.Position = 0;
                 var d = XDocument.Load(stream);
-                var root = d.Element(ROOT);
+                var root = d.Element(Root);
 
-                if (root.Attribute("xmlversion") == null || !XML_VERSION_READ.Contains(root.Attribute("xmlversion").Value))
+                //TODO: Should possibly treat this as a missing file rather than crashing the editor
+                if (root.Attribute("xmlversion") == null || !XmlVersionRead.Contains(root.Attribute("xmlversion").Value))
                     throw new Exception("unrecognised conversation xml version");
 
-                IEnumerable<Or<GraphAndUI<TUIRawData>, Error>> editables = root.Elements("Node").Select(n => ReadEditable(n, m_datasource)).Evaluate();
+                IEnumerable<Or<GraphAndUI<TUIRawData>, LoadError>> editables = root.Elements("Node").Select(n => ReadEditable(n, m_datasource)).Evaluate();
                 var allnodes = new Dictionary<ID<NodeTemp>, GraphAndUI<TUIRawData>>();
-                var errors = new List<Error>();
+                var errors = new List<LoadError>();
 
                 foreach (var editable in editables)
                 {
                     editable.Do(e =>
                     {
-                        allnodes[e.GraphData.NodeID] = new GraphAndUI<TUIRawData>(e.GraphData, e.UIData);
+                        allnodes[e.GraphData.NodeId] = new GraphAndUI<TUIRawData>(e.GraphData, e.UIData);
                     }, a =>
                     {
                         errors.Add(a);
@@ -129,7 +139,7 @@ namespace Conversation.Serialization
                 }
 
                 //This makes a lot of assumptions but I'm fairly sure they're assumptions that currently hold
-                IEnumerable<ID<NodeTemp>> filteredNodes = allnodes.Keys.Where(k => m_filter(allnodes[k].GraphData.NodeTypeID)).Evaluate();
+                IEnumerable<ID<NodeTemp>> filteredNodes = allnodes.Keys.Where(k => m_filter(allnodes[k].GraphData.NodeTypeId)).Evaluate();
 
                 var links = ReadLinks(filteredNodes, root);
 
@@ -144,30 +154,33 @@ namespace Conversation.Serialization
                         IEditable node1 = allnodes[id1].GraphData;
                         IEditable node2 = allnodes[id2].GraphData;
 
-                        if (node1 is UnknownEditable)
+                        var unknownNode1 = node1 as UnknownEditable;
+                        var unknownNode2 = node2 as UnknownEditable;
+
+                        if (unknownNode1 != null)
                         {
-                            ((UnknownEditable)node1).AddConnector(link.Item1.Item1);
+                            unknownNode1.AddConnector(link.Item1.Item1);
                         }
-                        if (node2 is UnknownEditable)
+                        if (unknownNode2 != null)
                         {
-                            ((UnknownEditable)node2).AddConnector(link.Item2.Item1);
+                            unknownNode2.AddConnector(link.Item2.Item1);
                         }
 
                         Output connector1 = node1.Connectors.SingleOrDefault(c => c.ID == link.Item1.Item1);
                         Output connector2 = node2.Connectors.SingleOrDefault(c => c.ID == link.Item2.Item1);
 
-                        if (node1 is UnknownEditable)
+                        if (unknownNode1 != null)
                         {
-                            ((UnknownEditable)node1).AllowConnection(connector1, connector2);
+                            unknownNode1.AllowConnection(connector1, connector2);
                         }
 
-                        if (node2 is UnknownEditable)
+                        if (unknownNode2 != null)
                         {
-                            ((UnknownEditable)node2).AllowConnection(connector1, connector2);
+                            unknownNode2.AllowConnection(connector1, connector2);
                         }
 
                         if (connector1 == null || connector2 == null)
-                            errors.Add(new Error("Connector does not exist"));
+                            errors.Add(new LoadError("Connector does not exist"));
                         else
                         {
                             bool success = connector1.ConnectTo(connector2, false);
@@ -175,7 +188,7 @@ namespace Conversation.Serialization
                             {
                                 success = connector1.ConnectTo(connector2, true);
                                 if (!success)
-                                    errors.Add(new Error("Tried to connect two connectors that could not be connected"));
+                                    errors.Add(new LoadError("Tried to connect two connectors that could not be connected"));
                             }
                         }
                     }
@@ -184,7 +197,7 @@ namespace Conversation.Serialization
                 foreach (var node in root.Elements("Node"))
                 {
                     ID<NodeTemp> nodeID = ID<NodeTemp>.Parse(node.Attribute("Id").Value);
-                    ID<NodeTypeTemp> nodeType = ID<NodeTypeTemp>.Parse(node.Attribute("Guid").Value);
+                    //ID<NodeTypeTemp> nodeType = ID<NodeTypeTemp>.Parse(node.Attribute("Guid").Value);
                     int outputIndex = 0; //no idea where the output guids come from so just assume they're ordered
 
                     //TODO: Remove support for legacy linking
@@ -197,7 +210,7 @@ namespace Conversation.Serialization
                         foreach (var connectedID in connectedNodes)
                         {
                             var connectedNode = allnodes[connectedID].GraphData;
-                            var orderedConnectors = connectedNode.Connectors.OrderBy(o => o.m_definition.Id != ConnectorDefinitionData.INPUT_DEFINITION_ID); //Put any inputs at the front of the list
+                            var orderedConnectors = connectedNode.Connectors.OrderBy(o => o.m_definition.Id != ConnectorDefinitionData.InputDefinitionId); //Put any inputs at the front of the list
                             bool success = false;
                             foreach (var connector in orderedConnectors)
                             {
@@ -216,26 +229,26 @@ namespace Conversation.Serialization
                                 }
                             }
                             if (!success)
-                                errors.Add(new Error() { Message = "Could not link nodes" });
+                                errors.Add(new LoadError("Could not link nodes"));
                         }
                         outputIndex++;
                     }
                 }
 
-                return new XmlGraphData<TUIRawData, TEditorData>(filteredNodes.Select(a => allnodes[a]), m_editorDataDeserializer.Read(root), errors);
+                return new XmlGraphData<TUIRawData, TEditorData>(filteredNodes.Select(a => allnodes[a]), m_editorDataDeserializer.Read(root), new ReadOnlyCollection<LoadError>(errors));
             }
 
-            private Or<GraphAndUI<TUIRawData>, Error> ReadEditable(XElement node, IDataSource datasource)
+            private Or<GraphAndUI<TUIRawData>, LoadError> ReadEditable(XElement node, IDataSource datasource)
             {
                 ID<NodeTemp> id = ID<NodeTemp>.Parse(node.Attribute("Id").Value);
                 ID<NodeTypeTemp> guid = ID<NodeTypeTemp>.Parse(node.Attribute("Guid").Value);
 
                 EditableGenerator editableGenerator = datasource.GetNode(guid);
 
-                Or<GraphAndUI<TUIRawData>, Error> result;
+                Or<GraphAndUI<TUIRawData>, LoadError> result;
 
                 var parameterNodes = node.Elements("Parameter");
-                var parameterData = parameterNodes.Select(p => new EditableGenerator.ParameterData(ID<Parameter>.Parse(p.Attribute("guid").Value), p.Attribute("value").Value)).ToList();
+                var parameterData = parameterNodes.Select(p => new EditableGeneratorParameterData(ID<Parameter>.Parse(p.Attribute("guid").Value), p.Attribute("value").Value)).ToList();
 
                 if (editableGenerator != null)
                 {
@@ -279,17 +292,17 @@ namespace Conversation.Serialization
                 m_nodeUISerializer = nodeUISerializer;
                 m_editorDataSerializer = editorDataSerializer;
             }
-            public void Write(XmlGraphData<TUIRawData, TEditorData> conversation, Stream stream)
+            public void Write(XmlGraphData<TUIRawData, TEditorData> data, Stream stream)
             {
                 var document = new XDocument();
-                var root = new XElement(ROOT, new XAttribute("xmlversion", XML_VERSION_WRITE));
+                var root = new XElement(Root, new XAttribute("xmlversion", XmlVersionWrite));
                 document.Add(root);
-                foreach (var node in conversation.Nodes)
+                foreach (var node in data.Nodes)
                     Write(node, root);
 
-                WriteLinks(conversation, root);
+                WriteLinks(data, root);
 
-                m_editorDataSerializer.Write(conversation.EditorData, root);
+                m_editorDataSerializer.Write(data.EditorData, root);
                 stream.Position = 0;
                 stream.SetLength(0);
                 document.Save(stream);
@@ -314,9 +327,9 @@ namespace Conversation.Serialization
 
                 foreach (var link in links)
                 {
-                    var node1 = new XAttribute("node1", link.Item1.Item2.NodeID.Serialized());
+                    var node1 = new XAttribute("node1", link.Item1.Item2.NodeId.Serialized());
                     var connector1 = new XAttribute("connector1", link.Item1.Item1.Serialized());
-                    var node2 = new XAttribute("node2", link.Item2.Item2.NodeID.Serialized());
+                    var node2 = new XAttribute("node2", link.Item2.Item2.NodeId.Serialized());
                     var connector2 = new XAttribute("connector2", link.Item2.Item1.Serialized());
                     root.Add(new XElement("Link", node1, connector1, node2, connector2));
                 }
@@ -350,8 +363,8 @@ namespace Conversation.Serialization
 
             private void Write(GraphAndUI<TUIRawData> con, XElement root)
             {
-                var id = new XAttribute("Id", con.GraphData.NodeID.Serialized());
-                var guid = new XAttribute("Guid", con.GraphData.NodeTypeID.Serialized());
+                var id = new XAttribute("Id", con.GraphData.NodeId.Serialized());
+                var guid = new XAttribute("Guid", con.GraphData.NodeTypeId.Serialized());
                 var node = new XElement("Node", id, guid);
                 m_nodeUISerializer.Write(con.UIData, node);
                 //WriteOutputs(con.GraphData, node);

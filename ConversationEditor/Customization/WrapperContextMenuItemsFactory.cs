@@ -6,11 +6,11 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    public class WrapperContextMenuItemsFactory : IProjectExplorerContextMenuItemsFactory
+    internal class WrapperContextMenuItemsFactory : IProjectExplorerContextMenuItemsFactory
     {
-        private Func<MainAssembly, IEnumerable<PluginAssembly>> m_plugins;
+        private Func<MainAssemblies, IEnumerable<PluginAssembly>> m_plugins;
 
-        public WrapperContextMenuItemsFactory(Func<MainAssembly, IEnumerable<PluginAssembly>> plugins)
+        public WrapperContextMenuItemsFactory(Func<MainAssemblies, IEnumerable<PluginAssembly>> plugins)
         {
             m_plugins = plugins;
         }
@@ -18,13 +18,17 @@ namespace ConversationEditor
         private IEnumerable<IProjectExplorerContextMenuItemsFactory> PluginContextMenuFactories()
         {
             List<IProjectExplorerContextMenuItemsFactory> result = new List<IProjectExplorerContextMenuItemsFactory>();
-            foreach (var pa in m_plugins(MainAssembly.Include))
+            foreach (var pa in m_plugins(MainAssemblies.Include))
             {
                 var factories = pa.Assembly.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(IProjectExplorerContextMenuItemsFactory)));
                 foreach (var factory in factories)
                 {
-                    IProjectExplorerContextMenuItemsFactory obj = factory.GetConstructor(Type.EmptyTypes).Invoke(new object[0]) as IProjectExplorerContextMenuItemsFactory;
-                    result.Add(obj);
+                    var constructor = factory.GetConstructor(Type.EmptyTypes);
+                    if (constructor != null)
+                    {
+                        IProjectExplorerContextMenuItemsFactory obj = constructor.Invoke(new object[0]) as IProjectExplorerContextMenuItemsFactory;
+                        result.Add(obj);
+                    }
                 }
             }
             return result;

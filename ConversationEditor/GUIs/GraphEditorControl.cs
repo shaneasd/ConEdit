@@ -13,56 +13,15 @@ using System.Diagnostics;
 using ConversationEditor.Controllers;
 using System.Reflection;
 using Conversation.Serialization;
+using Utilities.UI;
 
 namespace ConversationEditor
 {
     using ConversationNode = ConversationNode<INodeGUI>;
+    using System.Globalization;
+    using System.Collections.ObjectModel;
 
-    public interface IGraphEditorControl<TNode> where TNode : IRenderable<IGUI>
-    {
-        void CopySelection();
-
-        void DuplicateSelection();
-
-        void SelectAll();
-
-        void Paste(Point? point);
-
-        void UngroupSelection();
-
-        void GroupSelection();
-
-        Control AsControl();
-
-        void SelectNode(TNode node);
-    }
-
-    public interface IConversationEditorControlData<TNode, TTransitionUI> : ISaveableFileUndoableProvider where TNode : IRenderable<IGUI>
-    {
-        TNode GetNode(ID<NodeTemp> id);
-        Tuple<IEnumerable<TNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, PointF location, LocalizationEngine localization);
-        void Add(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups);
-        bool Remove(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups);
-        IEnumerableReversible<TNode> Nodes { get; }
-        IEnumerableReversible<NodeGroup> Groups { get; }
-        void RemoveLinks(Output o);
-        /// <summary>
-        /// Issues that were detected in deserialization that can be automatically resolved but with possible loss of data
-        /// e.g. removing links that point to non-existent nodes
-        /// </summary>
-        List<Error> Errors { get; }
-        void ClearErrors();
-
-        void BringToFront(IReadonlyNodeSet Selected);
-
-        TTransitionUI UIInfo(Output connection);
-
-        event Action NodesDeleted;
-
-        TNode MakeNode(IEditable e, NodeUIData uiData);
-    }
-
-    public partial class GraphEditorControl<TNode> : UserControl, IGraphEditorControl<TNode> where TNode : class, IRenderable<IGUI>, IConversationNode, IConfigurable
+    internal partial class GraphEditorControl<TNode> : UserControl, IGraphEditorControl<TNode> where TNode : class, IRenderable<IGUI>, IConversationNode, IConfigurable
     {
         public GraphEditorControl()
         {
@@ -198,8 +157,6 @@ namespace ConversationEditor
 
         private MouseController<TNode> m_mouseController;
         private Func<IEditable, AudioGenerationParameters, ConfigureResult> Edit;
-        private Action<TNode> FileReferences;
-        private INodeFactory<TNode> m_nodeFactory;
         private CopyPasteController<TNode, TransitionNoduleUIInfo> m_copyPasteController;
 
         Matrix GetTransform()
@@ -214,11 +171,11 @@ namespace ConversationEditor
         private bool m_showGrid;
         public bool ShowGrid { get { return m_showGrid; } set { m_showGrid = value; Redraw(); } }
 
-        private uint m_minorGridSpacing;
-        public uint MinorGridSpacing { get { return m_minorGridSpacing; } set { m_minorGridSpacing = value; Redraw(); } }
+        private int m_minorGridSpacing;
+        public int MinorGridSpacing { get { return m_minorGridSpacing; } set { m_minorGridSpacing = value; Redraw(); } }
 
-        private uint m_majorGridSpacing;
-        public uint MajorGridSpacing { get { return m_majorGridSpacing; } set { m_majorGridSpacing = value; Redraw(); } }
+        private int m_majorGridSpacing;
+        public int MajorGridSpacing { get { return m_majorGridSpacing; } set { m_majorGridSpacing = value; Redraw(); } }
 
         public bool ShowIDs { get; set; }
         private ColorScheme m_colorScheme;
@@ -285,12 +242,10 @@ namespace ConversationEditor
 
         ToolTip m_toolTip = new ToolTip();
 
-        internal void Initialise(Func<IEditable, AudioGenerationParameters, ConfigureResult> editNode, INodeFactory<TNode> nodeFactory, CopyPasteController<TNode, TransitionNoduleUIInfo> copyPasteController, Action<TNode> findReferences)
+        internal void Initialise(Func<IEditable, AudioGenerationParameters, ConfigureResult> editNode, CopyPasteController<TNode, TransitionNoduleUIInfo> copyPasteController)
         {
             Edit = editNode;
-            m_nodeFactory = nodeFactory;
             m_copyPasteController = copyPasteController;
-            FileReferences = findReferences;
             InitialiseMouseController();
             m_contextMenu = new ContextMenu<TNode>(Colors, m_mouseController, DrawWindowToGraphSpace, () => CurrentFile != DummyConversationEditorControlData<TNode, TransitionNoduleUIInfo>.Instance && !(CurrentFile is MissingConversationFile));
             m_contextMenu.AttachTo(drawWindow);
@@ -375,12 +330,11 @@ namespace ConversationEditor
             vScrollBar1.Value = Utilities.Util.Clamp(vScrollBar1.Value + shift.Y, vScrollBar1.Minimum, vScrollBar1.Maximum);
         }
 
-        Dictionary<Keys, EditableGenerator> m_keyMapping = new Dictionary<Keys, EditableGenerator>();
+        Dictionary<Keys, IEditableGenerator> m_keyMapping = new Dictionary<Keys, IEditableGenerator>();
 
         private ConfigureResult MyEdit(IEditable data)
         {
-            Func<ID<LocalizedText>, string> localize = id => m_localization.Localize(id);
-            return Edit(data, new AudioGenerationParameters(CurrentFile, m_project, data.Parameters, localize));
+            return Edit(data, new AudioGenerationParameters(CurrentFile.File.File, m_project.File.File));
         }
         private void InitialiseMouseController()
         {
@@ -475,17 +429,17 @@ namespace ConversationEditor
 
         public void UpdateKeyMappings()
         {
-            m_keyMapping = new Dictionary<Keys, EditableGenerator>();
+            m_keyMapping = new Dictionary<Keys, IEditableGenerator>();
             foreach (var node in DataSource.AllNodes())
             {
-                string shortcutKeys = "";
-                if (ShortcutKey.TryGet(node.Config, ref shortcutKeys))
+                string shortcutKeys;
+                if (ShortcutKey.TryGet(node.Config, out shortcutKeys))
                 {
                     foreach (char key in shortcutKeys)
                     {
                         Keys k;
                         if (!Enum.TryParse("" + key, out k))
-                            if (!Enum.TryParse(("" + key).ToUpper(), out k))
+                            if (!Enum.TryParse(("" + key).ToUpper(CultureInfo.InvariantCulture), out k))
                                 throw new Exception("Don't understand shortcut " + key);
                         m_keyMapping[k] = node;
                     }
@@ -511,22 +465,22 @@ namespace ConversationEditor
             }
         }
 
-        private void DrawGrid(PaintEventArgs e, Pen pen, uint GRID_SPACING, PointF lowerBound, PointF upperBound)
+        private void DrawGrid(PaintEventArgs e, Pen pen, int gridSpacing, PointF lowerBound, PointF upperBound)
         {
-            if (GRID_SPACING * GraphScale >= 4)
+            if (gridSpacing * GraphScale >= 4)
             {
                 List<PointF> pointList = new List<PointF>();
 
-                for (float i = (float)Math.Floor(lowerBound.X / GRID_SPACING) * GRID_SPACING; i < upperBound.X; i += GRID_SPACING)
+                for (float i = (float)Math.Floor(lowerBound.X / gridSpacing) * gridSpacing; i < upperBound.X; i += gridSpacing)
                 {
-                    pointList.Add(new PointF(i, lowerBound.Y - GRID_SPACING));
-                    pointList.Add(new PointF(i, upperBound.Y + GRID_SPACING));
+                    pointList.Add(new PointF(i, lowerBound.Y - gridSpacing));
+                    pointList.Add(new PointF(i, upperBound.Y + gridSpacing));
                 }
 
-                for (float i = (float)Math.Floor(lowerBound.Y / GRID_SPACING) * GRID_SPACING; i < upperBound.Y; i += GRID_SPACING)
+                for (float i = (float)Math.Floor(lowerBound.Y / gridSpacing) * gridSpacing; i < upperBound.Y; i += gridSpacing)
                 {
-                    pointList.Add(new PointF(lowerBound.X - GRID_SPACING, i));
-                    pointList.Add(new PointF(upperBound.X + GRID_SPACING, i));
+                    pointList.Add(new PointF(lowerBound.X - gridSpacing, i));
+                    pointList.Add(new PointF(upperBound.X + gridSpacing, i));
                 }
 
                 PointF[] points = pointList.ToArray();
@@ -683,11 +637,11 @@ namespace ConversationEditor
             }
         }
 
-        public void AddNode(EditableGenerator node, Point p)
+        public void AddNode(IEditableGenerator node, Point p)
         {
             if (CurrentFile.File.Exists)
             {
-                TNode g = CurrentFile.MakeNode(node.Generate(ID<NodeTemp>.New(), new List<EditableGenerator.ParameterData>()), new NodeUIData(p));
+                TNode g = CurrentFile.MakeNode(node.Generate(ID<NodeTemp>.New(), new List<EditableGeneratorParameterData>()), new NodeUIData(p));
                 Action addNode = () => { CurrentFile.Add(g.Only(), Enumerable.Empty<NodeGroup>()); };
                 g.Configure(MyEdit).Do
                 (
@@ -702,7 +656,7 @@ namespace ConversationEditor
             if (m_contextMenu == null)
                 return;
 
-            List<MenuAction2<TNode>> custom = new List<MenuAction2<TNode>>();
+            List<MenuAction<TNode>> custom = new List<MenuAction<TNode>>();
 
             foreach (var factory in menuFactories)
             {
@@ -786,7 +740,7 @@ namespace ConversationEditor
     /// <summary>
     /// To get rid of the generic parameter to make the designer happy
     /// </summary>
-    public class ConversationEditorControl : GraphEditorControl<ConversationNode>
+    internal class ConversationEditorControl : GraphEditorControl<ConversationNode>
     {
     }
 }

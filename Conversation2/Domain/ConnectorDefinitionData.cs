@@ -21,9 +21,9 @@ namespace Conversation
         public readonly ConnectorPosition Position;
         public readonly bool Hidden;
 
-        public static readonly ID<TConnectorDefinition> INPUT_DEFINITION_ID = ID<TConnectorDefinition>.Parse("73e5cff2-7d6c-45e8-8f0e-08bcb780acc9");
-        public static readonly ID<TConnectorDefinition> OUTPUT_DEFINITION_ID = ID<TConnectorDefinition>.Parse("a800357f-5013-44c1-8637-c8a60cff240b");
-        public static readonly ID<Parameter> OUTPUT_NAME = ID<Parameter>.Parse("ec0c0b5c-57d9-484b-8946-c8dcf3e09b38");
+        public static readonly ID<TConnectorDefinition> InputDefinitionId = ID<TConnectorDefinition>.Parse("73e5cff2-7d6c-45e8-8f0e-08bcb780acc9");
+        public static readonly ID<TConnectorDefinition> OutputDefinitionId = ID<TConnectorDefinition>.Parse("a800357f-5013-44c1-8637-c8a60cff240b");
+        public static readonly ID<Parameter> OutputName = ID<Parameter>.Parse("ec0c0b5c-57d9-484b-8946-c8dcf3e09b38");
 
         //Domain currently doesn't have any connectors with parameters so ignore them for now
         public Output MakeWithoutParameters(ID<TConnector> id, IEditable parent, IConnectionRules rules)

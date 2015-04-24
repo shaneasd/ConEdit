@@ -8,24 +8,11 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    public interface IGUI
-    {
-        RectangleF Area { get; }
-        void UpdateArea();
-        void Draw(Graphics g, bool selected, ColorScheme scheme);
-        void MoveTo(PointF point);
-    }
-
-    public static class INodeGUIUtils
+    internal static class INodeGUIUtils
     {
         public static void Offset(this IGUI node, PointF offset)
         {
             node.MoveTo(node.Area.Center().Plus(offset));
         }
-    }
-
-    public interface INodeGUI : INodeUI<INodeGUI>, IGUI
-    {
-        string DisplayName { get; }
     }
 }

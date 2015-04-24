@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace ConversationEditor
 {
-    public partial class ProjectExplorer
+    partial class ProjectExplorer
     {
         public class RealLeafItem<TConcrete, TInterface> : LeafItem<TInterface>
             where TConcrete : TInterface

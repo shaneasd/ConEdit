@@ -8,22 +8,19 @@ using System.Windows;
 
 namespace ConversationEditor
 {
-    public partial class ProjectExplorer
+    partial class ProjectExplorer
     {
         public class FileSystemObject
         {
             private Or<DirectoryInfo, ISaveableFile> m_target;
-            IProject m_project;
 
-            public FileSystemObject(IProject project, ISaveableFile file)
+            public FileSystemObject(ISaveableFile file)
             {
-                m_project = project;
                 m_target = new Or<DirectoryInfo, ISaveableFile>(file);
             }
 
-            public FileSystemObject(IProject project, DirectoryInfo folder)
+            public FileSystemObject(DirectoryInfo folder)
             {
-                m_project = project;
                 m_target = folder;
             }
 

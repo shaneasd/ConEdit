@@ -75,7 +75,7 @@ namespace Conversation
         public string GetName(Guid value)
         {
             if (value == Guid.Empty)
-                return INVALID_VALUE;
+                return InvalidValue;
             else
                 return m_enumeration.GetName(value);
         }
@@ -84,9 +84,9 @@ namespace Conversation
         {
             if (m_textOverride != null)
                 return m_textOverride;
-            return string.Join(" + ", m_value.Select(v => GetName(v) ?? INVALID_VALUE).OrderBy(a => a));
+            return string.Join(" + ", m_value.Select(v => GetName(v) ?? InvalidValue).OrderBy(a => a));
         }
 
-        public const string INVALID_VALUE = "ERROR: Unknown enumeration value";
+        public const string InvalidValue = "ERROR: Unknown enumeration value";
     }
 }

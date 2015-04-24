@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ConversationEditor
 {
-    public class DummyLocalizationFile : ILocalizationFile
+    internal sealed class DummyLocalizationFile : ILocalizationFile
     {
         public static readonly DummyLocalizationFile Instance = new DummyLocalizationFile();
         private DummyLocalizationFile() { }

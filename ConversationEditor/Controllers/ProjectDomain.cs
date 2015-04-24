@@ -6,7 +6,7 @@ using Conversation;
 
 namespace ConversationEditor.Controllers
 {
-    class ProjectDomain : IDataSource
+    internal class ProjectDomain : IDataSource
     {
         public static ProjectDomain Instance = new ProjectDomain();
 
@@ -25,22 +25,22 @@ namespace ConversationEditor.Controllers
             throw new NotImplementedException();
         }
 
-        public bool IsInteger(ParameterType guid)
+        public bool IsInteger(ParameterType type)
         {
             return false;
         }
 
-        public bool IsDecimal(ParameterType guid)
+        public bool IsDecimal(ParameterType type)
         {
             return false;
         }
 
-        public bool IsEnum(ParameterType guid)
+        public bool IsEnum(ParameterType type)
         {
             throw new NotImplementedException();
         }
 
-        public bool IsDynamicEnum(ParameterType guid)
+        public bool IsDynamicEnum(ParameterType type)
         {
             throw new NotImplementedException();
         }

@@ -7,7 +7,7 @@ using System.IO;
 
 namespace Conversation
 {
-    public class Failed
+    public sealed class Failed
     {
         private Failed() { }
         public static Failed Instance = null;
@@ -57,8 +57,8 @@ namespace Conversation
 
     public class AudioParameter : Parameter<Audio>, IAudioParameter
     {
-        public AudioParameter(string name, ID<Parameter> id, ParameterType typeId, string defaultValue)
-            : base(name, id, typeId, defaultValue)
+        public AudioParameter(string name, ID<Parameter> id, ParameterType typeId)
+            : base(name, id, typeId, null) //Audio parameters may require information from the conversation that contains them and as such do not support a constant default value
         {
         }
 
@@ -76,12 +76,6 @@ namespace Conversation
         public override string DisplayValue(Func<ID<LocalizedText>, string> localize)
         {
             return m_value.DisplayValue();
-        }
-
-        protected override void DecorruptFromNull()
-        {
-            //TODO: Something here?
-            //TODO: we want to return TryDeserialiseValue(m_defaultValue) but we can't because audioparameters' defaults are not in line with the audio path generation rules (currently)
         }
     }
 }

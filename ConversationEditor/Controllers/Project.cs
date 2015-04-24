@@ -19,8 +19,9 @@ namespace ConversationEditor
     using ConversationSerializerDeserializerFactory = Func<IDataSource, ISerializerDeserializer<XmlGraphData<NodeUIData, ConversationEditorData>>>;
     using DomainSerializerDeserializerFactory = Func<IDataSource, DomainSerializerDeserializer>;
     using System.Diagnostics;
+    using System.Collections.ObjectModel;
 
-    public class Project : IProject, ISaveableFileProvider
+    internal class Project : Disposable, IProject, ISaveableFileProvider
     {
         public static ILocalizationFile SelectNewLocalizer(IProjectElementList<LocalizationFile, ILocalizationFile> localizers)
         {
@@ -158,7 +159,6 @@ namespace ConversationEditor
             {
                 m_conversationDatasourceModified = false;
                 m_conversationDataSource = new ConversationDataSource(BaseTypeSet.Make(), m_domainFiles.Select(f => f.Data));
-                var serializer = m_conversationSerializerFactory(m_conversationDataSource);
                 m_conversations.Reload(); //Reload all conversations
                 return true;
             }
@@ -167,8 +167,6 @@ namespace ConversationEditor
 
         public Project(ILocalizationContext context, TData data, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, MemoryStream initialData, FileInfo projectFile, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializerFactory, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
         {
-            var soFar = DateTime.Now - Process.GetCurrentProcess().StartTime;
-
             Action<Stream> saveTo = stream => { Write(Conversations.Select(c => c.File.File), LocalizationFiles.Select(l => l.File.File), DomainFiles.Select(d => d.File.File), AudioFiles.Select(a => a.File.File), stream, Origin, m_serializer); };
             m_file = new SaveableFileNotUndoable(initialData, projectFile, saveTo);
             ConversationNodeFactory = conversationNodeFactory;
@@ -196,11 +194,11 @@ namespace ConversationEditor
                     m_domainDataSource = new DomainDomain(pluginsConfig);
                     Func<IEnumerable<FileInfo>, IEnumerable<Or<DomainFile, MissingDomainFile>>> loader = paths =>
                     {
-                        var result = DomainFile.Load(paths, m_domainDataSource, null, DomainSerializerDeserializer.Make(m_domainDataSource), DomainNodeFactory, () => DomainUsage).Evaluate();
+                        var result = DomainFile.Load(paths, m_domainDataSource, document => DomainSerializerDeserializer.Make(m_domainDataSource), DomainNodeFactory, () => DomainUsage).Evaluate();
                         result.ForAll(a => a.Do(b => b.ConversationDomainModified += ConversationDatasourceModified, null));
                         return result;
                     };
-                    Func<DirectoryInfo, DomainFile> makeEmpty = path => DomainFile.CreateEmpty(path, m_domainDataSource, m_conversationDataSource, m_domainSerializer, pathOk, DomainNodeFactory, () => DomainUsage);
+                    Func<DirectoryInfo, DomainFile> makeEmpty = path => DomainFile.CreateEmpty(path, m_domainDataSource, m_domainSerializer, pathOk, DomainNodeFactory, () => DomainUsage);
                     m_domainFiles = new ProjectElementList<DomainFile, MissingDomainFile, IDomainFile>(s => CheckFolder(s, Origin), loader, makeEmpty);
                     IEnumerable<FileInfo> toLoad = Rerout(domainPaths);
                     m_domainFiles.Load(toLoad);
@@ -217,10 +215,9 @@ namespace ConversationEditor
                 {
                     Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> audio = (c, p) =>
                     {
-                        Func<ID<LocalizedText>, string> localize = id => context.CurrentLocalization.Value.Localize(id);
-                        return m_audioProvider.Generate(new AudioGenerationParameters(c, this, p, localize));
+                        return m_audioProvider.Generate(new AudioGenerationParameters(c.File.File, this.File.File));
                     };
-                    Func<IEnumerable<FileInfo>, IEnumerable<ConversationFile>> loadConversation = files => files.Select(file => ConversationFile.Load(file, m_conversationDataSource, ConversationNodeFactory, m_conversationSerializerFactory(m_conversationDataSource), audio, m_audioProvider));
+                    Func<IEnumerable<FileInfo>, IEnumerable<ConversationFile>> loadConversation = files => files.Select(file => ConversationFile.Load(file, ConversationNodeFactory, m_conversationSerializerFactory(m_conversationDataSource), audio, m_audioProvider));
                     Func<DirectoryInfo, ConversationFile> makeEmpty = path => ConversationFile.CreateEmpty(path, this, pathOk, ConversationNodeFactory, audio, m_audioProvider);
                     Func<FileInfo, MissingConversationFile> makeMissing = file => new MissingConversationFile(file);
                     m_conversations = new ProjectElementList<ConversationFile, MissingConversationFile, IConversationFile>(s => CheckFolder(s, Origin), loadConversation, makeEmpty, makeMissing);
@@ -254,8 +251,6 @@ namespace ConversationEditor
                 //m_domainFiles.ForAll(d => d.File.SaveStateChanged += () => { if (!d.File.Changed) ReloadDatasource(); });
 
                 m_domainUsage = new DomainUsage(this);
-
-                var soFar2 = DateTime.Now - Process.GetCurrentProcess().StartTime;
 
                 m_audioProvider.UpdateUsage();
             }
@@ -384,11 +379,6 @@ namespace ConversationEditor
             get { return m_conversationDataSource; }
         }
 
-        private void ContentMoved(FileInfo a, FileInfo b)
-        {
-            GotChanged();
-        }
-
         public bool CanModifyConversations
         {
             get { return DomainFiles.All(f => f.File.Writable == null || !f.File.Writable.Changed); }
@@ -438,11 +428,26 @@ namespace ConversationEditor
         public event Action<ISaveableFileProvider, Action> ElementModifiedExternally;
         public event Action<ISaveableFileProvider> ElementDeletedExternally;
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            foreach (var element in ElementsExceptThis)
-                element.Dispose();
-            File.Dispose();
+            if (disposing)
+            {
+                foreach (var element in ElementsExceptThis)
+                    element.Dispose();
+                m_file.Dispose();
+                m_conversations.Dispose();
+                m_domainFiles.Dispose();
+            }
+        }
+
+        public IEnumerable<IDomainFile> DomainFilesCollection
+        {
+            get { return DomainFiles; }
+        }
+
+        public IEnumerable<IConversationFile> ConversationFilesCollection
+        {
+            get { return Conversations; }
         }
     }
 }

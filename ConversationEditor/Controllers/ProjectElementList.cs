@@ -9,99 +9,19 @@ using System.Diagnostics;
 
 namespace ConversationEditor
 {
-    public interface IInProject
-    {
-        bool CanRemove(Func<bool> prompt);
-        void Removed();
-    }
-
-    public enum Change { Add, Remove, Move }
-
-    public interface IProjectElementList<out TReal, TInterface> : IEnumerable<TInterface>
-        where TReal : TInterface
-    {
-        IEnumerable<TInterface> Load(IEnumerable<FileInfo> fileInfos);
-        void Reload();
-        TReal New(DirectoryInfo path);
-        /// <summary>
-        /// Remove the 'element' from the collection. Provided either 'force' is true or element.File.CanClose is true
-        /// </summary>
-        void Remove(TInterface element, bool force);
-        void Delete(TInterface element);
-        bool FileLocationOk(string path);
-
-        event Action<TInterface> Added;
-        event Action<TInterface> Removed;
-        event Action<TInterface, TInterface> Reloaded;
-        event Action GotChanged;
-    }
-
-    public class DummyProjectElementList<TReal, TInterface> : IProjectElementList<TReal, TInterface> where TReal : TInterface
-    {
-        public static readonly DummyProjectElementList<TReal, TInterface> Instance = new DummyProjectElementList<TReal, TInterface>();
-
-        public IEnumerable<TInterface> Load(IEnumerable<FileInfo> fileInfos)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Reload()
-        {
-            throw new NotImplementedException();
-        }
-
-        public TReal New(DirectoryInfo path)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Remove(TInterface element, bool force)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(TInterface element)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool FileLocationOk(string path)
-        {
-            throw new NotImplementedException();
-        }
-
-        public event Action<TInterface> Added { add { } remove { } }
-
-        public event Action<TInterface> Removed { add { } remove { } }
-
-        public event Action<TInterface, TInterface> Reloaded { add { } remove { } }
-
-        public event Action GotChanged { add { } remove { } }
-
-        public IEnumerator<TInterface> GetEnumerator()
-        {
-            return Enumerable.Empty<TInterface>().GetEnumerator();
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return Enumerable.Empty<TInterface>().GetEnumerator();
-        }
-    }
-
-    public static class ProjectElementList
+    internal static class ProjectElementList
     {
         public class Error
         {
-            public readonly string Message;
+            private readonly string m_message;
             public Error(string message)
             {
-                Message = message;
+                m_message = message;
             }
         }
     }
 
-    public class ProjectElementList<TReal, TMissing, TInterface> : IProjectElementList<TReal, TInterface>
+    internal class ProjectElementList<TReal, TMissing, TInterface> : IProjectElementList<TReal, TInterface>, IDisposable
         where TReal : TInterface
         where TMissing : TInterface
         where TInterface : class, ISaveableFileProvider, IInProject
@@ -110,11 +30,31 @@ namespace ConversationEditor
         private Func<IEnumerable<FileInfo>, IEnumerable<Or<TReal, TMissing>>> m_loader;
         private Func<DirectoryInfo, TReal> m_makeEmpty;
         private Func<string, bool> m_fileLocationOk;
+        private SuppressibleAction m_suppressibleGotChanged;
 
         public event Action<TInterface> Added;
         public event Action<TInterface> Removed;
         public event Action<TInterface, TInterface> Reloaded;
         public event Action GotChanged;
+
+        public ProjectElementList(Func<string, bool> fileLocationOk, Func<IEnumerable<FileInfo>, IEnumerable<TReal>> loader, Func<DirectoryInfo, TReal> makeEmpty, Func<FileInfo, TMissing> makeMissing)
+            : this(fileLocationOk, MyLoader(loader, makeMissing), makeEmpty)
+        {
+        }
+
+        public ProjectElementList(Func<string, bool> fileLocationOk, Func<IEnumerable<FileInfo>, IEnumerable<Or<TReal, TMissing>>> loader, Func<DirectoryInfo, TReal> makeEmpty)
+        {
+            m_data = new CallbackDictionary<string, TInterface>();
+            m_data.Removing += (key, element) => { element.Removed(); };
+            m_data.Clearing += () => { m_data.Values.ForAll(element => { element.Removed(); }); };
+            m_loader = loader;
+            m_makeEmpty = makeEmpty;
+            m_fileLocationOk = fileLocationOk;
+
+            m_suppressibleGotChanged = new SuppressibleAction(() => { GotChanged.Execute(); });
+            Added += a => m_suppressibleGotChanged.TryExecute();
+            Removed += a => m_suppressibleGotChanged.TryExecute();
+        }
 
         public bool FileLocationOk(string path)
         {
@@ -156,26 +96,6 @@ namespace ConversationEditor
                 };
         }
 
-        public ProjectElementList(Func<string, bool> fileLocationOk, Func<IEnumerable<FileInfo>, IEnumerable<TReal>> loader, Func<DirectoryInfo, TReal> makeEmpty, Func<FileInfo, TMissing> makeMissing)
-            : this(fileLocationOk, MyLoader(loader, makeMissing), makeEmpty)
-        {
-        }
-
-        private SuppressibleAction m_suppressibleGotChanged;
-        public ProjectElementList(Func<string, bool> fileLocationOk, Func<IEnumerable<FileInfo>, IEnumerable<Or<TReal, TMissing>>> loader, Func<DirectoryInfo, TReal> makeEmpty)
-        {
-            m_data = new CallbackDictionary<string, TInterface>();
-            m_data.Removing += (key, element) => { element.Removed(); };
-            m_data.Clearing += () => { m_data.Values.ForAll(element => { element.Removed(); }); };
-            m_loader = loader;
-            m_makeEmpty = makeEmpty;
-            m_fileLocationOk = fileLocationOk;
-
-            m_suppressibleGotChanged = new SuppressibleAction(() => { GotChanged.Execute(); });
-            Added += a => m_suppressibleGotChanged.TryExecute();
-            Removed += a => m_suppressibleGotChanged.TryExecute();
-        }
-
         public IEnumerator<TInterface> GetEnumerator()
         {
             return m_data.Values.GetEnumerator();
@@ -186,25 +106,16 @@ namespace ConversationEditor
             return GetEnumerator();
         }
 
-        public static Stopwatch CheckLocationOkTime = new Stopwatch();
-        public static Stopwatch CheckExistingTime = new Stopwatch();
-        public static Stopwatch AddNewTime = new Stopwatch();
-        public static Stopwatch CallbacksTime = new Stopwatch();
-
         public IEnumerable<TInterface> Load(IEnumerable<FileInfo> fileInfos)
         {
             List<Tuple<FileInfo, TInterface>> toLoad = new List<Tuple<FileInfo, TInterface>>();
             foreach (var fileInfo in fileInfos)
             {
-                CheckLocationOkTime.Start();
                 if (!FileLocationOk(fileInfo.FullName))
                     throw new Exception("Attempting to load file that is not in a subfolder of the project's parent folder");
-                CheckLocationOkTime.Stop(); //233ms
 
-                CheckExistingTime.Start();
                 //var existing = m_data.FirstOrDefault(e => e.File.File.FullName == fileInfo.FullName);
                 var existing = m_data.ContainsKey(fileInfo.FullName) ? m_data[fileInfo.FullName] : null;
-                CheckExistingTime.Stop(); //0ms
                 if (existing != null)
                 {
                     try
@@ -236,11 +147,8 @@ namespace ConversationEditor
                 }
             }
 
-            AddNewTime.Start();
             List<TInterface> result = m_loader(toLoad.Select(t => t.Item1)).Select(o => o.Transformed<TInterface>(a => a, a => a)).ToList();
-            AddNewTime.Stop(); //18ms
 
-            CallbacksTime.Start();
             using (m_suppressibleGotChanged.SuppressCallback())
             {
                 for (int i = 0; i < result.Count; i++)
@@ -254,7 +162,6 @@ namespace ConversationEditor
                         Added.Execute(conversation);
                 }
             }
-            CallbacksTime.Stop();  //1ms
 
             return this;
         }
@@ -326,6 +233,11 @@ namespace ConversationEditor
                 m_data.Remove(element.File.File.FullName);
                 Removed(element);
             }
+        }
+
+        public void Dispose()
+        {
+            m_suppressibleGotChanged.Dispose();
         }
     }
 }

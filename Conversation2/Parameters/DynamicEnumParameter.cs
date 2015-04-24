@@ -32,7 +32,7 @@ namespace Conversation
         Source m_source;
 
         public DynamicEnumParameter(string name, ID<Parameter> id, Source source, ParameterType typeId, string defaultValue = null)
-            : base(name, id, typeId, defaultValue)
+            : base(name, id, typeId,  defaultValue)
         {
             m_source = source;
         }
@@ -69,18 +69,18 @@ namespace Conversation
             }
         }
 
-        /// <summary>
-        /// Notifies the parameter that its parent node has been removed and as such it is no longer a valid usage of the underlying data value
-        /// OR its parent nodes removal has been undone and it is once again a valid usage of the underlying data value
-        /// </summary>
-        /// <param name="removed"></param>
-        public void Removed(bool removed)
-        {
-            if (removed)
-                m_source.DeregisterUsage(this);
-            else
-                Value = Value;
-        }
+        ///// <summary>
+        ///// Notifies the parameter that its parent node has been removed and as such it is no longer a valid usage of the underlying data value
+        ///// OR its parent nodes removal has been undone and it is once again a valid usage of the underlying data value
+        ///// </summary>
+        ///// <param name="removed"></param>
+        //public void Removed(bool removed)
+        //{
+        //    if (removed)
+        //        m_source.DeregisterUsage(this);
+        //    else
+        //        Value = Value;
+        //}
 
         public override string DisplayValue(Func<ID<LocalizedText>, string> localize)
         {

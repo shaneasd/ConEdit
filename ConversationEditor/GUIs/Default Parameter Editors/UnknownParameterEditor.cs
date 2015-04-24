@@ -8,10 +8,11 @@ using System.Text;
 using System.Windows.Forms;
 using Conversation;
 using Utilities;
+using Utilities.UI;
 
 namespace ConversationEditor
 {
-    public partial class UnknownParameterEditor : UserControl, IFocusProvider, IParameterEditor<UnknownParameterEditor>
+    internal partial class UnknownParameterEditor : UserControl, IFocusProvider, IParameterEditor<UnknownParameterEditor>
     {
         private MyTextBox m_textBox;
         private MyButton m_button;
@@ -92,6 +93,23 @@ namespace ConversationEditor
                 m_textBox.Colors.BorderPen = value.ControlBorder;
                 drawWindow1.ColorScheme = value;
             }
+        }
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            if (disposing)
+            {
+                m_button.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

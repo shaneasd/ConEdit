@@ -17,7 +17,7 @@ namespace Clandestine
             get { return "Conversations as Semicolon Separated Values"; }
         }
 
-        public void Export(IProject project, ConfigParameterString exportPath, Func<ID<LocalizedText>, string> localize, IErrorCheckerUtilities<IConversationNode> util)
+        public void Export(IProject2 project, ConfigParameterString exportPath, Func<ID<LocalizedText>, string> localize, IErrorCheckerUtilities<IConversationNode> util)
         {
             using (var sfd = new SaveFileDialog())
             {
@@ -39,7 +39,7 @@ namespace Clandestine
                         {
                             ExportAsSsv ssv = new ExportAsSsv(localize);
                             CsvData.WriteTitle(";", sw, true);
-                            foreach (var con in project.Conversations)
+                            foreach (var con in project.ConversationFilesCollection)
                                 ssv.WriteConversation(con, sw, true, util);
                         }
                     }

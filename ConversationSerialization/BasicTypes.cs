@@ -10,93 +10,65 @@ using Utilities;
 
 namespace RuntimeConversation
 {
-    public abstract class TypeDeserializerBase
+    [AttributeUsage(AttributeTargets.Field)]
+    public sealed class ParameterIdAttribute : Attribute
     {
-        public static void Deserialize(out int a, string value)
+        private Guid m_guid;
+        public Guid Guid { get { return m_guid; } }
+        public ParameterIdAttribute(string guid)
         {
-            a = int.Parse(value);
-        }
-
-        public static void Deserialize(out decimal a, string value)
-        {
-            a = decimal.Parse(value, CultureInfo.InvariantCulture);
-        }
-
-        public static void Deserialize(out string a, string value)
-        {
-            a = value;
-        }
-
-        public static void Deserialize(out bool a, string value)
-        {
-            a = bool.Parse(value);
-        }
-
-        public static void Deserialize(out LocalizedString a, string value)
-        {
-            a = new LocalizedString(value);
-        }
-
-        public static void Deserialize(out Audio a, string value)
-        {
-            a = new Audio(value);
+            m_guid = Guid.Parse(guid);
         }
     }
 
     [AttributeUsage(AttributeTargets.Field)]
-    public class ParameterIDAttribute : Attribute
+    public sealed class EnumValueIdAttribute : Attribute
     {
-        public Guid Guid { get; private set; }
-        public ParameterIDAttribute(string guid)
+        private Guid m_guid;
+        public Guid Guid { get { return m_guid; } }
+        public EnumValueIdAttribute(string guid)
         {
-            Guid = Guid.Parse(guid);
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Field)]
-    public class EnumValueIDAttribute : Attribute
-    {
-        public Guid Guid { get; private set; }
-        public EnumValueIDAttribute(string guid)
-        {
-            Guid = Guid.Parse(guid);
+            m_guid = Guid.Parse(guid);
         }
     }
 
     [AttributeUsage(AttributeTargets.Enum | AttributeTargets.Struct)]
-    public class TypeIDAttribute : Attribute
+    public sealed class TypeIdAttribute : Attribute
     {
-        public Guid Guid { get; private set; }
-        public TypeIDAttribute(string guid)
+        private Guid m_guid;
+        public Guid Guid { get { return m_guid; } }
+        public TypeIdAttribute(string guid)
         {
-            Guid = Guid.Parse(guid);
+            m_guid = Guid.Parse(guid);
         }
     }
 
     [AttributeUsage(AttributeTargets.Class)]
-    public class ConnectorTypeIDAttribute : Attribute
+    public sealed class ConnectorTypeIdAttribute : Attribute
     {
-        public Guid Guid { get; private set; }
-        public ConnectorTypeIDAttribute(string guid)
+        private Guid m_guid;
+        public Guid Guid { get { return m_guid; } }
+        public ConnectorTypeIdAttribute(string guid)
         {
-            Guid = Guid.Parse(guid);
+            m_guid = Guid.Parse(guid);
         }
     }
 
     [AttributeUsage(AttributeTargets.Class)]
-    public class NodeTypeIDAttribute : Attribute
+    public sealed class NodeTypeIdAttribute : Attribute
     {
-        public Guid Guid { get; private set; }
-        public NodeTypeIDAttribute(string guid)
+        private Guid m_guid;
+        public Guid Guid { get { return m_guid; } }
+        public NodeTypeIdAttribute(string guid)
         {
-            Guid = Guid.Parse(guid);
+            m_guid = Guid.Parse(guid);
         }
     }
 
     public abstract class ConnectorBase
     {
         private ID<TConnector> m_id;
-        public ID<TConnector> ID { get { return m_id; } }
+        public ID<TConnector> Id { get { return m_id; } }
 
         protected ConnectorBase(ID<TConnector> id)
         {
@@ -106,34 +78,39 @@ namespace RuntimeConversation
 
     public abstract class NodeBase
     {
-        private ID<NodeTemp> m_id;
+        private readonly ID<NodeTemp> m_id;
         //public abstract IEnumerable<Connector> Connectors { get; }
-        public ID<NodeTemp> ID { get { return m_id; } }
+        public ID<NodeTemp> Id { get { return m_id; } }
 
-        public readonly PointF Position;
+        private readonly PointF m_position;
+        public PointF Position { get { return m_position; } }
 
-        public NodeBase(ID<NodeTemp> id, PointF position)
+        protected NodeBase(ID<NodeTemp> id, PointF position)
         {
             m_id = id;
-            Position = position;
+            m_position = position;
         }
 
-        public string GetParameter(IEnumerable<CustomDeserializer.Parameter> parameters, Guid guid)
+        protected static string GetParameter(IEnumerable<CustomDeserializerParameter> parameters, Guid guid)
         {
             return parameters.First(p => p.Guid == guid).Value;
         }
 
-        public abstract void Connect(ID<TConnector> thisConnectorID, NodeBase other, ID<TConnector> otherConnectorID);
+        public abstract void Connect(ID<TConnector> thisConnectorID, NodeBase other, ID<TConnector> otherConnectorId);
     }
 
     public class Conversation
     {
-        public readonly IEnumerable<RuntimeConversation.NodeBase> Nodes;
-        public readonly IEnumerable<Error> Errors;
-        public Conversation(IEnumerable<RuntimeConversation.NodeBase> nodes, IEnumerable<Error> errors)
+        private readonly IEnumerable<RuntimeConversation.NodeBase> m_nodes;
+        public IEnumerable<RuntimeConversation.NodeBase> Nodes { get { return m_nodes; } }
+
+        private readonly IEnumerable<LoadError> m_errors;
+        public IEnumerable<LoadError> Errors { get { return m_errors; } }
+
+        public Conversation(IEnumerable<RuntimeConversation.NodeBase> nodes, IEnumerable<LoadError> errors)
         {
-            Nodes = nodes;
-            Errors = errors;
+            m_nodes = nodes;
+            m_errors = errors;
         }
     }
 }

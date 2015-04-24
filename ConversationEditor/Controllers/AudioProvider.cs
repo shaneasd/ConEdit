@@ -10,64 +10,15 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    public class AudioGenerationParameters
+    internal class NoAudio : IAudioProvider
     {
-        public AudioGenerationParameters(ISaveableFileProvider file, IProject project, IEnumerable<Parameter> parameters, Func<ID<LocalizedText>, string> localize)
-        {
-            File = file;
-            Project = project;
-            Parameters = parameters.ToArray();
-            Localize = localize;
-        }
-        public readonly ISaveableFileProvider File;
-        public readonly IProject Project;
-        public readonly Parameter[] Parameters;
-        public readonly Func<ID<LocalizedText>, string> Localize;
-    }
+        void IAudioProvider2.Play(Audio guid) { }
+        void IAudioProvider2.Play(IAudioFile file) { }
+        Audio IAudioProvider2.Generate(AudioGenerationParameters parameters) { throw new NotSupportedException(); }
+        void IAudioProvider2.UpdateUsage(Audio audio) { }
 
-    public interface IAudioProvider
-    {
-        void Play(Audio guid); //A parameter value
-        void Play(AudioFile file); //A file
-
-        IProjectElementList<AudioFile, IAudioFile> AudioFiles { get; }
-
-        Audio Generate(AudioGenerationParameters parameters);
-
-        /// <summary>
-        /// Determine a complete list of audio entities which are referenced by nodes
-        /// </summary>
-        IEnumerable<Audio> UsedAudio();
-
-        /// <summary>
-        /// Add this audio to the project if it is referenced by a node
-        /// Update can be delayed using SuppressUpdates()
-        /// </summary>
-        void UpdateUsage(Audio audio);
-
-        /// <summary>
-        /// Add all audio that the input node refers to to the project
-        /// Update can be delayed using SuppressUpdates()
-        /// </summary>
-        void UpdateUsage(ConversationNode<INodeGUI> n);
-
-        /// <summary>
-        /// Add all required audio files to the project
-        /// Update can be delayed using SuppressUpdates()
-        /// </summary>
-        void UpdateUsage();
-
-        IDisposable SuppressUpdates();
-    }
-
-    public class NoAudio : IAudioProvider
-    {
-        void IAudioProvider.Play(Audio guid) { }
-        void IAudioProvider.Play(AudioFile file) { }
         IProjectElementList<AudioFile, IAudioFile> IAudioProvider.AudioFiles { get { throw new NotSupportedException(); } }
-        Audio IAudioProvider.Generate(AudioGenerationParameters parameters) { throw new NotSupportedException(); }
         IEnumerable<Audio> IAudioProvider.UsedAudio() { return Enumerable.Empty<Audio>(); }
-        void IAudioProvider.UpdateUsage(Audio audio) { }
         void IAudioProvider.UpdateUsage(ConversationNode<INodeGUI> n) { }
         public static readonly NoAudio Instance = new NoAudio();
 
@@ -85,13 +36,13 @@ namespace ConversationEditor
         }
     }
 
-    public class AudioProvider : IAudioProvider
+    internal class AudioProvider : Disposable, IAudioProvider, IDisposable
     {
         private class TDefaultCustomization : IAudioProviderCustomization
         {
             public Audio Generate(AudioGenerationParameters parameters)
             {
-                var conversationPath = FileSystem.RelativePath(parameters.File.File.File, parameters.Project.File.File.Directory);
+                var conversationPath = FileSystem.RelativePath(parameters.File, parameters.Project.Directory);
                 conversationPath = Path.ChangeExtension(conversationPath, null);
 
                 //GetRandomFileName generates 11 random (cryptographically strong) 5 bit characters (abcdefghijklmnopqrstuvwxyz01235)
@@ -107,11 +58,10 @@ namespace ConversationEditor
                 //For N = 1000 this gives a probability of no collision of 0.9999995 (http://www.wolframalpha.com/input/?i=%28%2832^8-+1%29%2F%2832^8%29%29^%28999000%2F2%29)
                 //for roughly a one in a million chance of collision
 
-                if (conversationPath.StartsWith("Resources\\Conversations\\"))
+                if (conversationPath.StartsWith("Resources\\Conversations\\", StringComparison.OrdinalIgnoreCase))
                     conversationPath = conversationPath.Substring("Resources\\Conversations\\".Length, conversationPath.Length - "Resources\\Conversations\\".Length);
                 return new Audio("Resources\\Audio\\" + conversationPath + "\\" + filename + ".ogg");
             }
-
 
             public string Name
             {
@@ -161,7 +111,7 @@ namespace ConversationEditor
                 MessageBox.Show("Audio file does not exist");
         }
 
-        public void Play(AudioFile audio)
+        public void Play(IAudioFile audio)
         {
             Process.Start(audio.File.File.FullName);
             //Process.Start(m_mediaPlayerPath(), "\"" +  audio.File.File.FullName + "\"");
@@ -255,6 +205,14 @@ namespace ConversationEditor
         public Audio Generate(AudioGenerationParameters parameters)
         {
             return m_customization.Generate(parameters);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                UpdateQueued.Dispose();
+            }
         }
     }
 }

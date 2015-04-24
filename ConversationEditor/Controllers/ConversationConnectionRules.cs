@@ -7,10 +7,8 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    public class ConversationConnectionRules : IConnectionRules
+    internal class ConversationConnectionRules : IConnectionRules
     {
-        public static readonly ConversationConnectionRules Instance = new ConversationConnectionRules();
-
         HashSet<UnorderedTuple2<ID<TConnectorDefinition>>> m_allowed = new HashSet<UnorderedTuple2<ID<TConnectorDefinition>>>();
 
         public bool CanConnect(ID<TConnectorDefinition> a, ID<TConnectorDefinition> b)

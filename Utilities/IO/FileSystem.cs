@@ -55,8 +55,6 @@ namespace Utilities
             return result;
         }
         
-        //TODO: Detach file deleted listener before deleting project elements
-
         public static string RelativePath(FileInfo child, DirectoryInfo root)
         {
             var path = PathToFrom(child, root);

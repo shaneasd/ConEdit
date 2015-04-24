@@ -5,14 +5,15 @@ using System.Text;
 using System.Drawing;
 using System.IO;
 using Utilities;
+using Utilities.UI;
 
 namespace ConversationEditor
 {
-    public partial class ProjectExplorer
+    internal partial class ProjectExplorer
     {
         public abstract class ContainerItem : Item
         {
-            public ContainerItem(ConstructorParams parameters) : base(parameters) 
+            protected ContainerItem(ConstructorParams parameters) : base(parameters) 
             {
             }
 
@@ -34,7 +35,7 @@ namespace ConversationEditor
                 {
                     bool interteeIsContainer = child is ContainerItem;
                     bool candidateIsContainer = m_subItems[i] is ContainerItem;
-                    bool nameOrdering = string.Compare(m_subItems[i].Text, child.Text) > 0;
+                    bool nameOrdering = string.Compare(m_subItems[i].Text, child.Text, StringComparison.CurrentCulture) > 0;
 
                     if (((interteeIsContainer == candidateIsContainer) && nameOrdering) || (interteeIsContainer && !candidateIsContainer))
                     {

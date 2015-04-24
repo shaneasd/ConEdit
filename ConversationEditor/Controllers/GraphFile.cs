@@ -12,8 +12,9 @@ namespace ConversationEditor
 {
     using ConversationNode = ConversationNode<INodeGUI>;
     using System.Drawing;
+    using System.Collections.ObjectModel;
 
-    public abstract class GraphFile : IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>, IDisposable
+    internal abstract class GraphFile : Disposable, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>, IDisposable
     {
         public ConversationNode GetNode(ID<NodeTemp> id)
         {
@@ -27,7 +28,7 @@ namespace ConversationEditor
         protected SortedWrapper<ConversationNode> m_nodesOrdered;
         protected SortedWrapper<NodeGroup> m_groupsOrdered;
 
-        protected List<Error> m_errors;
+        protected ReadOnlyCollection<LoadError> m_errors;
 
         private INodeFactory<ConversationNode> m_nodeFactory;
         private Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> m_generateAudio;
@@ -38,7 +39,7 @@ namespace ConversationEditor
             return m_nodeFactory.MakeNode(e, uiData);
         }
 
-        public GraphFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, List<Error> errors, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio, IAudioProvider audioProvider)
+        protected GraphFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, ReadOnlyCollection<LoadError> errors, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio, IAudioProvider audioProvider)
         {
             m_nodeFactory = nodeFactory;
             m_generateAudio = generateAudio;
@@ -62,7 +63,7 @@ namespace ConversationEditor
         }
 
         //TODO: Duplicate the IEditable with a new ID (must be deep copy of parameters)
-        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, PointF location, LocalizationEngine localization)
+        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, PointF location, ILocalizationEngine localization)
         {
             var nodes = nodeData.Select(gnu => MakeNode(gnu.GraphData, gnu.UIData)).Evaluate();
 
@@ -311,15 +312,15 @@ namespace ConversationEditor
         public abstract ISaveableFileUndoable UndoableFile { get; }
         ISaveableFile ISaveableFileProvider.File { get { return UndoableFile; } }
 
-        public List<Error> Errors
+        public ReadOnlyCollection<LoadError> Errors
         {
             get { return m_errors; }
         }
 
         public void ClearErrors()
         {
-            List<Error> oldErrors = m_errors;
-            GenericUndoAction action = new GenericUndoAction(() => { m_errors = oldErrors; }, () => { m_errors = new List<Error>(); }, "Cleared errors on conversation");
+            ReadOnlyCollection<LoadError> oldErrors = m_errors;
+            GenericUndoAction action = new GenericUndoAction(() => { m_errors = oldErrors; }, () => { m_errors = new ReadOnlyCollection<LoadError>(new LoadError[0]); }, "Cleared errors on conversation");
             UndoableFile.Change(action);
         }
 
@@ -341,10 +342,13 @@ namespace ConversationEditor
             remove { (this as ISaveableFileProvider).File.FileDeletedExternally -= value; }
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            ISaveableFileProvider me = this as ISaveableFileProvider;
-            me.File.Dispose();
+            if (disposing)
+            {
+                ISaveableFileProvider me = this as ISaveableFileProvider;
+                me.File.Dispose();
+            }
         }
 
         Dictionary<Output, TransitionNoduleUIInfo> m_cachedNodeUI = new Dictionary<Output, TransitionNoduleUIInfo>();
@@ -352,14 +356,14 @@ namespace ConversationEditor
         {
             if (!m_cachedNodeUI.ContainsKey(connection))
             {
-                var node = m_nodes.Where(n => n.Connectors.Any(c => c.ID == connection.ID && n.Id == connection.Parent.NodeID)).Single();
+                var node = m_nodes.Where(n => n.Connectors.Any(c => c.ID == connection.ID && n.Id == connection.Parent.NodeId)).Single();
                 var comparable = node.Connectors.Where(c => c.m_definition.Position == connection.m_definition.Position);
                 m_cachedNodeUI[connection] = CreateTransitionUIInfo(node, connection.m_definition.Position, comparable.IndexOf(connection), comparable.Count());
             }
             return m_cachedNodeUI[connection];
         }
 
-        public TransitionNoduleUIInfo CreateTransitionUIInfo(ConversationNode node, ConnectorPosition position, int i, int count)
+        private static TransitionNoduleUIInfo CreateTransitionUIInfo(ConversationNode node, ConnectorPosition position, int i, int count)
         {
             Func<RectangleF> top = () =>
             {
@@ -415,6 +419,4 @@ namespace ConversationEditor
             return true;
         }
     }
-
-
 }

@@ -16,9 +16,8 @@ namespace PluginPack
             return true;
         }
 
-        public override Conversation.ConfigureResult Edit(ConversationEditor.ColorScheme scheme, Conversation.IEditable node, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, LocalizationEngine localizer, IAudioProvider audioProvider)
+        public override Conversation.ConfigureResult Edit(ConversationEditor.ColorScheme scheme, Conversation.IEditable node, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioProvider2 audioProvider)
         {
-            MessageBox.Show("This node is configured to be uneditable");
             return ConfigureResult.NotApplicable;
         }
 

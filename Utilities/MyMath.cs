@@ -12,7 +12,8 @@ namespace Utilities
             return (float)Math.Ceiling(val);
         }
 
-        public static bool IsPowerOf2(uint i)
+        /// <param name="i">must be non-negative</param>
+        public static bool IsPowerOf2(int i)
         {
             return i > 0 && ((~i + 1) & i) == i;
         }

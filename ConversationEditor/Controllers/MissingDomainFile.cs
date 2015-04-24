@@ -9,8 +9,9 @@ using Utilities;
 namespace ConversationEditor
 {
     using ConversationNode = ConversationNode<INodeGUI>;
+    using System.Collections.ObjectModel;
 
-    public class MissingDomainFile : IDomainFile
+    internal sealed class MissingDomainFile : IDomainFile
     {
         private MissingFile m_file;
 
@@ -45,11 +46,6 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public void Change(Utilities.UndoAction revert)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerableReversible<ConversationNode> Nodes
         {
             get { return EnumerableReversible.Empty<ConversationNode>(); }
@@ -79,9 +75,9 @@ namespace ConversationEditor
             }
         }
 
-        public List<Conversation.Serialization.Error> Errors
+        public ReadOnlyCollection<Conversation.Serialization.LoadError> Errors
         {
-            get { return new List<Conversation.Serialization.Error>(); }
+            get { return new ReadOnlyCollection<Conversation.Serialization.LoadError>(new Conversation.Serialization.LoadError[0]); }
         }
 
         public void ClearErrors()
@@ -121,11 +117,6 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<Conversation.Serialization.GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, System.Drawing.PointF location, LocalizationEngine localization)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Add(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups)
         {
             throw new NotImplementedException();
@@ -140,5 +131,11 @@ namespace ConversationEditor
         }
 
         public event Action ConversationDomainModified { add { } remove { } }
+
+
+        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<Conversation.Serialization.GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, System.Drawing.PointF location, ILocalizationEngine localization)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

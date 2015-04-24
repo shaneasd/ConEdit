@@ -14,8 +14,8 @@ namespace Conversation
     public abstract class ErrorChecker<T>
         where T : class, IConversationNode
     {
-        public abstract IEnumerable<ConversationError<T>> Check(IEnumerable<T> conversationFile, IErrorCheckerUtilities<T> utils);
+        public abstract IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils);
 
-        public abstract string GetName();
+        public abstract string Name { get; }
     }
 }

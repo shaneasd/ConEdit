@@ -9,7 +9,7 @@ using System.Drawing.Drawing2D;
 
 namespace ConversationEditor
 {
-    public abstract class ProjectElementDefinition
+    internal abstract class ProjectElementDefinition
     {
         public static IEnumerable<ProjectElementDefinition> Definitions
         {
@@ -33,19 +33,19 @@ namespace ConversationEditor
         public abstract void Update(bool visible, ref ProjectExplorer.VisibilityFilter m_visibility);
     }
 
-    public abstract class ProjectElementDefinition<T> : ProjectElementDefinition
+    internal abstract class ProjectElementDefinition<T> : ProjectElementDefinition
     {
         public abstract ProjectExplorer.Item MakeMissingElement(Func<RectangleF> area, T item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename);
         public abstract ProjectExplorer.Item MakeElement(Func<RectangleF> area, T item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename);
     }
 
-    public class ConversationDefinition : ProjectElementDefinition<IConversationFile>
+    internal class ConversationDefinition : ProjectElementDefinition<IConversationFile>
     {
         public static ProjectElementDefinition Instance = new ConversationDefinition();
-        private Bitmap m_icon;
-        private Bitmap m_missingIcon;
+        private static Bitmap m_icon;
+        private static Bitmap m_missingIcon;
 
-        public ConversationDefinition()
+        static ConversationDefinition()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.Conversation.png"))
@@ -82,13 +82,13 @@ namespace ConversationEditor
         }
     }
 
-    public class LocalizationDefinition : ProjectElementDefinition<ILocalizationFile>
+    internal class LocalizationDefinition : ProjectElementDefinition<ILocalizationFile>
     {
         public static ProjectElementDefinition Instance = new LocalizationDefinition();
-        private Bitmap m_icon;
-        private Bitmap m_missingIcon;
+        private static Bitmap m_icon;
+        private static Bitmap m_missingIcon;
 
-        public LocalizationDefinition()
+        static LocalizationDefinition()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.LocalisationFile.png"))
@@ -125,13 +125,13 @@ namespace ConversationEditor
         }
     }
 
-    public class DomainDefinition : ProjectElementDefinition<IDomainFile>
+    internal class DomainDefinition : ProjectElementDefinition<IDomainFile>
     {
         public static ProjectElementDefinition Instance = new DomainDefinition();
-        private Bitmap m_icon;
-        private Bitmap m_missingIcon;
+        private static Bitmap m_icon;
+        private static Bitmap m_missingIcon;
 
-        public DomainDefinition()
+        static DomainDefinition()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.Domain.png"))
@@ -168,13 +168,13 @@ namespace ConversationEditor
         }
     }
 
-    public class AudioDefinition : ProjectElementDefinition<IAudioFile>
+    internal class AudioDefinition : ProjectElementDefinition<IAudioFile>
     {
         public static ProjectElementDefinition Instance = new AudioDefinition();
-        private Bitmap m_icon;
-        private Bitmap m_missingIcon;
+        private static Bitmap m_icon;
+        private static Bitmap m_missingIcon;
 
-        public AudioDefinition()
+        static AudioDefinition()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.Audio.png"))

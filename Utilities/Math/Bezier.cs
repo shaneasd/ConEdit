@@ -9,20 +9,18 @@ namespace Utilities
     public class Bezier
     {
         public static readonly Mat BezierDefinition = new Mat(4, 4, new double[] { -1, 3, -3, 1, 3, -6, 3, 0, -3, 3, 0, 0, 1, 0, 0, 0 });
-        public readonly PointF A, B, C, D;
-        public readonly PointF[] Coefficients;
-        public readonly PointF Average;
-        public readonly float BoundingRadius;
+        private readonly PointF[] Coefficients;
+        private readonly PointF Average;
+        private readonly float BoundingRadius;
         public Bezier(PointF a, PointF b, PointF c, PointF d)
         {
-            A = a; B = b; C = c; D = d;
             Coefficients = new PointF[4];
             Coefficients[0] = a;
             Coefficients[1] = b;
             Coefficients[2] = c;
             Coefficients[3] = d;
 
-            Average = A.Plus(B).Plus(C).Plus(D).ScaleBy(0.25f);
+            Average = a.Plus(b).Plus(c).Plus(d).ScaleBy(0.25f);
             BoundingRadius = Coefficients.Select(p => p.DistanceTo(Average)).Max();
         }
 
@@ -39,9 +37,9 @@ namespace Utilities
             if (p.DistanceTo(Average) > BoundingRadius + r)
                 return false;
 
-            if (A.Take(p).LengthSquared() < r * r)
+            if (Coefficients[0].Take(p).LengthSquared() < r * r)
                 return true; //It's at one of the end points
-            if (D.Take(p).LengthSquared() < r * r)
+            if (Coefficients[3].Take(p).LengthSquared() < r * r)
                 return true; //It's at the other end point
 
             //Vector containing <R,S,T,U> for the point: P = Rt^3 + St^2 + Tt^1 + Ut^0
@@ -63,7 +61,7 @@ namespace Utilities
 
         public void DebugDraw(Graphics g)
         {
-            var bezierComponents = BezierDefinition.PreMultiply(Coefficients, (a, b) => b.ScaleBy((float)a), (a, b) => a.Plus(b), PointF.Empty);
+            //var bezierComponents = BezierDefinition.PreMultiply(Coefficients, (a, b) => b.ScaleBy((float)a), (a, b) => a.Plus(b), PointF.Empty);
 
             for (float t = 0; t < 1; t += 0.05f)
             {
@@ -73,7 +71,7 @@ namespace Utilities
 
         public void Draw(Graphics g, Pen pen)
         {
-            g.DrawBezier(pen, A, B, C, D);
+            g.DrawBezier(pen, Coefficients[0], Coefficients[1], Coefficients[2], Coefficients[3]);
         }
     }
 }

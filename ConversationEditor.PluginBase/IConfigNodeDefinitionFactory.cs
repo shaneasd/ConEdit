@@ -7,6 +7,6 @@ namespace Conversation
 {
     public interface IConfigNodeDefinitionFactory
     {
-        IEnumerable<IConfigNodeDefinition> ConfigNodeDefinitions();
+        IEnumerable<IConfigNodeDefinition> GetConfigNodeDefinitions();
     }
 }

@@ -9,6 +9,6 @@ namespace ConversationEditor
     public interface IProjectExporter
     {
         string Name { get; }
-        void Export(IProject project, ConfigParameterString exportPath, Func<ID<LocalizedText>, string> localize, IErrorCheckerUtilities<IConversationNode> util);
+        void Export(IProject2 project, ConfigParameterString exportPath, Func<ID<LocalizedText>, string> localize, IErrorCheckerUtilities<IConversationNode> util);
     }
 }

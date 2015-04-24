@@ -7,7 +7,7 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    public class GraphViewConfig : IConfigParameter
+    internal class GraphViewConfig : IConfigParameter
     {
         public void Load(XElement root)
         {
@@ -24,15 +24,15 @@ namespace ConversationEditor
 
                 var showIds = node.Element("ShowIDs");
                 if (showIds != null)
-                    m_showIDs = bool.Parse(showIds.Attribute("value").Value);
+                    m_showIds = bool.Parse(showIds.Attribute("value").Value);
 
                 var minorGridSpacing = node.Element("MinorGridSpacing");
                 if (minorGridSpacing != null)
-                    uint.TryParse(minorGridSpacing.Attribute("value").Value, out m_minorGridSpacing);
+                    int.TryParse(minorGridSpacing.Attribute("value").Value, out m_minorGridSpacing);
 
                 var majorGridSpacing = node.Element("MajorGridSpacing");
                 if (majorGridSpacing != null)
-                    uint.TryParse(majorGridSpacing.Attribute("value").Value, out m_majorGridSpacing);
+                    int.TryParse(majorGridSpacing.Attribute("value").Value, out m_majorGridSpacing);
 
             }
         }
@@ -48,7 +48,7 @@ namespace ConversationEditor
                 var snapToGrid = new XElement("SnapToGrid", new XAttribute("value", m_snapToGrid));
                 node.Add(snapToGrid);
 
-                var showIds = new XElement("ShowIDs", new XAttribute("value", m_showIDs));
+                var showIds = new XElement("ShowIDs", new XAttribute("value", m_showIds));
                 node.Add(showIds);
 
                 var minorGridSpacing = new XElement("MinorGridSpacing", new XAttribute("value", m_minorGridSpacing));
@@ -89,22 +89,22 @@ namespace ConversationEditor
             }
         }
 
-        private bool m_showIDs = false;
+        private bool m_showIds = false;
         public bool ShowIDs
         {
-            get { return m_showIDs; }
+            get { return m_showIds; }
             set
             {
-                if (value != m_showIDs)
+                if (value != m_showIds)
                 {
-                    m_showIDs = value;
+                    m_showIds = value;
                     ValueChanged.Execute();
                 }
             }
         }
 
-        private uint m_minorGridSpacing = 20;
-        public uint MinorGridSpacing
+        private int m_minorGridSpacing = 20;
+        public int MinorGridSpacing
         {
             get { return m_minorGridSpacing; }
             set
@@ -117,8 +117,8 @@ namespace ConversationEditor
             }
         }
 
-        private uint m_majorGridSpacing = 80;
-        public uint MajorGridSpacing
+        private int m_majorGridSpacing = 80;
+        public int MajorGridSpacing
         {
             get { return m_majorGridSpacing; }
             set

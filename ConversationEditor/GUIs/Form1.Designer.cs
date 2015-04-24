@@ -425,8 +425,8 @@
             this.conversationEditorControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.conversationEditorControl1.GraphScale = 1F;
             this.conversationEditorControl1.Location = new System.Drawing.Point(0, 0);
-            this.conversationEditorControl1.MajorGridSpacing = ((uint)(0u));
-            this.conversationEditorControl1.MinorGridSpacing = ((uint)(0u));
+            this.conversationEditorControl1.MajorGridSpacing = 0;
+            this.conversationEditorControl1.MinorGridSpacing = 0;
             this.conversationEditorControl1.Name = "conversationEditorControl1";
             this.conversationEditorControl1.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.conversationEditorControl1.ShowGrid = false;

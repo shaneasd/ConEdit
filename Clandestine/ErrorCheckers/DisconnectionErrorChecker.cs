@@ -10,7 +10,7 @@ namespace Clandestine
 {
     public class DisconnectionErrorChecker<T> : ErrorChecker<T> where T : class, IConversationNode
     {
-        public class DisconnectedInputError : ConversationError<T>
+        private class DisconnectedInputError : ConversationError<T> 
         {
             public DisconnectedInputError(T node) : base(node.Only()) { }
             public override string Message
@@ -19,7 +19,7 @@ namespace Clandestine
             }
         }
 
-        public class DisconnectedOutputError : ConversationError<T>
+        private class DisconnectedOutputError : ConversationError<T> 
         {
             public DisconnectedOutputError(T node) : base(node.Only()) { }
             public override string Message
@@ -38,7 +38,7 @@ namespace Clandestine
                 foreach (var input in inputs)
                     if (!input.Connections.Any())
                         yield return new DisconnectedInputError(node);
-                if (node.Type == SpecialNodes.BRANCH)
+                if (node.Type == SpecialNodes.Branch)
                 {
                     if (!outputs.Any(c => c.Connections.Any()))
                         yield return new DisconnectedOutputError(node);
@@ -52,9 +52,9 @@ namespace Clandestine
             }
         }
 
-        public override string GetName()
+        public override string Name
         {
-            return "Disconnected link";
+            get { return "Disconnected link"; }
         }
     }
 }

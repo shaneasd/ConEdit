@@ -107,7 +107,7 @@ namespace Clandestine
     {
         private Func<ID<LocalizedText>, string> m_localize;
 
-        public ExportAsSeparatedStrings(Func<ID<LocalizedText>, string> localize)
+        protected ExportAsSeparatedStrings(Func<ID<LocalizedText>, string> localize)
         {
             m_localize = localize;
         }
