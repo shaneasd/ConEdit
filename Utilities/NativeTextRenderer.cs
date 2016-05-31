@@ -7,6 +7,113 @@ using System.Drawing;
 
 namespace Arthur
 {
+    internal static class NativeMethods
+    {
+        // ReSharper disable NotAccessedField.Local
+        // ReSharper disable MemberCanBePrivate.Local
+        // ReSharper disable FieldCanBeMadeReadOnly.Local
+        public struct Rect
+        {
+            private int _left;
+            private int _top;
+            private int _right;
+            private int _bottom;
+
+            public Rect(Rectangle r)
+            {
+                _left = r.Left;
+                _top = r.Top;
+                _bottom = r.Bottom;
+                _right = r.Right;
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct BlendFunction
+        {
+            public byte BlendOp;
+            public byte BlendFlags;
+            public byte SourceConstantAlpha;
+            public byte AlphaFormat;
+
+            public BlendFunction(byte alpha)
+            {
+                BlendOp = 0;
+                BlendFlags = 0;
+                AlphaFormat = 0;
+                SourceConstantAlpha = alpha;
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct BitMapInfo
+        {
+            public int biSize;
+            public int biWidth;
+            public int biHeight;
+            public short biPlanes;
+            public short biBitCount;
+            public int biCompression;
+            public int biSizeImage;
+            public int biXPelsPerMeter;
+            public int biYPelsPerMeter;
+            public int biClrUsed;
+            public int biClrImportant;
+            public byte bmiColors_rgbBlue;
+            public byte bmiColors_rgbGreen;
+            public byte bmiColors_rgbRed;
+            public byte bmiColors_rgbReserved;
+        }
+
+        [DllImport("gdi32.dll")]
+        public static extern int SetBkMode(IntPtr hdc, int mode);
+
+        [DllImport("gdi32.dll", EntryPoint = "SelectObject")]
+        public static extern IntPtr SelectObject([In] IntPtr hdc, [In] IntPtr hgdiobj);
+
+        [DllImport("gdi32.dll")]
+        public static extern int SetTextColor(IntPtr hdc, int color);
+
+        [DllImport("gdi32.dll", EntryPoint = "GetTextExtentPoint32W")]
+        public static extern int GetTextExtentPoint32(IntPtr hdc, [MarshalAs(UnmanagedType.LPWStr)] string str, int len, ref Size size);
+
+        [DllImport("gdi32.dll", EntryPoint = "GetTextExtentExPointW")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetTextExtentExPoint(IntPtr hDc, [MarshalAs(UnmanagedType.LPWStr)]string str, int nLength, int nMaxExtent, int[] lpnFit, int[] alpDx, ref Size size);
+
+        [DllImport("gdi32.dll", EntryPoint = "TextOutW")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool TextOut(IntPtr hdc, int x, int y, [MarshalAs(UnmanagedType.LPWStr)] string str, int len);
+
+        [DllImport("user32.dll", EntryPoint = "DrawTextW")]
+        public static extern int DrawText(IntPtr hdc, [MarshalAs(UnmanagedType.LPWStr)] string str, int len, ref Rect rect, uint uFormat);
+
+        [DllImport("gdi32.dll")]
+        public static extern int SelectClipRgn(IntPtr hdc, IntPtr hrgn);
+
+        [DllImport("gdi32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool DeleteObject(IntPtr hObject);
+
+        [DllImport("gdi32.dll", ExactSpelling = true, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool DeleteDC(IntPtr hdc);
+
+        [DllImport("gdi32.dll", EntryPoint = "BitBlt", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool BitBlt([In] IntPtr hdc, int nXDest, int nYDest, int nWidth, int nHeight, [In] IntPtr hdcSrc, int nXSrc, int nYSrc, uint dwRop);
+
+        [DllImport("gdi32.dll", EntryPoint = "GdiAlphaBlend")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool AlphaBlend(IntPtr hdcDest, int nXOriginDest, int nYOriginDest, int nWidthDest, int nHeightDest, IntPtr hdcSrc, int nXOriginSrc, int nYOriginSrc, int nWidthSrc, int nHeightSrc, BlendFunction blendFunction);
+
+        [DllImport("gdi32.dll", ExactSpelling = true, SetLastError = true)]
+        public static extern IntPtr CreateCompatibleDC(IntPtr hdc);
+
+        [DllImport("gdi32.dll")]
+        public static extern IntPtr CreateDIBSection(IntPtr hdc, [In] ref BitMapInfo pbmi, uint iUsage, out IntPtr ppvBits, IntPtr hSection, uint dwOffset);
+    }
+
     /// <summary>
     /// Wrapper for GDI text rendering functions<br/>
     /// This class is not thread-safe as GDI function should be called from the UI thread.
@@ -34,7 +141,7 @@ namespace Arthur
         /// <summary>
         /// cache of all the font used not to create same font again and again
         /// </summary>
-        private static readonly Dictionary<string, Dictionary<float, Dictionary<FontStyle, IntPtr>>> _fontsCache = new Dictionary<string, Dictionary<float, Dictionary<FontStyle, IntPtr>>>(StringComparer.InvariantCultureIgnoreCase);
+        private static readonly Dictionary<string, Dictionary<float, Dictionary<FontStyle, IntPtr>>> _fontsCache = new Dictionary<string, Dictionary<float, Dictionary<FontStyle, IntPtr>>>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// The wrapped WinForms graphics object
@@ -59,11 +166,11 @@ namespace Arthur
             var clip = _g.Clip.GetHrgn(_g);
 
             _hdc = _g.GetHdc();
-            SetBkMode(_hdc, 1);
+            NativeMethods.SetBkMode(_hdc, 1);
 
-            SelectClipRgn(_hdc, clip);
+            NativeMethods.SelectClipRgn(_hdc, clip);
 
-            DeleteObject(clip);
+            NativeMethods.DeleteObject(clip);
         }
 
         /// <summary>
@@ -78,7 +185,7 @@ namespace Arthur
             SetFont(font);
 
             var size = new Size();
-            GetTextExtentPoint32(_hdc, str, str.Length, ref size);
+            NativeMethods.GetTextExtentPoint32(_hdc, str, str.Length, ref size);
             return size;
         }
 
@@ -99,7 +206,7 @@ namespace Arthur
             SetFont(font);
 
             var size = new Size();
-            GetTextExtentExPoint(_hdc, str, str.Length, (int)Math.Round(maxWidth), _charFit, _charFitWidth, ref size);
+            NativeMethods.GetTextExtentExPoint(_hdc, str, str.Length, (int)Math.Round(maxWidth), _charFit, _charFitWidth, ref size);
             charFit = _charFit[0];
             charFitWidth = charFit > 0 ? _charFitWidth[charFit - 1] : 0;
             return size;
@@ -117,7 +224,7 @@ namespace Arthur
             SetFont(font);
             SetTextColor(color);
 
-            TextOut(_hdc, point.X, point.Y, str, str.Length);
+            NativeMethods.TextOut(_hdc, point.X, point.Y, str, str.Length);
         }
 
         /// <summary>
@@ -134,8 +241,8 @@ namespace Arthur
             SetFont(font);
             SetTextColor(color);
 
-            var rect2 = new Rect(rect);
-            DrawText(_hdc, str, str.Length, ref rect2, (uint)flags);
+            var rect2 = new NativeMethods.Rect(rect);
+            NativeMethods.DrawText(_hdc, str, str.Length, ref rect2, (uint)flags);
         }
 
         /// <summary>
@@ -148,11 +255,11 @@ namespace Arthur
         public void DrawTransparentText(string str, Font font, Color color, Point point, Size size)
         {
             // Create a memory DC so we can work off-screen
-            IntPtr memoryHdc = CreateCompatibleDC(_hdc);
-            SetBkMode(memoryHdc, 1);
+            IntPtr memoryHdc = NativeMethods.CreateCompatibleDC(_hdc);
+            NativeMethods.SetBkMode(memoryHdc, 1);
 
             // Create a device-independent bitmap and select it into our DC
-            var info = new BitMapInfo();
+            var info = new NativeMethods.BitMapInfo();
             info.biSize = Marshal.SizeOf(info);
             info.biWidth = size.Width;
             info.biHeight = -size.Height;
@@ -160,28 +267,28 @@ namespace Arthur
             info.biBitCount = 32;
             info.biCompression = 0; // BI_RGB
             IntPtr ppvBits;
-            IntPtr dib = CreateDIBSection(_hdc, ref info, 0, out ppvBits, IntPtr.Zero, 0);
-            SelectObject(memoryHdc, dib);
+            IntPtr dib = NativeMethods.CreateDIBSection(_hdc, ref info, 0, out ppvBits, IntPtr.Zero, 0);
+            NativeMethods.SelectObject(memoryHdc, dib);
 
             try
             {
                 // copy target background to memory HDC so when copied back it will have the proper background
-                BitBlt(memoryHdc, 0, 0, size.Width, size.Height, _hdc, point.X, point.Y, 0x00CC0020);
+                NativeMethods.BitBlt(memoryHdc, 0, 0, size.Width, size.Height, _hdc, point.X, point.Y, 0x00CC0020);
 
                 // Create and select font
-                SelectObject(memoryHdc, GetCachedHFont(font));
-                SetTextColor(memoryHdc, (color.B & 0xFF) << 16 | (color.G & 0xFF) << 8 | color.R);
+                NativeMethods.SelectObject(memoryHdc, GetCachedHFont(font));
+                NativeMethods.SetTextColor(memoryHdc, (color.B & 0xFF) << 16 | (color.G & 0xFF) << 8 | color.R);
 
                 // Draw text to memory HDC
-                TextOut(memoryHdc, 0, 0, str, str.Length);
+                NativeMethods.TextOut(memoryHdc, 0, 0, str, str.Length);
 
                 // copy from memory HDC to normal HDC with alpha blend so achieve the transparent text
-                AlphaBlend(_hdc, point.X, point.Y, size.Width, size.Height, memoryHdc, 0, 0, size.Width, size.Height, new BlendFunction(color.A));
+                NativeMethods.AlphaBlend(_hdc, point.X, point.Y, size.Width, size.Height, memoryHdc, 0, 0, size.Width, size.Height, new NativeMethods.BlendFunction(color.A));
             }
             finally
             {
-                DeleteObject(dib);
-                DeleteDC(memoryHdc);
+                NativeMethods.DeleteObject(dib);
+                NativeMethods.DeleteDC(memoryHdc);
             }
         }
 
@@ -192,7 +299,7 @@ namespace Arthur
         {
             if (_hdc != IntPtr.Zero)
             {
-                SelectClipRgn(_hdc, IntPtr.Zero);
+                NativeMethods.SelectClipRgn(_hdc, IntPtr.Zero);
                 _g.ReleaseHdc(_hdc);
                 _hdc = IntPtr.Zero;
             }
@@ -206,7 +313,7 @@ namespace Arthur
         /// </summary>
         private void SetFont(Font font)
         {
-            SelectObject(_hdc, GetCachedHFont(font));
+            NativeMethods.SelectObject(_hdc, GetCachedHFont(font));
         }
 
         /// <summary>
@@ -250,113 +357,10 @@ namespace Arthur
         private void SetTextColor(Color color)
         {
             int rgb = (color.B & 0xFF) << 16 | (color.G & 0xFF) << 8 | color.R;
-            SetTextColor(_hdc, rgb);
-        }
-
-        [DllImport("gdi32.dll")]
-        private static extern int SetBkMode(IntPtr hdc, int mode);
-
-        [DllImport("gdi32.dll", EntryPoint = "SelectObject")]
-        private static extern IntPtr SelectObject([In] IntPtr hdc, [In] IntPtr hgdiobj);
-
-        [DllImport("gdi32.dll")]
-        private static extern int SetTextColor(IntPtr hdc, int color);
-
-        [DllImport("gdi32.dll", EntryPoint = "GetTextExtentPoint32W")]
-        private static extern int GetTextExtentPoint32(IntPtr hdc, [MarshalAs(UnmanagedType.LPWStr)] string str, int len, ref Size size);
-
-        [DllImport("gdi32.dll", EntryPoint = "GetTextExtentExPointW")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool GetTextExtentExPoint(IntPtr hDc, [MarshalAs(UnmanagedType.LPWStr)]string str, int nLength, int nMaxExtent, int[] lpnFit, int[] alpDx, ref Size size);
-
-        [DllImport("gdi32.dll", EntryPoint = "TextOutW")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool TextOut(IntPtr hdc, int x, int y, [MarshalAs(UnmanagedType.LPWStr)] string str, int len);
-
-        [DllImport("user32.dll", EntryPoint = "DrawTextW")]
-        private static extern int DrawText(IntPtr hdc, [MarshalAs(UnmanagedType.LPWStr)] string str, int len, ref Rect rect, uint uFormat);
-
-        [DllImport("gdi32.dll")]
-        private static extern int SelectClipRgn(IntPtr hdc, IntPtr hrgn);
-
-        [DllImport("gdi32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool DeleteObject(IntPtr hObject);
-
-        [DllImport("gdi32.dll", ExactSpelling = true, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool DeleteDC(IntPtr hdc);
-
-        [DllImport("gdi32.dll", EntryPoint = "BitBlt", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool BitBlt([In] IntPtr hdc, int nXDest, int nYDest, int nWidth, int nHeight, [In] IntPtr hdcSrc, int nXSrc, int nYSrc, uint dwRop);
-
-        [DllImport("gdi32.dll", EntryPoint = "GdiAlphaBlend")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool AlphaBlend(IntPtr hdcDest, int nXOriginDest, int nYOriginDest, int nWidthDest, int nHeightDest, IntPtr hdcSrc, int nXOriginSrc, int nYOriginSrc, int nWidthSrc, int nHeightSrc, BlendFunction blendFunction);
-
-        [DllImport("gdi32.dll", ExactSpelling = true, SetLastError = true)]
-        private static extern IntPtr CreateCompatibleDC(IntPtr hdc);
-
-        [DllImport("gdi32.dll")]
-        private static extern IntPtr CreateDIBSection(IntPtr hdc, [In] ref BitMapInfo pbmi, uint iUsage, out IntPtr ppvBits, IntPtr hSection, uint dwOffset);
-
-        // ReSharper disable NotAccessedField.Local
-        // ReSharper disable MemberCanBePrivate.Local
-        // ReSharper disable FieldCanBeMadeReadOnly.Local
-        private struct Rect
-        {
-            private int _left;
-            private int _top;
-            private int _right;
-            private int _bottom;
-
-            public Rect(Rectangle r)
-            {
-                _left = r.Left;
-                _top = r.Top;
-                _bottom = r.Bottom;
-                _right = r.Right;
-            }
+            NativeMethods.SetTextColor(_hdc, rgb);
         }
 
 
-        [StructLayout(LayoutKind.Sequential)]
-        private struct BlendFunction
-        {
-            public byte BlendOp;
-            public byte BlendFlags;
-            public byte SourceConstantAlpha;
-            public byte AlphaFormat;
-
-            public BlendFunction(byte alpha)
-            {
-                BlendOp = 0;
-                BlendFlags = 0;
-                AlphaFormat = 0;
-                SourceConstantAlpha = alpha;
-            }
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct BitMapInfo
-        {
-            public int biSize;
-            public int biWidth;
-            public int biHeight;
-            public short biPlanes;
-            public short biBitCount;
-            public int biCompression;
-            public int biSizeImage;
-            public int biXPelsPerMeter;
-            public int biYPelsPerMeter;
-            public int biClrUsed;
-            public int biClrImportant;
-            public byte bmiColors_rgbBlue;
-            public byte bmiColors_rgbGreen;
-            public byte bmiColors_rgbRed;
-            public byte bmiColors_rgbReserved;
-        }
 
         #endregion
     }

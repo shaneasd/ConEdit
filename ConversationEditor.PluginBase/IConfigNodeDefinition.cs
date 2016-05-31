@@ -7,7 +7,7 @@ namespace Conversation
 {
     public interface IConfigNodeDefinition
     {
-        ID<NodeTypeTemp> Id { get; }
+        Id<NodeTypeTemp> Id { get; }
         string Name { get; }
         IEnumerable<Parameter> MakeParameters();
     }

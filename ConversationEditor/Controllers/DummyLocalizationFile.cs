@@ -10,12 +10,12 @@ namespace ConversationEditor
         public static readonly DummyLocalizationFile Instance = new DummyLocalizationFile();
         private DummyLocalizationFile() { }
 
-        public string Localize(Conversation.ID<Conversation.LocalizedText> id)
+        public string Localize(Conversation.Id<Conversation.LocalizedText> id)
         {
             return LocalizationEngine.MISSING_LOCALIZATION;
         }
 
-        public Utilities.SimpleUndoPair SetLocalizationAction(Conversation.ID<Conversation.LocalizedText> guid, string p)
+        public Utilities.SimpleUndoPair SetLocalizationAction(Conversation.Id<Conversation.LocalizedText> guid, string p)
         {
             throw new NotSupportedException("Attempting to modify localization values of a dummy localization file");
         }

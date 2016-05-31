@@ -8,7 +8,8 @@ namespace Utilities
     public class NotifierProperty<T>
     {
         private T m_value;
-        public WeakEvent<Changed<T>> Changed = new WeakEvent<Changed<T>>();
+        private WeakEvent<Changed<T>> m_changed = new WeakEvent<Changed<T>>();
+        public WeakEvent<Changed<T>> Changed { get { return m_changed; } }
         public NotifierProperty(T value)
         {
             m_value = value;
@@ -32,7 +33,7 @@ namespace Utilities
         }
     }
 
-    class Changed
+    public static class Changed
     {
         public static Changed<T> Create<T>(T from, T to)
         {

@@ -11,12 +11,12 @@ namespace PluginPack
     {
         public static string GetId(T node)
         {
-            return (node.Parameters.Single(n => n.Name == "ID") as IDynamicEnumParameter).Value;
+            return (node.Parameters.Single(n => string.Equals(n.Name, "ID", StringComparison.InvariantCultureIgnoreCase)) as IDynamicEnumParameter).Value;
         }
 
         public static string GetTarget(T node)
         {
-            return (node.Parameters.Single(n => n.Name == "Target") as IDynamicEnumParameter).Value;
+            return (node.Parameters.Single(n => string.Equals(n.Name, "Target", StringComparison.InvariantCultureIgnoreCase)) as IDynamicEnumParameter).Value;
         }
 
         class DuplicatedTargetError : ConversationError<T>

@@ -10,12 +10,12 @@ namespace Conversation
 {
     internal class ExternalFunction : IEditable
     {
-        private ID<NodeTemp> m_id;
+        private Id<NodeTemp> m_id;
         private readonly IEditableGenerator m_generator;
         private List<Parameter> m_parameters;
         private readonly IEnumerable<Output> m_connectors;
 
-        public ID<NodeTypeTemp> NodeTypeId
+        public Id<NodeTypeTemp> NodeTypeId
         {
             get { return m_generator.Guid; }
         }
@@ -46,7 +46,7 @@ namespace Conversation
             }
         }
 
-        public void ChangeId(ID<NodeTemp> id)
+        public void ChangeId(Id<NodeTemp> id)
         {
             m_id = id;
         }
@@ -59,15 +59,15 @@ namespace Conversation
             }
         }
 
-        public ID<NodeTemp> NodeId { get { return m_id; } }
+        public Id<NodeTemp> NodeId { get { return m_id; } }
 
         public event Action Linked;
-        protected void OnOutputLinked()
+        protected void OnOutputLinked(Output o)
         {
             Linked.Execute();
         }
 
-        public ExternalFunction(IEditableGenerator generator, ID<NodeTemp> id, IEnumerable<Func<IEditable, Output>> connectors, IEnumerable<Parameter> parameters)
+        public ExternalFunction(IEditableGenerator generator, Id<NodeTemp> id, IEnumerable<Func<IEditable, Output>> connectors, IEnumerable<Parameter> parameters)
         {
             m_id = id;
             m_parameters = parameters.ToList();

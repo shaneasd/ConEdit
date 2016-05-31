@@ -81,11 +81,11 @@ namespace ConversationEditor
 
     public class MapConfig<TKey, TData> : IConfigParameter
     {
-        protected Dictionary<TKey, TData> m_data = new Dictionary<TKey, TData>();
-        protected readonly string m_nodeName;
-        protected readonly Func<KeyValuePair<TKey, TData>, KeyValuePair<string, string>> m_serialize;
-        protected readonly Func<KeyValuePair<string, string>, KeyValuePair<TKey, TData>> m_deserialize;
-        protected readonly Func<TKey, TData> m_defaults;
+        private Dictionary<TKey, TData> m_data = new Dictionary<TKey, TData>();
+        private readonly string m_nodeName;
+        private readonly Func<KeyValuePair<TKey, TData>, KeyValuePair<string, string>> m_serialize;
+        private readonly Func<KeyValuePair<string, string>, KeyValuePair<TKey, TData>> m_deserialize;
+        private readonly Func<TKey, TData> m_defaults;
 
         public MapConfig(string nodeName, Func<KeyValuePair<TKey, TData>, KeyValuePair<string, string>> serialize, Func<KeyValuePair<string, string>, KeyValuePair<TKey, TData>> deserialize, Func<TKey, TData> defaults)
         {

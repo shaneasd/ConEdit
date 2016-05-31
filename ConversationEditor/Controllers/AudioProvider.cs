@@ -10,16 +10,16 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    internal class NoAudio : IAudioProvider
+    internal class NoAudio : IAudioLibrary
     {
-        void IAudioProvider2.Play(Audio guid) { }
-        void IAudioProvider2.Play(IAudioFile file) { }
-        Audio IAudioProvider2.Generate(AudioGenerationParameters parameters) { throw new NotSupportedException(); }
-        void IAudioProvider2.UpdateUsage(Audio audio) { }
+        void IAudioParameterEditorCallbacks.Play(Audio guid) { }
+        void IAudioLibrary.Play(IAudioFile file) { }
+        Audio IAudioParameterEditorCallbacks.Generate(AudioGenerationParameters parameters) { throw new NotSupportedException(); }
+        void IAudioLibrary.UpdateUsage(Audio audio) { }
 
-        IProjectElementList<AudioFile, IAudioFile> IAudioProvider.AudioFiles { get { throw new NotSupportedException(); } }
-        IEnumerable<Audio> IAudioProvider.UsedAudio() { return Enumerable.Empty<Audio>(); }
-        void IAudioProvider.UpdateUsage(ConversationNode<INodeGUI> n) { }
+        IProjectElementList<AudioFile, IAudioFile> IAudioLibrary.AudioFiles { get { throw new NotSupportedException(); } }
+        IEnumerable<Audio> IAudioLibrary.UsedAudio() { return Enumerable.Empty<Audio>(); }
+        void IAudioLibrary.UpdateUsage(ConversationNode<INodeGui> n) { }
         public static readonly NoAudio Instance = new NoAudio();
 
         public void UpdateUsage() { }
@@ -36,7 +36,7 @@ namespace ConversationEditor
         }
     }
 
-    internal class AudioProvider : Disposable, IAudioProvider, IDisposable
+    internal class AudioProvider : Disposable, IAudioLibrary, IDisposable
     {
         private class TDefaultCustomization : IAudioProviderCustomization
         {
@@ -130,7 +130,7 @@ namespace ConversationEditor
             return nodes.SelectMany(UsedAudio);
         }
 
-        public IEnumerable<Audio> UsedAudio(ConversationNode<INodeGUI> n)
+        public IEnumerable<Audio> UsedAudio(ConversationNode<INodeGui> n)
         {
             var audioParameters = n.Parameters.OfType<IAudioParameter>();
             var audioValues = audioParameters.Select(a => a.Value);
@@ -151,7 +151,7 @@ namespace ConversationEditor
             UpdateQueued.TryExecute();
         }
 
-        public void UpdateUsage(ConversationNode<INodeGUI> n)
+        public void UpdateUsage(ConversationNode<INodeGui> n)
         {
             using (SuppressUpdates())
             {
@@ -211,6 +211,7 @@ namespace ConversationEditor
         {
             if (disposing)
             {
+                m_audioFiles.Dispose();
                 UpdateQueued.Dispose();
             }
         }

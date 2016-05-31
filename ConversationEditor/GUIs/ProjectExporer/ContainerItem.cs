@@ -73,7 +73,7 @@ namespace ConversationEditor
 
             public override IEnumerable<Item> AllItems(VisibilityFilter filter)
             {
-                if (Children(filter).Any() || filter.EmptyFolders)
+                if (Children(filter).Any() || filter.EmptyFolders.Value)
                 {
                     yield return this;
 

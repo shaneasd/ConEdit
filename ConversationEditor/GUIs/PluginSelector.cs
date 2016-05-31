@@ -16,7 +16,7 @@ namespace ConversationEditor
     {
         private CheckList<PluginAssembly> m_list;
         private PluginsConfig m_config;
-        
+
         public PluginSelector()
         {
             InitializeComponent();
@@ -79,6 +79,30 @@ namespace ConversationEditor
             drawWindow1.Invalidate(true);
         }
 
+        private void drawWindow1_MouseDown(object sender, MouseEventArgs e)
+        {
+            m_list.MouseDown(e.Location, (int)greyScrollBar1.Value);
+            drawWindow1.Invalidate(true);
+        }
+
+        private void drawWindow1_MouseUp(object sender, MouseEventArgs e)
+        {
+            m_list.MouseUp();
+            drawWindow1.Invalidate(true);
+        }
+
+        private void drawWindow1_MouseCaptureChanged(object sender, EventArgs e)
+        {
+            m_list.MouseCaptureChanged();
+            drawWindow1.Invalidate(true);
+        }
+
+        private void drawWindow1_MouseMove(object sender, MouseEventArgs e)
+        {
+            m_list.MouseMove(e.Location, (int)greyScrollBar1.Value);
+            drawWindow1.Invalidate(true);
+        }
+
         private ColorScheme m_scheme;
         public ColorScheme Scheme
         {
@@ -103,7 +127,7 @@ namespace ConversationEditor
         {
             m_stringSelector = stringSelector;
         }
-        public Font Font;
+        public Font Font { get; set; }
         public class ListElement
         {
             public ListElement(T assembly, bool check)
@@ -120,12 +144,13 @@ namespace ConversationEditor
 
         public int PerItemHeight { get { return SPACING + BOX_SIZE; } }
 
-        public List<ListElement> Items = new List<ListElement>();
+        public IEnumerable<ListElement> Items { get { return m_items; } }
+        private List<ListElement> m_items = new List<ListElement>();
         private Func<T, string> m_stringSelector;
 
         public void AddItem(T item, bool check)
         {
-            Items.Add(new ListElement(item, check));
+            m_items.Add(new ListElement(item, check));
         }
 
         public Rectangle ItemBox(int index, int scroll)
@@ -136,7 +161,7 @@ namespace ConversationEditor
 
         public void DrawItems(ColorScheme scheme, Graphics g, int scroll)
         {
-            for (int index = 0; index < Items.Count; index++)
+            for (int index = 0; index < m_items.Count; index++)
             {
                 DrawItem(scheme, g, index, scroll);
             }
@@ -144,19 +169,19 @@ namespace ConversationEditor
 
         private void DrawItem(ColorScheme scheme, Graphics g, int index, int scroll)
         {
-            var item = Items[index];
+            var item = m_items[index];
             bool check = item.Checked;
             var itemBox = ItemBox(index, scroll);
-            DefaultBooleanEditor.DrawCheckBox(scheme, g, itemBox, check);
+            DefaultBooleanEditor.DrawCheckBox(scheme, g, itemBox, check, m_held == item, m_hovered == item);
             var textSize = g.MeasureString(m_stringSelector(item.Element), Font);
             g.DrawString(m_stringSelector(item.Element), Font, scheme.ForegroundBrush, SPACING + BOX_SIZE + SPACING, itemBox.Y + (BOX_SIZE - textSize.Height) / 2);
         }
 
         public void UpdateScrollBar(GreyScrollBar scrollbar, int height)
         {
-            if (Items.Any())
+            if (m_items.Any())
             {
-                float totalHeight = ItemBox(Items.Count - 1, 0).Bottom;
+                float totalHeight = ItemBox(m_items.Count - 1, 0).Bottom;
                 scrollbar.PercentageCovered = (height / totalHeight).Clamp(0, 1);
                 scrollbar.Maximum = (int)Math.Ceiling((totalHeight - height) / PerItemHeight).Clamp(0, int.MaxValue);
                 scrollbar.LargeChange = 1 / scrollbar.Maximum;
@@ -171,11 +196,48 @@ namespace ConversationEditor
 
         public void MouseClick(Point location, int scroll)
         {
-            for (int index = 0; index < Items.Count; index++)
+            for (int index = 0; index < m_items.Count; index++)
             {
                 if (ItemBox(index, scroll).Contains(location))
                 {
-                    Items[index].Checked = !Items[index].Checked;
+                    m_items[index].Checked = !m_items[index].Checked;
+                }
+            }
+        }
+
+        ListElement m_held = null;
+        ListElement m_hovered = null;
+
+        public void MouseCaptureChanged()
+        {
+            m_held = null;
+            m_hovered = null;
+        }
+
+        public void MouseUp()
+        {
+            m_held = null;
+        }
+
+        public void MouseDown(Point location, int scroll)
+        {
+            for (int index = 0; index < m_items.Count; index++)
+            {
+                if (ItemBox(index, scroll).Contains(location))
+                {
+                    m_held = m_items[index];
+                }
+            }
+        }
+
+        public void MouseMove(Point location, int scroll)
+        {
+            m_hovered = null;
+            for (int index = 0; index < m_items.Count; index++)
+            {
+                if (ItemBox(index, scroll).Contains(location))
+                {
+                    m_hovered = m_items[index];
                 }
             }
         }

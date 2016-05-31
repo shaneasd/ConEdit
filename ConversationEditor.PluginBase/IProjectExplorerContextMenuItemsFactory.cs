@@ -6,7 +6,7 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
     public interface IDomainContextMenuItem
     {
         string Name { get; }
@@ -34,7 +34,7 @@ namespace ConversationEditor
     public interface IProjectExplorerContextMenuItemsFactory
     {
         IEnumerable<IDomainContextMenuItem> DomainContextMenuItems { get; }
-        IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<ID<LocalizedText>, string> localizer);
+        IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<Id<LocalizedText>, string> localizer);
         IEnumerable<ILocalizationContextMenuItem> LocalizationContextMenuItems { get; }
         IEnumerable<IAudioContextMenuItem> AudioContextMenuItems { get; }
     }

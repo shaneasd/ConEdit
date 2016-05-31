@@ -7,18 +7,6 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
 
         #region Windows Form Designer generated code
 
@@ -28,7 +16,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            ConversationEditor.ColorScheme colorScheme1 = new ConversationEditor.ColorScheme();
+            ConversationEditor.ColorScheme colorScheme4 = new ConversationEditor.ColorScheme();
+            ConversationEditor.ColorScheme colorScheme5 = new ConversationEditor.ColorScheme();
+            ConversationEditor.ColorScheme colorScheme6 = new ConversationEditor.ColorScheme();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.projectNewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,13 +44,14 @@
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiShowGrid = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiSnapToGrid = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiShowIDs = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiShowIds = new System.Windows.Forms.ToolStripMenuItem();
             this.connectorColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.audioNamingMethodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.defaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.errorCheckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testEverythingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.throwTestExceptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,9 +59,9 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.projectExplorer = new ConversationEditor.ProjectExplorer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.conversationEditorControl1 = new ConversationEditor.ConversationEditorControl();
+            this.m_conversationEditor = new ConversationEditor.ConversationEditorControl();
             this.errorList1 = new ConversationEditor.ErrorList();
-            this.testEverythingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sanityTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -232,7 +223,7 @@
             this.optionsToolStripMenuItem,
             this.tsmiShowGrid,
             this.tsmiSnapToGrid,
-            this.tsmiShowIDs,
+            this.tsmiShowIds,
             this.connectorColorToolStripMenuItem,
             this.audioNamingMethodToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
@@ -290,13 +281,13 @@
             this.tsmiSnapToGrid.Text = "Snap to Grid";
             this.tsmiSnapToGrid.CheckedChanged += new System.EventHandler(this.tsmiSnapToGrid_CheckedChanged);
             // 
-            // tsmiShowIDs
+            // tsmiShowIds
             // 
-            this.tsmiShowIDs.CheckOnClick = true;
-            this.tsmiShowIDs.Name = "tsmiShowIDs";
-            this.tsmiShowIDs.Size = new System.Drawing.Size(212, 22);
-            this.tsmiShowIDs.Text = "Show IDs";
-            this.tsmiShowIDs.CheckedChanged += new System.EventHandler(this.tsmiShowIDs_CheckedChanged);
+            this.tsmiShowIds.CheckOnClick = true;
+            this.tsmiShowIds.Name = "tsmiShowIds";
+            this.tsmiShowIds.Size = new System.Drawing.Size(212, 22);
+            this.tsmiShowIds.Text = "Show IDs";
+            this.tsmiShowIds.CheckedChanged += new System.EventHandler(this.tsmiShowIDs_CheckedChanged);
             // 
             // connectorColorToolStripMenuItem
             // 
@@ -335,16 +326,23 @@
             // testToolStripMenuItem
             // 
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.testToolStripMenuItem.Text = "Test Document";
             this.testToolStripMenuItem.Click += new System.EventHandler(this.errorCheckToolStripMenuItem_Click);
             // 
             // testProjectToolStripMenuItem
             // 
             this.testProjectToolStripMenuItem.Name = "testProjectToolStripMenuItem";
-            this.testProjectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.testProjectToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.testProjectToolStripMenuItem.Text = "Test Project";
             this.testProjectToolStripMenuItem.Click += new System.EventHandler(this.testProjectToolStripMenuItem_Click);
+            // 
+            // testEverythingToolStripMenuItem
+            // 
+            this.testEverythingToolStripMenuItem.Name = "testEverythingToolStripMenuItem";
+            this.testEverythingToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.testEverythingToolStripMenuItem.Text = "Test Everything";
+            this.testEverythingToolStripMenuItem.Click += new System.EventHandler(this.testEverythingToolStripMenuItem_Click);
             // 
             // exportToolStripMenuItem
             // 
@@ -355,7 +353,8 @@
             // debugToolStripMenuItem
             // 
             this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.throwTestExceptionToolStripMenuItem});
+            this.throwTestExceptionToolStripMenuItem,
+            this.sanityTestToolStripMenuItem});
             this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
             this.debugToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
             this.debugToolStripMenuItem.Text = "Debug";
@@ -396,6 +395,8 @@
             this.projectExplorer.Location = new System.Drawing.Point(0, 0);
             this.projectExplorer.Margin = new System.Windows.Forms.Padding(0);
             this.projectExplorer.Name = "projectExplorer";
+            colorScheme4.Connectors = System.Drawing.Color.Black;
+            this.projectExplorer.Scheme = colorScheme4;
             this.projectExplorer.Size = new System.Drawing.Size(181, 561);
             this.projectExplorer.TabIndex = 0;
             // 
@@ -409,7 +410,7 @@
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.conversationEditorControl1);
+            this.splitContainer2.Panel1.Controls.Add(this.m_conversationEditor);
             // 
             // splitContainer2.Panel2
             // 
@@ -420,23 +421,26 @@
             // 
             // conversationEditorControl1
             // 
-            this.conversationEditorControl1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.conversationEditorControl1.Colors = colorScheme1;
-            this.conversationEditorControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.conversationEditorControl1.GraphScale = 1F;
-            this.conversationEditorControl1.Location = new System.Drawing.Point(0, 0);
-            this.conversationEditorControl1.MajorGridSpacing = 0;
-            this.conversationEditorControl1.MinorGridSpacing = 0;
-            this.conversationEditorControl1.Name = "conversationEditorControl1";
-            this.conversationEditorControl1.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
-            this.conversationEditorControl1.ShowGrid = false;
-            this.conversationEditorControl1.ShowIDs = true;
-            this.conversationEditorControl1.Size = new System.Drawing.Size(804, 419);
-            this.conversationEditorControl1.SnapToGrid = false;
-            this.conversationEditorControl1.TabIndex = 4;
+            this.m_conversationEditor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            colorScheme5.Connectors = System.Drawing.Color.Black;
+            this.m_conversationEditor.Colors = colorScheme5;
+            this.m_conversationEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.m_conversationEditor.GraphScale = 1F;
+            this.m_conversationEditor.Location = new System.Drawing.Point(0, 0);
+            this.m_conversationEditor.MajorGridSpacing = 0;
+            this.m_conversationEditor.MinorGridSpacing = 0;
+            this.m_conversationEditor.Name = "conversationEditorControl1";
+            this.m_conversationEditor.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
+            this.m_conversationEditor.ShowGrid = false;
+            this.m_conversationEditor.ShowIds = true;
+            this.m_conversationEditor.Size = new System.Drawing.Size(804, 419);
+            this.m_conversationEditor.SnapToGrid = false;
+            this.m_conversationEditor.TabIndex = 4;
             // 
             // errorList1
             // 
+            colorScheme6.Connectors = System.Drawing.Color.Black;
+            this.errorList1.ColorScheme = colorScheme6;
             this.errorList1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.errorList1.Location = new System.Drawing.Point(0, 0);
             this.errorList1.Name = "errorList1";
@@ -444,12 +448,12 @@
             this.errorList1.Size = new System.Drawing.Size(804, 138);
             this.errorList1.TabIndex = 3;
             // 
-            // testEverythingToolStripMenuItem
+            // sanityTestToolStripMenuItem
             // 
-            this.testEverythingToolStripMenuItem.Name = "testEverythingToolStripMenuItem";
-            this.testEverythingToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.testEverythingToolStripMenuItem.Text = "Test Everything";
-            this.testEverythingToolStripMenuItem.Click += new System.EventHandler(this.testEverythingToolStripMenuItem_Click);
+            this.sanityTestToolStripMenuItem.Name = "sanityTestToolStripMenuItem";
+            this.sanityTestToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.sanityTestToolStripMenuItem.Text = "Sanity Test";
+            this.sanityTestToolStripMenuItem.Click += new System.EventHandler(this.SanityTest);
             // 
             // Form1
             // 
@@ -513,16 +517,17 @@
         private System.Windows.Forms.ToolStripMenuItem groupToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ungroupToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem projectSaveAsMenuItem;
-        private ConversationEditorControl conversationEditorControl1;
+        private ConversationEditorControl m_conversationEditor;
         private System.Windows.Forms.ToolStripMenuItem findAndReplaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testProjectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem recentProjectsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tsmiShowIDs;
+        private System.Windows.Forms.ToolStripMenuItem tsmiShowIds;
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem connectorColorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem audioNamingMethodToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem defaultToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testEverythingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sanityTestToolStripMenuItem;
     }
 }
 

@@ -17,6 +17,8 @@ namespace Conversation
     public interface IRenderable<out TRenderer>
     {
         TRenderer Renderer { get; }
+        event Action RendererChanging;
+        event Action RendererChanged;
     }
 
     public class ConversationNode<TNodeUI> : IConversationNode, IRenderable<TNodeUI>, IConfigurable
@@ -27,7 +29,16 @@ namespace Conversation
         private Func<ConversationNode<TNodeUI>, TNodeUI> m_currentRenderer;
 
         private TNodeUI m_renderer;
-        public TNodeUI Renderer { get { return m_renderer; } }
+        public TNodeUI Renderer
+        {
+            get { return m_renderer; }
+            private set
+            {
+                RendererChanging.Execute();
+                m_renderer = value;
+                RendererChanged.Execute();
+            }
+        }
 
         /// <summary>
         /// Attempt to decorrupt the node if it is corrupt. Does nothing if not corrupt.
@@ -49,7 +60,7 @@ namespace Conversation
                 if (m_currentRenderer != m_nodeUI)
                 {
                     m_currentRenderer = m_nodeUI;
-                    m_renderer = m_currentRenderer(this);
+                    Renderer = m_currentRenderer(this);
                 }
             }
             else
@@ -57,7 +68,7 @@ namespace Conversation
                 if (m_currentRenderer != m_corruptedUI)
                 {
                     m_currentRenderer = m_corruptedUI;
-                    m_renderer = m_currentRenderer(this);
+                    Renderer = m_currentRenderer(this);
                 }
             }
         }
@@ -67,24 +78,26 @@ namespace Conversation
             if (m_currentRenderer == m_nodeUI)
             {
                 m_currentRenderer = newRenderer;
-                m_renderer = newRenderer(this);
+                Renderer = newRenderer(this);
             }
             m_nodeUI = newRenderer;
         }
 
         public readonly IEditable m_data;
         #region Thin wrapper around m_data
-        public ID<NodeTemp> Id { get { return m_data.NodeId; } }
-        public ID<NodeTypeTemp> Type { get { return m_data.NodeTypeId; } }
+        public Id<NodeTemp> Id { get { return m_data.NodeId; } }
+        public Id<NodeTypeTemp> Type { get { return m_data.NodeTypeId; } }
         public event Action Linked { add { m_data.Linked += value; } remove { m_data.Linked -= value; } }
         public IEnumerable<Parameter> Parameters { get { return m_data.Parameters; } }
         public ReadOnlyCollection<NodeData.ConfigData> Config { get { return m_data.Config; } }
         public IEnumerable<Output> Connectors { get { return m_data.Connectors; } }
         public string NodeName { get { return m_data.Name; } }
-        public void ChangeId(ID<NodeTemp> id) { m_data.ChangeId(id); }
+        public void ChangeId(Id<NodeTemp> id) { m_data.ChangeId(id); }
         #endregion
 
         public event Action Modified;
+        public event Action RendererChanging;
+        public event Action RendererChanged;
 
         public ConfigureResult Configure(Func<IEditable, ConfigureResult> configureData)
         {
@@ -116,7 +129,7 @@ namespace Conversation
                 m_currentRenderer = corruptedUI;
             else
                 m_currentRenderer = nodeUI;
-            m_renderer = m_currentRenderer(this);
+            Renderer = m_currentRenderer(this);
         }
 
         public SimpleUndoPair GetNodeRemoveActions()

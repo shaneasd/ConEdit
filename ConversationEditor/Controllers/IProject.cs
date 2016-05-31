@@ -8,7 +8,7 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    using ConversationNode = ConversationNode<INodeGUI>;
+    using ConversationNode = ConversationNode<INodeGui>;
 
     internal interface IProject : IProject2
     {
@@ -16,6 +16,7 @@ namespace ConversationEditor
         IDataSource ConversationDataSource { get; }
         bool ReloadConversationDatasourceIfRequired();
         DirectoryInfo Origin { get; }
+        IEnumerable<FileInfo> Rerout(IEnumerable<string> paths);
 
         void GotChanged();
 
@@ -27,7 +28,7 @@ namespace ConversationEditor
         IEnumerable<ISaveableFileProvider> ElementsExceptThis { get; }
 
         LocalizationEngine Localizer { get; }
-        IAudioProvider AudioProvider { get; }
+        IAudioLibrary AudioProvider { get; }
         IDomainUsage<ConversationNode, TransitionNoduleUIInfo> DomainUsage { get; }
 
         /// <summary>
@@ -39,6 +40,11 @@ namespace ConversationEditor
         /// Currently it is impossible to modify the domain while there are unsaved changes to conversations
         /// </summary>
         bool CanModifyDomain { get; }
+
+        /// <summary>
+        /// For an input parameter, current user entered value of that parameter and source for local data, suggest values extending upon that value
+        /// </summary>
+        Func<IParameter, string, Func<ParameterType, DynamicEnumParameter.Source>, IEnumerable<string>> AutoCompleteSuggestions { get; }
     }
 
 }

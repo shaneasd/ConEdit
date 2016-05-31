@@ -14,17 +14,17 @@ namespace ConversationEditor
 {
     internal class NodeRendererCustomizer : NodeCustomizer<NodeRendererChoice>
     {
-        public NodeRendererCustomizer(IDataSource datasource, TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice> config, PluginsConfig pluginsConfig)
+        public NodeRendererCustomizer(IDataSource datasource, TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice> config, PluginsConfig pluginsConfig)
             : base(datasource, config, pluginsConfig)
         {
         }
 
-        protected override NodeRendererChoice Default(ID<NodeTypeTemp> guid)
+        protected override NodeRendererChoice Default(Id<NodeTypeTemp> guid)
         {
             return NodeRendererChoice.DefaultConversation(guid);
         }
 
-        protected override IEnumerable<NodeRendererChoice> GetItemsFor(ID<NodeTypeTemp> guid)
+        protected override IEnumerable<NodeRendererChoice> GetItemsFor(Id<NodeTypeTemp> guid)
         {
             return m_pluginsConfig.GetRenderersFor(guid);
         }
@@ -32,17 +32,17 @@ namespace ConversationEditor
 
     internal class NodeEditorCustomizer : NodeCustomizer<NodeEditorChoice>
     {
-        public NodeEditorCustomizer(IDataSource datasource, TypeMapConfig<ID<NodeTypeTemp>, NodeEditorChoice> config, PluginsConfig pluginsConfig)
+        public NodeEditorCustomizer(IDataSource datasource, TypeMapConfig<Id<NodeTypeTemp>, NodeEditorChoice> config, PluginsConfig pluginsConfig)
             : base(datasource, config, pluginsConfig)
         {
         }
 
-        protected override NodeEditorChoice Default(ID<NodeTypeTemp> guid)
+        protected override NodeEditorChoice Default(Id<NodeTypeTemp> guid)
         {
             return NodeEditorChoice.Default(guid);
         }
 
-        protected override IEnumerable<NodeEditorChoice> GetItemsFor(ID<NodeTypeTemp> guid)
+        protected override IEnumerable<NodeEditorChoice> GetItemsFor(Id<NodeTypeTemp> guid)
         {
             return m_pluginsConfig.GetEditorsFor(guid);
         }
@@ -57,10 +57,10 @@ namespace ConversationEditor
         }
 
         IDataSource m_datasource;
-        TypeMapConfig<ID<NodeTypeTemp>, TChoice> m_config;
+        TypeMapConfig<Id<NodeTypeTemp>, TChoice> m_config;
         protected PluginsConfig m_pluginsConfig;
 
-        protected NodeCustomizer(IDataSource datasource, TypeMapConfig<ID<NodeTypeTemp>, TChoice> config, PluginsConfig pluginsConfig)
+        protected NodeCustomizer(IDataSource datasource, TypeMapConfig<Id<NodeTypeTemp>, TChoice> config, PluginsConfig pluginsConfig)
             : this()
         {
             m_datasource = datasource;
@@ -80,7 +80,7 @@ namespace ConversationEditor
 
         List<Action> m_save = new List<Action>();
 
-        protected abstract IEnumerable<TChoice> GetItemsFor(ID<NodeTypeTemp> guid);
+        protected abstract IEnumerable<TChoice> GetItemsFor(Id<NodeTypeTemp> guid);
 
         void AddNode(IEditableGenerator node, int indent)
         {
@@ -115,7 +115,7 @@ namespace ConversationEditor
             m_save.Add(() => { m_config[node.Guid] = (c.SelectedItem as ToStringWrapper<TChoice>).Value; });
         }
 
-        protected abstract TChoice Default(ID<NodeTypeTemp> guid);
+        protected abstract TChoice Default(Id<NodeTypeTemp> guid);
 
         private void NodeRendererCustomizer_Load(object sender, EventArgs e)
         {

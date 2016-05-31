@@ -6,17 +6,19 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    //TODO: rename
-    public interface IAudioProvider2
+    /// <summary>
+    /// Provide an interface for an audio parameter editor to extract information from the system
+    /// </summary>
+    public interface IAudioParameterEditorCallbacks
     {
-        void Play(Audio guid); //A parameter value
-        void Play(IAudioFile file); //A file
-        Audio Generate(AudioGenerationParameters parameters);
+        /// <summary>
+        /// Play the audio associated with the specified audio value if it exists
+        /// </summary>
+        void Play(Audio value);
 
         /// <summary>
-        /// Add this audio to the project if it is referenced by a node
-        /// Update can be delayed using SuppressUpdates()
+        /// Generate an audio value given the specified contextual information for the value
         /// </summary>
-        void UpdateUsage(Audio audio);
+        Audio Generate(AudioGenerationParameters parameters);
     }
 }

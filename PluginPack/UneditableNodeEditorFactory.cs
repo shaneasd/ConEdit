@@ -11,14 +11,14 @@ namespace PluginPack
 {
     public class UneditableNodeEditorFactory : NodeEditorFactory
     {
-        public override bool WillEdit(ID<NodeTypeTemp> typeId)
+        public override bool WillEdit(Id<NodeTypeTemp> typeId)
         {
             return true;
         }
 
-        public override Conversation.ConfigureResult Edit(ConversationEditor.ColorScheme scheme, Conversation.IEditable node, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioProvider2 audioProvider)
+        public override Conversation.ConfigureResult2 Edit(ConversationEditor.ColorScheme scheme, Conversation.IEditable node, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions)
         {
-            return ConfigureResult.NotApplicable;
+            return ConfigureResult2.NotApplicable;
         }
 
         public override string DisplayName

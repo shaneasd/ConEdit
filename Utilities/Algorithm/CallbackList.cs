@@ -5,7 +5,11 @@ using System.Text;
 
 namespace Utilities
 {
-    //TODO: Replace with the seemingly equivalent class in ObjectModel
+    /// <summary>
+    /// List object that triggers callbacks whenever its content is modified. Distinct from
+    /// System.Collections.ObjectModel.ObservableCollection in that most of its callbacks
+    /// trigger before modification rather than after.
+    /// </summary>
     public class CallbackList<T> : IList<T>
     {
         List<T> m_base;
@@ -126,6 +130,8 @@ namespace Utilities
 
         public void AddRange(IEnumerable<T> elements)
         {
+            if (elements == null)
+                throw new ArgumentNullException(nameof(elements));
             foreach (var e in elements)
             {
                 Add(e);
@@ -134,6 +140,8 @@ namespace Utilities
 
         public void RemoveRange(IEnumerable<T> elements)
         {
+            if (elements == null)
+                throw new ArgumentNullException(nameof(elements));
             foreach (var e in elements)
             {
                 Remove(e);

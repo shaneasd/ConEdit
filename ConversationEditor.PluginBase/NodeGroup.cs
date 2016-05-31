@@ -9,9 +9,9 @@ using Utilities.UI;
 
 namespace ConversationEditor
 {
-    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
 
-    public class NodeGroupRenderer : IGUI
+    public class NodeGroupRenderer : IGui
     {
         public NodeGroupRenderer(RectangleF area)
         {
@@ -19,10 +19,18 @@ namespace ConversationEditor
         }
 
         RectangleF m_area;
+
+        public event Action<Changed<RectangleF>> AreaChanged;
+
         public RectangleF Area
         {
             get { return m_area; }
-            set { m_area = value; }
+            set
+            {
+                var old = m_area;
+                m_area = value;
+                AreaChanged.Execute(Changed.Create(old, m_area));
+            }
         }
 
         public void UpdateArea() { } //The area isn't calculated automatically
@@ -36,46 +44,61 @@ namespace ConversationEditor
             g.DrawRectangle(scheme.ForegroundPen, m_area);
         }
 
-        public void MoveTo(PointF point)
+        public void MoveTo(PointF location)
         {
-            m_area.X = point.X - m_area.Width / 2.0f;
-            m_area.Y = point.Y - m_area.Height / 2.0f;
+            var old = m_area;
+            m_area.X = location.X - m_area.Width / 2.0f;
+            m_area.Y = location.Y - m_area.Height / 2.0f;
+            AreaChanged.Execute(Changed.Create(old, m_area));
         }
 
         public void MoveTop(float y)
         {
+            var old = m_area;
             m_area.Height = m_area.Bottom - y;
             m_area.Location = new PointF(m_area.Left, y);
+            AreaChanged.Execute(Changed.Create(old, m_area));
         }
 
         public void MoveBottom(float y)
         {
+            var old = m_area;
             m_area.Height = y - m_area.Top;
+            AreaChanged.Execute(Changed.Create(old, m_area));
         }
 
         public void MoveLeft(float x)
         {
+            var old = m_area;
             m_area.Width = m_area.Right - x;
             m_area.Location = new PointF(x, m_area.Top);
+            AreaChanged.Execute(Changed.Create(old, m_area));
         }
 
         public void MoveRight(float x)
         {
+            var old = m_area;
             m_area.Width = x - m_area.Left;
+            AreaChanged.Execute(Changed.Create(old, m_area));
         }
     }
 
     public class NodeGroup : IRenderable<NodeGroupRenderer>
     {
-        NodeGroupRenderer m_renderer;
+        private NodeGroupRenderer m_renderer;
+        private HashSet<Id<NodeTemp>> m_contents = new HashSet<Id<NodeTemp>>();
 
-        public NodeGroup(RectangleF area, IEnumerable<ID<NodeTemp>> contents)
-            : this(area)
+        //Renderer can never change so these callbacks will never be triggered
+        public event Action RendererChanging { add { } remove { } }
+        public event Action RendererChanged { add { } remove { } }
+
+        public NodeGroup(RectangleF area, IEnumerable<Id<NodeTemp>> contents)
+                : this(area)
         {
-            Contents.UnionWith(contents);
+            m_contents.UnionWith(contents);
         }
 
-        public static NodeGroup Make<TNode2>(IEnumerable<TNode2> contents) where TNode2 : class, IGraphNode, IRenderable<IGUI>
+        public static NodeGroup Make<TNode>(IEnumerable<TNode> contents) where TNode : class, IGraphNode, IRenderable<IGui>
         {
             var l = contents.Min(n => n.Renderer.Area.Left) - 20;
             var r = contents.Max(n => n.Renderer.Area.Right) + 20;
@@ -94,6 +117,9 @@ namespace ConversationEditor
             get { return m_renderer; }
         }
 
-        public HashSet<ID<NodeTemp>> Contents = new HashSet<ID<NodeTemp>>();
+        public HashSet<Id<NodeTemp>> Contents
+        {
+            get { return m_contents; }
+        }
     }
 }

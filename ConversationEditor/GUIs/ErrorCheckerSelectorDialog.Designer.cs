@@ -28,11 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            Utilities.UI.ColorScheme colorScheme1 = new Utilities.UI.ColorScheme();
             this.btnOk = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.drawWindow1 = new Utilities.UI.DrawWindow();
             this.greyScrollBar1 = new Utilities.UI.GreyScrollBar();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -65,9 +66,21 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(271, 424);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
+            // panel1
+            // 
+            this.tableLayoutPanel1.SetColumnSpan(this.panel1, 2);
+            this.panel1.Controls.Add(this.drawWindow1);
+            this.panel1.Controls.Add(this.greyScrollBar1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(265, 370);
+            this.panel1.TabIndex = 4;
+            // 
             // drawWindow1
             // 
             this.drawWindow1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(56)))), ((int)(((byte)(56)))));
+            this.drawWindow1.ColorScheme = colorScheme1;
             this.drawWindow1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.drawWindow1.HandleNavigation = false;
             this.drawWindow1.Location = new System.Drawing.Point(0, 0);
@@ -76,6 +89,10 @@
             this.drawWindow1.TabIndex = 2;
             this.drawWindow1.Paint += new System.Windows.Forms.PaintEventHandler(this.drawWindow1_Paint);
             this.drawWindow1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.drawWindow1_MouseClick);
+            this.drawWindow1.MouseCaptureChanged += new System.EventHandler(this.drawWindow1_MouseCaptureChanged);
+            this.drawWindow1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.drawWindow1_MouseDown);
+            this.drawWindow1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.drawWindow1_MouseMove);
+            this.drawWindow1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.drawWindow1_MouseUp);
             // 
             // greyScrollBar1
             // 
@@ -90,17 +107,6 @@
             this.greyScrollBar1.Size = new System.Drawing.Size(15, 370);
             this.greyScrollBar1.TabIndex = 3;
             this.greyScrollBar1.Value = 0F;
-            // 
-            // panel1
-            // 
-            this.tableLayoutPanel1.SetColumnSpan(this.panel1, 2);
-            this.panel1.Controls.Add(this.drawWindow1);
-            this.panel1.Controls.Add(this.greyScrollBar1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(265, 370);
-            this.panel1.TabIndex = 4;
             // 
             // ErrorCheckerSelectorDialog
             // 

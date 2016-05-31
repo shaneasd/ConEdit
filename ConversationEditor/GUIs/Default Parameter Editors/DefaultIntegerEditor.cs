@@ -73,20 +73,17 @@ namespace ConversationEditor
             return m_parameter.SetValueAction((int)m_numericUpDown.Value);
         }
 
-        private void numericUpDown1_KeyUp(object sender, KeyEventArgs e)
+        public string IsValid()
         {
-            if (e.KeyCode == Keys.Enter)
-            {
-                Ok.Execute();
-            }
+            if (m_numericUpDown.Value > m_numericUpDown.Maximum)
+                return "Entered value is greater than maximum allowed value";
+            else if (m_numericUpDown.Value < m_numericUpDown.Minimum)
+                return "Entered value is less than minimum allowed value";
+            else
+                return null;
         }
 
-        public bool IsValid()
-        {
-            return true;
-        }
-
-        public event Action Ok;
+        public event Action Ok { add { } remove { } }
 
         ColorScheme m_scheme;
         public ColorScheme Scheme
@@ -99,5 +96,23 @@ namespace ConversationEditor
                 drawWindow1.ColorScheme = value;
             }
         }
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                m_numericUpDown.Dispose();
+            }
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
     }
 }

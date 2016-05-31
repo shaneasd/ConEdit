@@ -7,7 +7,7 @@ namespace Conversation
 {
     public interface IErrorCheckerUtilities<out T> where T: class, IConversationNode
     {
-        Guid GetCategory(ID<NodeTypeTemp> type);
+        Guid GetCategory(Id<NodeTypeTemp> type);
         T ReverseLookup(IEditable data);
     }
 

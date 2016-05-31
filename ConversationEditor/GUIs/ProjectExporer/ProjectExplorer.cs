@@ -11,9 +11,10 @@ using System.IO;
 using System.Reflection;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
 using System.Drawing.Drawing2D;
 using Utilities.UI;
+using Conversation;
 
 namespace ConversationEditor
 {
@@ -30,7 +31,7 @@ namespace ConversationEditor
         private ContextMenuStrip m_contextMenu;
         private SharedContext m_context;
 
-        ColorScheme m_scheme;
+        ColorScheme m_scheme = new ColorScheme(); //So the designer has something to work with
         public ColorScheme Scheme
         {
             get { return m_scheme; }
@@ -63,6 +64,8 @@ namespace ConversationEditor
 
         public ProjectExplorer()
         {
+            m_suppressibleItemSelected = new SuppressibleAction(()=>ItemSelected.Execute());
+
             InitializeComponent();
 
             UpdateSelectedLocalizer = new SuppressibleAction(UnsuppressibleUpdateSelectedLocalizer);
@@ -95,14 +98,22 @@ namespace ConversationEditor
                 var d = definition;
                 var button = makeButton(definition.Icon);
                 button.Highlighted = true;
+                d.RegisterFilterChangedCallback(m_visibility, b => button.Highlighted = b);
                 button.ValueChanged += () => { d.Update(button.Highlighted, ref m_visibility); InvalidateImage(); };
+
                 m_buttons.Add(button);
             }
 
             var folderFilterButton = makeButton(FolderIcon);
             folderFilterButton.Highlighted = true;
-            folderFilterButton.ValueChanged += () => { m_visibility.EmptyFolders = folderFilterButton.Highlighted; InvalidateImage(); };
+            folderFilterButton.ValueChanged += () => { m_visibility.EmptyFolders.Value = folderFilterButton.Highlighted; InvalidateImage(); };
             m_buttons.Add(folderFilterButton);
+
+            m_visibility.Audio.Changed.Register(b => m_config.Audio.Value = b.to);
+            m_visibility.Conversations.Changed.Register(b => m_config.Conversations.Value = b.to);
+            m_visibility.Domains.Changed.Register(b => m_config.Domains.Value = b.to);
+            m_visibility.EmptyFolders.Changed.Register(b => m_config.Folders.Value = b.to);
+            m_visibility.Localizations.Changed.Register(b => m_config.Localizations.Value = b.to);
         }
 
         private void UnsuppressibleUpdateSelectedLocalizer()
@@ -117,10 +128,16 @@ namespace ConversationEditor
 
         SuppressibleAction UpdateSelectedLocalizer;
 
-        public void Initialize(SharedContext context)
+        public void Initialize(SharedContext context, FileFilterConfig config)
         {
             m_context = context;
             m_context.CurrentLocalization.Changed.Register(this, (a, change) => UpdateSelectedLocalizer.TryExecute());
+            m_config = config;
+            m_visibility.Audio.Value = config.Audio.Value;
+            m_visibility.Conversations.Value = config.Conversations.Value;
+            m_visibility.Domains.Value = config.Domains.Value;
+            m_visibility.EmptyFolders.Value = config.Folders.Value;
+            m_visibility.Localizations.Value = config.Localizations.Value;
         }
 
         public void InvalidateImage()
@@ -136,21 +153,29 @@ namespace ConversationEditor
 
         List<HighlightableImageButton> m_buttons = new List<HighlightableImageButton>();
 
-        public struct VisibilityFilter
+        public class VisibilityFilter
         {
-            public bool Conversations;
-            public bool Domains;
-            public bool Localizations;
-            public bool Audio;
-            public bool EmptyFolders;
+            public NotifierProperty<bool> Conversations = new NotifierProperty<bool>(true);
+            public NotifierProperty<bool> Domains = new NotifierProperty<bool>(true);
+            public NotifierProperty<bool> Localizations = new NotifierProperty<bool>(true);
+            public NotifierProperty<bool> Audio = new NotifierProperty<bool>(true);
+            public NotifierProperty<bool> EmptyFolders = new NotifierProperty<bool>(true);
 
-            public static VisibilityFilter Everything = new VisibilityFilter { Conversations = true, Domains = true, Localizations = true, Audio = true, EmptyFolders = true };
-            public static VisibilityFilter Just(bool Conversations = true, bool Domains = true, bool Localizations = true, bool Audio = true, bool EmptyFolders = true)
+            private VisibilityFilter() { }
+
+            public static VisibilityFilter Everything = new VisibilityFilter();
+            public static VisibilityFilter Just(bool Conversations = false, bool Domains = false, bool Localizations = false, bool Audio = false, bool EmptyFolders = false)
             {
-                return new VisibilityFilter { Conversations = Conversations, Domains = Domains, Localizations = Localizations, Audio = Audio, EmptyFolders = EmptyFolders };
+                VisibilityFilter result = new VisibilityFilter();
+                result.Conversations.Value = Conversations;
+                result.Domains.Value = Domains;
+                result.Localizations.Value = Localizations;
+                result.Audio.Value = Audio;
+                result.EmptyFolders.Value = EmptyFolders;
+                return result;
             }
         }
-        private VisibilityFilter m_visibility = new VisibilityFilter() { Conversations = true, Audio = true, Domains = true, EmptyFolders = true, Localizations = true };
+        private VisibilityFilter m_visibility = VisibilityFilter.Everything;
         private VisibilityFilter Visibility
         {
             get
@@ -210,6 +235,7 @@ namespace ConversationEditor
         OpenFileDialog m_ofdLocalization = new OpenFileDialog() { DefaultExt = "loc", Filter = "Localizations|*.loc|xml|*.xml", Multiselect = true, ValidateNames = false };
         OpenFileDialog m_ofdAudio = new OpenFileDialog() { DefaultExt = "ogg", Filter = "Ogg Vorbis|*.ogg|All files (*.*)|*.*", Multiselect = true, ValidateNames = false };
 
+        public SuppressibleAction m_suppressibleItemSelected;
         public event Action ItemSelected;
         public IConversationFile SelectedConversation
         {
@@ -325,7 +351,7 @@ namespace ConversationEditor
 
         public void Select<T>(T item) where T : ISaveableFileProvider
         {
-            Item newSelected = ContainingItem2(item);
+            Item newSelected = ContainingItem(item);
             SelectItem(newSelected);
         }
 
@@ -344,7 +370,7 @@ namespace ConversationEditor
                 {
                     if (item.Select(ref m_selectedItem, ref m_selectedEditable))
                     {
-                        ItemSelected.Execute();
+                        m_suppressibleItemSelected.TryExecute();
                         InvalidateImage();
                     }
                 }
@@ -393,7 +419,7 @@ namespace ConversationEditor
                     if (item.File.Exists)
                     {
                         int cursorPos = item.CursorPosition(e.X, g);
-                        item.StartRenaming(cursorPos, g, drawWindow1);
+                        item.StartRenaming(cursorPos, drawWindow1);
                         m_renamingItem = item;
                         InvalidateImage();
                     }
@@ -432,6 +458,7 @@ namespace ConversationEditor
 
         Item m_renamingItem = null;
         private Item m_contextItem;
+        private FileFilterConfig m_config;
 
         Item GetItem(Point location)
         {
@@ -480,18 +507,19 @@ namespace ConversationEditor
             return result;
         }
 
-        internal void SetProject(IProject p)
+        internal void SetProject(IProject p, Project.TConfig config)
         {
             m_root = p.File.Exists ? MakeNewProjectItem(p) : ProjectItem.Null;
             m_ofdConversation.InitialDirectory = p.Origin.FullName;
             m_ofdDomain.InitialDirectory = p.Origin.FullName;
             m_ofdLocalization.InitialDirectory = p.Origin.FullName;
             m_ofdAudio.InitialDirectory = p.Origin.FullName;
-            UpdateList();
+            UpdateList(config);
         }
 
-        private void UpdateList()
+        private void UpdateList(Project.TConfig config)
         {
+            using (m_suppressibleItemSelected.SuppressCallback())
             using (m_updateScrollbar.SuppressCallback())
             {
                 foreach (var item in m_root.Children(VisibilityFilter.Everything))
@@ -529,6 +557,7 @@ namespace ConversationEditor
                 {
                     Add(con);
                 }
+
                 addingConversationsTime.Stop();
 
                 m_root.Project.DomainFiles.Removed += Remove;
@@ -538,6 +567,17 @@ namespace ConversationEditor
                 {
                     Add(domainFile);
                 }
+
+                var lastCon = config.LastEdited != null ? m_root.Project.Conversations.FirstOrDefault(c => c.File.File.FullName == m_root.Project.Rerout(config.LastEdited.Only()).Single().FullName) : null;
+                if (lastCon != null)
+                    Select(lastCon);
+                else
+                {
+                    var lastDom = config.LastEdited != null ? m_root.Project.DomainFiles.FirstOrDefault(c => c.File.File.FullName == m_root.Project.Rerout(config.LastEdited.Only()).Single().FullName) : null;
+                    if (lastDom != null)
+                        Select(lastCon);
+                }
+
 
                 m_root.Project.LocalizationFiles.Removed += Remove;
                 m_root.Project.LocalizationFiles.Reloaded += (from, to) => { Remove(from); Add(to); };
@@ -568,7 +608,7 @@ namespace ConversationEditor
             InvalidateImage();
         }
 
-        private bool SameItem<T>(T a, T b) where T : ISaveableFileProvider
+        private static bool SameItem<T>(T a, T b) where T : ISaveableFileProvider
         {
             return a.File.File.FullName == b.File.File.FullName;
         }
@@ -595,7 +635,7 @@ namespace ConversationEditor
                 {
                     m_selectedItem = result;
                     m_selectedEditable = result;
-                    ItemSelected.Execute();
+                    m_suppressibleItemSelected.TryExecute();
                 }
 
                 if (element is ILocalizationFile)
@@ -620,7 +660,7 @@ namespace ConversationEditor
                     m_selectedItem = Item.Null;
                     //m_selectedItem = null;
                     m_selectedEditable = null;
-                    ItemSelected.Execute();
+                    m_suppressibleItemSelected.TryExecute();
                 }
                 InvalidateImage();
             }
@@ -673,17 +713,12 @@ namespace ConversationEditor
             return parent;
         }
 
-        private IEnumerable<LeafItem<T>> LeafItems<T>() where T : ISaveableFileProvider
-        {
-            return m_root.AllItems(VisibilityFilter.Everything).OfType<LeafItem<T>>();
-        }
+        //private IEnumerable<LeafItem<T>> LeafItems<T>() where T : ISaveableFileProvider
+        //{
+        //    return m_root.AllItems(VisibilityFilter.Everything).OfType<LeafItem<T>>();
+        //}
 
-        private LeafItem<T> ContainingItem<T>(T item) where T : ISaveableFileProvider
-        {
-            return LeafItems<T>().FirstOrDefault(i => object.Equals(i.Item, item));
-        }
-
-        private LeafItem ContainingItem2(ISaveableFileProvider item)
+        private LeafItem ContainingItem(ISaveableFileProvider item)
         {
             return m_root.AllItems(VisibilityFilter.Everything).OfType<LeafItem>().FirstOrDefault(i => object.Equals(i.Item, item));
         }
@@ -808,7 +843,7 @@ namespace ConversationEditor
             }
         }
 
-        private IEnumerable<TInterface> LoadValidImportFiles<TConcrete, TInterface>(OpenFileDialog ofd, IProjectElementList<TConcrete, TInterface> list) where TConcrete : TInterface
+        private static IEnumerable<TInterface> LoadValidImportFiles<TConcrete, TInterface>(OpenFileDialog ofd, IProjectElementList<TConcrete, TInterface> list) where TConcrete : TInterface
         {
             var badpaths = ofd.FileNames.Where(p => !list.FileLocationOk(p)).ToArray();
             if (badpaths.Any())
@@ -854,7 +889,7 @@ namespace ConversationEditor
         {
             if (m_ofdAudio.ShowDialog() == DialogResult.OK)
             {
-                var loaded = LoadValidImportFiles(m_ofdAudio, m_root.Project.AudioFiles);
+                LoadValidImportFiles(m_ofdAudio, m_root.Project.AudioFiles);
             }
         }
 
@@ -883,7 +918,7 @@ namespace ConversationEditor
             else if (audioItem != null)
                 m_root.Project.AudioFiles.Remove(audioItem.Item, false);
             else
-                throw new Exception("dfvhbsd345kbak");
+                throw new InternalLogicException("dfvhbsd345kbak");
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -912,7 +947,7 @@ namespace ConversationEditor
                 m_root.Project.AudioFiles.Delete(audioItem.Item);
             }
             else
-                throw new Exception("fdvbsdh4k53bka");
+                throw new InternalLogicException("fdvbsdh4k53bka");
         }
 
         private void playMenuItem_Click(object sender, EventArgs e)
@@ -1037,7 +1072,7 @@ namespace ConversationEditor
             else if (domainItem != null)
                 domainItem.Item.File.Writable.Save();
             else
-                throw new Exception("attempted to save a file that isn't saveable from the project explorer menu");
+                throw new InternalLogicException("attempted to save a file that isn't saveable from the project explorer menu");
         }
 
         /// <summary> 
@@ -1046,14 +1081,17 @@ namespace ConversationEditor
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
+            if (disposing)
+            {
+                UpdateSelectedLocalizer.Dispose();
+                m_updateScrollbar.Dispose();
+            }
+
             if (disposing && (components != null))
             {
                 components.Dispose();
             }
-            if (disposing)
-            {
-                m_updateScrollbar.Dispose();
-            }
+
             base.Dispose(disposing);
         }
     }

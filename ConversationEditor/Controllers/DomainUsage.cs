@@ -7,9 +7,9 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    using ConversationNode = ConversationNode<INodeGUI>;
+    using ConversationNode = ConversationNode<INodeGui>;
 
-    internal abstract class IDomainUsage<TNode, TTransition> where TNode : IRenderable<IGUI>
+    internal abstract class IDomainUsage<TNode, TTransition> where TNode : IRenderable<IGui>
     {
         public abstract IEnumerable<Usage> Usages(IConversationNode node);
 
@@ -35,7 +35,7 @@ namespace ConversationEditor
             m_project = project;
         }
 
-        private IEnumerable<Usage> CategoryUsage(ID<NodeTemp> id)
+        private IEnumerable<Usage> CategoryUsage(Id<NodeTemp> id)
         {
             List<Usage> result = new List<Usage>();
             foreach (var domainFile in m_project.DomainFiles.Evaluate())
@@ -69,7 +69,7 @@ namespace ConversationEditor
         /// </summary>
         /// <param name="id">The id of the specific derived type</param>
         /// <param name="type">The type in question</param>
-        private List<Usage> DerivedTypeUsage(ID<NodeTemp> id, BaseType type)
+        private List<Usage> DerivedTypeUsage(Id<NodeTemp> id, BaseType type)
         {
             List<Usage> result = new List<Usage>();
             foreach (var domainFile in m_project.DomainFiles.Evaluate())
@@ -127,7 +127,6 @@ namespace ConversationEditor
                         if (n.Type == BaseType.Enumeration.ParameterNodeType)
                         {
                             var ppp = n.Parameters;
-                            var name = n.Parameters.OfType<IStringParameter>().First().Value;
                             var typeParameter = n.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_TYPE) as IEnumParameter;
                             if (typeParameter.Value == enumTypeID.Guid)
                             {
@@ -144,14 +143,14 @@ namespace ConversationEditor
             return result;
         }
 
-        private List<Usage> ConnectorDefinitionsUsages(IEnumerable<ID<TConnectorDefinition>> ids)
+        private List<Usage> ConnectorDefinitionsUsages(IEnumerable<Id<TConnectorDefinition>> ids)
         {
             List<Usage> result = new List<Usage>();
             foreach (var domainFile in m_project.DomainFiles)
             {
                 foreach (var i in ids)
                 {
-                    ID<NodeTypeTemp> id = ID<NodeTypeTemp>.ConvertFrom(i);
+                    Id<NodeTypeTemp> id = Id<NodeTypeTemp>.ConvertFrom(i);
                     var connectors = domainFile.Nodes.Where(n => n.Type == id);
                     result.AddRange(connectors.Select(c => new Usage(c, domainFile, "Connector " + c.Id.Serialized())));
                 }
@@ -161,8 +160,8 @@ namespace ConversationEditor
 
         private IEnumerable<Usage> ConnectedNodesUsages(IConversationNode node)
         {
-            HashSet<ID<NodeTypeTemp>> nodeIds = new HashSet<ID<NodeTypeTemp>>();
-            nodeIds.UnionWith(node.Connectors.SelectMany(t => t.Connections).Select(t => t.Parent).Where(n => n.NodeTypeId == DomainIDs.NodeGuid).Select(n => ID<NodeTypeTemp>.ConvertFrom(n.NodeId)));
+            HashSet<Id<NodeTypeTemp>> nodeIds = new HashSet<Id<NodeTypeTemp>>();
+            nodeIds.UnionWith(node.Connectors.SelectMany(t => t.Connections).Select(t => t.Parent).Where(n => n.NodeTypeId == DomainIDs.NodeGuid).Select(n => Id<NodeTypeTemp>.ConvertFrom(n.NodeId)));
             return NodeDefinitionsUsages(nodeIds);
         }
 
@@ -170,7 +169,7 @@ namespace ConversationEditor
         /// All usages in all conversation files of nodes with the specified types
         /// </summary>
         /// <param name="typeIDs">The IDs identifying the types of nodes to search for usages of</param>
-        private List<Usage> NodeDefinitionsUsages(ICollection<ID<NodeTypeTemp>> typeIDs)
+        private List<Usage> NodeDefinitionsUsages(ICollection<Id<NodeTypeTemp>> typeIDs)
         {
             List<Usage> result = new List<Usage>();
             foreach (var conversationFile in m_project.Conversations)
@@ -215,7 +214,9 @@ namespace ConversationEditor
              */
 
 
-            ID<NodeTypeTemp> id = node.Type;
+            Id<NodeTypeTemp> id = node.Type;
+
+            var temp = BaseType.BaseTypes.Select(t => t.NodeType).Where(t=>t!= null).Select(t=>t.Serialized());
 
             BaseType type = BaseType.BaseTypes.SingleOrDefault(t => t.NodeType == id);
 
@@ -238,7 +239,7 @@ namespace ConversationEditor
             //It's a connector definition used to define custom connectors
             else if (id == DomainIDs.ConnectorDefinitionGuid)
             {
-                return ConnectorDefinitionsUsages(ID<TConnectorDefinition>.ConvertFrom(node.Id).Only());
+                return ConnectorDefinitionsUsages(Id<TConnectorDefinition>.ConvertFrom(node.Id).Only());
             }
             else if (id == DomainIDs.ConnectionDefinitionGuid)
             {
@@ -247,7 +248,7 @@ namespace ConversationEditor
             //It's a parameter
             else if (BaseType.BaseTypes.Any(t => t.ParameterNodeType == id))
             {
-                var connectors = ConnectorDefinitionsUsages(node.Connectors.SelectMany(t => t.Connections).Select(t => t.Parent).Where(n => n.NodeTypeId == DomainIDs.ConnectorDefinitionGuid).Select(a => ID<TConnectorDefinition>.ConvertFrom(a.NodeId)));
+                var connectors = ConnectorDefinitionsUsages(node.Connectors.SelectMany(t => t.Connections).Select(t => t.Parent).Where(n => n.NodeTypeId == DomainIDs.ConnectorDefinitionGuid).Select(a => Id<TConnectorDefinition>.ConvertFrom(a.NodeId)));
                 var nodes = ConnectedNodesUsages(node);
                 return connectors.Concat(nodes);
             }
@@ -259,7 +260,7 @@ namespace ConversationEditor
             //It's a plain old node definition
             else if (id == DomainIDs.NodeGuid)
             {
-                return NodeDefinitionsUsages(ID<NodeTypeTemp>.ConvertFrom(node.Id).Only());
+                return NodeDefinitionsUsages(Id<NodeTypeTemp>.ConvertFrom(node.Id).Only());
             }
             else
             {

@@ -45,7 +45,7 @@ namespace Utilities.UI
             m_buttonDownArea = () => { var a = area(); return new RectangleF(a.Right - BUTTON_WIDTH, a.Top + a.Height / 2, BUTTON_WIDTH, a.Height / 2); };
             Func<RectangleF> m_textBoxArea = () => { var a = area(); return RectangleF.FromLTRB(a.Left, a.Top, a.Right - BUTTON_WIDTH, a.Bottom); };
 
-            m_textBox = new MyTextBox(control, m_textBoxArea, decimalAllowed ? MyTextBox.InputFormEnum.Decimal : MyTextBox.InputFormEnum.Integer);
+            m_textBox = new MyTextBox(control, m_textBoxArea, decimalAllowed ? MyTextBox.InputFormEnum.Decimal : MyTextBox.InputFormEnum.Integer, null);
             m_textBox.RequestedAreaChanged += () => { RequestedArea = new SizeF(Area.Width, m_textBox.RequestedArea.Height); };
             m_textBox.TextChanged += (string oldText) =>
                 {
@@ -177,12 +177,12 @@ namespace Utilities.UI
             m_mouseDownTimer.Stop();
         }
 
-        public override void Paint(Graphics graphics)
+        public override void Paint(Graphics g)
         {
-            m_textBox.Paint(graphics);
+            m_textBox.Paint(g);
 
-            DrawButton(graphics, m_buttonUpArea(), true);
-            DrawButton(graphics, m_buttonDownArea(), false);
+            DrawButton(g, m_buttonUpArea(), true);
+            DrawButton(g, m_buttonDownArea(), false);
         }
 
         private void DrawButton(Graphics graphics, RectangleF buttonArea, bool up)
@@ -224,9 +224,9 @@ namespace Utilities.UI
                 }
             }
         }
-        public decimal Minimum;
-        public decimal Maximum;
-        public decimal Increment = 1;
+        public decimal Minimum { get; set; } = 0;
+        public decimal Maximum { get; set; } = 0;
+        public decimal Increment { get; set; } = 1;
 
         public override bool Contains(PointF point)
         {

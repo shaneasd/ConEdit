@@ -7,6 +7,9 @@ using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Globalization;
+using System.Diagnostics;
+using System.Diagnostics.Contracts;
 
 namespace Utilities.UI
 {
@@ -61,6 +64,10 @@ namespace Utilities.UI
                 SelectedBackgroundBrush = Brushes.Navy;
                 Background = Color.FromArgb(56, 56, 56);
                 BorderPen = new Pen(Color.FromArgb(205, 205, 205));
+                AutoCompleteText = Color.Cyan;
+                AutoCompleteBackground = Color.Black;
+                TokenText = Color.AntiqueWhite;
+                TokenBackground = Color.Black;
             }
 
             Color m_text;
@@ -89,6 +96,11 @@ namespace Utilities.UI
                 }
             }
 
+            public Color AutoCompleteText { get; set; }
+            public Color AutoCompleteBackground { get; set; }
+
+            public Color TokenText { get; set; }
+            public Color TokenBackground { get; set; }
 
             public Pen BorderPen { get; set; }
 
@@ -121,6 +133,12 @@ namespace Utilities.UI
                     m_uninitializedText = false;
                     var oldText = m_state.Text;
                     m_state.Text = value;
+
+                    if (m_autoCompleteRange != null)
+                    {
+                        m_autoCompleteRange = new Tuple<CP, CP>(m_autoCompleteRange.Item1, new CP(m_autoCompleteRange.Item2.Pos + value.Length - oldText.Length, true));
+                    }
+
                     TextChanged.Execute(oldText);
                     UpdateRequestedArea();
                     this.Redraw();
@@ -132,9 +150,10 @@ namespace Utilities.UI
         {
             public int Pos;
             public bool PreferEnd; //Put the cursor at the end of line i instead of the start of line i+1
-            public CP(int pos, bool preferEnd = false) { Pos = pos; PreferEnd = preferEnd; }
+            public CP(int pos, bool preferEnd) { Pos = pos; PreferEnd = preferEnd; }
+            public CP(int pos) : this(pos, false) { }
 
-            public Point GetUV(List<string> lines)
+            internal Point GetUV(List<string> lines)
             {
                 int before = 0;
                 int i = 0;
@@ -172,6 +191,15 @@ namespace Utilities.UI
                 if (value.Pos > Text.Length)
                     value.Pos = Text.Length;
                 m_state.CursorPos = value;
+
+                UpdateDropdown();
+
+                if (m_autoCompleteRange != null)
+                {
+                    if (value.Pos < m_autoCompleteRange.Item1.Pos || value.Pos > m_autoCompleteRange.Item2.Pos - 1)
+                        m_autoCompleteRange = null;
+                }
+
                 MoveCaret();
                 Redraw();
             }
@@ -197,7 +225,10 @@ namespace Utilities.UI
 
         public string SelectedText { get { return Text.Substring(SelectionStart, Math.Abs(SelectionLength)); } }
 
-        public Font Font = SystemFonts.MessageBoxFont;
+        public Font Font
+        {
+            get; set;
+        } = SystemFonts.MessageBoxFont;
         private Func<RectangleF> m_area;
         public RectangleF Area { get { return m_area(); } }
         private void UpdateRequestedArea()
@@ -233,8 +264,138 @@ namespace Utilities.UI
 
         public enum InputFormEnum { Text, Decimal, Integer, Path, FileName, None }
 
-        public MyTextBox(Control control, Func<RectangleF> area, InputFormEnum inputForm)
+        #region DropDown
+        Func<string, IEnumerable<string>> AutoCompleteSuggestions;
+        ToolStripDropDown m_dropDown;
+        private bool m_dropDownOpen = false;
+        int m_dropDownWindow = 0;
+        const int WINDOW_SIZE = 4;
+        public Color SelectedBackgroundColor = Color.Green;
+        string[] m_suggestions = new string[] { "shane", "tammy", "shane again" };
+        int m_itemIndex = -1;
+        private int ItemIndex
         {
+            get { return m_itemIndex; }
+            set
+            {
+                Debug.WriteLine("Index changed to " + value + " m_dropDownWindow: " + m_dropDownWindow);
+                if (SelectedToolStripItem != null)
+                    SelectedToolStripItem.BackColor = m_dropDown.BackColor;
+                if (value >= 0 && value < m_suggestions.Length)
+                    m_itemIndex = value;
+
+                int newDropDownWindow = m_itemIndex - WINDOW_SIZE + 1;
+                if (newDropDownWindow > m_dropDownWindow)
+                {
+                    m_dropDownWindow = newDropDownWindow;
+                    UpdateDropdown();
+                }
+                if (m_itemIndex < m_dropDownWindow)
+                {
+                    m_dropDownWindow = m_itemIndex;
+                    UpdateDropdown();
+                }
+
+                if (SelectedToolStripItem != null)
+                    SelectedToolStripItem.BackColor = SelectedBackgroundColor;
+            }
+        }
+        private ToolStripItem SelectedToolStripItem
+        {
+            get
+            {
+                if (ItemIndex - m_dropDownWindow < 0)
+                    return null;
+                if (ItemIndex - m_dropDownWindow >= m_dropDown.Items.Count - 2)
+                    return null;
+                return m_dropDown.Items[ItemIndex - m_dropDownWindow + 1];
+            }
+        }
+        private void UpdateDropdown()
+        {
+            if (m_dropDown == null)
+                return;
+
+            var tokens = FindTokens().ToArray();
+            var matchingToken = tokens.Where(t => t.Item1.Pos < GetCursorPosInt() && (t.Item2.Pos > GetCursorPosInt() || (Text[t.Item2.Pos - 1] != ']' && t.Item2.Pos == Text.Length))).FirstOrDefault();
+
+            if (matchingToken != null)
+            {
+                if (!m_dropDownOpen)
+                {
+                    m_itemIndex = -1;
+                    m_dropDownWindow = 0;
+                }
+
+                m_suggestions = AutoCompleteSuggestions(Text.Substring(matchingToken.Item1.Pos + 1, GetCursorPosInt() - matchingToken.Item1.Pos - 1)).ToArray();
+            }
+            else
+            {
+                CloseDropdown();
+                return;
+            }
+
+            m_dropDown.SuspendLayout();
+            var width = (int)m_area().Width - 2;
+            var height = m_dropDown.Font.Height + 4;
+            m_dropDown.Items.Clear();
+            m_dropDown.Items.Add(new UpArrowItem(width, () => { m_dropDownWindow--; UpdateDropdown(); }, true));
+            if (m_dropDownWindow + WINDOW_SIZE > m_suggestions.Length)
+                m_dropDownWindow = m_suggestions.Length - WINDOW_SIZE;
+            if (m_dropDownWindow < 0)
+                m_dropDownWindow = 0;
+            var limited = m_suggestions.Skip(m_dropDownWindow).TakeUpTo(WINDOW_SIZE);
+            foreach (var item in limited)
+            {
+                var itemitem = item;
+                var element = m_dropDown.Items.Add(item, null, (a, b) => { AutoCompleteTo(item); });
+                element.TextAlign = ContentAlignment.MiddleLeft;
+                element.AutoSize = false;
+                element.Height = height;
+                element.Width = width;
+            }
+            m_dropDown.Items.Add(new UpArrowItem(width, () => { m_dropDownWindow++; UpdateDropdown(); }, false));
+            m_dropDown.AutoClose = false;
+
+            if (m_dropDownWindow <= 0)
+                m_dropDown.Items[0].Visible = false;
+            if (m_dropDownWindow >= m_suggestions.Length - WINDOW_SIZE)
+                m_dropDown.Items.OfType<ToolStripItem>().Last().Visible = false;
+
+            m_dropDown.ResumeLayout();
+
+            if (!m_dropDownOpen)
+                m_dropDown.Show(m_control.PointToScreen(new Point((int)Area.Left, (int)Area.Bottom)));
+        }
+
+        public System.Windows.Forms.ToolStripRenderer Renderer { get { return m_dropDown.Renderer; } set { m_dropDown.Renderer = value; } }
+        private void CloseDropdown()
+        {
+            if (m_dropDown != null)
+                m_dropDown.Close();
+        }
+
+        private void AutoCompleteTo(string item)
+        {
+            var tokens = FindTokens().ToArray();
+            var matchingToken = tokens.Where(t => t.Item1.Pos < GetCursorPosInt() && (t.Item2.Pos > GetCursorPosInt() || (Text[t.Item2.Pos - 1] != ']' && t.Item2.Pos == Text.Length))).FirstOrDefault();
+
+            Contract.Assert(matchingToken != null, "attempting string autocompletion when there is nothing to complete");
+
+            InsertText("[" + item + "]", matchingToken.Item1.Pos, matchingToken.Item2.Pos - matchingToken.Item1.Pos);
+        }
+
+        #endregion
+
+        public MyTextBox(Control control, Func<RectangleF> area, InputFormEnum inputForm, Func<string, IEnumerable<string>> autoCompleteSuggestions)
+        {
+            if (autoCompleteSuggestions != null)
+            {
+                m_dropDown = new ToolStripDropDown();
+                m_dropDown.Opened += (a, b) => { m_dropDownOpen = true; };
+                m_dropDown.Closed += (a, b) => { m_dropDownOpen = false; m_itemIndex = -1; m_dropDownWindow = 0; };
+            }
+
             m_area = area;
             m_requestedSize = SizeF.Empty;
             m_control = control;
@@ -243,6 +404,7 @@ namespace Utilities.UI
             SelectionLength = 0;
             control.SizeChanged += (a, b) => UpdateRequestedArea();
             InputForm = inputForm;
+            AutoCompleteSuggestions = autoCompleteSuggestions;
         }
 
         public void Redraw()
@@ -306,6 +468,28 @@ namespace Utilities.UI
 
         #endregion
 
+        Tuple<CP, CP> m_autoCompleteRange = null;
+
+        private IEnumerable<Tuple<CP, CP>> FindTokens()
+        {
+            int openIndex = int.MaxValue;
+            for (int i = 0; i < Text.Length; i++)
+            {
+                if (Text[i] == '[')
+                {
+                    if (openIndex == int.MaxValue)
+                        openIndex = Math.Min(i, openIndex);
+                }
+                else if (Text[i] == ']' && openIndex < int.MaxValue)
+                {
+                    yield return Tuple.Create(new CP(openIndex, false), new CP(i + 1, true));
+                    openIndex = int.MaxValue;
+                }
+            }
+            if (openIndex < int.MaxValue)
+                yield return Tuple.Create(new CP(openIndex, false), new CP(Text.Length, true));
+        }
+
         public override void Paint(Graphics g)
         {
             var area = Area;
@@ -326,29 +510,44 @@ namespace Utilities.UI
                     }
                 }
 
+                foreach (var token in FindTokens())
+                {
+                    RenderOverText(g, area, lines, Colors.TokenText, Colors.TokenBackground, token.Item1, token.Item2);
+                }
+
                 if (Math.Abs(SelectionLength) > 0)
                 {
-                    Point p1 = CursorPos.GetUV(lines);
-                    Point p2 = new CP(CursorPos.Pos + SelectionLength).GetUV(lines);
+                    RenderOverText(g, area, lines, Colors.SelectedText, Colors.SelectedBackground, CursorPos, new CP(CursorPos.Pos + SelectionLength));
+                }
 
-                    if (p1.Y > p2.Y || (p1.Y == p2.Y && p1.X > p2.X))
-                        Util.Swap(ref p1, ref p2);
+                if (m_autoCompleteRange != null)
+                {
+                    RenderOverText(g, area, lines, Colors.AutoCompleteText, Colors.AutoCompleteBackground, m_autoCompleteRange.Item1, m_autoCompleteRange.Item2);
+                }
+            }
+        }
 
-                    for (int y = p1.Y; y <= p2.Y; y++)
-                    {
-                        int minx = p1.Y == y ? p1.X : 0;
-                        int maxx = p2.Y == y ? p2.X : lines[y].Length;
+        private void RenderOverText(Graphics g, RectangleF area, List<string> lines, Color textColor, Color backgroundColor, CP start, CP end)
+        {
+            Point p1 = start.GetUV(lines);
+            Point p2 = end.GetUV(lines);
 
-                        float startx = CursorToXY(new Point(minx, y)).X;
-                        float endx = CursorToXY(new Point(maxx, y)).X;
-                        using (g.SaveState())
-                        {
-                            Region r = new Region(RectangleF.FromLTRB(startx, y * Font.Height + TextRectangle.Y, endx, (1 + y) * Font.Height + TextRectangle.Y));
-                            g.Clip = r;
-                            g.FillRectangle(Colors.SelectedBackgroundBrush, area);
-                            TextRenderer.DrawText(g, lines[y], Font, TextRectangle.Location.Round().Plus(0, Font.Height * y), Colors.SelectedText, Colors.SelectedBackground, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
-                        }
-                    }
+            if (p1.Y > p2.Y || (p1.Y == p2.Y && p1.X > p2.X))
+                Util.Swap(ref p1, ref p2);
+
+            for (int y = p1.Y; y <= p2.Y; y++)
+            {
+                int minx = p1.Y == y ? p1.X : 0;
+                int maxx = p2.Y == y ? p2.X : lines[y].Length;
+
+                float startx = CursorToXY(new Point(minx, y)).X;
+                float endx = CursorToXY(new Point(maxx, y)).X;
+                using (g.SaveState())
+                {
+                    Region r = new Region(RectangleF.FromLTRB(startx, y * Font.Height + TextRectangle.Y, endx, (1 + y) * Font.Height + TextRectangle.Y));
+                    g.Clip = r;
+                    g.FillRectangle(Colors.SelectedBackgroundBrush, area);
+                    TextRenderer.DrawText(g, lines[y], Font, TextRectangle.Location.Round().Plus(0, Font.Height * y), textColor, backgroundColor, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
                 }
             }
         }
@@ -416,44 +615,83 @@ namespace Utilities.UI
         public override void KeyPress(KeyPressEventArgs args)
         {
             bool isEnter = args.KeyChar == '\n' || args.KeyChar == '\r';
-            bool canEnter = ((Control.ModifierKeys & Keys.Shift) == Keys.Shift) || !SpecialEnter;
+            bool canEnter = m_dropDownOpen || ((Control.ModifierKeys & Keys.Shift) == Keys.Shift) || !SpecialEnter;
             if (!char.IsControl(args.KeyChar) || (isEnter && canEnter))
             {
-                bool acceptable = InputForm == MyTextBox.InputFormEnum.Text ||
-                                  InputForm == MyTextBox.InputFormEnum.Decimal && IsAcceptableNumeric(args.KeyChar) ||
-                                  InputForm == MyTextBox.InputFormEnum.Integer && IsAcceptableNumeric(args.KeyChar) ||
-                                  InputForm == MyTextBox.InputFormEnum.Path && IsAcceptablePathChar(args.KeyChar) ||
-                                  InputForm == MyTextBox.InputFormEnum.FileName && IsAcceptableFileNameChar(args.KeyChar);
-                if (acceptable)
+                if (isEnter && m_dropDownOpen)
                 {
-                    if (Math.Abs(SelectionLength) > 0 || m_additionUndoAction == null) //If we've got text selected or we're not already adding text the replacement of that text becomes the start of a new addition
-                        m_additionUndoAction = MakeUndoAction();
+                    if (SelectedToolStripItem != null)
+                    {
+                        SelectedToolStripItem.PerformClick();
+                    }
+                    m_dropDown.Close();
+                }
+                else
+                {
+                    //bool acceptable = InputForm == MyTextBox.InputFormEnum.Text ||
+                    //                  InputForm == MyTextBox.InputFormEnum.Decimal && IsAcceptableNumeric(args.KeyChar) ||
+                    //                  InputForm == MyTextBox.InputFormEnum.Integer && IsAcceptableNumeric(args.KeyChar) ||
+                    //                  InputForm == MyTextBox.InputFormEnum.Path && StringUtil.IsAcceptablePathChar(args.KeyChar) ||
+                    //                  InputForm == MyTextBox.InputFormEnum.FileName && IsAcceptableFileNameChar(args.KeyChar);
 
-                    DeleteSelection();
-                    if (!char.IsControl(args.KeyChar))
-                        Text = Text.Insert(GetCursorPosInt(), args.KeyChar.ToString());
-                    else if (args.KeyChar == '\r')
-                        Text = Text.Insert(GetCursorPosInt(), "\n"); //Currently newlines are considered like any other text in terms of resetting undo state
-                    CursorPos = new CP(CursorPos.Pos + 1);
-                    m_additionUndoAction.SetRedo(m_state);
+                    string newText = Text.Remove(SelectionStart, Math.Abs(SelectionLength)).Insert(SelectionStart, args.KeyChar + "");
+
+                    decimal dontcare1;
+                    int dontcare2;
+                    bool acceptable = InputForm == MyTextBox.InputFormEnum.Text ||
+                                      InputForm == MyTextBox.InputFormEnum.Decimal && decimal.TryParse(newText, NumberStyles.Number, CultureInfo.CurrentCulture, out dontcare1) ||
+                                      InputForm == MyTextBox.InputFormEnum.Integer && int.TryParse(newText, NumberStyles.Number, CultureInfo.CurrentCulture, out dontcare2) ||
+                                      InputForm == MyTextBox.InputFormEnum.Decimal && decimal.TryParse(newText + "0", NumberStyles.Number, CultureInfo.CurrentCulture, out dontcare1) || //To catch "-" and "+"
+                                      InputForm == MyTextBox.InputFormEnum.Integer && int.TryParse(newText + "0", NumberStyles.Number, CultureInfo.CurrentCulture, out dontcare2) || //To catch "-" and "+"
+                                      InputForm == MyTextBox.InputFormEnum.Path && StringUtil.IsAcceptablePathChar(args.KeyChar) ||
+                                      InputForm == MyTextBox.InputFormEnum.FileName && IsAcceptableFileNameChar(args.KeyChar);
+
+                    if (acceptable)
+                    {
+                        string textToInsert = "";
+                        if (!char.IsControl(args.KeyChar))
+                            textToInsert = args.KeyChar.ToString();
+                        else if (args.KeyChar == '\r')
+                            textToInsert = "\n"; //Currently newlines are considered like any other text in terms of resetting undo state
+
+                        InsertText(textToInsert, GetCursorPosInt(), SelectionLength);
+
+                        if (m_autoCompleteRange == null)
+                        {
+                            if (args.KeyChar == '[' && InputForm == InputFormEnum.Text)
+                            {
+                                //TODO: Decide whether some form of autocomplete is necessary or whether to delete it
+                                //Text = Text.Insert(GetCursorPosInt(), "]");
+                                //CursorPos = new CP(CursorPos.Pos + 1);
+                                //m_additionUndoAction.SetRedo(m_state);
+                                //m_autoCompleteRange = Tuple.Create(new CP(GetCursorPosInt() - 1, false), new CP(GetCursorPosInt() + 1, true));
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        private bool IsAcceptableNumeric(char p)
+        private void InsertText(string textToInsert, int from, int length)
         {
-            if (char.IsNumber(p))
-                return true;
-            if (InputForm == InputFormEnum.Decimal && p == '.' && !Text.Contains('.'))
-                return true;
-            if (p == '-' && SelectionStart == 0)
-                return true;
-            return false;
-        }
+            if (Math.Abs(SelectionLength) > 0 || m_additionUndoAction == null) //If we've got text selected or we're not already adding text the replacement of that text becomes the start of a new addition
+                m_additionUndoAction = MakeUndoAction();
 
-        private bool IsAcceptablePathChar(char c)
-        {
-            return !Path.GetInvalidPathChars().Contains(c);
+            CursorPos = new CP(from);
+            SelectionLength = length;
+
+
+            if (length != 0)
+            {
+                DeleteSelection();
+            }
+            if (textToInsert != null)
+            {
+                Text = Text.Insert(GetCursorPosInt(), textToInsert); //Currently newlines are considered like any other text in terms of resetting undo state
+                CursorPos = new CP(CursorPos.Pos + textToInsert.Length);
+            }
+
+            m_additionUndoAction.SetRedo(m_state);
         }
 
         private bool IsAcceptableFileNameChar(char c)
@@ -474,32 +712,36 @@ namespace Utilities.UI
         public override void LostFocus()
         {
             ClearCaret();
+            CloseDropdown();
         }
 
         private void ClearCaret()
         {
-            m_caret.Dispose();
-            m_caret = null;
+            if (m_caret != null)
+            {
+                m_caret.Dispose();
+                m_caret = null;
+            }
         }
 
         public bool SpecialEnter { get; set; }
         public event Action EnterPressed;
 
-        public override void KeyDown(KeyEventArgs e)
+        public override void KeyDown(KeyEventArgs args)
         {
-            if (e.KeyCode.IsSet(Keys.A) && e.Control)
+            if (args.KeyCode.IsSet(Keys.A) && args.Control)
             {
                 SelectionLength = -Text.Length;
                 CursorPos = new CP(int.MaxValue);
                 m_additionUndoAction = null;
             }
-            else if (e.KeyCode.IsSet(Keys.C) && e.Control)
+            else if (args.KeyCode.IsSet(Keys.C) && args.Control)
             {
                 if (!string.IsNullOrEmpty(SelectedText))
                     Clipboard.SetText(SelectedText);
                 m_additionUndoAction = null;
             }
-            else if (e.KeyCode.IsSet(Keys.X) && e.Control)
+            else if (args.KeyCode.IsSet(Keys.X) && args.Control)
             {
                 if (InputForm != InputFormEnum.None)
                 {
@@ -514,7 +756,7 @@ namespace Utilities.UI
                     }
                 }
             }
-            else if (e.KeyCode.IsSet(Keys.V) && e.Control)
+            else if (args.KeyCode.IsSet(Keys.V) && args.Control)
             {
                 if (Clipboard.ContainsText() && InputForm != InputFormEnum.None)
                 {
@@ -528,28 +770,28 @@ namespace Utilities.UI
                     undo.SetRedo(m_state);
                 }
             }
-            else if (e.KeyCode.IsSet(Keys.Z) && e.Control)
+            else if (args.KeyCode.IsSet(Keys.Z) && args.Control)
             {
                 m_undoQueue.Undo();
                 m_additionUndoAction = null;
             }
-            else if (e.KeyCode.IsSet(Keys.Y) && e.Control)
+            else if (args.KeyCode.IsSet(Keys.Y) && args.Control)
             {
                 m_undoQueue.Redo();
                 m_additionUndoAction = null;
             }
-            else if (e.KeyCode.IsSet(Keys.Right))
+            else if (args.KeyCode.IsSet(Keys.Right))
             {
                 var oldPos = GetCursorPosInt();
                 int nextPos = 1;
-                if (e.Control)
+                if (args.Control)
                 {
                     Regex r = new Regex(@"\s*\S*");
                     nextPos = r.Match(Text, GetCursorPosInt()).Length;
                 }
                 CursorPos = new CP(CursorPos.Pos + nextPos);
 
-                if (e.Shift)
+                if (args.Shift)
                 {
                     if (SelectionLength <= 0)
                         SelectionLength -= GetCursorPosInt() - oldPos;
@@ -563,11 +805,11 @@ namespace Utilities.UI
                 Redraw();
                 m_additionUndoAction = null;
             }
-            else if (e.KeyCode.IsSet(Keys.Left))
+            else if (args.KeyCode.IsSet(Keys.Left))
             {
                 var oldPos = GetCursorPosInt();
                 int nextPos = Math.Max(0, GetCursorPosInt() - 1);
-                if (e.Control)
+                if (args.Control)
                 {
                     Regex r = new Regex(@"\S*\s*$");
                     string before = Text.Substring(0, GetCursorPosInt());
@@ -575,7 +817,7 @@ namespace Utilities.UI
                 }
                 CursorPos = new CP(nextPos);
 
-                if (e.Shift)
+                if (args.Shift)
                 {
                     if (SelectionLength <= 0)
                         SelectionLength -= GetCursorPosInt() - oldPos;
@@ -589,47 +831,57 @@ namespace Utilities.UI
                 Redraw();
                 m_additionUndoAction = null;
             }
-            else if (e.KeyCode.IsSet(Keys.Up))
+            else if (args.KeyCode.IsSet(Keys.Up))
             {
-                if (e.Shift)
-                {
-                    var selectionEnd = GetCursorPosInt() + SelectionLength;
-                    var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
-                    point.Y -= Font.Height;
-                    CursorPos = XYToCursor(point.X, point.Y);
-                    SelectionLength = selectionEnd - GetCursorPosInt();
-                }
+                if (m_dropDownOpen)
+                    ItemIndex--;
                 else
                 {
-                    SelectionLength = 0;
-                    var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
-                    point.Y -= Font.Height;
-                    CursorPos = XYToCursor(point.X, point.Y);
+                    if (args.Shift)
+                    {
+                        var selectionEnd = GetCursorPosInt() + SelectionLength;
+                        var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
+                        point.Y -= Font.Height;
+                        CursorPos = XYToCursor(point.X, point.Y);
+                        SelectionLength = selectionEnd - GetCursorPosInt();
+                    }
+                    else
+                    {
+                        SelectionLength = 0;
+                        var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
+                        point.Y -= Font.Height;
+                        CursorPos = XYToCursor(point.X, point.Y);
+                    }
+                    Redraw();
+                    m_additionUndoAction = null;
                 }
-                Redraw();
-                m_additionUndoAction = null;
             }
-            else if (e.KeyCode.IsSet(Keys.Down))
+            else if (args.KeyCode.IsSet(Keys.Down))
             {
-                if (e.Shift)
-                {
-                    var selectionEnd = GetCursorPosInt() + SelectionLength;
-                    var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
-                    point.Y += Font.Height;
-                    CursorPos = XYToCursor(point.X, point.Y);
-                    SelectionLength = selectionEnd - GetCursorPosInt();
-                }
+                if (m_dropDownOpen)
+                    ItemIndex++;
                 else
                 {
-                    SelectionLength = 0;
-                    var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
-                    point.Y += Font.Height;
-                    CursorPos = XYToCursor(point.X, point.Y);
+                    if (args.Shift)
+                    {
+                        var selectionEnd = GetCursorPosInt() + SelectionLength;
+                        var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
+                        point.Y += Font.Height;
+                        CursorPos = XYToCursor(point.X, point.Y);
+                        SelectionLength = selectionEnd - GetCursorPosInt();
+                    }
+                    else
+                    {
+                        SelectionLength = 0;
+                        var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
+                        point.Y += Font.Height;
+                        CursorPos = XYToCursor(point.X, point.Y);
+                    }
+                    Redraw();
+                    m_additionUndoAction = null;
                 }
-                Redraw();
-                m_additionUndoAction = null;
             }
-            else if (e.KeyCode.IsSet(Keys.Delete))
+            else if (args.KeyCode.IsSet(Keys.Delete))
             {
                 if (InputForm != InputFormEnum.None)
                 {
@@ -638,7 +890,7 @@ namespace Utilities.UI
                         DeleteSelection();
                     else if (GetCursorPosInt() < Text.Length)
                     {
-                        if (e.Control)
+                        if (args.Control)
                         {
                             Regex r = new Regex(@"\s*\S*");
                             SelectionLength = r.Match(Text, GetCursorPosInt()).Length;
@@ -654,7 +906,7 @@ namespace Utilities.UI
                     undo.SetRedo(m_state);
                 }
             }
-            else if (e.KeyCode.IsSet(Keys.Back))
+            else if (args.KeyCode.IsSet(Keys.Back))
             {
                 if (InputForm != InputFormEnum.None)
                 {
@@ -663,7 +915,7 @@ namespace Utilities.UI
                         DeleteSelection();
                     else if (GetCursorPosInt() > 0)
                     {
-                        if (e.Control)
+                        if (args.Control)
                         {
                             Regex r = new Regex(@"\S*\s*$");
                             string before = Text.Substring(0, GetCursorPosInt());
@@ -684,9 +936,9 @@ namespace Utilities.UI
                     undo.SetRedo(m_state);
                 }
             }
-            else if (e.KeyCode == Keys.Home)
+            else if (args.KeyCode == Keys.Home)
             {
-                if (e.Shift)
+                if (args.Shift)
                 {
                     var end = GetCursorPosInt() + SelectionLength;
                     var lines = GetLines().ToList();
@@ -699,7 +951,7 @@ namespace Utilities.UI
                     SelectionLength = 0;
                 }
 
-                if (e.Control)
+                if (args.Control)
                 {
                     CursorPos = new CP(0);
                 }
@@ -712,9 +964,9 @@ namespace Utilities.UI
 
                 m_additionUndoAction = null;
             }
-            else if (e.KeyCode == Keys.End)
+            else if (args.KeyCode == Keys.End)
             {
-                if (e.Shift)
+                if (args.Shift)
                 {
                     var start = GetCursorPosInt() + SelectionLength;
                     var lines = GetLines().ToList();
@@ -726,7 +978,7 @@ namespace Utilities.UI
                     SelectionLength = 0;
                 }
 
-                if (e.Control)
+                if (args.Control)
                 {
                     CursorPos = new CP(int.MaxValue);
                 }
@@ -736,12 +988,12 @@ namespace Utilities.UI
                 }
                 m_additionUndoAction = null;
             }
-            else if (e.KeyCode.IsSet(Keys.Enter))
+            else if (args.KeyCode.IsSet(Keys.Enter))
             {
-                if (SpecialEnter && !e.Shift)
+                if (SpecialEnter && !args.Shift && !m_dropDownOpen)
                 {
-                    e.Handled = true;
-                    e.SuppressKeyPress = true;
+                    args.Handled = true;
+                    args.SuppressKeyPress = true;
                     EnterPressed.Execute();
                 }
             }

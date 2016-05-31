@@ -24,7 +24,7 @@ namespace ConversationEditor
             m_factory = (NodeUI.IFactory)Assembly.LoadFrom(assembly).GetType(type).GetConstructor(new Type[0]).Invoke(new object[0]);
         }
 
-        public bool WillRender(ID<NodeTypeTemp> guid)
+        public bool WillRender(Id<NodeTypeTemp> guid)
         {
             return m_factory.WillRender(guid);
         }
@@ -37,22 +37,22 @@ namespace ConversationEditor
             }
         }
 
-        public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        public INodeGui GetRenderer(ConversationNode<INodeGui> n, PointF p, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
             return m_factory.GetRenderer(n, p, localizer, datasource);
         }
 
-        public static NodeRendererChoice DefaultConversation(ID<NodeTypeTemp> guid)
+        public static NodeRendererChoice DefaultConversation(Id<NodeTypeTemp> guid)
         {
             if (guid == SpecialNodes.Start)
-                return new NodeRendererChoice(StartGUIFactory.Instance);
+                return new NodeRendererChoice(StartGuiFactory.Instance);
             else if (guid == SpecialNodes.Terminator)
-                return new NodeRendererChoice(TerminatorGUIFactory.Instance);
+                return new NodeRendererChoice(TerminatorGuiFactory.Instance);
             else
                 return new NodeRendererChoice(EditableUIFactory.Instance);
         }
 
-        public static NodeRendererChoice DefaultDomain(ID<NodeTypeTemp> guid)
+        public static NodeRendererChoice DefaultDomain(Id<NodeTypeTemp> guid)
         {
                 return new NodeRendererChoice(DomainNodeRendererFactory.Instance);
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ConversationEditor.Controllers;
-using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
 using Utilities;
 using Conversation;
 using System.Windows.Forms;
@@ -13,7 +13,7 @@ namespace ConversationEditor
 {
     internal class DomainContextMenuItems : GraphContextMenuItems
     {
-        public DomainContextMenuItems(Action<ConversationNode> findReferences )
+        public DomainContextMenuItems(Action<ConversationNode> findReferences)
             : base(findReferences)
         {
         }
@@ -44,12 +44,12 @@ namespace ConversationEditor
             yield return new MenuAction<ConversationNode>("Paste", (n, p) => null, null, null, (p) => { control.Paste(p); });
             yield return new MenuAction<ConversationNode>("Delete", (n, p) => () => { control.CurrentFile.Remove(n.Only(), Enumerable.Empty<NodeGroup>()); }, null, null, null);
             yield return new MenuAction<ConversationNode>("Remove Links", (n, p) => () => { foreach (var c in n.Connectors) control.CurrentFile.RemoveLinks(c); }, (i, p) => { control.CurrentFile.RemoveLinks(i); }, null, null);
-            yield return new MenuAction<ConversationNode>("Copy ID", (n, p) => control.ShowIDs ? () => Clipboard.SetText(n.Id.Serialized()) : (Action)null, null, null, null);
+            yield return new MenuAction<ConversationNode>("Copy ID", (n, p) => control.ShowIds ? () => Clipboard.SetText(n.Id.Serialized()) : (Action)null, null, null, null);
         }
 
         private void AddNodeMenuItem(MenuAction<ConversationNode> menu, INodeType node, IGraphEditorControl<ConversationNode> control)
         {
-            foreach (var n in node.Nodes)
+            foreach (var n in node.Nodes.OrderBy(n => n.Name))
             {
                 var nn = n;
                 var name = nn.Name;

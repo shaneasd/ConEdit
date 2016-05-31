@@ -13,7 +13,7 @@ namespace PluginPack
         private static RedRendererFactory m_instance = new RedRendererFactory();
         public static RedRendererFactory Instance { get { return m_instance; } }
 
-        public bool WillRender(ID<NodeTypeTemp> nodeType)
+        public bool WillRender(Id<NodeTypeTemp> nodeType)
         {
             return nodeType != SpecialNodes.Start;
         }
@@ -23,28 +23,23 @@ namespace PluginPack
             get { return "Red Renderer"; }
         }
 
-        public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        public INodeGui GetRenderer(ConversationNode<INodeGui> n, PointF p, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
             return new RedRenderer(n, p);
         }
 
-        static Guid m_guid = Guid.Parse("7166fb2a-c457-4d0a-8c93-906e925a50ae");
+        static Guid s_guid = Guid.Parse("7166fb2a-c457-4d0a-8c93-906e925a50ae");
         public Guid Guid
         {
-            get { return m_guid; }
+            get { return s_guid; }
         }
     }
 
     public class RedRenderer : NodeUI
     {
-        public RedRenderer(ConversationNode<ConversationEditor.INodeGUI> node, PointF p) :
+        public RedRenderer(ConversationNode<ConversationEditor.INodeGui> node, PointF p) :
             base(node, p)
         {
-        }
-
-        public override string DisplayName
-        {
-            get { return RedRendererFactory.Instance.DisplayName; }
         }
 
         protected override void InnerDraw(System.Drawing.Graphics g, bool selected)
@@ -55,6 +50,10 @@ namespace PluginPack
         protected override SizeF CalculateArea(System.Drawing.Graphics g)
         {
             return new SizeF(100, 100);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Utilities.UI
         public string Name;
         protected MyControl()
         {
-            Name = GetHashCode().ToString(CultureInfo.InvariantCulture);
+            this.GetType().ToString();
         }
 
         public abstract void MouseDown(MouseEventArgs args);

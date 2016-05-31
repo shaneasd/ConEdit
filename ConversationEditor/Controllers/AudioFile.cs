@@ -60,7 +60,7 @@ namespace ConversationEditor
         {
             if (disposing)
             {
-                File.Dispose();
+                m_file.Dispose();
             }
         }
     }

@@ -7,16 +7,36 @@ using System.Reflection;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.IO;
+using System.Threading;
 
 namespace Utilities
 {
     [Serializable]
     public class MyFileLoadException : Exception
     {
-        public MyFileLoadException() { }
-
         public MyFileLoadException(Exception inner)
-            : base("error loading file", inner)
+            : this("error loading file", inner)
+        {
+        }
+
+        public MyFileLoadException()
+            : this("error loading file")
+        {
+        }
+
+        public MyFileLoadException(string message)
+            : base(message)
+        {
+        }
+
+        public MyFileLoadException(string message, Exception innerException) :
+            base(message, innerException)
+        {
+        }
+
+        protected MyFileLoadException(System.Runtime.Serialization.SerializationInfo info,
+           System.Runtime.Serialization.StreamingContext context)
+            : base(info, context)
         {
         }
     }
@@ -198,26 +218,39 @@ namespace Utilities
             return new RectangleF(r.X, r.Y, r.Width, r.Height);
         }
 
-        public static FileStream LoadFileStream(string path, FileMode mode, FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.None)
+        public static FileStream LoadFileStream(string path, FileMode mode, FileAccess access)
         {
-            FileStream s = null;
-            FileLoadOperation(() => s = new FileStream(path, mode, access, share));
-            return s;
+            return LoadFileStream(path, mode, access, 0);
         }
 
-        [System.Diagnostics.DebuggerNonUserCode]
-        public static FileStream LoadFileStream(FileInfo path, FileMode mode, FileAccess access = FileAccess.ReadWrite, FileShare share = FileShare.None)
+        public static FileStream LoadFileStream(string path, FileMode mode, FileAccess access, int attempts)
         {
             FileStream s = null;
-            try
+            for (int i = 0; true; i++)
             {
-                FileLoadOperation(() => s = path.Open(mode, access, share));
+                try
+                {
+                    FileLoadOperation(() => s = new FileStream(path, mode, access, FileShare.None));
+                    return s;
+                }
+                catch (MyFileLoadException)
+                {
+                    if (i >= attempts)
+                        throw;
+                    Thread.Sleep(100);
+                }
             }
-            catch (MyFileLoadException)
-            {
-                throw;
-            }
-            return s;
+        }
+
+        public static FileStream LoadFileStream(FileInfo path, FileMode mode, FileAccess access)
+        {
+            return LoadFileStream(path, mode, access, 0);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "We just get the path but it has to be the path of a file to generate a filestream from it")]
+        public static FileStream LoadFileStream(FileInfo path, FileMode mode, FileAccess access, int attempts)
+        {
+            return LoadFileStream(path.FullName, mode, access, attempts);
         }
 
         public static void FileLoadOperation(Action @do)
@@ -245,6 +278,15 @@ namespace Utilities
             { throw new MyFileLoadException(e); }
             catch (System.NotSupportedException e) //path refers to a non-file device, such as "con:", "com1:", "lpt1:", etc. in a non-NTFS environment
             { throw new MyFileLoadException(e); }
+        }
+
+        public static string MemoryStreamContents(Stream m)
+        {
+            var pos = m.Position;
+            StreamReader s = new StreamReader(m);
+            var result = s.ReadToEnd();
+            m.Position = pos;
+            return result;
         }
     }
 }

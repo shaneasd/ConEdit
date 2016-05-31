@@ -34,7 +34,7 @@ namespace Conversation.Serialization
 
             public static IDeserializer<XmlGraphData<TUIRawData, TEditorData>> Categories(IDataSource source, IDeserializerXml<TUIRawData> nodeUISerializer)
             {
-                Func<ID<NodeTypeTemp>, bool> filter = id => source.IsCategoryDefinition(id);
+                Func<Id<NodeTypeTemp>, bool> filter = id => source.IsCategoryDefinition(id);
                 var editorDataDeserializer = NullDeserializer<TEditorData>.Instance;
                 var inner = new XmlConversation<TUIRawData, TEditorData>.Deserializer(source, nodeUISerializer, editorDataDeserializer, filter);
                 return new Deserializer(inner);
@@ -42,7 +42,7 @@ namespace Conversation.Serialization
 
             public static IDeserializer<XmlGraphData<TUIRawData, TEditorData>> Types(IDataSource source, IDeserializerXml<TUIRawData> nodeUISerializer)
             {
-                Func<ID<NodeTypeTemp>, bool> filter = id => source.IsTypeDefinition(id);
+                Func<Id<NodeTypeTemp>, bool> filter = id => source.IsTypeDefinition(id);
                 var editorDataDeserializer = NullDeserializer<TEditorData>.Instance;
                 var inner = new XmlConversation<TUIRawData, TEditorData>.Deserializer(source, nodeUISerializer, editorDataDeserializer, filter);
                 return new Deserializer(inner);
@@ -50,7 +50,7 @@ namespace Conversation.Serialization
 
             public static IDeserializer<XmlGraphData<TUIRawData, TEditorData>> Connectors(IDataSource source, IDeserializerXml<TUIRawData> nodeUISerializer)
             {
-                Func<ID<NodeTypeTemp>, bool> filter = id => source.IsConnectorDefinition(id);
+                Func<Id<NodeTypeTemp>, bool> filter = id => source.IsConnectorDefinition(id);
                 var editorDataDeserializer = NullDeserializer<TEditorData>.Instance;
                 var inner = new XmlConversation<TUIRawData, TEditorData>.Deserializer(source, nodeUISerializer, editorDataDeserializer, filter);
                 return new Deserializer(inner);
@@ -58,7 +58,7 @@ namespace Conversation.Serialization
 
             public static IDeserializer<XmlGraphData<TUIRawData, TEditorData>> Nodes(IDataSource source, IDeserializerXml<TUIRawData> nodeUISerializer)
             {
-                Func<ID<NodeTypeTemp>, bool> filter = id => source.IsNodeDefinition(id);
+                Func<Id<NodeTypeTemp>, bool> filter = id => source.IsNodeDefinition(id);
                 var editorDataDeserializer = NullDeserializer<TEditorData>.Instance;
                 var inner = new XmlConversation<TUIRawData, TEditorData>.Deserializer(source, nodeUISerializer, editorDataDeserializer, filter);
                 return new Deserializer(inner);
@@ -76,13 +76,13 @@ namespace Conversation.Serialization
                 public XmlGraphData<TUIRawData, TEditorData> Read(Stream stream)
                 {
                     var data = m_inner.Read(stream);
-                    return new XmlGraphData<TUIRawData, TEditorData>(Enumerable.Empty<GraphAndUI<TUIRawData>>(), data.EditorData, data.Errors);
+                    return new XmlGraphData<TUIRawData, TEditorData>(Enumerable.Empty<GraphAndUI<TUIRawData>>(), data.EditorData, data.Errors, data.DocumentID);
                 }
             }
 
             public static IDeserializer<XmlGraphData<TUIRawData, TEditorData>> Everything(IDataSource source, IDeserializerXml<TUIRawData> nodeUISerializer)
             {
-                Func<ID<NodeTypeTemp>, bool> filter = id => true;
+                Func<Id<NodeTypeTemp>, bool> filter = id => true;
                 var editorDataDeserializer = NullDeserializer<TEditorData>.Instance;
                 var inner = new XmlConversation<TUIRawData, TEditorData>.Deserializer(source, nodeUISerializer, editorDataDeserializer, filter);
                 return new Deserializer(inner);
@@ -90,7 +90,15 @@ namespace Conversation.Serialization
 
             public static IDeserializer<XmlGraphData<TUIRawData, TEditorData>> UI(IDataSource source, IDeserializerXml<TUIRawData> nodeUISerializer, IDeserializerXml<TEditorData> editorDataDeserializer)
             {
-                Func<ID<NodeTypeTemp>, bool> filter = id => false;
+                Func<Id<NodeTypeTemp>, bool> filter = id => false;
+                var inner = new XmlConversation<TUIRawData, TEditorData>.Deserializer(source, nodeUISerializer, editorDataDeserializer, filter);
+                return new Deserializer(inner);
+            }
+
+            public static IDeserializer<XmlGraphData<TUIRawData, TEditorData>> AutoCompleteSuggestions(IDataSource source, IDeserializerXml<TUIRawData> nodeUISerializer)
+            {
+                Func<Id<NodeTypeTemp>, bool> filter = id => source.IsAutoCompleteNode(id);
+                var editorDataDeserializer = NullDeserializer<TEditorData>.Instance;
                 var inner = new XmlConversation<TUIRawData, TEditorData>.Deserializer(source, nodeUISerializer, editorDataDeserializer, filter);
                 return new Deserializer(inner);
             }
@@ -103,7 +111,7 @@ namespace Conversation.Serialization
             public XmlGraphData<TUIRawData, TEditorData> Read(Stream stream)
             {
                 var data = m_inner.Read(stream);
-                return new XmlGraphData<TUIRawData, TEditorData>(data.Nodes, data.EditorData, data.Errors);
+                return new XmlGraphData<TUIRawData, TEditorData>(data.Nodes, data.EditorData, data.Errors, data.DocumentID);
             }
         }
     }

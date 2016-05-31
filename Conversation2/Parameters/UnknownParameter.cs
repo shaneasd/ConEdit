@@ -7,15 +7,15 @@ namespace Conversation
 {
     public class UnknownParameter : Parameter<string>
     {
-        public static readonly ParameterType TYPE_ID = ParameterType.Parse("c7b4be3f-add0-4d58-9fe4-ae19c8e95a35");
+        public static readonly ParameterType s_typeId = ParameterType.Parse("c7b4be3f-add0-4d58-9fe4-ae19c8e95a35");
 
-        public UnknownParameter(ID<Parameter> id, string value)
-            : base("Unknown parameter " + id.Guid.ToString().Substring(0, 8), id, TYPE_ID,  value)
+        public UnknownParameter(Id<Parameter> id, string value)
+            : base("Unknown parameter " + id.Guid.ToString().Substring(0, 8), id, s_typeId,  value)
         {
             m_value = value;
         }
 
-        public override string DisplayValue(Func<ID<LocalizedText>, string> localize)
+        public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
         {
             return m_value;
         }

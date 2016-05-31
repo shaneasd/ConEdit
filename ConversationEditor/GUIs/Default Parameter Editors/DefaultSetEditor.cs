@@ -11,6 +11,7 @@ using Utilities;
 
 //using TControl = Utilities.MySuggestionBox<System.Guid>;
 using TControl = Utilities.UI.MyComboBox<System.Guid>;
+using TItem = Utilities.UI.MyComboBoxItem<System.Guid>;
 using Utilities.UI;
 
 namespace ConversationEditor
@@ -45,7 +46,7 @@ namespace ConversationEditor
     {
         List<TControl> m_comboBoxes = new List<TControl>();
         List<CrossButton> m_buttons = new List<CrossButton>();
-        List<TControl.Item> m_comboBoxItems = new List<TControl.Item>();
+        List<TItem> m_comboBoxItems = new List<TItem>();
         ISetParameter m_parameter;
 
         public DefaultSetEditor()
@@ -113,7 +114,7 @@ namespace ConversationEditor
             m_parameter = data.Parameter as ISetParameter;
             foreach (var ch in m_parameter.Options.OrderBy(o => m_parameter.GetName(o)))
             {
-                m_comboBoxItems.Add(new TControl.Item(m_parameter.GetName(ch), ch));
+                m_comboBoxItems.Add(new TItem(m_parameter.GetName(ch), ch));
             }
 
             if (!m_parameter.Corrupted)
@@ -124,9 +125,9 @@ namespace ConversationEditor
                     var valueName = m_parameter.GetName(selection);
                     var comboBox = m_comboBoxes[m_comboBoxes.Count - 2];
                     if (valueName != null)
-                        comboBox.SelectedItem = new TControl.Item(valueName, selection);
+                        comboBox.SelectedItem = new TItem(valueName, selection);
                     else
-                        comboBox.SelectedItem = new TControl.Item(EnumParameter.InvalidValue);
+                        comboBox.SelectedItem = new TItem(EnumParameter.InvalidValue);
                 }
             }
 
@@ -144,7 +145,7 @@ namespace ConversationEditor
 
         public UpdateParameterData UpdateParameterAction()
         {
-            if (!IsValid())
+            if (IsValid() != null)
                 throw new Exception("Current enum selection is invalid");
 
             ReadonlySet<Guid> selection = new ReadonlySet<Guid>(m_comboBoxes.TakeWhile((c, i) => i < m_comboBoxes.Count - 1).Select(c => c.SelectedItem.Contents));
@@ -152,9 +153,9 @@ namespace ConversationEditor
             return m_parameter.SetValueAction(selection);
         }
 
-        public bool IsValid()
+        public string IsValid()
         {
-            return true;
+            return null;
         }
 
         public event Action Ok

@@ -7,7 +7,7 @@ using Utilities;
 using Conversation;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
 
 namespace ConversationEditor
 {
@@ -15,7 +15,7 @@ namespace ConversationEditor
     {
         public static DomainNodeRendererFactory Instance = new DomainNodeRendererFactory();
 
-        public bool WillRender(ID<NodeTypeTemp> nodeType)
+        public bool WillRender(Id<NodeTypeTemp> nodeType)
         {
             return true;
         }
@@ -25,7 +25,7 @@ namespace ConversationEditor
             get { return "Default Domain Node Renderer"; }
         }
 
-        public INodeGUI GetRenderer(ConversationNode n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        public INodeGui GetRenderer(ConversationNode n, PointF p, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
             return new DomainNodeRenderer(n, p, localizer);
         }
@@ -39,13 +39,12 @@ namespace ConversationEditor
 
     internal class DomainNodeRenderer : NodeUI
     {
-
         private readonly static Font Font = SystemFonts.DefaultFont;
         private readonly static Font BoldFont = new Font(SystemFonts.DefaultFont, FontStyle.Bold);
         private readonly static Pen Thin = new Pen(Brushes.Black, 1);
         private readonly static Pen Thick = new Pen(Brushes.White, 3);
 
-        public DomainNodeRenderer(ConversationNode node, PointF p, Func<ID<LocalizedText>, string> localizer)
+        public DomainNodeRenderer(ConversationNode node, PointF p, Func<Id<LocalizedText>, string> localizer)
             : base(node, p)
         {
             m_titleSection = new TitleSection(node);
@@ -53,11 +52,11 @@ namespace ConversationEditor
             m_parametersSection = new ParametersSection(node, localizer);
         }
 
-        protected Section m_titleSection;
-        protected Section m_parametersSection;
-        protected Section m_outputsSection;
+        private Section m_titleSection;
+        private Section m_parametersSection;
+        private Section m_outputsSection;
 
-        GraphicsPath RoundedRectangle(RectangleF notRounded, int radius)
+        static GraphicsPath RoundedRectangle(RectangleF notRounded, int radius)
         {
             GraphicsPath result = new GraphicsPath(FillMode.Winding);
             var o = notRounded.Location;
@@ -119,18 +118,6 @@ namespace ConversationEditor
 
             public float Height { get { return m_size.Height; } }
             public float Width { get { return m_size.Width; } }
-        }
-
-        protected void DrawChunk(Graphics g, Color baseColor, float brightnessFactor, float darknessFactor, RectangleF area)
-        {
-            if (area.Height > 0)
-            {
-                using (var theRestGradient = CalculateGradient(baseColor, brightnessFactor, darknessFactor, area))
-                {
-                    g.FillRectangle(theRestGradient, area);
-                }
-                g.DrawRectangle(Thin, Rectangle.Round(area));
-            }
         }
 
         class TitleSection : Section
@@ -195,7 +182,7 @@ namespace ConversationEditor
                 }
             }
 
-            public string GetName(Output connector)
+            public static string GetName(Output connector)
             {
                 if (connector.m_definition.Id == DomainIDs.NodeOutputConfigDefinition.Id)
                     return "Config";
@@ -210,9 +197,9 @@ namespace ConversationEditor
 
         class ParametersSection : Section
         {
-            Func<ID<LocalizedText>, string> m_localizer;
+            Func<Id<LocalizedText>, string> m_localizer;
 
-            public ParametersSection(ConversationNode node, Func<ID<LocalizedText>, string> localizer)
+            public ParametersSection(ConversationNode node, Func<Id<LocalizedText>, string> localizer)
                 : base(node)
             {
                 m_localizer = localizer;
@@ -409,10 +396,8 @@ namespace ConversationEditor
             return new SizeF(maxWidth, sections.Sum(s => s.Height));
         }
 
-        public override string DisplayName
+        protected override void Dispose(bool disposing)
         {
-            get { return DomainNodeRendererFactory.Instance.DisplayName; }
         }
-
     }
 }

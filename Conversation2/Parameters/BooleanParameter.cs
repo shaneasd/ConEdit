@@ -7,7 +7,7 @@ namespace Conversation
 {
     public class BooleanParameter : Parameter<bool>, IBooleanParameter
     {
-        public BooleanParameter(string name, ID<Parameter> id, ParameterType typeId, string defaultValue = null)
+        public BooleanParameter(string name, Id<Parameter> id, ParameterType typeId, string defaultValue)
             : base(name, id, typeId, defaultValue)
         {
         }
@@ -22,7 +22,7 @@ namespace Conversation
             return m_value.ToString();
         }
 
-        public override string DisplayValue(Func<ID<LocalizedText>, string> localize)
+        public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
         {
             return m_value.ToString();
         }

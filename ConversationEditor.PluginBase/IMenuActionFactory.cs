@@ -13,7 +13,7 @@ namespace ConversationEditor
     /// Implementers of this task will be loaded from plugins by reflection provided they have a parameterless constructor
     /// </summary>
     /// <typeparam name="TNode"></typeparam>
-    public interface IMenuActionFactory<TNode> where TNode : class, IRenderable<IGUI>, IConversationNode, IConfigurable
+    public interface IMenuActionFactory<TNode> where TNode : class, IRenderable<IGui>, IConversationNode, IConfigurable
     {
         IEnumerable<MenuAction<TNode>> GetMenuActions(IGraphEditorControl<TNode> control);
     }

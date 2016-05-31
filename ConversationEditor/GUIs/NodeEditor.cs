@@ -37,16 +37,16 @@ namespace ConversationEditor
             InitializeComponent();
         }
 
-        public static ConfigureResult Edit(ColorScheme scheme, IEditable data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioProvider2 audioProvider)
+        public static ConfigureResult2 Edit(ColorScheme scheme, IEditable data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions)
         {
             using (Form f = new Form())
             {
-                NodeEditor editor = new NodeEditor(scheme, data, audioContext, config, localizer, audioProvider);
+                NodeEditor editor = new NodeEditor(scheme, data, audioContext, config, localizer, audioProvider, autoCompleteSuggestions);
                 f.Text = editor.Title;
                 bool oked = false;
                 editor.Ok += () =>
                 {
-                    var invalid = editor.m_parameterEditors.Where(e => !e.Item1.IsValid());
+                    var invalid = editor.m_parameterEditors.Select(e => new { Name = e.Item2.Name, Message = e.Item1.IsValid() }).Where(e => e.Message != null);
                     if (!invalid.Any())
                     {
                         oked = true;
@@ -54,7 +54,15 @@ namespace ConversationEditor
                     }
                     else
                     {
-                        MessageBox.Show("Invalid value specified for parameter: " + invalid.First().Item2.Name);
+                        string message = "Invalid values specified for the following parameters:";
+                        foreach (var i in invalid)
+                        {
+                            message += "\n";
+                            message += i.Name + ": ";
+                            message += i.Message;
+                        }
+
+                        MessageBox.Show(message);
                     }
                 };
                 editor.Cancel += () => { oked = false; f.Close(); };
@@ -66,34 +74,8 @@ namespace ConversationEditor
 
                 if (oked)
                 {
-                    List<Action> undo = new List<Action>();
-                    List<Action> redo = new List<Action>();
-                    foreach (var e in editor.m_parameterEditors)
-                    {
-                        UpdateParameterData updateParameterData = e.Item1.UpdateParameterAction();
-                        if (updateParameterData != null)
-                        {
-                            SimpleUndoPair? actions = updateParameterData.Actions;
-                            if (actions != null)
-                            {
-                                undo.Add(actions.Value.Undo);
-                                redo.Add(actions.Value.Redo);
-                            }
-                            if (updateParameterData.Audio != null)
-                            {
-                                undo.Add(() => audioProvider.UpdateUsage(updateParameterData.Audio.Value));
-                                redo.Add(() => audioProvider.UpdateUsage(updateParameterData.Audio.Value));
-                            }
-                        }
-                    }
-                    if (undo.Any())
-                    {
-                        return new SimpleUndoPair { Redo = () => redo.ForEach(a => a()), Undo = () => undo.ForEach(a => a()) };
-                    }
-                    else
-                    {
-                        return ConfigureResult.NotApplicable; //This isn't exactly what NotApplicable was intended for but it's the closest match and I can't see a functional difference
-                    }
+                    var updates = editor.m_parameterEditors.Select(e => e.Item1.UpdateParameterAction());
+                    return new ConfigureResult2(updates.ToArray());
                 }
                 else
                 {
@@ -102,9 +84,40 @@ namespace ConversationEditor
             }
         }
 
+        //private static ConfigureResult OnOk(IAudioProvider2 audioProvider, IEnumerable<UpdateParameterData> updates)
+        //{
+        //    List<Action> undo = new List<Action>();
+        //    List<Action> redo = new List<Action>();
+        //    foreach (UpdateParameterData updateParameterData in updates)
+        //    {
+        //        if (updateParameterData != null)
+        //        {
+        //            SimpleUndoPair? actions = updateParameterData.Actions;
+        //            if (actions != null)
+        //            {
+        //                undo.Add(actions.Value.Undo);
+        //                redo.Add(actions.Value.Redo);
+        //            }
+        //            if (updateParameterData.Audio != null)
+        //            {
+        //                undo.Add(() => audioProvider.UpdateUsage(updateParameterData.Audio.Value));
+        //                redo.Add(() => audioProvider.UpdateUsage(updateParameterData.Audio.Value));
+        //            }
+        //        }
+        //    }
+        //    if (undo.Any())
+        //    {
+        //        return new SimpleUndoPair { Redo = () => redo.ForEach(a => a()), Undo = () => undo.ForEach(a => a()) };
+        //    }
+        //    else
+        //    {
+        //        return ConfigureResult.NotApplicable; //This isn't exactly what NotApplicable was intended for but it's the closest match and I can't see a functional difference
+        //    }
+        //}
+
         public string Title { get; private set; }
 
-        public NodeEditor(ColorScheme scheme, IEditable data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioProvider2 audioProvider)
+        public NodeEditor(ColorScheme scheme, IEditable data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions)
             : this()
         {
             Scheme = scheme;
@@ -115,10 +128,10 @@ namespace ConversationEditor
             int parameterCount = 0;
             foreach (Parameter p in m_data.Parameters.OrderBy(p => p.Name))
             {
-                var editorData = new ParameterEditorSetupData(p, localizer, audioProvider, audioContext);
-                if (p is UnknownParameter)
+                var editorData = new ParameterEditorSetupData(p, localizer, audioProvider, audioContext, (s)=> autoCompleteSuggestions(p, s));
+                var unknown = p as UnknownParameter;
+                if (unknown != null)
                 {
-                    var unknown = p as UnknownParameter;
                     UnknownParameterEditor ed = null;
                     ed = UnknownParameterEditor.Make(Scheme, editorData, m_data.RemoveUnknownParameter(unknown),
                     () =>
@@ -137,11 +150,11 @@ namespace ConversationEditor
                 parameterCount++;
             }
 
-            if (parameterCount > 15)
-            {
-                tableLayoutPanel3.ColumnStyles[4].Width = 105;
-                tableLayoutPanel3.Controls.Add(new Button() { Width = 100 }, 4, 0);
-            }
+            //if (parameterCount > 15)
+            //{
+            //    tableLayoutPanel3.ColumnStyles[4].Width = 105;
+            //    tableLayoutPanel3.Controls.Add(new Button() { Width = 100 }, 4, 0);
+            //}
 
             //Add a buffer to fill up the space
             tableLayoutPanel1.RowCount++;
@@ -198,22 +211,28 @@ namespace ConversationEditor
         {
             m_ok();
         }
+
+        private void tableLayoutPanel3_Resize(object sender, EventArgs e)
+        {
+            //tableLayoutPanel1.MaximumSize = new Size(int.MaxValue, Math.Max(0, tableLayoutPanel3.Height - 37));
+            //tableLayoutPanel1.MaximumSize = new Size(int.MaxValue, 50);
+        }
     }
 
     public class DefaultNodeEditorFactory : NodeEditorFactory
     {
-        public override bool WillEdit(ID<NodeTypeTemp> typeId)
+        public override bool WillEdit(Id<NodeTypeTemp> typeId)
         {
             //The default node editor can handle any node. You may not want it to.
             return true;
         }
 
-        public override ConfigureResult Edit(ColorScheme scheme, IEditable node, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioProvider2 audioProvider)
+        public override ConfigureResult2 Edit(ColorScheme scheme, IEditable node, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions)
         {
             if (node.Parameters.Any())
-                return NodeEditor.Edit(scheme, node, audioContext, config, localizer, audioProvider);
+                return NodeEditor.Edit(scheme, node, audioContext, config, localizer, audioProvider, autoCompleteSuggestions);
             else
-                return ConfigureResult.NotApplicable;
+                return ConfigureResult2.NotApplicable;
         }
 
         public override string DisplayName

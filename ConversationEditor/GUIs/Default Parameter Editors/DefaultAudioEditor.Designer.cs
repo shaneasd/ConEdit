@@ -16,6 +16,7 @@
             if (disposing && (components != null))
             {
                 components.Dispose();
+                m_textBox.Dispose();
             }
             base.Dispose(disposing);
         }

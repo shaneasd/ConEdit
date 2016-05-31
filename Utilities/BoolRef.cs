@@ -10,7 +10,10 @@ namespace Utilities
     /// </summary>
     public class BoolRef
     {
-        public bool Value;
+        public bool Value
+        {
+            get; set;
+        }
 
         public static bool operator true(BoolRef x)
         {

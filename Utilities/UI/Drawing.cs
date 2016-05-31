@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace Utilities.UI
 {
-    public static class Drawing
+    public static class Draw
     {
         public static void DrawRectangle(this Graphics g, Pen pen, RectangleF rect)
         {

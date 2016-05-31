@@ -15,7 +15,7 @@ using Conversation;
 using ConversationEditor.Controllers;
 using ConversationEditor;
 using Utilities;
-using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
 using Conversation.Serialization;
 using System.Xml.Linq;
 
@@ -30,7 +30,7 @@ namespace ConversationEditor
         INodeFactory m_domainNodeFactory;
         ProjectMenuController m_projectMenuController;
 
-        ConversationEditorControl m_domainEditor2 = new ConversationEditorControl() { Dock = DockStyle.Fill, ShowGrid = true };
+        ConversationEditorControl m_domainEditor = new ConversationEditorControl() { Dock = DockStyle.Fill, ShowGrid = true };
         ConversationEditorControl m_projectGraphEditor = new ConversationEditorControl() { Dock = DockStyle.Fill, ShowGrid = true };
 
         IGraphEditorControl<ConversationNode> m_currentEditor = null;
@@ -51,12 +51,12 @@ namespace ConversationEditor
                         splitContainer2.Panel1.Controls.Add(value.AsControl());
                     splitContainer2.Panel1.ResumeLayout();
 
-                    if (value == conversationEditorControl1)
+                    if (value == m_conversationEditor)
                     {
                         findAndReplaceToolStripMenuItem.Visible = true;
                         findAndReplaceToolStripMenuItem.Text = "Find in Conversations";
                     }
-                    else if (value == m_domainEditor2)
+                    else if (value == m_domainEditor)
                     {
                         findAndReplaceToolStripMenuItem.Visible = true;
                         findAndReplaceToolStripMenuItem.Text = "Find in Domain";
@@ -80,10 +80,10 @@ namespace ConversationEditor
         {
             get
             {
-                if (CurrentEditor == m_domainEditor2)
-                    return m_domainEditor2.CurrentFile;
-                else if (CurrentEditor == conversationEditorControl1)
-                    return conversationEditorControl1.CurrentFile;
+                if (CurrentEditor == m_domainEditor)
+                    return m_domainEditor.CurrentFile;
+                else if (CurrentEditor == m_conversationEditor)
+                    return m_conversationEditor.CurrentFile;
                 else if (CurrentEditor == m_projectGraphEditor)
                     return m_projectGraphEditor.CurrentFile;
                 else
@@ -91,7 +91,10 @@ namespace ConversationEditor
             }
         }
 
-        ColorScheme m_scheme = new ColorScheme(); //TODO: Consolidate with the one from config
+        /// <summary>
+        /// All (in theory) colors used within the GUI. Some of these colors updated at runtime from config
+        /// </summary>
+        readonly ColorScheme m_scheme = new ColorScheme();
 
         public Form1()
         {
@@ -111,12 +114,13 @@ namespace ConversationEditor
             try
             {
                 var willEdit = new WillEdit
-                {
-                    IsDecimal = guid => m_context.CurrentProject.Value.ConversationDataSource.IsDecimal(guid) || m_context.CurrentProject.Value.DomainDataSource.IsDecimal(guid),
-                    IsDynamicEnum = guid => m_context.CurrentProject.Value.ConversationDataSource.IsDynamicEnum(guid) || m_context.CurrentProject.Value.DomainDataSource.IsDynamicEnum(guid),
-                    IsEnum = guid => m_context.CurrentProject.Value.ConversationDataSource.IsEnum(guid) || m_context.CurrentProject.Value.DomainDataSource.IsEnum(guid),
-                    IsInteger = guid => m_context.CurrentProject.Value.ConversationDataSource.IsInteger(guid) || m_context.CurrentProject.Value.DomainDataSource.IsInteger(guid),
-                };
+                (
+                    isDecimal:  guid => m_context.CurrentProject.Value.ConversationDataSource.IsDecimal(guid) || m_context.CurrentProject.Value.DomainDataSource.IsDecimal(guid),
+                    isDynamicEnum: guid => m_context.CurrentProject.Value.ConversationDataSource.IsDynamicEnum(guid) || m_context.CurrentProject.Value.DomainDataSource.IsDynamicEnum(guid),
+                    isLocalDynamicEnum: guid => m_context.CurrentProject.Value.ConversationDataSource.IsLocalDynamicEnum(guid) || m_context.CurrentProject.Value.DomainDataSource.IsLocalDynamicEnum(guid),
+                    isEnum: guid => m_context.CurrentProject.Value.ConversationDataSource.IsEnum(guid) || m_context.CurrentProject.Value.DomainDataSource.IsEnum(guid),
+                    isInteger: guid => m_context.CurrentProject.Value.ConversationDataSource.IsInteger(guid) || m_context.CurrentProject.Value.DomainDataSource.IsInteger(guid)
+                );
                 m_config = new Config("config.xml", willEdit);
             }
             catch (Config.LoadFailedException)
@@ -124,7 +128,7 @@ namespace ConversationEditor
                 throw;
             }
 
-            projectExplorer.Initialize(m_context);
+            projectExplorer.Initialize(m_context, m_config.FileFilters);
 
             InitialiseNodeFactory();
             InitialiseFileMenu();
@@ -161,7 +165,7 @@ namespace ConversationEditor
         {
             tsmiShowGrid.Checked = m_config.GraphView.ShowGrid;
             tsmiSnapToGrid.Checked = m_config.GraphView.SnapToGrid;
-            tsmiShowIDs.Checked = m_config.GraphView.ShowIDs;
+            tsmiShowIds.Checked = m_config.GraphView.ShowIds;
         }
 
         private bool SelectNode(ConversationNode node, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo> file)
@@ -171,16 +175,16 @@ namespace ConversationEditor
             if (m_context.CurrentProject.Value.Conversations.Contains(file))
             {
                 projectExplorer.Select(file);
-                conversationEditorControl1.CurrentFile = file;
-                conversationEditorControl1.SelectNode(node);
-                CurrentEditor = conversationEditorControl1;
+                m_conversationEditor.CurrentFile = file;
+                m_conversationEditor.SelectNode(node);
+                CurrentEditor = m_conversationEditor;
             }
             else if (m_context.CurrentProject.Value.DomainFiles.Contains(file))
             {
                 projectExplorer.Select(file);
-                m_domainEditor2.CurrentFile = file;
-                m_domainEditor2.SelectNode(node);
-                CurrentEditor = m_domainEditor2;
+                m_domainEditor.CurrentFile = file;
+                m_domainEditor.SelectNode(node);
+                CurrentEditor = m_domainEditor;
             }
             else if (object.Equals(file.File, m_context.CurrentProject.Value.File))
             {
@@ -215,12 +219,12 @@ namespace ConversationEditor
 
         private void InitialiseConversationEditor()
         {
-            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_context.CurrentProject.Value.ConversationDataSource, conversationEditorControl1, new GraphContextMenuItems(FindReferences));
+            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_context.CurrentProject.Value.ConversationDataSource, m_conversationEditor, new GraphContextMenuItems(FindReferences));
         }
 
         private void InitializeDomainEditor()
         {
-            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_context.CurrentProject.Value.DomainDataSource, m_domainEditor2, new DomainContextMenuItems(FindReferences));
+            InitializeGraphEditor(ConversationCopyPasteController.Instance, m_context.CurrentProject.Value.DomainDataSource, m_domainEditor, new DomainContextMenuItems(FindReferences));
         }
 
         private void InitializeProjectEditor()
@@ -238,7 +242,7 @@ namespace ConversationEditor
             {
                 editor.SnapToGrid = m_config.GraphView.SnapToGrid;
                 editor.ShowGrid = m_config.GraphView.ShowGrid;
-                editor.ShowIDs = m_config.GraphView.ShowIDs;
+                editor.ShowIds = m_config.GraphView.ShowIds;
                 m_scheme.Connectors = m_config.ColorScheme.ConnectorColor;
                 editor.MinorGridSpacing = m_config.GraphView.MinorGridSpacing;
                 editor.MajorGridSpacing = m_config.GraphView.MajorGridSpacing;
@@ -273,20 +277,20 @@ namespace ConversationEditor
                     {
                         if (m_context.CurrentProject.Value.ReloadConversationDatasourceIfRequired())
                         {
-                            conversationEditorControl1.SetContext(m_context.CurrentProject.Value.ConversationDataSource, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value);
-                            conversationEditorControl1.UpdateKeyMappings();
+                            m_conversationEditor.SetContext(m_context.CurrentProject.Value.ConversationDataSource, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value);
+                            m_conversationEditor.UpdateKeyMappings();
                         }
                     }
                 }
 
-                conversationEditorControl1.CurrentFile = projectExplorer.SelectedConversation;
-                m_domainEditor2.CurrentFile = projectExplorer.CurrentDomainFile;
+                m_conversationEditor.CurrentFile = projectExplorer.SelectedConversation;
+                m_domainEditor.CurrentFile = projectExplorer.CurrentDomainFile;
                 //m_projectGraphEditor.CurrentFile = m_context.CurrentProject.Value;
 
                 if (projectExplorer.SelectedConversation != null && projectExplorer.SelectedConversation.File.Exists)
-                    CurrentEditor = conversationEditorControl1;
+                    CurrentEditor = m_conversationEditor;
                 else if (projectExplorer.CurrentDomainFile != null && projectExplorer.CurrentDomainFile.File.Exists)
-                    CurrentEditor = m_domainEditor2;
+                    CurrentEditor = m_domainEditor;
                 else if (projectExplorer.ProjectSelected)
                     CurrentEditor = m_projectGraphEditor;
                 else
@@ -297,8 +301,8 @@ namespace ConversationEditor
             m_context.CurrentLocalization.Changed.Register(this, (a, value) =>
             {
                 //Invalidate graph editors as they can display localized text
-                conversationEditorControl1.Invalidate();
-                m_domainEditor2.Invalidate();
+                m_conversationEditor.Invalidate();
+                m_domainEditor.Invalidate();
             });
         }
 
@@ -334,29 +338,29 @@ namespace ConversationEditor
         {
             Project.TConfig projectConfig = ReadProjectConfig(project);
 
-            conversationEditorControl1.SetContext(project.ConversationDataSource, project.Localizer, project);
-            conversationEditorControl1.UpdateKeyMappings();
+            m_conversationEditor.SetContext(project.ConversationDataSource, project.Localizer, project);
+            m_conversationEditor.UpdateKeyMappings();
 
-            m_domainEditor2.SetContext(project.DomainDataSource, project.Localizer, project);
-            m_domainEditor2.UpdateKeyMappings();
+            m_domainEditor.SetContext(project.DomainDataSource, project.Localizer, project);
+            m_domainEditor.UpdateKeyMappings();
 
-            projectExplorer.SetProject(project);
+            projectExplorer.SetProject(project, projectConfig);
             var p = project as Project;
             if (p != null)
             {
                 var con = projectConfig.LastEdited != null ? project.Conversations.FirstOrDefault(c => c.File.File.FullName == p.Rerout(projectConfig.LastEdited.Only()).Single().FullName) : null;
                 var dom = projectConfig.LastEdited != null ? project.DomainFiles.FirstOrDefault(c => c.File.File.FullName == p.Rerout(projectConfig.LastEdited.Only()).Single().FullName) : null;
-                conversationEditorControl1.CurrentFile = con;
-                m_domainEditor2.CurrentFile = dom;
+                m_conversationEditor.CurrentFile = con;
+                m_domainEditor.CurrentFile = dom;
                 if (con != null)
                 {
                     projectExplorer.Select(con);
-                    CurrentEditor = conversationEditorControl1;
+                    CurrentEditor = m_conversationEditor;
                 }
                 else if (dom != null)
                 {
                     projectExplorer.Select(dom);
-                    CurrentEditor = m_domainEditor2;
+                    CurrentEditor = m_domainEditor;
                 }
                 else
                     CurrentEditor = null;
@@ -454,10 +458,45 @@ namespace ConversationEditor
                 return ConfigureResult.NotApplicable;
             }
             else
-                return m_config.NodeEditors[data.NodeTypeId].GetEditorFactory().Edit(m_scheme, data, audioContext, GetParameterEditor, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value.AudioProvider);
+            {
+                //TODO: This should probably be done by the project itself and should certainly handle local enums better (i.e. at all)
+                Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions = (p, s) => m_context.CurrentProject.Value.AutoCompleteSuggestions(p, s, (t) => m_context.CurrentProject.Value.ConversationDataSource.GetSource(t, CurrentFile));
+
+                ConfigureResult2 result = m_config.NodeEditors[data.NodeTypeId].GetEditorFactory().Edit(m_scheme, data, audioContext, GetParameterEditor, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value.AudioProvider, autoCompleteSuggestions);
+                return result.Transformed(a => OnOk(m_context.CurrentProject.Value.AudioProvider, a), b => new ConfigureResult(b));
+            }
         }
 
-
+        private static ConfigureResult OnOk(IAudioLibrary audioProvider, IEnumerable<UpdateParameterData> updates)
+        {
+            List<Action> undo = new List<Action>();
+            List<Action> redo = new List<Action>();
+            foreach (UpdateParameterData updateParameterData in updates)
+            {
+                if (updateParameterData != null)
+                {
+                    SimpleUndoPair? actions = updateParameterData.Actions;
+                    if (actions != null)
+                    {
+                        undo.Add(actions.Value.Undo);
+                        redo.Add(actions.Value.Redo);
+                    }
+                    if (updateParameterData.Audio != null)
+                    {
+                        undo.Add(() => audioProvider.UpdateUsage(updateParameterData.Audio.Value));
+                        redo.Add(() => audioProvider.UpdateUsage(updateParameterData.Audio.Value));
+                    }
+                }
+            }
+            if (undo.Any())
+            {
+                return new SimpleUndoPair { Redo = () => redo.ForEach(a => a()), Undo = () => undo.ForEach(a => a()) };
+            }
+            else
+            {
+                return ConfigureResult.NotApplicable; //This isn't exactly what NotApplicable was intended for but it's the closest match and I can't see a functional difference
+            }
+        }
 
         private void errorCheckToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -541,7 +580,7 @@ namespace ConversationEditor
 
                     try
                     {
-                        using (var s = Util.LoadFileStream(configPath, FileMode.OpenOrCreate, FileAccess.Write))
+                        using (var s = Util.LoadFileStream(configPath, FileMode.OpenOrCreate, FileAccess.Write, 0))
                         {
                             s.SetLength(0);
                             doc.Save(s);
@@ -591,7 +630,7 @@ namespace ConversationEditor
 
         private void tsmiShowIDs_CheckedChanged(object sender, EventArgs e)
         {
-            m_config.GraphView.ShowIDs = tsmiShowIDs.Checked;
+            m_config.GraphView.ShowIds = tsmiShowIds.Checked;
         }
 
         private void customiseParameterEditorsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -609,7 +648,7 @@ namespace ConversationEditor
             };
 
             var editor = new DefaultNodeEditorFactory();
-            editor.Edit(m_scheme, data, null, config, null, null).Do(a => a.Redo(), a => { });
+            editor.Edit(m_scheme, data, null, config, null, null, null).Transformed(a => OnOk(DummyAudioLibrary.Instance, a), a => a).Do(a => a.Redo(), a => { });
 
             foreach (var d in data.Parameters)
             {
@@ -634,10 +673,10 @@ namespace ConversationEditor
                 return result;
             };
             var editor = new DefaultNodeEditorFactory();
-            editor.Edit(m_scheme, data, null, config, null, null).Do(a => a.Redo(), a => { });
+            editor.Edit(m_scheme, data, null, config, null, null, null).Transformed(a => OnOk(DummyAudioLibrary.Instance, a), a => a).Do(a => a.Redo(), a=> { });
             foreach (var d in data.Parameters)
             {
-                m_config.ConversationNodeRenderers[ID<NodeTypeTemp>.ConvertFrom(d.TypeId)] = (d as IEnumParameter).Value;
+                m_config.ConversationNodeRenderers[Id<NodeTypeTemp>.ConvertFrom(d.TypeId)] = (d as IEnumParameter).Value;
             }
 
             //TODO: Customize domain node renderers?
@@ -667,17 +706,17 @@ namespace ConversationEditor
         private void findAndReplaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             IEnumerable<IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>> search;
-            if (CurrentEditor == conversationEditorControl1)
+            if (CurrentEditor == m_conversationEditor)
             {
                 search = m_context.CurrentProject.Value.Conversations;
             }
-            else if (CurrentEditor == m_domainEditor2)
+            else if (CurrentEditor == m_domainEditor)
             {
                 search = m_context.CurrentProject.Value.DomainFiles;
             }
             else
             {
-                throw new Exception("fvjblanbl");
+                throw new InternalLogicException("fvjblanbl");
             }
 
             var d = new FindAndReplaceDialog(search, m_context.CurrentProject.Value.Localizer, () => CurrentFile);
@@ -687,22 +726,22 @@ namespace ConversationEditor
                 if (m_context.CurrentProject.Value.Conversations.Contains(file))
                 {
                     projectExplorer.Select(file);
-                    conversationEditorControl1.CurrentFile = file;
-                    CurrentEditor = conversationEditorControl1;
-                    conversationEditorControl1.SelectNode(node);
+                    m_conversationEditor.CurrentFile = file;
+                    CurrentEditor = m_conversationEditor;
+                    m_conversationEditor.SelectNode(node);
                 }
                 else if (m_context.CurrentProject.Value.DomainFiles.Contains(file))
                 {
                     projectExplorer.Select(file);
-                    m_domainEditor2.CurrentFile = file;
-                    CurrentEditor = m_domainEditor2;
-                    m_domainEditor2.SelectNode(node);
+                    m_domainEditor.CurrentFile = file;
+                    CurrentEditor = m_domainEditor;
+                    m_domainEditor.SelectNode(node);
                 }
                 else
-                    throw new Exception("skjvblb;wqef");
+                    throw new InternalLogicException("skjvblb;wqef");
 
             };
-            d.UpdateDisplay += () => { conversationEditorControl1.Invalidate(true); m_domainEditor2.Invalidate(true); };
+            d.UpdateDisplay += () => { m_conversationEditor.Invalidate(true); m_domainEditor.Invalidate(true); };
             d.Show();
         }
 
@@ -804,6 +843,26 @@ namespace ConversationEditor
                         MessageBox.Show("Cannot export as there is no currently selected localizer");
                 };
             }
+        }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+                m_scheme.Dispose();
+                m_config.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        private void SanityTest(object sender, EventArgs e)
+        {
+            m_conversationEditor.SanityTest();
         }
     }
 }

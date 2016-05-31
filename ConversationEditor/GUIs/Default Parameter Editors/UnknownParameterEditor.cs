@@ -15,7 +15,7 @@ namespace ConversationEditor
     internal partial class UnknownParameterEditor : UserControl, IFocusProvider, IParameterEditor<UnknownParameterEditor>
     {
         private MyTextBox m_textBox;
-        private MyButton m_button;
+        private CrossButton m_button;
         public MyControl LastFocused { get; set; }
 
         public UnknownParameterEditor()
@@ -24,7 +24,7 @@ namespace ConversationEditor
 
             const int BUTTON_SIZE = 16;
 
-            m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width - BUTTON_SIZE, Math.Max(BUTTON_SIZE, drawWindow1.Height)), MyTextBox.InputFormEnum.None);
+            m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width - BUTTON_SIZE, Math.Max(BUTTON_SIZE, drawWindow1.Height)), MyTextBox.InputFormEnum.None, null);
             m_textBox.RequestedAreaChanged += () =>
             {
                 //Draw window is the whole control so we can just modify the control
@@ -36,7 +36,7 @@ namespace ConversationEditor
             m_textBox.RegisterCallbacks(this, drawWindow1);
             //MyTextBox.SetupCallbacks(drawWindow1, m_textBox);
 
-            m_button = new CrossButton(() => new RectangleF(drawWindow1.Width - BUTTON_SIZE, (drawWindow1.Height - BUTTON_SIZE) / 2, BUTTON_SIZE, BUTTON_SIZE), () => { Remove.Execute(); m_remove = true; }, Scheme.ControlBorder, Scheme.BackgroundBrush);
+            m_button = new CrossButton(() => new RectangleF(drawWindow1.Width - BUTTON_SIZE, (drawWindow1.Height - BUTTON_SIZE) / 2, BUTTON_SIZE, BUTTON_SIZE), () => { Remove.Execute(); m_remove = true; }, Pens.Magenta, Brushes.Magenta);
             m_button.RegisterCallbacks(this, drawWindow1);
 
             LastFocused = m_textBox;
@@ -65,9 +65,9 @@ namespace ConversationEditor
                 return null;
         }
 
-        public bool IsValid()
+        public string IsValid()
         {
-            return true;
+            return null;
         }
 
         public event Action Ok { add { } remove { } }
@@ -92,6 +92,8 @@ namespace ConversationEditor
                 m_scheme = value;
                 m_textBox.Colors.BorderPen = value.ControlBorder;
                 drawWindow1.ColorScheme = value;
+                m_button.Foreground = Scheme.ControlBorder;
+                m_button.Background = Scheme.BackgroundBrush;
             }
         }
 
@@ -101,13 +103,14 @@ namespace ConversationEditor
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
             if (disposing)
             {
                 m_button.Dispose();
+                m_textBox.Dispose();
+            }
+            if (disposing && (components != null))
+            {
+                components.Dispose();
             }
             base.Dispose(disposing);
         }

@@ -7,7 +7,7 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    using ConversationNode = ConversationNode<INodeGUI>;
+    using ConversationNode = ConversationNode<INodeGui>;
     using Utilities;
 
     internal sealed class DummyProject : IProject
@@ -18,7 +18,7 @@ namespace ConversationEditor
 
         public ISaveableFile File { get { return new MissingFile(null); } }
 
-        IAudioProvider IProject.AudioProvider { get { return null; } }
+        IAudioLibrary IProject.AudioProvider { get { return null; } }
 
         IProjectElementList<LocalizationFile, ILocalizationFile> IProject.LocalizationFiles
         {
@@ -55,7 +55,7 @@ namespace ConversationEditor
             get { return new DirectoryInfo("."); }
         }
 
-        Conversation.IDataSource IProject.ConversationDataSource
+        IDataSource IProject.ConversationDataSource
         {
             get { return DummyDataSource.Instance; }
         }
@@ -72,7 +72,7 @@ namespace ConversationEditor
 
         LocalizationEngine IProject.Localizer
         {
-            get { return new LocalizationEngine(null, () => new HashSet<ID<LocalizedText>>(), s => false, s => false, p => true, s => true); }
+            get { return new LocalizationEngine(null, () => new HashSet<Id<LocalizedText>>(), s => false, s => false, p => true, s => true); }
         }
 
         IProjectElementList<AudioFile, IAudioFile> IProject.AudioFiles
@@ -112,5 +112,12 @@ namespace ConversationEditor
         public void Dispose()
         {
         }
+
+        IEnumerable<FileInfo> IProject.Rerout(IEnumerable<string> paths)
+        {
+            throw new NotImplementedException();
+        }
+
+        Func<IParameter, string, Func<ParameterType, DynamicEnumParameter.Source>, IEnumerable<string>> IProject.AutoCompleteSuggestions { get { return null; } }
     }
 }

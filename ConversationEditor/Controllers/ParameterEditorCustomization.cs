@@ -15,6 +15,8 @@ namespace ConversationEditor
                 return DefaultDecimalEditorFactory.StaticId;
             else if (willEdit.IsDynamicEnum(type))
                 return DefaultDynamicEnumEditorFactory.StaticId;
+            else if (willEdit.IsLocalDynamicEnum(type))
+                return DefaultLocalDynamicEnumEditorFactory.StaticId;
             else if (willEdit.IsEnum(type))
                 return DefaultEnumEditorFactory.StaticId;
             else if (willEdit.IsInteger(type))
@@ -38,7 +40,7 @@ namespace ConversationEditor
         public ParameterEditorCustomization()
         {
             m_parameters = new List<Parameter>();
-            m_parameters.Add(new EnumParameter("Character", ID<Parameter>.New(), new Enumeration(new[] { Tuple.Create(Guid.NewGuid(), "value") }, ParameterType.Basic.New())));
+            m_parameters.Add(new EnumParameter("Character", Id<Parameter>.New(), new Enumeration(new[] { Tuple.Create(Guid.NewGuid(), "value") }, ParameterType.Basic.New())));
         }
 
         public ParameterEditorCustomization(IDataSource datasource, MapConfig<ParameterType, Guid> typeMapConfig, IEnumerable<IParameterEditorFactory> allEditors)
@@ -50,7 +52,7 @@ namespace ConversationEditor
                 var options = allEditors.Where(e => e.WillEdit(type, WillEdit.Create(datasource))).Select(e => Tuple.Create(e.Guid, e.Name)).ToList();
                 Guid def = m_typeMapConfig[type];
                 var enumeration = new Enumeration(options, type, def);
-                var p = new EnumParameter(datasource.GetTypeName(type), ID<Parameter>.ConvertFrom(type), enumeration, def.ToString());
+                var p = new EnumParameter(datasource.GetTypeName(type), Id<Parameter>.ConvertFrom(type), enumeration, def.ToString());
                 m_parameters.Add(p);
             }
         }
@@ -60,12 +62,12 @@ namespace ConversationEditor
             get { return m_parameters; }
         }
 
-        public ID<NodeTemp> NodeId
+        public Id<NodeTemp> NodeId
         {
             get { throw new NotImplementedException(); }
         }
 
-        public ID<NodeTypeTemp> NodeTypeId
+        public Id<NodeTypeTemp> NodeTypeId
         {
             get { throw new NotImplementedException(); }
         }
@@ -87,7 +89,7 @@ namespace ConversationEditor
 
         public event Action Linked { add { } remove { } }
 
-        public void ChangeId(ID<NodeTemp> id)
+        public void ChangeId(Id<NodeTemp> id)
         {
             throw new NotImplementedException();
         }

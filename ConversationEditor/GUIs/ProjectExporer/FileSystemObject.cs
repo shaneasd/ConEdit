@@ -12,11 +12,11 @@ namespace ConversationEditor
     {
         public class FileSystemObject
         {
-            private Or<DirectoryInfo, ISaveableFile> m_target;
+            private Either<DirectoryInfo, ISaveableFile> m_target;
 
             public FileSystemObject(ISaveableFile file)
             {
-                m_target = new Or<DirectoryInfo, ISaveableFile>(file);
+                m_target = new Either<DirectoryInfo, ISaveableFile>(file);
             }
 
             public FileSystemObject(DirectoryInfo folder)

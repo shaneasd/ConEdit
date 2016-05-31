@@ -98,12 +98,19 @@ namespace Utilities
         }
         public static EnumerableReversible<T> Make<T>(IEnumerable<T> data)
         {
-            if (data is LinkedList<T>)
-                return Make(data as LinkedList<T>);
-            else if (data is EnumerableReversible<T>)
-                return Make(data as EnumerableReversible<T>);
+            var linkedList = data as LinkedList<T>;
+            if (linkedList != null)
+            {
+                return Make(linkedList);
+            }
             else
-                return new EnumerableReversible<T>(data, new LazyReverseEnumerable<T>(data)); //The standard buffered way, but lazy.
+            {
+                var enumerableReversible = data as EnumerableReversible<T>;
+                if (enumerableReversible != null)
+                    return Make(enumerableReversible);
+                else
+                    return new EnumerableReversible<T>(data, new LazyReverseEnumerable<T>(data)); //The standard buffered way, but lazy.
+            }
         }
 
         public static EnumerableReversible<T> Make<T>(LinkedList<T> data)
@@ -127,6 +134,9 @@ namespace Utilities
 
         private IEnumerable<T> m_forward;
         private IEnumerable<T> m_reverse;
+
+        public EnumerableReversible(IEnumerableReversible<T> data)
+        { }
 
         public EnumerableReversible(IEnumerable<T> forward, IEnumerable<T> reverse)
         {

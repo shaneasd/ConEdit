@@ -9,8 +9,8 @@ namespace ConversationEditor
 {
     public abstract class NodeEditorFactory
     {
-        public abstract bool WillEdit(ID<NodeTypeTemp> typeId);
-        public abstract ConfigureResult Edit(ColorScheme scheme, IEditable node, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioProvider2 audioProvider);
+        public abstract bool WillEdit(Id<NodeTypeTemp> typeId);
+        public abstract ConfigureResult2 Edit(ColorScheme scheme, IEditable node, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions);
         public abstract string DisplayName { get; }
     }
 }

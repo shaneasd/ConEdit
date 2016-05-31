@@ -19,10 +19,10 @@ namespace Conversation
         NotApplicable
     }
 
-    public class ConfigureResult : Or<SimpleUndoPair, ConfigureResultNotOk>
+    public class ConfigureResult : Either<SimpleUndoPair, ConfigureResultNotOk>
     {
-        public static ConfigureResultNotOk Cancel = ConfigureResultNotOk.Cancel;
-        public static ConfigureResultNotOk NotApplicable = ConfigureResultNotOk.NotApplicable;
+        public const ConfigureResultNotOk Cancel = ConfigureResultNotOk.Cancel;
+        public const ConfigureResultNotOk NotApplicable = ConfigureResultNotOk.NotApplicable;
 
         public ConfigureResult(SimpleUndoPair pair)
             : base(pair)
@@ -43,6 +43,52 @@ namespace Conversation
         public static implicit operator ConfigureResult(ConfigureResultNotOk a)
         {
             return new ConfigureResult(a);
+        }
+    }
+
+
+    public class UpdateParameterData
+    {
+        /// <summary>
+        /// Undo/Redo actions to perform to change the state of the parameter based on the editor selection
+        /// </summary>
+        public SimpleUndoPair? Actions = null;
+        /// <summary>
+        /// An audio file whose inclusion in the project should be updated
+        /// </summary>
+        public Audio? Audio = null;
+
+        public static implicit operator UpdateParameterData(SimpleUndoPair? actions)
+        {
+            return new UpdateParameterData() { Actions = actions };
+        }
+    }
+
+
+    public class ConfigureResult2 : Either<UpdateParameterData[], ConfigureResultNotOk>
+    {
+        public const ConfigureResultNotOk Cancel = ConfigureResultNotOk.Cancel;
+        public const ConfigureResultNotOk NotApplicable = ConfigureResultNotOk.NotApplicable;
+
+        public ConfigureResult2(UpdateParameterData[] updates)
+            : base(updates)
+        {
+        }
+
+        public ConfigureResult2(ConfigureResultNotOk a)
+            : base(a)
+        {
+        }
+
+
+        public static implicit operator ConfigureResult2(UpdateParameterData[] updates)
+        {
+            return new ConfigureResult2(updates);
+        }
+
+        public static implicit operator ConfigureResult2(ConfigureResultNotOk a)
+        {
+            return new ConfigureResult2(a);
         }
     }
 }

@@ -5,18 +5,19 @@ using System.Text;
 using Utilities;
 using System.IO;
 using System.Collections.ObjectModel;
+using TDocument = System.Object;
 
 namespace Conversation
 {
     public struct EditableGeneratorParameterData
     {
-        private readonly ID<Parameter> m_guid;
-        public ID<Parameter> Guid { get { return m_guid; } }
+        private readonly Id<Parameter> m_guid;
+        public Id<Parameter> Guid { get { return m_guid; } }
 
         private readonly string m_value;
         public string Value { get { return m_value; } }
 
-        public EditableGeneratorParameterData(ID<Parameter> guid, string value)
+        public EditableGeneratorParameterData(Id<Parameter> guid, string value)
         {
             m_guid = guid;
             m_value = value;
@@ -29,12 +30,12 @@ namespace Conversation
     public interface IEditableGenerator
     {
         string Name { get; }
-        ID<NodeTypeTemp> Guid { get; }
+        Id<NodeTypeTemp> Guid { get; }
         ReadOnlyCollection<NodeData.ConfigData> Config { get; }
         IEnumerable<Func<IEditable, Output>> MakeConnectors();
-        List<Parameter> MakeParameters(List<EditableGeneratorParameterData> parameterData);
-        ReadOnlyCollection<NodeData.ConfigData> GetParameterConfig(ID<Parameter> parameterID);
-        IEditable Generate(ID<NodeTemp> id, List<EditableGeneratorParameterData> parameters);
+        List<Parameter> MakeParameters(List<EditableGeneratorParameterData> parameterData, TDocument document);
+        ReadOnlyCollection<NodeData.ConfigData> GetParameterConfig(Id<Parameter> parameterId);
+        IEditable Generate(Id<NodeTemp> id, List<EditableGeneratorParameterData> parameters, TDocument document);
     }
 
     //public class CorruptEditableGenerator : IEditableGenerator
@@ -70,26 +71,26 @@ namespace Conversation
 
     public abstract class EditableGenerator : IEditableGenerator
     {
-        public abstract IEditable Generate(ID<NodeTemp> id, List<EditableGeneratorParameterData> parameters);
+        public abstract IEditable Generate(Id<NodeTemp> id, List<EditableGeneratorParameterData> parameters, TDocument document);
         public abstract string Name { get; }
-        public abstract ID<NodeTypeTemp> Guid { get; }
+        public abstract Id<NodeTypeTemp> Guid { get; }
         public abstract ReadOnlyCollection<NodeData.ConfigData> Config { get; }
         public abstract IEnumerable<Func<IEditable, Output>> MakeConnectors();
-        public abstract List<Parameter> MakeParameters(List<EditableGeneratorParameterData> parameterData);
-        public abstract ReadOnlyCollection<NodeData.ConfigData> GetParameterConfig(ID<Parameter> parameterID);
+        public abstract List<Parameter> MakeParameters(List<EditableGeneratorParameterData> parameterData, TDocument document);
+        public abstract ReadOnlyCollection<NodeData.ConfigData> GetParameterConfig(Id<Parameter> parameterId);
     }
 
     public class GenericEditableGenerator2 : EditableGenerator
     {
         TypeSet m_types;
-        IDictionary<ID<TConnectorDefinition>, ConnectorDefinitionData> m_connectorDefinitions;
+        IDictionary<Id<TConnectorDefinition>, ConnectorDefinitionData> m_connectorDefinitions;
         IConnectionRules m_rules;
         NodeData m_data;
         Func<Parameter[], List<Parameter>> m_extraParameters;
-        private List<ExternalFunction> m_generated = new List<ExternalFunction>();
+        //private List<ExternalFunction> m_generated = new List<ExternalFunction>();
         bool m_exists = true;
 
-        public GenericEditableGenerator2(NodeData data, TypeSet types, IDictionary<ID<TConnectorDefinition>, ConnectorDefinitionData> connectorDefinitions, IConnectionRules rules)
+        public GenericEditableGenerator2(NodeData data, TypeSet types, IDictionary<Id<TConnectorDefinition>, ConnectorDefinitionData> connectorDefinitions, IConnectionRules rules)
         {
             m_data = data;
             m_types = types;
@@ -98,7 +99,7 @@ namespace Conversation
             m_extraParameters = (x => new List<Parameter>());
         }
 
-        public GenericEditableGenerator2(NodeData data, TypeSet types, IDictionary<ID<TConnectorDefinition>, ConnectorDefinitionData> connectorDefinitions, IConnectionRules rules, Func<Parameter[], List<Parameter>> extraParameters)
+        public GenericEditableGenerator2(NodeData data, TypeSet types, IDictionary<Id<TConnectorDefinition>, ConnectorDefinitionData> connectorDefinitions, IConnectionRules rules, Func<Parameter[], List<Parameter>> extraParameters)
         {
             m_data = data;
             m_types = types;
@@ -111,15 +112,15 @@ namespace Conversation
         {
             Func<NodeData.ConnectorData, Func<IEditable, Output>> processConnector = c =>
             {
-                Func<IEditable, List<Parameter>, Output> a = m_connectorDefinitions[c.TypeID].Make(c.Id, m_rules);
+                Func<IEditable, List<Parameter>, Output> a = m_connectorDefinitions[c.TypeId].Make(c.Id, m_rules);
                 return data => a(data, c.Parameters);
             };
             return m_data.Connectors.Select(processConnector).Evaluate();
         }
 
-        public override List<Parameter> MakeParameters(List<EditableGeneratorParameterData> parameterData)
+        public override List<Parameter> MakeParameters(List<EditableGeneratorParameterData> parameterData, TDocument document)
         {
-            var parameters = m_data.Parameters.Select(p => p.Make(m_types.Make)).ToArray();
+            var parameters = m_data.Parameters.Select(p => p.Make((a, b, c, d) => m_types.Make(a, b, c, d, document))).ToArray();
 
             var result = parameters.Concat(m_extraParameters(parameters)).ToList();
             foreach (var d in parameterData)
@@ -137,16 +138,16 @@ namespace Conversation
             return result;
         }
 
-        public override ReadOnlyCollection<NodeData.ConfigData> GetParameterConfig(ID<Parameter> parameterID)
+        public override ReadOnlyCollection<NodeData.ConfigData> GetParameterConfig(Id<Parameter> parameterId)
         {
-            var parameterDefinition = m_data.Parameters.Single(p => p.Id == parameterID);
+            var parameterDefinition = m_data.Parameters.Single(p => p.Id == parameterId);
             return parameterDefinition.Config;
         }
 
-        public override IEditable Generate(ID<NodeTemp> id, List<EditableGeneratorParameterData> parameterData)
+        public override IEditable Generate(Id<NodeTemp> id, List<EditableGeneratorParameterData> parameters, TDocument document)
         {
-            var result = new ExternalFunction(this, id, MakeConnectors(), MakeParameters(parameterData));
-            m_generated.Add(result);
+            var result = new ExternalFunction(this, id, MakeConnectors(), MakeParameters(parameters, document));
+            //m_generated.Add(result);
             return result;
         }
 
@@ -155,7 +156,7 @@ namespace Conversation
             get { return m_exists ? m_data.Name : "Definition Deleted"; }
         }
 
-        public override ID<NodeTypeTemp> Guid
+        public override Id<NodeTypeTemp> Guid
         {
             get { return m_data.Guid; }
         }

@@ -6,16 +6,19 @@ using System.IO;
 using Utilities;
 using System.Threading;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Utilities
 {
     public static class FileSystem
     {
+        [SuppressMessage("Microsoft.Design", "CA1011",
+            Justification = "We only use the FullName member so 'ancestor' could be a FileSystemInfo but we already know that only a DirectoryInfo can be the parent of another FileSystemInfo")]
         public static bool AncestorOf(this FileInfo descendant, DirectoryInfo ancestor)
         {
             var pathA = ancestor.FullName;
             var pathD = descendant.FullName;
-            return pathD.StartsWith(pathA, StringComparison.InvariantCultureIgnoreCase);
+            return pathD.StartsWith(pathA, StringComparison.OrdinalIgnoreCase);
         }
 
         public static List<DirectoryInfo> PathToFrom(FileInfo descendant, DirectoryInfo ancestor)
@@ -35,7 +38,7 @@ namespace Utilities
             string pathA = ancestor.FullName.TrimEnd('\\');
             string pathD = descendant.FullName.TrimEnd('\\');
 
-            if (!pathD.StartsWith(pathA, StringComparison.InvariantCultureIgnoreCase))
+            if (!pathD.StartsWith(pathA, StringComparison.OrdinalIgnoreCase))
                 return null;
 
             List<DirectoryInfo> result = new List<DirectoryInfo>();
@@ -104,6 +107,15 @@ namespace Utilities
 
                 if (same)
                     return false;
+
+                using (StreamWriter a = new StreamWriter(@"C:\fileA.txt"))
+                {
+                    a.Write(current.ToArray().Select(x=>(char)x).ToArray());
+                }
+                using (StreamWriter a = new StreamWriter(@"C:\fileB.txt"))
+                {
+                    a.Write(m.ToArray().Select(x => (char)x).ToArray());
+                }
 
                 current.Dispose();
                 current = m;

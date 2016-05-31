@@ -38,15 +38,25 @@ namespace ConversationEditor
         }
     }
 
+
     internal partial class DefaultStringEditor : UserControl, IParameterEditor<DefaultStringEditor>
     {
+
         private MyTextBox m_textBox;
+
+        internal IEnumerable<string> AutoCompleteSuggestions(string arg)
+        {
+            if (m_autoCompleteSuggestions != null)
+                return m_autoCompleteSuggestions(arg);
+            else
+                return Enumerable.Empty<string>();
+        }
 
         public DefaultStringEditor()
         {
             InitializeComponent();
 
-            m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), MyTextBox.InputFormEnum.Text);
+            m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), MyTextBox.InputFormEnum.Text, AutoCompleteSuggestions);
             m_textBox.RequestedAreaChanged += () =>
             {
                 //Draw window is the whole control so we can just modify the control
@@ -64,6 +74,7 @@ namespace ConversationEditor
             m_parameter = data.Parameter as IStringParameter;
             if (!m_parameter.Corrupted)
                 m_textBox.Text = m_parameter.Value;
+            m_autoCompleteSuggestions = data.AutoCompleteSuggestions;
         }
 
         public DefaultStringEditor AsControl
@@ -76,14 +87,16 @@ namespace ConversationEditor
             return m_parameter.SetValueAction(m_textBox.Text);
         }
 
-        public bool IsValid()
+        public string IsValid()
         {
-            return true;
+            return null;
         }
 
         public event Action Ok;
 
         ColorScheme m_scheme;
+        private Func<string, IEnumerable<string>> m_autoCompleteSuggestions;
+
         public ColorScheme Scheme
         {
             get { return m_scheme; }
@@ -93,6 +106,23 @@ namespace ConversationEditor
                 m_textBox.Colors.BorderPen = value.ControlBorder;
                 drawWindow1.ColorScheme = value;
             }
+        }
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                m_textBox.Dispose();
+            }
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

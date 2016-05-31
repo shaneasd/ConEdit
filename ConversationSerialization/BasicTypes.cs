@@ -10,6 +10,7 @@ using Utilities;
 
 namespace RuntimeConversation
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1019:DefineAccessorsForAttributeArguments", Justification = "Guid property should use Guid type but will always be specified as a string in the attribute constructor for convenience")]
     [AttributeUsage(AttributeTargets.Field)]
     public sealed class ParameterIdAttribute : Attribute
     {
@@ -21,6 +22,7 @@ namespace RuntimeConversation
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1019:DefineAccessorsForAttributeArguments", Justification = "Guid property should use Guid type but will always be specified as a string in the attribute constructor for convenience")]
     [AttributeUsage(AttributeTargets.Field)]
     public sealed class EnumValueIdAttribute : Attribute
     {
@@ -32,6 +34,7 @@ namespace RuntimeConversation
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1019:DefineAccessorsForAttributeArguments", Justification = "Guid property should use Guid type but will always be specified as a string in the attribute constructor for convenience")]
     [AttributeUsage(AttributeTargets.Enum | AttributeTargets.Struct)]
     public sealed class TypeIdAttribute : Attribute
     {
@@ -43,6 +46,7 @@ namespace RuntimeConversation
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1019:DefineAccessorsForAttributeArguments", Justification = "Guid property should use Guid type but will always be specified as a string in the attribute constructor for convenience")]
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class ConnectorTypeIdAttribute : Attribute
     {
@@ -54,6 +58,7 @@ namespace RuntimeConversation
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1019:DefineAccessorsForAttributeArguments", Justification = "Guid property should use Guid type but will always be specified as a string in the attribute constructor for convenience")]
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class NodeTypeIdAttribute : Attribute
     {
@@ -67,10 +72,10 @@ namespace RuntimeConversation
 
     public abstract class ConnectorBase
     {
-        private ID<TConnector> m_id;
-        public ID<TConnector> Id { get { return m_id; } }
+        private Id<TConnector> m_id;
+        public Id<TConnector> Id { get { return m_id; } }
 
-        protected ConnectorBase(ID<TConnector> id)
+        protected ConnectorBase(Id<TConnector> id)
         {
             m_id = id;
         }
@@ -78,14 +83,14 @@ namespace RuntimeConversation
 
     public abstract class NodeBase
     {
-        private readonly ID<NodeTemp> m_id;
+        private readonly Id<NodeTemp> m_id;
         //public abstract IEnumerable<Connector> Connectors { get; }
-        public ID<NodeTemp> Id { get { return m_id; } }
+        public Id<NodeTemp> Id { get { return m_id; } }
 
         private readonly PointF m_position;
         public PointF Position { get { return m_position; } }
 
-        protected NodeBase(ID<NodeTemp> id, PointF position)
+        protected NodeBase(Id<NodeTemp> id, PointF position)
         {
             m_id = id;
             m_position = position;
@@ -96,7 +101,7 @@ namespace RuntimeConversation
             return parameters.First(p => p.Guid == guid).Value;
         }
 
-        public abstract void Connect(ID<TConnector> thisConnectorID, NodeBase other, ID<TConnector> otherConnectorId);
+        public abstract void Connect(Id<TConnector> thisConnectorId, NodeBase other, Id<TConnector> otherConnectorId);
     }
 
     public class Conversation

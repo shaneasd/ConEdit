@@ -12,7 +12,7 @@ using ConversationEditor.Controllers;
 
 namespace ConversationEditor
 {
-    internal class MouseController<TNode> where TNode : IRenderable<IGUI>, IGraphNode, IConfigurable
+    internal class MouseController<TNode> where TNode : IRenderable<IGui>, IGraphNode, IConfigurable
     {
         public class State
         {
@@ -55,7 +55,7 @@ namespace ConversationEditor
                         if (RectangleF.Intersect(SelectionRectangle(), node.Renderer.Area) != RectangleF.Empty)
                             m_controller.m_selection.Add(node.Id);
                     }
-                    m_parent.m_state = new State.Nothing(m_parent, null, null);
+                    m_parent.SetStateToNothingOrSelectingDirection(null, null);
                 }
 
                 public override void Draw(Graphics g, ConnectionDrawer connections)
@@ -66,15 +66,16 @@ namespace ConversationEditor
                 public override void MouseMove(PointF client, Point screen)
                 {
                     m_lastClientPos = client;
+                    m_parent.ScrollIfRequired(screen);
                 }
             }
             public class Dragging : State
             {
                 public PointF m_moveOrigin;
                 public PointF m_lastClientPos;
-                IRenderable<IGUI> m_dragTarget;
+                IRenderable<IGui> m_dragTarget;
 
-                public Dragging(MouseController<TNode> parent, PointF moveOrigin, PointF client, IRenderable<IGUI> dragTarget)
+                public Dragging(MouseController<TNode> parent, PointF moveOrigin, PointF client, IRenderable<IGui> dragTarget)
                     : base(parent)
                 {
                     m_moveOrigin = moveOrigin;
@@ -94,6 +95,7 @@ namespace ConversationEditor
                     foreach (var a in m_parent.m_selection.Renderable(id => m_parent.GetNode(id)))
                         a.Renderer.Offset(offset);
                     m_lastClientPos = m_lastClientPos.Plus(offset);
+                    m_parent.ScrollIfRequired(screen);
                 }
 
                 public override void LeftMouseUp(Point client, Point screen)
@@ -156,7 +158,7 @@ namespace ConversationEditor
                         m_parent.Changed.Execute(new GenericUndoAction(undo, redo, "Dragged " + currentSelection.Count() + " things"));
                     }
 
-                    m_parent.m_state = new State.Nothing(m_parent, null, null);
+                    m_parent.SetStateToNothingOrSelectingDirection(null, null);
                 }
             }
             public class Linking : State
@@ -186,6 +188,7 @@ namespace ConversationEditor
                 public override void MouseMove(PointF client, Point screen)
                 {
                     m_lastClientPos = client;
+                    m_parent.ScrollIfRequired(screen);
                 }
 
                 public override void LeftMouseUp(Point client, Point screen)
@@ -209,14 +212,15 @@ namespace ConversationEditor
                     }
                     else
                     {
-                        var x = m_parent.BestConnector(m_parent.UIInfo(LinkingTransition).Area.Center(), client, a => a.CanConnectTo(LinkingTransition, ConnectionConsiderations.None));
+                        var x = m_parent.BestConnector(m_parent.UIInfo(LinkingTransition).Area.Value.Center(), client, a => a.CanConnectTo(LinkingTransition, ConnectionConsiderations.None));
                         if (x != LinkingTransition)
                             Connect(LinkingTransition, x);
                         else
                             selectTransition = LinkingTransition;
                         LinkingTransition = null;
                     }
-                    m_parent.m_state = new State.Nothing(m_parent, null, selectTransition);
+                    m_parent.SetStateToNothingOrSelectingDirection(null, selectTransition);
+
                     m_parent.RefreshDisplay();
                 }
 
@@ -227,7 +231,7 @@ namespace ConversationEditor
                     //    for (int j = 0; j < 480; j++)
                     //    {
                     //        //var dist = m_parent.FancyDistance(null, m_lastClientPos, new PointF(i, j));
-                    //        var dist = m_parent.FancyDistance(m_parent.UIInfo(LinkingTransition).Area.Center(), m_lastClientPos, new PointF(i, j));
+                    //        var dist = FancyDistance(m_parent.UIInfo(LinkingTransition).Area.Center(), m_lastClientPos, new PointF(i, j));
                     //        dist = (float)Math.Sqrt(dist);
                     //        int r = (int)(dist * 5 % 256);
                     //        //if (dist > 255)
@@ -237,13 +241,13 @@ namespace ConversationEditor
                     if (Control.ModifierKeys.HasFlag(Keys.Shift))
                     {
                         var p0 = m_lastClientPos;
-                        Output x = m_parent.BestConnector(m_parent.UIInfo(LinkingTransition).Area.Center(), p0, a => a.CanConnectTo(LinkingTransition, ConnectionConsiderations.None));
+                        Output x = m_parent.BestConnector(m_parent.UIInfo(LinkingTransition).Area.Value.Center(), p0, a => a.CanConnectTo(LinkingTransition, ConnectionConsiderations.None));
                         if (x != null)
-                            connections.Add(m_parent.UIInfo(x).Area.Center(), m_parent.UIInfo(LinkingTransition).Area.Center(), false);
+                            connections.Add(m_parent.UIInfo(x).Area.Value.Center(), m_parent.UIInfo(LinkingTransition).Area.Value.Center(), false);
                     }
                     else
                     {
-                        connections.Add(m_lastClientPos, m_parent.UIInfo(LinkingTransition).Area.Center(), false);
+                        connections.Add(m_lastClientPos, m_parent.UIInfo(LinkingTransition).Area.Value.Center(), false);
                     }
                 }
             }
@@ -267,7 +271,7 @@ namespace ConversationEditor
 
                 public override void MiddleMouseUp(Point client, Point screen)
                 {
-                    m_parent.m_state = new State.Nothing(m_parent, null, m_selectedTransition);
+                    m_parent.SetStateToNothingOrSelectingDirection(null, m_selectedTransition);
                 }
 
                 public override SimpleUndoPair? Delete()
@@ -309,9 +313,9 @@ namespace ConversationEditor
                         },
                         x => { }, (a, b) => { }, x => { }, () => { });
 
-                    m_parent.m_state = new State.Nothing(m_parent, null, null);
+                    m_parent.SetStateToNothingOrSelectingDirection(null, null);
                 }
-            } //Yes
+            }
             public class Nothing : State
             {
                 private readonly Output m_selectedTransition;
@@ -360,12 +364,12 @@ namespace ConversationEditor
                         var totalArea = group.Renderer.Area;
                         var newResizeState = m_parent.GetResizeOption(totalArea, client);
                         if (newResizeState != ResizeState)
-                            m_parent.m_state = new State.Nothing(m_parent, newResizeState, m_selectedTransition);
+                            m_parent.SetStateToNothingOrSelectingDirection(newResizeState, m_selectedTransition);
                     };
                     Action clearState = () =>
                     {
                         if (null != ResizeState)
-                            m_parent.m_state = new State.Nothing(m_parent, null, m_selectedTransition);
+                            m_parent.SetStateToNothingOrSelectingDirection(null, m_selectedTransition);
                     };
                     m_parent.ForClickedOn(client, n => { clearState(); }, t => { clearState(); }, (a, b) => { clearState(); }, groupOp, clearState);
                 }
@@ -381,7 +385,7 @@ namespace ConversationEditor
                 }
 
                 public override Output SelectedTransition { get { return m_selectedTransition; } }
-            } //Yes
+            }
             public class Resizing : State
             {
                 public Resizing(MouseController<TNode> parent, ResizeState resizeState, RectangleF resizeOriginalArea, NodeGroup group, Action<NodeGroup> updateNodesInGroup)
@@ -408,7 +412,7 @@ namespace ConversationEditor
                     Action redo = () => { m_group.Renderer.Area = newArea; UpdateNodesInGroup(); };
 
                     m_parent.Changed.Execute(new GenericUndoAction(undo, redo, "Resized group"));
-                    m_parent.m_state = new State.Nothing(m_parent, null, null);
+                    m_parent.SetStateToNothingOrSelectingDirection(null, null);
                 }
 
                 public override void MouseMove(PointF client, Point screen)
@@ -446,6 +450,7 @@ namespace ConversationEditor
                             group.Renderer.MoveRight(client.X);
                             break;
                     }
+                    m_parent.ScrollIfRequired(screen);
                     m_parent.RefreshDisplay();
                 }
 
@@ -495,14 +500,14 @@ namespace ConversationEditor
                         if (x != null)
                             foreach (Output connection in SelectedTransition.Connections)
                             {
-                                connections.Add(m_parent.UIInfo(x).Area.Center(), m_parent.UIInfo(connection).Area.Center(), true);
+                                connections.Add(m_parent.UIInfo(x).Area.Value.Center(), m_parent.UIInfo(connection).Area.Value.Center(), true);
                             }
                     }
                     else
                     {
                         foreach (Output connection in SelectedTransition.Connections)
                         {
-                            connections.Add(Util.Center(m_parent.UIInfo(connection).Area), m_lastClientPos, true);
+                            connections.Add(Util.Center(m_parent.UIInfo(connection).Area.Value), m_lastClientPos, true);
                         }
                     }
                 }
@@ -510,6 +515,7 @@ namespace ConversationEditor
                 public override void MouseMove(PointF client, Point screen)
                 {
                     m_lastClientPos = client;
+                    m_parent.ScrollIfRequired(screen);
                 }
 
                 public override void LeftMouseUp(Point client, Point screen)
@@ -554,7 +560,7 @@ namespace ConversationEditor
                     }
                     m_parent.ForClickedOn(client, x => { }, action, (a, b) => { }, x => { }, () => { });
                     m_parent.RefreshDisplay();
-                    m_parent.m_state = new State.Nothing(m_parent, null, null);
+                    m_parent.SetStateToNothingOrSelectingDirection(null, null);
                 }
 
                 public override SimpleUndoPair? Delete()
@@ -568,7 +574,7 @@ namespace ConversationEditor
                 }
 
                 public override Output SelectedTransition { get { return m_selectedTransition; } }
-            } //Yes
+            }
             public class ConnectionSelected : State
             {
                 public readonly UnorderedTuple2<Output> SelectedConnection;
@@ -591,7 +597,54 @@ namespace ConversationEditor
 
                 public override void Draw(Graphics g, ConnectionDrawer connections)
                 {
-                    connections.Add(Util.Center(m_parent.UIInfo(SelectedConnection.Item1).Area), Util.Center(m_parent.UIInfo(SelectedConnection.Item2).Area), true);
+                    connections.Add(Util.Center(m_parent.UIInfo(SelectedConnection.Item1).Area.Value), Util.Center(m_parent.UIInfo(SelectedConnection.Item2).Area.Value), true);
+                }
+            }
+            public class SelectingDirection : State
+            {
+                private Point m_direction;
+
+                public SelectingDirection(MouseController<TNode> parent, Point direction) : base(parent)
+                {
+                    m_direction = direction;
+                }
+
+                public override void LeftMouseUp(Point client, Point screen)
+                {
+                    m_parent.SelectAllNodesAndGroupsRelativeToPoint(client, m_direction);
+                }
+
+                public override Cursor Cursor
+                {
+                    get
+                    {
+                        if (m_direction.X < 0)
+                        {
+                            if (m_direction.Y > 0)
+                                return Cursors.PanSW;
+                            else if (m_direction.Y < 0)
+                                return Cursors.PanNW;
+                            else
+                                return Cursors.PanWest;
+                        }
+                        else if (m_direction.X > 0)
+                        {
+                            if (m_direction.Y > 0)
+                                return Cursors.PanSE;
+                            else if (m_direction.Y < 0)
+                                return Cursors.PanNE;
+                            else
+                                return Cursors.PanEast;
+                        }
+                        else
+                        {
+                            if (m_direction.Y < 0)
+                                return Cursors.PanNorth;
+                            else
+                                return Cursors.PanSouth;
+                            //We ignore the (0,0) case as it shouldn't occur
+                        }
+                    }
                 }
             }
 
@@ -620,6 +673,35 @@ namespace ConversationEditor
             {
                 return SelectedTransition == connector;
             }
+        }
+
+        private void SelectAllNodesAndGroupsRelativeToPoint(Point p, Point dir)
+        {
+            var groups = m_groups().Where(g =>
+            {
+                var groupArea = g.Renderer.Area;
+                var groupCenter = groupArea.Center();
+                var xError = p.X - groupCenter.X;
+                var yError = p.Y - groupCenter.Y;
+                return (xError - groupArea.Width / 2) * dir.X <= 0 &&
+                       (xError + groupArea.Width / 2) * dir.X <= 0 &&
+                       (yError - groupArea.Height / 2) * dir.Y <= 0 &&
+                       (yError + groupArea.Height / 2) * dir.Y <= 0;
+            }).ToList();
+            var nodes = m_nodes().Where(n =>
+            {
+                if (groups.Any(g => g.Contents.Contains(n.Id)))
+                    return false;
+                var groupArea = n.Renderer.Area;
+                var groupCenter = groupArea.Center();
+                var xError = p.X - groupCenter.X;
+                var yError = p.Y - groupCenter.Y;
+                return (xError - groupArea.Width / 2) * dir.X <= 0 &&
+                       (xError + groupArea.Width / 2) * dir.X <= 0 &&
+                       (yError - groupArea.Height / 2) * dir.Y <= 0 &&
+                       (yError + groupArea.Height / 2) * dir.Y <= 0;
+            }).ToList();
+            SetSelection(nodes.Select(n => n.Id), groups);
         }
 
         public enum ResizeState
@@ -661,7 +743,7 @@ namespace ConversationEditor
             }
         }
 
-        public void SetSelection(IEnumerable<ID<NodeTemp>> nodes, IEnumerable<NodeGroup> groups)
+        public void SetSelection(IEnumerable<Id<NodeTemp>> nodes, IEnumerable<NodeGroup> groups)
         {
             m_selection.Clear();
             foreach (var node in nodes)
@@ -676,7 +758,7 @@ namespace ConversationEditor
         }
 
         /// <param name="from">null if there is no single linking connector (e.g. when dragging several links)</param>
-        private float FancyDistance(PointF? from, PointF p0, PointF test)
+        public static float FancyDistance(PointF? from, PointF p0, PointF test)
         {
             if (from == null)
             {
@@ -712,7 +794,7 @@ namespace ConversationEditor
             var filteredConnectors = connectors.Where(filter);
             if (filteredConnectors.Any())
             {
-                var connectorsAndMetric = filteredConnectors.Select(c => new { Connector = c, Distance = FancyDistance(from, p0, (UIInfo(c).Area.Center())) });
+                var connectorsAndMetric = filteredConnectors.Select(c => new { Connector = c, Distance = FancyDistance(from, p0, (UIInfo(c).Area.Value.Center())) });
                 var x = connectorsAndMetric.Best((a, b) => a.Distance < b.Distance).Connector;
                 return x;
             }
@@ -724,28 +806,60 @@ namespace ConversationEditor
 
         Action RefreshDisplay;
         Action<Point> Shift;
+        Action<PointF?> ScrollIfRequired;
         Action<Point, float> Scale;
-        Func<IEnumerable<TNode>> m_nodes; //Accessor to the set of nodes associated with the current file
+        Func<IReadonlyQuadTree<TNode>> m_nodes; //Accessor to the set of nodes associated with the current file
+        Func<IReadonlyQuadTree<UnorderedTuple2<Output>>> m_connections;
         Func<IEnumerable<NodeGroup>> m_groups; //Accessor to the set of groups associated with the current file
         public event Action<UndoAction> Changed;
         private readonly Func<PointF, PointF> Snap;
         private readonly Func<PointF, PointF> SnapGroup;
         private readonly Func<IEditable, ConfigureResult> Edit;
         private readonly Func<TNode, bool> RemoveNode;
-        private readonly Func<ID<NodeTemp>, TNode> GetNode;
+        private readonly Func<Id<NodeTemp>, TNode> GetNode;
         public event Action<Point> PlainClick;
-        public bool m_keyHeld;
+
+        void SetStateToNothingOrSelectingDirection(ResizeState? resizeState, Output selectedTransition)
+        {
+            ScrollIfRequired(null);
+            if (m_keyHeld == Keys.Left)
+                m_state = new State.SelectingDirection(this, new Point(-1, 0));
+            else if (m_keyHeld == Keys.Right)
+                m_state = new State.SelectingDirection(this, new Point(1, 0));
+            else if (m_keyHeld == Keys.Up)
+                m_state = new State.SelectingDirection(this, new Point(0, -1));
+            else if (m_keyHeld == Keys.Down)
+                m_state = new State.SelectingDirection(this, new Point(0, 1));
+            else if (!m_state.If(n => { }))
+            {
+                m_state = new State.Nothing(this, resizeState, selectedTransition);
+            }
+        }
+
+        private Keys? m_keyHeld;
+        public Keys? KeyHeld
+        {
+            get { return m_keyHeld; }
+            set
+            {
+                m_keyHeld = value;
+                if (m_state is State.Nothing || m_state is State.SelectingDirection)
+                    SetStateToNothingOrSelectingDirection(null, m_state.SelectedTransition);
+            }
+        }
         private readonly Func<Output, TransitionNoduleUIInfo> UIInfo;
         ColorScheme m_scheme;
 
-        public MouseController(ColorScheme scheme, Action refreshDisplay, Action<Point> shift, Action<Point, float> scale, Func<IEnumerable<TNode>> nodes, Func<IEnumerable<NodeGroup>> groups, Func<IEditable, ConfigureResult> edit, Func<TNode, bool> removeNode, Func<PointF, PointF> snap, Func<PointF, PointF> snapGroup, Func<Output, TransitionNoduleUIInfo> uiInfo, Func<ID<NodeTemp>, TNode> getNode)
+        public MouseController(ColorScheme scheme, Action refreshDisplay, Action<Point> shift, Action<PointF?> scrollIfRequired, Action<Point, float> scale, Func<IReadonlyQuadTree<TNode>> nodes, Func<IReadonlyQuadTree<UnorderedTuple2<Output>>> connections, Func<IEnumerable<NodeGroup>> groups, Func<IEditable, ConfigureResult> edit, Func<TNode, bool> removeNode, Func<PointF, PointF> snap, Func<PointF, PointF> snapGroup, Func<Output, TransitionNoduleUIInfo> uiInfo, Func<Id<NodeTemp>, TNode> getNode)
         {
             m_scheme = scheme;
             m_innerState = new State.Nothing(this, null, null);
             RefreshDisplay = refreshDisplay;
             Shift = shift;
+            ScrollIfRequired = scrollIfRequired;
             Scale = scale;
             m_nodes = nodes;
+            m_connections = connections;
             m_groups = groups;
             RemoveNode = removeNode;
             Edit = edit;
@@ -764,14 +878,18 @@ namespace ConversationEditor
         public void ForClickedOn(PointF p, Action<TNode> nodeOp, Action<Output> transitionOp, Action<Output, Output> connectionOp, Action<NodeGroup> groupOp, Action otherwise)
         {
             var nodes = m_nodes();
-            TNode clicked = nodes.FirstOrDefault(n => n.Renderer.Area.Contains(p));
+            //Make the search rectangle large enough to capture nodes which we haven't clicked on but whose connectors we might have
+            RectangleF searchRectangle = RectangleF.FromLTRB(p.X - 20, p.Y - 20, p.X + 20, p.Y + 20);//TODO: Making a big assumption here about the nature of connectors
+            var nearbyNodes = nodes.FindTouchingRegion(new RectangleF(p, SizeF.Empty)).ToArray();
+            TNode clicked = nearbyNodes.FirstOrDefault(n => n.Renderer.Area.Contains(p));
+
             if (clicked != null)
             {
                 nodeOp(clicked);
                 return;
             }
 
-            var connector = nodes.SelectMany(n => n.Connectors).FirstOrDefault(t => UIInfo(t).Area.Contains(p));
+            var connector = nearbyNodes.SelectMany(n => n.Connectors).FirstOrDefault(t => UIInfo(t).Area.Value.Contains(p));
             if (connector != null)
             {
                 transitionOp(connector);
@@ -785,12 +903,10 @@ namespace ConversationEditor
                 groupOp(group);
                 return;
             }
-
-            var connectors = nodes.SelectMany(n => n.Connectors);
-            HashSet<UnorderedTuple2<Output>> connections = new HashSet<UnorderedTuple2<Output>>(connectors.SelectMany(o => o.Connections.Select(c => UnorderedTuple.Make(o, c))));
-            foreach (var connection in connections)
+            var connections = m_connections();
+            foreach (var connection in connections.FindTouchingRegion(searchRectangle))
             {
-                Bezier b = LineDrawer.GetBezier(Util.Center(UIInfo(connection.Item1).Area), Util.Center(UIInfo(connection.Item2).Area));
+                Bezier b = LineDrawer.GetBezier(Util.Center(UIInfo(connection.Item1).Area.Value), Util.Center(UIInfo(connection.Item2).Area.Value));
                 if (b.WithinDistance(p, 5))
                 {
                     connectionOp(connection.Item1, connection.Item2);
@@ -925,7 +1041,7 @@ namespace ConversationEditor
                     {
                         if (!ctrl)
                             m_selection.Clear();
-                        if (m_keyHeld)
+                        if (KeyHeld.HasValue)
                             PlainClick.Execute(client);
                         else
                             m_state = new State.Netting(this, client, this);
@@ -968,8 +1084,8 @@ namespace ConversationEditor
         //Update the contents of the group so that all nodes physically inside the group are logically inside the group and the complement
         private void UpdateNodesInGroup(NodeGroup group)
         {
-            HashSet<ID<NodeTemp>> toAdd = new HashSet<ID<NodeTemp>>();
-            HashSet<ID<NodeTemp>> toRemove = new HashSet<ID<NodeTemp>>();
+            HashSet<Id<NodeTemp>> toAdd = new HashSet<Id<NodeTemp>>();
+            HashSet<Id<NodeTemp>> toRemove = new HashSet<Id<NodeTemp>>();
             foreach (var node in group.Contents.ToList().Where(n => !group.Renderer.Area.Contains(GetNode(n).Renderer.Area)))
             {
                 group.Contents.Remove(node);
@@ -992,9 +1108,7 @@ namespace ConversationEditor
         public void MouseMove(PointF client, Point screen)
         {
             ForClickedOn(client, n => { HoverNode = n; }, t => { HoverNode = default(TNode); }, (a, b) => { HoverNode = default(TNode); }, g => { HoverNode = default(TNode); }, () => { HoverNode = default(TNode); });
-
             m_state.MouseMove(client, screen);
-
             RefreshDisplay();
         }
 
@@ -1045,7 +1159,7 @@ namespace ConversationEditor
                 undoActions.Add(stateDelete.Value.Undo);
             }
 
-            this.m_state = new State.Nothing(this, null, null);
+            SetStateToNothingOrSelectingDirection(null, null);
 
             if (redoActions.Any())
                 return new SimpleUndoPair() { Undo = () => { foreach (var undo in undoActions) undo(); }, Redo = () => { foreach (var redo in redoActions) redo(); } };
@@ -1059,14 +1173,14 @@ namespace ConversationEditor
         public UndoAction Deleted()
         {
             m_selection.Clear();
-            m_state = new State.Nothing(this, null, null);
+            SetStateToNothingOrSelectingDirection(null, null);
             return null;
         }
 
         internal void MouseCaptureChanged()
         {
             if (!(m_state is State.ConnectionSelected))
-                m_state = new State.Nothing(this, null, m_state.SelectedTransition);
+                SetStateToNothingOrSelectingDirection(null, m_state.SelectedTransition);
         }
 
         internal bool IsSelected(Output connector)

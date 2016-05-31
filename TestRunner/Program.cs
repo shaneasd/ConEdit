@@ -5,6 +5,7 @@ using System.Text;
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
+using Utilities;
 
 namespace TestRunner
 {
@@ -30,10 +31,7 @@ namespace TestRunner
             //}
             //w.Stop();
 
-            DirectoryInfo a = new DirectoryInfo(@"c:\a\");
-            DirectoryInfo b = new DirectoryInfo(@"c:\a\\");
-            DirectoryInfo c = new DirectoryInfo(@"c:\a\\\");
-            DirectoryInfo d = new DirectoryInfo(@"c:\A\");
+            //Tests.TestUpToDateFile.StressTest();
 
             NUnit.ConsoleRunner.Runner.Main(args);
         }

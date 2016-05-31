@@ -12,7 +12,7 @@ using Utilities.UI;
 
 namespace ConversationEditor
 {
-    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
 
     internal partial class ErrorList : UserControl
     {
@@ -161,7 +161,7 @@ namespace ConversationEditor
             greyScrollBar1.PercentageCovered = Height / totalHeight;
         }
 
-        ColorScheme m_scheme;
+        ColorScheme m_scheme = new ColorScheme(); //So the designer has something to work with
         public ColorScheme ColorScheme
         {
             get { return m_scheme; }

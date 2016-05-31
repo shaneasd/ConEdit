@@ -18,19 +18,19 @@ namespace Conversation.Serialization
         /// <summary>
         /// Deserialize only the localization data required by a conversation player (i.e the mapping of id to text)
         /// </summary>
-        public class ClientDeserializer : IDeserializer<Dictionary<ID<LocalizedText>, string>>
+        public class ClientDeserializer : IDeserializer<Dictionary<Id<LocalizedText>, string>>
         {
-            public Dictionary<ID<LocalizedText>, string> Read(Stream stream)
+            public Dictionary<Id<LocalizedText>, string> Read(Stream stream)
             {
-                Dictionary<ID<LocalizedText>, string> result = new Dictionary<ID<LocalizedText>, string>();
+                Dictionary<Id<LocalizedText>, string> result = new Dictionary<Id<LocalizedText>, string>();
                 XDocument doc = XDocument.Load(stream);
                 XElement root = doc.Root;
                 if (root.Attribute("xmlversion").Value != XML_VERSION)
-                    throw new Exception("Unknown xml version in " + stream.ToString());
+                    throw new XmlVersionException("Unknown xml version in " + stream.ToString());
                 var nodes = root.Elements("Localize");
                 foreach (var node in nodes)
                 {
-                    var id = ID<LocalizedText>.Parse(node.Attribute("id").Value);
+                    var id = Id<LocalizedText>.Parse(node.Attribute("id").Value);
                     string data = node.Value;
                     result[id] = data;
                 }
@@ -50,10 +50,10 @@ namespace Conversation.Serialization
                 var nodes = root.Elements("Localize");
                 foreach (var node in nodes)
                 {
-                    var id = ID<LocalizedText>.Parse(node.Attribute("id").Value);
+                    var id = Id<LocalizedText>.Parse(node.Attribute("id").Value);
                     DateTime localized = new DateTime(long.Parse(node.Attribute("localized").Value, CultureInfo.InvariantCulture));
                     string data = node.Value;
-                    result.m_data[id] = new LocalizationElement(localized, data);
+                    result.SetLocalized(id, new LocalizationElement(localized, data));
                 }
                 return result;
             }
@@ -61,14 +61,14 @@ namespace Conversation.Serialization
 
         public class Serializer : ISerializer<LocalizerData>
         {
-            private Func<ID<LocalizedText>, bool> m_idUsed;
-            private Func<IEnumerable<ID<LocalizedText>>> m_usedGuids;
+            private Func<Id<LocalizedText>, bool> m_idUsed;
+            private Func<IEnumerable<Id<LocalizedText>>> m_usedGuids;
             private Func<string, bool> m_shouldClean;
             private Func<string, bool> m_shouldExpand;
-            private Func<ID<LocalizedText>, string> m_bestLocalization;
+            private Func<Id<LocalizedText>, string> m_bestLocalization;
             private string m_file;
 
-            public Serializer(Func<ID<LocalizedText>, bool> guidUsed, Func<IEnumerable<ID<LocalizedText>>> usedGuids, Func<string, bool> shouldClean, Func<string, bool> shouldExpand, Func<ID<LocalizedText>, string> bestLocalization, string file)
+            public Serializer(Func<Id<LocalizedText>, bool> guidUsed, Func<IEnumerable<Id<LocalizedText>>> usedGuids, Func<string, bool> shouldClean, Func<string, bool> shouldExpand, Func<Id<LocalizedText>, string> bestLocalization, string file)
             {
                 m_idUsed = guidUsed;
                 m_usedGuids = usedGuids;
@@ -80,14 +80,14 @@ namespace Conversation.Serialization
 
             public void Write(LocalizerData data, Stream stream)
             {
-                var unused = data.m_data.Where(kvp => !m_idUsed(kvp.Key));
-                var used = data.m_data.Where(kvp => m_idUsed(kvp.Key));
+                var unused = data.AllLocalizations.Where(kvp => !m_idUsed(kvp.Key));
+                var used = data.AllLocalizations.Where(kvp => m_idUsed(kvp.Key));
                 var missing = m_usedGuids().Except(used.Select(kvp => kvp.Key));
 
                 XElement root = new XElement(ROOT, new XAttribute("xmlversion", XML_VERSION));
                 XDocument doc = new XDocument(root);
 
-                SortedList<ID<LocalizedText>, XElement> elements = new SortedList<ID<LocalizedText>, XElement>();
+                SortedList<Id<LocalizedText>, XElement> elements = new SortedList<Id<LocalizedText>, XElement>();
 
                 foreach (var kvp in used)
                 {
@@ -131,6 +131,23 @@ namespace Conversation.Serialization
 
     public class LocalizerData
     {
-        public Dictionary<ID<LocalizedText>, LocalizationElement> m_data = new Dictionary<ID<LocalizedText>, LocalizationElement>();
+        public Dictionary<Id<LocalizedText>, LocalizationElement> m_data = new Dictionary<Id<LocalizedText>, LocalizationElement>();
+
+        public bool CanLocalize(Id<LocalizedText> id)
+        {
+            return m_data.ContainsKey(id);
+        }
+
+        public LocalizationElement GetLocalized(Id<LocalizedText> id)
+        {
+            return m_data[id];
+        }
+
+        public void SetLocalized(Id<LocalizedText> id, LocalizationElement localized)
+        {
+            m_data[id] = localized;
+        }
+
+        public IEnumerable<KeyValuePair<Id<LocalizedText>, LocalizationElement>> AllLocalizations { get { return m_data; } }
     }
 }

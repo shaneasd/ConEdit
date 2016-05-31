@@ -12,10 +12,10 @@ namespace PluginPack
 {
     public class IconRendererFactory : NodeUI.IFactory
     {
-        private static readonly IconRendererFactory m_instance = new IconRendererFactory();
-        public static IconRendererFactory Instance { get { return m_instance; } }
+        private static readonly IconRendererFactory s_instance = new IconRendererFactory();
+        public static IconRendererFactory Instance { get { return s_instance; } }
 
-        public bool WillRender(ID<NodeTypeTemp> nodeType)
+        public bool WillRender(Id<NodeTypeTemp> nodeType)
         {
             return true;
         }
@@ -25,7 +25,7 @@ namespace PluginPack
             get { return "Icon Renderer"; }
         }
 
-        public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        public INodeGui GetRenderer(ConversationNode<INodeGui> n, PointF p, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
             return new IconRenderer(n, p, localizer);
         }
@@ -37,12 +37,12 @@ namespace PluginPack
         }
     }
 
-    public class IconRenderer : NodeUI, IDisposable
+    public class IconRenderer : NodeUI
     {
         string m_name;
         Bitmap m_image;
 
-        public IconRenderer(ConversationNode<ConversationEditor.INodeGUI> node, PointF p, Func<ID<LocalizedText>, string> localizer) :
+        public IconRenderer(ConversationNode<ConversationEditor.INodeGui> node, PointF p, Func<Id<LocalizedText>, string> localizer) :
             base(node, p)
         {
             m_localizer = localizer;
@@ -94,11 +94,6 @@ namespace PluginPack
             }
         }
 
-        public override string DisplayName
-        {
-            get { return IconRendererFactory.Instance.DisplayName; }
-        }
-
         protected override void InnerDraw(System.Drawing.Graphics g, bool selected)
         {
             SetName();
@@ -117,14 +112,9 @@ namespace PluginPack
 
         static readonly Font Font = SystemFonts.DefaultFont;
         const float NAME_ICON_SPACING = 2;
-        private Func<ID<LocalizedText>, string> m_localizer;
+        private Func<Id<LocalizedText>, string> m_localizer;
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             if (disposing)
             {

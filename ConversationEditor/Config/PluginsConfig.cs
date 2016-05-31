@@ -70,12 +70,12 @@ namespace ConversationEditor
             }
         }
 
-        public IEnumerable<NodeRendererChoice> GetRenderersFor(ID<NodeTypeTemp> nodeType)
+        public IEnumerable<NodeRendererChoice> GetRenderersFor(Id<NodeTypeTemp> nodeType)
         {
             return NodeRenderers.Where(c => c.WillRender(nodeType));
         }
 
-        public IEnumerable<NodeEditorChoice> GetEditorsFor(ID<NodeTypeTemp> nodeType)
+        public IEnumerable<NodeEditorChoice> GetEditorsFor(Id<NodeTypeTemp> nodeType)
         {
             return NodeEditors.Where(c => c.WillEdit(nodeType));
         }

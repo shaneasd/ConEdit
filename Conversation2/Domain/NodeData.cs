@@ -19,22 +19,22 @@ namespace Conversation
         /// </summary>
         public struct ConnectorData
         {
-            public ConnectorData(ID<TConnector> id, ID<TConnectorDefinition> typeID, List<Parameter> parameters)
+            public ConnectorData(Id<TConnector> id, Id<TConnectorDefinition> typeId, List<Parameter> parameters)
             {
                 Id = id;
-                TypeID = typeID;
+                TypeId = typeId;
                 Parameters = parameters;
             }
 
             /// <summary>
             /// Identifies this connector for the node type uniquely. A combination of this ID and a node ID will uniquely identify a connector in a graph.
             /// </summary>
-            public readonly ID<TConnector> Id;
+            public readonly Id<TConnector> Id;
 
             /// <summary>
             /// Identifies the connector definition which classifies this connector
             /// </summary>
-            public readonly ID<TConnectorDefinition> TypeID;
+            public readonly Id<TConnectorDefinition> TypeId;
 
             public readonly List<Parameter> Parameters;
 
@@ -47,10 +47,10 @@ namespace Conversation
 
         public struct ParameterData
         {
-            public ParameterData(string name, ID<Parameter> id, ParameterType type, ReadOnlyCollection<ConfigData> config)
+            public ParameterData(string name, Id<Parameter> id, ParameterType type, ReadOnlyCollection<ConfigData> config)
             {
                 if (config == null)
-                    throw new Exception("Parameter config cannot be null (A)");
+                    throw new InternalLogicException("Parameter config cannot be null (A)");
                 Type = type;
                 Name = name;
                 Id = id;
@@ -58,10 +58,10 @@ namespace Conversation
                 Config = config;
             }
 
-            public ParameterData(string name, ID<Parameter> id, ParameterType type, ReadOnlyCollection<ConfigData> config, string def)
+            public ParameterData(string name, Id<Parameter> id, ParameterType type, ReadOnlyCollection<ConfigData> config, string def)
             {
                 if (config == null)
-                    throw new Exception("Parameter config cannot be null (B)");
+                    throw new InternalLogicException("Parameter config cannot be null (B)");
                 Type = type;
                 Name = name;
                 Id = id;
@@ -71,11 +71,11 @@ namespace Conversation
 
             public ParameterType Type;
             public string Name;
-            public ID<Parameter> Id;
+            public Id<Parameter> Id;
             public string Default; //Can be null, string form of the default value
             public ReadOnlyCollection<ConfigData> Config;
 
-            public Parameter Make(Func<ParameterType, string, ID<Parameter>, string, Parameter> parameterFactory)
+            public Parameter Make(Func<ParameterType, string, Id<Parameter>, string, Parameter> parameterFactory)
             {
                 var result = parameterFactory(Type, Name, Id, Default);
                 //var @default = ;
@@ -91,10 +91,10 @@ namespace Conversation
 
         public struct ConfigData
         {
-            public readonly ID<NodeTypeTemp> Type;
+            public readonly Id<NodeTypeTemp> Type;
             public IEnumerable<Parameter> Parameters;
 
-            public ConfigData(ID<NodeTypeTemp> type, IEnumerable<Parameter> parameters)
+            public ConfigData(Id<NodeTypeTemp> type, IEnumerable<Parameter> parameters)
             {
                 Type = type;
                 Parameters = parameters.ToList();
@@ -109,7 +109,7 @@ namespace Conversation
             //public string Value;
         }
 
-        public NodeData(string name, Guid? type, ID<NodeTypeTemp> guid, List<ConnectorData> connectors, List<ParameterData> parameters, List<ConfigData> config)
+        public NodeData(string name, Guid? type, Id<NodeTypeTemp> guid, List<ConnectorData> connectors, List<ParameterData> parameters, List<ConfigData> config)
         {
             Name = name;
             Type = type;
@@ -121,7 +121,7 @@ namespace Conversation
 
         public string Name;
         public Guid? Type; //Category
-        public ID<NodeTypeTemp> Guid;
+        public Id<NodeTypeTemp> Guid;
         public List<ConnectorData> Connectors;
         public List<ParameterData> Parameters;
         public List<ConfigData> Config;

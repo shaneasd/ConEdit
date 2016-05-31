@@ -94,7 +94,7 @@ namespace Utilities
 
         public int Count
         {
-            get { throw new NotImplementedException(); }
+            get { return m_data.Count; }
         }
 
         public bool IsReadOnly
@@ -102,19 +102,20 @@ namespace Utilities
             get { return false; }
         }
 
-        public bool Remove(KeyValuePair<TKey, TValue> item)
+        bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
         {
-            throw new NotImplementedException();
+            //It's not supported by Dictionary so I'm not going to support it either
+            throw new NotSupportedException("CallbackDictionary<TKey, TValue>.Remove(KeyValuePair<TKey, TValue>) not supported");
         }
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            throw new NotImplementedException();
+            return m_data.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return m_data.GetEnumerator();
         }
     }
 }

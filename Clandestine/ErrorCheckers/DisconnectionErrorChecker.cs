@@ -10,7 +10,7 @@ namespace Clandestine
 {
     public class DisconnectionErrorChecker<T> : ErrorChecker<T> where T : class, IConversationNode
     {
-        private class DisconnectedInputError : ConversationError<T> 
+        private class DisconnectedInputError : ConversationError<T>
         {
             public DisconnectedInputError(T node) : base(node.Only()) { }
             public override string Message
@@ -19,7 +19,7 @@ namespace Clandestine
             }
         }
 
-        private class DisconnectedOutputError : ConversationError<T> 
+        private class DisconnectedOutputError : ConversationError<T>
         {
             public DisconnectedOutputError(T node) : base(node.Only()) { }
             public override string Message
@@ -28,7 +28,39 @@ namespace Clandestine
             }
         }
 
+        private class DisconnectedConnectorError : ConversationError<T>
+        {
+            public DisconnectedConnectorError(T node) : base(node.Only()) { }
+            public override string Message
+            {
+                get { return "Disconnected connector"; }
+            }
+        }
+
+        static bool IsOptional(Output connector)
+        {
+            var optionalParameters = connector.Parameters.Where(p => string.Equals(p.Name, "optional", StringComparison.OrdinalIgnoreCase));
+            var optionalParameter = optionalParameters.OfType<IBooleanParameter>().SingleOrDefault();
+            if (optionalParameter != null)
+                return optionalParameter.Value;
+            else
+                return false;
+        }
+
         public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
+        {
+            foreach (var node in nodes)
+            {
+                var connectors = node.Connectors;
+                var nonoptionalConnectors = connectors.Where(c=>!IsOptional(c));
+
+                foreach (var input in nonoptionalConnectors)
+                    if (!input.Connections.Any())
+                        yield return new DisconnectedConnectorError(node);
+            }
+        }
+
+        public IEnumerable<ConversationError<T>> Check2(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
         {
             foreach (var node in nodes)
             {
@@ -56,5 +88,6 @@ namespace Clandestine
         {
             get { return "Disconnected link"; }
         }
+
     }
 }

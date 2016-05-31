@@ -12,10 +12,10 @@ namespace Clandestine
 {
     public class PartialRendererFactory : NodeUI.IFactory
     {
-        private static readonly PartialRendererFactory m_instance = new PartialRendererFactory();
-        public static PartialRendererFactory Instance { get { return m_instance; } }
+        private static readonly PartialRendererFactory s_instance = new PartialRendererFactory();
+        public static PartialRendererFactory Instance { get { return s_instance; } }
 
-        public bool WillRender(ID<NodeTypeTemp> nodeType)
+        public bool WillRender(Id<NodeTypeTemp> nodeType)
         {
             return true;
         }
@@ -25,7 +25,8 @@ namespace Clandestine
             get { return "Partial Renderer"; }
         }
 
-        public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "IL might look different to the code but there's nothing you can do to fix the warning")]
+        public INodeGui GetRenderer(ConversationNode<INodeGui> n, PointF p, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
             return new PartialRenderer(n, p, localizer, datasource);
         }
@@ -40,7 +41,7 @@ namespace Clandestine
     {
         private Func<IDataSource> m_datasource;
 
-        public PartialRenderer(ConversationNode<ConversationEditor.INodeGUI> node, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource) :
+        public PartialRenderer(ConversationNode<ConversationEditor.INodeGui> node, PointF p, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource) :
             base(node, p, localizer)
         {
             m_datasource = datasource;
@@ -48,13 +49,10 @@ namespace Clandestine
 
         protected override bool ShouldRender(Parameter p)
         {
+            if (p == null)
+                throw new ArgumentNullException(nameof(p));
             var config = m_datasource().GetNode(Node.Type).GetParameterConfig(p.Id);
             return !DoNotRenderConfig.TryGet(config);
-        }
-        
-        public override string DisplayName
-        {
-            get { return PartialRendererFactory.Instance.DisplayName; }
         }
     }
 }

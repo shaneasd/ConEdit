@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Conversation;
 using Utilities;
-using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
 
 namespace ConversationEditor
 {

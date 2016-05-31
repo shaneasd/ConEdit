@@ -17,7 +17,7 @@ namespace ConversationEditor
             Area = RectangleF.FromLTRB(p.X - 10, p.Y - 10, p.X + 10, p.Y + 10);
         }
 
-        public static NodeUIData Make(IGUI renderer)
+        public static NodeUIData Make(IGui renderer)
         {
             return new NodeUIData { Area = renderer.Area };
         }

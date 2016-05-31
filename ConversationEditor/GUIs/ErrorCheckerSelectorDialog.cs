@@ -106,5 +106,29 @@ namespace ConversationEditor
             m_list.MouseClick(e.Location, (int)greyScrollBar1.Value);
             drawWindow1.Invalidate(true);
         }
+
+        private void drawWindow1_MouseDown(object sender, MouseEventArgs e)
+        {
+            m_list.MouseDown(e.Location, (int)greyScrollBar1.Value);
+            drawWindow1.Invalidate(true);
+        }
+
+        private void drawWindow1_MouseUp(object sender, MouseEventArgs e)
+        {
+            m_list.MouseUp();
+            drawWindow1.Invalidate(true);
+        }
+
+        private void drawWindow1_MouseCaptureChanged(object sender, EventArgs e)
+        {
+            m_list.MouseCaptureChanged();
+            drawWindow1.Invalidate(true);
+        }
+
+        private void drawWindow1_MouseMove(object sender, MouseEventArgs e)
+        {
+            m_list.MouseMove(e.Location, (int)greyScrollBar1.Value);
+            drawWindow1.Invalidate(true);
+        }
     }
 }

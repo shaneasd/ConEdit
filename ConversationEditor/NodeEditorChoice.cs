@@ -26,7 +26,7 @@ namespace ConversationEditor
             get { return GetEditorFactory().DisplayName; }
         }
 
-        internal bool WillEdit(ID<NodeTypeTemp> nodeType)
+        internal bool WillEdit(Id<NodeTypeTemp> nodeType)
         {
             return GetEditorFactory().WillEdit(nodeType);
         }
@@ -37,7 +37,7 @@ namespace ConversationEditor
             return constructor.Invoke(new object[0]) as NodeEditorFactory;
         }
 
-        internal static NodeEditorChoice Default(ID<NodeTypeTemp> guid)
+        internal static NodeEditorChoice Default(Id<NodeTypeTemp> guid)
         {
             return new NodeEditorChoice(typeof(DefaultNodeEditorFactory));
         }

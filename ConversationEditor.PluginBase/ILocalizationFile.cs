@@ -9,8 +9,8 @@ namespace ConversationEditor
 {
     public interface ILocalizationFile : IInProject, ISaveableFileProvider
     {
-        string Localize(ID<LocalizedText> id);
-        SimpleUndoPair SetLocalizationAction(ID<LocalizedText> guid, string p);
+        string Localize(Id<LocalizedText> id);
+        SimpleUndoPair SetLocalizationAction(Id<LocalizedText> guid, string p);
         /// <summary>
         /// Will this localizer localize to real user specified data?
         /// </summary>

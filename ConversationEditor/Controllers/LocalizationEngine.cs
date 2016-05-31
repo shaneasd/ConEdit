@@ -10,14 +10,14 @@ using Conversation.Serialization;
 
 namespace ConversationEditor
 {
-    internal class LocalizationEngine : ILocalizationEngine
+    internal class LocalizationEngine : Disposable, ILocalizationEngine
     {
         public const string MISSING_LOCALIZATION = "Missing Localization";
 
         ProjectElementList<LocalizationFile, MissingLocalizationFile, ILocalizationFile> m_localizers;
         ILocalizationContext m_context;
 
-        private Func<HashSet<ID<LocalizedText>>> m_usedGuids;
+        private Func<HashSet<Id<LocalizedText>>> m_usedGuids;
         public readonly Func<string, bool> ShouldClean;
         public readonly Func<string, bool> ShouldExpand;
 
@@ -27,7 +27,7 @@ namespace ConversationEditor
         /// <param name="shouldExpand"></param>
         /// <param name="pathOk">Path is an acceptable filename for a new localization file</param>
         /// <param name="fileLocationOk">Path is an acceptable location from which to import an existing localization file</param>
-        public LocalizationEngine(ILocalizationContext context, Func<HashSet<ID<LocalizedText>>> usedGuids, Func<string, bool> shouldClean, Func<string, bool> shouldExpand, Func<FileInfo, bool> pathOk, Func<string, bool> fileLocationOk)
+        public LocalizationEngine(ILocalizationContext context, Func<HashSet<Id<LocalizedText>>> usedGuids, Func<string, bool> shouldClean, Func<string, bool> shouldExpand, Func<FileInfo, bool> pathOk, Func<string, bool> fileLocationOk)
         {
             m_context = context;
             m_usedGuids = usedGuids;
@@ -56,7 +56,7 @@ namespace ConversationEditor
             return new XmlLocalization.Serializer(GuidUsed, m_usedGuids, ShouldClean, ShouldExpand, Localize, file);
         }
 
-        public string Localize(ID<LocalizedText> guid)
+        public string Localize(Id<LocalizedText> guid)
         {
             if (guid != null)
                 return m_context.CurrentLocalization.Value.Localize(guid) ?? MISSING_LOCALIZATION;
@@ -64,9 +64,9 @@ namespace ConversationEditor
                 return MISSING_LOCALIZATION;
         }
 
-        public Tuple<ID<LocalizedText>, SimpleUndoPair> DuplicateActions(ID<LocalizedText> guid)
+        public Tuple<Id<LocalizedText>, SimpleUndoPair> DuplicateActions(Id<LocalizedText> guid)
         {
-            ID<LocalizedText> result = new ID<LocalizedText>();
+            Id<LocalizedText> result = new Id<LocalizedText>();
             List<SimpleUndoPair> actions = new List<SimpleUndoPair>();
             foreach (var loc in Localizers.OfType<LocalizationFile>())
             {
@@ -75,12 +75,12 @@ namespace ConversationEditor
             return Tuple.Create(result, new SimpleUndoPair { Redo = ()=>actions.ForEach(a=>a.Redo()), Undo = ()=> actions.ForEach(a=>a.Undo())});
         }
 
-        public SimpleUndoPair SetLocalizationAction(ID<LocalizedText> guid, string value)
+        public SimpleUndoPair SetLocalizationAction(Id<LocalizedText> guid, string value)
         {
             return m_context.CurrentLocalization.Value.SetLocalizationAction(guid, value);
         }
 
-        public IEnumerable<ID<LocalizedText>> UsedGuids
+        public IEnumerable<Id<LocalizedText>> UsedGuids
         {
             get
             {
@@ -88,7 +88,7 @@ namespace ConversationEditor
             }
         }
 
-        public bool GuidUsed(ID<LocalizedText> guid)
+        public bool GuidUsed(Id<LocalizedText> guid)
         {
             return m_usedGuids().Contains(guid);
         }
@@ -96,6 +96,11 @@ namespace ConversationEditor
         public bool CanLocalize
         {
             get { return m_localizers.Any(); } //Assume that if localizers exist then one is selected
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            m_localizers.Dispose();
         }
     }
 }

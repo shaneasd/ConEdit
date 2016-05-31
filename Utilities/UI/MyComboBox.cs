@@ -9,47 +9,50 @@ using System.Drawing.Drawing2D;
 
 namespace Utilities.UI
 {
+    public class MyComboBoxItem<T>
+    {
+        private readonly string m_displayString;
+        private readonly T m_contents;
+
+        public string DisplayString { get { return m_displayString; } }
+        public T Contents { get { return m_contents; } }
+        private bool m_sourcedValue;
+        public MyComboBoxItem(string displayString, T contents)
+        {
+            m_displayString = displayString;
+            m_contents = contents;
+            m_sourcedValue = true;
+        }
+        public MyComboBoxItem(string displayString)
+        {
+            m_displayString = displayString;
+            m_contents = default(T);
+            m_sourcedValue = false;
+        }
+        public override string ToString()
+        {
+            return DisplayString;
+        }
+        public override bool Equals(object obj)
+        {
+            var other = obj as MyComboBoxItem<T>;
+            if (other == null)
+                return false;
+            else if (m_sourcedValue != other.m_sourcedValue)
+                return false;
+            else if (m_sourcedValue)
+                return object.Equals(Contents, other.Contents);
+            else
+                return object.Equals(DisplayString, other.DisplayString);
+        }
+        public override int GetHashCode()
+        {
+            return 0;
+        }
+    }
+
     public class MyComboBox<T> : MyControl
     {
-        public class Item
-        {
-            public readonly string DisplayString;
-            public readonly T Contents;
-            public bool SourcedValue;
-            public Item(string displayString, T contents)
-            {
-                DisplayString = displayString;
-                Contents = contents;
-                SourcedValue = true;
-            }
-            public Item(string displayString)
-            {
-                DisplayString = displayString;
-                Contents = default(T);
-                SourcedValue = false;
-            }
-            public override string ToString()
-            {
-                return DisplayString;
-            }
-            public override bool Equals(object obj)
-            {
-                var other = obj as Item;
-                if (other == null)
-                    return false;
-                else if (SourcedValue != other.SourcedValue)
-                    return false;
-                else if (SourcedValue)
-                    return object.Equals(Contents, other.Contents);
-                else
-                    return object.Equals(DisplayString, other.DisplayString);
-            }
-            public override int GetHashCode()
-            {
-                return 0;
-            }
-        }
-
         public override event Action RequestedAreaChanged;
         public event Action SelectionChanged;
         private SizeF m_requestedSize;
@@ -81,7 +84,7 @@ namespace Utilities.UI
 
         public MyTextBox.ColorOptions TextBoxColors { get { return m_textBox.Colors; } set { m_textBox.Colors = value; } }
 
-        public MyComboBox(Control control, Func<RectangleF> area, bool allowCustomText, IEnumerable<Item> items)
+        public MyComboBox(Control control, Func<RectangleF> area, bool allowCustomText, IEnumerable<MyComboBoxItem<T>> items)
         {
             m_allowCustomText = allowCustomText;
             m_control = control;
@@ -97,7 +100,7 @@ namespace Utilities.UI
 
             m_dropDown = new ToolStripDropDown();
 
-            m_textBox = new MyTextBox(control, m_textBoxArea, allowCustomText ? MyTextBox.InputFormEnum.Text : MyTextBox.InputFormEnum.None);
+            m_textBox = new MyTextBox(control, m_textBoxArea, allowCustomText ? MyTextBox.InputFormEnum.Text : MyTextBox.InputFormEnum.None, null);
             m_textBox.Font = m_dropDown.Font;
             m_textBox.RequestedAreaChanged += () => { RequestedArea = new SizeF(Area.Width, m_textBox.RequestedArea.Height); };
 
@@ -173,12 +176,12 @@ namespace Utilities.UI
             m_textBox.KeyDown(args);
         }
 
-        public override void Paint(Graphics graphics)
+        public override void Paint(Graphics g)
         {
-            m_textBox.Paint(graphics);
+            m_textBox.Paint(g);
 
             if (m_HasDropDownButton)
-                DrawButton(graphics, m_buttonArea());
+                DrawButton(g, m_buttonArea());
         }
 
         private void DrawButton(Graphics graphics, RectangleF buttonArea)
@@ -191,19 +194,19 @@ namespace Utilities.UI
             graphics.FillPath(TextBoxColors.TextBrush, path);
         }
 
-        private Item MatchingItem()
+        private MyComboBoxItem<T> MatchingItem()
         {
             return Items.FirstOrDefault(i => i.DisplayString == m_textBox.Text);
         }
 
-        private Item m_selectedItem = new Item("Uninitialized default", default(T));
-        public Item SelectedItem
+        private MyComboBoxItem<T> m_selectedItem = new MyComboBoxItem<T>("Uninitialized default", default(T));
+        public MyComboBoxItem<T> SelectedItem
         {
             get
             {
                 if (m_allowCustomText)
                 {
-                    return MatchingItem() ?? new Item(m_textBox.Text);
+                    return MatchingItem() ?? new MyComboBoxItem<T>(m_textBox.Text);
                 }
                 else
                 {
@@ -229,7 +232,7 @@ namespace Utilities.UI
         }
 
         public ToolStripRenderer Renderer { get { return m_dropDown.Renderer; } set { m_dropDown.Renderer = value; } }
-        public readonly IEnumerable<Item> Items;
+        public readonly IEnumerable<MyComboBoxItem<T>> Items;
 
         public event Action EnterPressed { add { m_textBox.EnterPressed += value; } remove { m_textBox.EnterPressed -= value; } }
 

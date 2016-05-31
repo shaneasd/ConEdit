@@ -14,8 +14,8 @@ namespace RuntimeConversation
 {
     public partial class ConversationForm : Form
     {
-        private Dictionary<ID<LocalizedText>, string> m_localizer;
-        public string Localize(ID<LocalizedText> id)
+        private Dictionary<Id<LocalizedText>, string> m_localizer;
+        public string Localize(Id<LocalizedText> id)
         {
             if (m_localizer.ContainsKey(id))
                 return m_localizer[id];

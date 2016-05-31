@@ -245,11 +245,11 @@ namespace Utilities
 
         public static RectangleUnion Unionize(IEnumerable<RectangleF> input)
         {
-            List<Shape> shapes = new List<Shape>();
-            shapes = input.Select(r => new Shape(r)).ToList();
+            IEnumerable<Shape> shapes = new List<Shape>();
+            shapes = input.Select(r => new Shape(r));
             shapes = shapes.Merge((a, b) => Shape.TryMerge(a, b));
             shapes = shapes.Merge((a, b) => Shape.TryMerge(a, b));//Shouldn't have to do this twice
-            return new RectangleUnion(shapes);
+            return new RectangleUnion(shapes.ToList());
         }
 
         public void Draw(Graphics g)

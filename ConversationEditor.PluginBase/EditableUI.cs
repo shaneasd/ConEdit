@@ -9,13 +9,13 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
 
     public class EditableUIFactory : NodeUI.IFactory
     {
         public static EditableUIFactory Instance = new EditableUIFactory();
 
-        public bool WillRender(ID<NodeTypeTemp> nodeType)
+        public bool WillRender(Id<NodeTypeTemp> nodeType)
         {
             return nodeType != SpecialNodes.Start;
         }
@@ -25,7 +25,7 @@ namespace ConversationEditor
             get { return "Default Conversation Node Renderer"; }
         }
 
-        public INodeGUI GetRenderer(ConversationNode n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        public INodeGui GetRenderer(ConversationNode n, PointF p, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
             return new EditableUI(n, p, localizer);
         }
@@ -41,15 +41,15 @@ namespace ConversationEditor
     {
         public readonly static Font Font = SystemFonts.DefaultFont;
         public readonly static Font BoldFont = new Font(SystemFonts.DefaultFont, FontStyle.Bold);
-        public readonly static Pen thin = new Pen(Brushes.Black, 1);
-        public readonly static Pen thick = new Pen(Brushes.White, 3);
+        public readonly static Pen Thin = new Pen(Brushes.Black, 1);
+        public readonly static Pen Thick = new Pen(Brushes.White, 3);
 
         protected virtual bool ShouldRender(Parameter p)
         {
             return true;
         }
 
-        public EditableUI(ConversationNode node, PointF p, Func<ID<LocalizedText>, string> localizer)
+        public EditableUI(ConversationNode node, PointF p, Func<Id<LocalizedText>, string> localizer)
             : base(node, p)
         {
             m_titleSection = new TitleSection(node);
@@ -57,9 +57,9 @@ namespace ConversationEditor
             m_parametersSection = new ParametersSection(node, localizer, ShouldRender);
         }
 
-        protected Section m_titleSection;
-        protected Section m_parametersSection;
-        protected Section m_outputsSection;
+        private Section m_titleSection;
+        private Section m_parametersSection;
+        private Section m_outputsSection;
 
         static GraphicsPath RoundedRectangle(RectangleF notRounded, int radius)
         {
@@ -126,7 +126,7 @@ namespace ConversationEditor
                     {
                         g.FillRectangle(theRestGradient, area);
                     }
-                    g.DrawRectangle(thin, Rectangle.Round(area));
+                    g.DrawRectangle(Thin, Rectangle.Round(area));
                 }
             }
 
@@ -206,10 +206,10 @@ namespace ConversationEditor
 
         protected class ParametersSection : Section
         {
-            Func<ID<LocalizedText>, string> m_localizer;
+            Func<Id<LocalizedText>, string> m_localizer;
             Func<Parameter, bool> ShouldRender;
 
-            public ParametersSection(ConversationNode node, Func<ID<LocalizedText>, string> localizer, Func<Parameter, bool> shouldRender)
+            public ParametersSection(ConversationNode node, Func<Id<LocalizedText>, string> localizer, Func<Parameter, bool> shouldRender)
                 : base(node)
             {
                 m_localizer = localizer;
@@ -247,6 +247,7 @@ namespace ConversationEditor
             //                          ShouldntRender<BooleanParameter>(p, s => s == false.ToString()) ||
             //                          ShouldntRender<DecimalParameter>(p, s => s == 0m.ToString()) ||
             //                          ShouldntRender<DynamicEnumParameter>(p, s => s == "") ||
+            //                          ShouldntRender<LocalDynamicEnumParameter>(p, s => s == "") ||
             //                          ShouldntRender(p as EnumParameter) ||
             //                          ShouldntRender<IntegerParameter>(p, s => s == 0.ToString()) ||
             //                          ShouldntRender<LocalizedStringParameter>(p, s => s == "") ||
@@ -329,7 +330,7 @@ namespace ConversationEditor
 
                     g.Restore(savedState);
 
-                    DrawShadow(g, selected);
+                    DrawShadow(g);
                     DrawBorder(g, nodeShape, selected);
                 }
             }
@@ -361,16 +362,16 @@ namespace ConversationEditor
         {
             if (selected)
             {
-                g.DrawPath(thick, nodeShape);
-                g.DrawPath(thin, nodeShape);
+                g.DrawPath(Thick, nodeShape);
+                g.DrawPath(Thin, nodeShape);
             }
             else
             {
-                g.DrawPath(thin, nodeShape);
+                g.DrawPath(Thin, nodeShape);
             }
         }
 
-        private void DrawShadow(Graphics g, bool selected)
+        private void DrawShadow(Graphics g)
         {
             Color shadowDark = Color.FromArgb(0x40, Color.Black);
             Color shadowLight = Color.FromArgb(0x00, Color.Black);
@@ -446,10 +447,8 @@ namespace ConversationEditor
             return new SizeF(maxWidth, sections.Sum(s => s.Height));
         }
 
-        public override string DisplayName
+        protected override void Dispose(bool disposing)
         {
-            get { return EditableUIFactory.Instance.DisplayName; }
         }
-
     }
 }

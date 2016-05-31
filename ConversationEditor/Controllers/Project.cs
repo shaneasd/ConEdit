@@ -10,12 +10,12 @@ using Conversation.Serialization;
 
 namespace ConversationEditor
 {
-    using ConversationNode = ConversationNode<INodeGUI>;
+    using ConversationNode = ConversationNode<INodeGui>;
     //using TData = Tuple<IEnumerable<string>, IEnumerable<string>, IEnumerable<string>>;
     using TConversationData = XmlGraphData<NodeUIData, ConversationEditorData>;
     using TDomainData = XmlGraphData<NodeUIData, ConversationEditorData>;
-    using TConversationSerializerDeserializer = ISerializerDeserializer<Tuple<IEnumerable<ConversationNode<INodeGUI>>, ConversationEditorData>>;
-    using TDomainSerializerDeserializer = ISerializerDeserializer<Tuple<IEnumerable<ConversationNode<INodeGUI>>, ConversationEditorData>>;
+    using TConversationSerializerDeserializer = ISerializerDeserializer<Tuple<IEnumerable<ConversationNode<INodeGui>>, ConversationEditorData>>;
+    using TDomainSerializerDeserializer = ISerializerDeserializer<Tuple<IEnumerable<ConversationNode<INodeGui>>, ConversationEditorData>>;
     using ConversationSerializerDeserializerFactory = Func<IDataSource, ISerializerDeserializer<XmlGraphData<NodeUIData, ConversationEditorData>>>;
     using DomainSerializerDeserializerFactory = Func<IDataSource, DomainSerializerDeserializer>;
     using System.Diagnostics;
@@ -88,7 +88,7 @@ namespace ConversationEditor
                 conversationSerializer.Write(SerializationUtils.MakeConversationData(Enumerable.Empty<ConversationNode>(), new ConversationEditorData()), conversationStream);
             }
 
-            LocalizationEngine temp = new LocalizationEngine(context, () => new HashSet<ID<LocalizedText>>(), s => false, s => false, p => !p.Exists, s => true);
+            LocalizationEngine temp = new LocalizationEngine(context, () => new HashSet<Id<LocalizedText>>(), s => false, s => false, p => !p.Exists, s => true);
             localizationFile = LocalizationFile.MakeNew(path.Directory, s => temp.MakeSerializer(s), p => !p.Exists);
 
             //Create the new project
@@ -110,9 +110,9 @@ namespace ConversationEditor
             return result;
         }
 
-        public HashSet<ID<LocalizedText>> UsedLocalizations()
+        public HashSet<Id<LocalizedText>> UsedLocalizations()
         {
-            return new HashSet<ID<LocalizedText>>(m_conversations.SelectMany(f => f.Nodes).SelectMany(f => f.Parameters).OfType<LocalizedStringParameter>().Where(p => !p.Corrupted).Select(p => p.Value));
+            return new HashSet<Id<LocalizedText>>(m_conversations.SelectMany(f => f.Nodes).SelectMany(f => f.Parameters).OfType<LocalizedStringParameter>().Where(p => !p.Corrupted).Select(p => p.Value));
         }
 
         public bool ShouldExpand(string file)
@@ -125,7 +125,7 @@ namespace ConversationEditor
                 case DialogResult.Yes:
                     return true;
                 default:
-                    throw new Exception("Unexpected state sb367f");
+                    throw new InternalLogicException("Unexpected state sb367f");
             }
         }
 
@@ -139,7 +139,7 @@ namespace ConversationEditor
                 case DialogResult.Yes:
                     return true;
                 default:
-                    throw new Exception("Unexpected state fv8fbf");
+                    throw new InternalLogicException("Unexpected state fv8fbf");
             }
         }
 
@@ -191,14 +191,23 @@ namespace ConversationEditor
 
                 //m_conversationDataSource = new ConversationDataSource(BaseTypeSet.Make(), Enumerable.Empty<DomainData>());
                 {
-                    m_domainDataSource = new DomainDomain(pluginsConfig);
-                    Func<IEnumerable<FileInfo>, IEnumerable<Or<DomainFile, MissingDomainFile>>> loader = paths =>
+                    //Dictionary<IDynamicEnumParameter, DynamicEnumParameter.Source> domainEnumSource = new Dictionary<IDynamicEnumParameter, DynamicEnumParameter.Source>();
+                    Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDomainEnumSource = (k, o) =>
                     {
-                        var result = DomainFile.Load(paths, m_domainDataSource, document => DomainSerializerDeserializer.Make(m_domainDataSource), DomainNodeFactory, () => DomainUsage).Evaluate();
+                        return null; //Nothing should need a source (but the system will ask anyway)
+                                     //if (!domainEnumSource.ContainsKey(k))
+                                     //domainEnumSource[k] = new DynamicEnumParameter.Source();
+                                     //return domainEnumSource[k];
+                    };
+
+                    m_domainDataSource = new DomainDomain(pluginsConfig);
+                    Func<IEnumerable<FileInfo>, IEnumerable<Either<DomainFile, MissingDomainFile>>> loader = paths =>
+                    {
+                        var result = DomainFile.Load(paths, m_domainDataSource, document => DomainSerializerDeserializer.Make(m_domainDataSource), DomainNodeFactory, () => DomainUsage, getDomainEnumSource).Evaluate();
                         result.ForAll(a => a.Do(b => b.ConversationDomainModified += ConversationDatasourceModified, null));
                         return result;
                     };
-                    Func<DirectoryInfo, DomainFile> makeEmpty = path => DomainFile.CreateEmpty(path, m_domainDataSource, m_domainSerializer, pathOk, DomainNodeFactory, () => DomainUsage);
+                    Func<DirectoryInfo, DomainFile> makeEmpty = path => DomainFile.CreateEmpty(path, m_domainDataSource, m_domainSerializer, pathOk, DomainNodeFactory, () => DomainUsage, getDomainEnumSource);
                     m_domainFiles = new ProjectElementList<DomainFile, MissingDomainFile, IDomainFile>(s => CheckFolder(s, Origin), loader, makeEmpty);
                     IEnumerable<FileInfo> toLoad = Rerout(domainPaths);
                     m_domainFiles.Load(toLoad);
@@ -217,8 +226,12 @@ namespace ConversationEditor
                     {
                         return m_audioProvider.Generate(new AudioGenerationParameters(c.File.File, this.File.File));
                     };
-                    Func<IEnumerable<FileInfo>, IEnumerable<ConversationFile>> loadConversation = files => files.Select(file => ConversationFile.Load(file, ConversationNodeFactory, m_conversationSerializerFactory(m_conversationDataSource), audio, m_audioProvider));
-                    Func<DirectoryInfo, ConversationFile> makeEmpty = path => ConversationFile.CreateEmpty(path, this, pathOk, ConversationNodeFactory, audio, m_audioProvider);
+                    Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getSource = (localEnum, newSourceID) =>
+                    {
+                        return m_conversationDataSource.GetSource(localEnum, newSourceID);
+                    };
+                    Func<IEnumerable<FileInfo>, IEnumerable<ConversationFile>> loadConversation = files => files.Select(file => ConversationFile.Load(file, ConversationNodeFactory, m_conversationSerializerFactory(m_conversationDataSource), audio, getSource, m_audioProvider));
+                    Func<DirectoryInfo, ConversationFile> makeEmpty = path => ConversationFile.CreateEmpty(path, this, pathOk, ConversationNodeFactory, audio, getSource, m_audioProvider);
                     Func<FileInfo, MissingConversationFile> makeMissing = file => new MissingConversationFile(file);
                     m_conversations = new ProjectElementList<ConversationFile, MissingConversationFile, IConversationFile>(s => CheckFolder(s, Origin), loadConversation, makeEmpty, makeMissing);
                     IEnumerable<FileInfo> toLoad = Rerout(conversationPaths);
@@ -389,8 +402,8 @@ namespace ConversationEditor
             get { return Conversations.All(f => f.File.Writable == null || !f.File.Writable.Changed); }
         }
 
-        private readonly IAudioProvider m_audioProvider;
-        public IAudioProvider AudioProvider
+        private readonly IAudioLibrary m_audioProvider;
+        public IAudioLibrary AudioProvider
         {
             get { return m_audioProvider; }
         }
@@ -437,6 +450,7 @@ namespace ConversationEditor
                 m_file.Dispose();
                 m_conversations.Dispose();
                 m_domainFiles.Dispose();
+                m_localizer.Dispose();
             }
         }
 
@@ -448,6 +462,14 @@ namespace ConversationEditor
         public IEnumerable<IConversationFile> ConversationFilesCollection
         {
             get { return Conversations; }
+        }
+
+        public Func<IParameter, string, Func<ParameterType, DynamicEnumParameter.Source>, IEnumerable<string>> AutoCompleteSuggestions
+        {
+            get
+            {
+                return (p, s, e) => m_domainFiles.SelectMany(d => d.AutoCompleteSuggestions(p, s, e));
+            }
         }
     }
 }

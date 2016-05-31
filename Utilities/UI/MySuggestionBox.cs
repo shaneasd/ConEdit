@@ -12,69 +12,68 @@ using System.Globalization;
 
 namespace Utilities.UI
 {
-    //TODO: Some sort of visual indication that items are being filtered out
+    public class UpArrowItem : ToolStripButton
+    {
+        public static Bitmap UpArrow;
+        public static Bitmap DownArrow;
+        static UpArrowItem()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.UpArrow.png"))
+                UpArrow = new Bitmap(stream);
+            DownArrow = new Bitmap(UpArrow);
+            DownArrow.RotateFlip(RotateFlipType.RotateNoneFlipY);
+        }
+
+        public override Size GetPreferredSize(Size constrainingSize)
+        {
+            return new Size(m_width, 10);
+        }
+
+        protected override void OnClick(EventArgs e)
+        {
+            m_clicked();
+        }
+
+        int m_width;
+        private Action m_clicked;
+        public UpArrowItem(int width, Action clicked, bool up)
+        {
+            m_width = width;
+            m_clicked = clicked;
+            Image = up ? UpArrow : DownArrow;
+            this.ImageTransparentColor = Color.Magenta;
+            this.ImageAlign = ContentAlignment.MiddleCenter;
+            this.ImageScaling = ToolStripItemImageScaling.None;
+            this.Padding = new Padding { All = 0 };
+            this.Margin = new Padding { All = 0 };
+        }
+
+        public override ToolStripItemDisplayStyle DisplayStyle
+        {
+            get
+            {
+                return ToolStripItemDisplayStyle.Image;
+            }
+            set
+            {
+                //Ignore that shit
+            }
+        }
+
+        //public override Size GetPreferredSize(Size constrainingSize)
+        //{
+        //    Size result = base.GetPreferredSize(constrainingSize);
+        //    //if (result.Height > 10)
+        //        result.Height = 100;
+        //    return result;
+        //}
+
+    }
 
     //TODO: Refactor commonality out of MyComboBox
     public class MySuggestionBox<T> : MyControl
     {
-        public class UpArrowItem : ToolStripButton
-        {
-            public static Bitmap UpArrow;
-            public static Bitmap DownArrow;
-            static UpArrowItem()
-            {
-                Assembly assembly = Assembly.GetExecutingAssembly();
-                using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.UpArrow.png"))
-                    UpArrow = new Bitmap(stream);
-                DownArrow = new Bitmap(UpArrow);
-                DownArrow.RotateFlip(RotateFlipType.RotateNoneFlipY);
-            }
-
-            public override Size GetPreferredSize(Size constrainingSize)
-            {
-                return new Size(m_width, 10);
-            }
-
-            protected override void OnClick(EventArgs e)
-            {
-                m_clicked();
-            }
-
-            int m_width;
-            private Action m_clicked;
-            public UpArrowItem(int width, Action clicked, bool up)
-            {
-                m_width = width;
-                m_clicked = clicked;
-                Image = up ? UpArrow : DownArrow;
-                this.ImageTransparentColor = Color.Magenta;
-                this.ImageAlign = ContentAlignment.MiddleCenter;
-                this.ImageScaling = ToolStripItemImageScaling.None;
-                this.Padding = new Padding { All = 0 };
-                this.Margin =  new Padding { All = 0 };
-            }
-
-            public override ToolStripItemDisplayStyle DisplayStyle
-            {
-                get
-                {
-                    return ToolStripItemDisplayStyle.Image;
-                }
-                set
-                {
-                    //Ignore that shit
-                }
-            }
-
-            //public override Size GetPreferredSize(Size constrainingSize)
-            //{
-            //    Size result = base.GetPreferredSize(constrainingSize);
-            //    //if (result.Height > 10)
-            //        result.Height = 100;
-            //    return result;
-            //}
-
-        }
         //public class ToolStripRenderer : System.Windows.Forms.ToolStripRenderer
         //{
         //    public System.Windows.Forms.ToolStripRenderer Inner;
@@ -205,48 +204,6 @@ namespace Utilities.UI
         //    }
         //}
 
-        public class Item
-        {
-            private readonly string m_displayString;
-            private readonly T m_contents;
-
-            public string DisplayString { get { return m_displayString; } }
-            public T Contents { get { return m_contents; } }
-            private bool m_sourcedValue;
-            public Item(string displayString, T contents)
-            {
-                m_displayString = displayString;
-                m_contents = contents;
-                m_sourcedValue = true;
-            }
-            public Item(string displayString)
-            {
-                m_displayString = displayString;
-                m_contents = default(T);
-                m_sourcedValue = false;
-            }
-            public override string ToString()
-            {
-                return DisplayString;
-            }
-            public override bool Equals(object obj)
-            {
-                var other = obj as Item;
-                if (other == null)
-                    return false;
-                else if (m_sourcedValue != other.m_sourcedValue)
-                    return false;
-                else if (m_sourcedValue)
-                    return object.Equals(Contents, other.Contents);
-                else
-                    return object.Equals(DisplayString, other.DisplayString);
-            }
-            public override int GetHashCode()
-            {
-                return 0;
-            }
-        }
-
         public override event Action RequestedAreaChanged;
         public event Action SelectionChanged;
         private SizeF m_requestedSize;
@@ -279,7 +236,7 @@ namespace Utilities.UI
         public MyTextBox.ColorOptions TextBoxColors { get { return m_textBox.Colors; } set { m_textBox.Colors = value; } }
         public Color SelectedBackgroundColor = Color.Green;
 
-        public MySuggestionBox(Control control, Func<RectangleF> area, bool allowCustomText, IEnumerable<Item> items)
+        public MySuggestionBox(Control control, Func<RectangleF> area, bool allowCustomText, IEnumerable<MyComboBoxItem<T>> items)
         {
             m_allowCustomText = allowCustomText;
             m_control = control;
@@ -299,7 +256,7 @@ namespace Utilities.UI
             //m_dropDown.Renderer = new ToolStripRenderer(m_dropDown.Renderer);
             //m_dropDown.RenderMode = ToolStripRenderMode.Custom;
 
-            m_textBox = new MyTextBox(control, m_textBoxArea, allowCustomText ? MyTextBox.InputFormEnum.Text : MyTextBox.InputFormEnum.None);
+            m_textBox = new MyTextBox(control, m_textBoxArea, allowCustomText ? MyTextBox.InputFormEnum.Text : MyTextBox.InputFormEnum.None, null);
             m_textBox.Font = m_dropDown.Font;
             m_textBox.RequestedAreaChanged += () => { RequestedArea = new SizeF(Area.Width, m_textBox.RequestedArea.Height); };
 
@@ -471,19 +428,19 @@ namespace Utilities.UI
             graphics.FillPath(TextBoxColors.TextBrush, path);
         }
 
-        private Item MatchingItem()
+        private MyComboBoxItem<T> MatchingItem()
         {
             return Items.FirstOrDefault(i => i.DisplayString == m_textBox.Text);
         }
 
-        private Item m_selectedItem = new Item("Uninitialized default", default(T));
-        public Item SelectedItem
+        private MyComboBoxItem<T> m_selectedItem = new MyComboBoxItem<T>("Uninitialized default", default(T));
+        public MyComboBoxItem<T> SelectedItem
         {
             get
             {
                 if (m_allowCustomText)
                 {
-                    return MatchingItem() ?? new Item(m_textBox.Text);
+                    return MatchingItem() ?? new MyComboBoxItem<T>(m_textBox.Text);
                 }
                 else
                 {
@@ -523,8 +480,9 @@ namespace Utilities.UI
             var height = m_dropDown.Font.Height + 4;
             m_dropDown.Items.Clear();
             m_dropDown.Items.Add(new UpArrowItem(width, () => { m_dropDownWindow--; UpdateDropdown(); }, true));
-            var matches = Items.Where(i => i.DisplayString.IndexOf(m_textBox.Text, StringComparison.CurrentCultureIgnoreCase) != -1);
-            var sorted = matches.OrderBy(i => !i.DisplayString.StartsWith(m_textBox.Text, StringComparison.CurrentCultureIgnoreCase)).ThenBy(i => i.DisplayString.ToUpper(CultureInfo.CurrentCulture));
+            var sorted = Items.OrderBy(i => !i.DisplayString.StartsWith(m_textBox.Text, StringComparison.CurrentCultureIgnoreCase))
+                              .ThenByDescending(i => i.DisplayString.IndexOf(m_textBox.Text, StringComparison.CurrentCultureIgnoreCase) != -1)
+                              .ThenBy(i => i.DisplayString.ToUpper(CultureInfo.CurrentCulture));
             var strictSorted = sorted.ToList();
             if (m_dropDownWindow + WINDOW_SIZE > strictSorted.Count)
                 m_dropDownWindow = strictSorted.Count - WINDOW_SIZE;
@@ -560,7 +518,7 @@ namespace Utilities.UI
 
         public System.Windows.Forms.ToolStripRenderer Renderer { get { return m_dropDown.Renderer; } set { m_dropDown.Renderer = value; } }
         //public System.Windows.Forms.ToolStripRenderer Renderer { get { return (m_dropDown.Renderer as ToolStripRenderer).Inner; } set { (m_dropDown.Renderer as ToolStripRenderer).Inner = value; } }
-        public readonly IEnumerable<Item> Items;
+        public readonly IEnumerable<MyComboBoxItem<T>> Items;
 
         public event Action EnterPressed;
 

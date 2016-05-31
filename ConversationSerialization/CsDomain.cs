@@ -21,9 +21,9 @@ namespace Conversation.Serialization
             return new CodeObjectCreateExpression(new CodeTypeReference(typeof(Guid)), new CodePrimitiveExpression(guid.ToString()));
         }
 
-        public static CodeExpression MakeId<T>(ID<T> id)
+        public static CodeExpression MakeId<T>(Id<T> id)
         {
-            return new CodeMethodInvokeExpression(new CodeMethodReferenceExpression(new CodeTypeReferenceExpression(typeof(ID<T>)), "Parse"), new CodePrimitiveExpression(id.Serialized()));
+            return new CodeMethodInvokeExpression(new CodeMethodReferenceExpression(new CodeTypeReferenceExpression(typeof(Id<T>)), "Parse"), new CodePrimitiveExpression(id.Serialized()));
         }
 
         public static CodeExpression MakeTuple<T1, T2>(CodeExpression a, CodeExpression b)
@@ -32,7 +32,7 @@ namespace Conversation.Serialization
         }
     }
 
-    public class CsDomainSerializer<TNodeUI, TUIRawData, TEditorData> : ISerializer<IEnumerable<DomainData>> where TNodeUI : INodeUI<TNodeUI>
+    public class CSDomainSerializer<TNodeUI, TUIRawData, TEditorData> : ISerializer<IEnumerable<DomainData>> where TNodeUI : INodeUI<TNodeUI>
     {
         static readonly CSharpCodeProvider generator = new CSharpCodeProvider(new Dictionary<string, string> { { "CompilerVersion", "v3.5" } });
         private static readonly List<NodeData.ConfigData> ParameterConfig = new List<NodeData.ConfigData>(); //Parameter config is not relevant to parsing of conversations and so is not written out to the C#
@@ -48,7 +48,7 @@ namespace Conversation.Serialization
 
         private readonly string m_namespace;
         private readonly Dictionary<ParameterType, string> m_basicTypeMap;
-        public CsDomainSerializer(Dictionary<ParameterType, string> basicTypeMap, string @namespace)
+        public CSDomainSerializer(Dictionary<ParameterType, string> basicTypeMap, string @namespace)
         {
             m_namespace = @namespace;
             m_basicTypeMap = basicTypeMap;
@@ -94,7 +94,7 @@ namespace Conversation.Serialization
             WriteToStream(stream, file);
         }
 
-        private static List<CodeTypeDeclaration> GenerateProcessors(Dictionary<ID<NodeTypeTemp>, string> nodeNames)
+        private static List<CodeTypeDeclaration> GenerateProcessors(Dictionary<Id<NodeTypeTemp>, string> nodeNames)
         {
             CodeTypeDeclaration actionProcessor = new CodeTypeDeclaration("IProcessor") { Attributes = MemberAttributes.Public, IsInterface = true };
             CodeTypeDeclaration funcProcessor = new CodeTypeDeclaration("IProcessor") { Attributes = MemberAttributes.Public, IsInterface = true };
@@ -116,7 +116,7 @@ namespace Conversation.Serialization
             return new List<CodeTypeDeclaration> { actionProcessor, funcProcessor };
         }
 
-        private static CodeTypeDeclaration GenerateDeserializer(Dictionary<ID<NodeTypeTemp>, string> nodeNames)
+        private static CodeTypeDeclaration GenerateDeserializer(Dictionary<Id<NodeTypeTemp>, string> nodeNames)
         {
             CodeTypeDeclaration deserializer = new CodeTypeDeclaration("Deserializer") { TypeAttributes = TypeAttributes.Public, IsClass = true };
             deserializer.BaseTypes.Add(typeof(IDeserializer<RuntimeConversation.Conversation>));
@@ -142,9 +142,9 @@ namespace Conversation.Serialization
 
             {
                 //Func<ID<NodeTypeTemp>, ID<NodeTemp>, IEnumerable<Parameter>, PointF, Or<RuntimeConversation.Node, Error>> m_datasource
-                var getNode = new CodeMemberMethod() { Attributes = MemberAttributes.Private, ReturnType = new CodeTypeReference(typeof(Or<RuntimeConversation.NodeBase, LoadError>)), Name = "GetNode" };
-                getNode.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(ID<NodeTypeTemp>)), "typeid"));
-                getNode.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(ID<NodeTemp>)), "id"));
+                var getNode = new CodeMemberMethod() { Attributes = MemberAttributes.Private, ReturnType = new CodeTypeReference(typeof(Either<RuntimeConversation.NodeBase, LoadError>)), Name = "GetNode" };
+                getNode.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(Id<NodeTypeTemp>)), "typeid"));
+                getNode.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(Id<NodeTemp>)), "id"));
                 getNode.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(IEnumerable<RuntimeConversation.CustomDeserializerParameter>)), "parameters"));
                 getNode.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(PointF)), "position"));
 
@@ -177,7 +177,9 @@ namespace Conversation.Serialization
                 foreach (var b in a.Decimals)
                     data.Decimals.Add(new DecimalData(BestName(b.Name, usedNames), b.TypeID, b.Max, b.Min));
                 foreach (var b in a.DynamicEnumerations)
-                    data.DynamicEnumerations.Add(new DynamicEnumerationData(BestName(b.Name, usedNames), b.TypeID));
+                    data.DynamicEnumerations.Add(new DynamicEnumerationData(BestName(b.Name, usedNames), b.TypeId));
+                foreach (var b in a.LocalDynamicEnumerations)
+                    data.LocalDynamicEnumerations.Add(new LocalDynamicEnumerationData(BestName(b.Name, usedNames), b.TypeId));
                 foreach (var b in a.Enumerations)
                 {
                     var enumValueNames = new HashSet<string>() { };
@@ -197,6 +199,7 @@ namespace Conversation.Serialization
                 //data.Connectors.AddRange(a.Connectors);
                 //data.Decimals.AddRange(a.Decimals);
                 //data.DynamicEnumerations.AddRange(a.DynamicEnumerations);
+                //data.LocalDynamicEnumerations.AddRange(a.LocalDynamicEnumerations);
                 //data.Enumerations.AddRange(a.Enumerations);
                 //data.Integers.AddRange(a.Integers);
                 //data.Nodes.AddRange(a.Nodes);
@@ -205,7 +208,7 @@ namespace Conversation.Serialization
             return data;
         }
 
-        private static Dictionary<ID<NodeTypeTemp>, string> GenerateNodes(DomainData data, Dictionary<ParameterType, string> basicTypeMap, Tuple<CodeNamespace, Func<ID<TConnectorDefinition>, string>> connectors, Tuple<List<CodeNamespace>, Func<Guid, CodeNamespace>> categoryNameSpaces)
+        private static Dictionary<Id<NodeTypeTemp>, string> GenerateNodes(DomainData data, Dictionary<ParameterType, string> basicTypeMap, Tuple<CodeNamespace, Func<Id<TConnectorDefinition>, string>> connectors, Tuple<List<CodeNamespace>, Func<Guid, CodeNamespace>> categoryNameSpaces)
         {
             {
                 var baseNamespace = categoryNameSpaces.Item2(Guid.Empty);
@@ -221,19 +224,19 @@ namespace Conversation.Serialization
                 processT.ReturnType = new CodeTypeReference("T");
 
                 var constructor = new CodeConstructor() { Attributes = MemberAttributes.Public };
-                constructor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(ID<NodeTemp>), "id"));
+                constructor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(Id<NodeTemp>), "id"));
                 constructor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(PointF), "position"));
                 constructor.BaseConstructorArgs.Add(new CodeArgumentReferenceExpression("id"));
                 constructor.BaseConstructorArgs.Add(new CodeArgumentReferenceExpression("position"));
                 baseNode.Members.Add(constructor);
 
                 var Connector = new CodeMemberMethod() { Attributes = MemberAttributes.Public | MemberAttributes.Abstract, ReturnType = new CodeTypeReference("Connector"), Name = "Connector" };
-                Connector.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(ID<TConnector>)), "connector"));
+                Connector.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(Id<TConnector>)), "connector"));
 
                 var Connect = new CodeMemberMethod() { Attributes = MemberAttributes.Public | MemberAttributes.Override, Name = "Connect" };
-                Connect.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(ID<TConnector>)), "thisConnectorID"));
+                Connect.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(Id<TConnector>)), "thisConnectorID"));
                 Connect.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(RuntimeConversation.NodeBase)), "other"));
-                Connect.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(ID<TConnector>)), "otherConnectorID"));
+                Connect.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(Id<TConnector>)), "otherConnectorID"));
                 Connect.Statements.Add(new CodeMethodInvokeExpression(new CodeMethodInvokeExpression(new CodeThisReferenceExpression(), "Connector", new CodeArgumentReferenceExpression("thisConnectorID")), "ConnectTo",
                                                                       new CodeMethodInvokeExpression(new CodeCastExpression(new CodeTypeReference("Node"), new CodeArgumentReferenceExpression("other")), "Connector", new CodeArgumentReferenceExpression("otherConnectorID"))));
 
@@ -245,7 +248,7 @@ namespace Conversation.Serialization
             }
 
 
-            Dictionary<ID<NodeTypeTemp>, string> result = new Dictionary<ID<NodeTypeTemp>, string>();
+            Dictionary<Id<NodeTypeTemp>, string> result = new Dictionary<Id<NodeTypeTemp>, string>();
             foreach (var nodeType in data.Nodes)
             {
                 CodeTypeDeclaration type = new CodeTypeDeclaration(nodeType.Name) { IsClass = true, Attributes = MemberAttributes.Final };
@@ -257,7 +260,7 @@ namespace Conversation.Serialization
 
                 {
                     var constructor = new CodeConstructor() { Attributes = MemberAttributes.Public };
-                    constructor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(ID<NodeTemp>), "id"));
+                    constructor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(Id<NodeTemp>), "id"));
                     constructor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(PointF), "position"));
                     constructor.BaseConstructorArgs.Add(new CodeArgumentReferenceExpression("id"));
                     constructor.BaseConstructorArgs.Add(new CodeArgumentReferenceExpression("position"));
@@ -265,14 +268,14 @@ namespace Conversation.Serialization
                     type.Members.Add(constructor);
 
                     var connector = new CodeMemberMethod() { Attributes = MemberAttributes.Public | MemberAttributes.Override, Name = "Connector", ReturnType = new CodeTypeReference("Connector") };
-                    connector.Parameters.Add(new CodeParameterDeclarationExpression(typeof(ID<TConnector>), "connector"));
+                    connector.Parameters.Add(new CodeParameterDeclarationExpression(typeof(Id<TConnector>), "connector"));
                     foreach (var c in nodeType.Connectors)
                     {
                         var connectorName = "id" + c.Id.Guid.ToString("N");
-                        type.Members.Add(new CodeMemberField(connectors.Item2(c.TypeID), connectorName) { Attributes = MemberAttributes.Public });
+                        type.Members.Add(new CodeMemberField(connectors.Item2(c.TypeId), connectorName) { Attributes = MemberAttributes.Public });
                         //constructor.Parameters.Add(new CodeParameterDeclarationExpression(connectors.Item2(c.TypeID), connectorName));
 
-                        var makeConnector = new CodeObjectCreateExpression(connectors.Item2(c.TypeID), new CodeThisReferenceExpression(), CodeDomHelper.MakeId(c.Id));
+                        var makeConnector = new CodeObjectCreateExpression(connectors.Item2(c.TypeId), new CodeThisReferenceExpression(), CodeDomHelper.MakeId(c.Id));
                         foreach (var parameter in c.Parameters)
                         {
                             string randomVariableName = "_" + Guid.NewGuid().ToString("N");
@@ -322,7 +325,7 @@ namespace Conversation.Serialization
             return result;
         }
 
-        private Tuple<CodeNamespace, Func<ID<TConnectorDefinition>, string>> GenerateConnectors(DomainData data, Dictionary<ParameterType, string> basicTypeMap)
+        private Tuple<CodeNamespace, Func<Id<TConnectorDefinition>, string>> GenerateConnectors(DomainData data, Dictionary<ParameterType, string> basicTypeMap)
         {
             CodeNamespace connectorsNamespace = new CodeNamespace(m_namespace + ".Nodes.Connectors");
             connectorsNamespace.Imports.Add(new CodeNamespaceImport("System"));
@@ -335,7 +338,7 @@ namespace Conversation.Serialization
                 connector.BaseTypes.Add(new CodeTypeReference(typeof(RuntimeConversation.ConnectorBase)));
                 var constructor = new CodeConstructor() { Attributes = MemberAttributes.Public };
                 constructor.Parameters.Add(new CodeParameterDeclarationExpression("Node", "parent"));
-                constructor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(ID<TConnector>), "id"));
+                constructor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(Id<TConnector>), "id"));
                 constructor.BaseConstructorArgs.Add(new CodeArgumentReferenceExpression("id"));
                 constructor.Statements.Add(new CodeAssignStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), "m_parent"), new CodeArgumentReferenceExpression("parent")));
                 connector.Members.Add(constructor);
@@ -365,7 +368,7 @@ namespace Conversation.Serialization
                 connectorsNamespace.Types.Add(connector);
             }
 
-            Dictionary<ID<TConnectorDefinition>, string> connectorTypes = new Dictionary<ID<TConnectorDefinition>, string>();
+            Dictionary<Id<TConnectorDefinition>, string> connectorTypes = new Dictionary<Id<TConnectorDefinition>, string>();
 
             foreach (var connectorType in data.Connectors)
             {
@@ -375,7 +378,7 @@ namespace Conversation.Serialization
                 connectorTypes.Add(connectorType.Id, connectorsNamespace.Name + "." + name);
             }
 
-            Func<ID<TConnectorDefinition>, string> access = guid => connectorTypes[guid];
+            Func<Id<TConnectorDefinition>, string> access = guid => connectorTypes[guid];
 
             return Tuple.Create(connectorsNamespace, access);
         }
@@ -421,7 +424,9 @@ namespace Conversation.Serialization
             foreach (var x in data.Decimals)
                 basicTypeMap[x.TypeID] = x.Name;
             foreach (var x in data.DynamicEnumerations)
-                basicTypeMap[x.TypeID] = x.Name;
+                basicTypeMap[x.TypeId] = x.Name;
+            foreach (var x in data.LocalDynamicEnumerations)
+                basicTypeMap[x.TypeId] = x.Name;
             foreach (var x in data.Enumerations)
             {
                 basicTypeMap[x.TypeID] = x.Name;
@@ -476,7 +481,7 @@ namespace Conversation.Serialization
 
             var constructor = new CodeConstructor() { Attributes = MemberAttributes.Public };
             constructor.Parameters.Add(new CodeParameterDeclarationExpression("Node", "parent"));
-            constructor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(ID<TConnector>), "id"));
+            constructor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(Id<TConnector>), "id"));
             constructor.BaseConstructorArgs.Add(new CodeArgumentReferenceExpression("parent"));
             constructor.BaseConstructorArgs.Add(new CodeArgumentReferenceExpression("id"));
             foreach (var parameter in connectorType.Parameters)
@@ -609,6 +614,17 @@ namespace Conversation.Serialization
                                                                     new CodeCastExpression(name, new CodeMethodInvokeExpression(new CodeTypeReferenceExpression("Enum"), "Parse", new CodeTypeOfExpression(new CodeTypeReference(name)), new CodeArgumentReferenceExpression("value")))));
                 TypeDeserializer.Members.Add(deserializer);
             }
+            foreach (var localdynamicEnum in data.LocalDynamicEnumerations)
+            {
+                typesNamespace.Types.Add(GenerateLocalDynamicEnumeration(localdynamicEnum));
+                var name = localdynamicEnum.Name;
+
+                var deserializer = new CodeMemberMethod() { Attributes = MemberAttributes.Public | MemberAttributes.Static, Name = "Deserialize" };
+                deserializer.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(name), "a") { Direction = FieldDirection.Out });
+                deserializer.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(string)), "value"));
+                deserializer.Statements.Add(new CodeAssignStatement(new CodeFieldReferenceExpression(new CodeArgumentReferenceExpression("a"), "Value"), new CodeArgumentReferenceExpression("value")));
+                TypeDeserializer.Members.Add(deserializer);
+            }
 
             typesNamespace.Types.Add(TypeDeserializer);
             return typesNamespace;
@@ -693,15 +709,25 @@ namespace Conversation.Serialization
         {
             var name = dynamicEnum.Name;
             CodeTypeDeclaration type = new CodeTypeDeclaration(name) { IsEnum = true };
-            type.CustomAttributes.Add(new CodeAttributeDeclaration("RuntimeConversation.TypeIDAttribute", new CodeAttributeArgument(new CodePrimitiveExpression(dynamicEnum.TypeID.Guid.ToString()))));
+            type.CustomAttributes.Add(new CodeAttributeDeclaration("RuntimeConversation.TypeIDAttribute", new CodeAttributeArgument(new CodePrimitiveExpression(dynamicEnum.TypeId.Guid.ToString()))));
 
-            foreach (var element in dynamicEnum.Options)
-            {
-                var elementName = element;
-                CodeMemberField f = new CodeMemberField(name, elementName);
-                type.Members.Add(f);
-            }
+            //TODO: Need a better way to generate dynamicEnum options
+            //foreach (var element in dynamicEnum.Options)
+            //{
+            //    var elementName = element;
+            //    CodeMemberField f = new CodeMemberField(name, elementName);
+            //    type.Members.Add(f);
+            //}
 
+            return type;
+        }
+
+        private static CodeTypeDeclaration GenerateLocalDynamicEnumeration(LocalDynamicEnumerationData dynamicEnum)
+        {
+            var name = dynamicEnum.Name;
+            CodeTypeDeclaration type = new CodeTypeDeclaration(name) { IsStruct = true };
+            type.Members.Add(new CodeMemberField(new CodeTypeReference(typeof(string)), "Value") { Attributes = MemberAttributes.Public });
+            type.CustomAttributes.Add(new CodeAttributeDeclaration("RuntimeConversation.TypeIDAttribute", new CodeAttributeArgument(new CodePrimitiveExpression(dynamicEnum.TypeId.Guid.ToString()))));
             return type;
         }
     }

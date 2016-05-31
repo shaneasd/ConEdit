@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.Globalization;
+using System.Diagnostics.Contracts;
 
 namespace ConversationEditor
 {
@@ -19,6 +20,8 @@ namespace ConversationEditor
 
         public override void Load(XElement root)
         {
+            if (root == null)
+                throw new ArgumentNullException(nameof(root));
             uint val;
             var b = root.Attribute("value");
             if (b != null)
@@ -28,6 +31,8 @@ namespace ConversationEditor
 
         public override void Write(XElement root)
         {
+            if (root == null)
+                throw new ArgumentNullException(nameof(root));
             var @string = InnerValue.ToString(CultureInfo.InvariantCulture);
             root.Add(new XElement(m_name, new XAttribute("value", @string)));
         }

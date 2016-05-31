@@ -20,28 +20,28 @@ namespace Clandestine
         public string Notes;
         public string Audio;
 
-        public static ID<NodeTypeTemp> PLAYER_SPEECH = ID<NodeTypeTemp>.FromGuid(Guid.Parse("da1dfd60-28e4-48f6-93e6-298f3a68b67c"));
-        public static ID<NodeTypeTemp> NPC_SPEECH = ID<NodeTypeTemp>.FromGuid(Guid.Parse("196dc521-8336-4714-93b7-77ac09b3abd7"));
-        public static ID<NodeTypeTemp> RADIO_SPEECH = ID<NodeTypeTemp>.FromGuid(Guid.Parse("836eeb03-2730-4830-b192-3fc9ce41503e"));
-        public static ID<Parameter> SPEECH_CHARACTER = ID<Parameter>.FromGuid(Guid.Parse("af08c7f7-33e9-4429-9e1f-cd786a73041b"));
-        public static ID<Parameter> SPEECH_SCRIPT = ID<Parameter>.FromGuid(Guid.Parse("0154fe0e-5f53-4657-acae-b983ea9030a0"));
-        public static ID<Parameter> SPEECH_SUBTITLE = ID<Parameter>.FromGuid(Guid.Parse("8987655a-92fe-4eca-8c50-8769a7edcf04"));
-        public static ID<Parameter> SPEECH_DIRECTION = ID<Parameter>.FromGuid(Guid.Parse("98401421-e713-4014-8489-b8675c566179"));
-        public static ID<Parameter> SPEECH_AUDIO = ID<Parameter>.FromGuid(Guid.Parse("d081e3ec-91f2-4ec1-ab20-a4a1b01162b7"));
-        public static ID<Parameter> SPEECH_LANGUAGE = ID<Parameter>.FromGuid(Guid.Parse("803d384c-edc1-45e3-9bfe-88f99384d86d"));
+        public static Id<NodeTypeTemp> PLAYER_SPEECH = Id<NodeTypeTemp>.FromGuid(Guid.Parse("da1dfd60-28e4-48f6-93e6-298f3a68b67c"));
+        public static Id<NodeTypeTemp> NPC_SPEECH = Id<NodeTypeTemp>.FromGuid(Guid.Parse("196dc521-8336-4714-93b7-77ac09b3abd7"));
+        public static Id<NodeTypeTemp> RADIO_SPEECH = Id<NodeTypeTemp>.FromGuid(Guid.Parse("836eeb03-2730-4830-b192-3fc9ce41503e"));
+        public static Id<Parameter> SPEECH_CHARACTER = Id<Parameter>.FromGuid(Guid.Parse("af08c7f7-33e9-4429-9e1f-cd786a73041b"));
+        public static Id<Parameter> SPEECH_SCRIPT = Id<Parameter>.FromGuid(Guid.Parse("0154fe0e-5f53-4657-acae-b983ea9030a0"));
+        public static Id<Parameter> SPEECH_SUBTITLE = Id<Parameter>.FromGuid(Guid.Parse("8987655a-92fe-4eca-8c50-8769a7edcf04"));
+        public static Id<Parameter> SPEECH_DIRECTION = Id<Parameter>.FromGuid(Guid.Parse("98401421-e713-4014-8489-b8675c566179"));
+        public static Id<Parameter> SPEECH_AUDIO = Id<Parameter>.FromGuid(Guid.Parse("d081e3ec-91f2-4ec1-ab20-a4a1b01162b7"));
+        public static Id<Parameter> SPEECH_LANGUAGE = Id<Parameter>.FromGuid(Guid.Parse("803d384c-edc1-45e3-9bfe-88f99384d86d"));
 
-        public static ID<NodeTypeTemp> OPTION = ID<NodeTypeTemp>.FromGuid(Guid.Parse("86524441-8da7-4e19-9ff3-c8df67e09f8f"));
-        public static ID<Parameter> OPTION_SCRIPT = ID<Parameter>.FromGuid(Guid.Parse("e8b15360-c500-434e-856c-bd1090c1b4a2"));
-        public static ID<Parameter> OPTION_SUBTITLES = ID<Parameter>.FromGuid(Guid.Parse("b9950a3d-14d9-46d0-94dd-4217ed1573ad"));
-        public static ID<Parameter> OPTION_DIRECTION = ID<Parameter>.FromGuid(Guid.Parse("a4f77304-57b1-4e25-849a-3e199f0f1795"));
-        public static ID<Parameter> OPTION_AUDIO = ID<Parameter>.FromGuid(Guid.Parse("266217e5-8504-4576-a5c8-428c86c9b73a"));
-        public static ID<Parameter> OPTION_LANGUAGE = ID<Parameter>.FromGuid(Guid.Parse("ea771838-a6bb-45d5-bf94-e29fde56e284"));
+        public static Id<NodeTypeTemp> OPTION = Id<NodeTypeTemp>.FromGuid(Guid.Parse("86524441-8da7-4e19-9ff3-c8df67e09f8f"));
+        public static Id<Parameter> OPTION_SCRIPT = Id<Parameter>.FromGuid(Guid.Parse("e8b15360-c500-434e-856c-bd1090c1b4a2"));
+        public static Id<Parameter> OPTION_SUBTITLES = Id<Parameter>.FromGuid(Guid.Parse("b9950a3d-14d9-46d0-94dd-4217ed1573ad"));
+        public static Id<Parameter> OPTION_DIRECTION = Id<Parameter>.FromGuid(Guid.Parse("a4f77304-57b1-4e25-849a-3e199f0f1795"));
+        public static Id<Parameter> OPTION_AUDIO = Id<Parameter>.FromGuid(Guid.Parse("266217e5-8504-4576-a5c8-428c86c9b73a"));
+        public static Id<Parameter> OPTION_LANGUAGE = Id<Parameter>.FromGuid(Guid.Parse("ea771838-a6bb-45d5-bf94-e29fde56e284"));
 
-        public static ID<NodeTypeTemp> CONVERSATIONINFO = ID<NodeTypeTemp>.FromGuid(Guid.Parse("d5974ffe-777b-419c-b9bc-bde980cb99a6"));
-        public static ID<Parameter> CONVERSATIONINFO_CONTEXT = ID<Parameter>.FromGuid(Guid.Parse("6940a618-5905-4e81-a59b-281d92a90782"));
-        public static ID<Parameter> CONVERSATIONINFO_NOTES = ID<Parameter>.FromGuid(Guid.Parse("cb4a4ac9-a5e9-444f-a7b0-b8f15e31e77a"));
+        public static Id<NodeTypeTemp> CONVERSATIONINFO = Id<NodeTypeTemp>.FromGuid(Guid.Parse("d5974ffe-777b-419c-b9bc-bde980cb99a6"));
+        public static Id<Parameter> CONVERSATIONINFO_CONTEXT = Id<Parameter>.FromGuid(Guid.Parse("6940a618-5905-4e81-a59b-281d92a90782"));
+        public static Id<Parameter> CONVERSATIONINFO_NOTES = Id<Parameter>.FromGuid(Guid.Parse("cb4a4ac9-a5e9-444f-a7b0-b8f15e31e77a"));
 
-        public static CsvData GetOptionData(ConversationNode<INodeGUI> node, ConversationNode<INodeGUI> conversationInfo, Func<ID<LocalizedText>, string> localize)
+        public static CsvData GetOptionData(ConversationNode<INodeGui> node, ConversationNode<INodeGui> conversationInfo, Func<Id<LocalizedText>, string> localize)
         {
             return new CsvData()
             {
@@ -56,7 +56,7 @@ namespace Clandestine
             };
         }
 
-        public static CsvData GetSpeechData(ConversationNode<INodeGUI> node, ConversationNode<INodeGUI> conversationInfo, Func<ID<LocalizedText>, string> localize)
+        public static CsvData GetSpeechData(ConversationNode<INodeGui> node, ConversationNode<INodeGui> conversationInfo, Func<Id<LocalizedText>, string> localize)
         {
             return new CsvData()
             {
@@ -71,7 +71,7 @@ namespace Clandestine
             };
         }
 
-        public static CsvData GetPlayerSpeechData(ConversationNode<INodeGUI> node, ConversationNode<INodeGUI> conversationInfo, Func<ID<LocalizedText>, string> localize)
+        public static CsvData GetPlayerSpeechData(ConversationNode<INodeGui> node, ConversationNode<INodeGui> conversationInfo, Func<Id<LocalizedText>, string> localize)
         {
             return new CsvData()
             {
@@ -105,9 +105,9 @@ namespace Clandestine
 
     public abstract class ExportAsSeparatedStrings : IConversationContextMenuItem
     {
-        private Func<ID<LocalizedText>, string> m_localize;
+        private Func<Id<LocalizedText>, string> m_localize;
 
-        protected ExportAsSeparatedStrings(Func<ID<LocalizedText>, string> localize)
+        protected ExportAsSeparatedStrings(Func<Id<LocalizedText>, string> localize)
         {
             m_localize = localize;
         }
@@ -124,20 +124,32 @@ namespace Clandestine
                 sfd.AddExtension = true;
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    using (var stream = sfd.OpenFile())
+                    Stream stream = null;
+                    try
                     {
+                        stream = sfd.OpenFile();
                         using (StreamWriter sw = new StreamWriter(stream))
                         {
+                            stream = null;
                             CsvData.WriteTitle(Separator, sw, false);
                             WriteConversation(conversation, sw, false, util);
                         }
+                    }
+                    finally
+                    {
+                        if (stream != null)
+                            stream.Dispose();
                     }
                 }
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "Makes sense that WriteConversation takes an IConversation")]
         public void WriteConversation(IConversationFile conversation, StreamWriter sw, bool includeName, IErrorCheckerUtilities<IConversationNode> util)
         {
+            if (conversation == null)
+                throw new ArgumentNullException(nameof(conversation));
+
             var nodes = conversation.Nodes;
 
             Stack<IEditable> startNodes = new Stack<IEditable>(nodes.Where(n => Clandestine.Util.IsStartNode(n.Type, util)).Select(n => n.m_data));
@@ -197,7 +209,7 @@ namespace Clandestine
 
     public class ExportAsCsv : ExportAsSeparatedStrings
     {
-        public ExportAsCsv(Func<ID<LocalizedText>, string> localize)
+        public ExportAsCsv(Func<Id<LocalizedText>, string> localize)
             : base(localize)
         {
         }
@@ -209,7 +221,7 @@ namespace Clandestine
 
     public class ExportAsSsv : ExportAsSeparatedStrings
     {
-        public ExportAsSsv(Func<ID<LocalizedText>, string> localize)
+        public ExportAsSsv(Func<Id<LocalizedText>, string> localize)
             : base(localize)
         {
         }

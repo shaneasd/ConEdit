@@ -216,14 +216,14 @@ namespace ConversationEditor
 
             public abstract ContainerItem SpawnLocation { get; }
 
-            public void StartRenaming(int cursorPos, Graphics g, Control control)
+            public void StartRenaming(int cursorPos, Control control)
             {
                 if (m_textBox == null)
                 {
                     var area = m_area();
                     var indent = CalculateIndent(area);
                     var textArea = CalculateTextArea(area, indent);
-                    m_textBox = new MyTextBox(control, () => new RectangleF(textArea.Location.Plus(ToControlTransform().OffsetX, ToControlTransform().OffsetY), textArea.Size), MyTextBox.InputFormEnum.FileName);
+                    m_textBox = new MyTextBox(control, () => new RectangleF(textArea.Location.Plus(ToControlTransform().OffsetX, ToControlTransform().OffsetY), textArea.Size), MyTextBox.InputFormEnum.FileName, null);
                     m_textBox.Text = PermanentText;
                     m_textBox.CursorPos = new MyTextBox.CP(cursorPos);
                     m_textBox.Colors.Background = Color.Transparent;

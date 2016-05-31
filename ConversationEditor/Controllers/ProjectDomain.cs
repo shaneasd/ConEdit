@@ -20,7 +20,7 @@ namespace ConversationEditor.Controllers
             get { throw new NotImplementedException(); }
         }
 
-        public EditableGenerator GetNode(ID<NodeTypeTemp> guid)
+        public EditableGenerator GetNode(Id<NodeTypeTemp> guid)
         {
             throw new NotImplementedException();
         }
@@ -45,33 +45,47 @@ namespace ConversationEditor.Controllers
             throw new NotImplementedException();
         }
 
-        public bool IsCategoryDefinition(ID<NodeTypeTemp> id)
+        public bool IsLocalDynamicEnum(ParameterType type)
         {
             throw new NotImplementedException();
         }
 
-        public bool IsTypeDefinition(ID<NodeTypeTemp> id)
+        public bool IsCategoryDefinition(Id<NodeTypeTemp> id)
         {
             throw new NotImplementedException();
         }
 
-        public bool IsConnectorDefinition(ID<NodeTypeTemp> id)
+        public bool IsTypeDefinition(Id<NodeTypeTemp> id)
         {
             throw new NotImplementedException();
         }
 
-        public bool IsNodeDefinition(ID<NodeTypeTemp> id)
+        public bool IsConnectorDefinition(Id<NodeTypeTemp> id)
         {
             throw new NotImplementedException();
         }
 
+        public bool IsNodeDefinition(Id<NodeTypeTemp> id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsAutoCompleteNode(Id<NodeTypeTemp> id)
+        {
+            throw new NotImplementedException();
+        }
 
         public string GetTypeName(ParameterType type)
         {
             throw new NotImplementedException();
         }
 
-        public Guid GetCategory(ID<NodeTypeTemp> type)
+        public Guid GetCategory(Id<NodeTypeTemp> type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DynamicEnumParameter.Source GetSource(ParameterType type, object newSourceId)
         {
             throw new NotImplementedException();
         }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ConversationEditor</RootNamespace>
     <AssemblyName>ConversationEditor</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -37,11 +37,13 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>e:\ConEdit\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
     </DocumentationFile>
+    <CodeAnalysisRuleSet>..\Utilities\Utilities.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -51,6 +53,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>2F31BDAC2FF2A43C53D2A64B25E70F1EB3521833</ManifestCertificateThumbprint>
@@ -62,7 +65,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>GenericSystemHover.ico</ApplicationIcon>
@@ -78,6 +81,8 @@
     <Compile Include="Config\ConfigParameterColor.cs" />
     <Compile Include="Config\ConfigParameterList.cs" />
     <Compile Include="Config\ConfigParameterUint.cs" />
+    <Compile Include="Config\ConfigParameterBool.cs" />
+    <Compile Include="Config\FileFilterConfig.cs" />
     <Compile Include="Controllers\AudioProvider.cs" />
     <Compile Include="Config\ConfigParameterStringList.cs" />
     <Compile Include="Config\ErrorCheckersConfig.cs" />
@@ -89,6 +94,7 @@
     <Compile Include="Config\TypeMapConfig.cs" />
     <Compile Include="ConnectionDrawer.cs" />
     <Compile Include="Controllers\AudioFile.cs" />
+    <Compile Include="Controllers\AutoCompletePattern.cs" />
     <Compile Include="Controllers\BaseTypes.cs" />
     <Compile Include="Controllers\ContextMenu.cs" />
     <Compile Include="Controllers\ConversationConnectionRules.cs" />
@@ -131,9 +137,8 @@
     <Compile Include="Controllers\SharedContext.cs" />
     <Compile Include="Customization\WrapperContextMenuItemsFactory.cs" />
     <Compile Include="Error Checkers\InvalidConnectionErrorChecker.cs" />
-    <Compile Include="GUIs\Default Parameter Editors\DefaultSetEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultLocalDynamicEnumEditor.cs" />
+    <Compile Include="GUIs\Default Parameter Editors\DefaultSetEditor.cs" />
     <Compile Include="GUIs\Default Parameter Editors\DefaultSetEditor.Designer.cs">
       <DependentUpon>DefaultSetEditor.cs</DependentUpon>
     </Compile>
@@ -183,15 +188,11 @@
     <Compile Include="GUIs\ProjectExporer\GraphItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GUIs\Default Parameter Editors\DefaultAudioEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultAudioEditor.cs" />
     <Compile Include="GUIs\Default Parameter Editors\DefaultAudioEditor.Designer.cs">
       <DependentUpon>DefaultAudioEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUIs\Default Parameter Editors\DefaultLocalizedStringEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultLocalizedStringEditor.cs" />
     <Compile Include="GUIs\Default Parameter Editors\DefaultLocalizedStringEditor.Designer.cs">
       <DependentUpon>DefaultLocalizedStringEditor.cs</DependentUpon>
     </Compile>
@@ -207,39 +208,27 @@
     <Compile Include="GUIs\ErrorForm.Designer.cs">
       <DependentUpon>ErrorForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUIs\Default Parameter Editors\DefaultBooleanEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultBooleanEditor.cs" />
     <Compile Include="GUIs\Default Parameter Editors\DefaultBooleanEditor.Designer.cs">
       <DependentUpon>DefaultBooleanEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUIs\Default Parameter Editors\DefaultDecimalEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultDecimalEditor.cs" />
     <Compile Include="GUIs\Default Parameter Editors\DefaultDecimalEditor.Designer.cs">
       <DependentUpon>DefaultDecimalEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUIs\Default Parameter Editors\DefaultDynamicEnumEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultDynamicEnumEditor.cs" />
     <Compile Include="GUIs\Default Parameter Editors\DefaultDynamicEnumEditor.Designer.cs">
       <DependentUpon>DefaultDynamicEnumEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUIs\Default Parameter Editors\DefaultEnumEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultEnumEditor.cs" />
     <Compile Include="GUIs\Default Parameter Editors\DefaultEnumEditor.Designer.cs">
       <DependentUpon>DefaultEnumEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUIs\Default Parameter Editors\DefaultIntegerEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultIntegerEditor.cs" />
     <Compile Include="GUIs\Default Parameter Editors\DefaultIntegerEditor.Designer.cs">
       <DependentUpon>DefaultIntegerEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUIs\Default Parameter Editors\DefaultStringEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="GUIs\Default Parameter Editors\DefaultStringEditor.cs" />
     <Compile Include="GUIs\Default Parameter Editors\DefaultStringEditor.Designer.cs">
       <DependentUpon>DefaultStringEditor.cs</DependentUpon>
     </Compile>
@@ -468,10 +457,6 @@
     <EmbeddedResource Include="Resources\GenericSystemHover.ico" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Audio.png" />
-    <EmbeddedResource Include="Resources\AudioMissing.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\End Icon.png" />
   </ItemGroup>
   <ItemGroup>
@@ -480,7 +465,18 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\ReadOnly.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Audio.png" />
+    <EmbeddedResource Include="Resources\AudioMissing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ToggleButtonOff.png" />
+    <EmbeddedResource Include="Resources\ToggleButtonOffHover.png" />
+    <EmbeddedResource Include="Resources\ToggleButtonOffPressed.png" />
+    <EmbeddedResource Include="Resources\ToggleButtonOn.png" />
+    <EmbeddedResource Include="Resources\ToggleButtonOnHover.png" />
+    <EmbeddedResource Include="Resources\ToggleButtonOnPressed.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

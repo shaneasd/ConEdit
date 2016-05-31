@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Utilities
 {
@@ -28,24 +29,27 @@ namespace Utilities
         public UpToDateFile(MemoryStream lastSavedOrLoaded, FileInfo file, Action<Stream> saveTo)
         {
             m_file = file;
-            m_onDisk = lastSavedOrLoaded;
             m_saveTo = saveTo;
+
+            //Make a copy of the input data to make sure we're the only ones that can access it.
+            m_onDisk = new MemoryStream((int)lastSavedOrLoaded.Length);
+            lastSavedOrLoaded.CopyTo(m_onDisk);
 
             m_abort = new ManualResetEventSlim(false);
             m_reopen = new AutoResetEvent(false);
             m_deleted = new ManualResetEventSlim(false);
             m_aborted = new ManualResetEventSlim(false);
             m_worker = new Thread(UpdateThread);
+            m_worker.IsBackground = true;
             m_worker.Start();
             m_watcher = new FileSystemWatcher();
             m_watcher.Path = m_file.Directory.FullName;
+            m_watcher.NotifyFilter = NotifyFilters.LastWrite;
             m_watcher.Filter = m_file.Name;
             m_watcher.Changed += m_watcher_Changed;
             m_watcher.Deleted += m_watcher_Changed;
             m_watcher.Renamed += m_watcher_Changed;
             m_watcher.EnableRaisingEvents = true;
-
-            Application.ApplicationExit += (a, b) => { m_abort.Set(); }; //Rather than clients being responsible for disposing the object and thus killing the thread, just have the thread monitor whether the application wants to exit
         }
 
         void m_watcher_Changed(object sender, FileSystemEventArgs e)
@@ -75,13 +79,13 @@ namespace Utilities
                         bool fileChanged = false;
                         while (true)
                         {
-                            //Essentially wait 100ms before trying the file but if we get terminated in the mean time just abort
-                            if (m_abort.Wait(100))
+                            //Essentially wait 1000ms before trying the file but if we get terminated in the mean time just abort
+                            if (m_abort.Wait(1000))
                                 return;
 
                             try
                             {
-                                using (var stream = Util.LoadFileStream(m_file, FileMode.Open, FileAccess.Read))
+                                using (var stream = Util.LoadFileStream(m_file, FileMode.Open, FileAccess.Read, 0))
                                 {
                                     int length = (int)stream.Length;
                                     if (length > 100e6)
@@ -89,6 +93,12 @@ namespace Utilities
                                     lock (m_onDiskAccess)
                                     {
                                         fileChanged = FileSystem.ChangeIfDifferent(ref m_onDisk, stream, m_abort.WaitHandle);
+
+                                        //TODO: Remove this. It's purely for debugging
+                                        if (fileChanged)
+                                        {
+                                            //FileSystem.ChangeIfDifferent(ref m_onDisk, stream, m_abort.WaitHandle);
+                                        }
                                         break;
                                     }
                                 }
@@ -110,7 +120,7 @@ namespace Utilities
 
         public void Save()
         {
-            using (FileStream file = Util.LoadFileStream(m_file, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+            using (FileStream file = Util.LoadFileStream(m_file, FileMode.OpenOrCreate, FileAccess.Write, 10))
             {
                 m_deleted.Reset();
                 lock (m_onDiskAccess)

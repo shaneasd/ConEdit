@@ -6,6 +6,7 @@ using System.IO;
 using System.Windows.Forms;
 using Utilities;
 using System.Threading;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Utilities
 {
@@ -142,18 +143,18 @@ namespace Utilities
             get { return true; }
         }
 
-        public bool Move(FileInfo path, Func<bool> replace)
+        public bool Move(FileInfo newPath, Func<bool> replace)
         {
             var oldFile = File;
-            if (path.Exists)
+            if (newPath.Exists)
                 if (replace())
-                    path.Delete();
+                    newPath.Delete();
                 else
                     return false;
             var stream = m_upToDateFile.Migrate();
-            path.Directory.EnsureExists(); //This can fail (returning false) if it does then we subsequently get a (hopefully) useful exception from File.Move
-            System.IO.File.Move(File.FullName, path.FullName);
-            m_upToDateFile = new UpToDateFile(stream, path, m_saveTo);
+            newPath.Directory.EnsureExists(); //This can fail (returning false) if it does then we subsequently get a (hopefully) useful exception from File.Move
+            System.IO.File.Move(File.FullName, newPath.FullName);
+            m_upToDateFile = new UpToDateFile(stream, newPath, m_saveTo);
             m_upToDateFile.FileChanged += () => FileModifiedExternally.Execute();
             m_upToDateFile.FileDeleted += () => FileDeletedExternally.Execute();
             Moved.Execute(new Changed<FileInfo>(oldFile, File));
@@ -187,6 +188,7 @@ namespace Utilities
         }
     }
 
+    [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly", Justification = "Disposable behavior inherited from SaveableFile")]
     public class SaveableFileUndoable : SaveableFile, ISaveableFileUndoable
     {
         public SaveableFileUndoable(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo)
@@ -231,6 +233,7 @@ namespace Utilities
         public event Action SaveStateChanged { add { m_undoQueue.ModifiedChanged += value; } remove { m_undoQueue.ModifiedChanged -= value; } }
     }
 
+    [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly", Justification = "Disposable behavior inherited from SaveableFile")]
     public class SaveableFileExternalChangedSource : SaveableFile, ISaveableFile
     {
         public SaveableFileExternalChangedSource(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo, Func<bool> changed, Action saved)
@@ -274,6 +277,7 @@ namespace Utilities
         public event Action Modified;
     }
 
+    [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly", Justification = "Disposable behavior inherited from SaveableFile")]
     public class SaveableFileNotUndoable : SaveableFile, ISaveableFile
     {
         public SaveableFileNotUndoable(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo)
@@ -335,17 +339,17 @@ namespace Utilities
             private set;
         }
 
-        public bool Move(FileInfo path, Func<bool> replace)
+        public bool Move(FileInfo newPath, Func<bool> replace)
         {
             var oldFile = File;
-            if (path.Exists)
+            if (newPath.Exists)
                 if (replace())
-                    path.Delete();
+                    newPath.Delete();
                 else
                     return false;
 
-            System.IO.File.Move(oldFile.FullName, path.FullName);
-            File = path;
+            System.IO.File.Move(oldFile.FullName, newPath.FullName);
+            File = newPath;
             Moved.Execute(new Changed<FileInfo>(oldFile, File));
             return true;
         }
@@ -397,19 +401,19 @@ namespace Utilities
             get { return m_upToDateFile.File; }
         }
 
-        public bool Move(FileInfo path, Func<bool> replace)
+        public bool Move(FileInfo newPath, Func<bool> replace)
         {
             var oldFile = File;
-            if (path.Exists)
+            if (newPath.Exists)
                 if (replace())
-                    path.Delete();
+                    newPath.Delete();
                 else
                     return false;
 
             var stream = m_upToDateFile.Migrate();
             m_upToDateFile.Dispose();
-            System.IO.File.Move(oldFile.FullName, path.FullName);
-            m_upToDateFile = new UpToDateFile(stream, path, s => { });
+            System.IO.File.Move(oldFile.FullName, newPath.FullName);
+            m_upToDateFile = new UpToDateFile(stream, newPath, s => { });
             m_upToDateFile.FileChanged += () => FileModifiedExternally.Execute();
             m_upToDateFile.FileDeleted += () => FileDeletedExternally.Execute();
             Moved.Execute(new Changed<FileInfo>(oldFile, File));

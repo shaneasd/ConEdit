@@ -9,7 +9,7 @@ using Conversation.Serialization;
 
 namespace ConversationEditor
 {
-    public interface IGraphEditorControl<TNode> where TNode : IRenderable<IGUI>
+    public interface IGraphEditorControl<TNode> where TNode : IRenderable<IGui>
     {
         void CopySelection();
 
@@ -29,7 +29,7 @@ namespace ConversationEditor
 
         float GraphScale { get; set; }
 
-        bool ShowIDs { get; set; }
+        bool ShowIds { get; set; }
 
         IConversationEditorControlData<TNode, TransitionNoduleUIInfo> CurrentFile
         {
@@ -41,6 +41,6 @@ namespace ConversationEditor
 
         void AddNode(IEditableGenerator nn, Point p);
 
-        void Insert(Point? p, Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>> additions);
+        void Insert(Point? p, Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, object> additions);
     }
 }

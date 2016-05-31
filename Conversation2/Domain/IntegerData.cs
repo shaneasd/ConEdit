@@ -7,10 +7,10 @@ namespace Conversation
 {
     public struct IntegerData
     {
-        public IntegerData(string name, ParameterType typeID, int? max = null, int? min = null/*, int? def = null*/)
+        public IntegerData(string name, ParameterType typeId, int? max = null, int? min = null/*, int? def = null*/)
         {
             Name = name;
-            TypeID = typeID;
+            TypeID = typeId;
             Max = max;
             Min = min;
             //Default = def;

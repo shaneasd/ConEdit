@@ -9,7 +9,7 @@ using Conversation.Serialization;
 
 namespace ConversationEditor
 {
-    using ConversationNode = ConversationNode<INodeGUI>;
+    using ConversationNode = ConversationNode<INodeGui>;
     using TData = XmlGraphData<NodeUIData, ConversationEditorData>;
     using System.Collections.ObjectModel;
 
@@ -20,8 +20,10 @@ namespace ConversationEditor
         SaveableFileUndoable m_file;
         public override ISaveableFileUndoable UndoableFile { get { return m_file; } }
 
-        public ConversationFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ISerializer<TData> serializer, ReadOnlyCollection<LoadError> errors, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio, IAudioProvider audioProvider)
-            : base(nodes, groups, errors, nodeFactory, generateAudio, audioProvider)
+        public ConversationFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ISerializer<TData> serializer,
+            ReadOnlyCollection<LoadError> errors, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio,
+            Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider)
+            : base(nodes, groups, errors, nodeFactory, generateAudio, getDocumentSource, audioProvider)
         {
             m_file = new SaveableFileUndoable(rawData, file, SaveTo);
             m_serializer = serializer;
@@ -58,7 +60,8 @@ namespace ConversationEditor
             }
         }
 
-        public static ConversationFile CreateEmpty(DirectoryInfo directory, Project project, Func<FileInfo, bool> pathOk, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio, IAudioProvider audioProvider)
+        public static ConversationFile CreateEmpty(DirectoryInfo directory, Project project, Func<FileInfo, bool> pathOk, INodeFactory<ConversationNode> nodeFactory,
+            Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider)
         {
             var file = GetAvailableConversationPath(directory, project.Elements, pathOk);
 
@@ -67,18 +70,19 @@ namespace ConversationEditor
 
             //Fill the stream with the essential content
             MemoryStream m = new MemoryStream();
-            using (FileStream stream = Util.LoadFileStream(file, FileMode.CreateNew))
+            using (FileStream stream = Util.LoadFileStream(file, FileMode.CreateNew, FileAccess.Write))
             {
                 project.ConversationSerializer.Write(SerializationUtils.MakeConversationData(nodes, new ConversationEditorData { Groups = groups }), m);
                 m.Position = 0;
                 m.CopyTo(stream);
             }
 
-            return new ConversationFile(nodes, groups, m, file, project.ConversationSerializer, new ReadOnlyCollection<LoadError>(new LoadError[0]), nodeFactory, generateAudio, audioProvider);
+            return new ConversationFile(nodes, groups, m, file, project.ConversationSerializer, new ReadOnlyCollection<LoadError>(new LoadError[0]), nodeFactory, generateAudio, getDocumentSource, audioProvider);
         }
 
         /// <exception cref="MyFileLoadException">If file can't be read</exception>
-        public static ConversationFile Load(FileInfo file, INodeFactory nodeFactory, ISerializerDeserializer<TData> serializer, Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio, IAudioProvider audioProvider)
+        public static ConversationFile Load(FileInfo file, INodeFactory nodeFactory, ISerializerDeserializer<TData> serializer, Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio,
+            Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider)
         {
             TData data;
             MemoryStream m;
@@ -89,7 +93,7 @@ namespace ConversationEditor
                 m.Position = 0;
                 data = serializer.Read(m);
             }
-            return new ConversationFile(data.Nodes.ToList(), data.EditorData.Groups.ToList(), m, file, serializer, data.Errors, nodeFactory, generateAudio, audioProvider);
+            return new ConversationFile(data.Nodes.ToList(), data.EditorData.Groups.ToList(), m, file, serializer, data.Errors, nodeFactory, generateAudio, getDocumentSource, audioProvider);
         }
 
         public bool CanRemove(Func<bool> prompt)

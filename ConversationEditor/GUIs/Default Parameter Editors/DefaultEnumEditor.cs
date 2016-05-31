@@ -10,6 +10,7 @@ using Conversation;
 using Utilities;
 
 using TControl = Utilities.UI.MySuggestionBox<System.Guid>;
+using TItem = Utilities.UI.MyComboBoxItem<System.Guid>;
 //using TControl = Utilities.MyComboBox<System.Guid>;
 
 namespace ConversationEditor
@@ -43,7 +44,7 @@ namespace ConversationEditor
     internal partial class DefaultEnumEditor : UserControl, IParameterEditor<DefaultEnumEditor>
     {
         TControl m_comboBox;
-        List<TControl.Item> m_comboBoxItems = new List<TControl.Item>();
+        List<TItem> m_comboBoxItems = new List<TItem>();
         IEnumParameter m_parameter;
 
         public DefaultEnumEditor()
@@ -69,7 +70,7 @@ namespace ConversationEditor
             }
             set
             {
-                m_comboBox.SelectedItem = new TControl.Item(m_parameter.GetName(value), value);
+                m_comboBox.SelectedItem = new TItem(m_parameter.GetName(value), value);
             }
         }
 
@@ -78,16 +79,16 @@ namespace ConversationEditor
             m_parameter = data.Parameter as IEnumParameter;
             foreach (var ch in m_parameter.Options.OrderBy(o=>m_parameter.GetName(o)))
             {
-                m_comboBoxItems.Add(new TControl.Item(m_parameter.GetName(ch), ch));
+                m_comboBoxItems.Add(new TItem(m_parameter.GetName(ch), ch));
             }
 
             if (!m_parameter.Corrupted)
             {
                 var valueName = m_parameter.GetName(m_parameter.Value);
                 if (valueName != null)
-                    m_comboBox.SelectedItem = new TControl.Item(valueName, m_parameter.Value);
+                    m_comboBox.SelectedItem = new TItem(valueName, m_parameter.Value);
                 else
-                    m_comboBox.SelectedItem = new TControl.Item(EnumParameter.InvalidValue);
+                    m_comboBox.SelectedItem = new TItem(EnumParameter.InvalidValue);
             }
         }
 
@@ -98,22 +99,18 @@ namespace ConversationEditor
 
         public UpdateParameterData UpdateParameterAction()
         {
-            if (!IsValid())
+            if (IsValid() != null)
                 throw new Exception("Current enum selection is invalid");
 
             return m_parameter.SetValueAction(SelectedItem);
         }
 
-        public bool IsValid()
+        public string IsValid()
         {
-            return m_comboBox.Items.Any(i => i.Contents == m_comboBox.SelectedItem.Contents);
+            return m_comboBox.Items.Any(i => i.Contents == m_comboBox.SelectedItem.Contents) ? null : "Selected item doe snot exist in enumeration";
         }
 
         public event Action Ok;
-        //{
-        //    add { }
-        //    remove { }
-        //}
 
         ColorScheme m_scheme;
         public ColorScheme Scheme

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using Conversation;
 using Utilities;
-using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
 using Conversation.Serialization;
 
 namespace ConversationEditor
@@ -58,8 +58,8 @@ namespace ConversationEditor
                 RemoveFromData(node);
         }
 
-        public DomainFile(List<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ReadOnlyCollection<LoadError> errors, DomainDomain datasource, ISerializer<TData> serializer, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage)
-            : base(nodes, groups, errors, nodeFactory, null, NoAudio.Instance)
+        public DomainFile(List<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ReadOnlyCollection<LoadError> errors, DomainDomain datasource, ISerializer<TData> serializer, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, List<IAutoCompletePattern> autoCompletePatterns)
+            : base(nodes, groups, errors, nodeFactory, null, getDocumentSource, NoAudio.Instance)
         {
             m_file = new SaveableFileUndoable(rawData, file, SaveTo);
             m_domainUsage = domainUsage;
@@ -81,9 +81,10 @@ namespace ConversationEditor
             m_datasource = datasource;
             //m_conversationDatasource = conversationDataSource;
             m_serializer = serializer;
+            m_autoCompletePatterns = autoCompletePatterns;
         }
 
-        public static DomainFile CreateEmpty(DirectoryInfo directory, DomainDomain datasource, ISerializer<TData> serializer, Func<FileInfo, bool> pathOk, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage)
+        public static DomainFile CreateEmpty(DirectoryInfo directory, DomainDomain datasource, ISerializer<TData> serializer, Func<FileInfo, bool> pathOk, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource)
         {
             //Create a stream under an available filename
             FileInfo path = null;
@@ -95,13 +96,13 @@ namespace ConversationEditor
             }
 
             MemoryStream m = new MemoryStream();
-            using (var stream = Util.LoadFileStream(path, FileMode.CreateNew))
+            using (var stream = Util.LoadFileStream(path, FileMode.CreateNew, FileAccess.Write))
             {
                 serializer.Write(SerializationUtils.MakeDomainData(Enumerable.Empty<ConversationNode>(), new ConversationEditorData()), m);
                 m.CopyTo(stream);
             }
 
-            return new DomainFile(new List<GraphAndUI<NodeUIData>>(), new List<NodeGroup>(), m, path, new ReadOnlyCollection<LoadError>(new LoadError[0]), datasource, serializer, nodeFactory, domainUsage);
+            return new DomainFile(new List<GraphAndUI<NodeUIData>>(), new List<NodeGroup>(), m, path, new ReadOnlyCollection<LoadError>(new LoadError[0]), datasource, serializer, nodeFactory, domainUsage, getDocumentSource, new List<IAutoCompletePattern>());
         }
 
         private void NodeModified(ConversationNode node)
@@ -124,7 +125,12 @@ namespace ConversationEditor
             Action<DynamicEnumerationData> dynamicEnumAction = data =>
             {
                 //There's no data that the conversation domain needs
-                m_datasource.RenameType(BaseType.DynamicEnumeration, data.Name, data.TypeID);
+                m_datasource.RenameType(BaseType.DynamicEnumeration, data.Name, data.TypeId);
+            };
+            Action<LocalDynamicEnumerationData> localDynamicEnumAction = data =>
+            {
+                //There's no data that the conversation domain needs
+                m_datasource.RenameType(BaseType.LocalDynamicEnumeration, data.Name, data.TypeId);
             };
             Action<EnumerationData> enumAction = data =>
             {
@@ -155,13 +161,13 @@ namespace ConversationEditor
             {
                 var nodeConnector = node.Connectors.Single(c => c.m_definition.Id == DomainIDs.ConnectorOutputDefinition.Id);
                 var nodes = nodeConnector.Connections.Select(c => c.Parent).Where(n => n.NodeTypeId == DomainIDs.NodeGuid);
-                DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
+                DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             }
             else if (m_datasource.IsParameter(node.Type))
             {
                 var nodeConnector = node.Connectors.Single(c => c.m_definition.Id == DomainIDs.ParameterOutputDefinition.Id);
                 var nodes = nodeConnector.Connections.Select(c => c.Parent).Where(n => n.NodeTypeId == DomainIDs.NodeGuid);
-                DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
+                DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             }
             else if (m_datasource.IsConfig(node.Type))
             {
@@ -169,7 +175,7 @@ namespace ConversationEditor
                 var connected = nodeConnector.Connections.Select(c => c.Parent);
 
                 var nodes = connected.Where(n => n.NodeTypeId == DomainIDs.NodeGuid);
-                DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
+                DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
 
                 //Don't currently need to handle parameter config affecting nodes
                 //var parameters = connected.Where(n => m_datasource.IsParameter(n.NodeTypeID));
@@ -178,7 +184,7 @@ namespace ConversationEditor
             }
             else
             {
-                DomainDomain.ForEachNode(node.Only(), categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
+                DomainDomain.ForEachNode(node.Only(), categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             }
             ConversationDomainModified.Execute(); //No need to be picky about false positives
         }
@@ -192,6 +198,7 @@ namespace ConversationEditor
             Action<IntegerData> integerAction = data => { }; //Can't link integer definitions to anything
             Action<DecimalData> decimalAction = data => { }; //Can't link decimal definitions to anything
             Action<DynamicEnumerationData> dynamicEnumAction = data => { }; //Can't link dynamic enum definitions to anything
+            Action<LocalDynamicEnumerationData> localDynamicEnumAction = data => { }; //Can't link local dynamic enum definitions to anything
             Action<EnumerationData> enumAction = data =>
             {
                 m_datasource.UpdateEnumeration(data);
@@ -209,7 +216,7 @@ namespace ConversationEditor
                 //update conversation datasource when connector definition is linked to a parameter
             };
             Action<ConnectionDefinitionData> connectionAction = data => { }; //Can't line connection definitions to anything
-            DomainDomain.ForEachNode(node.Only(), categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
+            DomainDomain.ForEachNode(node.Only(), categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             ConversationDomainModified.Execute(); //No need to be picky about false positives
         }
 
@@ -235,6 +242,11 @@ namespace ConversationEditor
                 datasource.AddDynamicEnumType(data);
                 //conversationDatasource.AddDynamicEnumType(data);
             };
+            Action<LocalDynamicEnumerationData> localDynamicEnumAction = data =>
+            {
+                datasource.AddLocalDynamicEnumType(data);
+                //conversationDatasource.AddLocalDynamicEnumType(data);
+            };
             Action<EnumerationData> enumAction = data =>
             {
                 datasource.AddEnumType(data); datasource.UpdateEnumeration(data);
@@ -254,7 +266,7 @@ namespace ConversationEditor
             {
                 //No action required as it doesn't affect the domain domain
             };
-            DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
+            DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
         }
 
         /// <summary>
@@ -279,7 +291,12 @@ namespace ConversationEditor
             };
             Action<DynamicEnumerationData> dynamicEnumAction = data =>
             {
-                m_datasource.RemoveType(BaseType.DynamicEnumeration, data.TypeID);
+                m_datasource.RemoveType(BaseType.DynamicEnumeration, data.TypeId);
+                //m_conversationDatasource.RemoveType(data.TypeID);
+            };
+            Action<LocalDynamicEnumerationData> localDynamicEnumAction = data =>
+            {
+                m_datasource.RemoveType(BaseType.LocalDynamicEnumeration, data.TypeId);
                 //m_conversationDatasource.RemoveType(data.TypeID);
             };
             Action<EnumerationData> enumAction = data =>
@@ -306,7 +323,7 @@ namespace ConversationEditor
             {
                 //Doesn't affect domain domain
             };
-            DomainDomain.ForEachNode(node.Only(), categoryAction, integerAction, decimalAction, dynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
+            DomainDomain.ForEachNode(node.Only(), categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             ConversationDomainModified.Execute(); //No need to be picky about false positives
         }
 
@@ -336,12 +353,12 @@ namespace ConversationEditor
             get
             {
                 DomainData data = new DomainData();
-                DomainDomain.ForEachNode(m_nodes, data.NodeTypes.Add, data.Integers.Add, data.Decimals.Add, data.DynamicEnumerations.Add, data.Enumerations.Add, a => { }, data.Nodes.Add, data.Connectors.Add, data.Connections.Add);
+                DomainDomain.ForEachNode(m_nodes, data.NodeTypes.Add, data.Integers.Add, data.Decimals.Add, data.DynamicEnumerations.Add, data.LocalDynamicEnumerations.Add, data.Enumerations.Add, a => { }, data.Nodes.Add, data.Connectors.Add, data.Connections.Add);
                 return data;
             }
         }
 
-        internal static IEnumerable<Or<DomainFile, MissingDomainFile>> Load(IEnumerable<FileInfo> paths, DomainDomain source, Func<FileInfo, DomainSerializerDeserializer> serializerdeserializer, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage)
+        internal static IEnumerable<Either<DomainFile, MissingDomainFile>> Load(IEnumerable<FileInfo> paths, DomainDomain source, Func<FileInfo, DomainSerializerDeserializer> serializerdeserializer, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource)
         {
             //List<FileStream> streams = new List<FileStream>();
 
@@ -354,7 +371,7 @@ namespace ConversationEditor
                         MemoryStream m = new MemoryStream((int)stream.Length);
                         stream.CopyTo(m);
                         m.Position = 0;
-                        return (Or<Tuple<MemoryStream, FileInfo>, MissingDomainFile>)Tuple.Create(m, path);
+                        return (Either<Tuple<MemoryStream, FileInfo>, MissingDomainFile>)Tuple.Create(m, path);
                     }
                 }
                 catch (MyFileLoadException e)
@@ -363,8 +380,11 @@ namespace ConversationEditor
                     Console.Out.WriteLine(e.StackTrace);
                     Console.Out.WriteLine(e.InnerException.Message);
                     Console.Out.WriteLine(e.InnerException.StackTrace);
-                    MessageBox.Show("File: " + path.Name + " exists but could not be accessed");
-                    return (Or<Tuple<MemoryStream, FileInfo>, MissingDomainFile>)(new MissingDomainFile(path));
+                    if (path.Exists)
+                        MessageBox.Show("File: " + path.Name + " exists but could not be accessed");
+                    else
+                        MessageBox.Show("File: " + path.Name + " does not exist");
+                    return (Either<Tuple<MemoryStream, FileInfo>, MissingDomainFile>)(new MissingDomainFile(path));
                 }
             }).Evaluate();
 
@@ -401,12 +421,17 @@ namespace ConversationEditor
                 }, a => { });
             }
 
-            return streamsAndPaths.Select(a => a.TransformedOr(stream =>
+            return streamsAndPaths.Select(a => a.TransformedEither(stream =>
                 {
                     var editorData = serializerdeserializer(stream.Item2).EditorDataDeserializer.Read(stream.Item1);
                     DomainFile.AddToData(editorData.Nodes.Select(n => n.GraphData), source);
                     var allData = serializerdeserializer(stream.Item2).EverythingDeserializer.Read(stream.Item1);
-                    return new DomainFile(allData.Nodes.ToList(), editorData.EditorData.Groups.ToList(), stream.Item1, stream.Item2, allData.Errors, source, serializerdeserializer(stream.Item2).Serializer, nodeFactory, domainUsage);
+
+                    List<IAutoCompletePattern> autoCompletePatterns = new List<IAutoCompletePattern>();
+                    var nodeData = serializerdeserializer(stream.Item2).AutoCompleteSuggestionsDeserializer.Read(stream.Item1);
+                    autoCompletePatterns.AddRange(AutoCompletePattern.Generate(nodeData, source));
+
+                    return new DomainFile(allData.Nodes.ToList(), editorData.EditorData.Groups.ToList(), stream.Item1, stream.Item2, allData.Errors, source, serializerdeserializer(stream.Item2).Serializer, nodeFactory, domainUsage, getDocumentSource, autoCompletePatterns);
                 }, b => b));
             //var data = streams.Select(stream =>
             //{
@@ -419,6 +444,13 @@ namespace ConversationEditor
             //        memory = 
             //    };
             //}).Evaluate();
+        }
+
+        List<IAutoCompletePattern> m_autoCompletePatterns;
+
+        public IEnumerable<string> AutoCompleteSuggestions(IParameter p, string s, Func<ParameterType, DynamicEnumParameter.Source> enumSource)
+        {
+            return m_autoCompletePatterns.SelectMany(acp => acp.AutoCompleteSuggestions(p, s, enumSource));
         }
     }
 }

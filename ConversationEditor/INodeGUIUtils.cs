@@ -8,9 +8,9 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    internal static class INodeGUIUtils
+    internal static class INodeGuiUtils
     {
-        public static void Offset(this IGUI node, PointF offset)
+        public static void Offset(this IGui node, PointF offset)
         {
             node.MoveTo(node.Area.Center().Plus(offset));
         }

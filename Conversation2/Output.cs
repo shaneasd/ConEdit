@@ -8,10 +8,17 @@ namespace Conversation
 {
     public class ConnectorPosition
     {
-        public static ConnectorPosition Top = new ConnectorPosition("Top", Guid.Parse("24c96d32-1704-4c85-b2bf-b8da8731ea47"));
-        public static ConnectorPosition Bottom = new ConnectorPosition("Bottom", Guid.Parse("b5461736-18f1-417c-8a54-2c5a1726483b"));
-        public static ConnectorPosition Left = new ConnectorPosition("Left", Guid.Parse("adb2301c-a858-44e8-b76c-93e538231960"));
-        public static ConnectorPosition Right = new ConnectorPosition("Right", Guid.Parse("d8b8efae-3949-47b3-af7b-8db1e402489e"));
+        private static readonly ConnectorPosition sm_top = new ConnectorPosition("Top", Guid.Parse("24c96d32-1704-4c85-b2bf-b8da8731ea47"));
+        public static ConnectorPosition Top { get { return sm_top; } }
+
+        private static readonly ConnectorPosition sm_bottom = new ConnectorPosition("Bottom", Guid.Parse("b5461736-18f1-417c-8a54-2c5a1726483b"));
+        public static ConnectorPosition Bottom { get { return sm_bottom; } }
+
+        private static readonly ConnectorPosition sm_left = new ConnectorPosition("Left", Guid.Parse("adb2301c-a858-44e8-b76c-93e538231960"));
+        public static ConnectorPosition Left { get { return sm_left; } }
+
+        private static readonly ConnectorPosition sm_right = new ConnectorPosition("Right", Guid.Parse("d8b8efae-3949-47b3-af7b-8db1e402489e"));
+        public static ConnectorPosition Right { get { return sm_right; } }
 
         public T For<T>(Func<T> top, Func<T> bottom, Func<T> left, Func<T> right)
         {
@@ -67,7 +74,7 @@ namespace Conversation
         private Tuple<Guid, string> Tuple { get { return System.Tuple.Create(m_guid, m_name); } }
 
         public static ParameterType ENUM_ID = ParameterType.Parse("2b075746-9b6e-4d6e-ad39-a083049374f2");
-        public static ID<Parameter> PARAMETER_ID = ID<Parameter>.Parse("43903044-1ef9-4c9f-a782-6219fb8e7826");
+        public static Id<Parameter> PARAMETER_ID = Id<Parameter>.Parse("43903044-1ef9-4c9f-a782-6219fb8e7826");
 
         public static EnumParameter MakeParameter()
         {
@@ -116,7 +123,7 @@ namespace Conversation
     public class NoConnections : IConnectionRules
     {
         public static readonly IConnectionRules Instance = new NoConnections();
-        public bool CanConnect(ID<TConnectorDefinition> a, ID<TConnectorDefinition> b)
+        public bool CanConnect(Id<TConnectorDefinition> a, Id<TConnectorDefinition> b)
         {
             return false;
         }
@@ -124,7 +131,7 @@ namespace Conversation
 
     public interface IConnectionRules
     {
-        bool CanConnect(ID<TConnectorDefinition> a, ID<TConnectorDefinition> b);
+        bool CanConnect(Id<TConnectorDefinition> a, Id<TConnectorDefinition> b);
     }
 
     [FlagsAttribute]
@@ -139,14 +146,14 @@ namespace Conversation
     public class Output
     {
         public readonly ConnectorDefinitionData m_definition;
-        public readonly ID<TConnector> ID;
+        public readonly Id<TConnector> ID;
         public readonly IEditable Parent;
         public readonly List<Parameter> Parameters;
         public readonly IConnectionRules Rules;
 
         private List<Output> m_connections = new List<Output>();
 
-        public Output(ID<TConnector> id, ConnectorDefinitionData definition, IEditable parent, List<Parameter> parameters, IConnectionRules rules)
+        public Output(Id<TConnector> id, ConnectorDefinitionData definition, IEditable parent, List<Parameter> parameters, IConnectionRules rules)
         {
             m_definition = definition;
             Parent = parent;
@@ -161,8 +168,8 @@ namespace Conversation
             get { return m_connections; }
         }
 
-        public event Action Connected;
-        public event Action Disconnected;
+        public event Action<Output> Connected;
+        public event Action<Output> Disconnected;
 
         public bool CanConnectTo(Output other, ConnectionConsiderations ignore)
         {
@@ -196,7 +203,7 @@ namespace Conversation
                 return false;
 
             m_connections.Add(other);
-            Connected.Execute();
+            Connected.Execute(other);
             return true;
         }
 
@@ -221,7 +228,7 @@ namespace Conversation
         private void CounterDisconnect(Output other)
         {
             m_connections.Remove(other);
-            Disconnected.Execute();
+            Disconnected.Execute(other);
         }
 
         public void Disconnect(Output other)

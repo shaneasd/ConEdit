@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
 using System.Reflection;
 using System.IO;
 using ConversationEditor;
@@ -23,7 +23,7 @@ namespace PluginPack
 
             yield return new MenuAction<ConversationNode>("Basic Conversation", (a, b) => null, null, null, p =>
             {
-                control.Insert(p, Tuple.Create(data.Nodes, data.EditorData.Groups));
+                control.Insert(p, Tuple.Create(data.Nodes, data.EditorData.Groups, new object()));
             });
         }
     }

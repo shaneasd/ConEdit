@@ -8,7 +8,7 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    using ConversationNode = ConversationNode<INodeGUI>;
+    using ConversationNode = ConversationNode<INodeGui>;
     using System.Collections.ObjectModel;
 
     internal sealed class MissingDomainFile : IDomainFile
@@ -61,11 +61,6 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public Utilities.UndoQueue UndoQueue
-        {
-            get { return new UndoQueue(); }
-        }
-
         public DomainData Data
         {
             get
@@ -112,7 +107,7 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public ConversationNode GetNode(ID<NodeTemp> id)
+        public ConversationNode GetNode(Id<NodeTemp> id)
         {
             throw new NotImplementedException();
         }
@@ -131,9 +126,21 @@ namespace ConversationEditor
         }
 
         public event Action ConversationDomainModified { add { } remove { } }
+        public event Action<ConversationNode> NodeAdded { add { } remove { } }
+        public event Action<ConversationNode> NodeRemoved { add { } remove { } }
 
 
-        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<Conversation.Serialization.GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, System.Drawing.PointF location, ILocalizationEngine localization)
+        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<Conversation.Serialization.GraphAndUI<NodeUIData>> nodeData,  IEnumerable<NodeGroup> groups, object documentID, System.Drawing.PointF location, ILocalizationEngine localization)
+        {
+            throw new NotImplementedException();
+        }
+        
+        public IEnumerable<string> AutoCompleteSuggestions(IParameter p, string s, Func<ParameterType, DynamicEnumParameter.Source> enumSource)
+        {
+            return Enumerable.Empty<string>(); //Missing file can't make suggestions but will probably be queried anyway
+        }
+
+        public int RelativePosition(ConversationNode of, ConversationNode relativeTo)
         {
             throw new NotImplementedException();
         }

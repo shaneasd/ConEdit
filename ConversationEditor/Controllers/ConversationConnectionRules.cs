@@ -9,9 +9,9 @@ namespace ConversationEditor
 {
     internal class ConversationConnectionRules : IConnectionRules
     {
-        HashSet<UnorderedTuple2<ID<TConnectorDefinition>>> m_allowed = new HashSet<UnorderedTuple2<ID<TConnectorDefinition>>>();
+        HashSet<UnorderedTuple2<Id<TConnectorDefinition>>> m_allowed = new HashSet<UnorderedTuple2<Id<TConnectorDefinition>>>();
 
-        public bool CanConnect(ID<TConnectorDefinition> a, ID<TConnectorDefinition> b)
+        public bool CanConnect(Id<TConnectorDefinition> a, Id<TConnectorDefinition> b)
         {
             var test = UnorderedTuple.Make(a, b);
             var alwaysAllowed = UnorderedTuple.Make(SpecialConnectors.Input.Id, SpecialConnectors.Output.Id);

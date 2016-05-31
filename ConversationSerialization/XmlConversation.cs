@@ -47,11 +47,12 @@ namespace Conversation.Serialization
     /// </summary>
     public class XmlGraphData<TUIRawData, TEditorData>
     {
-        public XmlGraphData(IEnumerable<GraphAndUI<TUIRawData>> nodes, TEditorData editorData, ReadOnlyCollection<LoadError> errors)
+        public XmlGraphData(IEnumerable<GraphAndUI<TUIRawData>> nodes, TEditorData editorData, ReadOnlyCollection<LoadError> errors, object documentID)
         {
             m_nodes = nodes;
             m_editorData = editorData;
             m_errors = errors;
+            m_documentID = documentID;
         }
 
         public XmlGraphData(IEnumerable<GraphAndUI<TUIRawData>> nodes, TEditorData editorData)
@@ -64,10 +65,12 @@ namespace Conversation.Serialization
         private readonly IEnumerable<GraphAndUI<TUIRawData>> m_nodes;
         private readonly TEditorData m_editorData;
         private readonly ReadOnlyCollection<LoadError> m_errors;
+        private object m_documentID;
 
         public IEnumerable<GraphAndUI<TUIRawData>> Nodes { get { return m_nodes; } }
         public TEditorData EditorData { get { return m_editorData; } }
         public ReadOnlyCollection<LoadError> Errors { get { return m_errors; } }
+        public object DocumentID { get { return m_documentID; } }
     }
 
     public static class XmlConversation<TUIRawData, TEditorData>
@@ -83,7 +86,7 @@ namespace Conversation.Serialization
 
             public SerializerDeserializer(IDataSource datasource, ISerializerDeserializerXml<TUIRawData, TUIRawData> nodeUISerializer, ISerializerXml<TEditorData> editorDataSerializer, IDeserializerXml<TEditorData> editorDataDeserializer)
             {
-                deserializer = new Deserializer(datasource, nodeUISerializer, editorDataDeserializer);
+                deserializer = new Deserializer(datasource, nodeUISerializer, editorDataDeserializer, null);
                 serializer = new Serializer(nodeUISerializer, editorDataSerializer);
             }
 
@@ -103,18 +106,20 @@ namespace Conversation.Serialization
             private IDataSource m_datasource;
             private IDeserializerXml<TUIRawData> m_nodeUIDeserializer;
             private IDeserializerXml<TEditorData> m_editorDataDeserializer;
-            Func<ID<NodeTypeTemp>, bool> m_filter;
+            Func<Id<NodeTypeTemp>, bool> m_filter;
 
-            public Deserializer(IDataSource datasource, IDeserializerXml<TUIRawData> nodeUISerializer, IDeserializerXml<TEditorData> editorDataDeserializer, Func<ID<NodeTypeTemp>, bool> filter = null)
+            public Deserializer(IDataSource datasource, IDeserializerXml<TUIRawData> nodeUISerializer, IDeserializerXml<TEditorData> editorDataDeserializer, Func<Id<NodeTypeTemp>, bool> filter)
             {
                 m_datasource = datasource;
                 m_nodeUIDeserializer = nodeUISerializer;
                 m_editorDataDeserializer = editorDataDeserializer;
-                m_filter = filter ?? new Func<ID<NodeTypeTemp>, bool>(i => true);
+                m_filter = filter ?? new Func<Id<NodeTypeTemp>, bool>(i => true);
             }
 
             public XmlGraphData<TUIRawData, TEditorData> Read(Stream stream)
             {
+                object documentID = new object();
+
                 stream.Position = 0;
                 var d = XDocument.Load(stream);
                 var root = d.Element(Root);
@@ -123,8 +128,8 @@ namespace Conversation.Serialization
                 if (root.Attribute("xmlversion") == null || !XmlVersionRead.Contains(root.Attribute("xmlversion").Value))
                     throw new Exception("unrecognised conversation xml version");
 
-                IEnumerable<Or<GraphAndUI<TUIRawData>, LoadError>> editables = root.Elements("Node").Select(n => ReadEditable(n, m_datasource)).Evaluate();
-                var allnodes = new Dictionary<ID<NodeTemp>, GraphAndUI<TUIRawData>>();
+                IEnumerable<Either<GraphAndUI<TUIRawData>, LoadError>> editables = root.Elements("Node").Select(n => ReadEditable(n, m_datasource, documentID)).Evaluate();
+                var allnodes = new Dictionary<Id<NodeTemp>, GraphAndUI<TUIRawData>>();
                 var errors = new List<LoadError>();
 
                 foreach (var editable in editables)
@@ -139,7 +144,7 @@ namespace Conversation.Serialization
                 }
 
                 //This makes a lot of assumptions but I'm fairly sure they're assumptions that currently hold
-                IEnumerable<ID<NodeTemp>> filteredNodes = allnodes.Keys.Where(k => m_filter(allnodes[k].GraphData.NodeTypeId)).Evaluate();
+                IEnumerable<Id<NodeTemp>> filteredNodes = allnodes.Keys.Where(k => m_filter(allnodes[k].GraphData.NodeTypeId)).Evaluate();
 
                 var links = ReadLinks(filteredNodes, root);
 
@@ -196,17 +201,17 @@ namespace Conversation.Serialization
 
                 foreach (var node in root.Elements("Node"))
                 {
-                    ID<NodeTemp> nodeID = ID<NodeTemp>.Parse(node.Attribute("Id").Value);
+                    Id<NodeTemp> nodeID = Id<NodeTemp>.Parse(node.Attribute("Id").Value);
                     //ID<NodeTypeTemp> nodeType = ID<NodeTypeTemp>.Parse(node.Attribute("Guid").Value);
                     int outputIndex = 0; //no idea where the output guids come from so just assume they're ordered
 
                     //TODO: Remove support for legacy linking
                     foreach (var output in node.Elements("Output"))
                     {
-                        ID<TConnector> outputGuid = ID<TConnector>.Parse(output.Attribute("guid").Value);
-                        bool legacyNodeOutput = ID<TConnector>.Parse("1583e20c-c725-48c3-944d-1ba40c3ebdf4") == outputGuid;
+                        Id<TConnector> outputGuid = Id<TConnector>.Parse(output.Attribute("guid").Value);
+                        bool legacyNodeOutput = Id<TConnector>.Parse("1583e20c-c725-48c3-944d-1ba40c3ebdf4") == outputGuid;
                         var outputConnectors = legacyNodeOutput ? allnodes[nodeID].GraphData.Connectors : allnodes[nodeID].GraphData.Connectors.ElementAt(outputIndex).Only();
-                        var connectedNodes = output.Elements("Link").Select(l => ID<NodeTemp>.Parse(l.Attribute("To").Value));
+                        var connectedNodes = output.Elements("Link").Select(l => Id<NodeTemp>.Parse(l.Attribute("To").Value));
                         foreach (var connectedID in connectedNodes)
                         {
                             var connectedNode = allnodes[connectedID].GraphData;
@@ -235,24 +240,24 @@ namespace Conversation.Serialization
                     }
                 }
 
-                return new XmlGraphData<TUIRawData, TEditorData>(filteredNodes.Select(a => allnodes[a]), m_editorDataDeserializer.Read(root), new ReadOnlyCollection<LoadError>(errors));
+                return new XmlGraphData<TUIRawData, TEditorData>(filteredNodes.Select(a => allnodes[a]), m_editorDataDeserializer.Read(root), new ReadOnlyCollection<LoadError>(errors), documentID);
             }
 
-            private Or<GraphAndUI<TUIRawData>, LoadError> ReadEditable(XElement node, IDataSource datasource)
+            private Either<GraphAndUI<TUIRawData>, LoadError> ReadEditable(XElement node, IDataSource datasource, object documentID)
             {
-                ID<NodeTemp> id = ID<NodeTemp>.Parse(node.Attribute("Id").Value);
-                ID<NodeTypeTemp> guid = ID<NodeTypeTemp>.Parse(node.Attribute("Guid").Value);
+                Id<NodeTemp> id = Id<NodeTemp>.Parse(node.Attribute("Id").Value);
+                Id<NodeTypeTemp> guid = Id<NodeTypeTemp>.Parse(node.Attribute("Guid").Value);
 
                 EditableGenerator editableGenerator = datasource.GetNode(guid);
 
-                Or<GraphAndUI<TUIRawData>, LoadError> result;
+                Either<GraphAndUI<TUIRawData>, LoadError> result;
 
                 var parameterNodes = node.Elements("Parameter");
-                var parameterData = parameterNodes.Select(p => new EditableGeneratorParameterData(ID<Parameter>.Parse(p.Attribute("guid").Value), p.Attribute("value").Value)).ToList();
+                var parameterData = parameterNodes.Select(p => new EditableGeneratorParameterData(Id<Parameter>.Parse(p.Attribute("guid").Value), p.Attribute("value").Value)).ToList();
 
                 if (editableGenerator != null)
                 {
-                    IEditable editable = editableGenerator.Generate(id, parameterData);
+                    IEditable editable = editableGenerator.Generate(id, parameterData, documentID);
                     result = new GraphAndUI<TUIRawData>(editable, m_nodeUIDeserializer.Read(node));
                 }
                 else
@@ -265,16 +270,16 @@ namespace Conversation.Serialization
                 return result;
             }
 
-            private static HashSet<UnorderedTuple2<Tuple<ID<TConnector>, ID<NodeTemp>>>> ReadLinks(IEnumerable<ID<NodeTemp>> filteredNodes, XElement root)
+            private static HashSet<UnorderedTuple2<Tuple<Id<TConnector>, Id<NodeTemp>>>> ReadLinks(IEnumerable<Id<NodeTemp>> filteredNodes, XElement root)
             {
-                HashSet<UnorderedTuple2<Tuple<ID<TConnector>, ID<NodeTemp>>>> result = new HashSet<UnorderedTuple2<Tuple<ID<TConnector>, ID<NodeTemp>>>>();
+                HashSet<UnorderedTuple2<Tuple<Id<TConnector>, Id<NodeTemp>>>> result = new HashSet<UnorderedTuple2<Tuple<Id<TConnector>, Id<NodeTemp>>>>();
 
                 foreach (var link in root.Elements("Link"))
                 {
-                    ID<NodeTemp> node1 = ID<NodeTemp>.Parse(link.Attribute("node1").Value);
-                    ID<TConnector> connector1 = ID<TConnector>.Parse(link.Attribute("connector1").Value);
-                    ID<NodeTemp> node2 = ID<NodeTemp>.Parse(link.Attribute("node2").Value);
-                    ID<TConnector> connector2 = ID<TConnector>.Parse(link.Attribute("connector2").Value);
+                    Id<NodeTemp> node1 = Id<NodeTemp>.Parse(link.Attribute("node1").Value);
+                    Id<TConnector> connector1 = Id<TConnector>.Parse(link.Attribute("connector1").Value);
+                    Id<NodeTemp> node2 = Id<NodeTemp>.Parse(link.Attribute("node2").Value);
+                    Id<TConnector> connector2 = Id<TConnector>.Parse(link.Attribute("connector2").Value);
 
                     if (filteredNodes.Any(n => n.Equals(node1) || n.Equals(node2)))
                         result.Add(UnorderedTuple.Make(Tuple.Create(connector1, node1), Tuple.Create(connector2, node2)));
@@ -311,7 +316,7 @@ namespace Conversation.Serialization
 
             private static void WriteLinks(XmlGraphData<TUIRawData, TEditorData> conversation, XElement root)
             {
-                HashSet<UnorderedTuple2<Tuple<ID<TConnector>, IEditable>>> links = new HashSet<UnorderedTuple2<Tuple<ID<TConnector>, IEditable>>>();
+                HashSet<UnorderedTuple2<Tuple<Id<TConnector>, IEditable>>> links = new HashSet<UnorderedTuple2<Tuple<Id<TConnector>, IEditable>>>();
                 foreach (var n in conversation.Nodes)
                 {
                     foreach (var c in n.GraphData.Connectors)

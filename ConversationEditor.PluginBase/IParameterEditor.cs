@@ -7,47 +7,38 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    public class UpdateParameterData
-    {
-        /// <summary>
-        /// Undo/Redo actions to perform to change the state of the parameter based on the editor selection
-        /// </summary>
-        public SimpleUndoPair? Actions = null;
-        /// <summary>
-        /// An audio file whose inclusion in the project should be updated
-        /// </summary>
-        public Audio? Audio = null;
-
-        public static implicit operator UpdateParameterData(SimpleUndoPair? actions)
-        {
-            return new UpdateParameterData() { Actions = actions };
-        }
-    }
-
     public interface ILocalizationEngine
     {
-        Tuple<ID<LocalizedText>, SimpleUndoPair> DuplicateActions(ID<LocalizedText> iD);
+        Tuple<Id<LocalizedText>, SimpleUndoPair> DuplicateActions(Id<LocalizedText> iD);
 
         bool CanLocalize { get; }
 
-        string Localize(ID<LocalizedText> id);
+        string Localize(Id<LocalizedText> id);
 
-        SimpleUndoPair SetLocalizationAction(ID<LocalizedText> id, string p);
+        SimpleUndoPair SetLocalizationAction(Id<LocalizedText> id, string p);
     }
 
-    public class ParameterEditorSetupData
+    public struct ParameterEditorSetupData
     {
-        public ParameterEditorSetupData(IParameter parameter, ILocalizationEngine localizer, IAudioProvider2 audioProvider, AudioGenerationParameters audioGenerationParameters)
+        public ParameterEditorSetupData(IParameter parameter, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, AudioGenerationParameters audioGenerationParameters, Func<string, IEnumerable<string>> autoCompleteSuggestions)
         {
-            Parameter = parameter;
-            Localizer = localizer;
-            AudioProvider = audioProvider;
-            AudioGenerationParameters = audioGenerationParameters;
+            m_parameter = parameter;
+            m_localizer = localizer;
+            m_audioProvider = audioProvider;
+            m_audioGenerationParameters = audioGenerationParameters;
+            m_autoCompleteSuggestions = autoCompleteSuggestions;
         }
-        public readonly IParameter Parameter;
-        public readonly ILocalizationEngine Localizer;
-        public readonly IAudioProvider2 AudioProvider;
-        public readonly AudioGenerationParameters AudioGenerationParameters;
+        private readonly IParameter m_parameter;
+        private readonly ILocalizationEngine m_localizer;
+        private readonly IAudioParameterEditorCallbacks m_audioProvider;
+        private readonly AudioGenerationParameters m_audioGenerationParameters;
+        private readonly Func<string, IEnumerable<string>> m_autoCompleteSuggestions;
+
+        public IParameter Parameter { get { return m_parameter; } }
+        public ILocalizationEngine Localizer { get { return m_localizer; } }
+        public IAudioParameterEditorCallbacks AudioProvider { get { return m_audioProvider; } }
+        public AudioGenerationParameters AudioGenerationParameters { get { return m_audioGenerationParameters; } }
+        public Func<string, IEnumerable<string>> AutoCompleteSuggestions { get { return m_autoCompleteSuggestions; } }
     }
     public interface IParameterEditor<out TUI>
     {
@@ -61,7 +52,13 @@ namespace ConversationEditor
         /// </summary>
         /// <param name="updateAudio">set to an audio file whose inclusion in the project should be update or left null</param>
         UpdateParameterData UpdateParameterAction();
-        bool IsValid();
+
+        /// <summary>
+        /// null if the current value is valid
+        /// otherwise describes the reason it's invalid
+        /// </summary>
+        /// <returns></returns>
+        string IsValid();
 
         event Action Ok;
     }

@@ -12,11 +12,29 @@ using System.Reflection;
 
 namespace ConversationEditor
 {
-    internal class Config
+    internal class Config : Disposable
     {
-        [Serializable]
+        [Serializable()]
         public class LoadFailedException : Exception
         {
+            public LoadFailedException()
+                : base("Failed to load config")
+            {
+            }
+
+            public LoadFailedException(string message)
+                : base(message)
+            {
+            }
+            public LoadFailedException(string message, Exception innerException) :
+                base(message, innerException)
+            {
+            }
+            protected LoadFailedException(System.Runtime.Serialization.SerializationInfo info,
+               System.Runtime.Serialization.StreamingContext context)
+                : base(info, context)
+            {
+            }
         }
 
         string m_file;
@@ -25,9 +43,9 @@ namespace ConversationEditor
             m_file = file;
             ParameterEditors = new MapConfig<ParameterType, Guid>("ParameterEditors", kvp => new KeyValuePair<string, string>(kvp.Key.Serialized(), kvp.Value.ToString()),
                                                                       kvp => new KeyValuePair<ParameterType, Guid>(ParameterType.Parse(kvp.Key), Guid.Parse(kvp.Value)),
-                                                                      a=>ParameterEditorCustomization.DefaultEditor(a,willEdit));
-            ConversationNodeRenderers = new MapConfig<ID<NodeTypeTemp>, Guid>("ConversationNodeRenderers", kvp => new KeyValuePair<string, string>(kvp.Key.Serialized(), kvp.Value.ToString()),
-                                                                      kvp => new KeyValuePair<ID<NodeTypeTemp>, Guid>(ID<NodeTypeTemp>.Parse(kvp.Key), Guid.Parse(kvp.Value)),
+                                                                      a => ParameterEditorCustomization.DefaultEditor(a, willEdit));
+            ConversationNodeRenderers = new MapConfig<Id<NodeTypeTemp>, Guid>("ConversationNodeRenderers", kvp => new KeyValuePair<string, string>(kvp.Key.Serialized(), kvp.Value.ToString()),
+                                                                      kvp => new KeyValuePair<Id<NodeTypeTemp>, Guid>(Id<NodeTypeTemp>.Parse(kvp.Key), Guid.Parse(kvp.Value)),
                                                                       a => EditableUIFactory.Instance.Guid);
             InitParameters();
             LoadRoot(file);
@@ -47,6 +65,7 @@ namespace ConversationEditor
             m_parameters.Add(ExportPath);
             m_parameters.Add(ColorScheme);
             m_parameters.Add(AudioCustomization);
+            m_parameters.Add(FileFilters);
 
             foreach (var p in m_parameters)
                 p.ValueChanged += Write;
@@ -54,18 +73,19 @@ namespace ConversationEditor
 
         public List<IConfigParameter> m_parameters = new List<IConfigParameter>();
         public readonly MapConfig<ParameterType, Guid> ParameterEditors;
-        public readonly MapConfig<ID<NodeTypeTemp>, Guid> ConversationNodeRenderers;
+        public readonly MapConfig<Id<NodeTypeTemp>, Guid> ConversationNodeRenderers;
         public readonly ErrorCheckersConfig ErrorCheckers = new ErrorCheckersConfig();
         public readonly GraphViewConfig GraphView = new GraphViewConfig();
         //public readonly TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice> ConversationNodeRenderers = new TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice>("NodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultConversation(nodeType));
-        public readonly TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice> DomainNodeRenderers = new TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice>("DomainNodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultDomain(nodeType));
-        public readonly TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice> ProjectNodeRenderers = new TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice>("ProjectNodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultDomain(nodeType));
-        public readonly TypeMapConfig<ID<NodeTypeTemp>, NodeEditorChoice> NodeEditors = new TypeMapConfig<ID<NodeTypeTemp>, NodeEditorChoice>("NodeEditors", nodeType => nodeType.Serialized(), (a, t) => new NodeEditorChoice(a, t), nodeType => NodeEditorChoice.Default(nodeType));
+        public readonly TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice> DomainNodeRenderers = new TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice>("DomainNodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultDomain(nodeType));
+        public readonly TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice> ProjectNodeRenderers = new TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice>("ProjectNodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultDomain(nodeType));
+        public readonly TypeMapConfig<Id<NodeTypeTemp>, NodeEditorChoice> NodeEditors = new TypeMapConfig<Id<NodeTypeTemp>, NodeEditorChoice>("NodeEditors", nodeType => nodeType.Serialized(), (a, t) => new NodeEditorChoice(a, t), nodeType => NodeEditorChoice.Default(nodeType));
         public readonly PluginsConfig Plugins = new PluginsConfig();
         public readonly ConfigParameterList<string> ProjectHistory = new ConfigParameterList<string>("ProjectHistory", () => new JustStringConfigParameter());
         public readonly ConfigParameterString ExportPath = new ConfigParameterString("ExportPath");
         public readonly ColorsConfig ColorScheme = new ColorsConfig();
         public readonly ConfigParameterString AudioCustomization = new ConfigParameterString("AudioCustomization");
+        public readonly FileFilterConfig FileFilters = new FileFilterConfig();
 
         string TryLoad(string file)
         {
@@ -147,6 +167,12 @@ namespace ConversationEditor
                 doc.WriteTo(writer);
                 writer.Close();
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+                ProjectHistory.Dispose();
         }
     }
 }

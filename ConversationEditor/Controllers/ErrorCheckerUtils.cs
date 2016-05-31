@@ -17,7 +17,7 @@ namespace ConversationEditor
             m_reverseLookup = reverseLookup;
         }
 
-        public Guid GetCategory(ID<NodeTypeTemp> type)
+        public Guid GetCategory(Id<NodeTypeTemp> type)
         {
             return m_dataSource.GetCategory(type);
         }

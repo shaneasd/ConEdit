@@ -15,7 +15,7 @@ namespace Conversation
             public int? Min = null;
         }
 
-        public IntegerParameter(string name, ID<Parameter> id, ParameterType typeId, Definition definition, string defaultValue = null)
+        public IntegerParameter(string name, Id<Parameter> id, ParameterType typeId, Definition definition, string defaultValue)
             : base(name, id, typeId,  defaultValue)
         {
             m_definition = definition ?? new Definition();
@@ -52,7 +52,7 @@ namespace Conversation
             get { return m_definition.Min ?? int.MinValue; }
         }
 
-        public override string DisplayValue(Func<ID<LocalizedText>, string> localize)
+        public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
         {
             return m_value.ToString(CultureInfo.CurrentCulture);
         }

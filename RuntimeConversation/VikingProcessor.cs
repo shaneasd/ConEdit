@@ -11,7 +11,7 @@ namespace RuntimeConversation
         public string Text;
         public Viking.Nodes.Node Node;
 
-        public static IEnumerable<NextNodeOption> FromConnector(Viking.Nodes.Connectors.Output output, Func<ID<LocalizedText>, string> localizer)
+        public static IEnumerable<NextNodeOption> FromConnector(Viking.Nodes.Connectors.Output output, Func<Id<LocalizedText>, string> localizer)
         {
             var nodes = output.Connections.Select(c => c.Parent);
 
@@ -32,9 +32,9 @@ namespace RuntimeConversation
 
     public class VikingProcessor : Viking.IProcessor<IEnumerable<NextNodeOption>>
     {
-        Func<ID<LocalizedText>, string> localizer;
+        Func<Id<LocalizedText>, string> localizer;
         Func<Viking.Types.Character, string> characterName;
-        public VikingProcessor(Func<ID<LocalizedText>, string> localizer, Func<Viking.Types.Character, string> characterName)
+        public VikingProcessor(Func<Id<LocalizedText>, string> localizer, Func<Viking.Types.Character, string> characterName)
         {
             this.localizer = localizer;
             this.characterName = characterName;

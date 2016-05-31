@@ -8,12 +8,12 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
-    //using ConversationNode = IRenderable<ConversationEditor.INodeGUI>;
+    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
+    //using ConversationNode = IRenderable<ConversationEditor.INodeGui>;
 
     internal class NodeSet : IReadonlyNodeSet
     {
-        public static RectangleF GetArea(IEnumerable<IRenderable<IGUI>> data)
+        public static RectangleF GetArea(IEnumerable<IRenderable<IGui>> data)
         {
             if (data.Any())
             {
@@ -26,12 +26,12 @@ namespace ConversationEditor
             }
         }
 
-        HashSet<ID<NodeTemp>> m_nodes = new HashSet<ID<NodeTemp>>();
+        HashSet<Id<NodeTemp>> m_nodes = new HashSet<Id<NodeTemp>>();
         HashSet<NodeGroup> m_groups = new HashSet<NodeGroup>();
 
         public event Action Changed;
 
-        public void Add(ID<NodeTemp> node)
+        public void Add(Id<NodeTemp> node)
         {
             if (!m_nodes.Contains(node))
             {
@@ -49,7 +49,7 @@ namespace ConversationEditor
             }
         }
 
-        public void Remove(ID<NodeTemp> node)
+        public void Remove(Id<NodeTemp> node)
         {
             m_nodes.Remove(node);
             Changed.Execute();
@@ -82,7 +82,7 @@ namespace ConversationEditor
         //    }
         //}
 
-        public NodeSet(IEnumerable<ID<NodeTemp>> nodes, IEnumerable<NodeGroup> groups)
+        public NodeSet(IEnumerable<Id<NodeTemp>> nodes, IEnumerable<NodeGroup> groups)
             : this()
         {
             m_nodes.UnionWith(nodes);
@@ -114,7 +114,7 @@ namespace ConversationEditor
             return m_nodes.Count() + m_groups.Count;
         }
 
-        public IEnumerable<ID<NodeTemp>> Nodes
+        public IEnumerable<Id<NodeTemp>> Nodes
         {
             get { return m_nodes; }
         }
@@ -124,7 +124,7 @@ namespace ConversationEditor
             get { return m_groups; }
         }
 
-        public IEnumerable<IRenderable<IGUI>> Renderable(Func<ID<NodeTemp>, IRenderable<IGUI>> GetNode)
+        public IEnumerable<IRenderable<IGui>> Renderable(Func<Id<NodeTemp>, IRenderable<IGui>> GetNode)
         {
             foreach (var node in Nodes)
                 yield return GetNode(node);

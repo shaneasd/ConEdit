@@ -86,6 +86,11 @@
             this.drawWindow1.TabIndex = 6;
             this.drawWindow1.Paint += new System.Windows.Forms.PaintEventHandler(this.drawWindow1_Paint);
             this.drawWindow1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.drawWindow1_MouseClick);
+            this.drawWindow1.MouseCaptureChanged += drawWindow1_MouseCaptureChanged;
+            this.drawWindow1.MouseDown += drawWindow1_MouseDown;
+            this.drawWindow1.MouseUp += drawWindow1_MouseUp;
+            this.drawWindow1.MouseMove += drawWindow1_MouseMove;
+
             // 
             // greyScrollBar1
             // 

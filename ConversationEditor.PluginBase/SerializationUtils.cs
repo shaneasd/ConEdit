@@ -20,9 +20,10 @@ namespace ConversationEditor
         public DomainDeserializer ConnectorsDeserializer;
         public DomainDeserializer NodesDeserializer;
         public DomainDeserializer EditorDataDeserializer;
+        public DomainDeserializer AutoCompleteSuggestionsDeserializer;
         public DomainDeserializer EverythingDeserializer;
 
-        public DomainSerializerDeserializer(DomainSerializer serializer, DomainDeserializer categoriesDeserializer, DomainDeserializer typesDeserializer, DomainDeserializer connectorsDeserializer, DomainDeserializer nodesDeserializer, DomainDeserializer editorDataDeserializer, DomainDeserializer everythingDeserializer)
+        public DomainSerializerDeserializer(DomainSerializer serializer, DomainDeserializer categoriesDeserializer, DomainDeserializer typesDeserializer, DomainDeserializer connectorsDeserializer, DomainDeserializer nodesDeserializer, DomainDeserializer editorDataDeserializer, DomainDeserializer autoCompleteSuggestionsDeserializer, DomainDeserializer everythingDeserializer)
         {
             Serializer = serializer;
             CategoriesDeserializer = categoriesDeserializer;
@@ -30,6 +31,7 @@ namespace ConversationEditor
             ConnectorsDeserializer = connectorsDeserializer;
             NodesDeserializer = nodesDeserializer;
             EditorDataDeserializer = editorDataDeserializer;
+            AutoCompleteSuggestionsDeserializer = autoCompleteSuggestionsDeserializer;
             EverythingDeserializer = everythingDeserializer;
         }
 
@@ -41,8 +43,17 @@ namespace ConversationEditor
             var ConnectorsDeserializer = XmlDomain<NodeUIData, ConversationEditorData>.Deserializer.Connectors(d, NodeUIDataSerializerXml.Instance);
             var NodesDeserializer = XmlDomain<NodeUIData, ConversationEditorData>.Deserializer.Nodes(d, NodeUIDataSerializerXml.Instance);
             var EditorDataDeserializer = XmlDomain<NodeUIData, ConversationEditorData>.Deserializer.UI(d, NodeUIDataSerializerXml.Instance, new ConversationEditorData.Deserializer());
+            var AutoCompleteSuggestionsDeserializer = XmlDomain<NodeUIData, ConversationEditorData>.Deserializer.AutoCompleteSuggestions(d, NodeUIDataSerializerXml.Instance);
             var ErrorDeserializer = XmlDomain<NodeUIData, ConversationEditorData>.Deserializer.Everything(d, NodeUIDataSerializerXml.Instance);
-            return new DomainSerializerDeserializer(Serializer, CategoriesDeserializer, TypesDeserializer, ConnectorsDeserializer, NodesDeserializer, EditorDataDeserializer, ErrorDeserializer);
+            return new DomainSerializerDeserializer(
+                serializer: Serializer,
+                categoriesDeserializer: CategoriesDeserializer,
+                typesDeserializer: TypesDeserializer,
+                connectorsDeserializer: ConnectorsDeserializer,
+                nodesDeserializer: NodesDeserializer,
+                editorDataDeserializer: EditorDataDeserializer,
+                autoCompleteSuggestionsDeserializer: AutoCompleteSuggestionsDeserializer,
+                everythingDeserializer: ErrorDeserializer);
         }
     }
 
@@ -56,7 +67,7 @@ namespace ConversationEditor
             }
         }
 
-        public static XmlGraphData<NodeUIData, ConversationEditorData> MakeDomainData(IEnumerable<ConversationNode<INodeGUI>> nodes, ConversationEditorData data)
+        public static XmlGraphData<NodeUIData, ConversationEditorData> MakeDomainData(IEnumerable<ConversationNode<INodeGui>> nodes, ConversationEditorData data)
         {
             var nodeData = nodes.Select(n => new GraphAndUI<NodeUIData>(n.m_data, NodeUIData.Make(n.Renderer)));
             return MakeDomainData(nodeData, data);
@@ -83,10 +94,10 @@ namespace ConversationEditor
 
         public static IDeserializer<XmlGraphData<NodeUIData, ConversationEditorData>> ConversationDeserializer(IDataSource d)
         {
-            return new XmlConversation<NodeUIData, ConversationEditorData>.Deserializer(d, NodeUIDataSerializerXml.Instance, new ConversationEditorData.Deserializer());
+            return new XmlConversation<NodeUIData, ConversationEditorData>.Deserializer(d, NodeUIDataSerializerXml.Instance, new ConversationEditorData.Deserializer(), null);
         }
 
-        public static XmlGraphData<NodeUIData, ConversationEditorData> MakeConversationData(IEnumerable<ConversationNode<INodeGUI>> nodes, ConversationEditorData data)
+        public static XmlGraphData<NodeUIData, ConversationEditorData> MakeConversationData(IEnumerable<ConversationNode<INodeGui>> nodes, ConversationEditorData data)
         {
             var nodeData = nodes.Select(n => new GraphAndUI<NodeUIData>(n.m_data, NodeUIData.Make(n.Renderer)));
             return MakeConversationData(nodeData, data);

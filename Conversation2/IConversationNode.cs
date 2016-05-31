@@ -11,12 +11,12 @@ namespace Conversation
         /// <summary>
         /// ID of the actual node instance in the graph
         /// </summary>
-        ID<NodeTemp> Id { get; }
+        Id<NodeTemp> Id { get; }
 
         /// <summary>
         /// ID of the nodes type
         /// </summary>
-        ID<NodeTypeTemp> Type { get; }
+        Id<NodeTypeTemp> Type { get; }
 
         string NodeName { get; }
 

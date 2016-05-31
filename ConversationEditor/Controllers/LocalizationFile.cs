@@ -13,7 +13,7 @@ namespace ConversationEditor
 {
     internal class LocalizationFile : Disposable, ILocalizationFile
     {
-        public delegate bool ShouldSaveQuery(ID<LocalizedText> guid);
+        public delegate bool ShouldSaveQuery(Id<LocalizedText> guid);
         private LocalizerData m_data;
         SaveableFileExternalChangedSource m_file;
         HashSet<object> m_changesLastSave = new HashSet<object>();
@@ -50,7 +50,7 @@ namespace ConversationEditor
             }
 
             LocalizerData data = new LocalizerData();
-            using (var file = Util.LoadFileStream(path, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+            using (var file = Util.LoadFileStream(path, FileMode.CreateNew, FileAccess.Write))
             {
                 file.Close();
             }
@@ -62,21 +62,22 @@ namespace ConversationEditor
         internal static LocalizationFile Load(FileInfo path, ISerializer<LocalizerData> serializer)
         {
             LocalizerData data;
-            MemoryStream m;
             using (FileStream file = Util.LoadFileStream(path, FileMode.Open, FileAccess.Read))
             {
-                m = new MemoryStream((int)file.Length);
-                file.CopyTo(m);
-                m.Position = 0;
-                XmlLocalization.Deserializer d = new XmlLocalization.Deserializer();
-                data = d.Read(m);
-                m.Position = 0;
+                using (MemoryStream m = new MemoryStream((int)file.Length))
+                {
+                    file.CopyTo(m);
+                    m.Position = 0;
+                    XmlLocalization.Deserializer d = new XmlLocalization.Deserializer();
+                    data = d.Read(m);
+                    m.Position = 0;
+                    LocalizationFile result = new LocalizationFile(m, path, data, serializer);
+                    return result;
+                }
             }
-            LocalizationFile result = new LocalizationFile(m, path, data, serializer);
-            return result;
         }
 
-        public bool Contains(ID<LocalizedText> guid)
+        public bool Contains(Id<LocalizedText> guid)
         {
             return m_data.m_data.ContainsKey(guid);
         }
@@ -92,43 +93,43 @@ namespace ConversationEditor
             //Do nothing
         }
 
-        public string Localize(ID<LocalizedText> guid)
+        public string Localize(Id<LocalizedText> guid)
         {
-            if (m_data.m_data.ContainsKey(guid))
+            if (m_data.CanLocalize(guid))
                 return m_data.m_data[guid].Text;
             else
                 return null;
         }
 
-        public SimpleUndoPair SetLocalizationAction(ID<LocalizedText> guid, string p)
+        public SimpleUndoPair SetLocalizationAction(Id<LocalizedText> guid, string p)
         {
-            Or<LocalizationElement, Null> oldValue = Or.Create(m_data.m_data.ContainsKey(guid), () => m_data.m_data[guid], Null.Func);
+            Either<LocalizationElement, Null> oldValue = Either.Create(m_data.CanLocalize(guid), () => m_data.GetLocalized(guid), Null.Func);
             object change = new object();
             return new SimpleUndoPair
             {
                 Redo = () =>
                 {
-                    m_data.m_data[guid] = new LocalizationElement(DateTime.Now, p);
+                    m_data.SetLocalized(guid, new LocalizationElement(DateTime.Now, p));
                     m_currentChanges.Add(change);
                     m_file.Change();
                 },
                 Undo = () =>
                 {
-                    oldValue.Do(a => m_data.m_data[guid] = a, b => m_data.m_data.Remove(guid));
+                    oldValue.Do(a => m_data.SetLocalized(guid, a), b => m_data.m_data.Remove(guid));
                     m_currentChanges.Remove(change);
                     m_file.Change();
                 },
             };
         }
 
-        public SimpleUndoPair DuplicateAction(ID<LocalizedText> guid, ID<LocalizedText> result)
+        public SimpleUndoPair DuplicateAction(Id<LocalizedText> guid, Id<LocalizedText> result)
         {
             object change = new object();
             return new SimpleUndoPair
             {
                 Redo = () =>
                 {
-                    if (m_data.m_data.ContainsKey(guid))
+                    if (m_data.CanLocalize(guid))
                     {
                         m_data.m_data[result] = m_data.m_data[guid];
                         m_currentChanges.Add(change);
@@ -160,7 +161,7 @@ namespace ConversationEditor
         {
             if (disposing)
             {
-                File.Dispose();
+                m_file.Dispose();
             }
         }
 

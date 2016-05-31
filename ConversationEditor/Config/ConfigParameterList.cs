@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using Utilities;
+using Conversation;
 
 namespace ConversationEditor
 {
@@ -24,8 +25,10 @@ namespace ConversationEditor
 
         public void Load(XElement root)
         {
+            if (root == null)
+                throw new ArgumentNullException(nameof(root));
             if (m_suppressibleValueChanged.Suppressed)
-                throw new Exception("Can't load config while there are unsaved changes to config");
+                throw new InternalLogicException("Can't load config while there are unsaved changes to config");
 
             using (SuppressCallback()) //The following block will modify the data but during a load that shouldn't trigger ValueChanged
             {
@@ -48,6 +51,8 @@ namespace ConversationEditor
 
         public void Write(XElement root)
         {
+            if (root == null)
+                throw new ArgumentNullException(nameof(root));
             var listRoot = new XElement(m_name);
             foreach (TValue t in m_data)
             {

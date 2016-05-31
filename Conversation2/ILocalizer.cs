@@ -20,7 +20,7 @@ namespace Conversation
 
     public interface ILocalizer
     {
-        bool Contains(ID<LocalizedText> guid);
-        LocalizationElement this[ID<LocalizedText> guid] { get; set; }
+        bool Contains(Id<LocalizedText> guid);
+        LocalizationElement this[Id<LocalizedText> guid] { get; set; }
     }
 }

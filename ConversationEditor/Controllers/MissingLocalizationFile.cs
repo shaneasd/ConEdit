@@ -33,12 +33,12 @@ namespace ConversationEditor
             //Do nothing
         }
 
-        string ILocalizationFile.Localize(ID<LocalizedText> guid)
+        string ILocalizationFile.Localize(Id<LocalizedText> guid)
         {
             throw new NotImplementedException();
         }
 
-        Utilities.SimpleUndoPair ILocalizationFile.SetLocalizationAction(ID<LocalizedText> guid, string p)
+        Utilities.SimpleUndoPair ILocalizationFile.SetLocalizationAction(Id<LocalizedText> guid, string p)
         {
             throw new NotImplementedException();
         }

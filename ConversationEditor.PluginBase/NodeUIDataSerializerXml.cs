@@ -17,7 +17,7 @@ namespace ConversationEditor
         {
         }
 
-        public void Write(IGUI data, XElement node)
+        public void Write(IGui data, XElement node)
         {
             Write(new NodeUIData() { Area = data.Area }, node);
         }

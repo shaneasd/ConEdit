@@ -10,8 +10,8 @@ namespace Clandestine
 {
     public class DoNotRenderConfig : IConfigNodeDefinition
     {
-        private static readonly ID<NodeTypeTemp> ID = ID<NodeTypeTemp>.Parse("56e826e6-2db8-42a6-8b29-53e44c2782ec");
-        public ID<NodeTypeTemp> Id
+        private static readonly Id<NodeTypeTemp> ID = Id<NodeTypeTemp>.Parse("56e826e6-2db8-42a6-8b29-53e44c2782ec");
+        public Id<NodeTypeTemp> Id
         {
             get { return ID; }
         }

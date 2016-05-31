@@ -10,7 +10,7 @@ namespace Conversation
     public class EnumParameter : Parameter<Guid>, IEnumParameter
     {
         IEnumeration m_enumeration;
-        public EnumParameter(string name, ID<Parameter> id, IEnumeration enumeration, string defaultValue = null)
+        public EnumParameter(string name, Id<Parameter> id, IEnumeration enumeration, string defaultValue = null)
             //: base(name, id, enumeration.TypeId, enumeration.Default.Transformed(a => Guid.Empty.ToString(), a => a.ToString()))
             : base(name, id, enumeration.TypeId,  defaultValue)
         {
@@ -77,7 +77,7 @@ namespace Conversation
                 return m_enumeration.GetName(value);
         }
 
-        public override string DisplayValue(Func<ID<LocalizedText>, string> localize)
+        public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
         {
             return GetName(m_value) ?? InvalidValue;
         }

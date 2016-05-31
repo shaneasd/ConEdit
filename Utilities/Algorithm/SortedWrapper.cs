@@ -11,9 +11,29 @@ namespace Utilities
         public SortedWrapper(CallbackList<T> data)
         {
             m_sortedData = new LinkedList<T>(data);
-            data.Inserting += a => m_sortedData.AddLast(a);
-            data.Removing += (a) => m_sortedData.Remove(a);
-            data.Clearing += () => m_sortedData.Clear();
+
+            int i = 0;
+            foreach (var item in m_sortedData)
+            {
+                m_positions[item] = i;
+                i++;
+            }
+
+            data.Inserting += a =>
+            {
+                m_sortedData.AddLast(a);
+                m_positions[a] = m_sortedData.Count - 1;
+            };
+            data.Removing += (a) =>
+            {
+                m_sortedData.Remove(a);
+                RegeneratePositions();
+            };
+            data.Clearing += () =>
+            {
+                m_sortedData.Clear();
+                m_positions.Clear();
+            };
         }
 
         public SortedWrapper(IEnumerable<T> data, Action<Action<T>> inserting, Action<Action<T>> removing, Action<Action> clearing)
@@ -48,11 +68,34 @@ namespace Utilities
                         last = m_sortedData.AddAfter(last, i.Value);
                 }
             }
+
+            RegeneratePositions();
         }
+
+        private void RegeneratePositions()
+        {
+            m_positions.Clear();
+            int i = 0;
+            foreach (var item in m_sortedData)
+            {
+                m_positions[item] = i;
+                i++;
+            }
+        }
+
+        Dictionary<T, int> m_positions = new Dictionary<T, int>();
 
         public IEnumerable<T> Reverse()
         {
             return new LinkedListReverseEnumerable<T>(m_sortedData);
+        }
+
+        /// <summary>
+        /// positive if 'of' is in front of 'relativeTo'
+        /// </summary>
+        public int RelativePosition(T of, T relativeTo)
+        {
+            return m_positions[of] - m_positions[relativeTo];
         }
     }
 }

@@ -13,10 +13,10 @@ namespace ConversationEditor
         ConversationConnectionRules m_connectionRules = new ConversationConnectionRules();
         TypeSet m_types;
 
-        private CallbackDictionary<ID<NodeTypeTemp>, Tuple<Guid, GenericEditableGenerator2>> m_nodes = new CallbackDictionary<ID<NodeTypeTemp>, Tuple<Guid, GenericEditableGenerator2>>();
+        private CallbackDictionary<Id<NodeTypeTemp>, Tuple<Guid, GenericEditableGenerator2>> m_nodes = new CallbackDictionary<Id<NodeTypeTemp>, Tuple<Guid, GenericEditableGenerator2>>();
         private NodeType m_nodeHeirarchy;
 
-        Dictionary<ID<TConnectorDefinition>, ConnectorDefinitionData> m_connectorDefinitions = new Dictionary<ID<TConnectorDefinition>, ConnectorDefinitionData>()
+        Dictionary<Id<TConnectorDefinition>, ConnectorDefinitionData> m_connectorDefinitions = new Dictionary<Id<TConnectorDefinition>, ConnectorDefinitionData>()
             {
                 {SpecialConnectors.Output.Id, SpecialConnectors.Output },
                 {SpecialConnectors.Input.Id, SpecialConnectors.Input },
@@ -37,6 +37,9 @@ namespace ConversationEditor
             //Types must be generated before Nodes and can be generated before NodeTypes
             foreach (var typeData in domains.SelectMany(d => d.DynamicEnumerations))
                 AddDynamicEnumType(typeData);
+
+            foreach (var typeData in domains.SelectMany(d => d.LocalDynamicEnumerations))
+                AddLocalDynamicEnumType(typeData);
 
             foreach (var typeData in domains.SelectMany(d => d.Enumerations))
                 AddEnumType(typeData);
@@ -66,7 +69,7 @@ namespace ConversationEditor
             m_connectionRules.SetRules(domains.SelectMany(d => d.Connections));
         }
 
-        void m_nodes_Removing(ID<NodeTypeTemp> id, Tuple<Guid, GenericEditableGenerator2> generator)
+        void m_nodes_Removing(Id<NodeTypeTemp> id, Tuple<Guid, GenericEditableGenerator2> generator)
         {
             generator.Item2.Removed();
         }
@@ -77,7 +80,7 @@ namespace ConversationEditor
             m_nodes[node.Guid] = new Tuple<Guid, GenericEditableGenerator2>(node.Type.GetValueOrDefault(DomainIDs.CategoryNone), nodeGenerator);
         }
 
-        internal void RemoveNodeType(ID<NodeTypeTemp> id)
+        internal void RemoveNodeType(Id<NodeTypeTemp> id)
         {
             m_nodes.Remove(id);
         }
@@ -87,7 +90,7 @@ namespace ConversationEditor
             m_connectorDefinitions[connector.Id] = connector;
         }
 
-        public void RemoveConnector(ID<TConnectorDefinition> id)
+        public void RemoveConnector(Id<TConnectorDefinition> id)
         {
             m_connectorDefinitions.Remove(id);
         }
@@ -104,7 +107,7 @@ namespace ConversationEditor
 
             nodeTypes.Add(m_nodeHeirarchy);
 
-            //foreach (var data in nodeTypeData.Where(d => d.Parent == DomainGUIDS.CATEGORY_NONE).ToList())
+            //foreach (var data in nodeTypeData.Where(d => d.Parent == DomainIds.CATEGORY_NONE).ToList())
             //{
             //    var newNodeType = new NodeType(data.Name, data.Guid);
             //    m_nodes.m_childTypes.Add(newNodeType);
@@ -122,7 +125,7 @@ namespace ConversationEditor
                     foreach (var data in nodeTypeData.Where(d => d.Parent == parent.Guid).ToList())
                     {
                         var newNodeType = new NodeType(data.Name, data.Guid);
-                        parent.m_childTypes.Add(newNodeType);
+                        parent.AddChildType(newNodeType);
                         nodeTypes.Add(newNodeType);
                         gotOne = true;
                         nodeTypeData.Remove(data);
@@ -137,7 +140,7 @@ namespace ConversationEditor
                 //    MessageBox.Show("The following node types are ancestors of an unknown node type: " + string.Join(", ", nodeTypeData.Select(d => d.Guid).ToArray()));
                 foreach (var orphan in nodeTypeData)
                 {
-                    m_nodeHeirarchy.m_childTypes.Add(new NodeType(orphan.Name, orphan.Guid));
+                    m_nodeHeirarchy.AddChildType(new NodeType(orphan.Name, orphan.Guid));
                 }
             }
         }
@@ -162,6 +165,11 @@ namespace ConversationEditor
             m_types.AddDynamicEnum(typeData);
         }
 
+        public void AddLocalDynamicEnumType(LocalDynamicEnumerationData typeData)
+        {
+            m_types.AddLocalDynamicEnum(typeData);
+        }
+
         public void AddDecimalType(DecimalData typeData)
         {
             m_types.AddDecimal(typeData);
@@ -174,7 +182,7 @@ namespace ConversationEditor
 
         public void AddIntegerType(IntegerData typeData)
         {
-            m_types.AddInteger(typeData);
+            m_types.AddInteger(typeData, false);
         }
 
         internal void ModifyIntegerType(IntegerData typeData)
@@ -208,7 +216,7 @@ namespace ConversationEditor
             }
         }
 
-        public EditableGenerator GetNode(ID<NodeTypeTemp> guid)
+        public EditableGenerator GetNode(Id<NodeTypeTemp> guid)
         {
             if (m_nodes.ContainsKey(guid))
                 return m_nodes[guid].Item2;
@@ -237,25 +245,36 @@ namespace ConversationEditor
             return m_types.IsDynamicEnum(type);
         }
 
-        public bool IsCategoryDefinition(ID<NodeTypeTemp> id)
+        public bool IsLocalDynamicEnum(ParameterType type)
+        {
+            return m_types.IsLocalDynamicEnum(type);
+        }
+
+        public bool IsCategoryDefinition(Id<NodeTypeTemp> id)
         {
             return false; //Not possible for a conversation to contain domain data
         }
 
-        public bool IsTypeDefinition(ID<NodeTypeTemp> id)
+        public bool IsTypeDefinition(Id<NodeTypeTemp> id)
         {
             return false; //Not possible for a conversation to contain domain data
         }
 
-        public bool IsConnectorDefinition(ID<NodeTypeTemp> id)
+        public bool IsConnectorDefinition(Id<NodeTypeTemp> id)
         {
             return false; //Not possible for a conversation to contain domain data
         }
 
-        public bool IsNodeDefinition(ID<NodeTypeTemp> id)
+        public bool IsNodeDefinition(Id<NodeTypeTemp> id)
         {
             return false; //Not possible for a conversation to contain domain data
         }
+
+        public bool IsAutoCompleteNode(Id<NodeTypeTemp> id)
+        {
+            return false; //Not possible for a conversation to contain domain data
+        }
+
         #endregion
 
         List<NodeTypeData> m_categories = new List<NodeTypeData>();
@@ -275,7 +294,7 @@ namespace ConversationEditor
             m_categories[index] = data;
         }
 
-        public Guid GetCategory(ID<NodeTypeTemp> type)
+        public Guid GetCategory(Id<NodeTypeTemp> type)
         {
             foreach (var item in m_nodes.Values)
             {
@@ -283,6 +302,19 @@ namespace ConversationEditor
                     return item.Item1;
             }
             return Guid.Empty;
+        }
+
+        internal DynamicEnumParameter.Source GetSource(IDynamicEnumParameter parameter, object newSourceID)
+        {
+            return GetSource(parameter.TypeId, newSourceID);
+        }
+
+        public DynamicEnumParameter.Source GetSource(ParameterType type, object newSourceId)
+        {
+            if ( IsLocalDynamicEnum(type) )
+                return m_types.GetLocalDynamicEnumSource(type, newSourceId);
+            else
+                return m_types.GetDynamicEnumSource(type);
         }
     }
 }

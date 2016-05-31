@@ -25,6 +25,10 @@ namespace Conversation
         }
 
         public readonly List<NodeType> m_childTypes = new List<NodeType>();
+        public void AddChildType(NodeType childType)
+        {
+            m_childTypes.Add(childType);
+        }
         public IEnumerable<INodeType> ChildTypes
         {
             get { return m_childTypes; }
@@ -53,20 +57,24 @@ namespace Conversation
     {
         IEnumerable<ParameterType> ParameterTypes { get; }
         INodeType Nodes { get; }
-        EditableGenerator GetNode(ID<NodeTypeTemp> guid);
+        EditableGenerator GetNode(Id<NodeTypeTemp> guid);
         bool IsInteger(ParameterType type);
         bool IsDecimal(ParameterType type);
         bool IsEnum(ParameterType type);
         bool IsDynamicEnum(ParameterType type);
+        bool IsLocalDynamicEnum(ParameterType type);
 
-        bool IsCategoryDefinition(ID<NodeTypeTemp> id);
-        bool IsTypeDefinition(ID<NodeTypeTemp> id);
-        bool IsConnectorDefinition(ID<NodeTypeTemp> id);
-        bool IsNodeDefinition(ID<NodeTypeTemp> id);
+        bool IsCategoryDefinition(Id<NodeTypeTemp> id);
+        bool IsTypeDefinition(Id<NodeTypeTemp> id);
+        bool IsConnectorDefinition(Id<NodeTypeTemp> id);
+        bool IsNodeDefinition(Id<NodeTypeTemp> id);
+        bool IsAutoCompleteNode(Id<NodeTypeTemp> id);
 
         string GetTypeName(ParameterType type);
 
-        Guid GetCategory(ID<NodeTypeTemp> type);
+        Guid GetCategory(Id<NodeTypeTemp> type);
+
+        DynamicEnumParameter.Source GetSource(ParameterType type, object newSourceId);
     }
 
     public static class DataSourceUtils
@@ -92,7 +100,7 @@ namespace Conversation
             get { return new NodeType("", Guid.NewGuid()); }
         }
 
-        EditableGenerator IDataSource.GetNode(ID<NodeTypeTemp> nodeType)
+        EditableGenerator IDataSource.GetNode(Id<NodeTypeTemp> nodeType)
         {
             throw new NotImplementedException();
         }
@@ -117,22 +125,32 @@ namespace Conversation
             throw new NotImplementedException();
         }
 
-        bool IDataSource.IsCategoryDefinition(ID<NodeTypeTemp> id)
+        bool IDataSource.IsLocalDynamicEnum(ParameterType type)
         {
             throw new NotImplementedException();
         }
 
-        bool IDataSource.IsTypeDefinition(ID<NodeTypeTemp> id)
+        bool IDataSource.IsCategoryDefinition(Id<NodeTypeTemp> id)
         {
             throw new NotImplementedException();
         }
 
-        bool IDataSource.IsConnectorDefinition(ID<NodeTypeTemp> id)
+        bool IDataSource.IsTypeDefinition(Id<NodeTypeTemp> id)
         {
             throw new NotImplementedException();
         }
 
-        bool IDataSource.IsNodeDefinition(ID<NodeTypeTemp> id)
+        bool IDataSource.IsConnectorDefinition(Id<NodeTypeTemp> id)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IDataSource.IsNodeDefinition(Id<NodeTypeTemp> id)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IDataSource.IsAutoCompleteNode(Id<NodeTypeTemp> id)
         {
             throw new NotImplementedException();
         }
@@ -142,7 +160,12 @@ namespace Conversation
             throw new NotImplementedException();
         }
 
-        Guid IDataSource.GetCategory(ID<NodeTypeTemp> type)
+        Guid IDataSource.GetCategory(Id<NodeTypeTemp> type)
+        {
+            throw new NotImplementedException();
+        }
+
+        DynamicEnumParameter.Source IDataSource.GetSource(ParameterType type, object newSourceId)
         {
             throw new NotImplementedException();
         }

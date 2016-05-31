@@ -18,24 +18,17 @@ namespace Conversation
         public Audio(string value)
         {
             if (string.IsNullOrEmpty(value))
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             Value = value;
         }
 
         public readonly string Value;
 
-        public static Or<Failed, Audio> Deserialize(string value)
+        public static Either<Failed, Audio> Deserialize(string value)
         {
-            try
-            {
-                if (string.IsNullOrEmpty(value))
-                    return Failed.Instance;
-                return new Audio(value);
-            }
-            catch
-            {
+            if (string.IsNullOrEmpty(value))
                 return Failed.Instance;
-            }
+            return new Audio(value);
         }
 
         public string Serialize()
@@ -57,7 +50,7 @@ namespace Conversation
 
     public class AudioParameter : Parameter<Audio>, IAudioParameter
     {
-        public AudioParameter(string name, ID<Parameter> id, ParameterType typeId)
+        public AudioParameter(string name, Id<Parameter> id, ParameterType typeId)
             : base(name, id, typeId, null) //Audio parameters may require information from the conversation that contains them and as such do not support a constant default value
         {
         }
@@ -73,7 +66,7 @@ namespace Conversation
             return m_value.Serialize();
         }
 
-        public override string DisplayValue(Func<ID<LocalizedText>, string> localize)
+        public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
         {
             return m_value.DisplayValue();
         }

@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 
 namespace ConversationEditor.Controllers
 {
-    internal sealed class DummyConversationEditorControlData<TNode, TTransitionUI> : IConversationEditorControlData<TNode, TTransitionUI> where TNode : IRenderable<IGUI>
+    internal sealed class DummyConversationEditorControlData<TNode, TTransitionUI> : IConversationEditorControlData<TNode, TTransitionUI> where TNode : IRenderable<IGui>
     {
         public static IConversationEditorControlData<TNode, TTransitionUI> Instance = new DummyConversationEditorControlData<TNode, TTransitionUI>();
         private DummyConversationEditorControlData() { }
@@ -76,7 +76,7 @@ namespace ConversationEditor.Controllers
             throw new NotImplementedException();
         }
 
-        public TNode GetNode(ID<NodeTemp> id)
+        public TNode GetNode(Id<NodeTemp> id)
         {
             throw new NotImplementedException();
         }
@@ -86,15 +86,21 @@ namespace ConversationEditor.Controllers
             throw new NotImplementedException();
         }
 
-        Tuple<IEnumerable<TNode>, IEnumerable<NodeGroup>> IConversationEditorControlData<TNode, TTransitionUI>.DuplicateInto(IEnumerable<Conversation.Serialization.GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, System.Drawing.PointF location, ILocalizationEngine localization)
+        Tuple<IEnumerable<TNode>, IEnumerable<NodeGroup>> IConversationEditorControlData<TNode, TTransitionUI>.DuplicateInto(IEnumerable<Conversation.Serialization.GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, object documentID, System.Drawing.PointF location, ILocalizationEngine localization)
         {
             throw new NotImplementedException();
         }
 
         public event Action NodesDeleted { add { } remove { } }
-
+        public event Action<TNode> NodeAdded { add { } remove { } }
+        public event Action<TNode> NodeRemoved { add { } remove { } }
 
         public TNode MakeNode(IEditable e, NodeUIData uiData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int RelativePosition(TNode of, TNode relativeTo)
         {
             throw new NotImplementedException();
         }

@@ -5,9 +5,11 @@ using System.Text;
 using Utilities;
 using System.IO;
 
+using TDocument = System.Object;
+
 namespace Conversation
 {
-    public delegate Parameter ParameterGenerator(string name, ID<Parameter> id, string value);
+    public delegate Parameter ParameterGenerator(string name, Id<Parameter> id, string value, TDocument document);
     /// <summary>
     /// Keeps track of all types within a domain.
     /// Can be queried to determine the base type of a typeID
@@ -19,6 +21,7 @@ namespace Conversation
         private Dictionary<ParameterType, ParameterGenerator> m_types = new Dictionary<ParameterType, ParameterGenerator>();
         private Dictionary<ParameterType, string> m_typeNames = new Dictionary<ParameterType, string>();
         private Dictionary<ParameterType, DynamicEnumerationData> m_dynamicEnums = new Dictionary<ParameterType, DynamicEnumerationData>();
+        private Dictionary<ParameterType, LocalDynamicEnumerationData> m_localDynamicEnums = new Dictionary<ParameterType, LocalDynamicEnumerationData>();
         private Dictionary<ParameterType, Tuple<string, MutableEnumeration>> m_enums = new Dictionary<ParameterType, Tuple<string, MutableEnumeration>>();
         private Dictionary<ParameterType, IntegerData> m_integers = new Dictionary<ParameterType, IntegerData>();
         private Dictionary<ParameterType, DecimalData> m_decimals = new Dictionary<ParameterType, DecimalData>();
@@ -27,27 +30,28 @@ namespace Conversation
         public event Action<ParameterType> Modified;
 
         public IEnumerable<EnumerationData> VisibleEnums { get { return m_enums.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => GetEnumData(kvp.Key)); } }
-        public IEnumerable<DynamicEnumerationData> VisibleDynamicEnums { get { return m_dynamicEnums.Where(kvp => !m_hidden[kvp.Key]).Select(kvp=>kvp.Value); } }
+        public IEnumerable<DynamicEnumerationData> VisibleDynamicEnums { get { return m_dynamicEnums.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
+        public IEnumerable<LocalDynamicEnumerationData> VisibleLocalDynamicEnums { get { return m_localDynamicEnums.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
         public IEnumerable<IntegerData> VisibleIntegers { get { return m_integers.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
         public IEnumerable<DecimalData> VisibleDecimals { get { return m_decimals.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
 
-        public Parameter Make(ParameterType typeid, string name, ID<Parameter> id, string defaultValue)
+        public Parameter Make(ParameterType typeid, string name, Id<Parameter> id, string defaultValue, TDocument document)
         {
-            return m_types[typeid](name, id, defaultValue);
+            return m_types[typeid](name, id, defaultValue, document);
         }
 
-        public void AddInteger(IntegerData typeData, bool hidden = false)
+        public void AddInteger(IntegerData typeData, bool hidden)
         {
             m_hidden[typeData.TypeID] = hidden;
             m_integers.Add(typeData.TypeID, typeData);
-            m_types.Add(typeData.TypeID, (name, id, defaultValue) => new IntegerParameter(name, id, typeData.TypeID, m_integers[typeData.TypeID].Definition(), defaultValue));
+            m_types.Add(typeData.TypeID, (name, id, defaultValue, document) => new IntegerParameter(name, id, typeData.TypeID, m_integers[typeData.TypeID].Definition(), defaultValue));
             m_typeNames.Add(typeData.TypeID, typeData.Name);
             Modified.Execute(typeData.TypeID);
         }
 
         public void ModifyInteger(IntegerData typeData)
         {
-            m_types[typeData.TypeID] = (name, id, defaultValue) => new IntegerParameter(name, id, typeData.TypeID, typeData.Definition(), defaultValue);
+            m_types[typeData.TypeID] = (name, id, defaultValue, document) => new IntegerParameter(name, id, typeData.TypeID, typeData.Definition(), defaultValue);
             m_integers[typeData.TypeID] = typeData;
             m_typeNames.Add(typeData.TypeID, typeData.Name);
             Modified.Execute(typeData.TypeID);
@@ -57,14 +61,14 @@ namespace Conversation
         {
             m_hidden[typeData.TypeID] = hidden;
             m_decimals.Add(typeData.TypeID, typeData);
-            m_types.Add(typeData.TypeID, (name, id, defaultValue) => new DecimalParameter(name, id, typeData.TypeID, typeData.Definition(), defaultValue));
+            m_types.Add(typeData.TypeID, (name, id, defaultValue, document) => new DecimalParameter(name, id, typeData.TypeID, typeData.Definition(), defaultValue));
             m_typeNames.Add(typeData.TypeID, typeData.Name);
             Modified.Execute(typeData.TypeID);
         }
 
         public void ModifyDecimal(DecimalData typeData)
         {
-            m_types[typeData.TypeID] = (name, id, defaultValue) => new DecimalParameter(name, id, typeData.TypeID, m_decimals[typeData.TypeID].Definition(), defaultValue);
+            m_types[typeData.TypeID] = (name, id, defaultValue, document) => new DecimalParameter(name, id, typeData.TypeID, m_decimals[typeData.TypeID].Definition(), defaultValue);
             m_typeNames.Add(typeData.TypeID, typeData.Name);
             m_decimals[typeData.TypeID] = typeData;
             Modified.Execute(typeData.TypeID);
@@ -79,8 +83,8 @@ namespace Conversation
             var elements = typeData.Elements.Select(e => Tuple.Create(e.Guid, e.Name));
             MutableEnumeration enumeration = new MutableEnumeration(elements, enumType, "");
             m_enums.Add(enumType, Tuple.Create(typeData.Name, enumeration));
-            m_types.Add(enumType, m_enums[enumType].Item2.ParameterEnum);
-            m_types.Add(setType, m_enums[enumType].Item2.ParameterSet);
+            m_types.Add(enumType, (a, b, c, d) => m_enums[enumType].Item2.ParameterEnum(a, b, c));
+            m_types.Add(setType, (a, b, c, d) => m_enums[enumType].Item2.ParameterSet(a, b, c));
             m_typeNames.Add(enumType, typeData.Name);
             m_typeNames.Add(setType, "Set of " + typeData.Name);
             Modified.Execute(enumType);
@@ -103,11 +107,38 @@ namespace Conversation
 
         public void AddDynamicEnum(DynamicEnumerationData typeData, bool hidden = false)
         {
-            m_hidden[typeData.TypeID] = hidden;
-            m_dynamicEnums.Add(typeData.TypeID, typeData);
-            m_types.Add(typeData.TypeID, typeData.Make);
-            m_typeNames.Add(typeData.TypeID, typeData.Name);
-            Modified.Execute(typeData.TypeID);
+            m_hidden[typeData.TypeId] = hidden;
+            m_dynamicEnums.Add(typeData.TypeId, typeData);
+            m_types.Add(typeData.TypeId, (a, b, c, document) => typeData.Make(a, b, c, GetDynamicEnumSource(typeData.TypeId)));
+            m_typeNames.Add(typeData.TypeId, typeData.Name);
+            Modified.Execute(typeData.TypeId);
+        }
+
+        Dictionary<Tuple<ParameterType, TDocument>, DynamicEnumParameter.Source> m_localDynamicEnumSources = new Dictionary<Tuple<ParameterType, TDocument>, DynamicEnumParameter.Source>();
+
+        public DynamicEnumParameter.Source GetDynamicEnumSource(ParameterType type)
+        {
+            var key = Tuple.Create(type, (object)null);
+            if (!m_localDynamicEnumSources.ContainsKey(key))
+                m_localDynamicEnumSources[key] = new DynamicEnumParameter.Source();
+            return m_localDynamicEnumSources[key];
+        }
+
+        public DynamicEnumParameter.Source GetLocalDynamicEnumSource(ParameterType type, TDocument document)
+        {
+            var key = Tuple.Create(type, document);
+            if (!m_localDynamicEnumSources.ContainsKey(key))
+                m_localDynamicEnumSources[key] = new DynamicEnumParameter.Source();
+                return m_localDynamicEnumSources[key];
+        }
+
+        public void AddLocalDynamicEnum(LocalDynamicEnumerationData typeData, bool hidden = false)
+        {
+            m_hidden[typeData.TypeId] = hidden;
+            m_localDynamicEnums.Add(typeData.TypeId, typeData);
+            m_types.Add(typeData.TypeId, (name, id, defaultValue, document) => typeData.Make(name, id, defaultValue, GetLocalDynamicEnumSource(typeData.TypeId, document)));
+            m_typeNames.Add(typeData.TypeId, typeData.Name);
+            Modified.Execute(typeData.TypeId);
         }
 
         public void Remove(ParameterType id)
@@ -117,6 +148,7 @@ namespace Conversation
             m_decimals.Remove(id);
             m_enums.Remove(id);
             m_dynamicEnums.Remove(id);
+            m_localDynamicEnums.Remove(id);
             Modified.Execute(id);
         }
 
@@ -145,6 +177,11 @@ namespace Conversation
         public bool IsDynamicEnum(ParameterType type)
         {
             return m_dynamicEnums.ContainsKey(type);
+        }
+
+        public bool IsLocalDynamicEnum(ParameterType type)
+        {
+            return m_localDynamicEnums.ContainsKey(type);
         }
 
         public string GetTypeName(ParameterType guid)
@@ -176,6 +213,12 @@ namespace Conversation
                 var data = m_dynamicEnums[guid];
                 data.Name = name;
                 m_dynamicEnums[guid] = data;
+            }
+            else if (IsLocalDynamicEnum(guid))
+            {
+                var data = m_localDynamicEnums[guid];
+                data.Name = name;
+                m_localDynamicEnums[guid] = data;
             }
             Modified.Execute(guid);
         }

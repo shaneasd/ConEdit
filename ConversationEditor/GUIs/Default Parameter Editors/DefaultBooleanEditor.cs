@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using Conversation;
 using System.Drawing.Drawing2D;
 using Utilities;
+using System.Reflection;
+using System.IO;
 
 namespace ConversationEditor
 {
@@ -41,6 +43,29 @@ namespace ConversationEditor
 
     internal partial class DefaultBooleanEditor : UserControl, IParameterEditor<DefaultBooleanEditor>
     {
+        private static Bitmap ToggleButtonOff;
+        private static Bitmap ToggleButtonOffHover;
+        private static Bitmap ToggleButtonOffPressed;
+        private static Bitmap ToggleButtonOn;
+        private static Bitmap ToggleButtonOnHover;
+        private static Bitmap ToggleButtonOnPressed;
+        static DefaultBooleanEditor()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.ToggleButtonOff.png"))
+                ToggleButtonOff = new Bitmap(stream);
+            using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.ToggleButtonOffHover.png"))
+                ToggleButtonOffHover = new Bitmap(stream);
+            using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.ToggleButtonOffPressed.png"))
+                ToggleButtonOffPressed = new Bitmap(stream);
+            using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.ToggleButtonOn.png"))
+                ToggleButtonOn = new Bitmap(stream);
+            using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.ToggleButtonOnHover.png"))
+                ToggleButtonOnHover = new Bitmap(stream);
+            using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.ToggleButtonOnPressed.png"))
+                ToggleButtonOnPressed = new Bitmap(stream);
+        }
+
         ColorScheme m_colorScheme;
         public ColorScheme Scheme
         {
@@ -57,18 +82,40 @@ namespace ConversationEditor
 
             drawWindow1.Paint += new PaintEventHandler(drawWindow1_Paint);
             drawWindow1.MouseClick += new MouseEventHandler(drawWindow1_MouseClick);
+            drawWindow1.MouseDown += new MouseEventHandler(drawWindow1_MouseDown);
+            drawWindow1.MouseUp += new MouseEventHandler(drawWindow1_MouseUp);
+            drawWindow1.MouseCaptureChanged += new EventHandler(drawWindow1_MouseCaptureChanged);
+            drawWindow1.MouseMove += new MouseEventHandler(drawWindow1_MouseMove);
+        }
+
+        bool m_held = false;
+
+        void drawWindow1_MouseCaptureChanged(object sender, EventArgs e)
+        {
+            m_held = false;
+            m_hovered = false;
+            Invalidate(true);
+        }
+
+        void drawWindow1_MouseUp(object sender, MouseEventArgs e)
+        {
+            m_held = false;
+            Invalidate(true);
+        }
+
+        void drawWindow1_MouseDown(object sender, MouseEventArgs e)
+        {
+            m_held = true;
+            Invalidate(true);
         }
 
         public bool Checked { get; set; }
 
         void drawWindow1_MouseClick(object sender, MouseEventArgs e)
         {
-            using (var g = drawWindow1.CreateGraphics())
+            if (BoxRectangle().Contains(e.Location))
             {
-                if (BoxRectangle(g).Contains(e.Location))
-                {
-                    Checked = !Checked;
-                }
+                Checked = !Checked;
             }
             Invalidate(true);
         }
@@ -81,7 +128,7 @@ namespace ConversationEditor
             }
         }
 
-        public Rectangle BoxRectangle(Graphics g)
+        public Rectangle BoxRectangle()
         {
             return new Rectangle(7, (int)((drawWindow1.Height - boxSize.Height) / 2), (int)boxSize.Width, (int)boxSize.Height);
         }
@@ -94,21 +141,36 @@ namespace ConversationEditor
             e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
             SizeF textSize = e.Graphics.MeasureString("False", Font);
-            Rectangle boxRectangle = BoxRectangle(e.Graphics);
+            Rectangle boxRectangle = BoxRectangle();
             Point textLocation = new Point((int)boxRectangle.X + (int)boxSize.Width + gap, (int)(drawWindow1.Height - textSize.Height) / 2);
             e.Graphics.DrawRectangle(Scheme.ControlBorder, Rectangle.FromLTRB(0, 0, drawWindow1.Width - 1, drawWindow1.Height - 1));
-            DrawCheckBox(Scheme, e.Graphics, boxRectangle, Checked);
+            DrawCheckBox(Scheme, e.Graphics, boxRectangle, Checked, m_held, m_hovered);
             e.Graphics.DrawString(DisplayText, Font, Scheme.ForegroundBrush, textLocation);
         }
 
-        public static void DrawCheckBox(Utilities.UI.ColorScheme scheme, Graphics g, Rectangle boxRectangle, bool check)
+        public static void DrawCheckBox(Utilities.UI.ColorScheme scheme, Graphics g, Rectangle boxRectangle, bool check, bool held, bool hovered)
         {
-            g.DrawRectangle(scheme.ForegroundPen, boxRectangle);
-            if (check)
-                g.FillRectangle(scheme.ForegroundBrush, new Rectangle(boxRectangle.X + 2, boxRectangle.Y + 2, boxRectangle.Width - 3, boxRectangle.Height - 3));
+            Image image = check && held ? ToggleButtonOnPressed :
+                          check && hovered ? ToggleButtonOnHover :
+                          check ? ToggleButtonOn :
+                          held ? ToggleButtonOffPressed :
+                          hovered ? ToggleButtonOffHover :
+                          ToggleButtonOff;
+            g.DrawImage(image, boxRectangle.Left, boxRectangle.Top, image.Width, image.Height);
+        }
+
+        void drawWindow1_MouseMove(object sender, MouseEventArgs e)
+        {
+            Rectangle boxRectangle = BoxRectangle();
+            if (boxRectangle.Contains(e.Location))
+                m_hovered = true;
+            else
+                m_hovered = false; 
+            Invalidate(true);
         }
 
         IBooleanParameter m_parameter;
+        private bool m_hovered;
         public void Setup(ParameterEditorSetupData data)
         {
             m_parameter = data.Parameter as IBooleanParameter;
@@ -126,9 +188,9 @@ namespace ConversationEditor
             return m_parameter.SetValueAction(Checked);
         }
 
-        public bool IsValid()
+        public string IsValid()
         {
-            return true;
+            return null;
         }
 
         public event Action Ok

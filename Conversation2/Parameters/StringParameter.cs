@@ -9,7 +9,7 @@ namespace Conversation
     {
         public static readonly ParameterType ParameterType = ParameterType.Parse("7ca91556-5526-4c5c-b565-00aff5ae85ce");
 
-        public StringParameter(string name, ID<Parameter> id, ParameterType typeId, string defaultValue = null) : base(name, id, typeId, defaultValue) { }
+        public StringParameter(string name, Id<Parameter> id, ParameterType typeId, string defaultValue = null) : base(name, id, typeId, defaultValue) { }
 
         protected override bool DeserialiseValue(string value)
         {
@@ -22,7 +22,7 @@ namespace Conversation
             return m_value;
         }
 
-        public override string DisplayValue(Func<ID<LocalizedText>, string> localize)
+        public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
         {
             return m_value;
         }

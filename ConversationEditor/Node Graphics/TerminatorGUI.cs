@@ -11,11 +11,11 @@ using Utilities.UI;
 
 namespace ConversationEditor
 {
-    public class TerminatorGUIFactory : NodeUI.IFactory
+    public class TerminatorGuiFactory : NodeUI.IFactory
     {
-        public static TerminatorGUIFactory Instance = new TerminatorGUIFactory();
+        public static TerminatorGuiFactory Instance = new TerminatorGuiFactory();
 
-        public bool WillRender(ID<NodeTypeTemp> nodeType)
+        public bool WillRender(Id<NodeTypeTemp> nodeType)
         {
             return nodeType == SpecialNodes.Terminator;
         }
@@ -25,9 +25,9 @@ namespace ConversationEditor
             get { return "Terminator Node Renderer"; }
         }
 
-        public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        public INodeGui GetRenderer(ConversationNode<INodeGui> n, PointF p, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
-            return new TerminatorGUI(n, p, localizer);
+            return new TerminatorGui(n, p, localizer);
         }
 
         Guid m_guid = Guid.Parse("aacda2b5-bd9e-4fd2-ad0c-5f6a4d764702");
@@ -37,20 +37,20 @@ namespace ConversationEditor
         }
     }
 
-    internal class TerminatorGUI : NodeUI
+    internal class TerminatorGui : NodeUI
     {
-        Image image;
-        public TerminatorGUI(ConversationNode<INodeGUI> node, PointF p, Func<ID<LocalizedText>, string> localizer)
+        Image m_image;
+        public TerminatorGui(ConversationNode<INodeGui> node, PointF p, Func<Id<LocalizedText>, string> localizer)
             : base(node, p)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.End Icon.png"))
-                image = new Bitmap(stream);
+                m_image = new Bitmap(stream);
         }
 
         protected override void InnerDraw(Graphics g, bool selected)
         {
-            g.DrawImage(image, Area);
+            g.DrawImage(m_image, Area);
             if (selected)
             {
                 Pen outline = new Pen(Brushes.Black, 2);
@@ -60,12 +60,13 @@ namespace ConversationEditor
 
         protected override SizeF CalculateArea(Graphics g)
         {
-            return image.Size;
+            return m_image.Size;
         }
 
-        public override string DisplayName
+        protected override void Dispose(bool disposing)
         {
-            get { return TerminatorGUIFactory.Instance.DisplayName; }
+            if (disposing)
+                m_image.Dispose();
         }
     }
 }

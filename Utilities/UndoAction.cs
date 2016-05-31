@@ -34,8 +34,8 @@ namespace Utilities
 
     public struct SimpleUndoPair
     {
-        public Action Undo;
-        public Action Redo;
+        public Action Undo { get; set; }
+        public Action Redo { get; set; }
     }
 
     public class GenericUndoAction : UndoAction

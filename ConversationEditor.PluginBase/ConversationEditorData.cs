@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace ConversationEditor
 {
-    using ConversationNode = ConversationNode<INodeGUI>;
+    using ConversationNode = ConversationNode<INodeGui>;
     using XmlConversationData = Conversation.Serialization.XmlGraphData<NodeUIData, ConversationEditorData>;
     using Conversation.Serialization;
 
@@ -24,7 +24,7 @@ namespace ConversationEditor
                     Write(group, node);
             }
 
-            public void Write(NodeGroup group, XContainer root)
+            private static void Write(NodeGroup group, XContainer root)
             {
                 var g = new XElement("Group");
                 foreach (var node in group.Contents)
@@ -45,7 +45,7 @@ namespace ConversationEditor
                 var groupsResult = new List<NodeGroup>();
                 foreach (var g in node.Elements("Group"))
                 {
-                    var contents = g.Elements("Node").Select(n => ID<NodeTemp>.Parse(n.Attribute("Id").Value));
+                    var contents = g.Elements("Node").Select(n => Id<NodeTemp>.Parse(n.Attribute("Id").Value));
                     System.Drawing.RectangleF area = NodeUIDataSerializerXml.ReadArea(g);
                     groupsResult.Add(new NodeGroup(area, contents));
                 }

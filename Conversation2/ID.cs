@@ -40,7 +40,7 @@ namespace Conversation
                 return new Basic(Guid.NewGuid());
             }
 
-            public static ParameterType ConvertFrom<T>(ID<T> type)
+            public static ParameterType ConvertFrom<T>(Id<T> type)
             {
                 return new Basic(type.Guid);
             }
@@ -106,7 +106,7 @@ namespace Conversation
                 return new Basic(Guid.NewGuid());
             }
 
-            public static ParameterType ConvertFrom<T>(ID<T> type)
+            public static ParameterType ConvertFrom<T>(Id<T> type)
             {
                 return new Basic(type.Guid);
             }
@@ -183,41 +183,43 @@ namespace Conversation
         public abstract bool IsSet { get; }
     }
 
-    public class ID<T> : IComparable<ID<T>>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
+    public class Id<T> : IComparable<Id<T>>, IComparable
     {
         public Guid Guid { get { return m_data; } }
 
         private readonly Guid m_data;
-        public ID()
+        public Id()
         {
             m_data = Guid.NewGuid();
         }
 
-        private ID(Guid data)
+        private Id(Guid data)
         {
             m_data = data;
         }
 
-        public static ID<T> ConvertFrom<U>(ID<U> other)
+        public static Id<T> ConvertFrom<U>(Id<U> other)
         {
-            return new ID<T>(other.Guid);
+            return new Id<T>(other.Guid);
         }
 
-        public static ID<T> Parse(string p)
+        public static Id<T> Parse(string p)
         {
-            return new ID<T>(Guid.Parse(p));
+            return new Id<T>(Guid.Parse(p));
         }
 
-        public static ID<T> New()
+        public static Id<T> New()
         {
-            return new ID<T>(Guid.NewGuid());
+            return new Id<T>(Guid.NewGuid());
         }
 
-        public static ID<T> Dummy = new ID<T>(Guid.Empty);
+        private static readonly Id<T> m_dummy = new Id<T>(Guid.Empty);
+        public static Id<T> Dummy { get { return m_dummy; } }
 
         public override bool Equals(object obj)
         {
-            return (obj as ID<T>) == this;
+            return (obj as Id<T>) == this;
         }
 
         public override int GetHashCode()
@@ -225,7 +227,7 @@ namespace Conversation
             return m_data.GetHashCode();
         }
 
-        public static bool operator ==(ID<T> a, ID<T> b)
+        public static bool operator ==(Id<T> a, Id<T> b)
         {
             bool aNull = object.Equals(null, a);
             bool bNull = object.Equals(null, b);
@@ -237,7 +239,7 @@ namespace Conversation
                 return object.Equals(a.m_data, b.m_data);
         }
 
-        public static bool operator !=(ID<T> a, ID<T> b)
+        public static bool operator !=(Id<T> a, Id<T> b)
         {
             return !(a == b);
         }
@@ -253,17 +255,17 @@ namespace Conversation
             return m_data.ToString();
         }
 
-        public static ID<T> FromGuid(System.Guid guid)
+        public static Id<T> FromGuid(System.Guid guid)
         {
-            return new ID<T>(guid);
+            return new Id<T>(guid);
         }
 
-        internal static bool TryParse(string value, out ID<T> m_value)
+        internal static bool TryParse(string value, out Id<T> m_value)
         {
             Guid guid;
             if (Guid.TryParse(value, out guid))
             {
-                m_value = new ID<T>(guid);
+                m_value = new Id<T>(guid);
                 return true;
             }
             else
@@ -273,14 +275,20 @@ namespace Conversation
             }
         }
 
-        public int CompareTo(ID<T> other)
+        public static Id<T> ConvertFrom(ParameterType parameterType)
         {
-            return Guid.CompareTo(other.Guid);
+            return new Id<T>(parameterType.Guid);
         }
 
-        public static ID<T> ConvertFrom(ParameterType parameterType)
+        public int CompareTo(Id<T> other)
         {
-            return new ID<T>(parameterType.Guid);
+            return m_data.CompareTo(other.m_data);
+        }
+
+        public int CompareTo(object obj)
+        {
+            Id<T> other = obj as Id<T>;
+            return m_data.CompareTo(other.m_data);
         }
     }
 

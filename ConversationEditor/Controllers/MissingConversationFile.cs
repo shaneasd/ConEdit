@@ -9,13 +9,14 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    using ConversationNode = ConversationNode<INodeGUI>;
+    using ConversationNode = ConversationNode<INodeGui>;
     using System.Collections.ObjectModel;
 
     internal sealed class MissingConversationFile : IConversationFile
     {
         private MissingFile m_file;
-        public MissingConversationFile(FileInfo file) 
+
+        public MissingConversationFile(FileInfo file)
         {
             m_file = new MissingFile(file);
         }
@@ -99,12 +100,12 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public ConversationNode GetNode(ID<NodeTemp> id)
+        public ConversationNode GetNode(Id<NodeTemp> id)
         {
             throw new NotImplementedException();
         }
 
-        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, System.Drawing.PointF location, ILocalizationEngine localization)
+        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, object documentID, System.Drawing.PointF location, ILocalizationEngine localization)
         {
             throw new NotImplementedException();
         }
@@ -115,9 +116,16 @@ namespace ConversationEditor
         }
 
         public event Action NodesDeleted { add { } remove { } }
+        public event Action<ConversationNode> NodeAdded { add { } remove { } }
+        public event Action<ConversationNode> NodeRemoved { add { } remove { } }
 
 
         public ConversationNode MakeNode(IEditable e, NodeUIData uiData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int RelativePosition(ConversationNode of, ConversationNode relativeTo)
         {
             throw new NotImplementedException();
         }

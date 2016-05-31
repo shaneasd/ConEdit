@@ -15,13 +15,13 @@ namespace ConversationEditor
         //}
 
         private List<Parameter> m_parameters;
-        private MapConfig<ID<NodeTypeTemp>, Guid> m_typeMapConfig;
+        private MapConfig<Id<NodeTypeTemp>, Guid> m_typeMapConfig;
         public NodeRendererCustomization()
         {
             m_parameters = new List<Parameter>();
         }
 
-        public NodeRendererCustomization(IDataSource datasource, MapConfig<ID<NodeTypeTemp>, Guid> typeMapConfig, IEnumerable<NodeUI.IFactory> allRenderers)
+        public NodeRendererCustomization(IDataSource datasource, MapConfig<Id<NodeTypeTemp>, Guid> typeMapConfig, IEnumerable<NodeUI.IFactory> allRenderers)
         {
             m_typeMapConfig = typeMapConfig;
             m_parameters = new List<Parameter>();
@@ -30,7 +30,7 @@ namespace ConversationEditor
                 var options = allRenderers.Where(e => e.WillRender(type.Guid)).Select(e => Tuple.Create(e.Guid, e.DisplayName)).ToList();
                 Guid def = m_typeMapConfig[type.Guid];
                 var enumeration = new Enumeration(options, ParameterType.Basic.ConvertFrom(type.Guid), def);
-                var p = new EnumParameter(type.Name, ID<Parameter>.ConvertFrom(type.Guid), enumeration, def.ToString());
+                var p = new EnumParameter(type.Name, Id<Parameter>.ConvertFrom(type.Guid), enumeration, def.ToString());
                 m_parameters.Add(p);
             }
         }
@@ -40,12 +40,12 @@ namespace ConversationEditor
             get { return m_parameters; }
         }
 
-        public ID<NodeTemp> NodeId
+        public Id<NodeTemp> NodeId
         {
             get { throw new NotImplementedException(); }
         }
 
-        public ID<NodeTypeTemp> NodeTypeId
+        public Id<NodeTypeTemp> NodeTypeId
         {
             get { throw new NotImplementedException(); }
         }
@@ -67,7 +67,7 @@ namespace ConversationEditor
 
         public event Action Linked { add { } remove { } }
 
-        public void ChangeId(ID<NodeTemp> id)
+        public void ChangeId(Id<NodeTemp> id)
         {
             throw new NotImplementedException();
         }

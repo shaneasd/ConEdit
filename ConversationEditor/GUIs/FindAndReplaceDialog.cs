@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using Conversation;
 using System.Text.RegularExpressions;
 using Utilities;
-using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
 
 namespace ConversationEditor
 {

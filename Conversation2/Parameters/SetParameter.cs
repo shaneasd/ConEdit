@@ -10,7 +10,7 @@ namespace Conversation
     public class SetParameter : Parameter<ReadonlySet<Guid>>, ISetParameter
     {
         IEnumeration m_enumeration;
-        public SetParameter(string name, ID<Parameter> id, IEnumeration enumeration, string defaultValue = null)
+        public SetParameter(string name, Id<Parameter> id, IEnumeration enumeration, string defaultValue)
             : base(name, id, ParameterType.Set.Of(enumeration.TypeId), defaultValue)
         {
             m_enumeration = enumeration;
@@ -80,7 +80,7 @@ namespace Conversation
                 return m_enumeration.GetName(value);
         }
 
-        public override string DisplayValue(Func<ID<LocalizedText>, string> localize)
+        public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
         {
             if (m_textOverride != null)
                 return m_textOverride;

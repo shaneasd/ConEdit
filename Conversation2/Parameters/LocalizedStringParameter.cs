@@ -5,13 +5,13 @@ using System.Text;
 
 namespace Conversation
 {
-    public class LocalizedStringParameter : Parameter<ID<LocalizedText>>, ILocalizedStringParameter
+    public class LocalizedStringParameter : Parameter<Id<LocalizedText>>, ILocalizedStringParameter
     {
-        public LocalizedStringParameter(string name, ID<Parameter> id, ParameterType typeId, string defaultValue = null) : base(name, id, typeId, defaultValue) { }
+        public LocalizedStringParameter(string name, Id<Parameter> id, ParameterType typeId, string defaultValue) : base(name, id, typeId, defaultValue) { }
 
         protected override bool DeserialiseValue(string value)
         {
-            return ID<LocalizedText>.TryParse(value, out m_value);
+            return Id<LocalizedText>.TryParse(value, out m_value);
         }
 
         protected override string InnerValueAsString()
@@ -19,17 +19,17 @@ namespace Conversation
             if (m_value != null)
                 return m_value.Serialized();
             else
-                return ID<LocalizedText>.New().Serialized();
+                return Id<LocalizedText>.New().Serialized();
         }
 
-        public override string DisplayValue(Func<ID<LocalizedText>, string> localize)
+        public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
         {
             return localize(m_value);
         }
 
         protected override void DecorruptFromNull()
         {
-            Value = ID<LocalizedText>.New();
+            Value = Id<LocalizedText>.New();
         }
     }
 }

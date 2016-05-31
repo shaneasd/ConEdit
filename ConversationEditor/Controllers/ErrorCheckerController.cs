@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace ConversationEditor
 {
-    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+    using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
 
     internal class ErrorCheckerController
     {

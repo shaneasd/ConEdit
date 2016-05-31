@@ -46,6 +46,10 @@ namespace ConversationEditor
 
             StringBuilder message = new StringBuilder();
 
+            message.Append(textBox1.Text);
+            for (int i = 0; i < 3; i++)
+                message.AppendLine();
+            
             for (Exception exception = m_exception; exception != null; exception = exception.InnerException)
             {
                 message.Append("Error report from: " + DateTime.Now); message.Append(Environment.NewLine);
@@ -72,7 +76,9 @@ namespace ConversationEditor
             {
                 client.Send(mail);
             }
-            catch
+            catch (Exception ex) when (ex is System.Net.Mail.SmtpException || ex is System.Net.Mail.SmtpFailedRecipientsException)
+            //catch (System.Net.Mail.SmtpException)
+            //catch (System.Net.Mail.SmtpFailedRecipientsException)
             {
                 MessageBox.Show("Failed to send mail");
             }

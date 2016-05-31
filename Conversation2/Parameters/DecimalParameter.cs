@@ -15,7 +15,7 @@ namespace Conversation
             public decimal? Min = null;
             public decimal? Max = null;
         }
-        public DecimalParameter(string name, ID<Parameter> id, ParameterType typeId, Definition definition, string defaultValue = null)
+        public DecimalParameter(string name, Id<Parameter> id, ParameterType typeId, Definition definition, string defaultValue)
             : base(name, id, typeId,  defaultValue)
         {
             m_definition = definition ?? new Definition();
@@ -51,7 +51,7 @@ namespace Conversation
             get { return m_definition.Min ?? decimal.MinValue; }
         }
 
-        public override string DisplayValue(Func<ID<LocalizedText>, string> localize)
+        public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
         {
             return m_value.ToString(CultureInfo.CurrentCulture);
         }

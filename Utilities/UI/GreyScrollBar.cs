@@ -143,7 +143,8 @@ namespace Utilities.UI
             set { m_percentageCovered = value; Invalidate(true); }
         }
 
-        private ColorScheme m_colorScheme;
+        private ColorScheme m_colorScheme = new ColorScheme();
+        [Browsable(false)]
         public ColorScheme ColorScheme
         {
             get { return m_colorScheme; }

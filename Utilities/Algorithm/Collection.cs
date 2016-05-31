@@ -43,6 +43,8 @@ namespace Utilities
 
             public void CopyTo(T[] array, int arrayIndex)
             {
+                if (array == null)
+                    throw new ArgumentNullException(nameof(array));
                 array[arrayIndex] = m_element;
             }
 
@@ -77,10 +79,14 @@ namespace Utilities
             return new OneElementCollection<T>(a);
         }
 
-        public static void ForAll<T>(this IEnumerable<T> e, Action<T> a)
+        public static void ForAll<T>(this IEnumerable<T> data, Action<T> action)
         {
-            foreach (var x in e)
-                a(x);
+            if (data == null)
+                throw new ArgumentNullException(nameof(data));
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+            foreach (var x in data)
+                action(x);
         }
 
         public static IEnumerable<U> Collapse<T, U>(this T root, Func<T, IEnumerable<T>> subNodeSelector, Func<T, IEnumerable<U>> valueSelector)
@@ -124,7 +130,7 @@ namespace Utilities
             }
         }
 
-        public static List<T> Merge<T>(this IEnumerable<T> data, Func<T, T, Tuple<bool,T>> tryMerge)
+        public static IEnumerable<T> Merge<T>(this IEnumerable<T> data, Func<T, T, Tuple<bool,T>> tryMerge)
         {
             List<T> d = data.ToList();
 
@@ -182,12 +188,12 @@ namespace Utilities
             }
         }
 
-        public static IEnumerable<T> Except<T, U, V>(this IEnumerable<T> first, IEnumerable<U> second, Func<T, V> Tkey, Func<U, V> Ukey)
+        public static IEnumerable<T> Except<T, U, V>(this IEnumerable<T> first, IEnumerable<U> second, Func<T, V> keyFirst, Func<U, V> keySecond)
         {
-            var secondKeys = second.Select(Ukey).Evaluate();
+            var secondKeys = second.Select(keySecond).Evaluate();
             foreach (var t in first)
             {
-                if (!secondKeys.Contains(Tkey(t)))
+                if (!secondKeys.Contains(keyFirst(t)))
                     yield return t;
             }
         }
@@ -197,7 +203,7 @@ namespace Utilities
             return new HashSet<T>(data);
         }
 
-        public static void BringToFront<T>(this List<T> list, IEnumerable<T> shifted)
+        public static void BringToFront<T>(this System.Collections.ObjectModel.Collection<T> list, IEnumerable<T> shifted)
         {
             List<T> toInsert = list.Intersect(shifted).Reverse().ToList();
             foreach (var a in toInsert)

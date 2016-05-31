@@ -8,10 +8,10 @@ namespace Conversation
 {
     public struct ConnectionDefinitionData
     {
-        public ConnectionDefinitionData(UnorderedTuple2<ID<TConnectorDefinition>> connectors)
+        public ConnectionDefinitionData(UnorderedTuple2<Id<TConnectorDefinition>> connectors)
         {
             Connectors = connectors;
         }
-        public readonly UnorderedTuple2<ID<TConnectorDefinition>> Connectors;
+        public readonly UnorderedTuple2<Id<TConnectorDefinition>> Connectors;
     }
 }

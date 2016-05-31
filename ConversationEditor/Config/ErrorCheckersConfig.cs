@@ -15,6 +15,8 @@ namespace ConversationEditor
 
         public void Load(XElement root)
         {
+            if (root == null)
+                throw new ArgumentNullException(nameof(root));
             m_assemblies = new List<ErrorCheckerAssembly>();
             var node = root.Element("ErrorCheckers");
             if (node != null)

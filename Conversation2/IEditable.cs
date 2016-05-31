@@ -13,10 +13,10 @@ namespace Conversation
         /// <summary>
         /// ID of the actual node instance in the graph
         /// </summary>
-        ID<NodeTemp> NodeId { get; }
+        Id<NodeTemp> NodeId { get; }
 
         //Node type information
-        ID<NodeTypeTemp> NodeTypeId { get; }
+        Id<NodeTypeTemp> NodeTypeId { get; }
         string Name { get; }
         ReadOnlyCollection<NodeData.ConfigData> Config { get; }
 
@@ -32,7 +32,7 @@ namespace Conversation
         /// Change the node's ID. Be careful about doing this as things refering to the node by ID will have dangling pointers
         /// </summary>
         /// <param name="id">the new ID</param>
-        void ChangeId(ID<NodeTemp> id);
+        void ChangeId(Id<NodeTemp> id);
 
         /// <summary>
         /// Attempt to decorrupt all corrupted parameters within the node

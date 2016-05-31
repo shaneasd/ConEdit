@@ -39,7 +39,7 @@ namespace ConversationEditor
             get { return PluginContextMenuFactories().SelectMany(p => p.DomainContextMenuItems); }
         }
 
-        public IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<ID<LocalizedText>, string> localizer)
+        public IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<Id<LocalizedText>, string> localizer)
         {
             return PluginContextMenuFactories().SelectMany(p => p.ConversationContextMenuItems(localizer));
         }

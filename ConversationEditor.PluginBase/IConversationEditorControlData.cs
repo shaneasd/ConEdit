@@ -11,12 +11,12 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    using ConversationNode = ConversationNode<INodeGUI>;
+    using ConversationNode = ConversationNode<INodeGui>;
 
-    public interface IConversationEditorControlData<TNode, TTransitionUI> : ISaveableFileUndoableProvider where TNode : IRenderable<IGUI>
+    public interface IConversationEditorControlData<TNode, TTransitionUI> : ISaveableFileUndoableProvider where TNode : IRenderable<IGui>
     {
-        TNode GetNode(ID<NodeTemp> id);
-        Tuple<IEnumerable<TNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, PointF location, ILocalizationEngine localization);
+        TNode GetNode(Id<NodeTemp> id);
+        Tuple<IEnumerable<TNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, object documentID, PointF location, ILocalizationEngine localization);
         void Add(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups);
         bool Remove(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups);
         IEnumerableReversible<TNode> Nodes { get; }
@@ -29,11 +29,14 @@ namespace ConversationEditor
         ReadOnlyCollection<LoadError> Errors { get; }
         void ClearErrors();
 
-        void BringToFront(IReadonlyNodeSet Selected);
+        void BringToFront(IReadonlyNodeSet selected);
 
         TTransitionUI UIInfo(Output connection);
 
         event Action NodesDeleted;
+        event Action<TNode> NodeAdded;
+        event Action<TNode> NodeRemoved;
+        int RelativePosition(TNode of, TNode relativeTo);
 
         TNode MakeNode(IEditable e, NodeUIData uiData);
     }

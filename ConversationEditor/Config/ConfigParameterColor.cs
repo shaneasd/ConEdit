@@ -19,6 +19,8 @@ namespace ConversationEditor
 
         public override void Load(XElement root)
         {
+            if (root == null)
+                throw new ArgumentNullException(nameof(root));
             var a = root.Element(m_name);
             if (a != null)
             {
@@ -30,6 +32,8 @@ namespace ConversationEditor
 
         public override void Write(XElement root)
         {
+            if (root == null)
+                throw new ArgumentNullException(nameof(root));
             var @string = InnerValue.ToArgb().ToString("X", CultureInfo.InvariantCulture);
             root.Add(new XElement(m_name, new XAttribute("value", @string)));
         }

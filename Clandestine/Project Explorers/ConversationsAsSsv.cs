@@ -10,15 +10,20 @@ using System.IO;
 
 namespace Clandestine
 {
-    class ConversationsAsSsv : IProjectExporter
+    public class ConversationsAsSsv : IProjectExporter
     {
         public string Name
         {
             get { return "Conversations as Semicolon Separated Values"; }
         }
 
-        public void Export(IProject2 project, ConfigParameterString exportPath, Func<ID<LocalizedText>, string> localize, IErrorCheckerUtilities<IConversationNode> util)
+        public void Export(IProject2 project, ConfigParameterString exportPath, Func<Id<LocalizedText>, string> localize, IErrorCheckerUtilities<IConversationNode> util)
         {
+            if (project == null)
+                throw new ArgumentNullException(nameof(project));
+            if (exportPath == null)
+                throw new ArgumentNullException(nameof(exportPath));
+
             using (var sfd = new SaveFileDialog())
             {
                 sfd.DefaultExt = "*.ssv";
@@ -32,16 +37,24 @@ namespace Clandestine
                 if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     exportPath.Value = Path.GetDirectoryName(sfd.FileName);
-                    using (var stream = new FileStream(sfd.FileName, FileMode.OpenOrCreate, FileAccess.Write))
+                    FileStream stream = null;
+                    try
                     {
+                        stream = new FileStream(sfd.FileName, FileMode.OpenOrCreate, FileAccess.Write);
                         stream.SetLength(0);
                         using (var sw = new StreamWriter(stream))
                         {
+                            stream = null;
                             ExportAsSsv ssv = new ExportAsSsv(localize);
                             CsvData.WriteTitle(";", sw, true);
                             foreach (var con in project.ConversationFilesCollection)
                                 ssv.WriteConversation(con, sw, true, util);
                         }
+                    }
+                    finally
+                    {
+                        if (stream != null)
+                            stream.Dispose();
                     }
                 }
             }

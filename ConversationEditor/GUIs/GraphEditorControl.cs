@@ -17,11 +17,11 @@ using Utilities.UI;
 
 namespace ConversationEditor
 {
-    using ConversationNode = ConversationNode<INodeGUI>;
+    using ConversationNode = ConversationNode<INodeGui>;
     using System.Globalization;
     using System.Collections.ObjectModel;
 
-    internal partial class GraphEditorControl<TNode> : UserControl, IGraphEditorControl<TNode> where TNode : class, IRenderable<IGUI>, IConversationNode, IConfigurable
+    internal partial class GraphEditorControl<TNode> : UserControl, IGraphEditorControl<TNode> where TNode : class, IRenderable<IGui>, IConversationNode, IConfigurable
     {
         public GraphEditorControl()
         {
@@ -33,7 +33,11 @@ namespace ConversationEditor
             vScrollBar1.Scrolled += Redraw;
             drawWindow.Paint += paintDrawWindow;
             zoomBar.Value = 1.0f;
+
+            m_autoScrollTimer.Tick += (a, b) => ScrollIfRequired();
         }
+
+        Timer m_autoScrollTimer = new Timer();
 
         protected override void OnBackColorChanged(EventArgs e)
         {
@@ -68,7 +72,15 @@ namespace ConversationEditor
                             value.File.Modified += Redraw;
                             m_conversation.NodesDeleted -= OnNodesDeleted;
                             value.NodesDeleted += OnNodesDeleted;
+
+                            m_conversation.NodeAdded -= OnNodeAdded;
+                            m_conversation.NodeRemoved -= OnNodeRemoved;
+                            value.NodeAdded += OnNodeAdded;
+                            value.NodeRemoved += OnNodeRemoved;
+
                             m_conversation = value;
+
+                            OnNodesReset();
                         }
                         else
                         {
@@ -80,6 +92,154 @@ namespace ConversationEditor
                 }
             }
         }
+
+        private void NodeAreaChanged(WeakReference<TNode> nodeRef, Changed<RectangleF> c)
+        {
+            TNode n;
+            if (nodeRef.TryGetTarget(out n))
+            {
+                //foreach (var connector in n.Connectors)
+                //{
+                //    foreach (var connection in connector.Connections)
+                //    {
+                //        RectangleF bounds;
+                //        var ui1 = UIInfo(connector);
+                //        var ui2 = UIInfo(connection);
+                //        //The nature of the bezier splines means they will never reach outside the bounding rectangle which includes their endpoints
+                //        bounds = RectangleF.Union(ui1.Area.Value, ui2.Area.Value);
+                //        var pair = UnorderedTuple.Make(connector, connection);
+                //        bool removed = SpatiallyOrderedConnections.Remove(Tuple.Create(pair, bounds), bounds);
+                //        if (!removed)
+                //        {
+                //            Debugger.Break();
+                //        }
+                //    }
+                //}
+
+                SpatiallyOrderedNodes.Remove(n, c.from);
+                SpatiallyOrderedNodes.Add(n, c.to);
+
+                //StoreConnections(n, true);
+            }
+        }
+
+        public void OnNodesReset()
+        {
+            SpatiallyOrderedNodes = new QuadTree<TNode>(RectangleF.FromLTRB(0, 0, 2048, 2048));
+            SpatiallyOrderedConnections = new QuadTree<Tuple<UnorderedTuple2<Output>, RectangleF>>(RectangleF.FromLTRB(0, 0, 2048, 2048));
+            foreach (var node in CurrentFile.Nodes)
+            {
+                node.Renderer.UpdateArea();
+                SpatiallyOrderedNodes.Add(node, node.Renderer.Area);
+                WeakReference<TNode> nodeRef = new WeakReference<TNode>(node);
+                Action<Changed<RectangleF>> areaChanged = c => NodeAreaChanged(nodeRef, c);
+                node.Renderer.AreaChanged += areaChanged;
+                node.RendererChanging += () =>
+                {
+                    node.Renderer.AreaChanged -= areaChanged;
+                    areaChanged(Changed.Create(node.Renderer.Area, Rectangle.Empty));
+                };
+                node.RendererChanged += () =>
+                {
+                    node.Renderer.AreaChanged += areaChanged;
+                    areaChanged(Changed.Create(Rectangle.Empty, node.Renderer.Area));
+                };
+
+                StoreConnections(node, true);
+            }
+        }
+
+        private void StoreConnections(TNode node, bool register)
+        {
+            if (!register)
+                return; //TODO: Need to actually deregister
+
+            foreach (var connector in node.Connectors)
+            {
+                var connectorTemp = connector;
+                Action<Output> connected = connection =>
+                {
+                    var ui1 = UIInfo(connectorTemp);
+                    var ui2 = UIInfo(connection);
+                    //The nature of the bezier splines means they will never reach outside the bounding rectangle which includes their endpoints
+                    RectangleF bounds = RectangleF.Union(ui1.Area.Value, ui2.Area.Value);
+
+                    var pair = UnorderedTuple.Make(connectorTemp, connection);
+                    bool exists = SpatiallyOrderedConnections.FindTouchingRegion(bounds).Contains(Tuple.Create(pair, bounds));
+                    if (!exists)
+                    {
+                        SpatiallyOrderedConnections.Add(Tuple.Create(pair, bounds), bounds);
+                    }
+                    else
+                    {
+                    }
+                };
+                connectorTemp.Connected += connected;
+                connectorTemp.Disconnected += connection =>
+                {
+                    var ui1 = UIInfo(connectorTemp);
+                    var ui2 = UIInfo(connection);
+                    //The nature of the bezier splines means they will never reach outside the bounding rectangle which includes their endpoints
+                    RectangleF bounds = RectangleF.Union(ui1.Area.Value, ui2.Area.Value);
+
+                    var pair = UnorderedTuple.Make(connectorTemp, connection);
+                    bool exists = SpatiallyOrderedConnections.FindTouchingRegion(bounds).Contains(Tuple.Create(pair, bounds));
+                    if (exists)
+                    {
+                        bool removed = SpatiallyOrderedConnections.Remove(Tuple.Create(pair, bounds), bounds);
+                        if (!removed)
+                            Debugger.Break();
+                    }
+                };
+
+                foreach (var connection in connectorTemp.Connections)
+                {
+                    connected(connection);
+
+                    UIInfo(connectorTemp).Area.Changed.Register(change =>
+                    {
+                        var other = UIInfo(connection);
+                        //The nature of the bezier splines means they will never reach outside the bounding rectangle which includes their endpoints
+                        RectangleF fromBounds = RectangleF.Union(change.from, other.Area.Value);
+
+                        var pair = UnorderedTuple.Make(connectorTemp, connection);
+                        bool removed = SpatiallyOrderedConnections.Remove(Tuple.Create(pair, fromBounds), fromBounds);
+                        if (!removed)
+                            Debugger.Break();
+
+                        RectangleF toBounds = RectangleF.Union(change.to, other.Area.Value);
+                        SpatiallyOrderedConnections.Add(Tuple.Create(pair, toBounds), toBounds);
+                    });
+                }
+            }
+        }
+
+        public void OnNodeAdded(TNode node)
+        {
+            SpatiallyOrderedNodes.Add(node, node.Renderer.Area);
+            WeakReference<TNode> nodeRef = new WeakReference<TNode>(node);
+            Action<Changed<RectangleF>> areaChanged = c => NodeAreaChanged(nodeRef, c);
+            node.Renderer.AreaChanged += areaChanged;
+            node.RendererChanging += () =>
+            {
+                node.Renderer.AreaChanged -= areaChanged;
+            };
+            node.RendererChanged += () =>
+            {
+                node.Renderer.AreaChanged += areaChanged;
+            };
+            StoreConnections(node, true);
+        }
+
+        public void OnNodeRemoved(TNode node)
+        {
+            StoreConnections(node, false);
+            SpatiallyOrderedNodes.Remove(node, node.Renderer.Area);
+            //TODO: It's not clear whether we need to remove the area change callbacks again
+        }
+
+        QuadTree<TNode> SpatiallyOrderedNodes = new QuadTree<TNode>(RectangleF.FromLTRB(0, 0, 2048, 2048));
+        QuadTree<Tuple<UnorderedTuple2<Output>, RectangleF>> SpatiallyOrderedConnections = new QuadTree<Tuple<UnorderedTuple2<Output>, RectangleF>>(RectangleF.FromLTRB(0, 0, 2048, 2048));
 
         private void OnNodesDeleted()
         {
@@ -99,8 +259,9 @@ namespace ConversationEditor
 
         public void ResizeDocument()
         {
-            IEnumerable<IRenderable<IGUI>> nodes = CurrentFile.Nodes;
-            IEnumerable<IRenderable<IGUI>> groups = CurrentFile.Groups;
+            //TODO: We can use the quad tree to more efficiently calculate (or cache) bounds
+            IEnumerable<IRenderable<IGui>> nodes = CurrentFile.Nodes;
+            IEnumerable<IRenderable<IGui>> groups = CurrentFile.Groups;
             RectangleF area = nodes.Concat(groups).Aggregate(RectangleF.Empty, (r, n) => RectangleF.Union(r, n.Renderer.Area));
             area = CurrentFile.Nodes.Aggregate(area, (r, n) => RectangleF.Union(r, n.Renderer.Area));
             area.Inflate(200, 200);
@@ -177,7 +338,7 @@ namespace ConversationEditor
         private int m_majorGridSpacing;
         public int MajorGridSpacing { get { return m_majorGridSpacing; } set { m_majorGridSpacing = value; Redraw(); } }
 
-        public bool ShowIDs { get; set; }
+        public bool ShowIds { get; set; }
         private ColorScheme m_colorScheme;
         public ColorScheme Colors
         {
@@ -225,7 +386,7 @@ namespace ConversationEditor
             m_mouseController.SetSelection(nodes.Select(n => n.Id), groups);
         }
 
-        public void SetSelection(IEnumerable<ID<NodeTemp>> nodes, IEnumerable<NodeGroup> groups)
+        public void SetSelection(IEnumerable<Id<NodeTemp>> nodes, IEnumerable<NodeGroup> groups)
         {
             m_mouseController.SetSelection(nodes, groups);
         }
@@ -251,6 +412,8 @@ namespace ConversationEditor
             m_contextMenu.AttachTo(drawWindow);
 
             m_toolTip.SetToolTip(drawWindow, null);
+            m_toolTip.Popup += (object sender, PopupEventArgs e) => { this.ToolTipPopup(sender, e); };
+            m_toolTip.Draw += (object sender, DrawToolTipEventArgs e) => { this.DrawToolTip(sender, e); };
         }
 
         public PointF Snap(PointF p)
@@ -330,18 +493,64 @@ namespace ConversationEditor
             vScrollBar1.Value = Utilities.Util.Clamp(vScrollBar1.Value + shift.Y, vScrollBar1.Minimum, vScrollBar1.Maximum);
         }
 
+        Point m_autoScrollShift;
+        private void ScrollIfRequired()
+        {
+            Shift(m_autoScrollShift);
+        }
+
+        internal void ScrollIfRequired(PointF? screenOrNull)
+        {
+            if (!screenOrNull.HasValue)
+            {
+                m_autoScrollShift = Point.Empty;
+                m_autoScrollTimer.Stop();
+                return;
+            }
+
+            var screen = screenOrNull.Value;
+            float scrollLeft = Math.Max(0, 30 - Math.Abs(drawWindow.Left - screen.X));
+            float scrollRight = Math.Max(0, 30 - Math.Abs(drawWindow.Right - screen.X));
+            float scrollUp = Math.Max(0, 30 - Math.Abs(drawWindow.Top - screen.Y));
+            float scrollDown = Math.Max(0, 30 - Math.Abs(drawWindow.Bottom - screen.Y));
+
+            int x = (int)Math.Round(scrollRight - scrollLeft);
+            int y = (int)Math.Round(scrollDown - scrollUp);
+            if (x != 0 || y != 0)
+            {
+                m_autoScrollShift = new Point(x, y);
+                m_autoScrollTimer.Start();
+            }
+            else
+            {
+                m_autoScrollShift = Point.Empty;
+                m_autoScrollTimer.Stop();
+            }
+
+        }
+
         Dictionary<Keys, IEditableGenerator> m_keyMapping = new Dictionary<Keys, IEditableGenerator>();
 
         private ConfigureResult MyEdit(IEditable data)
         {
             return Edit(data, new AudioGenerationParameters(CurrentFile.File.File, m_project.File.File));
         }
+
+        PopupEventHandler ToolTipPopup = (a, b) => { };
+        DrawToolTipEventHandler DrawToolTip = (a, b) => { };
+
         private void InitialiseMouseController()
         {
-            m_mouseController = new MouseController<TNode>(Colors, Redraw, shift => Shift(shift), (p, z) => Zoom(p, z), () => CurrentFile.Nodes, () => CurrentFile.Groups, MyEdit, n => CurrentFile.Remove(n.Only(), Enumerable.Empty<NodeGroup>()), Snap, SnapGroup, UIInfo, id => CurrentFile.GetNode(id));
+            m_mouseController = new MouseController<TNode>(Colors, Redraw, shift => Shift(shift), (screen) => ScrollIfRequired(screen), (p, z) => Zoom(p, z), () => new ZOrderedQuadTree<TNode>(SpatiallyOrderedNodes, CurrentFile.RelativePosition), () => new Fake<UnorderedTuple2<Output>>(SpatiallyOrderedConnections.Select(a => a.Item1)), () => CurrentFile.Groups, MyEdit, n => CurrentFile.Remove(n.Only(), Enumerable.Empty<NodeGroup>()), Snap, SnapGroup, UIInfo, id => CurrentFile.GetNode(id));
             drawWindow.MouseDown += (a, args) => m_mouseController.MouseDown(DrawWindowToGraphSpace(args.Location), args.Location, args.Button);
             drawWindow.MouseUp += (a, args) => m_mouseController.MouseUp(DrawWindowToGraphSpace(args.Location), args.Location, args.Button);
-            drawWindow.MouseMove += (a, args) => m_mouseController.MouseMove(DrawWindowToGraphSpace(args.Location), args.Location);
+            drawWindow.MouseMove += (a, args) =>
+            {
+                Stopwatch w = Stopwatch.StartNew();
+                m_mouseController.MouseMove(DrawWindowToGraphSpace(args.Location), args.Location);
+                w.Stop();
+                Debug.WriteLine(w.Elapsed.TotalMilliseconds);
+            };
             drawWindow.MouseDoubleClick += (a, args) => m_mouseController.MouseDoubleClick(DrawWindowToGraphSpace(args.Location), args.Button);
             drawWindow.MouseWheel += (a, args) => m_mouseController.MouseWheel(DrawWindowToGraphSpace(args.Location), args, Control.ModifierKeys);
             drawWindow.MouseCaptureChanged += (a, args) => m_mouseController.MouseCaptureChanged();
@@ -351,7 +560,7 @@ namespace ConversationEditor
 
             m_mouseController.PlainClick += (p) =>
             {
-                if (m_keyMapping.ContainsKey(m_keyHeld))
+                if (m_keyMapping[m_keyHeld] != null)
                     AddNode(m_keyMapping[m_keyHeld], p);
             };
 
@@ -359,18 +568,18 @@ namespace ConversationEditor
 
             drawWindow.KeyDown += (o, k) =>
             {
-                m_mouseController.m_keyHeld = m_keyMapping.ContainsKey(k.KeyCode);
+                m_mouseController.KeyHeld = m_keyMapping.ContainsKey(k.KeyCode) ? k.KeyCode : (Keys?)null;
                 m_keyHeld = k.KeyCode;
                 if (k.KeyCode.IsSet(Keys.ShiftKey))
                     Redraw();
             };
             drawWindow.KeyUp += (o, k) =>
             {
-                m_mouseController.m_keyHeld = false;
+                m_mouseController.KeyHeld = null;
                 if (k.KeyCode.IsSet(Keys.ShiftKey))
                     Redraw();
             };
-            drawWindow.LostFocus += (o, e) => m_mouseController.m_keyHeld = false;
+            drawWindow.LostFocus += (o, e) => m_mouseController.KeyHeld = null;
 
             m_mouseController.StateChanged += () =>
             {
@@ -381,7 +590,7 @@ namespace ConversationEditor
             {
                 if (m_mouseController.HoverNode != null)
                 {
-                    if (ShowIDs)
+                    if (ShowIds)
                     {
                         m_toolTip.Active = true;
                         m_toolTip.SetToolTip(drawWindow, m_mouseController.HoverNode.Id.Serialized());
@@ -389,13 +598,12 @@ namespace ConversationEditor
                     }
                     else
                     {
-                        m_toolTip.Active = true;
                         m_toolTip.OwnerDraw = true;
-                        var node = m_mouseController.HoverNode as ConversationNode<INodeGUI>;
+                        var node = m_mouseController.HoverNode as ConversationNode<INodeGui>;
                         EditableUI renderer = new EditableUI(node, new PointF(0, 0), m_localization.Localize);
                         renderer.UpdateArea();
-                        m_toolTip.Popup += (sender, e) => { e.ToolTipSize = renderer.Area.Size.ToSize(); };
-                        m_toolTip.Draw += (sender, e) =>
+                        ToolTipPopup = (sender, e) => { e.ToolTipSize = renderer.Area.Size.ToSize(); };
+                        DrawToolTip = (sender, e) =>
                         {
                             var m = new Matrix();
                             m.Translate(renderer.Area.Width / 2, renderer.Area.Height / 2);
@@ -403,6 +611,7 @@ namespace ConversationEditor
                             renderer.Draw(e.Graphics, false, m_colorScheme);
                         };
                         m_toolTip.SetToolTip(drawWindow, m_mouseController.HoverNode.Id.Serialized());
+                        m_toolTip.Active = true;
                     }
                 }
                 else
@@ -444,6 +653,12 @@ namespace ConversationEditor
                         m_keyMapping[k] = node;
                     }
                 }
+
+                //Mouse controller is going to want m_keyHeld set when these are held but it will handle them itself
+                m_keyMapping[Keys.Left] = null;
+                m_keyMapping[Keys.Right] = null;
+                m_keyMapping[Keys.Up] = null;
+                m_keyMapping[Keys.Down] = null;
             }
         }
 
@@ -524,8 +739,8 @@ namespace ConversationEditor
                         {
                             foreach (var connection in t.Connections)
                             {
-                                PointF p1 = UIInfo(t).Area.Center();
-                                PointF p2 = UIInfo(connection).Area.Center();
+                                PointF p1 = UIInfo(t).Area.Value.Center();
+                                PointF p2 = UIInfo(connection).Area.Value.Center();
                                 var pair = UnorderedTuple.Make(p1, p2);
                                 bool selected = m_mouseController.IsSelected(connection) || m_mouseController.IsSelected(t);
 
@@ -547,8 +762,8 @@ namespace ConversationEditor
                         {
                             foreach (var connection in t.Connections)
                             {
-                                PointF p1 = UIInfo(t).Area.Center();
-                                PointF p2 = UIInfo(connection).Area.Center();
+                                PointF p1 = UIInfo(t).Area.Value.Center();
+                                PointF p2 = UIInfo(connection).Area.Value.Center();
                                 var pair = UnorderedTuple.Make(p1, p2);
                                 bool selected = m_mouseController.IsSelected(connection) || m_mouseController.IsSelected(t);
 
@@ -641,12 +856,22 @@ namespace ConversationEditor
         {
             if (CurrentFile.File.Exists)
             {
-                TNode g = CurrentFile.MakeNode(node.Generate(ID<NodeTemp>.New(), new List<EditableGeneratorParameterData>()), new NodeUIData(p));
+                TNode g = CurrentFile.MakeNode(node.Generate(Id<NodeTemp>.New(), new List<EditableGeneratorParameterData>(), CurrentFile), new NodeUIData(p));
                 Action addNode = () => { CurrentFile.Add(g.Only(), Enumerable.Empty<NodeGroup>()); };
                 g.Configure(MyEdit).Do
                 (
                     simpleUndoPair => { addNode(); simpleUndoPair.Redo(); }, //Add the node and Configure it. Configure doesn't need to be undoable as we never need to revert the node to an unconfigured state.
-                    resultNotOk => { if (resultNotOk != ConfigureResult.Cancel) addNode(); } //Add the node if the user didn't cancel (i.e. no editing was required)
+                    resultNotOk =>
+                    {
+                        if (resultNotOk == ConfigureResult.Cancel)
+                        {
+                            //Merge the parameter into a junk source so it doesn't count towards the real source
+                            foreach (var parameter in g.Parameters.OfType<IDynamicEnumParameter>())
+                                parameter.MergeInto(new DynamicEnumParameter.Source());
+                        }
+                        else
+                            addNode();  //Add the node if the user didn't cancel (i.e. no editing was required)
+                    }
                 );
             }
         }
@@ -694,7 +919,7 @@ namespace ConversationEditor
             if (Selected.Nodes.Any() || Selected.Groups.Any())
             {
                 var duplicates = m_copyPasteController.Duplicate(Selected.Nodes.Select(CurrentFile.GetNode), Selected.Groups, DataSource);
-                var nodesAndGroups = CurrentFile.DuplicateInto(duplicates.Item1, duplicates.Item2, duplicates.Item3, m_localization);
+                var nodesAndGroups = CurrentFile.DuplicateInto(duplicates.Item1, duplicates.Item2, duplicates.Item4, duplicates.Item3, m_localization);
                 SetSelection(nodesAndGroups.Item1, nodesAndGroups.Item2);
                 Redraw();
             }
@@ -719,10 +944,10 @@ namespace ConversationEditor
             Insert(p, additions);
         }
 
-        public void Insert(Point? p, Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>> additions)
+        public void Insert(Point? p, Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, object> additions)
         {
             Point loc = p ?? DrawWindowToGraphSpace(new Point(Width / 2, Height / 2));
-            var nodesAndGroups = CurrentFile.DuplicateInto(additions.Item1, additions.Item2, loc, m_localization);
+            var nodesAndGroups = CurrentFile.DuplicateInto(additions.Item1, additions.Item2, additions.Item3, loc, m_localization);
             SetSelection(nodesAndGroups.Item1, nodesAndGroups.Item2);
         }
 
@@ -735,12 +960,84 @@ namespace ConversationEditor
         {
             return CurrentFile.UIInfo(connection);
         }
+
+        internal void SanityTest()
+        {
+            var missingNodes = CurrentFile.Nodes.Except(SpatiallyOrderedNodes).ToList();
+            var extraNodes = SpatiallyOrderedNodes.Except(CurrentFile.Nodes).ToList();
+            if (missingNodes.Any() || extraNodes.Any())
+            {
+                //Nodes collection incorrect
+                Debugger.Break();
+            }
+
+            while (SpatiallyOrderedNodes.Any())
+            {
+                var node = SpatiallyOrderedNodes.First();
+                if (!SpatiallyOrderedNodes.Remove(node, node.Renderer.Area))
+                {
+                    //Couldn't find node in expected area
+                    Debugger.Break();
+                }
+            }
+            foreach (var node in CurrentFile.Nodes)
+            {
+                SpatiallyOrderedNodes.Add(node, node.Renderer.Area);
+            }
+
+            foreach (var connector in CurrentFile.Nodes.SelectMany(n => n.Connectors))
+            {
+                UIInfo(connector);
+            }
+
+            return;
+
+            var connections = CurrentFile.Nodes.SelectMany(n => n.Connectors.SelectMany(c => c.Connections.Select(cc => Tuple.Create(new UnorderedTuple2<Output>(c, cc), RectangleF.Union(UIInfo(c).Area.Value, UIInfo(cc).Area.Value))))).Distinct().ToList();
+            var missingConnections = connections.Except(SpatiallyOrderedConnections).ToList();
+            var extraConnections = SpatiallyOrderedConnections.Except(connections);
+            if (missingConnections.Any() || extraConnections.Any())
+            {
+                //Connections collection incorrect
+                Debugger.Break();
+            }
+
+            foreach (var connection in SpatiallyOrderedConnections)
+            {
+                var oldBounds = connection.Item2;
+                var newBounds = RectangleF.Union(UIInfo(connection.Item1.Item1).Area.Value, UIInfo(connection.Item1.Item2).Area.Value);
+                if (oldBounds != newBounds)
+                    Debugger.Break();
+            }
+
+            while (SpatiallyOrderedConnections.Any())
+            {
+                var connection = SpatiallyOrderedConnections.First();
+                var ui1 = UIInfo(connection.Item1.Item1);
+                var ui2 = UIInfo(connection.Item1.Item2);
+                //The nature of the bezier splines means they will never reach outside the bounding rectangle which includes their endpoints
+                RectangleF bounds = RectangleF.Union(ui1.Area.Value, ui2.Area.Value);
+
+                if (!SpatiallyOrderedConnections.Remove(connection, bounds))
+                {
+                    //Couldn't find node in expected area
+                    Debugger.Break();
+                    SpatiallyOrderedConnections.Remove(connection, bounds);
+                }
+            }
+            foreach (var connection in connections)
+            {
+                var ui1 = UIInfo(connection.Item1.Item1);
+                var ui2 = UIInfo(connection.Item1.Item2);
+                //The nature of the bezier splines means they will never reach outside the bounding rectangle which includes their endpoints
+                RectangleF bounds = RectangleF.Union(ui1.Area.Value, ui2.Area.Value);
+                SpatiallyOrderedConnections.Add(connection, bounds);
+            }
+        }
     }
 
     /// <summary>
     /// To get rid of the generic parameter to make the designer happy
     /// </summary>
     internal class ConversationEditorControl : GraphEditorControl<ConversationNode>
-    {
-    }
+    { }
 }

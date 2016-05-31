@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using System.IO;
 
 namespace Utilities
 {
@@ -97,5 +98,9 @@ namespace Utilities
             yield return sb.ToString();
         }
 
+        public static bool IsAcceptablePathChar(char c)
+        {
+            return !Path.GetInvalidPathChars().Contains(c);
+        }
     }
 }

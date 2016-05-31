@@ -43,11 +43,20 @@ namespace ConversationEditor
     {
         private MyTextBox m_textBox;
 
+        internal IEnumerable<string> AutoCompleteSuggestions(string arg)
+        {
+            if (m_autoCompleteSuggestions != null)
+                return m_autoCompleteSuggestions(arg);
+            else
+                return Enumerable.Empty<string>();
+        }
+
         public DefaultLocalizedStringEditor()
         {
             InitializeComponent();
 
-            m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), MyTextBox.InputFormEnum.Text);
+            //TODO: Suggest things that make sense from the domain for autoCompleteSuggestions
+            m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), MyTextBox.InputFormEnum.Text, AutoCompleteSuggestions);
             m_textBox.RequestedAreaChanged += () =>
             {
                 //Draw window is the whole control so we can just modify the control
@@ -72,6 +81,7 @@ namespace ConversationEditor
                 m_textBox.Text = m_localizer.Localize(null);
             if (!m_localizer.CanLocalize)
                 m_textBox.InputForm = MyTextBox.InputFormEnum.None;
+            m_autoCompleteSuggestions = data.AutoCompleteSuggestions;
         }
 
         public DefaultLocalizedStringEditor AsControl
@@ -86,7 +96,7 @@ namespace ConversationEditor
             {
                 if (m_parameter.Corrupted)
                 {
-                    ID<LocalizedText> id = new ID<LocalizedText>();
+                    Id<LocalizedText> id = new Id<LocalizedText>();
                     var parameterAction = m_parameter.SetValueAction(id);
                     var localizerAction = m_localizer.SetLocalizationAction(id, m_textBox.Text);
                     return new SimpleUndoPair
@@ -107,14 +117,16 @@ namespace ConversationEditor
             }
         }
 
-        public bool IsValid()
+        public string IsValid()
         {
-            return true;
+            return null;
         }
 
         public event Action Ok;
 
         ColorScheme m_scheme;
+        private Func<string, IEnumerable<string>> m_autoCompleteSuggestions;
+
         public ColorScheme Scheme
         {
             get { return m_scheme; }

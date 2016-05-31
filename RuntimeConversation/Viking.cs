@@ -1046,7 +1046,7 @@ namespace Viking.Nodes.Connectors
         
         private System.Collections.Generic.List<Connector> m_connections = new System.Collections.Generic.List<Connector>();
         
-        public Connector(Node parent, Conversation.ID<Conversation.TConnector> id) : 
+        public Connector(Node parent, Conversation.Id<Conversation.TConnector> id) : 
                 base(id)
         {
             this.m_parent = parent;
@@ -1079,7 +1079,7 @@ namespace Viking.Nodes.Connectors
     public class Input : Connector
     {
         
-        public Input(Node parent, Conversation.ID<Conversation.TConnector> id) : 
+        public Input(Node parent, Conversation.Id<Conversation.TConnector> id) : 
                 base(parent, id)
         {
         }
@@ -1092,7 +1092,7 @@ namespace Viking.Nodes.Connectors
         [RuntimeConversation.ParameterIdAttribute("ec0c0b5c-57d9-484b-8946-c8dcf3e09b38")]
         public String Name;
         
-        public Output(Node parent, Conversation.ID<Conversation.TConnector> id, String Name) : 
+        public Output(Node parent, Conversation.Id<Conversation.TConnector> id, String Name) : 
                 base(parent, id)
         {
             this.Name = Name;
@@ -1111,12 +1111,12 @@ namespace Viking.Nodes
     public abstract class Node : RuntimeConversation.NodeBase
     {
         
-        public Node(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Node(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
         }
         
-        public override void Connect(Conversation.ID<Conversation.TConnector> thisConnectorID, RuntimeConversation.NodeBase other, Conversation.ID<Conversation.TConnector> otherConnectorID)
+        public override void Connect(Conversation.Id<Conversation.TConnector> thisConnectorID, RuntimeConversation.NodeBase other, Conversation.Id<Conversation.TConnector> otherConnectorID)
         {
             this.Connector(thisConnectorID).ConnectTo(((Node)(other)).Connector(otherConnectorID));
         }
@@ -1126,7 +1126,7 @@ namespace Viking.Nodes
         public abstract T Process<T>(IProcessor<T> processor)
         ;
         
-        public abstract Connector Connector(Conversation.ID<Conversation.TConnector> connector);
+        public abstract Connector Connector(Conversation.Id<Conversation.TConnector> connector);
     }
     
     [RuntimeConversation.NodeTypeIdAttribute("196dc521-8336-4714-93b7-77ac09b3abd7")]
@@ -1152,22 +1152,22 @@ namespace Viking.Nodes
         [RuntimeConversation.ParameterIdAttribute("8987655a-92fe-4eca-8c50-8769a7edcf04")]
         public RuntimeConversation.LocalizedString Speech;
         
-        public NPC_Speech(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public NPC_Speech(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
             String _b55f6931855c4ec5b15f71dd0a7ef665;
             TypeDeserializer.Deserialize(out _b55f6931855c4ec5b15f71dd0a7ef665, "");
-            this.id179fd9edc5654fb2bf3ebc562c27c940 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("179fd9ed-c565-4fb2-bf3e-bc562c27c940"), _b55f6931855c4ec5b15f71dd0a7ef665);
-            this.id2784a61493054bf6a9962d8a7e097866 = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("2784a614-9305-4bf6-a996-2d8a7e097866"));
+            this.id179fd9edc5654fb2bf3ebc562c27c940 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("179fd9ed-c565-4fb2-bf3e-bc562c27c940"), _b55f6931855c4ec5b15f71dd0a7ef665);
+            this.id2784a61493054bf6a9962d8a7e097866 = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("2784a614-9305-4bf6-a996-2d8a7e097866"));
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("179fd9ed-c565-4fb2-bf3e-bc562c27c940")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("179fd9ed-c565-4fb2-bf3e-bc562c27c940")))
             {
                 return id179fd9edc5654fb2bf3ebc562c27c940;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("2784a614-9305-4bf6-a996-2d8a7e097866")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("2784a614-9305-4bf6-a996-2d8a7e097866")))
             {
                 return id2784a61493054bf6a9962d8a7e097866;
             }
@@ -1215,22 +1215,22 @@ namespace Viking.Nodes
         [RuntimeConversation.ParameterIdAttribute("740c779d-c64a-4f58-abe3-a3a0419868a7")]
         public Boolean Action;
         
-        public Option(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Option(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
             String _078953510cd94acd938ee37c00ad1842;
             TypeDeserializer.Deserialize(out _078953510cd94acd938ee37c00ad1842, "");
-            this.id2fdfacb3fdb44c4f99a62fa7bc341c79 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("2fdfacb3-fdb4-4c4f-99a6-2fa7bc341c79"), _078953510cd94acd938ee37c00ad1842);
-            this.idb579f35fa56a455ca971884f555d0a29 = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("b579f35f-a56a-455c-a971-884f555d0a29"));
+            this.id2fdfacb3fdb44c4f99a62fa7bc341c79 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("2fdfacb3-fdb4-4c4f-99a6-2fa7bc341c79"), _078953510cd94acd938ee37c00ad1842);
+            this.idb579f35fa56a455ca971884f555d0a29 = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("b579f35f-a56a-455c-a971-884f555d0a29"));
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("2fdfacb3-fdb4-4c4f-99a6-2fa7bc341c79")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("2fdfacb3-fdb4-4c4f-99a6-2fa7bc341c79")))
             {
                 return id2fdfacb3fdb44c4f99a62fa7bc341c79;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("b579f35f-a56a-455c-a971-884f555d0a29")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("b579f35f-a56a-455c-a971-884f555d0a29")))
             {
                 return idb579f35fa56a455ca971884f555d0a29;
             }
@@ -1263,17 +1263,17 @@ namespace Viking.Nodes
         
         public Viking.Nodes.Connectors.Output idb5b1fe0305e14058aecb4012ae91db1f;
         
-        public Start(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Start(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
             String _ee8efd4a6f1149eb8b0d845993a98ff5;
             TypeDeserializer.Deserialize(out _ee8efd4a6f1149eb8b0d845993a98ff5, "");
-            this.idb5b1fe0305e14058aecb4012ae91db1f = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("b5b1fe03-05e1-4058-aecb-4012ae91db1f"), _ee8efd4a6f1149eb8b0d845993a98ff5);
+            this.idb5b1fe0305e14058aecb4012ae91db1f = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("b5b1fe03-05e1-4058-aecb-4012ae91db1f"), _ee8efd4a6f1149eb8b0d845993a98ff5);
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("b5b1fe03-05e1-4058-aecb-4012ae91db1f")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("b5b1fe03-05e1-4058-aecb-4012ae91db1f")))
             {
                 return idb5b1fe0305e14058aecb4012ae91db1f;
             }
@@ -1302,15 +1302,15 @@ namespace Viking.Nodes
         
         public Viking.Nodes.Connectors.Input id1907c3b315a84ab2bb4ab89fd072a6a5;
         
-        public Terminator(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Terminator(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            this.id1907c3b315a84ab2bb4ab89fd072a6a5 = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("1907c3b3-15a8-4ab2-bb4a-b89fd072a6a5"));
+            this.id1907c3b315a84ab2bb4ab89fd072a6a5 = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("1907c3b3-15a8-4ab2-bb4a-b89fd072a6a5"));
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("1907c3b3-15a8-4ab2-bb4a-b89fd072a6a5")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("1907c3b3-15a8-4ab2-bb4a-b89fd072a6a5")))
             {
                 return id1907c3b315a84ab2bb4ab89fd072a6a5;
             }
@@ -1355,29 +1355,29 @@ namespace Viking.Nodes.Condition
         [RuntimeConversation.ParameterIdAttribute("afe33600-ec07-4a01-a4ed-76d278a5aa24")]
         public Character Character;
         
-        public Character_Alive(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Character_Alive(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
             String _745e7ec6a4e144148b000fb28a5ce79f;
             TypeDeserializer.Deserialize(out _745e7ec6a4e144148b000fb28a5ce79f, "Alive");
-            this.id94b73ca161054b84a505141a878e7494 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("94b73ca1-6105-4b84-a505-141a878e7494"), _745e7ec6a4e144148b000fb28a5ce79f);
+            this.id94b73ca161054b84a505141a878e7494 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("94b73ca1-6105-4b84-a505-141a878e7494"), _745e7ec6a4e144148b000fb28a5ce79f);
             String _1e83d17e759b42f682d0d721a68ef93f;
             TypeDeserializer.Deserialize(out _1e83d17e759b42f682d0d721a68ef93f, "Dead");
-            this.idbd570e148ca844c1a1e213d4252f8833 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("bd570e14-8ca8-44c1-a1e2-13d4252f8833"), _1e83d17e759b42f682d0d721a68ef93f);
-            this.idee1b251dacab476eb788efb1bd1c05c7 = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("ee1b251d-acab-476e-b788-efb1bd1c05c7"));
+            this.idbd570e148ca844c1a1e213d4252f8833 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("bd570e14-8ca8-44c1-a1e2-13d4252f8833"), _1e83d17e759b42f682d0d721a68ef93f);
+            this.idee1b251dacab476eb788efb1bd1c05c7 = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("ee1b251d-acab-476e-b788-efb1bd1c05c7"));
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("94b73ca1-6105-4b84-a505-141a878e7494")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("94b73ca1-6105-4b84-a505-141a878e7494")))
             {
                 return id94b73ca161054b84a505141a878e7494;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("bd570e14-8ca8-44c1-a1e2-13d4252f8833")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("bd570e14-8ca8-44c1-a1e2-13d4252f8833")))
             {
                 return idbd570e148ca844c1a1e213d4252f8833;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ee1b251d-acab-476e-b788-efb1bd1c05c7")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("ee1b251d-acab-476e-b788-efb1bd1c05c7")))
             {
                 return idee1b251dacab476eb788efb1bd1c05c7;
             }
@@ -1412,24 +1412,24 @@ namespace Viking.Nodes.Condition
         [RuntimeConversation.ParameterIdAttribute("9fd6f445-9517-4b76-ad68-f8518d0199b3")]
         public BooleanFlag Flag;
         
-        public Check_Boolean(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Check_Boolean(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
             String _1314fe3964bc4e73ae9e310f7e4bfca5;
             TypeDeserializer.Deserialize(out _1314fe3964bc4e73ae9e310f7e4bfca5, "True");
-            this.ida0b6ab3f1fd7404ca0f17416b1fbdb43 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("a0b6ab3f-1fd7-404c-a0f1-7416b1fbdb43"), _1314fe3964bc4e73ae9e310f7e4bfca5);
+            this.ida0b6ab3f1fd7404ca0f17416b1fbdb43 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("a0b6ab3f-1fd7-404c-a0f1-7416b1fbdb43"), _1314fe3964bc4e73ae9e310f7e4bfca5);
             String _4d41e74dca13493cb07737da3202e1db;
             TypeDeserializer.Deserialize(out _4d41e74dca13493cb07737da3202e1db, "False");
-            this.idd20ba0d84a4d498f82c12938789a7196 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("d20ba0d8-4a4d-498f-82c1-2938789a7196"), _4d41e74dca13493cb07737da3202e1db);
+            this.idd20ba0d84a4d498f82c12938789a7196 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("d20ba0d8-4a4d-498f-82c1-2938789a7196"), _4d41e74dca13493cb07737da3202e1db);
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("a0b6ab3f-1fd7-404c-a0f1-7416b1fbdb43")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("a0b6ab3f-1fd7-404c-a0f1-7416b1fbdb43")))
             {
                 return ida0b6ab3f1fd7404ca0f17416b1fbdb43;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("d20ba0d8-4a4d-498f-82c1-2938789a7196")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("d20ba0d8-4a4d-498f-82c1-2938789a7196")))
             {
                 return idd20ba0d84a4d498f82c12938789a7196;
             }
@@ -1471,36 +1471,36 @@ namespace Viking.Nodes.Condition
         [RuntimeConversation.ParameterIdAttribute("1785b9d2-80f9-4a5a-a553-50625ca31f3d")]
         public IntegerFlag Flag;
         
-        public Check_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Check_Integer(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
             String _23762c9bb6034303a6028a0d2a394f3a;
             TypeDeserializer.Deserialize(out _23762c9bb6034303a6028a0d2a394f3a, "Greater");
-            this.idce18fc018b7e452e9cda7eec8bc16286 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("ce18fc01-8b7e-452e-9cda-7eec8bc16286"), _23762c9bb6034303a6028a0d2a394f3a);
+            this.idce18fc018b7e452e9cda7eec8bc16286 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("ce18fc01-8b7e-452e-9cda-7eec8bc16286"), _23762c9bb6034303a6028a0d2a394f3a);
             String _9af0f25ea01a4f4499f3eb622fcf803a;
             TypeDeserializer.Deserialize(out _9af0f25ea01a4f4499f3eb622fcf803a, "Less");
-            this.id76aab09126b046f9b5ca11efd99b5da9 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("76aab091-26b0-46f9-b5ca-11efd99b5da9"), _9af0f25ea01a4f4499f3eb622fcf803a);
+            this.id76aab09126b046f9b5ca11efd99b5da9 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("76aab091-26b0-46f9-b5ca-11efd99b5da9"), _9af0f25ea01a4f4499f3eb622fcf803a);
             String _882e24ead17e4c51b180aa5b2843b9d6;
             TypeDeserializer.Deserialize(out _882e24ead17e4c51b180aa5b2843b9d6, "Equal");
-            this.id4947fa04ff924f5e81dceb38d73ba500 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4947fa04-ff92-4f5e-81dc-eb38d73ba500"), _882e24ead17e4c51b180aa5b2843b9d6);
-            this.idee53636aa7d847a7842547f88cc624aa = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("ee53636a-a7d8-47a7-8425-47f88cc624aa"));
+            this.id4947fa04ff924f5e81dceb38d73ba500 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("4947fa04-ff92-4f5e-81dc-eb38d73ba500"), _882e24ead17e4c51b180aa5b2843b9d6);
+            this.idee53636aa7d847a7842547f88cc624aa = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("ee53636a-a7d8-47a7-8425-47f88cc624aa"));
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ce18fc01-8b7e-452e-9cda-7eec8bc16286")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("ce18fc01-8b7e-452e-9cda-7eec8bc16286")))
             {
                 return idce18fc018b7e452e9cda7eec8bc16286;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("76aab091-26b0-46f9-b5ca-11efd99b5da9")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("76aab091-26b0-46f9-b5ca-11efd99b5da9")))
             {
                 return id76aab09126b046f9b5ca11efd99b5da9;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4947fa04-ff92-4f5e-81dc-eb38d73ba500")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("4947fa04-ff92-4f5e-81dc-eb38d73ba500")))
             {
                 return id4947fa04ff924f5e81dceb38d73ba500;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("ee53636a-a7d8-47a7-8425-47f88cc624aa")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("ee53636a-a7d8-47a7-8425-47f88cc624aa")))
             {
                 return idee53636aa7d847a7842547f88cc624aa;
             }
@@ -1543,36 +1543,36 @@ namespace Viking.Nodes.Condition
         [RuntimeConversation.ParameterIdAttribute("beaac6ff-0de4-4af7-bb9c-2f581403247f")]
         public Percentage Percent;
         
-        public Character_Health(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Character_Health(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
             String _314873d910fc495c8c99b1207e2ae29d;
             TypeDeserializer.Deserialize(out _314873d910fc495c8c99b1207e2ae29d, "Less");
-            this.idf30b1a73ca5d4690b93688da62022af7 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("f30b1a73-ca5d-4690-b936-88da62022af7"), _314873d910fc495c8c99b1207e2ae29d);
+            this.idf30b1a73ca5d4690b93688da62022af7 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("f30b1a73-ca5d-4690-b936-88da62022af7"), _314873d910fc495c8c99b1207e2ae29d);
             String _2ac0c957770942d282d9a0db840987bd;
             TypeDeserializer.Deserialize(out _2ac0c957770942d282d9a0db840987bd, "Equals");
-            this.id4cb88d40540a439899d0daf064f2b368 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("4cb88d40-540a-4398-99d0-daf064f2b368"), _2ac0c957770942d282d9a0db840987bd);
+            this.id4cb88d40540a439899d0daf064f2b368 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("4cb88d40-540a-4398-99d0-daf064f2b368"), _2ac0c957770942d282d9a0db840987bd);
             String _a83a54fdf8964ddda567b3e61533d8e8;
             TypeDeserializer.Deserialize(out _a83a54fdf8964ddda567b3e61533d8e8, "Greater");
-            this.id508041a1622143dd9f93ae5472f84315 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("508041a1-6221-43dd-9f93-ae5472f84315"), _a83a54fdf8964ddda567b3e61533d8e8);
-            this.id36e21978b1a943b98d687be70965c3cd = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("36e21978-b1a9-43b9-8d68-7be70965c3cd"));
+            this.id508041a1622143dd9f93ae5472f84315 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("508041a1-6221-43dd-9f93-ae5472f84315"), _a83a54fdf8964ddda567b3e61533d8e8);
+            this.id36e21978b1a943b98d687be70965c3cd = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("36e21978-b1a9-43b9-8d68-7be70965c3cd"));
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("f30b1a73-ca5d-4690-b936-88da62022af7")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("f30b1a73-ca5d-4690-b936-88da62022af7")))
             {
                 return idf30b1a73ca5d4690b93688da62022af7;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4cb88d40-540a-4398-99d0-daf064f2b368")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("4cb88d40-540a-4398-99d0-daf064f2b368")))
             {
                 return id4cb88d40540a439899d0daf064f2b368;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("508041a1-6221-43dd-9f93-ae5472f84315")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("508041a1-6221-43dd-9f93-ae5472f84315")))
             {
                 return id508041a1622143dd9f93ae5472f84315;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("36e21978-b1a9-43b9-8d68-7be70965c3cd")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("36e21978-b1a9-43b9-8d68-7be70965c3cd")))
             {
                 return id36e21978b1a943b98d687be70965c3cd;
             }
@@ -1607,29 +1607,29 @@ namespace Viking.Nodes.Condition
         
         public Viking.Nodes.Connectors.Input id4f02fde216264045a0b0789efd769e79;
         
-        public Player_Sex(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Player_Sex(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
             String _55d05a296e974507a453d04e770d1208;
             TypeDeserializer.Deserialize(out _55d05a296e974507a453d04e770d1208, "Female");
-            this.id0988e9354ae1448abc7f79995462a368 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("0988e935-4ae1-448a-bc7f-79995462a368"), _55d05a296e974507a453d04e770d1208);
+            this.id0988e9354ae1448abc7f79995462a368 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("0988e935-4ae1-448a-bc7f-79995462a368"), _55d05a296e974507a453d04e770d1208);
             String _5a7cd485a3ed4125aff6d9499643e8e7;
             TypeDeserializer.Deserialize(out _5a7cd485a3ed4125aff6d9499643e8e7, "Male");
-            this.id8bb5e9bba4d6470a895fd006ee30034e = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("8bb5e9bb-a4d6-470a-895f-d006ee30034e"), _5a7cd485a3ed4125aff6d9499643e8e7);
-            this.id4f02fde216264045a0b0789efd769e79 = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("4f02fde2-1626-4045-a0b0-789efd769e79"));
+            this.id8bb5e9bba4d6470a895fd006ee30034e = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("8bb5e9bb-a4d6-470a-895f-d006ee30034e"), _5a7cd485a3ed4125aff6d9499643e8e7);
+            this.id4f02fde216264045a0b0789efd769e79 = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("4f02fde2-1626-4045-a0b0-789efd769e79"));
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("0988e935-4ae1-448a-bc7f-79995462a368")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("0988e935-4ae1-448a-bc7f-79995462a368")))
             {
                 return id0988e9354ae1448abc7f79995462a368;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("8bb5e9bb-a4d6-470a-895f-d006ee30034e")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("8bb5e9bb-a4d6-470a-895f-d006ee30034e")))
             {
                 return id8bb5e9bba4d6470a895fd006ee30034e;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4f02fde2-1626-4045-a0b0-789efd769e79")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("4f02fde2-1626-4045-a0b0-789efd769e79")))
             {
                 return id4f02fde216264045a0b0789efd769e79;
             }
@@ -1665,29 +1665,29 @@ namespace Viking.Nodes.Condition
         [RuntimeConversation.ParameterIdAttribute("e95f9349-68e8-4c3a-b18f-c8e0d643b207")]
         public Item Contains;
         
-        public Player_Inventory(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Player_Inventory(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
             String _b90045ad877041aebfd49250fcb0396e;
             TypeDeserializer.Deserialize(out _b90045ad877041aebfd49250fcb0396e, "True");
-            this.ida0b6ab3f1fd7404ca0f17416b1fbdb43 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("a0b6ab3f-1fd7-404c-a0f1-7416b1fbdb43"), _b90045ad877041aebfd49250fcb0396e);
-            this.id61943bf14e2f490495ab739e5738dd8b = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("61943bf1-4e2f-4904-95ab-739e5738dd8b"));
+            this.ida0b6ab3f1fd7404ca0f17416b1fbdb43 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("a0b6ab3f-1fd7-404c-a0f1-7416b1fbdb43"), _b90045ad877041aebfd49250fcb0396e);
+            this.id61943bf14e2f490495ab739e5738dd8b = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("61943bf1-4e2f-4904-95ab-739e5738dd8b"));
             String _40ad14ef64784114a6e4fbd678259d12;
             TypeDeserializer.Deserialize(out _40ad14ef64784114a6e4fbd678259d12, "False");
-            this.idd20ba0d84a4d498f82c12938789a7196 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("d20ba0d8-4a4d-498f-82c1-2938789a7196"), _40ad14ef64784114a6e4fbd678259d12);
+            this.idd20ba0d84a4d498f82c12938789a7196 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("d20ba0d8-4a4d-498f-82c1-2938789a7196"), _40ad14ef64784114a6e4fbd678259d12);
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("a0b6ab3f-1fd7-404c-a0f1-7416b1fbdb43")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("a0b6ab3f-1fd7-404c-a0f1-7416b1fbdb43")))
             {
                 return ida0b6ab3f1fd7404ca0f17416b1fbdb43;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("61943bf1-4e2f-4904-95ab-739e5738dd8b")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("61943bf1-4e2f-4904-95ab-739e5738dd8b")))
             {
                 return id61943bf14e2f490495ab739e5738dd8b;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("d20ba0d8-4a4d-498f-82c1-2938789a7196")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("d20ba0d8-4a4d-498f-82c1-2938789a7196")))
             {
                 return idd20ba0d84a4d498f82c12938789a7196;
             }
@@ -1731,22 +1731,22 @@ namespace Viking.Nodes.Dev
         [RuntimeConversation.ParameterIdAttribute("73bdecc0-8f41-42ed-853b-5b31ff623f15")]
         public String Description;
         
-        public TODO(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public TODO(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
             String _5601d44c812246ab81b11a47bd5402fe;
             TypeDeserializer.Deserialize(out _5601d44c812246ab81b11a47bd5402fe, "");
-            this.id7a13cd196eb941aab94ba49107d8ba50 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("7a13cd19-6eb9-41aa-b94b-a49107d8ba50"), _5601d44c812246ab81b11a47bd5402fe);
-            this.id5e37d69b1d12487cb26f81aad52bfab4 = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("5e37d69b-1d12-487c-b26f-81aad52bfab4"));
+            this.id7a13cd196eb941aab94ba49107d8ba50 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("7a13cd19-6eb9-41aa-b94b-a49107d8ba50"), _5601d44c812246ab81b11a47bd5402fe);
+            this.id5e37d69b1d12487cb26f81aad52bfab4 = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("5e37d69b-1d12-487c-b26f-81aad52bfab4"));
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("7a13cd19-6eb9-41aa-b94b-a49107d8ba50")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("7a13cd19-6eb9-41aa-b94b-a49107d8ba50")))
             {
                 return id7a13cd196eb941aab94ba49107d8ba50;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("5e37d69b-1d12-487c-b26f-81aad52bfab4")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("5e37d69b-1d12-487c-b26f-81aad52bfab4")))
             {
                 return id5e37d69b1d12487cb26f81aad52bfab4;
             }
@@ -1779,15 +1779,15 @@ namespace Viking.Nodes.Dev
         [RuntimeConversation.ParameterIdAttribute("a83ddc54-0696-4856-8d7d-dfb15953b5d9")]
         public String Message;
         
-        public Error(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Error(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            this.id8ee7ec496e3b41a99c1e3d07473c666c = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("8ee7ec49-6e3b-41a9-9c1e-3d07473c666c"));
+            this.id8ee7ec496e3b41a99c1e3d07473c666c = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("8ee7ec49-6e3b-41a9-9c1e-3d07473c666c"));
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("8ee7ec49-6e3b-41a9-9c1e-3d07473c666c")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("8ee7ec49-6e3b-41a9-9c1e-3d07473c666c")))
             {
                 return id8ee7ec496e3b41a99c1e3d07473c666c;
             }
@@ -1822,22 +1822,22 @@ namespace Viking.Nodes.Dev
         [RuntimeConversation.ParameterIdAttribute("3be5b7bd-35b9-4dae-bea5-f60b10862276")]
         public String Description_;
         
-        public Description(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Description(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
             String _201309d785ef457e8114a7d402b81a85;
             TypeDeserializer.Deserialize(out _201309d785ef457e8114a7d402b81a85, "");
-            this.iddc59839e3fc6431394799ce9506a49ad = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("dc59839e-3fc6-4313-9479-9ce9506a49ad"), _201309d785ef457e8114a7d402b81a85);
-            this.ide6cfd63700004ea68a5c4f17c094ca37 = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("e6cfd637-0000-4ea6-8a5c-4f17c094ca37"));
+            this.iddc59839e3fc6431394799ce9506a49ad = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("dc59839e-3fc6-4313-9479-9ce9506a49ad"), _201309d785ef457e8114a7d402b81a85);
+            this.ide6cfd63700004ea68a5c4f17c094ca37 = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("e6cfd637-0000-4ea6-8a5c-4f17c094ca37"));
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("dc59839e-3fc6-4313-9479-9ce9506a49ad")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("dc59839e-3fc6-4313-9479-9ce9506a49ad")))
             {
                 return iddc59839e3fc6431394799ce9506a49ad;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("e6cfd637-0000-4ea6-8a5c-4f17c094ca37")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("e6cfd637-0000-4ea6-8a5c-4f17c094ca37")))
             {
                 return ide6cfd63700004ea68a5c4f17c094ca37;
             }
@@ -1879,15 +1879,15 @@ namespace Viking.Nodes.Jumps
         [RuntimeConversation.ParameterIdAttribute("70dea536-f654-40ec-a738-c1f0caec5d9e")]
         public Jump_IDs Target;
         
-        public Jump_To(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Jump_To(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            this.ide04efd81ea02402f8b16f270f44daaf6 = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("e04efd81-ea02-402f-8b16-f270f44daaf6"));
+            this.ide04efd81ea02402f8b16f270f44daaf6 = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("e04efd81-ea02-402f-8b16-f270f44daaf6"));
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("e04efd81-ea02-402f-8b16-f270f44daaf6")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("e04efd81-ea02-402f-8b16-f270f44daaf6")))
             {
                 return ide04efd81ea02402f8b16f270f44daaf6;
             }
@@ -1920,17 +1920,17 @@ namespace Viking.Nodes.Jumps
         [RuntimeConversation.ParameterIdAttribute("60d947e7-2fc8-4acb-8f00-9e590da242c6")]
         public Jump_IDs ID;
         
-        public Jump_Target(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Jump_Target(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
             String _f423828636b14f3aa230cddfe7ce56a5;
             TypeDeserializer.Deserialize(out _f423828636b14f3aa230cddfe7ce56a5, "");
-            this.id41c4957558e347d9ad447e39df3ac7cc = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("41c49575-58e3-47d9-ad44-7e39df3ac7cc"), _f423828636b14f3aa230cddfe7ce56a5);
+            this.id41c4957558e347d9ad447e39df3ac7cc = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("41c49575-58e3-47d9-ad44-7e39df3ac7cc"), _f423828636b14f3aa230cddfe7ce56a5);
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("41c49575-58e3-47d9-ad44-7e39df3ac7cc")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("41c49575-58e3-47d9-ad44-7e39df3ac7cc")))
             {
                 return id41c4957558e347d9ad447e39df3ac7cc;
             }
@@ -1982,12 +1982,12 @@ namespace Viking.Nodes.Metadata
         [RuntimeConversation.ParameterIdAttribute("15d39743-755c-4776-87a8-0f756593c074")]
         public Boolean Proximity_Triggered;
         
-        public Conversation_Info(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Conversation_Info(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
             return null;
         }
@@ -2030,22 +2030,22 @@ namespace Viking.Nodes.Randomise
         
         public Viking.Nodes.Connectors.Input id76652911e7494f08b5012ae0c09f77b3;
         
-        public Random(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Random(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
             String _f7880dd81bf94ef08ef578ca9a736b8f;
             TypeDeserializer.Deserialize(out _f7880dd81bf94ef08ef578ca9a736b8f, "");
-            this.idd1517dc6b4e04487bfc92eed2d2f04cd = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("d1517dc6-b4e0-4487-bfc9-2eed2d2f04cd"), _f7880dd81bf94ef08ef578ca9a736b8f);
-            this.id76652911e7494f08b5012ae0c09f77b3 = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("76652911-e749-4f08-b501-2ae0c09f77b3"));
+            this.idd1517dc6b4e04487bfc92eed2d2f04cd = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("d1517dc6-b4e0-4487-bfc9-2eed2d2f04cd"), _f7880dd81bf94ef08ef578ca9a736b8f);
+            this.id76652911e7494f08b5012ae0c09f77b3 = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("76652911-e749-4f08-b501-2ae0c09f77b3"));
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("d1517dc6-b4e0-4487-bfc9-2eed2d2f04cd")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("d1517dc6-b4e0-4487-bfc9-2eed2d2f04cd")))
             {
                 return idd1517dc6b4e04487bfc92eed2d2f04cd;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("76652911-e749-4f08-b501-2ae0c09f77b3")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("76652911-e749-4f08-b501-2ae0c09f77b3")))
             {
                 return id76652911e7494f08b5012ae0c09f77b3;
             }
@@ -2081,29 +2081,29 @@ namespace Viking.Nodes.Randomise
         [RuntimeConversation.ParameterIdAttribute("914df4a8-e857-49d0-bf76-3bd9f6615193")]
         public Percentage Percent;
         
-        public Probability(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Probability(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
             String _a0c64e2a460b4512bdf4be74090b82a6;
             TypeDeserializer.Deserialize(out _a0c64e2a460b4512bdf4be74090b82a6, "Success");
-            this.id2b2c53380db74cc78403931b08f4a64b = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("2b2c5338-0db7-4cc7-8403-931b08f4a64b"), _a0c64e2a460b4512bdf4be74090b82a6);
+            this.id2b2c53380db74cc78403931b08f4a64b = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("2b2c5338-0db7-4cc7-8403-931b08f4a64b"), _a0c64e2a460b4512bdf4be74090b82a6);
             String _6f4c37ce201242a09525aa29fdf1285b;
             TypeDeserializer.Deserialize(out _6f4c37ce201242a09525aa29fdf1285b, "Failure");
-            this.id2dea9f2bfefa4f60b82808e19d8a06ec = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("2dea9f2b-fefa-4f60-b828-08e19d8a06ec"), _6f4c37ce201242a09525aa29fdf1285b);
-            this.id06803b592a0040ec89c2448e0937c38c = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("06803b59-2a00-40ec-89c2-448e0937c38c"));
+            this.id2dea9f2bfefa4f60b82808e19d8a06ec = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("2dea9f2b-fefa-4f60-b828-08e19d8a06ec"), _6f4c37ce201242a09525aa29fdf1285b);
+            this.id06803b592a0040ec89c2448e0937c38c = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("06803b59-2a00-40ec-89c2-448e0937c38c"));
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("2b2c5338-0db7-4cc7-8403-931b08f4a64b")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("2b2c5338-0db7-4cc7-8403-931b08f4a64b")))
             {
                 return id2b2c53380db74cc78403931b08f4a64b;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("2dea9f2b-fefa-4f60-b828-08e19d8a06ec")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("2dea9f2b-fefa-4f60-b828-08e19d8a06ec")))
             {
                 return id2dea9f2bfefa4f60b82808e19d8a06ec;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("06803b59-2a00-40ec-89c2-448e0937c38c")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("06803b59-2a00-40ec-89c2-448e0937c38c")))
             {
                 return id06803b592a0040ec89c2448e0937c38c;
             }
@@ -2144,22 +2144,22 @@ namespace Viking.Nodes.Trigger
         
         public Viking.Nodes.Connectors.Output id3dee23b1b1a04457b2f736fdfe67cdf2;
         
-        public Exit_Dialogue(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Exit_Dialogue(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            this.idc3b4c2e2f43d42eabde566b1bfda29f5 = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("c3b4c2e2-f43d-42ea-bde5-66b1bfda29f5"));
+            this.idc3b4c2e2f43d42eabde566b1bfda29f5 = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("c3b4c2e2-f43d-42ea-bde5-66b1bfda29f5"));
             String _441e9c535f3c466b8606bc93f9e396d2;
             TypeDeserializer.Deserialize(out _441e9c535f3c466b8606bc93f9e396d2, "");
-            this.id3dee23b1b1a04457b2f736fdfe67cdf2 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2"), _441e9c535f3c466b8606bc93f9e396d2);
+            this.id3dee23b1b1a04457b2f736fdfe67cdf2 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2"), _441e9c535f3c466b8606bc93f9e396d2);
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("c3b4c2e2-f43d-42ea-bde5-66b1bfda29f5")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("c3b4c2e2-f43d-42ea-bde5-66b1bfda29f5")))
             {
                 return idc3b4c2e2f43d42eabde566b1bfda29f5;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2")))
             {
                 return id3dee23b1b1a04457b2f736fdfe67cdf2;
             }
@@ -2190,22 +2190,22 @@ namespace Viking.Nodes.Trigger
         
         public Viking.Nodes.Connectors.Output id3dee23b1b1a04457b2f736fdfe67cdf2;
         
-        public Enter_Dialogue(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Enter_Dialogue(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            this.idb432e72c724c4d73bcf12c24148e9568 = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("b432e72c-724c-4d73-bcf1-2c24148e9568"));
+            this.idb432e72c724c4d73bcf12c24148e9568 = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("b432e72c-724c-4d73-bcf1-2c24148e9568"));
             String _6887a9c5207a441380b1e5e25cbee101;
             TypeDeserializer.Deserialize(out _6887a9c5207a441380b1e5e25cbee101, "");
-            this.id3dee23b1b1a04457b2f736fdfe67cdf2 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2"), _6887a9c5207a441380b1e5e25cbee101);
+            this.id3dee23b1b1a04457b2f736fdfe67cdf2 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2"), _6887a9c5207a441380b1e5e25cbee101);
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("b432e72c-724c-4d73-bcf1-2c24148e9568")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("b432e72c-724c-4d73-bcf1-2c24148e9568")))
             {
                 return idb432e72c724c4d73bcf12c24148e9568;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2")))
             {
                 return id3dee23b1b1a04457b2f736fdfe67cdf2;
             }
@@ -2242,22 +2242,22 @@ namespace Viking.Nodes.Trigger
         [RuntimeConversation.ParameterIdAttribute("e3e1497f-bd0c-468e-aadd-8db9ed593700")]
         public Int32 By;
         
-        public Increment_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Increment_Integer(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
             String _4cc24fa8a6e34235afa7d93176dab6c1;
             TypeDeserializer.Deserialize(out _4cc24fa8a6e34235afa7d93176dab6c1, "");
-            this.id3dee23b1b1a04457b2f736fdfe67cdf2 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2"), _4cc24fa8a6e34235afa7d93176dab6c1);
-            this.id7710fc42fc43454b8288838a06fbc8b9 = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("7710fc42-fc43-454b-8288-838a06fbc8b9"));
+            this.id3dee23b1b1a04457b2f736fdfe67cdf2 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2"), _4cc24fa8a6e34235afa7d93176dab6c1);
+            this.id7710fc42fc43454b8288838a06fbc8b9 = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("7710fc42-fc43-454b-8288-838a06fbc8b9"));
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2")))
             {
                 return id3dee23b1b1a04457b2f736fdfe67cdf2;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("7710fc42-fc43-454b-8288-838a06fbc8b9")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("7710fc42-fc43-454b-8288-838a06fbc8b9")))
             {
                 return id7710fc42fc43454b8288838a06fbc8b9;
             }
@@ -2296,22 +2296,22 @@ namespace Viking.Nodes.Trigger
         [RuntimeConversation.ParameterIdAttribute("70ce28d8-9284-4bab-8bb7-47ef421a18dd")]
         public BooleanFlag Flag;
         
-        public Set_Boolean(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Set_Boolean(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
             String _f0ed9ea043614f719387406e3a5d476f;
             TypeDeserializer.Deserialize(out _f0ed9ea043614f719387406e3a5d476f, "");
-            this.id3dee23b1b1a04457b2f736fdfe67cdf2 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2"), _f0ed9ea043614f719387406e3a5d476f);
-            this.idd1d99b283eb14386a8c6f4ba664040ee = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("d1d99b28-3eb1-4386-a8c6-f4ba664040ee"));
+            this.id3dee23b1b1a04457b2f736fdfe67cdf2 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2"), _f0ed9ea043614f719387406e3a5d476f);
+            this.idd1d99b283eb14386a8c6f4ba664040ee = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("d1d99b28-3eb1-4386-a8c6-f4ba664040ee"));
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2")))
             {
                 return id3dee23b1b1a04457b2f736fdfe67cdf2;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("d1d99b28-3eb1-4386-a8c6-f4ba664040ee")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("d1d99b28-3eb1-4386-a8c6-f4ba664040ee")))
             {
                 return idd1d99b283eb14386a8c6f4ba664040ee;
             }
@@ -2350,22 +2350,22 @@ namespace Viking.Nodes.Trigger
         [RuntimeConversation.ParameterIdAttribute("b30054dd-f984-41a7-b245-aaed6bac39f8")]
         public IntegerFlag Flag;
         
-        public Set_Integer(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Set_Integer(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
-            this.id9a358db500e245d4934d7b1dd059f89b = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("9a358db5-00e2-45d4-934d-7b1dd059f89b"));
+            this.id9a358db500e245d4934d7b1dd059f89b = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("9a358db5-00e2-45d4-934d-7b1dd059f89b"));
             String _9ddf708611e7419bb82bcb0f94abebc7;
             TypeDeserializer.Deserialize(out _9ddf708611e7419bb82bcb0f94abebc7, "");
-            this.id3dee23b1b1a04457b2f736fdfe67cdf2 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2"), _9ddf708611e7419bb82bcb0f94abebc7);
+            this.id3dee23b1b1a04457b2f736fdfe67cdf2 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2"), _9ddf708611e7419bb82bcb0f94abebc7);
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("9a358db5-00e2-45d4-934d-7b1dd059f89b")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("9a358db5-00e2-45d4-934d-7b1dd059f89b")))
             {
                 return id9a358db500e245d4934d7b1dd059f89b;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2")))
             {
                 return id3dee23b1b1a04457b2f736fdfe67cdf2;
             }
@@ -2407,22 +2407,22 @@ namespace Viking.Nodes.Trigger
         [RuntimeConversation.ParameterIdAttribute("578f6dbd-a218-462e-8ec4-fc5a7c96db7d")]
         public Item Object;
         
-        public Give_Item(Conversation.ID<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
+        public Give_Item(Conversation.Id<Conversation.NodeTemp> id, System.Drawing.PointF position) : 
                 base(id, position)
         {
             String _3e60e4cbea9d416296ae1abc75b1834d;
             TypeDeserializer.Deserialize(out _3e60e4cbea9d416296ae1abc75b1834d, "");
-            this.id3dee23b1b1a04457b2f736fdfe67cdf2 = new Viking.Nodes.Connectors.Output(this, Conversation.ID<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2"), _3e60e4cbea9d416296ae1abc75b1834d);
-            this.id4264c31346ac4abba19d628d5572f67d = new Viking.Nodes.Connectors.Input(this, Conversation.ID<Conversation.TConnector>.Parse("4264c313-46ac-4abb-a19d-628d5572f67d"));
+            this.id3dee23b1b1a04457b2f736fdfe67cdf2 = new Viking.Nodes.Connectors.Output(this, Conversation.Id<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2"), _3e60e4cbea9d416296ae1abc75b1834d);
+            this.id4264c31346ac4abba19d628d5572f67d = new Viking.Nodes.Connectors.Input(this, Conversation.Id<Conversation.TConnector>.Parse("4264c313-46ac-4abb-a19d-628d5572f67d"));
         }
         
-        public override Connector Connector(Conversation.ID<Conversation.TConnector> connector)
+        public override Connector Connector(Conversation.Id<Conversation.TConnector> connector)
         {
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("3dee23b1-b1a0-4457-b2f7-36fdfe67cdf2")))
             {
                 return id3dee23b1b1a04457b2f736fdfe67cdf2;
             }
-            if (connector.Equals(Conversation.ID<Conversation.TConnector>.Parse("4264c313-46ac-4abb-a19d-628d5572f67d")))
+            if (connector.Equals(Conversation.Id<Conversation.TConnector>.Parse("4264c313-46ac-4abb-a19d-628d5572f67d")))
             {
                 return id4264c31346ac4abba19d628d5572f67d;
             }
@@ -2470,147 +2470,147 @@ namespace Viking
             return backend.Read(stream);
         }
 
-        private Utilities.Or<RuntimeConversation.NodeBase, Conversation.Serialization.LoadError> GetNode(Conversation.ID<Conversation.NodeTypeTemp> typeid, Conversation.ID<Conversation.NodeTemp> id, System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters, System.Drawing.PointF position)
+        private Utilities.Either<RuntimeConversation.NodeBase, Conversation.Serialization.LoadError> GetNode(Conversation.Id<Conversation.NodeTypeTemp> typeid, Conversation.Id<Conversation.NodeTemp> id, System.Collections.Generic.IEnumerable<RuntimeConversation.CustomDeserializerParameter> parameters, System.Drawing.PointF position)
         {
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("196dc521-8336-4714-93b7-77ac09b3abd7")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("196dc521-8336-4714-93b7-77ac09b3abd7")))
             {
                 Viking.Nodes.NPC_Speech node = new Viking.Nodes.NPC_Speech(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("df8c4ddb-616b-4481-b0bc-07eb8236f7fb")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("df8c4ddb-616b-4481-b0bc-07eb8236f7fb")))
             {
                 Viking.Nodes.Condition.Character_Alive node = new Viking.Nodes.Condition.Character_Alive(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("0ff6290f-13da-4f7a-8584-9a3daa95fc23")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("0ff6290f-13da-4f7a-8584-9a3daa95fc23")))
             {
                 Viking.Nodes.Condition.Check_Boolean node = new Viking.Nodes.Condition.Check_Boolean(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("08727d6a-da44-430b-8caf-a58cfdfe251c")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("08727d6a-da44-430b-8caf-a58cfdfe251c")))
             {
                 Viking.Nodes.Condition.Check_Integer node = new Viking.Nodes.Condition.Check_Integer(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("e8a66001-6237-411a-830b-976477ee9701")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("e8a66001-6237-411a-830b-976477ee9701")))
             {
                 Viking.Nodes.Condition.Character_Health node = new Viking.Nodes.Condition.Character_Health(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("f10f8ebc-616c-4061-be2d-4e392cd15396")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("f10f8ebc-616c-4061-be2d-4e392cd15396")))
             {
                 Viking.Nodes.Condition.Player_Sex node = new Viking.Nodes.Condition.Player_Sex(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("6f6392be-efaa-4e1a-9594-e4696c782067")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("6f6392be-efaa-4e1a-9594-e4696c782067")))
             {
                 Viking.Nodes.Condition.Player_Inventory node = new Viking.Nodes.Condition.Player_Inventory(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("3a0cf660-90d4-4e06-9d61-6769c3b93211")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("3a0cf660-90d4-4e06-9d61-6769c3b93211")))
             {
                 Viking.Nodes.Dev.TODO node = new Viking.Nodes.Dev.TODO(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("78589f5b-07f8-41d7-820a-318ec2989a40")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("78589f5b-07f8-41d7-820a-318ec2989a40")))
             {
                 Viking.Nodes.Dev.Error node = new Viking.Nodes.Dev.Error(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("28023421-4d83-486b-b4ac-7b820bd634c4")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("28023421-4d83-486b-b4ac-7b820bd634c4")))
             {
                 Viking.Nodes.Dev.Description node = new Viking.Nodes.Dev.Description(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("dd02c832-4896-4f25-9a49-3884d6146fa3")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("dd02c832-4896-4f25-9a49-3884d6146fa3")))
             {
                 Viking.Nodes.Jumps.Jump_To node = new Viking.Nodes.Jumps.Jump_To(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("17cf0309-8377-4e3e-9d8d-46d0a7cef943")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("17cf0309-8377-4e3e-9d8d-46d0a7cef943")))
             {
                 Viking.Nodes.Jumps.Jump_Target node = new Viking.Nodes.Jumps.Jump_Target(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("d5974ffe-777b-419c-b9bc-bde980cb99a6")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("d5974ffe-777b-419c-b9bc-bde980cb99a6")))
             {
                 Viking.Nodes.Metadata.Conversation_Info node = new Viking.Nodes.Metadata.Conversation_Info(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("86524441-8da7-4e19-9ff3-c8df67e09f8f")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("86524441-8da7-4e19-9ff3-c8df67e09f8f")))
             {
                 Viking.Nodes.Option node = new Viking.Nodes.Option(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("03f66e93-bc0c-4713-ae07-dd249d85078d")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("03f66e93-bc0c-4713-ae07-dd249d85078d")))
             {
                 Viking.Nodes.Randomise.Random node = new Viking.Nodes.Randomise.Random(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("9c764213-48f0-4f68-acb4-cc416edc66ae")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("9c764213-48f0-4f68-acb4-cc416edc66ae")))
             {
                 Viking.Nodes.Randomise.Probability node = new Viking.Nodes.Randomise.Probability(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("656a48b2-324e-4484-a1b1-c3b91ad10c3e")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("656a48b2-324e-4484-a1b1-c3b91ad10c3e")))
             {
                 Viking.Nodes.Start node = new Viking.Nodes.Start(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("b2626790-c010-43d8-b1fb-d2093fd9328c")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("b2626790-c010-43d8-b1fb-d2093fd9328c")))
             {
                 Viking.Nodes.Terminator node = new Viking.Nodes.Terminator(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("4e0b5433-898b-42cf-989f-dd1adc7efd87")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("4e0b5433-898b-42cf-989f-dd1adc7efd87")))
             {
                 Viking.Nodes.Trigger.Exit_Dialogue node = new Viking.Nodes.Trigger.Exit_Dialogue(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("0bd4f09f-702a-4ae3-a801-38493653be5d")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("0bd4f09f-702a-4ae3-a801-38493653be5d")))
             {
                 Viking.Nodes.Trigger.Enter_Dialogue node = new Viking.Nodes.Trigger.Enter_Dialogue(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("00b12526-aa16-4258-95b5-fd1e9927c271")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("00b12526-aa16-4258-95b5-fd1e9927c271")))
             {
                 Viking.Nodes.Trigger.Increment_Integer node = new Viking.Nodes.Trigger.Increment_Integer(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("78c38356-d036-418c-be97-b757e4792c4a")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("78c38356-d036-418c-be97-b757e4792c4a")))
             {
                 Viking.Nodes.Trigger.Set_Boolean node = new Viking.Nodes.Trigger.Set_Boolean(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("7adc2a07-f50e-439a-bca4-58aa80ed24b1")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("7adc2a07-f50e-439a-bca4-58aa80ed24b1")))
             {
                 Viking.Nodes.Trigger.Set_Integer node = new Viking.Nodes.Trigger.Set_Integer(id, position);
                 node.GetParameters(parameters);
                 return node;
             }
-            if (typeid.Equals(Conversation.ID<Conversation.NodeTypeTemp>.Parse("9c4a1f4c-7313-46a1-bb46-d5b4131549aa")))
+            if (typeid.Equals(Conversation.Id<Conversation.NodeTypeTemp>.Parse("9c4a1f4c-7313-46a1-bb46-d5b4131549aa")))
             {
                 Viking.Nodes.Trigger.Give_Item node = new Viking.Nodes.Trigger.Give_Item(id, position);
                 node.GetParameters(parameters);

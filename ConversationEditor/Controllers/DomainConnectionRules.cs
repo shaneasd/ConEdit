@@ -9,7 +9,7 @@ namespace ConversationEditor
 {
     internal class DomainConnectionRules : IConnectionRules
     {
-        static readonly HashSet<UnorderedTuple2<ID<TConnectorDefinition>>> acceptablePairings = new HashSet<UnorderedTuple2<ID<TConnectorDefinition>>>()
+        static readonly HashSet<UnorderedTuple2<Id<TConnectorDefinition>>> acceptablePairings = new HashSet<UnorderedTuple2<Id<TConnectorDefinition>>>()
         {
             UnorderedTuple.Make(DomainIDs.EnumOutputDefinition.Id, DomainIDs.EnumValueOutputDefinition.Id), //Connect enumeration declarations with possible values
             
@@ -21,11 +21,14 @@ namespace ConversationEditor
 
             UnorderedTuple.Make(DomainIDs.ConnectorDefiinitionOutputDefinition.Id, DomainIDs.ParameterOutputDefinition.Id), //Connect connector declaration with parameters for that connector type
             //UnorderedTuple.Make(DomainIDs.CONNECTOR_DEFINITION_CONNECTION_DEFINITION.Id, DomainIDs.CONNECTION_DEFINITION_CONNECTOR.Id), //Connect connector declaration with connection declaration
+
+            UnorderedTuple.Make(DomainIDs.AutoComplete.Parent.Id, DomainIDs.AutoComplete.Child.Id),
+            UnorderedTuple.Make(DomainIDs.AutoComplete.Next.Id, DomainIDs.AutoComplete.Previous.Id),
         };
 
         public static readonly DomainConnectionRules Instance = new DomainConnectionRules();
 
-        public bool CanConnect(ID<TConnectorDefinition> a, ID<TConnectorDefinition> b)
+        public bool CanConnect(Id<TConnectorDefinition> a, Id<TConnectorDefinition> b)
         {
             return acceptablePairings.Contains(UnorderedTuple.Make(a, b));
         }

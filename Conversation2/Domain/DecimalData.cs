@@ -7,10 +7,10 @@ namespace Conversation
 {
     public struct DecimalData
     {
-        public DecimalData(string name, ParameterType typeID, decimal? max = null, decimal? min = null/*, decimal? def = null*/)
+        public DecimalData(string name, ParameterType typeId, decimal? max, decimal? min /*, decimal? def = null*/)
         {
             Name = name;
-            TypeID = typeID;
+            TypeID = typeId;
             Max = max;
             Min = min;
             //Default = def;

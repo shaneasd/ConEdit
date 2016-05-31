@@ -11,8 +11,8 @@ namespace ConversationEditor
 {
     public class ShortcutKey : IConfigNodeDefinition
     {
-        private static readonly ID<NodeTypeTemp> ID = ID<NodeTypeTemp>.Parse("b3a94816-8236-4ea5-8646-09887e1ebf94");
-        public ID<NodeTypeTemp> Id
+        private static readonly Id<NodeTypeTemp> ID = Id<NodeTypeTemp>.Parse("b3a94816-8236-4ea5-8646-09887e1ebf94");
+        public Id<NodeTypeTemp> Id
         {
             get { return ID; }
         }
@@ -24,7 +24,7 @@ namespace ConversationEditor
 
         public IEnumerable<Parameter> MakeParameters()
         {
-            yield return new StringParameter("Key", ID<Parameter>.Parse("70de2664-9d86-470d-b3b5-2a23e5afae91"), StringParameter.ParameterType);
+            yield return new StringParameter("Key", Id<Parameter>.Parse("70de2664-9d86-470d-b3b5-2a23e5afae91"), StringParameter.ParameterType);
         }
 
         public static bool TryGet(ReadOnlyCollection<NodeData.ConfigData> config, out string keys)
@@ -38,7 +38,7 @@ namespace ConversationEditor
             foreach (var c in config.Where(c => c.Type == GenericNodeConfigDefinition.StaticId))
             {
                 var data = GenericNodeConfigDefinition.Extract(c);
-                if (string.Compare("Shortcut", data.Key, true, CultureInfo.InvariantCulture) == 0)
+                if (string.Compare("Shortcut", data.Key, StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     keys = data.Value;
                     return true;
@@ -50,8 +50,8 @@ namespace ConversationEditor
 
     public class BackgroundColor : IConfigNodeDefinition
     {
-        static readonly ID<NodeTypeTemp> ID = ID<NodeTypeTemp>.Parse("5887131d-47aa-49ac-b73f-2e21a176af16");
-        public ID<NodeTypeTemp> Id
+        static readonly Id<NodeTypeTemp> ID = Id<NodeTypeTemp>.Parse("5887131d-47aa-49ac-b73f-2e21a176af16");
+        public Id<NodeTypeTemp> Id
         {
             get { return ID; }
         }
@@ -63,7 +63,7 @@ namespace ConversationEditor
 
         public IEnumerable<Parameter> MakeParameters()
         {
-            yield return new StringParameter("Color", ID<Parameter>.Parse("9baa396d-265d-4b69-8a19-0f4799606a3a"), StringParameter.ParameterType);
+            yield return new StringParameter("Color", Id<Parameter>.Parse("9baa396d-265d-4b69-8a19-0f4799606a3a"), StringParameter.ParameterType);
         }
 
         public static Color? TryGet(ReadOnlyCollection<NodeData.ConfigData> config)
@@ -121,11 +121,11 @@ namespace ConversationEditor
 
     public class GenericNodeConfigDefinition : IConfigNodeDefinition
     {
-        public static ID<NodeTypeTemp> StaticId { get { return ID<NodeTypeTemp>.Parse("ba33c8fb-6f3e-4a0f-ba97-b346e02304f8"); } }
-        public static ID<Parameter> ConfigKey { get { return ID<Parameter>.Parse("d7e0e8bd-534c-4827-9f57-cbe5446b716d"); } }
-        public static ID<Parameter> ConfigValue { get { return ID<Parameter>.Parse("0b82c6b5-3a74-4511-b52b-0d8070839d89"); } }
+        public static Id<NodeTypeTemp> StaticId { get { return Id<NodeTypeTemp>.Parse("ba33c8fb-6f3e-4a0f-ba97-b346e02304f8"); } }
+        public static Id<Parameter> ConfigKey { get { return Id<Parameter>.Parse("d7e0e8bd-534c-4827-9f57-cbe5446b716d"); } }
+        public static Id<Parameter> ConfigValue { get { return Id<Parameter>.Parse("0b82c6b5-3a74-4511-b52b-0d8070839d89"); } }
 
-        public ID<NodeTypeTemp> Id
+        public Id<NodeTypeTemp> Id
         {
             get { return StaticId; }
         }
@@ -151,7 +151,8 @@ namespace ConversationEditor
         public static KeyValuePair<string, string> Extract(NodeData.ConfigData data)
         {
             if (data.Type != StaticId)
-                throw new Exception("Attempted to extract generic config from a node that was not a generic config node");
+                throw new InternalLogicException("Attempted to extract generic config from a node that was not a generic config node");
+
             var pName = data.Parameters.Single(p => p.Id == ConfigKey) as IStringParameter;
             var pValue = data.Parameters.Single(p => p.Id == ConfigValue) as IStringParameter;
             return new KeyValuePair<string, string>(pName.Value, pValue.Value);
@@ -164,7 +165,7 @@ namespace ConversationEditor
         {
         }
 
-        IEnumerable<IConfigNodeDefinition> IConfigNodeDefinitionFactory.GetConfigNodeDefinitions()
+        public IEnumerable<IConfigNodeDefinition> GetConfigNodeDefinitions()
         {
             yield return new GenericNodeConfigDefinition();
             yield return new ShortcutKey();

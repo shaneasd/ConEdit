@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Utilities
 {
-    //Same as .NET 4.5 version (hopefully)
-    class WeakReference<T> where T : class
+    //Same as .NET 4.5 version (hopefully). Not used anymore.
+    class LegacyWeakReference<T> where T : class
     {
         WeakReference w;
-        public WeakReference(T value)
+        public LegacyWeakReference(T value)
         {
             w = new WeakReference(value);
         }

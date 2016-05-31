@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
 using Conversation;
 
 namespace ConversationEditor
@@ -11,5 +11,6 @@ namespace ConversationEditor
     {
         DomainData Data { get; }
         event Action ConversationDomainModified;
+        IEnumerable<string> AutoCompleteSuggestions(IParameter p, string s, Func<ParameterType,DynamicEnumParameter.Source> enumSource);
     }
 }

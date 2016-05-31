@@ -7,22 +7,23 @@ namespace Utilities
 {
     public class Polynomial
     {
-        public readonly double[] Coefficients;
+        private readonly double[] m_coefficients;
+        public IReadOnlyList<double> Coefficients { get { return m_coefficients; } }
         public Polynomial(IEnumerable<double> coefficients)
         {
-            Coefficients = coefficients.ToArray();
-            if (!Coefficients.Any())
-                Coefficients = new double[] { 0 };
-            for (int i = Coefficients.Length - 1; i >= 1; i--)
-                if (Math.Abs(Coefficients[i]) < 1e-12)
-                    Array.Resize(ref Coefficients, i);
+            m_coefficients = coefficients.ToArray();
+            if (!m_coefficients.Any())
+                m_coefficients = new double[] { 0 };
+            for (int i = m_coefficients.Length - 1; i >= 1; i--)
+                if (Math.Abs(m_coefficients[i]) < 1e-12)
+                    Array.Resize(ref m_coefficients, i);
                 else
                     break;
-            m_deriv = new Lazy<Polynomial>(() => new Polynomial(Coefficients.Select((t, i) => i * t).Skip(1)));
+            m_deriv = new Lazy<Polynomial>(() => new Polynomial(m_coefficients.Select((t, i) => i * t).Skip(1)));
         }
 
-        public int Order { get { return Coefficients.Length - 1; } }
-        public int Indices { get { return Coefficients.Length; } }
+        public int Order { get { return m_coefficients.Length - 1; } }
+        public int Indexes { get { return m_coefficients.Length; } }
 
         Lazy<Polynomial> m_deriv;
         public Polynomial Derivative
@@ -35,12 +36,12 @@ namespace Utilities
 
         public override string ToString()
         {
-            return string.Join(" + ", Coefficients.Select((t, i) => t + "t^" + i));
+            return string.Join(" + ", m_coefficients.Select((t, i) => t + "t^" + i));
         }
 
         public double At(double t)
         {
-            return Coefficients.Select((c, i) => c * Math.Pow(t, i)).Sum();
+            return m_coefficients.Select((c, i) => c * Math.Pow(t, i)).Sum();
         }
 
         public double[] RealRoots()
@@ -48,12 +49,12 @@ namespace Utilities
             if (Order == 0)
                 return new double[0];
             if (Order == 1)
-                return new double[] { -Coefficients[1] / Coefficients[0] };
+                return new double[] { -m_coefficients[1] / m_coefficients[0] };
             if (Order == 2)
             {
-                double c = Coefficients[0];
-                double b = Coefficients[1];
-                double a = Coefficients[2];
+                double c = m_coefficients[0];
+                double b = m_coefficients[1];
+                double a = m_coefficients[2];
 
                 double discriminant = b * b - 4 * a * c;
                 if (discriminant > 0)
@@ -117,9 +118,9 @@ namespace Utilities
                 return true;
             else if (Order == 2)
             {
-                double c = Coefficients[0];
-                double b = Coefficients[1];
-                double a = Coefficients[2];
+                double c = m_coefficients[0];
+                double b = m_coefficients[1];
+                double a = m_coefficients[2];
 
                 double discriminant = b * b - 4 * a * c;
                 return discriminant >= 0;
@@ -161,7 +162,7 @@ namespace Utilities
 
         public bool IsZero()
         {
-            if (Order == 0 && Math.Abs(Coefficients[0]) < 1e-12)
+            if (Order == 0 && Math.Abs(m_coefficients[0]) < 1e-12)
                 return true;
             else
                 return false;
@@ -172,12 +173,12 @@ namespace Utilities
             while (a.Order >= b.Order)
             {
                 var power = a.Order - b.Order;
-                var scale = a.Coefficients.Last() / b.Coefficients.Last();
+                var scale = a.m_coefficients.Last() / b.m_coefficients.Last();
 
-                double[] newCoefficients = a.Coefficients.Take((int)a.Order).ToArray();
+                double[] newCoefficients = a.m_coefficients.Take((int)a.Order).ToArray();
                 for (int i = 0; i < b.Order; i++)
                 {
-                    newCoefficients[i + power] -= scale * b.Coefficients[i];
+                    newCoefficients[i + power] -= scale * b.m_coefficients[i];
                 }
                 a = new Polynomial(newCoefficients);
             }
@@ -188,7 +189,7 @@ namespace Utilities
         {
             get
             {
-                return Math.Sign(Coefficients.Last()) * (((int)Order % 2) * -2 + 1);
+                return Math.Sign(m_coefficients.Last()) * (((int)Order % 2) * -2 + 1);
             }
         }
 
@@ -196,7 +197,7 @@ namespace Utilities
         {
             get
             {
-                return Math.Sign(Coefficients.Last());
+                return Math.Sign(m_coefficients.Last());
             }
         }
 
@@ -226,15 +227,15 @@ namespace Utilities
             int lower = Math.Min((int)a.Order, (int)b.Order);
             List<double> coefficients = new List<double>((int)longer.Order + 1);
             for (int i = 0; i <= lower; i++)
-                coefficients.Add(a.Coefficients[i] + b.Coefficients[i]);
+                coefficients.Add(a.m_coefficients[i] + b.m_coefficients[i]);
             for (int i = lower + 1; i < coefficients.Capacity; i++)
-                coefficients.Add(longer.Coefficients[i]);
+                coefficients.Add(longer.m_coefficients[i]);
             return new Polynomial(coefficients);
         }
 
         public static Polynomial operator -(Polynomial a)
         {
-            return new Polynomial(a.Coefficients.Select(x => -x));
+            return new Polynomial(a.m_coefficients.Select(x => -x));
         }
 
         public static Polynomial operator *(Polynomial a, Polynomial b)
@@ -242,12 +243,12 @@ namespace Utilities
             double[] coefficients = new double[a.Order + b.Order + 1];
             for (uint i = 0; i <= a.Order; i++)
             {
-                if (Math.Abs(a.Coefficients[i]) > 1e-12)
+                if (Math.Abs(a.m_coefficients[i]) > 1e-12)
                 {
                     for (uint j = 0; j <= b.Order; j++)
                     {
-                        if (Math.Abs(b.Coefficients[j]) > 1e-12)
-                            coefficients[i + j] += a.Coefficients[i] * b.Coefficients[j];
+                        if (Math.Abs(b.m_coefficients[j]) > 1e-12)
+                            coefficients[i + j] += a.m_coefficients[i] * b.m_coefficients[j];
                     }
                 }
             }

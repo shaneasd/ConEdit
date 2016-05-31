@@ -90,7 +90,7 @@ namespace ConversationEditor
         }
 
         private bool m_showIds = false;
-        public bool ShowIDs
+        public bool ShowIds
         {
             get { return m_showIds; }
             set

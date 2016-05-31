@@ -10,12 +10,14 @@ namespace Conversation
     {
         public class Source
         {
+            //TODO: May not want the weakreference thing
+            
             public Source() { }
-            Dictionary<DynamicEnumParameter, string> m_options = new Dictionary<DynamicEnumParameter, string>();
-            public IEnumerable<string> Options { get { return m_options.Values.Distinct().Except("".Only()); } }
+            Dictionary<WeakReference<DynamicEnumParameter>, string> m_options = new Dictionary<WeakReference<DynamicEnumParameter>, string>(new WeakReferenceComparer<DynamicEnumParameter>());
+            public IEnumerable<string> Options { get { PurgeOptions(); return m_options.Values.Distinct().Except("".Only()); } }
             public void RegisterUsage(DynamicEnumParameter user, string value)
             {
-                m_options[user] = value;
+                m_options[new WeakReference<DynamicEnumParameter>(user)] = value;
             }
 
             public void Clear()
@@ -25,16 +27,32 @@ namespace Conversation
 
             internal void DeregisterUsage(DynamicEnumParameter dynamicEnumParameter)
             {
-                m_options.Remove(dynamicEnumParameter);
+                m_options.Remove(new WeakReference<DynamicEnumParameter>(dynamicEnumParameter));
+            }
+
+            void PurgeOptions()
+            {
+                foreach (var key in m_options.Keys)
+                {
+                    DynamicEnumParameter val;
+                    if (!key.TryGetTarget(out val))
+                        m_options.Remove(key);
+                }
             }
         }
 
         Source m_source;
+        private bool m_local;
 
-        public DynamicEnumParameter(string name, ID<Parameter> id, Source source, ParameterType typeId, string defaultValue = null)
-            : base(name, id, typeId,  defaultValue)
+        public DynamicEnumParameter(string name, Id<Parameter> id, Source source, ParameterType typeId, string defaultValue, bool local)
+            : base(name, id, typeId, defaultValue)
         {
             m_source = source;
+            m_local = local;
+
+            //TODO: This appears to not get deregistered properly for default values
+            // Specifically when deleting a node or cancelling creation of a node, the node's parameters do not get cleaned up (i.e. deregistered)
+            m_source.RegisterUsage(this, this.Value);
         }
 
         protected override bool DeserialiseValue(string value)
@@ -62,10 +80,18 @@ namespace Conversation
             set
             {
                 base.Value = value;
-                if (m_source != null) //m_source is null during construction but we just use a value of "" anyway so it doesn't matter if it doesn't get registered
+                if (m_source != null) //m_source is null during construction so we explicitly do the registration there for that case
                 {
                     m_source.RegisterUsage(this, value);
                 }
+            }
+        }
+
+        public bool Local
+        {
+            get
+            {
+                return m_local;
             }
         }
 
@@ -82,9 +108,20 @@ namespace Conversation
         //        Value = Value;
         //}
 
-        public override string DisplayValue(Func<ID<LocalizedText>, string> localize)
+        public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
         {
             return m_value;
+        }
+
+        /// <summary>
+        /// Change data source to newSource and update usage in newSource to reflect current value
+        /// </summary>
+        /// <param name="newSource">The new data source to use</param>
+        public void MergeInto(Source newSource)
+        {
+            m_source.DeregisterUsage(this);
+            newSource.RegisterUsage(this, this.Value);
+            m_source = newSource;
         }
     }
 }

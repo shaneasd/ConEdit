@@ -9,6 +9,7 @@ namespace Conversation
     {
         public List<NodeTypeData> NodeTypes = new List<NodeTypeData>();
         public List<DynamicEnumerationData> DynamicEnumerations = new List<DynamicEnumerationData>();
+        public List<LocalDynamicEnumerationData> LocalDynamicEnumerations = new List<LocalDynamicEnumerationData>();
         public List<EnumerationData> Enumerations = new List<EnumerationData>();
         public List<DecimalData> Decimals = new List<DecimalData>();
         public List<IntegerData> Integers = new List<IntegerData>();

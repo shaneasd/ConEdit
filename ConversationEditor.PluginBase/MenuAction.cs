@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace ConversationEditor
 {
-    public class MenuAction<TNode> where TNode : IRenderable<IGUI>, IConversationNode, IConfigurable
+    public class MenuAction<TNode> where TNode : IRenderable<IGui>, IConversationNode, IConfigurable
     {
         private readonly string m_name;
         public string Name { get { return m_name; } }

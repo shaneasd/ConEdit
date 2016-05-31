@@ -9,27 +9,21 @@ namespace Conversation
 {
     public struct DynamicEnumerationData
     {
-        //TODO: WTF? Fix this please
-        //Global variables evil. This is a hack to get around the fact that every time you call DomainFile.Data this type gets recreated from the nodes so there's no permanent mapping between dynamic enumeration and source
-        public static Dictionary<ParameterType, DynamicEnumParameter.Source> sourcesHack = new Dictionary<ParameterType, DynamicEnumParameter.Source>();
-
-        public DynamicEnumerationData(string name, ParameterType typeID)
+        public DynamicEnumerationData(string name, ParameterType typeId)
         {
             Name = name;
-            TypeID = typeID;
-            if (!sourcesHack.ContainsKey(typeID))
-                sourcesHack[typeID] = new DynamicEnumParameter.Source();
-            m_source = sourcesHack[typeID];
+            TypeId = typeId;
+            //m_source = source;
         }
         public string Name;
-        public ParameterType TypeID;
-        private DynamicEnumParameter.Source m_source;
+        public ParameterType TypeId;
+        //private DynamicEnumParameter.Source m_source;
 
-        public IEnumerable<string> Options { get { return m_source.Options; } }
+        //public IEnumerable<string> Options { get { return m_source.Options; } }
 
-        public Parameter Make(string name, ID<Parameter> id, string defaultValue)
+        public Parameter Make(string name, Id<Parameter> id, string defaultValue, DynamicEnumParameter.Source source)
         {
-            return new DynamicEnumParameter(name, id, m_source, TypeID, defaultValue);
+            return new DynamicEnumParameter(name, id, source, TypeId, defaultValue, false);
         }
     }
 }

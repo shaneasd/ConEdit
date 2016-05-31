@@ -9,26 +9,26 @@ namespace Conversation
 {
     public class UnknownEditable : IEditable
     {
-        private ID<NodeTemp> m_nodeID;
-        private ID<NodeTypeTemp> m_nodeTypeID;
+        private Id<NodeTemp> m_nodeId;
+        private Id<NodeTypeTemp> m_nodeTypeId;
         private List<UnknownParameter> m_parameters;
         public event Action Linked { add { } remove { } }
 
-        public UnknownEditable(ID<NodeTemp> nodeID, ID<NodeTypeTemp> nodeTypeID, IEnumerable<UnknownParameter> parameters)
+        public UnknownEditable(Id<NodeTemp> nodeId, Id<NodeTypeTemp> nodeTypeId, IEnumerable<UnknownParameter> parameters)
         {
-            m_nodeID = nodeID;
-            m_nodeTypeID = nodeTypeID;
+            m_nodeId = nodeId;
+            m_nodeTypeId = nodeTypeId;
             m_parameters = parameters.ToList();
         }
 
-        public ID<NodeTemp> NodeId
+        public Id<NodeTemp> NodeId
         {
-            get { return m_nodeID; }
+            get { return m_nodeId; }
         }
 
-        public ID<NodeTypeTemp> NodeTypeId
+        public Id<NodeTypeTemp> NodeTypeId
         {
-            get { return m_nodeTypeID; }
+            get { return m_nodeTypeId; }
         }
 
         public string Name
@@ -52,9 +52,9 @@ namespace Conversation
             get { return m_connectors; }
         }
 
-        public void ChangeId(ID<NodeTemp> id)
+        public void ChangeId(Id<NodeTemp> id)
         {
-            m_nodeID = id;
+            m_nodeId = id;
         }
 
         public void TryDecorrupt()
@@ -63,14 +63,14 @@ namespace Conversation
 
         class CustomConnectionRules : IConnectionRules
         {
-            HashSet<UnorderedTuple2<ID<TConnectorDefinition>>> m_rules = new HashSet<UnorderedTuple2<ID<TConnectorDefinition>>>();
+            HashSet<UnorderedTuple2<Id<TConnectorDefinition>>> m_rules = new HashSet<UnorderedTuple2<Id<TConnectorDefinition>>>();
 
-            public bool CanConnect(ID<TConnectorDefinition> a, ID<TConnectorDefinition> b)
+            public bool CanConnect(Id<TConnectorDefinition> a, Id<TConnectorDefinition> b)
             {
                 return m_rules.Contains(UnorderedTuple.Make(a, b));
             }
 
-            public void Allow(ID<TConnectorDefinition> a, ID<TConnectorDefinition> b)
+            public void Allow(Id<TConnectorDefinition> a, Id<TConnectorDefinition> b)
             {
                 m_rules.Add(UnorderedTuple.Make(a, b));
             }
@@ -78,11 +78,11 @@ namespace Conversation
 
         CustomConnectionRules m_rules = new CustomConnectionRules();
 
-        public void AddConnector(ID<TConnector> id)
+        public void AddConnector(Id<TConnector> id)
         {
             if (!m_connectors.Any(c => c.ID == id))
             {
-                ConnectorDefinitionData data = new ConnectorDefinitionData("", ID<TConnectorDefinition>.ConvertFrom(id), new List<NodeData.ParameterData>(), ConnectorPosition.Bottom);
+                ConnectorDefinitionData data = new ConnectorDefinitionData("", Id<TConnectorDefinition>.ConvertFrom(id), new List<NodeData.ParameterData>(), ConnectorPosition.Bottom);
                 m_connectors.Add(new Output(id, data, this, new List<Parameter>(), m_rules));
             }
         }

@@ -47,7 +47,8 @@ namespace ConversationEditor
         {
             InitializeComponent();
 
-            m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), MyTextBox.InputFormEnum.Path);
+            //TODO: Suggest paths that exist for autoCompleteSuggestions
+            m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), MyTextBox.InputFormEnum.Path, null);
             m_textBox.RequestedAreaChanged += () =>
             {
                 int extraHeight = (Size.Height - drawWindow1.Size.Height).Clamp(0, int.MaxValue);
@@ -69,7 +70,7 @@ namespace ConversationEditor
         public event Action Ok;
         AudioGenerationParameters m_audioGenerationParameters;
         IAudioParameter m_parameter;
-        IAudioProvider2 m_audioProvider;
+        IAudioParameterEditorCallbacks m_audioProvider;
         public void Setup(ParameterEditorSetupData data)
         {
             m_parameter = data.Parameter as IAudioParameter;
@@ -88,7 +89,7 @@ namespace ConversationEditor
 
         public UpdateParameterData UpdateParameterAction()
         {
-            if (!IsValid())
+            if (IsValid() != null)
                 throw new Exception("Current path invalid");
 
             Audio audio = new Audio(m_textBox.Text);
@@ -98,23 +99,25 @@ namespace ConversationEditor
             return result;
         }
 
-        public bool IsValid()
+        public string IsValid()
         {
             try
             {
                 new FileInfo(m_textBox.Text);
-                return true;
+                return null;
             }
-            catch
-            {
-                return false;
-            }
+            catch (System.Security.SecurityException) { }
+            catch (System.ArgumentException) { }
+            catch (System.UnauthorizedAccessException) { }
+            catch (System.IO.PathTooLongException) { }
+            catch (System.NotSupportedException) { }
+            return "Path invalid";
         }
 
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (!IsValid())
+            if (IsValid() != null)
                 MessageBox.Show("Current path invalid");
             else
                 m_audioProvider.Play(new Audio(m_textBox.Text));

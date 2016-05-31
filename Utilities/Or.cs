@@ -14,25 +14,25 @@ namespace Utilities
         public static readonly Func<Null> Func = () => null;
     }
 
-    public static class Or
+    public static class Either
     {
-        public static Or<T, U> Create<T,U>(bool useA, Func<T> aGenerator, Func<U> bGenerator)
+        public static Either<T, U> Create<T,U>(bool useA, Func<T> aGenerator, Func<U> bGenerator)
         {
-            return new Or<T, U>(useA, aGenerator, bGenerator);
+            return new Either<T, U>(useA, aGenerator, bGenerator);
         }
     }
 
-    public class Or<T, U>
+    public class Either<T, U>
     {
         bool m_aSpecified;
 
-        public Or(T a)
+        public Either(T a)
         {
             m_aSpecified = true;
             A = a;
             B = default(U);
         }
-        public Or(U b)
+        public Either(U b)
         {
             m_aSpecified = false;
             A = default(T);
@@ -41,7 +41,7 @@ namespace Utilities
         readonly T A;
         readonly U B;
 
-        public Or(bool useA, Func<T> aGenerator, Func<U> bGenerator)
+        public Either(bool useA, Func<T> aGenerator, Func<U> bGenerator)
         {
             m_aSpecified = useA;
             if (useA)
@@ -56,14 +56,14 @@ namespace Utilities
             }
         }
 
-        public static implicit operator Or<T, U>(T a)
+        public static implicit operator Either<T, U>(T a)
         {
-            return new Or<T, U>(a);
+            return new Either<T, U>(a);
         }
 
-        public static implicit operator Or<T, U>(U b)
+        public static implicit operator Either<T, U>(U b)
         {
-            return new Or<T, U>(b);
+            return new Either<T, U>(b);
         }
 
         public override int GetHashCode()
@@ -73,9 +73,9 @@ namespace Utilities
 
         public override bool Equals(object obj)
         {
-            if (obj is Or<T, U>)
+            if (obj is Either<T, U>)
             {
-                var other = (Or<T, U>)obj;
+                var other = (Either<T, U>)obj;
                 if (m_aSpecified != other.m_aSpecified)
                     return false;
                 else if (m_aSpecified)
@@ -90,36 +90,36 @@ namespace Utilities
                 return object.Equals(obj, B);
         }
 
-        public static bool operator ==(Or<T, U> a, T b)
+        public static bool operator ==(Either<T, U> a, T b)
         {
             return object.Equals(a, b);
         }
-        public static bool operator ==(Or<T, U> a, U b)
+        public static bool operator ==(Either<T, U> a, U b)
         {
             return object.Equals(a, b);
         }
-        public static bool operator ==(T b, Or<T, U> a)
+        public static bool operator ==(T b, Either<T, U> a)
         {
             return object.Equals(a, b);
         }
-        public static bool operator ==(U b, Or<T, U> a)
+        public static bool operator ==(U b, Either<T, U> a)
         {
             return object.Equals(a, b);
         }
 
-        public static bool operator !=(Or<T, U> a, T b)
+        public static bool operator !=(Either<T, U> a, T b)
         {
             return !object.Equals(a, b);
         }
-        public static bool operator !=(Or<T, U> a, U b)
+        public static bool operator !=(Either<T, U> a, U b)
         {
             return !object.Equals(a, b);
         }
-        public static bool operator !=(T b, Or<T, U> a)
+        public static bool operator !=(T b, Either<T, U> a)
         {
             return !object.Equals(a, b);
         }
-        public static bool operator !=(U b, Or<T, U> a)
+        public static bool operator !=(U b, Either<T, U> a)
         {
             return !object.Equals(a, b);
         }
@@ -132,7 +132,7 @@ namespace Utilities
                 return b(B);
         }
 
-        public Or<V,W> TransformedOr<V, W>(Func<T, V> a, Func<U, W> b)
+        public Either<V,W> TransformedEither<V, W>(Func<T, V> a, Func<U, W> b)
         {
             if (m_aSpecified)
                 return a(A);

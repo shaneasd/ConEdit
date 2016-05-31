@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using Conversation;
 using Utilities;
-using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGUI>;
+using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
 using Utilities.UI;
 
 namespace ConversationEditor
@@ -14,14 +14,9 @@ namespace ConversationEditor
     {
         static Font Font = SystemFonts.DefaultFont;
 
-        public CorruptedNodeRenderer(ConversationNode<INodeGUI> node, PointF p) :
+        public CorruptedNodeRenderer(ConversationNode<INodeGui> node, PointF p) :
             base(node, p)
         {
-        }
-
-        public override string DisplayName
-        {
-            get { return "Corrupted Node Renderer"; }
         }
 
         protected override void InnerDraw(System.Drawing.Graphics g, bool selected)
@@ -50,6 +45,10 @@ namespace ConversationEditor
         {
             return g.MeasureString(Text, Font);
             //return new SizeF(30, 30);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
         }
     }
 

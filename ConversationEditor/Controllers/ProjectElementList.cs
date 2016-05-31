@@ -9,25 +9,13 @@ using System.Diagnostics;
 
 namespace ConversationEditor
 {
-    internal static class ProjectElementList
-    {
-        public class Error
-        {
-            private readonly string m_message;
-            public Error(string message)
-            {
-                m_message = message;
-            }
-        }
-    }
-
     internal class ProjectElementList<TReal, TMissing, TInterface> : IProjectElementList<TReal, TInterface>, IDisposable
         where TReal : TInterface
         where TMissing : TInterface
         where TInterface : class, ISaveableFileProvider, IInProject
     {
         public CallbackDictionary<string, TInterface> m_data;
-        private Func<IEnumerable<FileInfo>, IEnumerable<Or<TReal, TMissing>>> m_loader;
+        private Func<IEnumerable<FileInfo>, IEnumerable<Either<TReal, TMissing>>> m_loader;
         private Func<DirectoryInfo, TReal> m_makeEmpty;
         private Func<string, bool> m_fileLocationOk;
         private SuppressibleAction m_suppressibleGotChanged;
@@ -42,7 +30,7 @@ namespace ConversationEditor
         {
         }
 
-        public ProjectElementList(Func<string, bool> fileLocationOk, Func<IEnumerable<FileInfo>, IEnumerable<Or<TReal, TMissing>>> loader, Func<DirectoryInfo, TReal> makeEmpty)
+        public ProjectElementList(Func<string, bool> fileLocationOk, Func<IEnumerable<FileInfo>, IEnumerable<Either<TReal, TMissing>>> loader, Func<DirectoryInfo, TReal> makeEmpty)
         {
             m_data = new CallbackDictionary<string, TInterface>();
             m_data.Removing += (key, element) => { element.Removed(); };
@@ -61,11 +49,11 @@ namespace ConversationEditor
             return m_fileLocationOk(path);
         }
 
-        static Func<IEnumerable<FileInfo>, IEnumerable<Or<TReal, TMissing>>> MyLoader(Func<IEnumerable<FileInfo>, IEnumerable<TReal>> loader, Func<FileInfo, TMissing> makeMissing)
+        static Func<IEnumerable<FileInfo>, IEnumerable<Either<TReal, TMissing>>> MyLoader(Func<IEnumerable<FileInfo>, IEnumerable<TReal>> loader, Func<FileInfo, TMissing> makeMissing)
         {
             return files =>
                 {
-                    List<Or<TReal, TMissing>> result = new List<Or<TReal, TMissing>>();
+                    List<Either<TReal, TMissing>> result = new List<Either<TReal, TMissing>>();
                     foreach (var file in files)
                     {
                         if (file.Exists)
@@ -181,6 +169,11 @@ namespace ConversationEditor
                 var existing = toLoad[i].Item2;
                 m_data[conversation.File.File.FullName] = conversation;
                 Reloaded.Execute(existing, conversation);
+            }
+
+            foreach (var dispose in toLoad.Select(v => v.Item2))
+            {
+                dispose.Dispose();
             }
         }
 

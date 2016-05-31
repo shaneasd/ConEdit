@@ -10,6 +10,7 @@ using Conversation;
 using Utilities;
 
 using TControl = Utilities.UI.MySuggestionBox<string>;
+using TItem = Utilities.UI.MyComboBoxItem<string>;
 //using TControl = Utilities.MyComboBox<string>;
 
 namespace ConversationEditor
@@ -43,13 +44,13 @@ namespace ConversationEditor
     internal partial class DefaultDynamicEnumEditor : UserControl, IParameterEditor<DefaultDynamicEnumEditor>
     {
         private TControl m_comboBox;
-        private IEnumerable<TControl.Item> m_comboBoxItems;
+        private IEnumerable<TItem> m_comboBoxItems;
 
         public DefaultDynamicEnumEditor()
         {
             InitializeComponent();
 
-            m_comboBoxItems = (new ExtraLazyEnumerable<TControl.Item>(() => m_parameter.Options.Select(ch => new TControl.Item(ch, ch))));
+            m_comboBoxItems = (new ExtraLazyEnumerable<TItem>(() => m_parameter.Options.Select(ch => new TItem(ch, ch))));
             m_comboBox = new TControl(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), true, m_comboBoxItems);
             m_comboBox.SetupCallbacks();
             m_comboBox.RequestedAreaChanged += () =>
@@ -67,7 +68,7 @@ namespace ConversationEditor
         {
             m_parameter = data.Parameter as IDynamicEnumParameter;
             if (!data.Parameter.Corrupted)
-                m_comboBox.SelectedItem = new TControl.Item(m_parameter.Value, m_parameter.Value);
+                m_comboBox.SelectedItem = new TItem(m_parameter.Value, m_parameter.Value);
         }
 
         public DefaultDynamicEnumEditor AsControl
@@ -80,9 +81,9 @@ namespace ConversationEditor
             return m_parameter.SetValueAction(m_comboBox.SelectedItem.DisplayString);
         }
 
-        public bool IsValid()
+        public string IsValid()
         {
-            return true;
+            return null;
         }
 
         public event Action Ok;

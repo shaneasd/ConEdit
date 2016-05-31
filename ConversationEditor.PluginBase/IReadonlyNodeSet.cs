@@ -8,7 +8,7 @@ namespace ConversationEditor
 {
     public interface IReadonlyNodeSet
     {
-        IEnumerable<ID<NodeTemp>> Nodes { get; }
+        IEnumerable<Id<NodeTemp>> Nodes { get; }
         IEnumerable<NodeGroup> Groups { get; }
         int Count();
     }

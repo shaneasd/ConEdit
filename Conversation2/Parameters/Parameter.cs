@@ -21,7 +21,7 @@ namespace Conversation
         /// <summary>
         /// Unique identifier identifying this parameter
         /// </summary>
-        ID<Parameter> Id { get; }
+        Id<Parameter> Id { get; }
 
         bool Corrupted { get; }
     }
@@ -48,7 +48,7 @@ namespace Conversation
     {
     }
 
-    public interface IConnectorParameter : IParameter<ID<NodeTemp>>
+    public interface IConnectorParameter : IParameter<Id<NodeTemp>>
     {
     }
 
@@ -62,7 +62,7 @@ namespace Conversation
     {
     }
 
-    public interface ILocalizedStringParameter : IParameter<ID<LocalizedText>>
+    public interface ILocalizedStringParameter : IParameter<Id<LocalizedText>>
     {
     }
 
@@ -91,6 +91,8 @@ namespace Conversation
     public interface IDynamicEnumParameter : IParameter<string>
     {
         IEnumerable<string> Options { get; }
+        void MergeInto(DynamicEnumParameter.Source newSource);
+        bool Local { get; }
     }
 
     public interface IAudioParameter : IParameter<Audio>
@@ -102,12 +104,12 @@ namespace Conversation
         private readonly string m_name;
         public string Name { get { return m_name; } }
 
-        private readonly ID<Parameter> m_id;
-        public ID<Parameter> Id { get { return m_id; } }
+        private readonly Id<Parameter> m_id;
+        public Id<Parameter> Id { get { return m_id; } }
 
         private readonly ParameterType m_typeId;
         public ParameterType TypeId { get { return m_typeId; } }
-        protected Parameter(string name, ID<Parameter> id, ParameterType typeid, string value)
+        protected Parameter(string name, Id<Parameter> id, ParameterType typeid, string value)
         {
             m_name = name;
             m_id = id;
@@ -117,7 +119,7 @@ namespace Conversation
                 Corrupted = true; //Corrupt if null so editors don't get confused
         }
 
-        public abstract string DisplayValue(Func<ID<LocalizedText>, string> localize);
+        public abstract string DisplayValue(Func<Id<LocalizedText>, string> localize);
         protected abstract string InnerValueAsString();
         public string ValueAsString()
         {
@@ -189,7 +191,7 @@ namespace Conversation
 
         string m_defaultValue = null;
 
-        protected Parameter(string name, ID<Parameter> id, ParameterType typeId, string defaultValue)
+        protected Parameter(string name, Id<Parameter> id, ParameterType typeId, string defaultValue)
             : base(name, id, typeId, defaultValue)
         {
             m_defaultValue = defaultValue;
@@ -197,7 +199,7 @@ namespace Conversation
 
         public override string ToString()
         {
-            throw new Exception("Dont call this");
+            throw new InternalLogicException("Dont call this");
         }
 
         protected override void DecorruptFromNull()

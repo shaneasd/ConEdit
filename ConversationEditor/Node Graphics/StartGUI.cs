@@ -11,12 +11,12 @@ using Utilities.UI;
 
 namespace ConversationEditor
 {
-    public class StartGUIFactory : NodeUI.IFactory
+    public class StartGuiFactory : NodeUI.IFactory
     {
-        private static StartGUIFactory m_instance = new StartGUIFactory();
-        public static StartGUIFactory Instance { get { return m_instance; } }
+        private static StartGuiFactory m_instance = new StartGuiFactory();
+        public static StartGuiFactory Instance { get { return m_instance; } }
 
-        public bool WillRender(ID<NodeTypeTemp> nodeType)
+        public bool WillRender(Id<NodeTypeTemp> nodeType)
         {
             return nodeType == SpecialNodes.Start;
         }
@@ -26,9 +26,9 @@ namespace ConversationEditor
             get { return "Start Node Renderer"; }
         }
 
-        public INodeGUI GetRenderer(ConversationNode<INodeGUI> n, PointF p, Func<ID<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        public INodeGui GetRenderer(ConversationNode<INodeGui> n, PointF p, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
-            return new StartGUI(n, p, localizer);
+            return new StartGui(n, p, localizer);
         }
 
         static Guid m_guid = Guid.Parse("346ac22d-6393-4958-8d36-fedff89b40c0");
@@ -38,35 +38,38 @@ namespace ConversationEditor
         }
     }
 
-    internal class StartGUI : NodeUI
+    internal class StartGui : NodeUI
     {
-        Image image;
-        public StartGUI(ConversationNode<INodeGUI> node, PointF p, Func<ID<LocalizedText>, string> localizer)
+        Image m_image;
+        public StartGui(ConversationNode<INodeGui> node, PointF p, Func<Id<LocalizedText>, string> localizer)
             : base(node, p)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.Start Icon.png"))
-                image = new Bitmap(stream);
+                m_image = new Bitmap(stream);
         }
 
         protected override void InnerDraw(Graphics g, bool selected)
         {
-            g.DrawImage(image, Area);
+            g.DrawImage(m_image, Area);
             if (selected)
             {
-                Pen outline = new Pen(Brushes.Black, 2);
-                g.DrawRectangle(outline, Area);
+                using (Pen outline = new Pen(Brushes.Black, 2))
+                {
+                    g.DrawRectangle(outline, Area);
+                }
             }
         }
 
         protected override SizeF CalculateArea(Graphics g)
         {
-            return image.Size;
+            return m_image.Size;
         }
 
-        public override string DisplayName
+        protected override void Dispose(bool disposing)
         {
-            get { return StartGUIFactory.Instance.DisplayName; }
+            if (disposing)
+                m_image.Dispose();
         }
     }
 }

@@ -10,13 +10,15 @@ using Conversation.Serialization;
 
 namespace ConversationEditor
 {
-    using ConversationNode = ConversationNode<INodeGUI>;
+    using ConversationNode = ConversationNode<INodeGui>;
     using System.Drawing;
     using System.Collections.ObjectModel;
+    using System.Diagnostics.Contracts;
+    using System.Diagnostics;
 
     internal abstract class GraphFile : Disposable, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>, IDisposable
     {
-        public ConversationNode GetNode(ID<NodeTemp> id)
+        public ConversationNode GetNode(Id<NodeTemp> id)
         {
             return m_nodesLookup[id];
         }
@@ -24,32 +26,78 @@ namespace ConversationEditor
         protected CallbackList<ConversationNode> m_nodes;
         protected CallbackList<NodeGroup> m_groups;
 
-        protected O1LookupWrapper<ConversationNode, ID<NodeTemp>> m_nodesLookup;
+        protected O1LookupWrapper<ConversationNode, Id<NodeTemp>> m_nodesLookup;
         protected SortedWrapper<ConversationNode> m_nodesOrdered;
         protected SortedWrapper<NodeGroup> m_groupsOrdered;
 
         protected ReadOnlyCollection<LoadError> m_errors;
+        Dictionary<Output, TransitionNoduleUIInfo> m_cachedNodeUI = new Dictionary<Output, TransitionNoduleUIInfo>();
 
         private INodeFactory<ConversationNode> m_nodeFactory;
         private Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> m_generateAudio;
-        private IAudioProvider m_audioProvider;
+        private Func<IDynamicEnumParameter, DynamicEnumParameter.Source> m_getDocumentSource;
+        private IAudioLibrary m_audioProvider;
 
         public ConversationNode MakeNode(IEditable e, NodeUIData uiData)
         {
             return m_nodeFactory.MakeNode(e, uiData);
         }
 
-        protected GraphFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, ReadOnlyCollection<LoadError> errors, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio, IAudioProvider audioProvider)
+        protected GraphFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, ReadOnlyCollection<LoadError> errors, INodeFactory<ConversationNode> nodeFactory,
+            Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider)
         {
+            Contract.Assert(getDocumentSource != null);
             m_nodeFactory = nodeFactory;
             m_generateAudio = generateAudio;
+            m_getDocumentSource = a => getDocumentSource(a, this);
             m_audioProvider = audioProvider;
             m_nodes = new CallbackList<ConversationNode>(nodes.Select(gnu => MakeNode(gnu.GraphData, gnu.UIData)));
-            m_nodesLookup = new O1LookupWrapper<ConversationNode, ID<NodeTemp>>(m_nodes, n => n.Id);
+            m_nodesLookup = new O1LookupWrapper<ConversationNode, Id<NodeTemp>>(m_nodes, n => n.Id);
             m_nodesOrdered = new SortedWrapper<ConversationNode>(m_nodes);
             m_groups = new CallbackList<NodeGroup>(groups);
             m_groupsOrdered = new SortedWrapper<NodeGroup>(m_groups);
             m_errors = errors;
+
+            IEnumerable<IDynamicEnumParameter> localDynamicEnumerationParameters = m_nodes.SelectMany(n => n.Parameters.OfType<IDynamicEnumParameter>());
+            foreach (var ldep in localDynamicEnumerationParameters)
+            {
+                ldep.MergeInto(m_getDocumentSource(ldep));
+            }
+
+            m_nodes.Inserting += M_nodes_Inserting;
+            m_nodes.Removing += M_nodes_Removing;
+            m_nodes.Clearing += M_nodes_Clearing;
+        }
+
+        private void M_nodes_Clearing()
+        {
+            foreach (var parameter in m_nodes.SelectMany(n => n.Parameters).OfType<IDynamicEnumParameter>())
+            {
+                //Give it a junk source so it's value stops counting towards the real source
+                parameter.MergeInto(new DynamicEnumParameter.Source());
+            }
+            foreach (var node in m_nodes)
+                NodeRemoved.Execute(node);
+        }
+
+        private void M_nodes_Removing(ConversationNode<INodeGui> node)
+        {
+            foreach (var parameter in node.Parameters.OfType<IDynamicEnumParameter>())
+            {
+                //Give it a junk source so it's value stops counting towards the real source
+                parameter.MergeInto(new DynamicEnumParameter.Source());
+            }
+            NodeRemoved.Execute(node);
+        }
+
+        private void M_nodes_Inserting(ConversationNode<INodeGui> node)
+        {
+            foreach (var parameter in node.Parameters.OfType<IDynamicEnumParameter>())
+            {
+                parameter.MergeInto(m_getDocumentSource(parameter));
+            }
+
+            NodeAdded.Execute(node);
         }
 
         public IEnumerableReversible<ConversationNode> Nodes
@@ -63,9 +111,15 @@ namespace ConversationEditor
         }
 
         //TODO: Duplicate the IEditable with a new ID (must be deep copy of parameters)
-        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, PointF location, ILocalizationEngine localization)
+        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, object documentID, PointF location, ILocalizationEngine localization)
         {
             var nodes = nodeData.Select(gnu => MakeNode(gnu.GraphData, gnu.UIData)).Evaluate();
+
+            IEnumerable<IDynamicEnumParameter> localDynamicEnumerationParameters = nodes.SelectMany(n => n.Parameters.OfType<IDynamicEnumParameter>().Where(p => p.Local));
+            foreach (var ldep in localDynamicEnumerationParameters)
+            {
+                ldep.MergeInto(m_getDocumentSource(ldep));
+            }
 
             if (nodes.Any() || groups.Any())
             {
@@ -98,7 +152,7 @@ namespace ConversationEditor
                     }
 
                     var oldID = node.Id;
-                    node.ChangeId(ID<NodeTemp>.New());
+                    node.ChangeId(Id<NodeTemp>.New());
                     foreach (var group in groups)
                     {
                         if (group.Contents.Contains(oldID))
@@ -109,7 +163,7 @@ namespace ConversationEditor
                     }
                 }
 
-                var area = NodeSet.GetArea(nodes.Concat<IRenderable<IGUI>>(groups));
+                var area = NodeSet.GetArea(nodes.Concat<IRenderable<IGui>>(groups));
                 PointF offset = location.Take(area.Center());
                 foreach (var node in nodes)
                 {
@@ -156,7 +210,7 @@ namespace ConversationEditor
             else if (addedGroups)
                 UndoableFile.Change(new GenericUndoAction(addActions.Undo, addActions.Redo, "Added groups"));
             else
-                throw new Exception("why would you do this?");
+                throw new InternalLogicException("why would you do this?");
         }
 
         private SimpleUndoPair InnerAddNodes(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups)
@@ -297,7 +351,7 @@ namespace ConversationEditor
             else if (removeGroups)
                 message = "Removed groupings";
             else
-                throw new Exception("Something went wrong :(");
+                throw new InternalLogicException("Something went wrong :(");
 
             UndoableFile.Change(new GenericUndoAction(undo, redo, message));
 
@@ -351,7 +405,6 @@ namespace ConversationEditor
             }
         }
 
-        Dictionary<Output, TransitionNoduleUIInfo> m_cachedNodeUI = new Dictionary<Output, TransitionNoduleUIInfo>();
         public TransitionNoduleUIInfo UIInfo(Output connection)
         {
             if (!m_cachedNodeUI.ContainsKey(connection))
@@ -365,38 +418,47 @@ namespace ConversationEditor
 
         private static TransitionNoduleUIInfo CreateTransitionUIInfo(ConversationNode node, ConnectorPosition position, int i, int count)
         {
-            Func<RectangleF> top = () =>
+            Func<RectangleF, RectangleF> top = (area) =>
             {
-                float per = node.Renderer.Area.Width / (float)count;
-                float y = node.Renderer.Area.Top - 10;
-                return new RectangleF(node.Renderer.Area.Left + (int)(per * (i + 0.5f)) - 5, y, 10, 10);
+                float per = area.Width / (float)count;
+                float y = area.Top - 10;
+                return new RectangleF(area.Left + (int)(per * (i + 0.5f)) - 5, y, 10, 10);
             };
 
-            Func<RectangleF> bottom = () =>
+            Func<RectangleF, RectangleF> bottom = (area) =>
             {
-                float per = node.Renderer.Area.Width / (float)count;
-                float y = node.Renderer.Area.Bottom;
-                return new RectangleF(node.Renderer.Area.Left + (int)(per * (i + 0.5f)) - 5, y, 10, 10);
+                float per = area.Width / (float)count;
+                float y = area.Bottom;
+                return new RectangleF(area.Left + (int)(per * (i + 0.5f)) - 5, y, 10, 10);
             };
 
-            Func<RectangleF> left = () =>
+            Func<RectangleF, RectangleF> left = (area) =>
             {
-                float per = node.Renderer.Area.Height / (float)count;
-                float x = node.Renderer.Area.Left - 10;
-                return new RectangleF(x, node.Renderer.Area.Top + (int)(per * (i + 0.5f)) - 5, 10, 10);
+                float per = area.Height / (float)count;
+                float x = area.Left - 10;
+                return new RectangleF(x, area.Top + (int)(per * (i + 0.5f)) - 5, 10, 10);
             };
 
-            Func<RectangleF> right = () =>
+            Func<RectangleF, RectangleF> right = (area) =>
             {
-                float per = node.Renderer.Area.Height / (float)count;
-                float x = node.Renderer.Area.Right;
-                return new RectangleF(x, node.Renderer.Area.Top + (int)(per * (i + 0.5f)) - 5, 10, 10);
+                float per = area.Height / (float)count;
+                float x = area.Right;
+                return new RectangleF(x, area.Top + (int)(per * (i + 0.5f)) - 5, 10, 10);
             };
 
-            return new TransitionNoduleUIInfo(() => position.For(top, bottom, left, right));
+            var result = new TransitionNoduleUIInfo(position.For(() => top(node.Renderer.Area), () => bottom(node.Renderer.Area), () => left(node.Renderer.Area), () => right(node.Renderer.Area)));
+            node.Renderer.AreaChanged += c =>
+            {
+                result.Area.Value = position.For(() => top(node.Renderer.Area), () => bottom(node.Renderer.Area), () => left(node.Renderer.Area), () => right(node.Renderer.Area));
+            };
+            return result;
         }
 
         public event Action NodesDeleted;
+
+        public event Action<ConversationNode> NodeAdded;
+        public event Action<ConversationNode> NodeRemoved;
+
         public static bool PromptNodeDeletion()
         {
             var result = MessageBox.Show("Removing this node will result in a domain which does not support the currently loaded conversations", "Ok to remove node?", MessageBoxButtons.OKCancel);
@@ -417,6 +479,11 @@ namespace ConversationEditor
         protected virtual bool CanRemoveFromData(ConversationNode node, Func<bool> prompt)
         {
             return true;
+        }
+
+        public int RelativePosition(ConversationNode of, ConversationNode relativeTo)
+        {
+            return m_nodesOrdered.RelativePosition(of, relativeTo);
         }
     }
 }

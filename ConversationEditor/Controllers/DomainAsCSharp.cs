@@ -10,7 +10,7 @@ namespace ConversationEditor.Controllers
 {
     internal class DomainAsCSharp : IProjectExporter
     {
-        public void Export(IProject2 project, ConfigParameterString exportPath, Func<ID<LocalizedText>, string> localize, IErrorCheckerUtilities<IConversationNode> util)
+        public void Export(IProject2 project, ConfigParameterString exportPath, Func<Id<LocalizedText>, string> localize, IErrorCheckerUtilities<IConversationNode> util)
         {
             DomainData builtIn = new DomainData();
             builtIn.Connectors.Add(SpecialConnectors.Input);
@@ -39,7 +39,7 @@ namespace ConversationEditor.Controllers
                         if (@namespace.Length == 0)
                             @namespace = "MyNamespace";
                     }
-                    CsDomainSerializer<INodeGUI, NodeUIData, ConversationEditorData> s = new CsDomainSerializer<INodeGUI, NodeUIData, ConversationEditorData>(BaseTypeSet.BasicTypeMap(), @namespace);
+                    CSDomainSerializer<INodeGui, NodeUIData, ConversationEditorData> s = new CSDomainSerializer<INodeGui, NodeUIData, ConversationEditorData>(BaseTypeSet.BasicTypeMap(), @namespace);
                     using (var stream = new FileStream(sfd.FileName, FileMode.OpenOrCreate, FileAccess.Write))
                     {
                         stream.SetLength(0);

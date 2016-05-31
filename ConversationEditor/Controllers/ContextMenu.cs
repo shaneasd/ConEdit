@@ -6,10 +6,11 @@ using System.Windows.Forms;
 using System.Drawing;
 using Utilities;
 using Conversation;
+using System.Diagnostics;
 
 namespace ConversationEditor
 {
-    internal class ContextMenu<TNode> where TNode : IRenderable<IGUI>, IConversationNode, IConfigurable
+    internal class ContextMenu<TNode> where TNode : IRenderable<IGui>, IConversationNode, IConfigurable
     {
         Dictionary<MenuAction<TNode>, ToolStripMenuItem> m_menuActions = new Dictionary<MenuAction<TNode>, ToolStripMenuItem>();
         private readonly ContextMenuStrip m_menu;
@@ -42,16 +43,58 @@ namespace ConversationEditor
             Opening.Execute();
 
             var point = ToGraphSpace(MenuPosition);
-
             bool showone = false;
-            foreach (MenuAction<TNode> mm in m_menuActions.Keys)
+            if (ConversationReal())
             {
-                var m = mm;
-                bool show = false;
-                m_mouseController.ForClickedOn(point, a => { show = m.NodeAction(a, point) != null; }, a => { show = m.TransitionAction != null; }, (a, b) => { }, a => { show = m.GroupAction != null; }, () => { show = m.EmptySpaceAction != null; });
-                bool visible = show & ConversationReal();
-                m_menuActions[m].Visible = visible;
-                showone |= visible;
+                m_mouseController.ForClickedOn(point,
+                    a =>
+                    {
+                        foreach (MenuAction<TNode> m in m_menuActions.Keys)
+                        {
+                            bool show = m.NodeAction(a, point) != null;
+                            bool visible = show;
+                            m_menuActions[m].Visible = visible;
+                            showone |= visible;
+                        }
+                    },
+                    a =>
+                    {
+                        foreach (MenuAction<TNode> m in m_menuActions.Keys)
+                        {
+                            bool show = m.TransitionAction != null;
+                            bool visible = show;
+                            m_menuActions[m].Visible = visible;
+                            showone |= visible;
+                        }
+                    },
+                    (a, b) => { },
+                    a =>
+                    {
+                        foreach (MenuAction<TNode> m in m_menuActions.Keys)
+                        {
+                            bool show = m.GroupAction != null;
+                            bool visible = show;
+                            m_menuActions[m].Visible = visible;
+                            showone |= visible;
+                        }
+                    },
+                    () =>
+                    {
+                        foreach (MenuAction<TNode> m in m_menuActions.Keys)
+                        {
+                            bool show = m.EmptySpaceAction != null;
+                            bool visible = show;
+                            m_menuActions[m].Visible = visible;
+                            showone |= visible;
+                        }
+                    });
+            }
+            else
+            {
+                foreach (MenuAction<TNode> m in m_menuActions.Keys)
+                {
+                    m_menuActions[m].Visible = false;
+                }
             }
 
             return !showone;

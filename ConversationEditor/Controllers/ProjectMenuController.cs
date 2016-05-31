@@ -10,7 +10,7 @@ using Conversation.Serialization;
 
 namespace ConversationEditor
 {
-    using ConversationNode = ConversationNode<INodeGUI>;
+    using ConversationNode = ConversationNode<INodeGui>;
 
     internal class ProjectMenuController
     {
@@ -27,7 +27,7 @@ namespace ConversationEditor
         {
             if (m_context.CurrentProject.Value.File.Exists)
             {
-                if (m_config.Value.Any() && m_config.Value[0] != m_context.CurrentProject.Value.File.File.FullName)
+                if (!m_config.Value.Any() || m_config.Value[0] != m_context.CurrentProject.Value.File.File.FullName)
                 {
                     using (m_config.SuppressCallback())
                     {
@@ -51,15 +51,15 @@ namespace ConversationEditor
             }
         }
 
-        private Action<Action> m_executeInGUIThread;
+        private Action<Action> m_executeInGuiThread;
         private PluginsConfig m_pluginsConfig;
         private Func<IAudioProviderCustomization> m_audioCustomization;
         SharedContext m_context;
 
-        public ProjectMenuController(SharedContext context, ConfigParameterList<string> config, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ProjectExplorer list, Action<Action> executeInGUIThread, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
+        public ProjectMenuController(SharedContext context, ConfigParameterList<string> config, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ProjectExplorer list, Action<Action> executeInGuiThread, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
         {
             m_context = context;
-            m_executeInGUIThread = executeInGUIThread;
+            m_executeInGuiThread = executeInGuiThread;
             m_conversationNodeFactory = conversationNodeFactory;
             m_domainNodeFactory = domainNodeFactory;
             m_config = config;
@@ -113,7 +113,7 @@ namespace ConversationEditor
 
             try
             {
-                using (var projectFile = Util.LoadFileStream(path, FileMode.Open, FileAccess.Read))
+                using (var projectFile = Util.LoadFileStream(path, FileMode.Open, FileAccess.Read, 0))
                 {
                     m = new MemoryStream((int)projectFile.Length);
                     projectFile.CopyTo(m);
@@ -139,8 +139,8 @@ namespace ConversationEditor
                     SerializationUtils.ConversationSerializerDeserializer,
                     SerializationUtils.DomainSerializer, m_pluginsConfig, m_audioCustomization);
 
-                project.FileDeletedExternally += () => m_executeInGUIThread(() => { MessageBox.Show("Project file deleted by another application"); });
-                project.FileModifiedExternally += () => m_executeInGUIThread(() =>
+                project.FileDeletedExternally += () => m_executeInGuiThread(() => { MessageBox.Show("Project file deleted by another application"); });
+                project.FileModifiedExternally += () => m_executeInGuiThread(() =>
                     {
                         var choice = MessageBox.Show("Project file modified by another application. Discard project changes and reload project from disk?", "Reload project?", MessageBoxButtons.YesNo);
                         if (choice == DialogResult.Yes)
@@ -152,7 +152,7 @@ namespace ConversationEditor
                             }
                         }
                     });
-                project.ElementModifiedExternally += (element, reload) => m_executeInGUIThread(() =>
+                project.ElementModifiedExternally += (element, reload) => m_executeInGuiThread(() =>
                 {
                     var choice = MessageBox.Show("Project element " + element.File.File.FullName + " modified by another application. Discard changes to this element and reload from disk?", "Reload element?", MessageBoxButtons.YesNo);
                     if (choice == DialogResult.Yes)
@@ -160,7 +160,7 @@ namespace ConversationEditor
                         reload();
                     }
                 });
-                project.ElementDeletedExternally += (element) => m_executeInGUIThread(() =>
+                project.ElementDeletedExternally += (element) => m_executeInGuiThread(() =>
                 {
                     //We never actually remove this callback so if the file is deleted this callback will trigger
                     //informing the user that the file they just deleted was just deleted. As this is pointless
@@ -203,14 +203,13 @@ namespace ConversationEditor
             {
                 if (DialogResult.OK == m_sfd.ShowDialog())
                 {
-                    Project project = null;
                     try
                     {
-                        project = Project.CreateEmpty(m_context, new FileInfo(m_sfd.FileName), m_conversationNodeFactory, m_domainNodeFactory,
-                            new XMLProject.Serializer(),
-                            SerializationUtils.ConversationSerializer,
-                            SerializationUtils.ConversationSerializerDeserializer,
-                            SerializationUtils.DomainSerializer, m_pluginsConfig, m_audioCustomization);
+                        m_context.CurrentProject.Value = Project.CreateEmpty(m_context, new FileInfo(m_sfd.FileName), m_conversationNodeFactory, m_domainNodeFactory,
+                                                                             new XMLProject.Serializer(),
+                                                                             SerializationUtils.ConversationSerializer,
+                                                                             SerializationUtils.ConversationSerializerDeserializer,
+                                                                             SerializationUtils.DomainSerializer, m_pluginsConfig, m_audioCustomization);
                     }
                     catch (MyFileLoadException e)
                     {
@@ -221,8 +220,6 @@ namespace ConversationEditor
                         MessageBox.Show("Failed to access file");
                         return;
                     }
-
-                    m_context.CurrentProject.Value = project;
                 }
             }
         }

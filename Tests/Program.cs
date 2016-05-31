@@ -14,11 +14,12 @@ namespace Tests
     {
         static void Main(string[] args)
         {
-            TestFileSystem.TestPathToFromDirDir();
-            TestWeakEvent();
-            TestPolynomial();
-            TestUndoQueue.TestEverything();
-            ManualResetEvent();
+            TestQuadTree.AllTests();
+            //TestFileSystem.TestPathToFromDirDir();
+            //TestWeakEvent();
+            //TestPolynomial();
+            //TestUndoQueue.TestEverything();
+            //ManualResetEvent();
         }
 
 
