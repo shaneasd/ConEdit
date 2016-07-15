@@ -13,7 +13,7 @@ namespace ConversationEditor
 
     public class EditableUIFactory : NodeUI.IFactory
     {
-        public static EditableUIFactory Instance = new EditableUIFactory();
+        public static EditableUIFactory Instance { get; } = new EditableUIFactory();
 
         public bool WillRender(Id<NodeTypeTemp> nodeType)
         {
@@ -81,8 +81,8 @@ namespace ConversationEditor
 
         protected abstract class Section
         {
-            protected SizeF m_size;
-            protected ConversationNode Node;
+            private SizeF m_size;
+            protected ConversationNode Node { get; private set; }
 
             protected Section(ConversationNode node)
             {
@@ -188,7 +188,7 @@ namespace ConversationEditor
                     var transitions = BottomNodes.ToArray();
                     for (int i = 0; i < transitions.Length; i++)
                     {
-                        float per = m_size.Width / (float)BottomNodes.Count();
+                        float per = Width / (float)BottomNodes.Count();
                         string s = GetName(transitions[i]);
                         SizeF size = g.MeasureString(s, Font);
                         g.DrawString(s, Font, Brushes.Black, new PointF(location.X + per * (i + 0.5f) - size.Width / 2, location.Y + 2));

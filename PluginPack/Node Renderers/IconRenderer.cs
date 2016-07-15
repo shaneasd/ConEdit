@@ -30,11 +30,7 @@ namespace PluginPack
             return new IconRenderer(n, p, localizer);
         }
 
-        static Guid m_guid = Guid.Parse("d629f0cb-58e5-4123-aab5-89617dabab31");
-        public Guid Guid
-        {
-            get { return m_guid; }
-        }
+        public Guid Guid { get; } = Guid.Parse("d629f0cb-58e5-4123-aab5-89617dabab31");
     }
 
     public class IconRenderer : NodeUI

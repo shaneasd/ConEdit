@@ -73,13 +73,13 @@ namespace Conversation
 
         private Tuple<Guid, string> Tuple { get { return System.Tuple.Create(m_guid, m_name); } }
 
-        public static ParameterType ENUM_ID = ParameterType.Parse("2b075746-9b6e-4d6e-ad39-a083049374f2");
-        public static Id<Parameter> PARAMETER_ID = Id<Parameter>.Parse("43903044-1ef9-4c9f-a782-6219fb8e7826");
+        public static ParameterType EnumId { get; } = ParameterType.Parse("2b075746-9b6e-4d6e-ad39-a083049374f2");
+        public static Id<Parameter> ParameterId { get; } = Id<Parameter>.Parse("43903044-1ef9-4c9f-a782-6219fb8e7826");
 
         public static EnumParameter MakeParameter()
         {
-            Enumeration enumeration = new Enumeration(new[] { Top.Tuple, Bottom.Tuple, Left.Tuple, Right.Tuple }, ENUM_ID, Bottom.m_guid);
-            return new EnumParameter("Position", PARAMETER_ID, enumeration);
+            Enumeration enumeration = new Enumeration(new[] { Top.Tuple, Bottom.Tuple, Left.Tuple, Right.Tuple }, EnumId, Bottom.m_guid);
+            return new EnumParameter("Position", ParameterId, enumeration, null);
         }
 
         public EnumerationData.Element Element
@@ -89,7 +89,7 @@ namespace Conversation
 
         public static EnumerationData PositionConnectorDefinition
         {
-            get { return new EnumerationData("Position", ENUM_ID, new List<EnumerationData.Element>() { Top.Element, Bottom.Element, Left.Element, Right.Element }); }
+            get { return new EnumerationData("Position", EnumId, new List<EnumerationData.Element>() { Top.Element, Bottom.Element, Left.Element, Right.Element }); }
         }
     }
 

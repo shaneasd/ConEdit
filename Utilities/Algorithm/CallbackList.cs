@@ -13,6 +13,7 @@ namespace Utilities
     public class CallbackList<T> : IList<T>
     {
         List<T> m_base;
+
         public CallbackList()
         {
             m_base = new List<T>();
@@ -28,7 +29,15 @@ namespace Utilities
             m_base = new List<T>(collection);
         }
 
+        /// <summary>
+        /// Triggered before an element is inserted
+        /// </summary>
         public event Action<T> Inserting;
+        /// <summary>
+        /// Triggered after an element has been inserted (but before the generic Modified event)
+        /// </summary>
+        public event Action<T> Inserted;
+
         /// <summary>
         /// Triggered before an element is removed.
         /// </summary>
@@ -41,6 +50,7 @@ namespace Utilities
         {
             Inserting.Execute(item);
             m_base.Insert(index, item);
+            Inserted.Execute(item);
             Modified.Execute();
         }
 
@@ -62,6 +72,7 @@ namespace Utilities
                 Removing.Execute(m_base[index]);
                 Inserting.Execute(value);
                 m_base[index] = value;
+                Inserted.Execute(value);
                 Modified.Execute();
             }
         }
@@ -70,6 +81,7 @@ namespace Utilities
         {
             Inserting.Execute(item);
             m_base.Add(item);
+            Inserted.Execute(item);
             Modified.Execute();
         }
 

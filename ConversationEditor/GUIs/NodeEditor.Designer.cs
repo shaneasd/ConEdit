@@ -80,6 +80,8 @@
             this.tableLayoutPanel3.Size = new System.Drawing.Size(480, 37);
             this.tableLayoutPanel3.TabIndex = 3;
             this.tableLayoutPanel3.Resize += new System.EventHandler(this.tableLayoutPanel3_Resize);
+
+
             // 
             // tableLayoutPanel1
             // 

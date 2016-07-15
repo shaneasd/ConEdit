@@ -15,9 +15,9 @@ namespace ConversationEditor
     public class DefaultDecimalEditorFactory : IParameterEditorFactory
     {
         public static readonly Guid StaticId = Guid.Parse("846c1908-4e19-4b11-bbb3-ea40b58ef72a");
-        public bool WillEdit(ParameterType type, WillEdit willEdit)
+        public bool WillEdit(ParameterType type, WillEdit queries)
         {
-            return willEdit.IsDecimal(type);
+            return queries.IsDecimal(type);
         }
 
         public string Name

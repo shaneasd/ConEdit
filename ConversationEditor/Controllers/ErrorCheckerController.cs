@@ -45,7 +45,7 @@ namespace ConversationEditor
         {
             public bool Enabled;
 
-            public ErrorCheckerData(ErrorCheckerAssembly parent, Type type, bool enabled)
+            public ErrorCheckerData(Type type, bool enabled)
                 : base(type)
             {
                 Enabled = enabled;

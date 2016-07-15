@@ -175,7 +175,7 @@ namespace Conversation.Serialization
                     data.Connectors.Add(new ConnectorDefinitionData(name, b.Id, parameters, b.Position));
                 }
                 foreach (var b in a.Decimals)
-                    data.Decimals.Add(new DecimalData(BestName(b.Name, usedNames), b.TypeID, b.Max, b.Min));
+                    data.Decimals.Add(new DecimalData(BestName(b.Name, usedNames), b.TypeId, b.Max, b.Min));
                 foreach (var b in a.DynamicEnumerations)
                     data.DynamicEnumerations.Add(new DynamicEnumerationData(BestName(b.Name, usedNames), b.TypeId));
                 foreach (var b in a.LocalDynamicEnumerations)
@@ -186,7 +186,7 @@ namespace Conversation.Serialization
                     data.Enumerations.Add(new EnumerationData(BestName(b.Name, usedNames), b.TypeID, b.Elements.Select(e => new EnumerationData.Element(BestName(e.Name, enumValueNames), e.Guid))));
                 }
                 foreach (var b in a.Integers)
-                    data.Integers.Add(new IntegerData(BestName(b.Name, usedNames), b.TypeID, b.Max, b.Min));
+                    data.Integers.Add(new IntegerData(BestName(b.Name, usedNames), b.TypeId, b.Max, b.Min));
                 foreach (var b in a.Nodes)
                 {
                     string name = BestName(b.Name, usedNames);
@@ -422,7 +422,7 @@ namespace Conversation.Serialization
         {
             Dictionary<ParameterType, string> basicTypeMap = new Dictionary<ParameterType, string>(m_basicTypeMap);
             foreach (var x in data.Decimals)
-                basicTypeMap[x.TypeID] = x.Name;
+                basicTypeMap[x.TypeId] = x.Name;
             foreach (var x in data.DynamicEnumerations)
                 basicTypeMap[x.TypeId] = x.Name;
             foreach (var x in data.LocalDynamicEnumerations)
@@ -435,7 +435,7 @@ namespace Conversation.Serialization
                 basicTypeMap[ParameterType.Set.Of(x.TypeID)] = name;
             }
             foreach (var x in data.Integers)
-                basicTypeMap[x.TypeID] = x.Name;
+                basicTypeMap[x.TypeId] = x.Name;
             return basicTypeMap;
         }
 
@@ -578,7 +578,7 @@ namespace Conversation.Serialization
             }
             foreach (var integer in data.Integers)
             {
-                typesNamespace.Types.Add(GenerateNumeric(integer.Name, integer.TypeID.Guid, integer.Max ?? int.MaxValue, integer.Min ?? int.MinValue));
+                typesNamespace.Types.Add(GenerateNumeric(integer.Name, integer.TypeId.Guid, integer.Max ?? int.MaxValue, integer.Min ?? int.MinValue));
                 var name = integer.Name;
 
                 var deserializer = new CodeMemberMethod() { Attributes = MemberAttributes.Public | MemberAttributes.Static, Name = "Deserialize" };
@@ -591,7 +591,7 @@ namespace Conversation.Serialization
             }
             foreach (var @decimal in data.Decimals)
             {
-                typesNamespace.Types.Add(GenerateNumeric(@decimal.Name, @decimal.TypeID.Guid, @decimal.Max ?? decimal.MaxValue, @decimal.Min ?? decimal.MinValue));
+                typesNamespace.Types.Add(GenerateNumeric(@decimal.Name, @decimal.TypeId.Guid, @decimal.Max ?? decimal.MaxValue, @decimal.Min ?? decimal.MinValue));
                 var name = @decimal.Name;
 
                 var deserializer = new CodeMemberMethod() { Attributes = MemberAttributes.Public | MemberAttributes.Static, Name = "Deserialize" };

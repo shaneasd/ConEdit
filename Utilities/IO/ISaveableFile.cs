@@ -67,7 +67,7 @@ namespace Utilities
         void Change(UndoAction actions);
     }
 
-    public abstract class SaveableFile : Disposable, ISaveableFileBase, IWritable, IDisposable
+    public abstract class SaveableFile : Disposable, ISaveableFileBase, IWritable
     {
         private UpToDateFile m_upToDateFile;
         private Action<Stream> m_saveTo;
@@ -277,7 +277,6 @@ namespace Utilities
         public event Action Modified;
     }
 
-    [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly", Justification = "Disposable behavior inherited from SaveableFile")]
     public class SaveableFileNotUndoable : SaveableFile, ISaveableFile
     {
         public SaveableFileNotUndoable(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo)

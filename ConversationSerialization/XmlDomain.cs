@@ -76,7 +76,7 @@ namespace Conversation.Serialization
                 public XmlGraphData<TUIRawData, TEditorData> Read(Stream stream)
                 {
                     var data = m_inner.Read(stream);
-                    return new XmlGraphData<TUIRawData, TEditorData>(Enumerable.Empty<GraphAndUI<TUIRawData>>(), data.EditorData, data.Errors, data.DocumentID);
+                    return new XmlGraphData<TUIRawData, TEditorData>(Enumerable.Empty<GraphAndUI<TUIRawData>>(), data.EditorData, data.Errors, data.DocumentId);
                 }
             }
 
@@ -111,7 +111,7 @@ namespace Conversation.Serialization
             public XmlGraphData<TUIRawData, TEditorData> Read(Stream stream)
             {
                 var data = m_inner.Read(stream);
-                return new XmlGraphData<TUIRawData, TEditorData>(data.Nodes, data.EditorData, data.Errors, data.DocumentID);
+                return new XmlGraphData<TUIRawData, TEditorData>(data.Nodes, data.EditorData, data.Errors, data.DocumentId);
             }
         }
     }

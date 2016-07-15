@@ -14,7 +14,10 @@ namespace ConversationEditor
             Area.Value = area;
         }
 
-        public NotifierProperty<RectangleF> Area = new NotifierProperty<RectangleF>(RectangleF.Empty);
+        public NotifierProperty<RectangleF> Area
+        {
+            get;
+        } = new NotifierProperty<RectangleF>(RectangleF.Empty);
 
         public void Draw(Graphics g, Color color)
         {

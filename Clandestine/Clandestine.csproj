@@ -55,6 +55,7 @@
     <Compile Include="Config\ConfigNodeDefinitions.cs" />
     <Compile Include="Config\DontRenderConfig.cs" />
     <Compile Include="Context Menu Items\ExportAsCsv.cs" />
+    <Compile Include="Context Menu Items\FindNodesOfType.cs" />
     <Compile Include="ErrorCheckers\StartNodeErrorChecker.cs" />
     <Compile Include="Factories\ProjectExplorerContextMenu.cs" />
     <Compile Include="ErrorCheckers\CinematicConnectionErrorChecker.cs" />

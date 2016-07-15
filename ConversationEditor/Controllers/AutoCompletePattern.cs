@@ -14,7 +14,7 @@ namespace ConversationEditor
         IEnumerable<string> AutoCompleteSuggestions(IParameter p, string s, Func<ParameterType, DynamicEnumParameter.Source> enumSource);
     }
 
-    public class AutoCompletePattern
+    public static class AutoCompletePattern
     {
         private static bool HasParent(IEditable node)
         {
@@ -131,9 +131,8 @@ namespace ConversationEditor
         {
             string m_matched;
             string m_remaining;
-            //TODO: This is some sort of debugging?
-            public string Matched { get { return m_matched; } set { m_matched = value; if (value.StartsWith("shaneshane")) Debugger.Break(); } }
-            public string Remaining { get { return m_remaining; } set { m_remaining = value; if (value.StartsWith("shaneshane")) Debugger.Break(); } }
+            public string Matched { get { return m_matched; } set { m_matched = value; } }
+            public string Remaining { get { return m_remaining; } set { m_remaining = value; } }
         }
 
         private abstract class Node : IAutoCompletePattern

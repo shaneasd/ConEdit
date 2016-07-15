@@ -68,7 +68,7 @@ namespace Utilities
                 else
                     return new double[0];
             }
-            throw new Exception();
+            throw new NotSupportedException("Calculation of roots for polynomial of order more than 2 not supported");
         }
 
         public bool HasRealRoot(double lower, double upper)

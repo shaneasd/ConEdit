@@ -19,14 +19,14 @@ namespace Utilities
                 return false;
         }
 
-        public int GetHashCode(WeakReference<T> x)
+        public int GetHashCode(WeakReference<T> obj)
         {
             T xVal;
-            bool xAlive = x.TryGetTarget(out xVal);
+            bool xAlive = obj.TryGetTarget(out xVal);
             if (xAlive)
                 return xVal.GetHashCode();
             else
-                return x.GetHashCode(); //In this scenario x is not equal to anything (including itself) so we want to minimise the chances of matching hash codes (without resorting to randomness)
+                return obj.GetHashCode(); //In this scenario x is not equal to anything (including itself) so we want to minimise the chances of matching hash codes (without resorting to randomness)
         }
     }
 }

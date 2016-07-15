@@ -16,11 +16,11 @@ namespace ConversationEditor
 
     internal partial class ErrorList : UserControl
     {
-        public class Element
+        private class Element : IErrorListElement
         {
-            public IEnumerable<ConversationNode> Nodes;
-            public IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo> File;
-            public string Message;
+            public IEnumerable<ConversationNode> Nodes { get; private set; }
+            public IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo> File { get; private set; }
+            public string Message { get; private set; }
 
             public Element(ConversationNode node, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo> file, string message)
             {
@@ -43,6 +43,16 @@ namespace ConversationEditor
                 else
                     return null;
             }
+        }
+
+        public static IErrorListElement MakeElement(ConversationNode node, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo> file, string message)
+        {
+            return new Element(node, file, message);
+        }
+
+        public static IErrorListElement MakeElement(ConversationError<ConversationNode> error, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo> file)
+        {
+            return new Element(error, file);
         }
 
         public ErrorList()
@@ -123,10 +133,10 @@ namespace ConversationEditor
             const float HEIGHT = 23;
             public float Height { get { return HEIGHT; } }
 
-            Element m_data;
-            public Element Error { get { return m_data; } }
+            IErrorListElement m_data;
+            public IErrorListElement Error { get { return m_data; } }
 
-            public ErrorItem(Element data)
+            public ErrorItem(IErrorListElement data)
             {
                 m_data = data;
             }
@@ -147,7 +157,7 @@ namespace ConversationEditor
 
         List<ErrorItem> m_items = new List<ErrorItem>();
 
-        public void SetErrors(IEnumerable<Element> errors)
+        public void SetErrors(IEnumerable<IErrorListElement> errors)
         {
             m_items = errors.Select(n => new ErrorItem(n)).ToList();
             UpdateScrollbar();

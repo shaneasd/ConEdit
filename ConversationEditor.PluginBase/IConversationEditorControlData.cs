@@ -16,7 +16,7 @@ namespace ConversationEditor
     public interface IConversationEditorControlData<TNode, TTransitionUI> : ISaveableFileUndoableProvider where TNode : IRenderable<IGui>
     {
         TNode GetNode(Id<NodeTemp> id);
-        Tuple<IEnumerable<TNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, object documentID, PointF location, ILocalizationEngine localization);
+        Tuple<IEnumerable<TNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, object documentId, PointF location, ILocalizationEngine localization);
         void Add(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups);
         bool Remove(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups);
         IEnumerableReversible<TNode> Nodes { get; }
@@ -31,12 +31,12 @@ namespace ConversationEditor
 
         void BringToFront(IReadonlyNodeSet selected);
 
-        TTransitionUI UIInfo(Output connection);
+        TTransitionUI UIInfo(Output connection, bool canFail);
 
         event Action NodesDeleted;
         event Action<TNode> NodeAdded;
         event Action<TNode> NodeRemoved;
-        int RelativePosition(TNode of, TNode relativeTo);
+        int RelativePosition(TNode ofNode, TNode relativeTo);
 
         TNode MakeNode(IEditable e, NodeUIData uiData);
     }

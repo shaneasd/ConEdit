@@ -67,7 +67,7 @@ namespace ConversationEditor
             m_assembly = assembly;
             foreach (Type type in LoadAssembly())
             {
-                Types.Add(new ErrorCheckerController.ErrorCheckerData(this, type, true));
+                Types.Add(new ErrorCheckerController.ErrorCheckerData(type, true));
             }
         }
 

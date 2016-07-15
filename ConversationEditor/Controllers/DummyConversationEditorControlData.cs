@@ -71,7 +71,7 @@ namespace ConversationEditor.Controllers
         {
         }
 
-        public TTransitionUI UIInfo(Output connection)
+        public TTransitionUI UIInfo(Output connection, bool canFail)
         {
             throw new NotImplementedException();
         }
@@ -100,7 +100,7 @@ namespace ConversationEditor.Controllers
             throw new NotImplementedException();
         }
 
-        public int RelativePosition(TNode of, TNode relativeTo)
+        public int RelativePosition(TNode ofNode, TNode relativeTo)
         {
             throw new NotImplementedException();
         }

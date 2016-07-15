@@ -16,7 +16,7 @@ namespace ConversationEditor
     public class DefaultAudioEditorFactory : IParameterEditorFactory
     {
         public static readonly Guid StaticId = Guid.Parse("b5d1b3ea-5998-4e53-bf78-f09311f81405");
-        public bool WillEdit(ParameterType type, WillEdit willEdit)
+        public bool WillEdit(ParameterType type, WillEdit queries)
         {
             return type == BaseTypeAudio.PARAMETER_TYPE;
         }

@@ -92,9 +92,11 @@ namespace ConversationEditor
                 }
             }
 
-            private void DrawReadOnly(Graphics g, RectangleF area)
+            private static void DrawReadOnly(Graphics g, RectangleF area)
             {
+                ReadonlyBackgroundBrush.TranslateTransform(area.X, area.Y);
                 g.FillRectangle(ReadonlyBackgroundBrush, area);
+                ReadonlyBackgroundBrush.ResetTransform();
             }
 
             public RectangleF CalculateIconRectangle(RectangleF area)

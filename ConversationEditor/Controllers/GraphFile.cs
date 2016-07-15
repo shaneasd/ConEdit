@@ -65,6 +65,7 @@ namespace ConversationEditor
             }
 
             m_nodes.Inserting += M_nodes_Inserting;
+            m_nodes.Inserted += M_nodes_Inserted;
             m_nodes.Removing += M_nodes_Removing;
             m_nodes.Clearing += M_nodes_Clearing;
         }
@@ -96,7 +97,10 @@ namespace ConversationEditor
             {
                 parameter.MergeInto(m_getDocumentSource(parameter));
             }
+        }
 
+        private void M_nodes_Inserted(ConversationNode<INodeGui> node)
+        {
             NodeAdded.Execute(node);
         }
 
@@ -405,11 +409,13 @@ namespace ConversationEditor
             }
         }
 
-        public TransitionNoduleUIInfo UIInfo(Output connection)
+        public TransitionNoduleUIInfo UIInfo(Output connection, bool canFail)
         {
             if (!m_cachedNodeUI.ContainsKey(connection))
             {
-                var node = m_nodes.Where(n => n.Connectors.Any(c => c.ID == connection.ID && n.Id == connection.Parent.NodeId)).Single();
+                var node = m_nodes.Where(n => n.Connectors.Any(c => c.ID == connection.ID && n.Id == connection.Parent.NodeId)).SingleOrDefault();
+                if (node == null && canFail)
+                    return null;
                 var comparable = node.Connectors.Where(c => c.m_definition.Position == connection.m_definition.Position);
                 m_cachedNodeUI[connection] = CreateTransitionUIInfo(node, connection.m_definition.Position, comparable.IndexOf(connection), comparable.Count());
             }
@@ -447,10 +453,13 @@ namespace ConversationEditor
             };
 
             var result = new TransitionNoduleUIInfo(position.For(() => top(node.Renderer.Area), () => bottom(node.Renderer.Area), () => left(node.Renderer.Area), () => right(node.Renderer.Area)));
-            node.Renderer.AreaChanged += c =>
+            Action<Changed<RectangleF>> areaChanged = c =>
             {
                 result.Area.Value = position.For(() => top(node.Renderer.Area), () => bottom(node.Renderer.Area), () => left(node.Renderer.Area), () => right(node.Renderer.Area));
             };
+            node.Renderer.AreaChanged += areaChanged;
+            node.RendererChanging += () => node.Renderer.AreaChanged -= areaChanged;
+            node.RendererChanged += () => node.Renderer.AreaChanged += areaChanged;
             return result;
         }
 
@@ -481,9 +490,9 @@ namespace ConversationEditor
             return true;
         }
 
-        public int RelativePosition(ConversationNode of, ConversationNode relativeTo)
+        public int RelativePosition(ConversationNode ofNode, ConversationNode relativeTo)
         {
-            return m_nodesOrdered.RelativePosition(of, relativeTo);
+            return m_nodesOrdered.RelativePosition(ofNode, relativeTo);
         }
     }
 }

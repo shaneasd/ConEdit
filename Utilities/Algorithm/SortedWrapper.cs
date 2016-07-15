@@ -93,9 +93,9 @@ namespace Utilities
         /// <summary>
         /// positive if 'of' is in front of 'relativeTo'
         /// </summary>
-        public int RelativePosition(T of, T relativeTo)
+        public int RelativePosition(T ofNode, T relativeTo)
         {
-            return m_positions[of] - m_positions[relativeTo];
+            return m_positions[ofNode] - m_positions[relativeTo];
         }
     }
 }

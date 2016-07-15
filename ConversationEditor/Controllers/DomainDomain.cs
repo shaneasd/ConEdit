@@ -54,8 +54,8 @@ namespace ConversationEditor
             EnumerationData allEnums = new EnumerationData("Enumerations", EnumSetGuid, new List<EnumerationData.Element>());
             EnumerationData allDynamicEnums = new EnumerationData("Dynamic Enumerations", DynamicEnumSetGuid, new List<EnumerationData.Element>());
             EnumerationData allLocalDynamicEnums = new EnumerationData("Local Dynamic Enumerations", LocalDynamicEnumSetGuid, new List<EnumerationData.Element>());
-            EnumerationData allIntegers = new EnumerationData("Integers", IntegerSetGuid, new List<EnumerationData.Element> { new EnumerationData.Element("Base", BaseTypeInteger.Data.TypeID.Guid) });
-            EnumerationData allDecimals = new EnumerationData("Decimals", DecimalSetGuid, new List<EnumerationData.Element> { new EnumerationData.Element("Base", BaseTypeDecimal.Data.TypeID.Guid) });
+            EnumerationData allIntegers = new EnumerationData("Integers", IntegerSetGuid, new List<EnumerationData.Element> { new EnumerationData.Element("Base", BaseTypeInteger.Data.TypeId.Guid) });
+            EnumerationData allDecimals = new EnumerationData("Decimals", DecimalSetGuid, new List<EnumerationData.Element> { new EnumerationData.Element("Base", BaseTypeDecimal.Data.TypeId.Guid) });
             m_typeSet.AddEnum(allEnums, true);
             m_typeSet.AddEnum(allDynamicEnums, true);
             m_typeSet.AddEnum(allLocalDynamicEnums, true);
@@ -77,10 +77,10 @@ namespace ConversationEditor
                     allLocalDynamicEnums.Elements = m_typeSet.VisibleLocalDynamicEnums.Select(e => new EnumerationData.Element(e.Name, e.TypeId.Guid)).ToList();
                     m_typeSet.ModifyEnum(allLocalDynamicEnums);
 
-                    allIntegers.Elements = m_typeSet.VisibleIntegers.Select(e => new EnumerationData.Element(e.Name, e.TypeID.Guid)).ToList();
+                    allIntegers.Elements = m_typeSet.VisibleIntegers.Select(e => new EnumerationData.Element(e.Name, e.TypeId.Guid)).ToList();
                     m_typeSet.ModifyEnum(allIntegers);
 
-                    allDecimals.Elements = m_typeSet.VisibleDecimals.Select(e => new EnumerationData.Element(e.Name, e.TypeID.Guid)).ToList();
+                    allDecimals.Elements = m_typeSet.VisibleDecimals.Select(e => new EnumerationData.Element(e.Name, e.TypeId.Guid)).ToList();
                     m_typeSet.ModifyEnum(allDecimals);
                 }
             };
@@ -168,7 +168,7 @@ namespace ConversationEditor
             List<NodeData.ParameterData> connectorDefinitionParameters = new List<NodeData.ParameterData>()
             {
                 new NodeData.ParameterData("Name", DomainIDs.ConnectorDefinitionName, BaseTypeString.ParameterType, NO_CONFIG),
-                new NodeData.ParameterData("Position", ConnectorPosition.PARAMETER_ID, ConnectorPosition.ENUM_ID, NO_CONFIG, ConnectorPosition.Bottom.Element.Guid.ToString()),
+                new NodeData.ParameterData("Position", ConnectorPosition.ParameterId, ConnectorPosition.EnumId, NO_CONFIG, ConnectorPosition.Bottom.Element.Guid.ToString()),
             };
             AddNode(DomainIDs.ConnectorDefinitionGuid, "Connector", m_nodeHeirarchy, MakeConfig('o', "ffff00"), connectorDefinitionConnectors, connectorDefinitionParameters);
 
@@ -546,13 +546,13 @@ namespace ConversationEditor
 
         public void AddIntegerType(IntegerData data)
         {
-            m_typeSet.AddInteger(data, false);
+            m_typeSet.AddInteger(data);
             //m_types.Integers.Add(data.TypeID, data.Name, data);
         }
 
         public void AddEnumType(EnumerationData data)
         {
-            m_typeSet.AddEnum(data);
+            m_typeSet.AddEnum(data, false);
             //m_types.Enumerations.Add(data.Guid, data.Name, data);
         }
 
@@ -670,7 +670,7 @@ namespace ConversationEditor
                 else if (node.NodeTypeId == DomainIDs.ConnectorDefinitionGuid)
                 {
                     var nameParameter = node.Parameters.Single(p => p.Id == DomainIDs.ConnectorDefinitionName) as IStringParameter;
-                    var positionParameter = node.Parameters.Single(p => p.Id == ConnectorPosition.PARAMETER_ID) as IEnumParameter;
+                    var positionParameter = node.Parameters.Single(p => p.Id == ConnectorPosition.ParameterId) as IEnumParameter;
                     var name = nameParameter.Value;
 
                     var linkedNodes = node.Connectors.SelectMany(n => n.Connections.Select(l => l.Parent));

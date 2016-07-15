@@ -116,7 +116,31 @@ namespace ConversationEditor
                 //    }
                 //}
 
-                SpatiallyOrderedNodes.Remove(n, c.from);
+                bool removed = SpatiallyOrderedNodes.Remove(n, c.from);
+                if (!removed)
+                {
+                    RectangleF? location = SpatiallyOrderedNodes.FindAndRemove(n);
+                    if (location.HasValue)
+                    {
+                        string message = String.Format("Something went wrong removing a node from the map. expected node at {0}, {1}, {2}, {3} but found at {4}, {5}, {6}, {7}.",
+                            c.from.X, c.from.Y, c.from.Width, c.from.Height, location.Value.X, location.Value.Y, location.Value.Width, location.Value.Height);
+                        try
+                        {
+                            throw new Exception(message);
+                        }
+                        catch (Exception e)
+                        {
+                            using (ErrorForm errorForm = new ErrorForm())
+                            {
+                                errorForm.SetException(e);
+                                errorForm.ShowDialog();
+                            }
+                        }
+
+                    }
+                    else
+                        throw new Exception("Something went from removing a node from the map");
+                }
                 SpatiallyOrderedNodes.Add(n, c.to);
 
                 //StoreConnections(n, true);
@@ -127,26 +151,38 @@ namespace ConversationEditor
         {
             SpatiallyOrderedNodes = new QuadTree<TNode>(RectangleF.FromLTRB(0, 0, 2048, 2048));
             SpatiallyOrderedConnections = new QuadTree<Tuple<UnorderedTuple2<Output>, RectangleF>>(RectangleF.FromLTRB(0, 0, 2048, 2048));
+            foreach (var deregister in m_connectionDeregisterActions)
+                deregister();
+            m_connectionDeregisterActions.Clear();
+
             foreach (var node in CurrentFile.Nodes)
             {
                 node.Renderer.UpdateArea();
                 SpatiallyOrderedNodes.Add(node, node.Renderer.Area);
-                WeakReference<TNode> nodeRef = new WeakReference<TNode>(node);
-                Action<Changed<RectangleF>> areaChanged = c => NodeAreaChanged(nodeRef, c);
-                node.Renderer.AreaChanged += areaChanged;
-                node.RendererChanging += () =>
-                {
-                    node.Renderer.AreaChanged -= areaChanged;
-                    areaChanged(Changed.Create(node.Renderer.Area, Rectangle.Empty));
-                };
-                node.RendererChanged += () =>
-                {
-                    node.Renderer.AreaChanged += areaChanged;
-                    areaChanged(Changed.Create(Rectangle.Empty, node.Renderer.Area));
-                };
+                AddNodeMovedCallbacks(node);
 
                 StoreConnections(node, true);
             }
+        }
+
+        private void AddNodeMovedCallbacks(TNode node)
+        {
+            WeakReference<TNode> nodeRef = new WeakReference<TNode>(node);
+            Action<Changed<RectangleF>> areaChanged = c => NodeAreaChanged(nodeRef, c);
+            if (m_nodeMovedCallbacks.ContainsKey(node))
+                node.Renderer.AreaChanged -= m_nodeMovedCallbacks[node];
+            node.Renderer.AreaChanged += areaChanged;
+            m_nodeMovedCallbacks[node] = areaChanged;
+            node.RendererChanging += () =>
+            {
+                node.Renderer.AreaChanged -= areaChanged;
+                areaChanged(Changed.Create(node.Renderer.Area, Rectangle.Empty));
+            };
+            node.RendererChanged += () =>
+            {
+                node.Renderer.AreaChanged += areaChanged;
+                areaChanged(Changed.Create(Rectangle.Empty, node.Renderer.Area));
+            };
         }
 
         private void StoreConnections(TNode node, bool register)
@@ -157,24 +193,27 @@ namespace ConversationEditor
             foreach (var connector in node.Connectors)
             {
                 var connectorTemp = connector;
-                Action<Output> connected = connection =>
+                Action<Output, bool> connected = (connection, mustExist) =>
                 {
-                    var ui1 = UIInfo(connectorTemp);
-                    var ui2 = UIInfo(connection);
-                    //The nature of the bezier splines means they will never reach outside the bounding rectangle which includes their endpoints
-                    RectangleF bounds = RectangleF.Union(ui1.Area.Value, ui2.Area.Value);
+                    var ui1 = UIInfo(connectorTemp, false);
+                    var ui2 = UIInfo(connection, !mustExist);
+                    if (ui2 != null)
+                    {
+                        //The nature of the bezier splines means they will never reach outside the bounding rectangle which includes their endpoints
+                        RectangleF bounds = RectangleF.Union(ui1.Area.Value, ui2.Area.Value);
 
-                    var pair = UnorderedTuple.Make(connectorTemp, connection);
-                    bool exists = SpatiallyOrderedConnections.FindTouchingRegion(bounds).Contains(Tuple.Create(pair, bounds));
-                    if (!exists)
-                    {
-                        SpatiallyOrderedConnections.Add(Tuple.Create(pair, bounds), bounds);
-                    }
-                    else
-                    {
+                        var pair = UnorderedTuple.Make(connectorTemp, connection);
+                        bool exists = SpatiallyOrderedConnections.FindTouchingRegion(bounds).Contains(Tuple.Create(pair, bounds));
+                        if (!exists)
+                        {
+                            SpatiallyOrderedConnections.Add(Tuple.Create(pair, bounds), bounds);
+                        }
+                        else
+                        {
+                        }
                     }
                 };
-                connectorTemp.Connected += connected;
+                connectorTemp.Connected += c => connected(c, true);
                 connectorTemp.Disconnected += connection =>
                 {
                     var ui1 = UIInfo(connectorTemp);
@@ -194,9 +233,12 @@ namespace ConversationEditor
 
                 foreach (var connection in connectorTemp.Connections)
                 {
-                    connected(connection);
+                    connected(connection, false);
+                }
 
-                    UIInfo(connectorTemp).Area.Changed.Register(change =>
+                Action deregister = UIInfo(connectorTemp).Area.Changed.Register(change =>
+                {
+                    foreach (var connection in connectorTemp.Connections)
                     {
                         var other = UIInfo(connection);
                         //The nature of the bezier splines means they will never reach outside the bounding rectangle which includes their endpoints
@@ -209,37 +251,34 @@ namespace ConversationEditor
 
                         RectangleF toBounds = RectangleF.Union(change.to, other.Area.Value);
                         SpatiallyOrderedConnections.Add(Tuple.Create(pair, toBounds), toBounds);
-                    });
-                }
+                    }
+                });
+                m_connectionDeregisterActions.Add(deregister);
             }
         }
 
         public void OnNodeAdded(TNode node)
         {
             SpatiallyOrderedNodes.Add(node, node.Renderer.Area);
-            WeakReference<TNode> nodeRef = new WeakReference<TNode>(node);
-            Action<Changed<RectangleF>> areaChanged = c => NodeAreaChanged(nodeRef, c);
-            node.Renderer.AreaChanged += areaChanged;
-            node.RendererChanging += () =>
-            {
-                node.Renderer.AreaChanged -= areaChanged;
-            };
-            node.RendererChanged += () =>
-            {
-                node.Renderer.AreaChanged += areaChanged;
-            };
+            AddNodeMovedCallbacks(node);
             StoreConnections(node, true);
         }
+
+        Dictionary<TNode, Action<Changed<RectangleF>>> m_nodeMovedCallbacks = new Dictionary<TNode, Action<Changed<RectangleF>>>();
 
         public void OnNodeRemoved(TNode node)
         {
             StoreConnections(node, false);
-            SpatiallyOrderedNodes.Remove(node, node.Renderer.Area);
-            //TODO: It's not clear whether we need to remove the area change callbacks again
+            bool removed = SpatiallyOrderedNodes.Remove(node, node.Renderer.Area);
+            if (!removed)
+                Debugger.Break();
+            node.Renderer.AreaChanged -= m_nodeMovedCallbacks[node];
+            m_nodeMovedCallbacks.Remove(node);
         }
 
         QuadTree<TNode> SpatiallyOrderedNodes = new QuadTree<TNode>(RectangleF.FromLTRB(0, 0, 2048, 2048));
         QuadTree<Tuple<UnorderedTuple2<Output>, RectangleF>> SpatiallyOrderedConnections = new QuadTree<Tuple<UnorderedTuple2<Output>, RectangleF>>(RectangleF.FromLTRB(0, 0, 2048, 2048));
+        List<Action> m_connectionDeregisterActions = new List<Action>();
 
         private void OnNodesDeleted()
         {
@@ -403,10 +442,13 @@ namespace ConversationEditor
 
         ToolTip m_toolTip = new ToolTip();
 
-        internal void Initialise(Func<IEditable, AudioGenerationParameters, ConfigureResult> editNode, CopyPasteController<TNode, TransitionNoduleUIInfo> copyPasteController)
+        Action<IEnumerable<IErrorListElement>> Log;
+
+        internal void Initialise(Func<IEditable, AudioGenerationParameters, ConfigureResult> editNode, CopyPasteController<TNode, TransitionNoduleUIInfo> copyPasteController, Action<IEnumerable<IErrorListElement>> log)
         {
             Edit = editNode;
             m_copyPasteController = copyPasteController;
+            Log = log;
             InitialiseMouseController();
             m_contextMenu = new ContextMenu<TNode>(Colors, m_mouseController, DrawWindowToGraphSpace, () => CurrentFile != DummyConversationEditorControlData<TNode, TransitionNoduleUIInfo>.Instance && !(CurrentFile is MissingConversationFile));
             m_contextMenu.AttachTo(drawWindow);
@@ -546,10 +588,7 @@ namespace ConversationEditor
             drawWindow.MouseUp += (a, args) => m_mouseController.MouseUp(DrawWindowToGraphSpace(args.Location), args.Location, args.Button);
             drawWindow.MouseMove += (a, args) =>
             {
-                Stopwatch w = Stopwatch.StartNew();
                 m_mouseController.MouseMove(DrawWindowToGraphSpace(args.Location), args.Location);
-                w.Stop();
-                Debug.WriteLine(w.Elapsed.TotalMilliseconds);
             };
             drawWindow.MouseDoubleClick += (a, args) => m_mouseController.MouseDoubleClick(DrawWindowToGraphSpace(args.Location), args.Button);
             drawWindow.MouseWheel += (a, args) => m_mouseController.MouseWheel(DrawWindowToGraphSpace(args.Location), args, Control.ModifierKeys);
@@ -885,7 +924,7 @@ namespace ConversationEditor
 
             foreach (var factory in menuFactories)
             {
-                custom.AddRange(factory.GetMenuActions(this));
+                custom.AddRange(factory.GetMenuActions(this, m_project, Log));
             }
 
             m_contextMenu.ResetCustomNodes(custom.ToArray());
@@ -956,82 +995,13 @@ namespace ConversationEditor
             return this;
         }
 
-        private TransitionNoduleUIInfo UIInfo(Output connection)
+        private TransitionNoduleUIInfo UIInfo(Output connection, bool canFail = false)
         {
-            return CurrentFile.UIInfo(connection);
+            return CurrentFile.UIInfo(connection, canFail);
         }
 
         internal void SanityTest()
         {
-            var missingNodes = CurrentFile.Nodes.Except(SpatiallyOrderedNodes).ToList();
-            var extraNodes = SpatiallyOrderedNodes.Except(CurrentFile.Nodes).ToList();
-            if (missingNodes.Any() || extraNodes.Any())
-            {
-                //Nodes collection incorrect
-                Debugger.Break();
-            }
-
-            while (SpatiallyOrderedNodes.Any())
-            {
-                var node = SpatiallyOrderedNodes.First();
-                if (!SpatiallyOrderedNodes.Remove(node, node.Renderer.Area))
-                {
-                    //Couldn't find node in expected area
-                    Debugger.Break();
-                }
-            }
-            foreach (var node in CurrentFile.Nodes)
-            {
-                SpatiallyOrderedNodes.Add(node, node.Renderer.Area);
-            }
-
-            foreach (var connector in CurrentFile.Nodes.SelectMany(n => n.Connectors))
-            {
-                UIInfo(connector);
-            }
-
-            return;
-
-            var connections = CurrentFile.Nodes.SelectMany(n => n.Connectors.SelectMany(c => c.Connections.Select(cc => Tuple.Create(new UnorderedTuple2<Output>(c, cc), RectangleF.Union(UIInfo(c).Area.Value, UIInfo(cc).Area.Value))))).Distinct().ToList();
-            var missingConnections = connections.Except(SpatiallyOrderedConnections).ToList();
-            var extraConnections = SpatiallyOrderedConnections.Except(connections);
-            if (missingConnections.Any() || extraConnections.Any())
-            {
-                //Connections collection incorrect
-                Debugger.Break();
-            }
-
-            foreach (var connection in SpatiallyOrderedConnections)
-            {
-                var oldBounds = connection.Item2;
-                var newBounds = RectangleF.Union(UIInfo(connection.Item1.Item1).Area.Value, UIInfo(connection.Item1.Item2).Area.Value);
-                if (oldBounds != newBounds)
-                    Debugger.Break();
-            }
-
-            while (SpatiallyOrderedConnections.Any())
-            {
-                var connection = SpatiallyOrderedConnections.First();
-                var ui1 = UIInfo(connection.Item1.Item1);
-                var ui2 = UIInfo(connection.Item1.Item2);
-                //The nature of the bezier splines means they will never reach outside the bounding rectangle which includes their endpoints
-                RectangleF bounds = RectangleF.Union(ui1.Area.Value, ui2.Area.Value);
-
-                if (!SpatiallyOrderedConnections.Remove(connection, bounds))
-                {
-                    //Couldn't find node in expected area
-                    Debugger.Break();
-                    SpatiallyOrderedConnections.Remove(connection, bounds);
-                }
-            }
-            foreach (var connection in connections)
-            {
-                var ui1 = UIInfo(connection.Item1.Item1);
-                var ui2 = UIInfo(connection.Item1.Item2);
-                //The nature of the bezier splines means they will never reach outside the bounding rectangle which includes their endpoints
-                RectangleF bounds = RectangleF.Union(ui1.Area.Value, ui2.Area.Value);
-                SpatiallyOrderedConnections.Add(connection, bounds);
-            }
         }
     }
 

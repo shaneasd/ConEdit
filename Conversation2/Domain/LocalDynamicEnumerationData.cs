@@ -9,15 +9,13 @@ namespace Conversation
 {
     public struct LocalDynamicEnumerationData
     {
-        public LocalDynamicEnumerationData(string name, ParameterType typeID)
+        public LocalDynamicEnumerationData(string name, ParameterType typeId)
         {
             Name = name;
-            TypeId = typeID;
+            TypeId = typeId;
         }
         public string Name;
         public ParameterType TypeId;
-
-        public IEnumerable<string> GetOptions(DynamicEnumParameter.Source source) { return source.Options; }
 
         public Parameter Make(string name, Id<Parameter> id, string defaultValue, DynamicEnumParameter.Source source)
         {

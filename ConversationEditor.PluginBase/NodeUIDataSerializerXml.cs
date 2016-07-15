@@ -12,7 +12,8 @@ namespace ConversationEditor
 {
     public class NodeUIDataSerializerXml : ISerializerDeserializerXml<NodeUIData, NodeUIData>
     {
-        public static NodeUIDataSerializerXml Instance = new NodeUIDataSerializerXml();
+        public static NodeUIDataSerializerXml Instance { get; } = new NodeUIDataSerializerXml();
+
         private NodeUIDataSerializerXml()
         {
         }

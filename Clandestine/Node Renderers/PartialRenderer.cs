@@ -51,6 +51,8 @@ namespace Clandestine
         {
             if (p == null)
                 throw new ArgumentNullException(nameof(p));
+            if (p is UnknownParameter) //TODO: Is there a way to determine this without reflection?
+                return true;
             var config = m_datasource().GetNode(Node.Type).GetParameterConfig(p.Id);
             return !DoNotRenderConfig.TryGet(config);
         }

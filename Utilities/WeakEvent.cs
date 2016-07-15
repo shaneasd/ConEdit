@@ -47,20 +47,25 @@ namespace Utilities
     {
         private List<WeakCallback<TParameter>> m_callbacks = new List<WeakCallback<TParameter>>();
 
-        public void Register(Action<TParameter> a)
+        public Action Register(Action<TParameter> a)
         {
-            Register(WeakCallback<TParameter>.Create(this, (obj, val) => a(val)));
+            var callback = WeakCallback<TParameter>.Create(this, (obj, val) => a(val));
+            Register(callback);
+            return () => Deregister(callback);
         }
 
-        public void Register<THost>(THost host, Action<THost, TParameter> callback) where THost : class
+        public Action Register<THost>(THost host, Action<THost, TParameter> callback) where THost : class
         {
-            Register(WeakCallback<TParameter>.Create(host, callback));
+            var callback2 = (WeakCallback<TParameter>.Create(host, callback));
+            Register(callback2);
+            return () => Deregister(callback2);
         }
 
-        public void Register(WeakCallback<TParameter> a)
+        public Action Register(WeakCallback<TParameter> a)
         {
             m_callbacks.RemoveAll(b => b.Expired);
             m_callbacks.Add(a);
+            return () => Deregister(a);
         }
 
         public void Deregister(WeakCallback<TParameter> a)

@@ -135,9 +135,6 @@ namespace Utilities
         private IEnumerable<T> m_forward;
         private IEnumerable<T> m_reverse;
 
-        public EnumerableReversible(IEnumerableReversible<T> data)
-        { }
-
         public EnumerableReversible(IEnumerable<T> forward, IEnumerable<T> reverse)
         {
             m_forward = forward;

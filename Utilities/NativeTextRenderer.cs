@@ -228,24 +228,6 @@ namespace Arthur
         }
 
         /// <summary>
-        /// Draw the given string using the given font and foreground color at given location.<br/>
-        /// See http://msdn.microsoft.com/en-us/library/windows/desktop/dd162498(v=vs.85).aspx.
-        /// </summary>
-        /// <param name="str">the string to draw</param>
-        /// <param name="font">the font to use to draw the string</param>
-        /// <param name="color">the text color to set</param>
-        /// <param name="rect">the rectangle in which the text is to be formatted</param>
-        /// <param name="flags">The method of formatting the text</param>
-        internal void DrawString(String str, Font font, Color color, Rectangle rect, TextFormatFlags flags)
-        {
-            SetFont(font);
-            SetTextColor(color);
-
-            var rect2 = new NativeMethods.Rect(rect);
-            NativeMethods.DrawText(_hdc, str, str.Length, ref rect2, (uint)flags);
-        }
-
-        /// <summary>
         /// Special draw logic to draw transparent text using GDI.<br/>
         /// 1. Create in-memory DC<br/>
         /// 2. Copy background to in-memory DC<br/>

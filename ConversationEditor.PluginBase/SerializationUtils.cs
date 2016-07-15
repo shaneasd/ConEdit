@@ -14,14 +14,14 @@ namespace ConversationEditor
 
     public class DomainSerializerDeserializer
     {
-        public DomainSerializer Serializer;
-        public DomainDeserializer CategoriesDeserializer;
-        public DomainDeserializer TypesDeserializer;
-        public DomainDeserializer ConnectorsDeserializer;
-        public DomainDeserializer NodesDeserializer;
-        public DomainDeserializer EditorDataDeserializer;
-        public DomainDeserializer AutoCompleteSuggestionsDeserializer;
-        public DomainDeserializer EverythingDeserializer;
+        public DomainSerializer Serializer { get; private set; }
+        public DomainDeserializer CategoriesDeserializer { get; private set; }
+        public DomainDeserializer TypesDeserializer { get; private set; }
+        public DomainDeserializer ConnectorsDeserializer { get; private set; }
+        public DomainDeserializer NodesDeserializer { get; private set; }
+        public DomainDeserializer EditorDataDeserializer { get; private set; }
+        public DomainDeserializer AutoCompleteSuggestionsDeserializer { get; private set; }
+        public DomainDeserializer EverythingDeserializer { get; private set; }
 
         public DomainSerializerDeserializer(DomainSerializer serializer, DomainDeserializer categoriesDeserializer, DomainDeserializer typesDeserializer, DomainDeserializer connectorsDeserializer, DomainDeserializer nodesDeserializer, DomainDeserializer editorDataDeserializer, DomainDeserializer autoCompleteSuggestionsDeserializer, DomainDeserializer everythingDeserializer)
         {

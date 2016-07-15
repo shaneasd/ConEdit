@@ -95,7 +95,7 @@ namespace ConversationEditor
         }
 
 
-        public TransitionNoduleUIInfo UIInfo(Output connection)
+        public TransitionNoduleUIInfo UIInfo(Output connection, bool canFail)
         {
             throw new NotImplementedException();
         }
@@ -125,7 +125,7 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public int RelativePosition(ConversationNode of, ConversationNode relativeTo)
+        public int RelativePosition(ConversationNode ofNode, ConversationNode relativeTo)
         {
             throw new NotImplementedException();
         }

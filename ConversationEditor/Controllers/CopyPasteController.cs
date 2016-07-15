@@ -42,7 +42,7 @@ namespace ConversationEditor
         private static void CopyToStream(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups, Stream m)
         {
             var serializer = SerializationUtils.ConversationSerializer;
-            serializer.Write(SerializationUtils.MakeConversationData(nodes.Cast<ConversationNode>(), new ConversationEditorData { Groups = groups }), m);
+            serializer.Write(SerializationUtils.MakeConversationData(nodes.Cast<ConversationNode>(), new ConversationEditorData(groups)), m);
         }
 
         public override void Copy(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups)
@@ -69,12 +69,12 @@ namespace ConversationEditor
             return Tuple.Create(Enumerable.Empty<GraphAndUI<NodeUIData>>(), Enumerable.Empty<NodeGroup>(), new object());
         }
 
-        private Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, object> ReadFromStream(IDataSource datasource, Stream m)
+        private static Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, object> ReadFromStream(IDataSource datasource, Stream m)
         {
             var deserializer = SerializationUtils.ConversationDeserializer(datasource);
             var data = deserializer.Read(m);
             var groups = data.EditorData.Groups;
-            return Tuple.Create(data.Nodes, groups, data.DocumentID);
+            return Tuple.Create(data.Nodes, groups, data.DocumentId);
         }
     }
 }

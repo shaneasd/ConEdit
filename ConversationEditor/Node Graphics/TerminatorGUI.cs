@@ -13,7 +13,7 @@ namespace ConversationEditor
 {
     public class TerminatorGuiFactory : NodeUI.IFactory
     {
-        public static TerminatorGuiFactory Instance = new TerminatorGuiFactory();
+        public static TerminatorGuiFactory Instance { get; } = new TerminatorGuiFactory();
 
         public bool WillRender(Id<NodeTypeTemp> nodeType)
         {

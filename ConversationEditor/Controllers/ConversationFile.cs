@@ -46,7 +46,7 @@ namespace ConversationEditor
         private void SaveTo(Stream file)
         {
             file.Position = 0;
-            m_serializer.Write(SerializationUtils.MakeConversationData(Nodes, new ConversationEditorData() { Groups = Groups }), file);
+            m_serializer.Write(SerializationUtils.MakeConversationData(Nodes, new ConversationEditorData(Groups)), file);
         }
 
         public static FileInfo GetAvailableConversationPath(DirectoryInfo directory, IEnumerable<ISaveableFileProvider> projectFiles, Func<FileInfo, bool> pathOk)
@@ -72,7 +72,7 @@ namespace ConversationEditor
             MemoryStream m = new MemoryStream();
             using (FileStream stream = Util.LoadFileStream(file, FileMode.CreateNew, FileAccess.Write))
             {
-                project.ConversationSerializer.Write(SerializationUtils.MakeConversationData(nodes, new ConversationEditorData { Groups = groups }), m);
+                project.ConversationSerializer.Write(SerializationUtils.MakeConversationData(nodes, new ConversationEditorData(groups)), m);
                 m.Position = 0;
                 m.CopyTo(stream);
             }

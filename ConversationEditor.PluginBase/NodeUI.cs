@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using Utilities;
 using Conversation;
+using System.Diagnostics;
 
 namespace ConversationEditor
 {
@@ -24,7 +25,7 @@ namespace ConversationEditor
         protected NodeUI(ConversationNode<INodeGui> node, PointF p)
         {
             m_node = node;
-            m_pos = p;
+            Area = new RectangleF(p, SizeF.Empty);
         }
 
         protected abstract SizeF CalculateArea(Graphics g);
@@ -33,12 +34,20 @@ namespace ConversationEditor
         private readonly ConversationNode<INodeGui> m_node;
         public ConversationNode<INodeGui> Node { get { return m_node; } }
 
-        private SizeF m_size = SizeF.Empty;
-        private PointF m_pos;
-
         public event Action<Changed<RectangleF>> AreaChanged;
 
-        public RectangleF Area { get { return new RectangleF(m_pos.Take(m_size.Width / 2.0f, m_size.Height / 2.0f), m_size); } }
+        private RectangleF m_area;
+        public RectangleF Area
+        {
+            get { return m_area; }
+            private set
+            {
+                var old = m_area;
+                m_area = value;
+                //Debug.WriteLine("Moving {0} -> \n {1}", old, value);
+                AreaChanged.Execute(Changed.Create(old, value));
+            }
+        }
 
         public bool Contains(Point p)
         {
@@ -47,9 +56,7 @@ namespace ConversationEditor
 
         public void MoveTo(PointF location)
         {
-            var old = Area;
-            m_pos = location;
-            AreaChanged.Execute(Changed.Create(old, Area));
+            Area = new RectangleF(location.Take(new PointF(Area.Size.Width * 0.5f, Area.Size.Height * 0.5f)), Area.Size);
         }
 
         public void UpdateArea()
@@ -59,11 +66,9 @@ namespace ConversationEditor
             using (Graphics g = Graphics.FromImage(b))
             {
                 var newsize = CalculateArea(g);
-                if (newsize != m_size)
+                if (newsize != Area.Size)
                 {
-                    var old = Area;
-                    m_size = newsize;
-                    AreaChanged.Execute(Changed.Create(old, Area));
+                    Area = new RectangleF(Area.Center().Take(new PointF(newsize.Width * 0.5f, newsize.Height * 0.5f)), newsize);
                 }
             }
         }

@@ -15,7 +15,7 @@ namespace ConversationEditor
         {
             var result = new TypeSet();
             //Populate with the standard types
-            result.AddInteger(BaseTypeInteger.Data, false);
+            result.AddInteger(BaseTypeInteger.Data);
             //result.AddInteger(BaseTypeInteger.PARAMETER_TYPE, (name, id) => new IntegerParameter(name, id, BaseTypeInteger.PARAMETER_TYPE));
             result.AddDecimal(BaseTypeDecimal.Data);
             //result.AddDecimal(BaseTypeDecimal.PARAMETER_TYPE, (name, id) => new DecimalParameter(name, id, BaseTypeDecimal.PARAMETER_TYPE));

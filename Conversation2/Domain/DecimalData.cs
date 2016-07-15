@@ -10,15 +10,15 @@ namespace Conversation
         public DecimalData(string name, ParameterType typeId, decimal? max, decimal? min /*, decimal? def = null*/)
         {
             Name = name;
-            TypeID = typeId;
+            TypeId = typeId;
             Max = max;
             Min = min;
             //Default = def;
         }
-        public string Name;
-        public ParameterType TypeID;
-        public decimal? Max;
-        public decimal? Min;
+        public string Name { get; set; }
+        public ParameterType TypeId { get; set; }
+        public decimal? Max { get; set; }
+        public decimal? Min { get; set; }
         //public decimal? Default;
 
         //public DecimalParameter Make(string name, ID<Parameter> id)

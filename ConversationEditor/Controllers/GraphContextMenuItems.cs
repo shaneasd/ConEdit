@@ -18,9 +18,9 @@ namespace ConversationEditor
         {
         }
 
-        public override IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control)
+        public override IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log)
         {
-            foreach (var action in base.GetMenuActions(control))
+            foreach (var action in base.GetMenuActions(control, project, log))
                 yield return action;
             yield return new MenuAction<ConversationNode>("Find References", (n, p) => () => FileReferences(n), null, null, null);
         }
@@ -34,7 +34,7 @@ namespace ConversationEditor
             FileReferences = findReferences;
         }
 
-        public virtual IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control)
+        public virtual IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log)
         {
             MenuAction<ConversationNode> addNodes = new MenuAction<ConversationNode>("Add Node", (n, p) => null, null, null, p => { });
             AddNodeMenuItem(addNodes, control.DataSource.Nodes, control);

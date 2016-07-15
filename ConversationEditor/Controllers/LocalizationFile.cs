@@ -79,7 +79,7 @@ namespace ConversationEditor
 
         public bool Contains(Id<LocalizedText> guid)
         {
-            return m_data.m_data.ContainsKey(guid);
+            return m_data.CanLocalize(guid);
         }
 
         public bool CanRemove(Func<bool> prompt)
@@ -96,7 +96,7 @@ namespace ConversationEditor
         public string Localize(Id<LocalizedText> guid)
         {
             if (m_data.CanLocalize(guid))
-                return m_data.m_data[guid].Text;
+                return m_data.GetLocalized(guid).Text;
             else
                 return null;
         }
@@ -115,7 +115,7 @@ namespace ConversationEditor
                 },
                 Undo = () =>
                 {
-                    oldValue.Do(a => m_data.SetLocalized(guid, a), b => m_data.m_data.Remove(guid));
+                    oldValue.Do(a => m_data.SetLocalized(guid, a), b => m_data.ClearLocaliation(guid));
                     m_currentChanges.Remove(change);
                     m_file.Change();
                 },
@@ -131,14 +131,14 @@ namespace ConversationEditor
                 {
                     if (m_data.CanLocalize(guid))
                     {
-                        m_data.m_data[result] = m_data.m_data[guid];
+                        m_data.SetLocalized(result, m_data.GetLocalized(guid));
                         m_currentChanges.Add(change);
                         m_file.Change();
                     }
                 },
                 Undo = () =>
                 {
-                    m_data.m_data.Remove(result);
+                    m_data.ClearLocaliation(result);
                     m_currentChanges.Add(change);
                     m_file.Change();
                 },

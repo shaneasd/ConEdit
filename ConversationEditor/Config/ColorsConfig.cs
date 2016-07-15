@@ -29,7 +29,7 @@ namespace ConversationEditor
 
         public event Action ValueChanged;
 
-        private bool ReadColor(XElement root, string name, ref Color value)
+        private static bool ReadColor(XElement root, string name, ref Color value)
         {
             var a = root.Element(name);
             if (a != null)
@@ -44,7 +44,7 @@ namespace ConversationEditor
             return false;
         }
 
-        public void WriteColor(XContainer root, string name, Color value)
+        private static void WriteColor(XContainer root, string name, Color value)
         {
             var @string = value.ToArgb().ToString("X", CultureInfo.InvariantCulture);
             root.Add(new XElement(name, new XAttribute("value", @string)));

@@ -153,8 +153,8 @@ namespace Utilities.UI
 
     public class CrossButton : MyButton
     {
-        public Pen Foreground;
-        public Brush Background;
+        public Pen Foreground { get; set; }
+        public Brush Background { get; set; }
         public CrossButton(Func<RectangleF> area, Action callback, Pen foreground, Brush background)
             : base(area, callback)
         {

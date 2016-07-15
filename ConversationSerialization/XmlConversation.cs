@@ -47,12 +47,12 @@ namespace Conversation.Serialization
     /// </summary>
     public class XmlGraphData<TUIRawData, TEditorData>
     {
-        public XmlGraphData(IEnumerable<GraphAndUI<TUIRawData>> nodes, TEditorData editorData, ReadOnlyCollection<LoadError> errors, object documentID)
+        public XmlGraphData(IEnumerable<GraphAndUI<TUIRawData>> nodes, TEditorData editorData, ReadOnlyCollection<LoadError> errors, object documentId)
         {
             m_nodes = nodes;
             m_editorData = editorData;
             m_errors = errors;
-            m_documentID = documentID;
+            m_documentId = documentId;
         }
 
         public XmlGraphData(IEnumerable<GraphAndUI<TUIRawData>> nodes, TEditorData editorData)
@@ -65,12 +65,12 @@ namespace Conversation.Serialization
         private readonly IEnumerable<GraphAndUI<TUIRawData>> m_nodes;
         private readonly TEditorData m_editorData;
         private readonly ReadOnlyCollection<LoadError> m_errors;
-        private object m_documentID;
+        private object m_documentId;
 
         public IEnumerable<GraphAndUI<TUIRawData>> Nodes { get { return m_nodes; } }
         public TEditorData EditorData { get { return m_editorData; } }
         public ReadOnlyCollection<LoadError> Errors { get { return m_errors; } }
-        public object DocumentID { get { return m_documentID; } }
+        public object DocumentId { get { return m_documentId; } }
     }
 
     public static class XmlConversation<TUIRawData, TEditorData>
@@ -126,7 +126,7 @@ namespace Conversation.Serialization
 
                 //TODO: Should possibly treat this as a missing file rather than crashing the editor
                 if (root.Attribute("xmlversion") == null || !XmlVersionRead.Contains(root.Attribute("xmlversion").Value))
-                    throw new Exception("unrecognised conversation xml version");
+                    throw new UnknownXmlVersionException("unrecognised conversation xml version");
 
                 IEnumerable<Either<GraphAndUI<TUIRawData>, LoadError>> editables = root.Elements("Node").Select(n => ReadEditable(n, m_datasource, documentID)).Evaluate();
                 var allnodes = new Dictionary<Id<NodeTemp>, GraphAndUI<TUIRawData>>();

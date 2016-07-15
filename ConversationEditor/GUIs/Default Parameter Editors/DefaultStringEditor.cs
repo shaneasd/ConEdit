@@ -15,7 +15,7 @@ namespace ConversationEditor
     public class DefaultStringEditorFactory : IParameterEditorFactory
     {
         public static readonly Guid StaticId = Guid.Parse("b3948691-425b-4220-ba6e-9ef00c5bc0f7");
-        public bool WillEdit(ParameterType type, WillEdit willEdit)
+        public bool WillEdit(ParameterType type, WillEdit queries)
         {
             return type == BaseTypeString.ParameterType;
         }

@@ -234,7 +234,7 @@ namespace ConversationEditor
 
         private void InitializeGraphEditor(ConversationCopyPasteController copyPasteController, IDataSource datasource, GraphEditorControl<ConversationNode> editor, IMenuActionFactory<ConversationNode> basicItems)
         {
-            editor.Initialise(Edit, copyPasteController);
+            editor.Initialise(Edit, copyPasteController, errorList1.SetErrors);
             editor.SetContext(datasource, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value);
             editor.m_contextMenu.Opening += () => editor.RefreshContextMenu(basicItems.Only().Concat(GetAllOfType<IMenuActionFactory<ConversationNode>>(MainAssemblies.Ignore)));
 
@@ -503,7 +503,7 @@ namespace ConversationEditor
             //TODO: Error checking for domain files
 
             var errors = m_errorCheckerController.CheckForErrors(CurrentFile.Nodes, m_context.ErrorCheckerUtils());
-            errorList1.SetErrors(errors.Select(error => new ErrorList.Element(error, CurrentFile)));
+            errorList1.SetErrors(errors.Select(error => ErrorList.MakeElement(error, CurrentFile)));
         }
 
         private void testEverythingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -511,7 +511,7 @@ namespace ConversationEditor
             var conversations = m_context.CurrentProject.Value.Conversations;
             var errors = conversations.SelectMany(
                             c => m_errorCheckerController.CheckForErrors(c.Nodes, m_context.ErrorCheckerUtils()).Select(
-                                error => new ErrorList.Element(error, c)));
+                                error => ErrorList.MakeElement(error, c)));
             errorList1.SetErrors(errors);
         }
 
@@ -520,7 +520,7 @@ namespace ConversationEditor
             success &= SelectNode(node, file);
         }
 
-        Project.TConfig ReadProjectConfig(IProject project)
+        static Project.TConfig ReadProjectConfig(IProject project)
         {
             if (project is DummyProject)
                 return new Project.TConfig(null, null);
@@ -674,9 +674,12 @@ namespace ConversationEditor
             };
             var editor = new DefaultNodeEditorFactory();
             editor.Edit(m_scheme, data, null, config, null, null, null).Transformed(a => OnOk(DummyAudioLibrary.Instance, a), a => a).Do(a => a.Redo(), a=> { });
-            foreach (var d in data.Parameters)
+            using (m_config.ConversationNodeRenderers.SuppressValueChanged())
             {
-                m_config.ConversationNodeRenderers[Id<NodeTypeTemp>.ConvertFrom(d.TypeId)] = (d as IEnumParameter).Value;
+                foreach (var d in data.Parameters)
+                {
+                    m_config.ConversationNodeRenderers[Id<NodeTypeTemp>.ConvertFrom(d.TypeId)] = (d as IEnumParameter).Value;
+                }
             }
 
             //TODO: Customize domain node renderers?
@@ -763,14 +766,14 @@ namespace ConversationEditor
             var unnecessaryAudioFiles = audioFiles.Except(allAudioReferences, a => a, b => b.Path);
             var danglingPointers = allAudioReferences.Except(audioFiles, b => b.Path, a => a);
 
-            IEnumerable<ErrorList.Element> danglingPointerErrors = danglingPointers.Select(a => new ErrorList.Element(new DanglingAudioError(a.Path, a.Node), a.Document));
-            IEnumerable<ErrorList.Element> pointlessAudioErrors = unnecessaryAudioFiles.Select(a => new ErrorList.Element(new PointlessAudioError(a), null));
+            IEnumerable<IErrorListElement> danglingPointerErrors = danglingPointers.Select(a => ErrorList.MakeElement(new DanglingAudioError(a.Path, a.Node), a.Document));
+            IEnumerable<IErrorListElement> pointlessAudioErrors = unnecessaryAudioFiles.Select(a => ErrorList.MakeElement(new PointlessAudioError(a), null));
             errorList1.SetErrors(danglingPointerErrors.Concat(pointlessAudioErrors));
         }
 
         private void FindReferences(ConversationNode node)
         {
-            errorList1.SetErrors(m_context.CurrentProject.Value.DomainUsage.Usages(node).Select(u => new ErrorList.Element(u.Node, u.File, u.Description)).ToList());
+            errorList1.SetErrors(m_context.CurrentProject.Value.DomainUsage.Usages(node).Select(u => ErrorList.MakeElement(u.Node, u.File, u.Description)).ToList());
         }
 
         private void connectorColorToolStripMenuItem_Click(object sender, EventArgs e)

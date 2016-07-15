@@ -91,6 +91,8 @@ namespace Utilities
 
         public static IEnumerable<U> Collapse<T, U>(this T root, Func<T, IEnumerable<T>> subNodeSelector, Func<T, IEnumerable<U>> valueSelector)
         {
+            if (valueSelector == null)
+                throw new ArgumentNullException(nameof(valueSelector));
             return valueSelector(root).Concat(subNodeSelector(root).SelectMany(a => a.Collapse(subNodeSelector, valueSelector)));
         }
 

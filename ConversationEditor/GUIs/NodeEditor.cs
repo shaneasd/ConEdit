@@ -10,6 +10,7 @@ using Conversation;
 using System.IO;
 using System.Reflection;
 using Utilities;
+using System.Diagnostics;
 
 namespace ConversationEditor
 {
@@ -124,8 +125,10 @@ namespace ConversationEditor
             m_data = data;
 
             this.SuspendLayout();
+            //tableLayoutPanel1.SuspendLayout();
             Title = m_data.Name;
             int parameterCount = 0;
+
             foreach (Parameter p in m_data.Parameters.OrderBy(p => p.Name))
             {
                 var editorData = new ParameterEditorSetupData(p, localizer, audioProvider, audioContext, (s)=> autoCompleteSuggestions(p, s));
@@ -145,7 +148,10 @@ namespace ConversationEditor
                 }
                 else
                 {
+                    Stopwatch w = Stopwatch.StartNew();
                     AddParameter(p, config(p.TypeId, editorData));
+                    Debug.WriteLine("Adding parameter time: " + w.Elapsed.TotalMilliseconds);
+                    w.Restart();
                 }
                 parameterCount++;
             }
@@ -156,30 +162,41 @@ namespace ConversationEditor
             //    tableLayoutPanel3.Controls.Add(new Button() { Width = 100 }, 4, 0);
             //}
 
+            //tableLayoutPanel1.ResumeLayout();
+
+
             //Add a buffer to fill up the space
             tableLayoutPanel1.RowCount++;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
 
-
             this.ResumeLayout();
+
+            //tableLayoutPanel1.MaximumSize = new Size(int.MaxValue, 768);
         }
 
         public void AddParameter(IParameter parameter, IParameterEditor<Control> editor)
         {
+            Stopwatch w = Stopwatch.StartNew();
             Label label = new Label();
             label.TextAlign = ContentAlignment.MiddleLeft;
             label.AutoSize = true;
             label.Dock = DockStyle.Fill;
             label.Text = parameter.Name;
             label.ForeColor = Scheme.Foreground;
+            Debug.WriteLine("label: " + w.Elapsed.TotalMilliseconds);
+            w.Restart();
 
             editor.AsControl.Dock = DockStyle.Top;
             m_parameterEditors.Add(Tuple.Create(editor, parameter));
 
+            Debug.WriteLine("m_parameterEditors: " + w.Elapsed.TotalMilliseconds);
+
             tableLayoutPanel1.RowCount++;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             tableLayoutPanel1.Controls.Add(label, 0, tableLayoutPanel1.RowCount - 1);
+            Debug.WriteLine("adding label: " + w.Elapsed.TotalMilliseconds);
             tableLayoutPanel1.Controls.Add(editor.AsControl, 1, tableLayoutPanel1.RowCount - 1);
+            Debug.WriteLine("adding editor: " + w.Elapsed.TotalMilliseconds);
         }
 
         List<Tuple<IParameterEditor<Control>, IParameter>> m_parameterEditors = new List<Tuple<IParameterEditor<Control>, IParameter>>();

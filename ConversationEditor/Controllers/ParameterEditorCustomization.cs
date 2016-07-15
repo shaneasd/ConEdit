@@ -40,7 +40,7 @@ namespace ConversationEditor
         public ParameterEditorCustomization()
         {
             m_parameters = new List<Parameter>();
-            m_parameters.Add(new EnumParameter("Character", Id<Parameter>.New(), new Enumeration(new[] { Tuple.Create(Guid.NewGuid(), "value") }, ParameterType.Basic.New())));
+            m_parameters.Add(new EnumParameter("Character", Id<Parameter>.New(), new Enumeration(new[] { Tuple.Create(Guid.NewGuid(), "value") }, ParameterType.Basic.New()), null));
         }
 
         public ParameterEditorCustomization(IDataSource datasource, MapConfig<ParameterType, Guid> typeMapConfig, IEnumerable<IParameterEditorFactory> allEditors)

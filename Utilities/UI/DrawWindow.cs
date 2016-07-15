@@ -29,14 +29,9 @@ namespace Utilities.UI
             InitializeComponent();
         }
 
-        private new bool DesignMode()
-        {
-            return System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime;
-        }
-
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (!m_colorSchemeAssigned && !DesignMode())
+            if (!m_colorSchemeAssigned && !Util.DesignMode())
                 throw new Exception("drawnwindow not given a color scheme");
             base.OnPaint(e);
         }

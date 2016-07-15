@@ -172,7 +172,10 @@ namespace ConversationEditor
         protected override void Dispose(bool disposing)
         {
             if (disposing)
+            {
+                ParameterEditors.Dispose();
                 ProjectHistory.Dispose();
+            }
         }
     }
 }

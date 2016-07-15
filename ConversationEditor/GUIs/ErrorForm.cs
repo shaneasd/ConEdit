@@ -32,6 +32,12 @@ namespace ConversationEditor
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (this.textBox1.Text == "enter steps to reproduce here")
+            {
+                MessageBox.Show("Please enter steps to reproduce");
+                return;
+            }
+
             //string from = "ConversationEditor1234@hotmail.com";
             string from = "conversationeditor12345@gmail.com";
             string to = "thatguyiknow5@hotmail.com";

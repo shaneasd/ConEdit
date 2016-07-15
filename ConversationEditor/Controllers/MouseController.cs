@@ -847,10 +847,12 @@ namespace ConversationEditor
                     SetStateToNothingOrSelectingDirection(null, m_state.SelectedTransition);
             }
         }
-        private readonly Func<Output, TransitionNoduleUIInfo> UIInfo;
+        private readonly Func<Output, bool, TransitionNoduleUIInfo> m_UIInfo;
+        private TransitionNoduleUIInfo UIInfo(Output output, bool canFail) { return m_UIInfo(output, canFail); }
+        private TransitionNoduleUIInfo UIInfo(Output output) { return m_UIInfo(output, false); }
         ColorScheme m_scheme;
 
-        public MouseController(ColorScheme scheme, Action refreshDisplay, Action<Point> shift, Action<PointF?> scrollIfRequired, Action<Point, float> scale, Func<IReadonlyQuadTree<TNode>> nodes, Func<IReadonlyQuadTree<UnorderedTuple2<Output>>> connections, Func<IEnumerable<NodeGroup>> groups, Func<IEditable, ConfigureResult> edit, Func<TNode, bool> removeNode, Func<PointF, PointF> snap, Func<PointF, PointF> snapGroup, Func<Output, TransitionNoduleUIInfo> uiInfo, Func<Id<NodeTemp>, TNode> getNode)
+        public MouseController(ColorScheme scheme, Action refreshDisplay, Action<Point> shift, Action<PointF?> scrollIfRequired, Action<Point, float> scale, Func<IReadonlyQuadTree<TNode>> nodes, Func<IReadonlyQuadTree<UnorderedTuple2<Output>>> connections, Func<IEnumerable<NodeGroup>> groups, Func<IEditable, ConfigureResult> edit, Func<TNode, bool> removeNode, Func<PointF, PointF> snap, Func<PointF, PointF> snapGroup, Func<Output, bool, TransitionNoduleUIInfo> uiInfo, Func<Id<NodeTemp>, TNode> getNode)
         {
             m_scheme = scheme;
             m_innerState = new State.Nothing(this, null, null);
@@ -865,7 +867,7 @@ namespace ConversationEditor
             Edit = edit;
             Snap = snap;
             SnapGroup = snapGroup;
-            UIInfo = uiInfo;
+            m_UIInfo = uiInfo;
             GetNode = getNode;
         }
 

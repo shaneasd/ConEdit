@@ -7,6 +7,8 @@ using System.Xml.Linq;
 using System.IO;
 using Utilities;
 using System.Globalization;
+using System.Diagnostics;
+using System.Xml;
 
 namespace Conversation.Serialization
 {
@@ -46,7 +48,7 @@ namespace Conversation.Serialization
                 XDocument doc = XDocument.Load(stream);
                 XElement root = doc.Root;
                 if (root.Attribute("xmlversion").Value != XML_VERSION)
-                    throw new Exception("Unknown xml version in " + stream.ToString());
+                    throw new UnknownXmlVersionException("Unknown xml version in " + stream.ToString());
                 var nodes = root.Elements("Localize");
                 foreach (var node in nodes)
                 {
@@ -59,19 +61,36 @@ namespace Conversation.Serialization
             }
         }
 
+        public class Context
+        {
+            public Context(Func<Id<LocalizedText>, bool> idUsed, IEnumerable<Id<LocalizedText>> usedGuids)
+            {
+                IdUsed = idUsed;
+                UsedGuids = usedGuids;
+            }
+
+            public Func<Id<LocalizedText>, bool> IdUsed
+            {
+                get; private set;
+            }
+
+            public IEnumerable<Id<LocalizedText>> UsedGuids
+            {
+                get; private set;
+            }
+        }
+
         public class Serializer : ISerializer<LocalizerData>
         {
-            private Func<Id<LocalizedText>, bool> m_idUsed;
-            private Func<IEnumerable<Id<LocalizedText>>> m_usedGuids;
+            private Func<Context> m_context;
             private Func<string, bool> m_shouldClean;
             private Func<string, bool> m_shouldExpand;
             private Func<Id<LocalizedText>, string> m_bestLocalization;
             private string m_file;
 
-            public Serializer(Func<Id<LocalizedText>, bool> guidUsed, Func<IEnumerable<Id<LocalizedText>>> usedGuids, Func<string, bool> shouldClean, Func<string, bool> shouldExpand, Func<Id<LocalizedText>, string> bestLocalization, string file)
+            public Serializer(Func<Context> context, Func<string, bool> shouldClean, Func<string, bool> shouldExpand, Func<Id<LocalizedText>, string> bestLocalization, string file)
             {
-                m_idUsed = guidUsed;
-                m_usedGuids = usedGuids;
+                m_context = context;
                 m_shouldClean = shouldClean;
                 m_shouldExpand = shouldExpand;
                 m_bestLocalization = bestLocalization;
@@ -80,9 +99,11 @@ namespace Conversation.Serialization
 
             public void Write(LocalizerData data, Stream stream)
             {
-                var unused = data.AllLocalizations.Where(kvp => !m_idUsed(kvp.Key));
-                var used = data.AllLocalizations.Where(kvp => m_idUsed(kvp.Key));
-                var missing = m_usedGuids().Except(used.Select(kvp => kvp.Key));
+                Context context = m_context();
+
+                var unused = data.AllLocalizations.Where(kvp => !context.IdUsed(kvp.Key)).ToList();
+                var used = data.AllLocalizations.Where(kvp => context.IdUsed(kvp.Key)).ToList();
+                var missing = context.UsedGuids.Except(used.Select(kvp => kvp.Key)).ToList();
 
                 XElement root = new XElement(ROOT, new XAttribute("xmlversion", XML_VERSION));
                 XDocument doc = new XDocument(root);
@@ -131,7 +152,7 @@ namespace Conversation.Serialization
 
     public class LocalizerData
     {
-        public Dictionary<Id<LocalizedText>, LocalizationElement> m_data = new Dictionary<Id<LocalizedText>, LocalizationElement>();
+        private Dictionary<Id<LocalizedText>, LocalizationElement> m_data = new Dictionary<Id<LocalizedText>, LocalizationElement>();
 
         public bool CanLocalize(Id<LocalizedText> id)
         {
@@ -146,6 +167,11 @@ namespace Conversation.Serialization
         public void SetLocalized(Id<LocalizedText> id, LocalizationElement localized)
         {
             m_data[id] = localized;
+        }
+
+        public void ClearLocaliation(Id<LocalizedText> id)
+        {
+            m_data.Remove(id);
         }
 
         public IEnumerable<KeyValuePair<Id<LocalizedText>, LocalizationElement>> AllLocalizations { get { return m_data; } }

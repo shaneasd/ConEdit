@@ -115,12 +115,12 @@ namespace ConversationEditor
             Action<IntegerData> integerAction = data =>
             {
                 //m_conversationDatasource.ModifyIntegerType(data);
-                m_datasource.RenameType(BaseType.Integer, data.Name, data.TypeID);
+                m_datasource.RenameType(BaseType.Integer, data.Name, data.TypeId);
             };
             Action<DecimalData> decimalAction = data =>
             {
                 //m_conversationDatasource.ModifyDecimalType(data);
-                m_datasource.RenameType(BaseType.Decimal, data.Name, data.TypeID);
+                m_datasource.RenameType(BaseType.Decimal, data.Name, data.TypeId);
             };
             Action<DynamicEnumerationData> dynamicEnumAction = data =>
             {
@@ -281,12 +281,12 @@ namespace ConversationEditor
             };
             Action<IntegerData> integerAction = data =>
             {
-                m_datasource.RemoveType(BaseType.Integer, data.TypeID);
+                m_datasource.RemoveType(BaseType.Integer, data.TypeId);
                 //m_conversationDatasource.RemoveType(data.TypeID);
             };
             Action<DecimalData> decimalAction = data =>
             {
-                m_datasource.RemoveType(BaseType.Decimal, data.TypeID);
+                m_datasource.RemoveType(BaseType.Decimal, data.TypeId);
                 //m_conversationDatasource.RemoveType(data.TypeID);
             };
             Action<DynamicEnumerationData> dynamicEnumAction = data =>
@@ -344,7 +344,7 @@ namespace ConversationEditor
         {
             file.Position = 0;
             file.SetLength(0);
-            m_serializer.Write(SerializationUtils.MakeDomainData(Nodes, new ConversationEditorData { Groups = Groups }), file);
+            m_serializer.Write(SerializationUtils.MakeDomainData(Nodes, new ConversationEditorData(Groups)), file);
         }
 
         //TODO: Cache this and apply updates rather than regenerating every time

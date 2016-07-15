@@ -50,6 +50,11 @@ namespace Utilities
             b = temp;
         }
 
+        public static bool DesignMode()
+        {
+            return System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime;
+        }
+
         public static T Clamp<T>(this T val, T min, T max) where T : IComparable
         {
             if (val.CompareTo(min) < 0)
@@ -288,5 +293,7 @@ namespace Utilities
             m.Position = pos;
             return result;
         }
+
+
     }
 }

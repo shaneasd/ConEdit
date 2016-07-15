@@ -67,7 +67,6 @@
     <Compile Include="BoolRef.cs" />
     <Compile Include="Algorithm\CallbackDictionary.cs" />
     <Compile Include="Algorithm\CallbackList.cs" />
-    <Compile Include="Algorithm\CallbackSet.cs" />
     <Compile Include="NativeTextRenderer.cs" />
     <Compile Include="NotfierProperty.cs" />
     <Compile Include="QuadTree.cs" />

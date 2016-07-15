@@ -102,7 +102,7 @@ namespace ConversationEditor
             m_file.Dispose();
         }
 
-        public TransitionNoduleUIInfo UIInfo(Output connection)
+        public TransitionNoduleUIInfo UIInfo(Output connection, bool canFail)
         {
             throw new NotImplementedException();
         }
@@ -130,17 +130,17 @@ namespace ConversationEditor
         public event Action<ConversationNode> NodeRemoved { add { } remove { } }
 
 
-        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<Conversation.Serialization.GraphAndUI<NodeUIData>> nodeData,  IEnumerable<NodeGroup> groups, object documentID, System.Drawing.PointF location, ILocalizationEngine localization)
+        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<Conversation.Serialization.GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, object documentID, System.Drawing.PointF location, ILocalizationEngine localization)
         {
             throw new NotImplementedException();
         }
-        
+
         public IEnumerable<string> AutoCompleteSuggestions(IParameter p, string s, Func<ParameterType, DynamicEnumParameter.Source> enumSource)
         {
             return Enumerable.Empty<string>(); //Missing file can't make suggestions but will probably be queried anyway
         }
 
-        public int RelativePosition(ConversationNode of, ConversationNode relativeTo)
+        public int RelativePosition(ConversationNode ofNode, ConversationNode relativeTo)
         {
             throw new NotImplementedException();
         }

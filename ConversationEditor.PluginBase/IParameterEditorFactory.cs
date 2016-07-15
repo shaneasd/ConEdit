@@ -9,7 +9,7 @@ namespace ConversationEditor
 {
     public interface IParameterEditorFactory
     {
-        bool WillEdit(ParameterType type, WillEdit willEdit);
+        bool WillEdit(ParameterType type, WillEdit queries);
         string Name { get; }
         Guid Guid { get; }
         IParameterEditor<Control> Make(ColorScheme scheme);

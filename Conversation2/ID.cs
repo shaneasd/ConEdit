@@ -214,9 +214,6 @@ namespace Conversation
             return new Id<T>(Guid.NewGuid());
         }
 
-        private static readonly Id<T> m_dummy = new Id<T>(Guid.Empty);
-        public static Id<T> Dummy { get { return m_dummy; } }
-
         public override bool Equals(object obj)
         {
             return (obj as Id<T>) == this;

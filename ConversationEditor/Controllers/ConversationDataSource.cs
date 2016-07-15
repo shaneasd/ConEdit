@@ -5,9 +5,22 @@ using System.Text;
 using Conversation;
 using Utilities;
 using System.Windows;
+using System.Runtime.Serialization;
 
 namespace ConversationEditor
 {
+    [Serializable]
+    public class CategoryGenerationException : Exception
+    {
+        public CategoryGenerationException(string message) : base(message) { }
+
+        public CategoryGenerationException() : base() { }
+
+        public CategoryGenerationException(string message, Exception inner) : base(message, inner) { }
+
+        protected CategoryGenerationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+    }
+
     internal class ConversationDataSource : IDataSource
     {
         ConversationConnectionRules m_connectionRules = new ConversationConnectionRules();
@@ -102,7 +115,7 @@ namespace ConversationEditor
 
             var duplicates = nodeTypeData.GroupBy(a => a.Guid).Where(g => g.Count() > 1);
             if (duplicates.Any())
-                throw new Exception("The following node types have duplicate definitions: " + string.Join(", ", duplicates.Select(g => g.Key).ToArray()));
+                throw new CategoryGenerationException("The following node types have duplicate definitions: " + string.Join(", ", duplicates.Select(g => g.Key).ToArray()));
             List<NodeType> nodeTypes = new List<NodeType> { };
 
             nodeTypes.Add(m_nodeHeirarchy);
@@ -147,7 +160,7 @@ namespace ConversationEditor
 
         public void AddEnumType(EnumerationData typeData)
         {
-            m_types.AddEnum(typeData);
+            m_types.AddEnum(typeData, false);
         }
 
         public void UpdateEnumeration(EnumerationData data)
@@ -182,7 +195,7 @@ namespace ConversationEditor
 
         public void AddIntegerType(IntegerData typeData)
         {
-            m_types.AddInteger(typeData, false);
+            m_types.AddInteger(typeData);
         }
 
         internal void ModifyIntegerType(IntegerData typeData)
@@ -311,7 +324,7 @@ namespace ConversationEditor
 
         public DynamicEnumParameter.Source GetSource(ParameterType type, object newSourceId)
         {
-            if ( IsLocalDynamicEnum(type) )
+            if (IsLocalDynamicEnum(type))
                 return m_types.GetLocalDynamicEnumSource(type, newSourceId);
             else
                 return m_types.GetDynamicEnumSource(type);

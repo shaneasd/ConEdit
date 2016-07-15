@@ -135,8 +135,8 @@ namespace ConversationEditor
                 Element = assembly;
                 Checked = check;
             }
-            public T Element;
-            public bool Checked;
+            public T Element { get; private set; }
+            public bool Checked { get; set; }
         }
 
         const int SPACING = 2;
@@ -156,7 +156,7 @@ namespace ConversationEditor
         public Rectangle ItemBox(int index, int scroll)
         {
             index -= scroll;
-            return new Rectangle(SPACING, 1 + index * (BOX_SIZE + SPACING), BOX_SIZE, BOX_SIZE);
+            return new Rectangle(SPACING, checked(1 + index * (BOX_SIZE + SPACING)), BOX_SIZE, BOX_SIZE);
         }
 
         public void DrawItems(ColorScheme scheme, Graphics g, int scroll)
@@ -172,7 +172,7 @@ namespace ConversationEditor
             var item = m_items[index];
             bool check = item.Checked;
             var itemBox = ItemBox(index, scroll);
-            DefaultBooleanEditor.DrawCheckBox(scheme, g, itemBox, check, m_held == item, m_hovered == item);
+            DefaultBooleanEditor.DrawCheckBox(g, itemBox, check, m_held == item, m_hovered == item);
             var textSize = g.MeasureString(m_stringSelector(item.Element), Font);
             g.DrawString(m_stringSelector(item.Element), Font, scheme.ForegroundBrush, SPACING + BOX_SIZE + SPACING, itemBox.Y + (BOX_SIZE - textSize.Height) / 2);
         }

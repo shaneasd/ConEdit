@@ -18,9 +18,9 @@ namespace ConversationEditor
     public class DefaultDynamicEnumEditorFactory : IParameterEditorFactory
     {
         public static readonly Guid StaticId = Guid.Parse("a9083141-9c56-44f1-8d5d-c10479877663");
-        public bool WillEdit(ParameterType type, WillEdit willEdit)
+        public bool WillEdit(ParameterType type, WillEdit queries)
         {
-            return willEdit.IsDynamicEnum(type);
+            return queries.IsDynamicEnum(type);
         }
 
         public string Name

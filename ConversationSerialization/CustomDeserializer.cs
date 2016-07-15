@@ -36,7 +36,7 @@ namespace RuntimeConversation
             var root = d.Element(XmlConversation<object, object>.Root);
 
             if (root.Attribute("xmlversion") == null || !XML_VERSION_READ.Contains(root.Attribute("xmlversion").Value))
-                throw new Exception("unrecognised conversation xml version");
+                throw new UnknownXmlVersionException("unrecognised conversation xml version");
 
             IEnumerable<Either<RuntimeConversation.NodeBase, LoadError>> editables = root.Elements("Node").Select(n => ReadEditable(n, m_datasource)).Evaluate();
             var allnodes = new Dictionary<Id<NodeTemp>, RuntimeConversation.NodeBase>();

@@ -20,7 +20,6 @@ namespace ConversationEditor
 {
     //TODO: Background color given to DrawText is wrong when the item is selected
     //TODO: Scroll an item into view when it's selected programatically (e.g. when clicking an error in the error list)
-    //TODO: Readonly background is misaligned sometimes
 
     internal partial class ProjectExplorer : UserControl
     {
@@ -212,10 +211,10 @@ namespace ConversationEditor
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetIconInfo(IntPtr hIcon, ref IconInfo pIconInfo);
+        internal static extern bool GetIconInfo(IntPtr hIcon, ref IconInfo pIconInfo);
 
         [DllImport("user32.dll")]
-        public static extern IntPtr CreateIconIndirect(ref IconInfo icon);
+        internal static extern IntPtr CreateIconIndirect(ref IconInfo icon);
 
         public static Cursor CreateCursor(Bitmap bmp, int xHotSpot, int yHotSpot)
         {
@@ -396,7 +395,7 @@ namespace ConversationEditor
             {
                 using (Graphics g = CreateGraphics())
                 {
-                    if (container.MinimizedIconRectangle(g, RectangleForItem(item)).Contains(e.Location))
+                    if (container.MinimizedIconRectangle(g, RectangleForItem(item)).Contains(e.Location.Plus(new PointF(0, greyScrollBar1.Value).Round())))
                     {
                         if (e.Button == MouseButtons.Left)
                         {
@@ -1085,6 +1084,7 @@ namespace ConversationEditor
             {
                 UpdateSelectedLocalizer.Dispose();
                 m_updateScrollbar.Dispose();
+                m_suppressibleItemSelected.Dispose();
             }
 
             if (disposing && (components != null))

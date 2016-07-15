@@ -40,41 +40,41 @@ namespace Conversation
             return m_types[typeid](name, id, defaultValue, document);
         }
 
-        public void AddInteger(IntegerData typeData, bool hidden)
+        public void AddInteger(IntegerData typeData)
         {
-            m_hidden[typeData.TypeID] = hidden;
-            m_integers.Add(typeData.TypeID, typeData);
-            m_types.Add(typeData.TypeID, (name, id, defaultValue, document) => new IntegerParameter(name, id, typeData.TypeID, m_integers[typeData.TypeID].Definition(), defaultValue));
-            m_typeNames.Add(typeData.TypeID, typeData.Name);
-            Modified.Execute(typeData.TypeID);
+            m_hidden[typeData.TypeId] = false;
+            m_integers.Add(typeData.TypeId, typeData);
+            m_types.Add(typeData.TypeId, (name, id, defaultValue, document) => new IntegerParameter(name, id, typeData.TypeId, m_integers[typeData.TypeId].Definition(), defaultValue));
+            m_typeNames.Add(typeData.TypeId, typeData.Name);
+            Modified.Execute(typeData.TypeId);
         }
 
         public void ModifyInteger(IntegerData typeData)
         {
-            m_types[typeData.TypeID] = (name, id, defaultValue, document) => new IntegerParameter(name, id, typeData.TypeID, typeData.Definition(), defaultValue);
-            m_integers[typeData.TypeID] = typeData;
-            m_typeNames.Add(typeData.TypeID, typeData.Name);
-            Modified.Execute(typeData.TypeID);
+            m_types[typeData.TypeId] = (name, id, defaultValue, document) => new IntegerParameter(name, id, typeData.TypeId, typeData.Definition(), defaultValue);
+            m_integers[typeData.TypeId] = typeData;
+            m_typeNames.Add(typeData.TypeId, typeData.Name);
+            Modified.Execute(typeData.TypeId);
         }
 
-        public void AddDecimal(DecimalData typeData, bool hidden = false)
+        public void AddDecimal(DecimalData typeData)
         {
-            m_hidden[typeData.TypeID] = hidden;
-            m_decimals.Add(typeData.TypeID, typeData);
-            m_types.Add(typeData.TypeID, (name, id, defaultValue, document) => new DecimalParameter(name, id, typeData.TypeID, typeData.Definition(), defaultValue));
-            m_typeNames.Add(typeData.TypeID, typeData.Name);
-            Modified.Execute(typeData.TypeID);
+            m_hidden[typeData.TypeId] = false;
+            m_decimals.Add(typeData.TypeId, typeData);
+            m_types.Add(typeData.TypeId, (name, id, defaultValue, document) => new DecimalParameter(name, id, typeData.TypeId, typeData.Definition(), defaultValue));
+            m_typeNames.Add(typeData.TypeId, typeData.Name);
+            Modified.Execute(typeData.TypeId);
         }
 
         public void ModifyDecimal(DecimalData typeData)
         {
-            m_types[typeData.TypeID] = (name, id, defaultValue, document) => new DecimalParameter(name, id, typeData.TypeID, m_decimals[typeData.TypeID].Definition(), defaultValue);
-            m_typeNames.Add(typeData.TypeID, typeData.Name);
-            m_decimals[typeData.TypeID] = typeData;
-            Modified.Execute(typeData.TypeID);
+            m_types[typeData.TypeId] = (name, id, defaultValue, document) => new DecimalParameter(name, id, typeData.TypeId, m_decimals[typeData.TypeId].Definition(), defaultValue);
+            m_typeNames.Add(typeData.TypeId, typeData.Name);
+            m_decimals[typeData.TypeId] = typeData;
+            Modified.Execute(typeData.TypeId);
         }
 
-        public void AddEnum(EnumerationData typeData, bool hidden = false)
+        public void AddEnum(EnumerationData typeData, bool hidden)
         {
             var enumType = typeData.TypeID;
             var setType = ParameterType.Set.Of(enumType);
@@ -105,9 +105,9 @@ namespace Conversation
             return m_enums[id].Item2.GetData(m_enums[id].Item1);
         }
 
-        public void AddDynamicEnum(DynamicEnumerationData typeData, bool hidden = false)
+        public void AddDynamicEnum(DynamicEnumerationData typeData)
         {
-            m_hidden[typeData.TypeId] = hidden;
+            m_hidden[typeData.TypeId] = false;
             m_dynamicEnums.Add(typeData.TypeId, typeData);
             m_types.Add(typeData.TypeId, (a, b, c, document) => typeData.Make(a, b, c, GetDynamicEnumSource(typeData.TypeId)));
             m_typeNames.Add(typeData.TypeId, typeData.Name);
@@ -132,9 +132,9 @@ namespace Conversation
                 return m_localDynamicEnumSources[key];
         }
 
-        public void AddLocalDynamicEnum(LocalDynamicEnumerationData typeData, bool hidden = false)
+        public void AddLocalDynamicEnum(LocalDynamicEnumerationData typeData)
         {
-            m_hidden[typeData.TypeId] = hidden;
+            m_hidden[typeData.TypeId] = false;
             m_localDynamicEnums.Add(typeData.TypeId, typeData);
             m_types.Add(typeData.TypeId, (name, id, defaultValue, document) => typeData.Make(name, id, defaultValue, GetLocalDynamicEnumSource(typeData.TypeId, document)));
             m_typeNames.Add(typeData.TypeId, typeData.Name);

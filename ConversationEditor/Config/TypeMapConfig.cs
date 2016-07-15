@@ -79,7 +79,7 @@ namespace ConversationEditor
         }
     }
 
-    public class MapConfig<TKey, TData> : IConfigParameter
+    public class MapConfig<TKey, TData> : Disposable, IConfigParameter
     {
         private Dictionary<TKey, TData> m_data = new Dictionary<TKey, TData>();
         private readonly string m_nodeName;
@@ -93,6 +93,7 @@ namespace ConversationEditor
             m_serialize = serialize;
             m_deserialize = deserialize;
             m_defaults = defaults;
+            m_valueChanged = new SuppressibleAction(() => ValueChanged.Execute());
         }
 
         public void Load(XElement root)
@@ -123,6 +124,10 @@ namespace ConversationEditor
             }
         }
 
+        SuppressibleAction m_valueChanged;
+
+        public IDisposable SuppressValueChanged() { return m_valueChanged.SuppressCallback(); }
+
         public event Action ValueChanged;
 
         public TData this[TKey key]
@@ -140,13 +145,19 @@ namespace ConversationEditor
                     m_data.Remove(key);
                 else
                     m_data[key] = value;
-                ValueChanged.Execute();
+                m_valueChanged.TryExecute();
             }
         }
 
         public bool ContainsKey(TKey key)
         {
             return m_data.ContainsKey(key);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            m_valueChanged.Dispose();
+            m_valueChanged = null;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace ConversationEditor
 
     internal sealed class DummyConversationFile : IConversationFile
     {
-        public static IConversationFile Instance = new DummyConversationFile();
+        public static IConversationFile Instance { get; } = new DummyConversationFile();
         private DummyConversationFile() { }
 
         public bool Remove(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups)
@@ -89,7 +89,7 @@ namespace ConversationEditor
         }
 
 
-        public TransitionNoduleUIInfo UIInfo(Output connection)
+        public TransitionNoduleUIInfo UIInfo(Output connection, bool canFail)
         {
             throw new NotImplementedException();
         }
@@ -120,7 +120,7 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public int RelativePosition(ConversationNode of, ConversationNode relativeTo)
+        public int RelativePosition(ConversationNode ofNode, ConversationNode relativeTo)
         {
             throw new NotImplementedException();
         }

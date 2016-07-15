@@ -73,9 +73,9 @@ namespace Utilities
 
         public override bool Equals(object obj)
         {
-            if (obj is Either<T, U>)
+            var other = obj as Either<T, U>;
+            if (other != null)
             {
-                var other = (Either<T, U>)obj;
                 if (m_aSpecified != other.m_aSpecified)
                     return false;
                 else if (m_aSpecified)

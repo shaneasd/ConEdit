@@ -10,6 +10,7 @@ using System.IO;
 using System.Globalization;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.Collections.ObjectModel;
 
 namespace Utilities.UI
 {
@@ -146,18 +147,35 @@ namespace Utilities.UI
             }
         }
 
+        /// <summary>
+        /// Represents a cursor position within a text UI element
+        /// </summary>
         public struct CP
         {
+            /// <summary>
+            /// The index of the cursor. 0 is before the first character. 1 is after the first character.
+            /// </summary>
             public int Pos;
-            public bool PreferEnd; //Put the cursor at the end of line i instead of the start of line i+1
-            public CP(int pos, bool preferEnd) { Pos = pos; PreferEnd = preferEnd; }
+
+            /// <summary>
+            /// Put the cursor at the end of line i instead of the start of line i+1
+            /// </summary>
+            private bool m_preferEnd;
+
+            public CP(int pos, bool preferEnd) { Pos = pos; m_preferEnd = preferEnd; }
             public CP(int pos) : this(pos, false) { }
 
-            internal Point GetUV(List<string> lines)
+            /// <summary>
+            /// Given a list of strings representing a series of lines determine the U (cursor position within a line with 0 being before the first character)
+            /// V (line number with 0 being the first line) coordinate of the cursor.
+            /// </summary>
+            /// <param name="lines">The lines making up the block of text</param>
+            /// <returns>UV coordinate of the cursor within the block of text</returns>
+            internal Point GetUV(IList<string> lines)
             {
                 int before = 0;
                 int i = 0;
-                while (i < lines.Count && lines[i].Length + before + (PreferEnd ? 1 : 0) <= Pos)
+                while (i < lines.Count && lines[i].Length + before + (m_preferEnd ? 1 : 0) <= Pos)
                 {
                     before += lines[i].Length;
                     i++;
@@ -170,7 +188,12 @@ namespace Utilities.UI
                 return new Point(Pos - before, i);
             }
 
-            public CP End(List<string> lines)
+            /// <summary>
+            /// Given a list of strings representing a series of lines determine the cursor position for the end of the line this cursor position exists on.
+            /// </summary>
+            /// <param name="lines">The lines making up the block of text</param>
+            /// <returns>The position of the end of the line this position is on</returns>
+            public CP End(IList<string> lines)
             {
                 var uv = GetUV(lines);
                 int before = lines.Take(uv.Y).Select(l => l.Length).Concat(0.Only()).Sum();
@@ -278,7 +301,7 @@ namespace Utilities.UI
             get { return m_itemIndex; }
             set
             {
-                Debug.WriteLine("Index changed to " + value + " m_dropDownWindow: " + m_dropDownWindow);
+                //Debug.WriteLine("Index changed to " + value + " m_dropDownWindow: " + m_dropDownWindow);
                 if (SelectedToolStripItem != null)
                     SelectedToolStripItem.BackColor = m_dropDown.BackColor;
                 if (value >= 0 && value < m_suggestions.Length)
@@ -694,7 +717,7 @@ namespace Utilities.UI
             m_additionUndoAction.SetRedo(m_state);
         }
 
-        private bool IsAcceptableFileNameChar(char c)
+        private static bool IsAcceptableFileNameChar(char c)
         {
             return !Path.GetInvalidFileNameChars().Contains(c);
         }

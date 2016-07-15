@@ -7,18 +7,18 @@ namespace Conversation
 {
     public struct IntegerData
     {
-        public IntegerData(string name, ParameterType typeId, int? max = null, int? min = null/*, int? def = null*/)
+        public IntegerData(string name, ParameterType typeId, int? max, int? min /*, int? def = null*/)
         {
             Name = name;
-            TypeID = typeId;
+            TypeId = typeId;
             Max = max;
             Min = min;
             //Default = def;
         }
-        public string Name;
-        public ParameterType TypeID;
-        public int? Max;
-        public int? Min;
+        public string Name { get; set; }
+        public ParameterType TypeId { get; private set; }
+        public int? Max { get; set; }
+        public int? Min { get; set; }
         //public int? Default;
 
         //public IntegerParameter Make(string name, ID<Parameter> id)

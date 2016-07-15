@@ -14,8 +14,8 @@ namespace Utilities.UI
 {
     public class UpArrowItem : ToolStripButton
     {
-        public static Bitmap UpArrow;
-        public static Bitmap DownArrow;
+        private static Bitmap UpArrow;
+        private static Bitmap DownArrow;
         static UpArrowItem()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
@@ -317,7 +317,7 @@ namespace Utilities.UI
             get { return m_itemIndex; }
             set
             {
-                Debug.WriteLine("Index changed to " + value + " m_dropDownWindow: " + m_dropDownWindow);
+                //Debug.WriteLine("Index changed to " + value + " m_dropDownWindow: " + m_dropDownWindow);
                 if (SelectedToolStripItem != null)
                     SelectedToolStripItem.BackColor = m_dropDown.BackColor;
                 if (value >= 0 && value < Items.Count())

@@ -18,7 +18,7 @@ namespace ConversationEditor
     {
         public static readonly Guid StaticId = Guid.Parse("87253284-4ade-4a7d-9043-81f3b58f1ba5");
 
-        public bool WillEdit(ParameterType type, WillEdit willEdit)
+        public bool WillEdit(ParameterType type, WillEdit queries)
         {
             return type == BaseTypeBoolean.PARAMETER_TYPE;
         }
@@ -144,11 +144,11 @@ namespace ConversationEditor
             Rectangle boxRectangle = BoxRectangle();
             Point textLocation = new Point((int)boxRectangle.X + (int)boxSize.Width + gap, (int)(drawWindow1.Height - textSize.Height) / 2);
             e.Graphics.DrawRectangle(Scheme.ControlBorder, Rectangle.FromLTRB(0, 0, drawWindow1.Width - 1, drawWindow1.Height - 1));
-            DrawCheckBox(Scheme, e.Graphics, boxRectangle, Checked, m_held, m_hovered);
+            DrawCheckBox(e.Graphics, boxRectangle, Checked, m_held, m_hovered);
             e.Graphics.DrawString(DisplayText, Font, Scheme.ForegroundBrush, textLocation);
         }
 
-        public static void DrawCheckBox(Utilities.UI.ColorScheme scheme, Graphics g, Rectangle boxRectangle, bool check, bool held, bool hovered)
+        public static void DrawCheckBox(Graphics g, Rectangle boxRectangle, bool check, bool held, bool hovered)
         {
             Image image = check && held ? ToggleButtonOnPressed :
                           check && hovered ? ToggleButtonOnHover :

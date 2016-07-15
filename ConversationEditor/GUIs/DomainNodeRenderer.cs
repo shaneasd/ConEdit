@@ -13,7 +13,7 @@ namespace ConversationEditor
 {
     public class DomainNodeRendererFactory : NodeUI.IFactory
     {
-        public static DomainNodeRendererFactory Instance = new DomainNodeRendererFactory();
+        public static DomainNodeRendererFactory Instance { get; } = new DomainNodeRendererFactory();
 
         public bool WillRender(Id<NodeTypeTemp> nodeType)
         {

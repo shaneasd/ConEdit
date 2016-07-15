@@ -7,7 +7,7 @@ namespace Utilities
 {
     public class NullDeserializer<T> : IDeserializerXml<T>, IDeserializer<T>
     {
-        public static NullDeserializer<T> Instance = new NullDeserializer<T>();
+        public static NullDeserializer<T> Instance { get; } = new NullDeserializer<T>();
 
         public T Read(System.Xml.Linq.XElement node)
         {

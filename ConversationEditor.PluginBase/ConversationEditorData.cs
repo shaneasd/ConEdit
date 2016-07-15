@@ -14,7 +14,17 @@ namespace ConversationEditor
 
     public class ConversationEditorData
     {
-        public IEnumerable<NodeGroup> Groups = Enumerable.Empty<NodeGroup>();
+        public IEnumerable<NodeGroup> Groups { get; private set; }
+
+        public ConversationEditorData()
+        {
+            Groups = Enumerable.Empty<NodeGroup>();
+        }
+
+        public ConversationEditorData(IEnumerable<NodeGroup> groups)
+        {
+            Groups = groups;
+        }
 
         public class Serializer : ISerializerXml<ConversationEditorData>
         {
@@ -49,7 +59,7 @@ namespace ConversationEditor
                     System.Drawing.RectangleF area = NodeUIDataSerializerXml.ReadArea(g);
                     groupsResult.Add(new NodeGroup(area, contents));
                 }
-                return new ConversationEditorData() { Groups = groupsResult };
+                return new ConversationEditorData(groupsResult);
             }
         }
 

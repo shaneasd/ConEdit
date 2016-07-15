@@ -59,6 +59,7 @@
     <Compile Include="CustomDeserializer.cs" />
     <Compile Include="LocalizedString.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnknownXmlVersionException.cs" />
     <Compile Include="XmlConversation.cs" />
     <Compile Include="XmlDomain.cs" />
     <Compile Include="XmlLocalization.cs" />

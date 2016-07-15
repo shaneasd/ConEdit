@@ -12,7 +12,7 @@ namespace PluginPack
 {
     class TemplatesMenuActions : IMenuActionFactory<ConversationNode>
     {
-        public IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control)
+        public IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log)
         {
             XmlGraphData<NodeUIData, ConversationEditorData> data;
             Assembly assembly = Assembly.GetExecutingAssembly();

@@ -59,6 +59,7 @@
     <Compile Include="Config\ConfigParameterString.cs" />
     <Compile Include="ConversationEditorData.cs" />
     <Compile Include="EditableUI.cs" />
+    <Compile Include="IErrorListElement.cs" />
     <Compile Include="IAudioFile.cs" />
     <Compile Include="IAudioProvider.cs" />
     <Compile Include="IAudioProviderCustomization.cs" />

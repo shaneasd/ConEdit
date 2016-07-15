@@ -41,19 +41,24 @@ namespace ConversationEditor
             m_localizers.GotChanged += () =>
             {
                 //If there is only one localizer then it must be the current localizer
-                if (m_localizers.Count() == 1) 
-                    m_context.CurrentLocalization.Value = m_localizers.First(); 
+                if (m_localizers.Count() == 1)
+                    m_context.CurrentLocalization.Value = m_localizers.First();
                 //If the current localizer is removed from the list of available localizers then select a replacement
                 if (!m_localizers.Contains(m_context.CurrentLocalization.Value))
                     m_context.CurrentLocalization.Value = Project.SelectNewLocalizer(m_localizers);
-            }; 
+            };
         }
 
         public IProjectElementList<LocalizationFile, ILocalizationFile> Localizers { get { return m_localizers; } }
 
         internal ISerializer<LocalizerData> MakeSerializer(string file)
         {
-            return new XmlLocalization.Serializer(GuidUsed, m_usedGuids, ShouldClean, ShouldExpand, Localize, file);
+            Func<XmlLocalization.Context> context = () =>
+             {
+                 var used = m_usedGuids();
+                 return new XmlLocalization.Context(used.Contains, used);
+             };
+            return new XmlLocalization.Serializer(context, ShouldClean, ShouldExpand, Localize, file);
         }
 
         public string Localize(Id<LocalizedText> guid)
@@ -72,7 +77,7 @@ namespace ConversationEditor
             {
                 actions.Add(loc.DuplicateAction(guid, result));
             }
-            return Tuple.Create(result, new SimpleUndoPair { Redo = ()=>actions.ForEach(a=>a.Redo()), Undo = ()=> actions.ForEach(a=>a.Undo())});
+            return Tuple.Create(result, new SimpleUndoPair { Redo = () => actions.ForEach(a => a.Redo()), Undo = () => actions.ForEach(a => a.Undo()) });
         }
 
         public SimpleUndoPair SetLocalizationAction(Id<LocalizedText> guid, string value)

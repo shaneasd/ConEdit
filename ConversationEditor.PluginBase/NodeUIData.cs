@@ -9,7 +9,7 @@ namespace ConversationEditor
 {
     public class NodeUIData
     {
-        public RectangleF Area;
+        public RectangleF Area { get; set; }
 
         public NodeUIData() { }
         public NodeUIData(PointF p)
