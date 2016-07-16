@@ -137,7 +137,6 @@
     <Compile Include="Util.cs" />
     <Compile Include="WeakEvent.cs" />
     <Compile Include="WeakReferenceComparer.cs" />
-    <Compile Include="WeakReferenceT.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\DrawWindow.resx">
@@ -168,6 +167,7 @@
     <EmbeddedResource Include="UI\Resources\UpArrow.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="ShanesKey.snk" />
     <None Include="Utilities.ruleset" />
   </ItemGroup>

@@ -201,7 +201,6 @@ namespace ConversationEditor
 
                 List<NodeData.ConnectorData> parameterConnectors = new List<NodeData.ConnectorData> { parameterOutput, parameterConfigConnector };
 
-                //OutputDefinition parameterOutput = (data) => DomainIDs.PARAMETER_OUTPUT_DEFINITION.MakeWithoutParameters(parameterDefinitionConnector1, data, DomainConnectionRules.Instance);
                 AddNode(BaseType.Integer.ParameterNodeType, "Integer", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, integerTypeParameter, integerDefaultParameter });
                 AddNode(BaseType.Decimal.ParameterNodeType, "Decimal", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, decimalTypeParameter, decimalDefaultParameter });
                 AddNode(BaseType.String.ParameterNodeType, "String", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, stringDefaultParameter });
@@ -212,9 +211,6 @@ namespace ConversationEditor
                 AddNode(BaseType.LocalDynamicEnumeration.ParameterNodeType, "Local Dynamic Enumeration", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, localDynamicEnumTypeParameter, stringDefaultParameter });
                 AddNode(BaseType.Set.ParameterNodeType, "Set", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, enumTypeParameter });
                 AddEnumNode(parameterMenu);
-                //AddNode(BaseType.Enumeration.ParameterNodeType, "Enumeration", parameterMenu, config('p', "00aaaa"), parameterOutput.Only().ToList(),
-                //new List<NodeData.ParameterData> { nameParameter, enumTypeParameter,
-                //new EnumDefaultParameter(m_types.GetEnumOptions, () => ParameterType.FromGuid(typeSelectionParameter.EditorSelected)});
             }
             #endregion
 
@@ -231,8 +227,6 @@ namespace ConversationEditor
 
             Id<TConnector> configOutput1 = Id<TConnector>.Parse("2d88af18-d66d-4f86-868e-5db9e020c99d");
             var configConnector = new NodeData.ConnectorData(configOutput1, DomainIDs.ConfigOutputDefinition.Id, new List<Parameter>());
-            //OutputDefinition configConnector = (data) => DomainIDs.CONFIG_OUTPUT_DEFINITION.MakeWithoutParameters(configOutput1, data, DomainConnectionRules.Instance);
-            //AddNode(DomainIDs.CONFIG_GUID, "Generic Config", configMenu, config('c', "aabb00"), configConnector.Only(), (id, ng, c) => new ExternalFunction(ng, id, c, new StringParameter("Key", DomainIDs.CONFIG_KEY, BaseTypeString.PARAMETER_TYPE), new StringParameter("Value", DomainIDs.CONFIG_VALUE, BaseTypeString.PARAMETER_TYPE)));
 
             IEnumerable<IConfigNodeDefinition> configNodeDefitions = m_pluginsConfig.GetConfigDefinitions();
             foreach (var configNodeDefinition in configNodeDefitions)
@@ -780,7 +774,6 @@ namespace ConversationEditor
 
         private void RefreshConnectorsMenu()
         {
-            //m_connectorsMenu.m_nodes.RemoveAll(g => !object.Equals(g, m_inputConnector) && !object.Equals(g, m_outputConnector));
             m_connectorsMenu.m_nodes.Clear();
             foreach (var data in ConnectorDefinitions.Values)
             {
@@ -788,9 +781,7 @@ namespace ConversationEditor
                 {
                     var d = data;
                     NodeData.ConnectorData connector = new NodeData.ConnectorData(Id<TConnector>.Parse("d7ac3a74-206d-48d5-b40f-30bc16dfdb67"), DomainIDs.ConnectorOutputDefinition.Id, new List<Parameter>());
-                    //OutputDefinition ConnectorConnectorDefinition = (e) => DomainIDs.CONNECTOR_OUTPUT_DEFINITION.MakeWithoutParameters( e, DomainConnectionRules.Instance);
                     AddNode(Id<NodeTypeTemp>.ConvertFrom(d.Id), d.Name, m_connectorsMenu, MakeConfig('\0', ConnectorColor), new List<NodeData.ConnectorData> { connector }, d.Parameters.ToList());
-                    //(id, ng, c) => new ExternalFunction(ng, id, c, d.Parameters.Select(p => p.Make(m_typeSet.Make)).ToArray()));
                 }
             }
         }

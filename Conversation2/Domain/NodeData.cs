@@ -21,22 +21,26 @@ namespace Conversation
         {
             public ConnectorData(Id<TConnector> id, Id<TConnectorDefinition> typeId, List<Parameter> parameters)
             {
-                Id = id;
-                TypeId = typeId;
-                Parameters = parameters;
+                m_id = id;
+                m_typeId = typeId;
+                m_parameters = parameters;
             }
+
+            private readonly Id<TConnector> m_id;
+            private readonly Id<TConnectorDefinition> m_typeId;
+            private readonly List<Parameter> m_parameters;
 
             /// <summary>
             /// Identifies this connector for the node type uniquely. A combination of this ID and a node ID will uniquely identify a connector in a graph.
             /// </summary>
-            public readonly Id<TConnector> Id;
+            public Id<TConnector> Id { get { return m_id; } }
 
             /// <summary>
             /// Identifies the connector definition which classifies this connector
             /// </summary>
-            public readonly Id<TConnectorDefinition> TypeId;
+            public Id<TConnectorDefinition> TypeId { get { return m_typeId; } }
 
-            public readonly List<Parameter> Parameters;
+            public List<Parameter> Parameters { get { return m_parameters; } }
 
             //public Func<IEditable, Output> Make(Func<ID<OutputTemp>, OutputDefinition> definitionFactory)
             //{
@@ -69,11 +73,11 @@ namespace Conversation
                 Config = config;
             }
 
-            public ParameterType Type;
-            public string Name;
-            public Id<Parameter> Id;
-            public string Default; //Can be null, string form of the default value
-            public ReadOnlyCollection<ConfigData> Config;
+            public ParameterType Type { get; private set; }
+            public string Name { get; private set; }
+            public Id<Parameter> Id { get; private set; }
+            public string Default { get; private set; } //Can be null, string form of the default value
+            public ReadOnlyCollection<ConfigData> Config { get; private set; }
 
             public Parameter Make(Func<ParameterType, string, Id<Parameter>, string, Parameter> parameterFactory)
             {
@@ -91,22 +95,15 @@ namespace Conversation
 
         public struct ConfigData
         {
-            public readonly Id<NodeTypeTemp> Type;
+            private readonly Id<NodeTypeTemp> m_type;
+            public Id<NodeTypeTemp> Type { get { return m_type; } }
             public IEnumerable<Parameter> Parameters;
 
             public ConfigData(Id<NodeTypeTemp> type, IEnumerable<Parameter> parameters)
             {
-                Type = type;
+                m_type = type;
                 Parameters = parameters.ToList();
             }
-
-            //public ConfigData(string name, string value)
-            //{
-            //    Name = name;
-            //    Value = value;
-            //}
-            //public string Name;
-            //public string Value;
         }
 
         public NodeData(string name, Guid? type, Id<NodeTypeTemp> guid, List<ConnectorData> connectors, List<ParameterData> parameters, List<ConfigData> config)

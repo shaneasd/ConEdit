@@ -37,14 +37,6 @@ namespace Conversation
         public static Id<TConnectorDefinition> OutputDefinitionId { get; } = Id<TConnectorDefinition>.Parse("a800357f-5013-44c1-8637-c8a60cff240b");
         public static Id<Parameter> OutputName { get; } = Id<Parameter>.Parse("ec0c0b5c-57d9-484b-8946-c8dcf3e09b38");
 
-        //Domain currently doesn't have any connectors with parameters so ignore them for now
-        public Output MakeWithoutParameters(Id<TConnector> id, IEditable parent, IConnectionRules rules)
-        {
-            if (this.Parameters.Any())
-                throw new Exception("Something wrong with domain domain");
-            return new Output(id, this, parent, new List<Parameter>(), rules);
-        }
-
         public Func<IEditable, List<Parameter>, Output> Make(Id<TConnector> id, IConnectionRules rules)
         {
             var thisCopy = this; //Make a copy because the lamba can't capture this because this is a struct

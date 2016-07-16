@@ -12,10 +12,11 @@ namespace Conversation
         public LocalDynamicEnumerationData(string name, ParameterType typeId)
         {
             Name = name;
-            TypeId = typeId;
+            m_typeId = typeId;
         }
-        public string Name;
-        public ParameterType TypeId;
+        public string Name { get; set; }
+        private readonly ParameterType m_typeId;
+        public ParameterType TypeId { get { return m_typeId; } }
 
         public Parameter Make(string name, Id<Parameter> id, string defaultValue, DynamicEnumParameter.Source source)
         {

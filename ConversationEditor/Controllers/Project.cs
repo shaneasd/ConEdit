@@ -347,7 +347,7 @@ namespace ConversationEditor
                     toLoad.Add(file);
                 }
                 else
-                    throw new Exception("Attempting to import file from a folder than is not a subfolder of the project's parent folder");
+                    throw new InvalidOperationException("Attempting to import file from a folder than is not a subfolder of the project's parent folder");
             }
             return toLoad.Distinct(new GenericEqualityComparer<FileInfo>((a, b) => a.FullName == b.FullName, a => a.FullName.GetHashCode()));
         }

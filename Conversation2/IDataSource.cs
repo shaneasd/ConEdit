@@ -24,7 +24,7 @@ namespace Conversation
             m_guid = guid;
         }
 
-        public readonly List<NodeType> m_childTypes = new List<NodeType>();
+        public List<NodeType> m_childTypes { get; } = new List<NodeType>();
         public void AddChildType(NodeType childType)
         {
             m_childTypes.Add(childType);
@@ -88,7 +88,7 @@ namespace Conversation
     public sealed class DummyDataSource : IDataSource
     {
         private DummyDataSource() { }
-        public static readonly IDataSource Instance = new DummyDataSource();
+        public static IDataSource Instance { get; } = new DummyDataSource();
 
         IEnumerable<ParameterType> IDataSource.ParameterTypes
         {

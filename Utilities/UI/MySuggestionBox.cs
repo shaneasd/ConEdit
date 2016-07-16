@@ -345,7 +345,7 @@ namespace Utilities.UI
             {
                 if (ItemIndex - m_dropDownWindow < 0)
                     return null;
-                if (ItemIndex - m_dropDownWindow >= m_dropDown.Items.Count-2)
+                if (ItemIndex - m_dropDownWindow >= m_dropDown.Items.Count - 2)
                     return null;
                 return m_dropDown.Items[ItemIndex - m_dropDownWindow + 1];
             }
@@ -421,11 +421,13 @@ namespace Utilities.UI
         private void DrawButton(Graphics graphics, RectangleF buttonArea)
         {
             graphics.DrawRectangle(TextBoxColors.BorderPen, RectangleF.FromLTRB(buttonArea.Left, buttonArea.Top, buttonArea.Right - 1, buttonArea.Bottom - 1));
-            var path = new GraphicsPath();
-            path.AddLines(new PointF[] { buttonArea.Location.Plus(buttonArea.Width/4,buttonArea.Height/3),
+            using (var path = new GraphicsPath())
+            {
+                path.AddLines(new PointF[] { buttonArea.Location.Plus(buttonArea.Width/4,buttonArea.Height/3),
                                          buttonArea.Location.Plus(3*buttonArea.Width/4, buttonArea.Height/3),
                                          buttonArea.Location.Plus(buttonArea.Width/2, 2*buttonArea.Height/3)});
-            graphics.FillPath(TextBoxColors.TextBrush, path);
+                graphics.FillPath(TextBoxColors.TextBrush, path);
+            }
         }
 
         private MyComboBoxItem<T> MatchingItem()
@@ -505,7 +507,7 @@ namespace Utilities.UI
 
             if (m_dropDownWindow <= 0)
                 m_dropDown.Items[0].Visible = false;
-            if ( m_dropDownWindow >= strictSorted.Count - WINDOW_SIZE )
+            if (m_dropDownWindow >= strictSorted.Count - WINDOW_SIZE)
                 m_dropDown.Items.OfType<ToolStripItem>().Last().Visible = false;
 
             m_dropDown.ResumeLayout();

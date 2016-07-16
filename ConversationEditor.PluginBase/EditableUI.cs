@@ -30,19 +30,15 @@ namespace ConversationEditor
             return new EditableUI(n, p, localizer);
         }
 
-        static Guid m_guid = Guid.Parse("2cbbf5fa-4e42-4670-9c10-c3578a2400eb");
-        public Guid Guid
-        {
-            get { return m_guid; }
-        }
+        public Guid Guid { get; } = Guid.Parse("2cbbf5fa-4e42-4670-9c10-c3578a2400eb");
     }
 
     public class EditableUI : NodeUI
     {
-        public readonly static Font Font = SystemFonts.DefaultFont;
-        public readonly static Font BoldFont = new Font(SystemFonts.DefaultFont, FontStyle.Bold);
-        public readonly static Pen Thin = new Pen(Brushes.Black, 1);
-        public readonly static Pen Thick = new Pen(Brushes.White, 3);
+        public static Font Font { get; } = SystemFonts.DefaultFont;
+        public static Font BoldFont { get; } = new Font(SystemFonts.DefaultFont, FontStyle.Bold);
+        public static Pen Thin { get; } = new Pen(Brushes.Black, 1);
+        public static Pen Thick { get; } = new Pen(Brushes.White, 3);
 
         protected virtual bool ShouldRender(Parameter p)
         {

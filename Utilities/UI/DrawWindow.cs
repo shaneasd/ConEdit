@@ -32,7 +32,7 @@ namespace Utilities.UI
         protected override void OnPaint(PaintEventArgs e)
         {
             if (!m_colorSchemeAssigned && !Util.DesignMode())
-                throw new Exception("drawnwindow not given a color scheme");
+                throw new InvalidOperationException("drawnwindow not given a color scheme");
             base.OnPaint(e);
         }
 

@@ -9,13 +9,18 @@ namespace Conversation
     {
         public NodeTypeData(string name, Guid guid, Guid parent)
         {
-            Name = name;
-            Guid = guid;
-            Parent = parent;
+            m_name = name;
+            m_guid = guid;
+            m_parent = parent;
         }
-        public readonly string Name;
-        public readonly Guid Guid;
-        public readonly Guid Parent;
+
+        private readonly string m_name;
+        private readonly Guid m_guid;
+        private readonly Guid m_parent;
+
+        public string Name { get { return m_name; } }
+        public Guid Guid { get { return m_guid; } }
+        public Guid Parent { get { return m_parent; } }
     }
 
 }

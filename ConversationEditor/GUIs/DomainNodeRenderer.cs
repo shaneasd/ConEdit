@@ -30,11 +30,7 @@ namespace ConversationEditor
             return new DomainNodeRenderer(n, p, localizer);
         }
 
-        static Guid m_guid = Guid.Parse("3a724c77-1707-479b-a256-7dc319f229b4");
-        public Guid Guid
-        {
-            get { return m_guid; }
-        }
+        public Guid Guid { get; } = Guid.Parse("3a724c77-1707-479b-a256-7dc319f229b4");
     }
 
     internal class DomainNodeRenderer : NodeUI

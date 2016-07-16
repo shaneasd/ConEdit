@@ -117,6 +117,7 @@ namespace ConversationEditor
                 //}
 
                 bool removed = SpatiallyOrderedNodes.Remove(n, c.from);
+                //TODO: This block is for diagnosing a bug which probably doesn't exist anymore and as such can be removed
                 if (!removed)
                 {
                     RectangleF? location = SpatiallyOrderedNodes.FindAndRemove(n);

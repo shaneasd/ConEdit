@@ -10,8 +10,7 @@ namespace PluginPack
 {
     public class RedRendererFactory : NodeUI.IFactory
     {
-        private static RedRendererFactory m_instance = new RedRendererFactory();
-        public static RedRendererFactory Instance { get { return m_instance; } }
+        public static RedRendererFactory Instance { get; } = new RedRendererFactory();
 
         public bool WillRender(Id<NodeTypeTemp> nodeType)
         {
@@ -28,11 +27,7 @@ namespace PluginPack
             return new RedRenderer(n, p);
         }
 
-        static Guid s_guid = Guid.Parse("7166fb2a-c457-4d0a-8c93-906e925a50ae");
-        public Guid Guid
-        {
-            get { return s_guid; }
-        }
+        public Guid Guid { get; } = Guid.Parse("7166fb2a-c457-4d0a-8c93-906e925a50ae");
     }
 
     public class RedRenderer : NodeUI

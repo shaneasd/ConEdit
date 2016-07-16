@@ -12,7 +12,7 @@ namespace Tests
 {
     public static partial class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             TestQuadTree.AllTests();
             //TestFileSystem.TestPathToFromDirDir();

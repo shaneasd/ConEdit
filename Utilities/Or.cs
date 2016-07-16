@@ -11,12 +11,12 @@ namespace Utilities
         {
         }
 
-        public static readonly Func<Null> Func = () => null;
+        public static Func<Null> Func { get; } = () => null;
     }
 
     public static class Either
     {
-        public static Either<T, U> Create<T,U>(bool useA, Func<T> aGenerator, Func<U> bGenerator)
+        public static Either<T, U> Create<T, U>(bool useA, Func<T> aGenerator, Func<U> bGenerator)
         {
             return new Either<T, U>(useA, aGenerator, bGenerator);
         }
@@ -132,7 +132,7 @@ namespace Utilities
                 return b(B);
         }
 
-        public Either<V,W> TransformedEither<V, W>(Func<T, V> a, Func<U, W> b)
+        public Either<V, W> TransformedEither<V, W>(Func<T, V> a, Func<U, W> b)
         {
             if (m_aSpecified)
                 return a(A);

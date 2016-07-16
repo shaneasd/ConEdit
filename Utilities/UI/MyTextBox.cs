@@ -128,7 +128,7 @@ namespace Utilities.UI
             set
             {
                 if (value == null)
-                    throw new Exception("Textbox Text cannot be null");
+                    throw new ArgumentNullException(nameof(value), "Textbox Text cannot be null");
                 if (m_state.Text != value || m_uninitializedText)
                 {
                     m_uninitializedText = false;
@@ -371,7 +371,7 @@ namespace Utilities.UI
             foreach (var item in limited)
             {
                 var itemitem = item;
-                var element = m_dropDown.Items.Add(item, null, (a, b) => { AutoCompleteTo(item); });
+                var element = m_dropDown.Items.Add(item, null, (a, b) => { AutoCompleteTo(itemitem); });
                 element.TextAlign = ContentAlignment.MiddleLeft;
                 element.AutoSize = false;
                 element.Height = height;
@@ -1074,6 +1074,10 @@ namespace Utilities.UI
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
+            if (disposing)
+            {
+                m_dropDown.Dispose();
+            }
             ClearCaret();
         }
     }

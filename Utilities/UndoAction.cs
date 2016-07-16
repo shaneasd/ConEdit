@@ -20,7 +20,7 @@ namespace Utilities
         public abstract void Redo();
         public abstract string Description { get; }
 
-        public static readonly UndoAction NeverSaved = new DummyUndoAction();
+        public static UndoAction NeverSaved { get; } = new DummyUndoAction();
 
         private class DummyUndoAction : UndoAction
         {

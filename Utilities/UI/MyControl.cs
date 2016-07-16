@@ -166,6 +166,6 @@ namespace Utilities.UI
         public override event Action RequestedAreaChanged { add { } remove { } }
         public override bool Contains(PointF point) { return false; }
 
-        public static readonly MyControl Instance = new DummyMyControl();
+        public static MyControl Instance { get; } = new DummyMyControl();
     }
 }

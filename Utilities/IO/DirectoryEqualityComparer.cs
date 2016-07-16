@@ -10,7 +10,6 @@ namespace Utilities
 {
     public class DirectoryInfoHashed
     {
-        public static int collisions = 0;
         private DirectoryInfo m_wrapped;
         private int m_hashCode;
         public DirectoryInfoHashed(DirectoryInfo wrapped)
@@ -24,8 +23,6 @@ namespace Utilities
             DirectoryInfoHashed other = (DirectoryInfoHashed)obj;
             if (other == null)
                 return false;
-            if (other.m_hashCode == m_hashCode)
-                collisions++;
             return DirectoryEqualityComparer.SamePath(other.m_wrapped, m_wrapped);
         }
 

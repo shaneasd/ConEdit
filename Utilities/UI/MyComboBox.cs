@@ -187,11 +187,13 @@ namespace Utilities.UI
         private void DrawButton(Graphics graphics, RectangleF buttonArea)
         {
             graphics.DrawRectangle(TextBoxColors.BorderPen, RectangleF.FromLTRB(buttonArea.Left, buttonArea.Top, buttonArea.Right - 1, buttonArea.Bottom - 1));
-            var path = new GraphicsPath();
-            path.AddLines(new PointF[] { buttonArea.Location.Plus(buttonArea.Width/4,buttonArea.Height/3),
+            using (var path = new GraphicsPath())
+            {
+                path.AddLines(new PointF[] { buttonArea.Location.Plus(buttonArea.Width/4,buttonArea.Height/3),
                                          buttonArea.Location.Plus(3*buttonArea.Width/4, buttonArea.Height/3),
                                          buttonArea.Location.Plus(buttonArea.Width/2, 2*buttonArea.Height/3)});
-            graphics.FillPath(TextBoxColors.TextBrush, path);
+                graphics.FillPath(TextBoxColors.TextBrush, path);
+            }
         }
 
         private MyComboBoxItem<T> MatchingItem()

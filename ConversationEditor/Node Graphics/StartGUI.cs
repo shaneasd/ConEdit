@@ -13,8 +13,7 @@ namespace ConversationEditor
 {
     public class StartGuiFactory : NodeUI.IFactory
     {
-        private static StartGuiFactory m_instance = new StartGuiFactory();
-        public static StartGuiFactory Instance { get { return m_instance; } }
+        public static StartGuiFactory Instance { get; } = new StartGuiFactory();
 
         public bool WillRender(Id<NodeTypeTemp> nodeType)
         {
@@ -31,11 +30,7 @@ namespace ConversationEditor
             return new StartGui(n, p, localizer);
         }
 
-        static Guid m_guid = Guid.Parse("346ac22d-6393-4958-8d36-fedff89b40c0");
-        public Guid Guid
-        {
-            get { return m_guid; }
-        }
+        public Guid Guid { get; } = Guid.Parse("346ac22d-6393-4958-8d36-fedff89b40c0");
     }
 
     internal class StartGui : NodeUI

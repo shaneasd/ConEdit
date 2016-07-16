@@ -10,8 +10,8 @@ namespace Conversation
     {
         public struct Element
         {
-            public string Name;
-            public Guid Guid;
+            public string Name { get; set; }
+            public Guid Guid { get; set; }
             public Element(string name, Guid guid)
             {
                 Name = name;
@@ -50,7 +50,7 @@ namespace Conversation
             var elements = Elements.Select(e => Tuple.Create(e.Guid, e.Name));
 
             //if (Default == null)
-                return new Enumeration(elements, TypeID);
+            return new Enumeration(elements, TypeID);
             //else
             //{
             //    var name = Name;

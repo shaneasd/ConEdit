@@ -6,33 +6,42 @@ using Utilities;
 
 namespace Conversation
 {
-    public class ConnectorPosition
+    public abstract class ConnectorPosition
     {
-        private static readonly ConnectorPosition sm_top = new ConnectorPosition("Top", Guid.Parse("24c96d32-1704-4c85-b2bf-b8da8731ea47"));
-        public static ConnectorPosition Top { get { return sm_top; } }
-
-        private static readonly ConnectorPosition sm_bottom = new ConnectorPosition("Bottom", Guid.Parse("b5461736-18f1-417c-8a54-2c5a1726483b"));
-        public static ConnectorPosition Bottom { get { return sm_bottom; } }
-
-        private static readonly ConnectorPosition sm_left = new ConnectorPosition("Left", Guid.Parse("adb2301c-a858-44e8-b76c-93e538231960"));
-        public static ConnectorPosition Left { get { return sm_left; } }
-
-        private static readonly ConnectorPosition sm_right = new ConnectorPosition("Right", Guid.Parse("d8b8efae-3949-47b3-af7b-8db1e402489e"));
-        public static ConnectorPosition Right { get { return sm_right; } }
-
-        public T For<T>(Func<T> top, Func<T> bottom, Func<T> left, Func<T> right)
+        private class CTop : ConnectorPosition
         {
-            if (this == ConnectorPosition.Top)
-                return top();
-            else if (this == ConnectorPosition.Bottom)
-                return bottom();
-            else if (this == ConnectorPosition.Left)
-                return left();
-            else if (this == ConnectorPosition.Right)
-                return right();
-            else
-                throw new Exception("Unkown ConnectorPosition in ConnectorPosition.For");
+            public static ConnectorPosition Instance { get; } = new CTop();
+            private CTop() : base("Top", Guid.Parse("24c96d32-1704-4c85-b2bf-b8da8731ea47")) { }
+            public override T For<T>(Func<T> top, Func<T> bottom, Func<T> left, Func<T> right) { return top(); }
         }
+
+        private class CBottom : ConnectorPosition
+        {
+            public static ConnectorPosition Instance { get; } = new CBottom();
+            private CBottom() : base("Bottom", Guid.Parse("b5461736-18f1-417c-8a54-2c5a1726483b")) { }
+            public override T For<T>(Func<T> top, Func<T> bottom, Func<T> left, Func<T> right) { return bottom(); }
+        }
+
+        private class CLeft : ConnectorPosition
+        {
+            public static ConnectorPosition Instance { get; } = new CLeft();
+            private CLeft() : base("Left", Guid.Parse("adb2301c-a858-44e8-b76c-93e538231960")) { }
+            public override T For<T>(Func<T> top, Func<T> bottom, Func<T> left, Func<T> right) { return left(); }
+        }
+
+        private class CRight : ConnectorPosition
+        {
+            public static ConnectorPosition Instance { get; } = new CRight();
+            private CRight() : base("Right", Guid.Parse("d8b8efae-3949-47b3-af7b-8db1e402489e")) { }
+            public override T For<T>(Func<T> top, Func<T> bottom, Func<T> left, Func<T> right) { return right(); }
+        }
+
+        public static ConnectorPosition Top { get; } = CTop.Instance;
+        public static ConnectorPosition Bottom { get; } = CBottom.Instance;
+        public static ConnectorPosition Left { get; } = CLeft.Instance;
+        public static ConnectorPosition Right { get; } = CRight.Instance;
+
+        public abstract T For<T>(Func<T> top, Func<T> bottom, Func<T> left, Func<T> right);
 
         public static bool operator ==(ConnectorPosition a, ConnectorPosition b)
         {
@@ -122,7 +131,7 @@ namespace Conversation
 
     public class NoConnections : IConnectionRules
     {
-        public static readonly IConnectionRules Instance = new NoConnections();
+        public static IConnectionRules Instance { get; } = new NoConnections();
         public bool CanConnect(Id<TConnectorDefinition> a, Id<TConnectorDefinition> b)
         {
             return false;
@@ -145,21 +154,27 @@ namespace Conversation
 
     public class Output
     {
+        private readonly Id<TConnector> m_id;
+        private readonly IEditable m_parent;
+        private readonly List<Parameter> m_parameters;
+        private readonly IConnectionRules m_rules;
+
         public readonly ConnectorDefinitionData m_definition;
-        public readonly Id<TConnector> ID;
-        public readonly IEditable Parent;
-        public readonly List<Parameter> Parameters;
-        public readonly IConnectionRules Rules;
+
+        public Id<TConnector> ID { get { return m_id; } }
+        public IEditable Parent { get { return m_parent; } }
+        public List<Parameter> Parameters { get { return m_parameters; } }
+        public IConnectionRules Rules { get { return m_rules; } }
 
         private List<Output> m_connections = new List<Output>();
 
         public Output(Id<TConnector> id, ConnectorDefinitionData definition, IEditable parent, List<Parameter> parameters, IConnectionRules rules)
         {
             m_definition = definition;
-            Parent = parent;
-            Parameters = parameters;
-            Rules = rules;
-            ID = id;
+            m_parent = parent;
+            m_parameters = parameters;
+            m_rules = rules;
+            m_id = id;
         }
 
 

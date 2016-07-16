@@ -374,7 +374,6 @@ namespace Utilities.UI
                 }
                 if (Horizontal)
                 {
-                    var area = RectangleF.FromLTRB(LowHeight, 0, HighHeight + 1, Height - 1);
                     var state = e.Graphics.Save();
                     var m = e.Graphics.Transform;
                     m.RotateAt(90, Point.Empty);

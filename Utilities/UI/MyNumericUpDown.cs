@@ -190,20 +190,22 @@ namespace Utilities.UI
             graphics.PixelOffsetMode = PixelOffsetMode.None;
             graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
             graphics.DrawRectangle(Colors.BorderPen, RectangleF.FromLTRB(buttonArea.Left, buttonArea.Top, buttonArea.Right - 1, buttonArea.Bottom - 1));
-            var path = new GraphicsPath();
-            if (up)
+            using (var path = new GraphicsPath())
             {
-                path.AddLines(new PointF[] { buttonArea.Location.Plus(buttonArea.Width/4,2*buttonArea.Height/3),
+                if (up)
+                {
+                    path.AddLines(new PointF[] { buttonArea.Location.Plus(buttonArea.Width/4,2*buttonArea.Height/3),
                                          buttonArea.Location.Plus(3*buttonArea.Width/4, 2*buttonArea.Height/3),
                                          buttonArea.Location.Plus(buttonArea.Width/2, buttonArea.Height/3)});
-            }
-            else
-            {
-                path.AddLines(new PointF[] { buttonArea.Location.Plus(buttonArea.Width/4,buttonArea.Height/3),
+                }
+                else
+                {
+                    path.AddLines(new PointF[] { buttonArea.Location.Plus(buttonArea.Width/4,buttonArea.Height/3),
                                          buttonArea.Location.Plus(3*buttonArea.Width/4, buttonArea.Height/3),
                                          buttonArea.Location.Plus(buttonArea.Width/2, 2*buttonArea.Height/3)});
+                }
+                graphics.FillPath(Colors.TextBrush, path);
             }
-            graphics.FillPath(Colors.TextBrush, path);
         }
 
         public bool SpecialEnter { get { return m_textBox.SpecialEnter; } set { m_textBox.SpecialEnter = value; } }

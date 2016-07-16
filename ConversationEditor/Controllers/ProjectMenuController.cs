@@ -56,7 +56,7 @@ namespace ConversationEditor
         private Func<IAudioProviderCustomization> m_audioCustomization;
         SharedContext m_context;
 
-        public ProjectMenuController(SharedContext context, ConfigParameterList<string> config, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ProjectExplorer list, Action<Action> executeInGuiThread, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
+        public ProjectMenuController(SharedContext context, ConfigParameterList<string> config, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, Action<Action> executeInGuiThread, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
         {
             m_context = context;
             m_executeInGuiThread = executeInGuiThread;

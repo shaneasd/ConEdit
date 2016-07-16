@@ -165,7 +165,6 @@ namespace ConversationEditor
                 writer.Formatting = Formatting.Indented;
                 writer.Indentation = 4;
                 doc.WriteTo(writer);
-                writer.Close();
             }
         }
 
@@ -175,6 +174,7 @@ namespace ConversationEditor
             {
                 ParameterEditors.Dispose();
                 ProjectHistory.Dispose();
+                ConversationNodeRenderers.Dispose();
             }
         }
     }

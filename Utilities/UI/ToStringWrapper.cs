@@ -15,11 +15,12 @@ namespace Utilities.UI
 
     public class ToStringWrapper<T>
     {
-        public readonly T Value;
+        public T Value { get { return m_value; } }
+        private readonly T m_value;
         private readonly string m_string;
         public ToStringWrapper(T value, string toString)
         {
-            Value = value;
+            m_value = value;
             m_string = toString;
         }
 

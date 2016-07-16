@@ -52,11 +52,11 @@ namespace Conversation
         /// <summary>
         /// Undo/Redo actions to perform to change the state of the parameter based on the editor selection
         /// </summary>
-        public SimpleUndoPair? Actions = null;
+        public SimpleUndoPair? Actions { get; private set; } = null;
         /// <summary>
         /// An audio file whose inclusion in the project should be updated
         /// </summary>
-        public Audio? Audio = null;
+        public Audio? Audio { get; set; } = null;
 
         public static implicit operator UpdateParameterData(SimpleUndoPair? actions)
         {

@@ -52,7 +52,6 @@ namespace ConversationEditor
             LocalizerData data = new LocalizerData();
             using (var file = Util.LoadFileStream(path, FileMode.CreateNew, FileAccess.Write))
             {
-                file.Close();
             }
             LocalizationFile result = new LocalizationFile(new MemoryStream(), path, data, serializer(path.FullName)); //Make a new localization file for an existing project
             result.File.Writable.Save();

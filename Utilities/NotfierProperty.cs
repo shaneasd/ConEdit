@@ -43,8 +43,8 @@ namespace Utilities
 
     public struct Changed<T>
     {
-        public T from;
-        public T to;
+        public T from { get; private set; }
+        public T to { get; private set; }
         public Changed(T from, T to)
         {
             this.from = from;

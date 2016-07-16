@@ -387,7 +387,7 @@ namespace ConversationEditor
             //};
 
             m_context.CurrentProject.Changed.Register(this, (a, b) => a.ProjectChanged(b.to));
-            m_projectMenuController = new ProjectMenuController(m_context, m_config.ProjectHistory, m_conversationNodeFactory, m_domainNodeFactory, projectExplorer, a => Invoke(a), m_config.Plugins, GetAudioCustomizer);
+            m_projectMenuController = new ProjectMenuController(m_context, m_config.ProjectHistory, m_conversationNodeFactory, m_domainNodeFactory, a => Invoke(a), m_config.Plugins, GetAudioCustomizer);
 
             this.projectSaveMenuItem.Click += (a, b) => m_projectMenuController.Save();
             this.projectNewMenuItem.Click += (a, b) => m_projectMenuController.New();

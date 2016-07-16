@@ -126,7 +126,6 @@ namespace ConversationEditor
                     {
                         if (n.Type == BaseType.Enumeration.ParameterNodeType)
                         {
-                            var ppp = n.Parameters;
                             var typeParameter = n.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_TYPE) as IEnumParameter;
                             if (typeParameter.Value == enumTypeID.Guid)
                             {
@@ -215,8 +214,6 @@ namespace ConversationEditor
 
 
             Id<NodeTypeTemp> id = node.Type;
-
-            var temp = BaseType.BaseTypes.Select(t => t.NodeType).Where(t=>t!= null).Select(t=>t.Serialized());
 
             BaseType type = BaseType.BaseTypes.SingleOrDefault(t => t.NodeType == id);
 
