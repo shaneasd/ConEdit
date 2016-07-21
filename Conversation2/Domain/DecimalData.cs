@@ -28,7 +28,7 @@ namespace Conversation
 
         public DecimalParameter.Definition Definition()
         {
-            return new DecimalParameter.Definition() { Max = Max, Min = Min };
+            return new DecimalParameter.Definition(Max, Min);
         }
     }
 }

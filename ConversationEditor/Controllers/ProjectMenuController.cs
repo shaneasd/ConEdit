@@ -65,7 +65,7 @@ namespace ConversationEditor
             m_config = config;
             m_pluginsConfig = pluginsConfig;
             m_audioCustomization = audioCustomization;
-            m_context.ProjectMoved += WeakCallback<Changed<FileInfo>>.Handler(this, (me, a) => me.ProjectMoved(a.from, a.to));
+            m_context.ProjectMoved += WeakCallback<Changed<FileInfo>>.Handler(this, (me, a) => me.ProjectMoved(a.From, a.To));
             m_context.CurrentProject.Changed.Register(this, (a, b) => UpdateRecentlyOpenedConfig());
 
             var file = m_config.Value.FirstOrDefault(a => true, a => a, "");

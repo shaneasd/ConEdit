@@ -14,7 +14,7 @@ namespace Tests
         public static void TestPathToFromDirDir()
         {
             {
-                List<DirectoryInfo> path = FileSystem.PathToFrom(new DirectoryInfo(@"C:\a\b\\\\c\d\e\\\f"), new DirectoryInfo(@"C:\a\\"));
+                IReadOnlyList<DirectoryInfo> path = FileSystem.PathToFrom(new DirectoryInfo(@"C:\a\b\\\\c\d\e\\\f"), new DirectoryInfo(@"C:\a\\"));
                 Assert.AreEqual(6, path.Count);
                 Assert.True(DirectoryEqualityComparer.SamePath(new DirectoryInfo(@"C:\a"), path.ElementAt(0)));
                 Assert.True(DirectoryEqualityComparer.SamePath(new DirectoryInfo(@"C:\a\b"), path.ElementAt(1)));
@@ -25,7 +25,7 @@ namespace Tests
             }
 
             {
-                List<DirectoryInfo> path = FileSystem.PathToFrom(new DirectoryInfo(@"C:\a\b\\\\c\d\e\f\\"), new DirectoryInfo(@"C:\a\"));
+                IReadOnlyList<DirectoryInfo> path = FileSystem.PathToFrom(new DirectoryInfo(@"C:\a\b\\\\c\d\e\f\\"), new DirectoryInfo(@"C:\a\"));
                 Assert.AreEqual(6, path.Count);
                 Assert.True(DirectoryEqualityComparer.SamePath(new DirectoryInfo(@"C:\a"), path.ElementAt(0)));
                 Assert.True(DirectoryEqualityComparer.SamePath(new DirectoryInfo(@"C:\a\b"), path.ElementAt(1)));

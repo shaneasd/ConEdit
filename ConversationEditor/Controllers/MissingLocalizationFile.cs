@@ -65,5 +65,13 @@ namespace ConversationEditor
         {
             get { return false; }
         }
+
+        public IEnumerable<Id<LocalizedText>> ExistingLocalizations
+        {
+            get
+            {
+                return Enumerable.Empty<Id<LocalizedText>>();
+            }
+        }
     }
 }

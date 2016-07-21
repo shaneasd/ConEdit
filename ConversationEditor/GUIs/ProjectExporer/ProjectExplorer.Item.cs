@@ -111,12 +111,12 @@ namespace ConversationEditor
                 return RectangleF.FromLTRB(5 + indent + CalculateIconRectangle(area).Width, area.Top - 1, area.Right, area.Bottom);
             }
 
-            public RectangleF MinimizedIconRectangle(Graphics g, RectangleF wholeArea)
+            public RectangleF MinimizedIconRectangle(RectangleF wholeArea)
             {
                 var indent = CalculateIndent(wholeArea);
-                return MinimizedIconRectangle(g, wholeArea, indent);
+                return MinimizedIconRectangle(wholeArea, indent);
             }
-            public RectangleF MinimizedIconRectangle(Graphics g, RectangleF area, float indent)
+            public RectangleF MinimizedIconRectangle(RectangleF area, float indent)
             {
                 const int minimizeRectangleSize = 8;
                 //return new Rectangle((int)(m_area.Location.Plus(textStart).X + textSize.Width + 2), (int)(m_area.Location.Plus(textStart).Y + (textSize.Height - minimizeRectangleSize) / 2), minimizeRectangleSize, minimizeRectangleSize);
@@ -149,7 +149,7 @@ namespace ConversationEditor
             {
                 float indent = CalculateIndent(area);
                 var iconRectangle = CalculateIconRectangle(area);
-                DrawMinimizeIcon(g, MinimizedIconRectangle(g, area, indent), filter, scheme);
+                DrawMinimizeIcon(g, MinimizedIconRectangle(area, indent), filter, scheme);
                 DrawTree(g, iconRectangle, filter, scheme);
                 DrawIcon(g, iconRectangle);
             }

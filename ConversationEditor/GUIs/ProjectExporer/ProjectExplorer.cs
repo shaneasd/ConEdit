@@ -63,7 +63,7 @@ namespace ConversationEditor
 
         public ProjectExplorer()
         {
-            m_suppressibleItemSelected = new SuppressibleAction(()=>ItemSelected.Execute());
+            m_suppressibleItemSelected = new SuppressibleAction(() => ItemSelected.Execute());
 
             InitializeComponent();
 
@@ -108,11 +108,11 @@ namespace ConversationEditor
             folderFilterButton.ValueChanged += () => { m_visibility.EmptyFolders.Value = folderFilterButton.Highlighted; InvalidateImage(); };
             m_buttons.Add(folderFilterButton);
 
-            m_visibility.Audio.Changed.Register(b => m_config.Audio.Value = b.to);
-            m_visibility.Conversations.Changed.Register(b => m_config.Conversations.Value = b.to);
-            m_visibility.Domains.Changed.Register(b => m_config.Domains.Value = b.to);
-            m_visibility.EmptyFolders.Changed.Register(b => m_config.Folders.Value = b.to);
-            m_visibility.Localizations.Changed.Register(b => m_config.Localizations.Value = b.to);
+            m_visibility.Audio.Changed.Register(b => m_config.Audio.Value = b.To);
+            m_visibility.Conversations.Changed.Register(b => m_config.Conversations.Value = b.To);
+            m_visibility.Domains.Changed.Register(b => m_config.Domains.Value = b.To);
+            m_visibility.EmptyFolders.Changed.Register(b => m_config.Folders.Value = b.To);
+            m_visibility.Localizations.Changed.Register(b => m_config.Localizations.Value = b.To);
         }
 
         private void UnsuppressibleUpdateSelectedLocalizer()
@@ -393,17 +393,14 @@ namespace ConversationEditor
             var container = item as ContainerItem;
             if (container != null)
             {
-                using (Graphics g = CreateGraphics())
+                if (container.MinimizedIconRectangle(RectangleForItem(item)).Contains(e.Location.Plus(new PointF(0, greyScrollBar1.Value).Round())))
                 {
-                    if (container.MinimizedIconRectangle(g, RectangleForItem(item)).Contains(e.Location.Plus(new PointF(0, greyScrollBar1.Value).Round())))
+                    if (e.Button == MouseButtons.Left)
                     {
-                        if (e.Button == MouseButtons.Left)
-                        {
-                            container.Minimized.Value = !container.Minimized.Value;
-                            InvalidateImage();
-                        }
-                        return;
+                        container.Minimized.Value = !container.Minimized.Value;
+                        InvalidateImage();
                     }
+                    return;
                 }
             }
 
@@ -436,16 +433,48 @@ namespace ConversationEditor
                 playMenuItem.Visible = m_contextItem is RealLeafItem<AudioFile, IAudioFile>;
                 m_contextMenu.Show(PointToScreen(e.Location));
 
-                foreach (var a in m_contextMenuItemsFactory.ConversationContextMenuItems(a => m_context.CurrentLocalization.Value.Localize(a)))
                 {
                     var con = m_contextItem as ConversationItem;
                     if (con != null)
                     {
-                        var i = new ToolStripMenuItem(a.Name);
-                        i.Click += (x, y) => a.Execute(con.Item, m_context.ErrorCheckerUtils());
-                        m_contextMenu.Items.Insert(m_contextMenu.Items.IndexOf(importConversationToolStripMenuItem), i);
-                        var temp = m_cleanContextMenu;
-                        m_cleanContextMenu = () => { temp(); m_contextMenu.Items.Remove(i); };
+                        foreach (var a in m_contextMenuItemsFactory.ConversationContextMenuItems(a => m_context.CurrentLocalization.Value.Localize(a)))
+                        {
+                            var i = new ToolStripMenuItem(a.Name);
+                            i.Click += (x, y) => a.Execute(con.Item, m_context.ErrorCheckerUtils());
+                            m_contextMenu.Items.Insert(m_contextMenu.Items.IndexOf(importConversationToolStripMenuItem), i);
+                            var temp = m_cleanContextMenu;
+                            m_cleanContextMenu = () => { temp(); m_contextMenu.Items.Remove(i); };
+                        }
+                    }
+                }
+
+                {
+                    var dom = m_contextItem as DomainItem;
+                    if (dom != null)
+                    {
+                        foreach (var a in m_contextMenuItemsFactory.DomainContextMenuItems)
+                        {
+                            var i = new ToolStripMenuItem(a.Name);
+                            i.Click += (x, y) => a.Execute(dom.Item);
+                            m_contextMenu.Items.Insert(m_contextMenu.Items.IndexOf(importDomainToolStripMenuItem), i);
+                            var temp = m_cleanContextMenu;
+                            m_cleanContextMenu = () => { temp(); m_contextMenu.Items.Remove(i); };
+                        }
+                    }
+                }
+
+                {
+                    var loc = m_contextItem as RealLeafItem<ILocalizationFile, ILocalizationFile>;
+                    if (loc != null)
+                    {
+                        foreach (var a in m_contextMenuItemsFactory.LocalizationContextMenuItems)
+                        {
+                            var i = new ToolStripMenuItem(a.Name);
+                            i.Click += (x, y) => a.Execute(loc.Item);
+                            m_contextMenu.Items.Insert(m_contextMenu.Items.IndexOf(makeCurrentLocalizationMenuItem), i);
+                            var temp = m_cleanContextMenu;
+                            m_cleanContextMenu = () => { temp(); m_contextMenu.Items.Remove(i); };
+                        }
                     }
                 }
             }
@@ -750,13 +779,10 @@ namespace ConversationEditor
                 DragItem = null;
             else
             {
-                using (Graphics g = drawWindow1.CreateGraphics())
-                {
-                    if (e.X > item.MinimizedIconRectangle(g, RectangleForItem(item)).Right)
-                        DragItem = item;
-                    else
-                        DragItem = null;
-                }
+                if (e.X > item.MinimizedIconRectangle(RectangleForItem(item)).Right)
+                    DragItem = item;
+                else
+                    DragItem = null;
             }
         }
 

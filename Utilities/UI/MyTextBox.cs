@@ -1076,7 +1076,8 @@ namespace Utilities.UI
             base.Dispose(disposing);
             if (disposing)
             {
-                m_dropDown.Dispose();
+                if (m_dropDown != null)
+                    m_dropDown.Dispose();
             }
             ClearCaret();
         }

@@ -9,7 +9,8 @@ namespace Conversation
     {
         public static ParameterType ParameterType { get; } = ParameterType.Parse("7ca91556-5526-4c5c-b565-00aff5ae85ce");
 
-        public StringParameter(string name, Id<Parameter> id, ParameterType typeId, string defaultValue = null) : base(name, id, typeId, defaultValue) { }
+        public StringParameter(string name, Id<Parameter> id, ParameterType typeId) : base(name, id, typeId, null) { }
+        public StringParameter(string name, Id<Parameter> id, ParameterType typeId, string defaultValue) : base(name, id, typeId, defaultValue) { }
 
         protected override bool DeserialiseValue(string value)
         {

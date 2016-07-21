@@ -21,7 +21,7 @@ namespace Utilities
             return pathD.StartsWith(pathA, StringComparison.OrdinalIgnoreCase);
         }
 
-        public static List<DirectoryInfo> PathToFrom(FileInfo descendant, DirectoryInfo ancestor)
+        public static IReadOnlyList<DirectoryInfo> PathToFrom(FileInfo descendant, DirectoryInfo ancestor)
         {
             var result = PathToFrom(descendant.Directory, ancestor);
             return result;
@@ -33,7 +33,7 @@ namespace Utilities
         /// The last element is 'descendant'
         /// If 'descendant' is not a descendant of 'ancestor', returns null
         /// </summary>
-        public static List<DirectoryInfo> PathToFrom(DirectoryInfo descendant, DirectoryInfo ancestor)
+        public static IReadOnlyList<DirectoryInfo> PathToFrom(DirectoryInfo descendant, DirectoryInfo ancestor)
         {
             string pathA = ancestor.FullName.TrimEnd('\\');
             string pathD = descendant.FullName.TrimEnd('\\');

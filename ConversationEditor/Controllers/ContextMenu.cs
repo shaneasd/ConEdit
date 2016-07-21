@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace ConversationEditor
 {
-    internal class ContextMenu<TNode> where TNode : IRenderable<IGui>, IConversationNode, IConfigurable
+    internal class ContextMenu<TNode> : Disposable where TNode : IRenderable<IGui>, IConversationNode, IConfigurable
     {
         Dictionary<MenuAction<TNode>, ToolStripMenuItem> m_menuActions = new Dictionary<MenuAction<TNode>, ToolStripMenuItem>();
         private readonly ContextMenuStrip m_menu;
@@ -21,12 +21,22 @@ namespace ConversationEditor
         private readonly Func<bool> ConversationReal;
         public event Action Opening;
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                m_menu.Dispose();
+            }
+        }
+
         public ContextMenu(ColorScheme scheme, MouseController<TNode> mouseController, Func<Point, Point> toGraphSpace, Func<bool> conversationReal)
         {
             m_mouseController = mouseController;
             ToGraphSpace = toGraphSpace;
             ConversationReal = conversationReal;
-            m_menu = new ContextMenuStrip() { RenderMode = ToolStripRenderMode.Professional, Renderer = scheme.ContextMenu };
+            m_menu = new ContextMenuStrip();
+            m_menu.RenderMode = ToolStripRenderMode.Professional;
+            m_menu.Renderer = scheme.ContextMenu;
             m_menu.Opening += (a, b) => b.Cancel = UpdateContextMenu();
         }
 

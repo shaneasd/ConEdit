@@ -58,6 +58,20 @@ namespace ConversationEditor
                 RemoveFromData(node);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <param name="groups"></param>
+        /// <param name="rawData">Represents the current contents of the file. Reference is not held. A copy is made.</param>
+        /// <param name="file"></param>
+        /// <param name="errors"></param>
+        /// <param name="datasource"></param>
+        /// <param name="serializer"></param>
+        /// <param name="nodeFactory"></param>
+        /// <param name="domainUsage"></param>
+        /// <param name="getDocumentSource"></param>
+        /// <param name="autoCompletePatterns"></param>
         public DomainFile(List<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ReadOnlyCollection<LoadError> errors, DomainDomain datasource, ISerializer<TData> serializer, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, List<IAutoCompletePattern> autoCompletePatterns)
             : base(nodes, groups, errors, nodeFactory, null, getDocumentSource, NoAudio.Instance)
         {
@@ -95,14 +109,16 @@ namespace ConversationEditor
                     path = null;
             }
 
-            MemoryStream m = new MemoryStream();
-            using (var stream = Util.LoadFileStream(path, FileMode.CreateNew, FileAccess.Write))
+            using (MemoryStream m = new MemoryStream())
             {
-                serializer.Write(SerializationUtils.MakeDomainData(Enumerable.Empty<ConversationNode>(), new ConversationEditorData()), m);
-                m.CopyTo(stream);
-            }
+                using (var stream = Util.LoadFileStream(path, FileMode.CreateNew, FileAccess.Write))
+                {
+                    serializer.Write(SerializationUtils.MakeDomainData(Enumerable.Empty<ConversationNode>(), new ConversationEditorData()), m);
+                    m.CopyTo(stream);
+                }
 
-            return new DomainFile(new List<GraphAndUI<NodeUIData>>(), new List<NodeGroup>(), m, path, new ReadOnlyCollection<LoadError>(new LoadError[0]), datasource, serializer, nodeFactory, domainUsage, getDocumentSource, new List<IAutoCompletePattern>());
+                return new DomainFile(new List<GraphAndUI<NodeUIData>>(), new List<NodeGroup>(), m, path, new ReadOnlyCollection<LoadError>(new LoadError[0]), datasource, serializer, nodeFactory, domainUsage, getDocumentSource, new List<IAutoCompletePattern>());
+            }
         }
 
         private void NodeModified(ConversationNode node)
@@ -135,7 +151,7 @@ namespace ConversationEditor
             Action<EnumerationData> enumAction = data =>
             {
                 //No impact on the conversation datasource
-                m_datasource.RenameType(BaseType.Enumeration, data.Name, data.TypeID);
+                m_datasource.RenameType(BaseType.Enumeration, data.Name, data.TypeId);
             };
             Action<EnumerationData> enumValueAction = data =>
             {
@@ -301,7 +317,7 @@ namespace ConversationEditor
             };
             Action<EnumerationData> enumAction = data =>
             {
-                m_datasource.RemoveType(BaseType.Enumeration, data.TypeID);
+                m_datasource.RemoveType(BaseType.Enumeration, data.TypeId);
                 //m_conversationDatasource.RemoveType(data.TypeID);
             };
             Action<EnumerationData> enumValueAction = data =>

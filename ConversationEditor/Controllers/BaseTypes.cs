@@ -312,7 +312,6 @@ namespace ConversationEditor
 
         static BaseType()
         {
-            m_parameterNodeTypeToBaseTypeMapping = new Dictionary<Id<NodeTypeTemp>, BaseType>();
             Action<BaseType> AddMapping = b => { m_parameterNodeTypeToBaseTypeMapping.Add(b.ParameterNodeType, b); };
 
             AddMapping(Integer);
@@ -327,7 +326,7 @@ namespace ConversationEditor
             AddMapping(Set);
         }
 
-        private static Dictionary<Id<NodeTypeTemp>, BaseType> m_parameterNodeTypeToBaseTypeMapping;
+        private static Dictionary<Id<NodeTypeTemp>, BaseType> m_parameterNodeTypeToBaseTypeMapping = new Dictionary<Id<NodeTypeTemp>, BaseType>();
 
         public static IEnumerable<BaseType> BaseTypes { get { return m_parameterNodeTypeToBaseTypeMapping.Values; } }
 

@@ -30,6 +30,13 @@ namespace ConversationEditor
             m_changesLastSave.UnionWith(m_currentChanges);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="initialData">Represents the current contents of the file. Reference is not held. A copy is made.</param>
+        /// <param name="path"></param>
+        /// <param name="data"></param>
+        /// <param name="serializer"></param>
         private LocalizationFile(MemoryStream initialData, FileInfo path, LocalizerData data, ISerializer<LocalizerData> serializer)
         {
             m_file = new SaveableFileExternalChangedSource(initialData, path, s => { serializer.Write(m_data, s); }, Changed, Saved);
@@ -53,9 +60,12 @@ namespace ConversationEditor
             using (var file = Util.LoadFileStream(path, FileMode.CreateNew, FileAccess.Write))
             {
             }
-            LocalizationFile result = new LocalizationFile(new MemoryStream(), path, data, serializer(path.FullName)); //Make a new localization file for an existing project
-            result.File.Writable.Save();
-            return result;
+            using (MemoryStream m = new MemoryStream())
+            {
+                LocalizationFile result = new LocalizationFile(new MemoryStream(), path, data, serializer(path.FullName)); //Make a new localization file for an existing project
+                result.File.Writable.Save();
+                return result;
+            }
         }
 
         internal static LocalizationFile Load(FileInfo path, ISerializer<LocalizerData> serializer)
@@ -120,6 +130,8 @@ namespace ConversationEditor
                 },
             };
         }
+
+        public IEnumerable<Id<LocalizedText>> ExistingLocalizations { get { return m_data.AllLocalizations.Select(kvp => kvp.Key); } }
 
         public SimpleUndoPair DuplicateAction(Id<LocalizedText> guid, Id<LocalizedText> result)
         {

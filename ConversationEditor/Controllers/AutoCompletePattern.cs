@@ -18,7 +18,7 @@ namespace ConversationEditor
     {
         private static bool HasParent(IEditable node)
         {
-            var parentConnector = node.Connectors.Where(c => c.ID == DomainIDs.AutoComplete.parent.Id).SingleOrDefault();
+            var parentConnector = node.Connectors.Where(c => c.Id == DomainIDs.AutoComplete.parent.Id).SingleOrDefault();
             if (parentConnector == null)
                 return false;
             else
@@ -27,7 +27,7 @@ namespace ConversationEditor
 
         private static bool HasPrevious(IEditable node)
         {
-            var previousConnector = node.Connectors.Where(c => c.ID == DomainIDs.AutoComplete.previous.Id).SingleOrDefault();
+            var previousConnector = node.Connectors.Where(c => c.Id == DomainIDs.AutoComplete.previous.Id).SingleOrDefault();
             if (previousConnector == null)
                 return false;
             else
@@ -36,7 +36,7 @@ namespace ConversationEditor
 
         private static IEnumerable<IEditable> Children(IEditable node)
         {
-            var childConnector = node.Connectors.Where(c => c.ID == DomainIDs.AutoComplete.child.Id).SingleOrDefault();
+            var childConnector = node.Connectors.Where(c => c.Id == DomainIDs.AutoComplete.child.Id).SingleOrDefault();
             if (childConnector == null)
                 return Enumerable.Empty<IEditable>();
             else
@@ -45,7 +45,7 @@ namespace ConversationEditor
 
         private static IEnumerable<IEditable> Next(IEditable node)
         {
-            var nextConnector = node.Connectors.Where(c => c.ID == DomainIDs.AutoComplete.next.Id).SingleOrDefault();
+            var nextConnector = node.Connectors.Where(c => c.Id == DomainIDs.AutoComplete.next.Id).SingleOrDefault();
             if (nextConnector == null)
                 return Enumerable.Empty<IEditable>();
             else

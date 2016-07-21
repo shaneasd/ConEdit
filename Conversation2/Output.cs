@@ -161,7 +161,7 @@ namespace Conversation
 
         public readonly ConnectorDefinitionData m_definition;
 
-        public Id<TConnector> ID { get { return m_id; } }
+        public Id<TConnector> Id { get { return m_id; } }
         public IEditable Parent { get { return m_parent; } }
         public List<Parameter> Parameters { get { return m_parameters; } }
         public IConnectionRules Rules { get { return m_rules; } }
@@ -277,12 +277,12 @@ namespace Conversation
             Output other = (Output)obj;
             if (other == null)
                 return false;
-            return ID.Equals(other.ID) && Parent.Equals(other.Parent);
+            return Id.Equals(other.Id) && Parent.Equals(other.Parent);
         }
 
         public override int GetHashCode()
         {
-            return Tuple.Create(ID, Parent).GetHashCode();
+            return Tuple.Create(Id, Parent).GetHashCode();
         }
 
         public string GetName()

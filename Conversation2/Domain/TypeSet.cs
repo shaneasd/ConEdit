@@ -76,7 +76,7 @@ namespace Conversation
 
         public void AddEnum(EnumerationData typeData, bool hidden)
         {
-            var enumType = typeData.TypeID;
+            var enumType = typeData.TypeId;
             var setType = ParameterType.Set.Of(enumType);
 
             m_hidden[enumType] = hidden;
@@ -92,11 +92,11 @@ namespace Conversation
 
         public void ModifyEnum(EnumerationData typeData)
         {
-            if (m_enums.ContainsKey(typeData.TypeID)) //If we're removing an entire domain file, an enum declaration can be removed before its values. In this circumstance, when the values are removed, this method will be called but the enum wont exist.
+            if (m_enums.ContainsKey(typeData.TypeId)) //If we're removing an entire domain file, an enum declaration can be removed before its values. In this circumstance, when the values are removed, this method will be called but the enum wont exist.
             {
-                var e = m_enums[typeData.TypeID].Item2;
+                var e = m_enums[typeData.TypeId].Item2;
                 e.SetOptions(typeData.Elements);
-                Modified.Execute(typeData.TypeID);
+                Modified.Execute(typeData.TypeId);
             }
         }
 

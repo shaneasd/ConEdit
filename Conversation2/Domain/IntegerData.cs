@@ -28,7 +28,7 @@ namespace Conversation
 
         public IntegerParameter.Definition Definition()
         {
-            return new IntegerParameter.Definition() { Max = Max, Min = Min };
+            return new IntegerParameter.Definition(Max, Min);
         }
     }
 }

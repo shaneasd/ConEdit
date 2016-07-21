@@ -13,35 +13,20 @@ namespace Tests
         public static void TestZeroSuppressions()
         {
             bool triggered = false;
-            SuppressibleAction action = new SuppressibleAction(() => { triggered = true; });
-            Assert.False(action.Suppressed);
-            var executed = action.TryExecute();
-            Assert.True(executed);
-            Assert.True(triggered);
+            using (SuppressibleAction action = new SuppressibleAction(() => { triggered = true; }))
+            {
+                Assert.False(action.Suppressed);
+                var executed = action.TryExecute();
+                Assert.True(executed);
+                Assert.True(triggered);
+            }
         }
 
         [NUnit.Framework.Test]
         public static void TestOneSuppression()
         {
             bool triggered = false;
-            SuppressibleAction action = new SuppressibleAction(() => { triggered = true; });
-            using (action.SuppressCallback())
-            {
-                Assert.True(action.Suppressed);
-                var executed = action.TryExecute();
-                Assert.False(executed);
-                Assert.False(triggered);
-            }
-            Assert.True(triggered);
-            Assert.False(action.Suppressed);
-        }
-
-        [NUnit.Framework.Test]
-        public static void TestManySuppression()
-        {
-            bool triggered = false;
-            SuppressibleAction action = new SuppressibleAction(() => { triggered = true; });
-            using (action.SuppressCallback())
+            using (SuppressibleAction action = new SuppressibleAction(() => { triggered = true; }))
             {
                 using (action.SuppressCallback())
                 {
@@ -50,22 +35,44 @@ namespace Tests
                     Assert.False(executed);
                     Assert.False(triggered);
                 }
-                Assert.False(triggered);
-                Assert.True(action.Suppressed);
+                Assert.True(triggered);
+                Assert.False(action.Suppressed);
             }
-            Assert.True(triggered);
-            Assert.False(action.Suppressed);
+        }
+
+        [NUnit.Framework.Test]
+        public static void TestManySuppression()
+        {
+            bool triggered = false;
+            using (SuppressibleAction action = new SuppressibleAction(() => { triggered = true; }))
+            {
+                using (action.SuppressCallback())
+                {
+                    using (action.SuppressCallback())
+                    {
+                        Assert.True(action.Suppressed);
+                        var executed = action.TryExecute();
+                        Assert.False(executed);
+                        Assert.False(triggered);
+                    }
+                    Assert.False(triggered);
+                    Assert.True(action.Suppressed);
+                }
+                Assert.True(triggered);
+                Assert.False(action.Suppressed);
+            }
         }
 
         [NUnit.Framework.Test]
         public static void TestDisposal()
         {
             bool triggered = false;
-            SuppressibleAction action = new SuppressibleAction(() => { triggered = true; });
-            using (action.SuppressCallback())
+            using (SuppressibleAction action = new SuppressibleAction(() => { triggered = true; }))
             {
-                action.TryExecute();
-                action.Dispose();
+                using (action.SuppressCallback())
+                {
+                    action.TryExecute();
+                }
             }
             Assert.False(triggered);
         }

@@ -413,7 +413,7 @@ namespace ConversationEditor
         {
             if (!m_cachedNodeUI.ContainsKey(connection))
             {
-                var node = m_nodes.Where(n => n.Connectors.Any(c => c.ID == connection.ID && n.Id == connection.Parent.NodeId)).SingleOrDefault();
+                var node = m_nodes.Where(n => n.Connectors.Any(c => c.Id == connection.Id && n.Id == connection.Parent.NodeId)).SingleOrDefault();
                 if (node == null && canFail)
                     return null;
                 var comparable = node.Connectors.Where(c => c.m_definition.Position == connection.m_definition.Position);

@@ -8,7 +8,6 @@ using System.Drawing.Drawing2D;
 using System.Diagnostics;
 using Utilities;
 using Conversation;
-using ConversationEditor.Controllers;
 
 namespace ConversationEditor
 {

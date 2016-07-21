@@ -9,7 +9,7 @@ using Utilities;
 
 namespace Tests
 {
-    public class TestUpToDateFile
+    public static class TestUpToDateFile
     {
         [NUnit.Framework.Test]
         public static void StressTest()

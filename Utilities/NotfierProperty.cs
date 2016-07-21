@@ -43,12 +43,12 @@ namespace Utilities
 
     public struct Changed<T>
     {
-        public T from { get; private set; }
-        public T to { get; private set; }
+        public T From { get; private set; }
+        public T To { get; private set; }
         public Changed(T from, T to)
         {
-            this.from = from;
-            this.to = to;
+            From = from;
+            To = to;
         }
     }
 }

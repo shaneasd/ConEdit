@@ -105,8 +105,8 @@ namespace Utilities.UI
 
     public class HighlightableImageButton : MyButton
     {
-        public Pen SelectionPen;
-        public Brush HighlightBackground;
+        public Pen SelectionPen { get; set; }
+        public Brush HighlightBackground { get; set; }
         private Image Image;
 
         private bool m_highlighted;

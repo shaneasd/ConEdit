@@ -234,7 +234,7 @@ namespace Utilities.UI
         }
 
         public ToolStripRenderer Renderer { get { return m_dropDown.Renderer; } set { m_dropDown.Renderer = value; } }
-        public readonly IEnumerable<MyComboBoxItem<T>> Items;
+        public IEnumerable<MyComboBoxItem<T>> Items { get; }
 
         public event Action EnterPressed { add { m_textBox.EnterPressed += value; } remove { m_textBox.EnterPressed -= value; } }
 

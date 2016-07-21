@@ -38,7 +38,7 @@ namespace ConversationEditor
 
         public SharedContext()
         {
-            CurrentProject.Changed.Register(change => { change.from.File.Moved -= OnProjectMoved; change.to.File.Moved += OnProjectMoved; });
+            CurrentProject.Changed.Register(change => { change.From.File.Moved -= OnProjectMoved; change.To.File.Moved += OnProjectMoved; });
         }
     }
 }

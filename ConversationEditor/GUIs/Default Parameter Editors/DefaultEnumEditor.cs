@@ -100,7 +100,7 @@ namespace ConversationEditor
         public UpdateParameterData UpdateParameterAction()
         {
             if (IsValid() != null)
-                throw new Exception("Current enum selection is invalid");
+                throw new InvalidOperationException("Current enum selection is invalid");
 
             return m_parameter.SetValueAction(SelectedItem);
         }

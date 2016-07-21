@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
 
-namespace ConversationEditor.Controllers
+namespace ConversationEditor
 {
     //This is a half complete class for a graph editor for projects
     internal class ProjectContextMenuItems : IMenuActionFactory<ConversationNode>

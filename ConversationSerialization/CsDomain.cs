@@ -183,7 +183,7 @@ namespace Conversation.Serialization
                 foreach (var b in a.Enumerations)
                 {
                     var enumValueNames = new HashSet<string>() { };
-                    data.Enumerations.Add(new EnumerationData(BestName(b.Name, usedNames), b.TypeID, b.Elements.Select(e => new EnumerationData.Element(BestName(e.Name, enumValueNames), e.Guid))));
+                    data.Enumerations.Add(new EnumerationData(BestName(b.Name, usedNames), b.TypeId, b.Elements.Select(e => new EnumerationData.Element(BestName(e.Name, enumValueNames), e.Guid))));
                 }
                 foreach (var b in a.Integers)
                     data.Integers.Add(new IntegerData(BestName(b.Name, usedNames), b.TypeId, b.Max, b.Min));
@@ -429,10 +429,10 @@ namespace Conversation.Serialization
                 basicTypeMap[x.TypeId] = x.Name;
             foreach (var x in data.Enumerations)
             {
-                basicTypeMap[x.TypeID] = x.Name;
+                basicTypeMap[x.TypeId] = x.Name;
 
                 var name = ReadonlySetOf(x.Name);
-                basicTypeMap[ParameterType.Set.Of(x.TypeID)] = name;
+                basicTypeMap[ParameterType.Set.Of(x.TypeId)] = name;
             }
             foreach (var x in data.Integers)
                 basicTypeMap[x.TypeId] = x.Name;
@@ -642,7 +642,7 @@ namespace Conversation.Serialization
         {
             var name = enumeration.Name;
             CodeTypeDeclaration type = new CodeTypeDeclaration(name) { IsEnum = true };
-            type.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(RuntimeConversation.TypeIdAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression(enumeration.TypeID.Guid.ToString()))));
+            type.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(RuntimeConversation.TypeIdAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression(enumeration.TypeId.Guid.ToString()))));
 
             foreach (var element in enumeration.Elements)
             {

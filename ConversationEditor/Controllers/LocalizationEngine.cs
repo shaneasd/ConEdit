@@ -85,19 +85,6 @@ namespace ConversationEditor
             return m_context.CurrentLocalization.Value.SetLocalizationAction(guid, value);
         }
 
-        public IEnumerable<Id<LocalizedText>> UsedGuids
-        {
-            get
-            {
-                return m_usedGuids();
-            }
-        }
-
-        public bool GuidUsed(Id<LocalizedText> guid)
-        {
-            return m_usedGuids().Contains(guid);
-        }
-
         public bool CanLocalize
         {
             get { return m_localizers.Any(); } //Assume that if localizers exist then one is selected

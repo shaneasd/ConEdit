@@ -14,8 +14,13 @@ namespace RuntimeConversation
 {
     public struct CustomDeserializerParameter
     {
-        public Guid Guid;
-        public string Value;
+        public CustomDeserializerParameter(Guid guid, string value)
+        {
+            Guid = guid;
+            Value = value;
+        }
+        public Guid Guid { get; }
+        public string Value { get; }
     }
 
     public class CustomDeserializer : IDeserializer<RuntimeConversation.Conversation>
@@ -74,11 +79,11 @@ namespace RuntimeConversation
         {
             Id<NodeTemp> id = Id<NodeTemp>.Parse(node.Attribute("Id").Value);
             Id<NodeTypeTemp> guid = Id<NodeTypeTemp>.Parse(node.Attribute("Guid").Value);
-            var parameters = node.Elements("Parameter").Select(e => new CustomDeserializerParameter() { Guid = Guid.Parse(e.Attribute("guid").Value), Value = e.Attribute("value").Value });
+            var parameters = node.Elements("Parameter").Select(e => new CustomDeserializerParameter(Guid.Parse(e.Attribute("guid").Value), e.Attribute("value").Value));
             node = node.Element("Area");
             float x = float.Parse(node.Attribute("X").Value, CultureInfo.InvariantCulture);
             float y = float.Parse(node.Attribute("Y").Value, CultureInfo.InvariantCulture);
-            return datasource(guid, id, parameters, new PointF(x,y));
+            return datasource(guid, id, parameters, new PointF(x, y));
         }
 
         private static HashSet<UnorderedTuple2<Tuple<Id<TConnector>, Id<NodeTemp>>>> ReadLinks(IEnumerable<Id<NodeTemp>> filteredNodes, XElement root)

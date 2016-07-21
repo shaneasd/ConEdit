@@ -82,7 +82,7 @@ namespace ConversationEditor
             m = new MemoryStream();
 
             //Create the new conversation file stream, fill with essential content and close
-            conversationFile = ConversationFile.GetAvailableConversationPath(path.Directory, Enumerable.Empty<ISaveableFileProvider>(), p => !p.Exists);
+            conversationFile = ConversationFile.GetAvailableConversationPath(path.Directory, Enumerable.Empty<ISaveableFileProvider>());
             using (FileStream conversationStream = Util.LoadFileStream(conversationFile, FileMode.CreateNew, FileAccess.Write))
             {
                 conversationSerializer.Write(SerializationUtils.MakeConversationData(Enumerable.Empty<ConversationNode>(), new ConversationEditorData()), conversationStream);
@@ -231,7 +231,7 @@ namespace ConversationEditor
                         return m_conversationDataSource.GetSource(localEnum, newSourceID);
                     };
                     Func<IEnumerable<FileInfo>, IEnumerable<ConversationFile>> loadConversation = files => files.Select(file => ConversationFile.Load(file, ConversationNodeFactory, m_conversationSerializerFactory(m_conversationDataSource), audio, getSource, m_audioProvider));
-                    Func<DirectoryInfo, ConversationFile> makeEmpty = path => ConversationFile.CreateEmpty(path, this, pathOk, ConversationNodeFactory, audio, getSource, m_audioProvider);
+                    Func<DirectoryInfo, ConversationFile> makeEmpty = path => ConversationFile.CreateEmpty(path, this, ConversationNodeFactory, audio, getSource, m_audioProvider);
                     Func<FileInfo, MissingConversationFile> makeMissing = file => new MissingConversationFile(file);
                     m_conversations = new ProjectElementList<ConversationFile, MissingConversationFile, IConversationFile>(s => CheckFolder(s, Origin), loadConversation, makeEmpty, makeMissing);
                     IEnumerable<FileInfo> toLoad = Rerout(conversationPaths);
@@ -291,7 +291,7 @@ namespace ConversationEditor
 
         public void OnElementMoved(Changed<FileInfo> change)
         {
-            if (change.from.FullName != change.to.FullName)
+            if (change.From.FullName != change.To.FullName)
                 GotChanged();
         }
 

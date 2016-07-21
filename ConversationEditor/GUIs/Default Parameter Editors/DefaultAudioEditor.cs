@@ -90,7 +90,7 @@ namespace ConversationEditor
         public UpdateParameterData UpdateParameterAction()
         {
             if (IsValid() != null)
-                throw new Exception("Current path invalid");
+                throw new InvalidOperationException("Current path invalid");
 
             Audio audio = new Audio(m_textBox.Text);
             UpdateParameterData result = m_parameter.SetValueAction(audio);
@@ -99,6 +99,7 @@ namespace ConversationEditor
             return result;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "System.IO.FileInfo", Justification ="FileInfo is created to see if the path is valid but we dont actually need to use it")]
         public string IsValid()
         {
             try

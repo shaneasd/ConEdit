@@ -80,7 +80,7 @@ namespace Conversation
 
         public void AddConnector(Id<TConnector> id)
         {
-            if (!m_connectors.Any(c => c.ID == id))
+            if (!m_connectors.Any(c => c.Id == id))
             {
                 ConnectorDefinitionData data = new ConnectorDefinitionData("", Id<TConnectorDefinition>.ConvertFrom(id), new List<NodeData.ParameterData>(), ConnectorPosition.Bottom);
                 m_connectors.Add(new Output(id, data, this, new List<Parameter>(), m_rules));

@@ -72,6 +72,12 @@ namespace Utilities
         private UpToDateFile m_upToDateFile;
         private Action<Stream> m_saveTo;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="initialContent">Represents the current contents of the file. Reference is not held. A copy is made.</param>
+        /// <param name="path"></param>
+        /// <param name="saveTo"></param>
         protected SaveableFile(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo)
         {
             m_upToDateFile = new UpToDateFile(initialContent, path, saveTo);
@@ -106,7 +112,7 @@ namespace Utilities
                     case DialogResult.Cancel:
                         return false; //If the user doesn't want to close the file we can't
                     default:
-                        throw new Exception();
+                        throw new InvalidOperationException();
                 }
             }
             return true; //If the file hasn't been changed we can close it
@@ -191,6 +197,12 @@ namespace Utilities
     [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly", Justification = "Disposable behavior inherited from SaveableFile")]
     public class SaveableFileUndoable : SaveableFile, ISaveableFileUndoable
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="initialContent">Represents the current contents of the file. Reference is not held. A copy is made.</param>
+        /// <param name="path"></param>
+        /// <param name="saveTo"></param>
         public SaveableFileUndoable(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo)
             : base(initialContent, path, saveTo)
         {
@@ -236,6 +248,14 @@ namespace Utilities
     [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly", Justification = "Disposable behavior inherited from SaveableFile")]
     public class SaveableFileExternalChangedSource : SaveableFile, ISaveableFile
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="initialContent">Represents the current contents of the file. Reference is not held. A copy is made.</param>
+        /// <param name="path"></param>
+        /// <param name="saveTo"></param>
+        /// <param name="changed"></param>
+        /// <param name="saved"></param>
         public SaveableFileExternalChangedSource(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo, Func<bool> changed, Action saved)
             : base(initialContent, path, saveTo)
         {

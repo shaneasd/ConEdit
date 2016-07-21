@@ -90,10 +90,10 @@ namespace Utilities
             }
         }
 
-        QuadTreeElement<T> m_root;
+        Element m_root;
         public QuadTree(RectangleF initialBounds)
         {
-            m_root = new QuadTreeElement<T>(initialBounds);
+            m_root = new Element(initialBounds);
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -185,223 +185,224 @@ namespace Utilities
         {
             return m_root.GetFirstNodeAreaDebug();
         }
-    }
 
-    public class QuadTreeElement<T> : IEnumerable<T>
-    {
-        List<T> Data = new List<T>();
-        QuadTreeElement<T> Lower00 = null;
-        QuadTreeElement<T> Lower01 = null;
-        QuadTreeElement<T> Lower10 = null;
-        QuadTreeElement<T> Lower11 = null;
-        List<QuadTreeElement<T>> LowerNonNull = new List<QuadTreeElement<T>>(4);
-        public readonly RectangleF Bounds;
-        public readonly RectangleF Bounds00;
-        public readonly RectangleF Bounds01;
-        public readonly RectangleF Bounds10;
-        public readonly RectangleF Bounds11;
 
-        public QuadTreeElement(RectangleF bounds)
+        public class Element : IEnumerable<T>
         {
-            Bounds = bounds;
-            var center = bounds.Center();
-            Bounds00 = RectangleF.FromLTRB(bounds.Left, bounds.Top, center.X, center.Y);
-            Bounds01 = RectangleF.FromLTRB(bounds.Left, center.Y, center.X, bounds.Bottom);
-            Bounds10 = RectangleF.FromLTRB(center.X, bounds.Top, Bounds.Right, center.Y);
-            Bounds11 = RectangleF.FromLTRB(center.X, center.Y, Bounds.Right, bounds.Bottom);
-        }
+            List<T> Data = new List<T>();
+            Element Lower00 = null;
+            Element Lower01 = null;
+            Element Lower10 = null;
+            Element Lower11 = null;
+            List<Element> LowerNonNull = new List<Element>(4);
+            internal readonly RectangleF Bounds;
+            internal readonly RectangleF Bounds00;
+            internal readonly RectangleF Bounds01;
+            internal readonly RectangleF Bounds10;
+            internal readonly RectangleF Bounds11;
 
-        public QuadTreeElement<T> Add(T element, RectangleF area)
-        {
-            //Apply a minimum size
-            if (Bounds.Width * Bounds.Height < 1)
+            public Element(RectangleF bounds)
             {
-                Data.Add(element);
-                return this;
+                Bounds = bounds;
+                var center = bounds.Center();
+                Bounds00 = RectangleF.FromLTRB(bounds.Left, bounds.Top, center.X, center.Y);
+                Bounds01 = RectangleF.FromLTRB(bounds.Left, center.Y, center.X, bounds.Bottom);
+                Bounds10 = RectangleF.FromLTRB(center.X, bounds.Top, Bounds.Right, center.Y);
+                Bounds11 = RectangleF.FromLTRB(center.X, center.Y, Bounds.Right, bounds.Bottom);
             }
 
-            var center = Bounds.Center();
-            if (area.Top > center.Y) //It's in the bottom half only
+            public Element Add(T element, RectangleF area)
             {
-                if (area.Left > center.X) //It's in the right half only
+                //Apply a minimum size
+                if (Bounds.Width * Bounds.Height < 1)
                 {
-                    if (Lower11 == null)
+                    Data.Add(element);
+                    return this;
+                }
+
+                var center = Bounds.Center();
+                if (area.Top > center.Y) //It's in the bottom half only
+                {
+                    if (area.Left > center.X) //It's in the right half only
                     {
-                        Lower11 = new QuadTreeElement<T>(Bounds11);
-                        LowerNonNull.Add(Lower11);
+                        if (Lower11 == null)
+                        {
+                            Lower11 = new Element(Bounds11);
+                            LowerNonNull.Add(Lower11);
+                        }
+                        return Lower11.Add(element, area);
                     }
-                    return Lower11.Add(element, area);
-                }
-                else if (area.Right <= center.X) //It's in the left half only
-                {
-                    if (Lower01 == null)
+                    else if (area.Right <= center.X) //It's in the left half only
                     {
-                        Lower01 = new QuadTreeElement<T>(Bounds01);
-                        LowerNonNull.Add(Lower01);
+                        if (Lower01 == null)
+                        {
+                            Lower01 = new Element(Bounds01);
+                            LowerNonNull.Add(Lower01);
+                        }
+                        return Lower01.Add(element, area);
                     }
-                    return Lower01.Add(element, area);
                 }
-            }
-            else if (area.Bottom <= center.Y) //It's in the top half only
-            {
-                if (area.Left > center.X) //It's in the right half only
+                else if (area.Bottom <= center.Y) //It's in the top half only
                 {
-                    if (Lower10 == null)
+                    if (area.Left > center.X) //It's in the right half only
                     {
-                        Lower10 = new QuadTreeElement<T>(Bounds10);
-                        LowerNonNull.Add(Lower10);
+                        if (Lower10 == null)
+                        {
+                            Lower10 = new Element(Bounds10);
+                            LowerNonNull.Add(Lower10);
+                        }
+                        return Lower10.Add(element, area);
                     }
-                    return Lower10.Add(element, area);
-                }
-                else if (area.Right <= center.X) //It's in the left half only
-                {
-                    if (Lower00 == null)
+                    else if (area.Right <= center.X) //It's in the left half only
                     {
-                        Lower00 = new QuadTreeElement<T>(Bounds00);
-                        LowerNonNull.Add(Lower00);
+                        if (Lower00 == null)
+                        {
+                            Lower00 = new Element(Bounds00);
+                            LowerNonNull.Add(Lower00);
+                        }
+                        return Lower00.Add(element, area);
                     }
-                    return Lower00.Add(element, area);
                 }
-            }
 
-            //else if (Bounds01.Contains(bounds))
-            //{
+                //else if (Bounds01.Contains(bounds))
+                //{
 
-            //    return Lower01.Add(element, bounds);
-            //}
-            //else if (Bounds10.Contains(bounds))
-            //{
+                //    return Lower01.Add(element, bounds);
+                //}
+                //else if (Bounds10.Contains(bounds))
+                //{
 
-            //    return Lower10.Add(element, bounds);
-            //}
-            //else if (Bounds11.Contains(bounds))
-            //{
+                //    return Lower10.Add(element, bounds);
+                //}
+                //else if (Bounds11.Contains(bounds))
+                //{
 
-            //    return Lower11.Add(element, bounds);
-            //}
-            //else
-            {
-                Data.Add(element);
-                return this;
-            }
-        }
-
-        public bool Remove(T node, RectangleF area)
-        {
-            var center = Bounds.Center();
-            if (area.Top > center.Y) //It's in the bottom half only
-            {
-                if (area.Left > center.X) //It's in the right half only
+                //    return Lower11.Add(element, bounds);
+                //}
+                //else
                 {
-                    if (Lower11 != null)
-                        return Lower11.Remove(node, area);
-                }
-                else if (area.Right <= center.X) //It's in the left half only
-                {
-                    if (Lower01 != null)
-                        return Lower01.Remove(node, area);
+                    Data.Add(element);
+                    return this;
                 }
             }
-            else if (area.Bottom <= center.Y) //It's in the top half only
+
+            public bool Remove(T node, RectangleF area)
             {
-                if (area.Left > center.X) //It's in the right half only
+                var center = Bounds.Center();
+                if (area.Top > center.Y) //It's in the bottom half only
                 {
-                    if (Lower10 != null)
-                        return Lower10.Remove(node, area);
+                    if (area.Left > center.X) //It's in the right half only
+                    {
+                        if (Lower11 != null)
+                            return Lower11.Remove(node, area);
+                    }
+                    else if (area.Right <= center.X) //It's in the left half only
+                    {
+                        if (Lower01 != null)
+                            return Lower01.Remove(node, area);
+                    }
                 }
-                else if (area.Right <= center.X) //It's in the left half only
+                else if (area.Bottom <= center.Y) //It's in the top half only
                 {
-                    if (Lower00 != null)
-                        return Lower00.Remove(node, area);
+                    if (area.Left > center.X) //It's in the right half only
+                    {
+                        if (Lower10 != null)
+                            return Lower10.Remove(node, area);
+                    }
+                    else if (area.Right <= center.X) //It's in the left half only
+                    {
+                        if (Lower00 != null)
+                            return Lower00.Remove(node, area);
+                    }
                 }
+
+                //Once we've descended as far as we can. Use this levels data.
+                return Data.Remove(node);
             }
 
-            //Once we've descended as far as we can. Use this levels data.
-            return Data.Remove(node);
-        }
-
-        /// <summary>
-        /// For debug purposes only
-        /// </summary>
-        /// <returns></returns>
-        public RectangleF? GetFirstNodeAreaDebug()
-        {
-            if (Data.Any())
-                return Bounds;
-            else
-                return LowerNonNull.Select(a => a.GetFirstNodeAreaDebug()).FirstOrDefault(a => a != null);
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            return Data.Concat(LowerNonNull.SelectMany(x => x)).GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        internal QuadTreeElement<T> ExpandLeftTop()
-        {
-            var result = new QuadTreeElement<T>(RectangleF.FromLTRB(Bounds.Left - Bounds.Width, Bounds.Top - Bounds.Height, Bounds.Right, Bounds.Bottom));
-            result.Lower11 = this;
-            result.LowerNonNull.Add(this);
-            return result;
-        }
-
-        internal QuadTreeElement<T> ExpandLeftBottom()
-        {
-            var result = new QuadTreeElement<T>(RectangleF.FromLTRB(Bounds.Left - Bounds.Width, Bounds.Top, Bounds.Right, Bounds.Bottom + Bounds.Height));
-            result.Lower10 = this;
-            result.LowerNonNull.Add(this);
-            return result;
-        }
-
-        internal QuadTreeElement<T> ExpandRightBottom()
-        {
-            var result = new QuadTreeElement<T>(RectangleF.FromLTRB(Bounds.Left, Bounds.Top, Bounds.Right + Bounds.Width, Bounds.Bottom + Bounds.Height));
-            result.Lower00 = this;
-            result.LowerNonNull.Add(this);
-            return result;
-        }
-
-        internal QuadTreeElement<T> ExpandRightTop()
-        {
-            var result = new QuadTreeElement<T>(RectangleF.FromLTRB(Bounds.Left, Bounds.Top - Bounds.Height, Bounds.Right + Bounds.Width, Bounds.Bottom));
-            result.Lower01 = this;
-            result.LowerNonNull.Add(this);
-            return result;
-        }
-
-        public IEnumerable<T> FindTouchingRegion(RectangleF bounds)
-        {
-            if (Bounds.IntersectsWith(bounds))
+            /// <summary>
+            /// For debug purposes only
+            /// </summary>
+            /// <returns></returns>
+            public RectangleF? GetFirstNodeAreaDebug()
             {
-                foreach (var d in Data)
-                    yield return d;
+                if (Data.Any())
+                    return Bounds;
+                else
+                    return LowerNonNull.Select(a => a.GetFirstNodeAreaDebug()).FirstOrDefault(a => a != null);
             }
-            foreach (var lower in LowerNonNull)
-            {
-                foreach (var d in lower.FindTouchingRegion(bounds))
-                    yield return d;
-            }
-        }
 
-        internal RectangleF? FindAndRemnove(T n)
-        {
-            if (Data.Remove(n))
-                return Bounds;
-            else
+            public IEnumerator<T> GetEnumerator()
             {
-                foreach (var x in LowerNonNull)
+                return Data.Concat(LowerNonNull.SelectMany(x => x)).GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+
+            internal Element ExpandLeftTop()
+            {
+                var result = new Element(RectangleF.FromLTRB(Bounds.Left - Bounds.Width, Bounds.Top - Bounds.Height, Bounds.Right, Bounds.Bottom));
+                result.Lower11 = this;
+                result.LowerNonNull.Add(this);
+                return result;
+            }
+
+            internal Element ExpandLeftBottom()
+            {
+                var result = new Element(RectangleF.FromLTRB(Bounds.Left - Bounds.Width, Bounds.Top, Bounds.Right, Bounds.Bottom + Bounds.Height));
+                result.Lower10 = this;
+                result.LowerNonNull.Add(this);
+                return result;
+            }
+
+            internal Element ExpandRightBottom()
+            {
+                var result = new Element(RectangleF.FromLTRB(Bounds.Left, Bounds.Top, Bounds.Right + Bounds.Width, Bounds.Bottom + Bounds.Height));
+                result.Lower00 = this;
+                result.LowerNonNull.Add(this);
+                return result;
+            }
+
+            internal Element ExpandRightTop()
+            {
+                var result = new Element(RectangleF.FromLTRB(Bounds.Left, Bounds.Top - Bounds.Height, Bounds.Right + Bounds.Width, Bounds.Bottom));
+                result.Lower01 = this;
+                result.LowerNonNull.Add(this);
+                return result;
+            }
+
+            public IEnumerable<T> FindTouchingRegion(RectangleF bounds)
+            {
+                if (Bounds.IntersectsWith(bounds))
                 {
-                    var found = x.FindAndRemnove(n);
-                    if (found.HasValue)
-                        return found;
+                    foreach (var d in Data)
+                        yield return d;
+                }
+                foreach (var lower in LowerNonNull)
+                {
+                    foreach (var d in lower.FindTouchingRegion(bounds))
+                        yield return d;
                 }
             }
-            return null;
+
+            internal RectangleF? FindAndRemnove(T n)
+            {
+                if (Data.Remove(n))
+                    return Bounds;
+                else
+                {
+                    foreach (var x in LowerNonNull)
+                    {
+                        var found = x.FindAndRemnove(n);
+                        if (found.HasValue)
+                            return found;
+                    }
+                }
+                return null;
+            }
         }
     }
 }

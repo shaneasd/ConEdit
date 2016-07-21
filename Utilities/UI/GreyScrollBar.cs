@@ -16,17 +16,17 @@ namespace Utilities.UI
 {
     public partial class GreyScrollBar : UserControl
     {
-        public readonly static Bitmap ScrollbarUpIcon;
-        public readonly static Bitmap ScrollbarUpPressedIcon;
-        public readonly static Bitmap ScrollbarBackgroundVerticalIcon;
-        public readonly static Bitmap FolderIcon;
+        public static Bitmap ScrollbarUpIcon { get; }
+        public static Bitmap ScrollbarUpPressedIcon { get; }
+        public static Bitmap ScrollbarBackgroundVerticalIcon { get; }
+        public static Bitmap FolderIcon { get; }
 
-        public readonly static Bitmap ScrollbarMiddleIcon;
-        public readonly static Bitmap ScrollbarMiddlePressedIcon;
-        public readonly static Bitmap ScrollbarTopIcon;
-        public readonly static Bitmap ScrollbarTopPressedIcon;
-        public readonly static Bitmap ScrollbarBottomIcon;
-        public readonly static Bitmap ScrollbarBottomPressedIcon;
+        public static Bitmap ScrollbarMiddleIcon { get; }
+        public static Bitmap ScrollbarMiddlePressedIcon { get; }
+        public static Bitmap ScrollbarTopIcon { get; }
+        public static Bitmap ScrollbarTopPressedIcon { get; }
+        public static Bitmap ScrollbarBottomIcon { get; }
+        public static Bitmap ScrollbarBottomPressedIcon { get; }
 
         static GreyScrollBar()
         {

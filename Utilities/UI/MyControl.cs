@@ -30,7 +30,7 @@ namespace Utilities.UI
 
     public abstract class MyControl : Disposable, IDisposable
     {
-        public string Name;
+        public string Name { get; set; }
         protected MyControl()
         {
             this.GetType().ToString();
@@ -106,10 +106,10 @@ namespace Utilities.UI
                 }
             };
             KeyPressEventHandler KeyPress = (a, args) => { if (this == focus.LastFocused) this.KeyPress(args); };
-            KeyEventHandler KeyDown = (a, args) => { if (this == focus.LastFocused)this.KeyDown(args); };
+            KeyEventHandler KeyDown = (a, args) => { if (this == focus.LastFocused) this.KeyDown(args); };
             PaintEventHandler Paint = (a, args) => this.Paint(args.Graphics);
-            EventHandler GotFocus = (a, args) => { if (this == focus.LastFocused)this.GotFocus(); };
-            EventHandler LostFocus = (a, args) => { if (this == focus.LastFocused)this.LostFocus(); };
+            EventHandler GotFocus = (a, args) => { if (this == focus.LastFocused) this.GotFocus(); };
+            EventHandler LostFocus = (a, args) => { if (this == focus.LastFocused) this.LostFocus(); };
 
             control.MouseDown += MouseDown;
             control.MouseUp += MouseUp;

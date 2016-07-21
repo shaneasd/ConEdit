@@ -9,6 +9,7 @@ namespace Tests
 {
     public static partial class Program
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.GC.Collect", Justification ="Unit test tests behavior of finalizer")]
         [NUnit.Framework.Test]
         public static void TestWeakEvent()
         {

@@ -234,7 +234,7 @@ namespace Utilities.UI
         private readonly bool m_HasDropDownButton = true;
 
         public MyTextBox.ColorOptions TextBoxColors { get { return m_textBox.Colors; } set { m_textBox.Colors = value; } }
-        public Color SelectedBackgroundColor = Color.Green;
+        public Color SelectedBackgroundColor { get; set; } = Color.Green;
 
         public MySuggestionBox(Control control, Func<RectangleF> area, bool allowCustomText, IEnumerable<MyComboBoxItem<T>> items)
         {
@@ -520,7 +520,7 @@ namespace Utilities.UI
 
         public System.Windows.Forms.ToolStripRenderer Renderer { get { return m_dropDown.Renderer; } set { m_dropDown.Renderer = value; } }
         //public System.Windows.Forms.ToolStripRenderer Renderer { get { return (m_dropDown.Renderer as ToolStripRenderer).Inner; } set { (m_dropDown.Renderer as ToolStripRenderer).Inner = value; } }
-        public readonly IEnumerable<MyComboBoxItem<T>> Items;
+        public IEnumerable<MyComboBoxItem<T>> Items { get; }
 
         public event Action EnterPressed;
 

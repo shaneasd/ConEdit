@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Conversation;
 
-namespace ConversationEditor.Controllers
+namespace ConversationEditor
 {
     internal class ProjectDomain : IDataSource
     {

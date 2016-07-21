@@ -14,7 +14,8 @@ namespace Tests
     {
         static void Main()
         {
-            TestQuadTree.AllTests();
+            TestRawLocalization.TestDataIntegrity();
+            //TestQuadTree.AllTests();
             //TestFileSystem.TestPathToFromDirDir();
             //TestWeakEvent();
             //TestPolynomial();
@@ -93,17 +94,6 @@ namespace Tests
                 Assert.AreEqual(b.Coefficients[3], c.Coefficients[3]);
                 Assert.AreEqual(b.Coefficients[4], c.Coefficients[4]);
             }
-        }
-
-        [NUnit.Framework.Test]
-        public static void ManualResetEvent()
-        {
-            ManualResetEventSlim e = new ManualResetEventSlim(false);
-            ManualResetEventSlim w = new ManualResetEventSlim();
-            ManualResetEventSlim ww = new ManualResetEventSlim();
-            Thread t = new Thread(() => { Thread.Sleep(1000); e.Set(); });
-            t.Start();
-            WaitHandle.WaitAny(new[] { e.WaitHandle, w.WaitHandle, ww.WaitHandle });
         }
     }
 }

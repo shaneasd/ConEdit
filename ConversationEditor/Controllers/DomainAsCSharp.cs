@@ -6,7 +6,7 @@ using Conversation;
 using Conversation.Serialization;
 using Utilities;
 
-namespace ConversationEditor.Controllers
+namespace ConversationEditor
 {
     internal class DomainAsCSharp : IProjectExporter
     {

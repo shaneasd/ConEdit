@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversationEditor", "ConversationEditor\ConversationEditor.csproj", "{D904BED7-0716-4B54-8BBE-D53A7F938C8D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{BC0871BD-3134-40F0-8E74-0D3AAF3BF65B}"
@@ -22,6 +24,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRunner", "TestRunner\TestRunner.csproj", "{2A4787A7-0AAC-4400-BB98-FD35B666B5C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversationEditor.PluginBase", "ConversationEditor.PluginBase\ConversationEditor.PluginBase.csproj", "{02B54812-8646-46FB-9F6F-EEF9F36DDF9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RawSerialization", "RawSerialization\RawSerialization.csproj", "{EACD784A-8B25-4F0B-AD33-BFA8F3FC96EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -146,6 +150,18 @@ Global
 		{02B54812-8646-46FB-9F6F-EEF9F36DDF9C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{02B54812-8646-46FB-9F6F-EEF9F36DDF9C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{02B54812-8646-46FB-9F6F-EEF9F36DDF9C}.Release|x86.ActiveCfg = Release|Any CPU
+		{EACD784A-8B25-4F0B-AD33-BFA8F3FC96EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EACD784A-8B25-4F0B-AD33-BFA8F3FC96EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EACD784A-8B25-4F0B-AD33-BFA8F3FC96EE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EACD784A-8B25-4F0B-AD33-BFA8F3FC96EE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EACD784A-8B25-4F0B-AD33-BFA8F3FC96EE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EACD784A-8B25-4F0B-AD33-BFA8F3FC96EE}.Debug|x86.Build.0 = Debug|Any CPU
+		{EACD784A-8B25-4F0B-AD33-BFA8F3FC96EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EACD784A-8B25-4F0B-AD33-BFA8F3FC96EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EACD784A-8B25-4F0B-AD33-BFA8F3FC96EE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EACD784A-8B25-4F0B-AD33-BFA8F3FC96EE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{EACD784A-8B25-4F0B-AD33-BFA8F3FC96EE}.Release|x86.ActiveCfg = Release|Any CPU
+		{EACD784A-8B25-4F0B-AD33-BFA8F3FC96EE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

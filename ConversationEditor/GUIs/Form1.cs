@@ -12,7 +12,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using Conversation;
-using ConversationEditor.Controllers;
 using ConversationEditor;
 using Utilities;
 using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
@@ -386,7 +385,7 @@ namespace ConversationEditor
             //        m_dataSourceController.LoadFromXml();
             //};
 
-            m_context.CurrentProject.Changed.Register(this, (a, b) => a.ProjectChanged(b.to));
+            m_context.CurrentProject.Changed.Register(this, (a, b) => a.ProjectChanged(b.To));
             m_projectMenuController = new ProjectMenuController(m_context, m_config.ProjectHistory, m_conversationNodeFactory, m_domainNodeFactory, a => Invoke(a), m_config.Plugins, GetAudioCustomizer);
 
             this.projectSaveMenuItem.Click += (a, b) => m_projectMenuController.Save();
@@ -796,14 +795,14 @@ namespace ConversationEditor
 
         private void audioNamingMethodToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
-            var customizations = AudioProvider.DefaultCustomization.Only().Concat(GetAllOfType<IAudioProviderCustomization>()).ToList();
+            var customizations = GetAllOfType<IAudioProviderCustomization>().ToList();
             var config = GetAudioCustomizer();
             audioNamingMethodToolStripMenuItem.DropDownItems.Clear();
             foreach (var customization in customizations)
             {
                 var c = customization;
-                ToolStripMenuItem item = new ToolStripMenuItem(customization.Name);
-                item.CheckState = customization.GetType() == config.GetType() ? CheckState.Checked : CheckState.Unchecked;
+                ToolStripMenuItem item = new ToolStripMenuItem(c.Name);
+                item.CheckState = c.GetType() == config.GetType() ? CheckState.Checked : CheckState.Unchecked;
                 item.CheckOnClick = true;
                 item.CheckedChanged += (a, b) =>
                     {

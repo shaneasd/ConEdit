@@ -19,10 +19,11 @@ namespace Conversation
         {
             if (string.IsNullOrEmpty(value))
                 throw new ArgumentNullException(nameof(value));
-            Value = value;
+            m_value = value;
         }
 
-        public readonly string Value;
+        private readonly string m_value;
+        public string Value { get { return m_value; } }
 
         public static Either<Failed, Audio> Deserialize(string value)
         {

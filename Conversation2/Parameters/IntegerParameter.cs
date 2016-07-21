@@ -11,14 +11,19 @@ namespace Conversation
     {
         public class Definition
         {
-            public int? Max = null;
-            public int? Min = null;
+            public Definition(int? max, int? min)
+            {
+                Max = max;
+                Min = min;
+            }
+            public int? Max { get; private set; }
+            public int? Min { get; private set; }
         }
 
         public IntegerParameter(string name, Id<Parameter> id, ParameterType typeId, Definition definition, string defaultValue)
-            : base(name, id, typeId,  defaultValue)
+            : base(name, id, typeId, defaultValue)
         {
-            m_definition = definition ?? new Definition();
+            m_definition = definition ?? new Definition(null, null);
             TryDecorrupt(); //The first setting will always be corrupt because definition is null
         }
 

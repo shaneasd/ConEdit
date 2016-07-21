@@ -146,7 +146,7 @@ namespace ConversationEditor
         public UpdateParameterData UpdateParameterAction()
         {
             if (IsValid() != null)
-                throw new Exception("Current enum selection is invalid");
+                throw new InvalidOperationException("Current enum selection is invalid");
 
             ReadonlySet<Guid> selection = new ReadonlySet<Guid>(m_comboBoxes.TakeWhile((c, i) => i < m_comboBoxes.Count - 1).Select(c => c.SelectedItem.Contents));
 

@@ -28,12 +28,11 @@ namespace ConversationEditor
 
                 var minorGridSpacing = node.Element("MinorGridSpacing");
                 if (minorGridSpacing != null)
-                    int.TryParse(minorGridSpacing.Attribute("value").Value, out m_minorGridSpacing);
+                    m_minorGridSpacing = Util.TryParseInt(minorGridSpacing.Attribute("value").Value) ?? m_minorGridSpacing;
 
                 var majorGridSpacing = node.Element("MajorGridSpacing");
                 if (majorGridSpacing != null)
-                    int.TryParse(majorGridSpacing.Attribute("value").Value, out m_majorGridSpacing);
-
+                    m_majorGridSpacing = Util.TryParseInt(majorGridSpacing.Attribute("value").Value) ?? m_majorGridSpacing;
             }
         }
 

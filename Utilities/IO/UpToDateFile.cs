@@ -25,7 +25,13 @@ namespace Utilities
         private ManualResetEventSlim m_abort;
         private ManualResetEventSlim m_aborted;
         private ManualResetEventSlim m_deleted;
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="lastSavedOrLoaded">Represents the current contents of the file. Reference is not held. A copy is made.</param>
+        /// <param name="file"></param>
+        /// <param name="saveTo"></param>
         public UpToDateFile(MemoryStream lastSavedOrLoaded, FileInfo file, Action<Stream> saveTo)
         {
             m_file = file;

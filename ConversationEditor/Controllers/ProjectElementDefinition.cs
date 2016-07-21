@@ -84,7 +84,7 @@ namespace ConversationEditor
 
         public override void RegisterFilterChangedCallback(ProjectExplorer.VisibilityFilter visibility, Action<bool> action)
         {
-            visibility.Conversations.Changed.Register(b => action(b.to));
+            visibility.Conversations.Changed.Register(b => action(b.To));
         }
     }
 
@@ -132,7 +132,7 @@ namespace ConversationEditor
 
         public override void RegisterFilterChangedCallback(ProjectExplorer.VisibilityFilter visibility, Action<bool> action)
         {
-            visibility.Localizations.Changed.Register(b => action(b.to));
+            visibility.Localizations.Changed.Register(b => action(b.To));
         }
     }
 
@@ -180,7 +180,7 @@ namespace ConversationEditor
 
         public override void RegisterFilterChangedCallback(ProjectExplorer.VisibilityFilter visibility, Action<bool> action)
         {
-            visibility.Domains.Changed.Register(b => action(b.to));
+            visibility.Domains.Changed.Register(b => action(b.To));
         }
     }
 
@@ -228,7 +228,7 @@ namespace ConversationEditor
 
         public override void RegisterFilterChangedCallback(ProjectExplorer.VisibilityFilter visibility, Action<bool> action)
         {
-            visibility.Audio.Changed.Register(b => action(b.to));
+            visibility.Audio.Changed.Register(b => action(b.To));
         }
     }
 }

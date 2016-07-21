@@ -24,7 +24,7 @@ namespace Tests
         [NUnit.Framework.Test]
         public static void TestAddDepth0()
         {
-            var test = new QuadTreeElement<object>(RectangleF.FromLTRB(0, 0, 1, 1));
+            var test = new QuadTree<object>.Element(RectangleF.FromLTRB(0, 0, 1, 1));
             var element1 = new object();
             var element2 = new object();
             Assert.That(test.Add(element1, RectangleF.FromLTRB(0.1f, 0.1f, 0.9f, 0.9f)), Is.EqualTo(test));
@@ -40,7 +40,7 @@ namespace Tests
         [NUnit.Framework.Test]
         public static void TestAddDepth1()
         {
-            var test = new QuadTreeElement<object>(RectangleF.FromLTRB(0, 0, 1, 1));
+            var test = new QuadTree<object>.Element(RectangleF.FromLTRB(0, 0, 1, 1));
 
             var element00 = new object();
             var element01 = new object();

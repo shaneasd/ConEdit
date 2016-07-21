@@ -15,5 +15,7 @@ namespace ConversationEditor
         /// Will this localizer localize to real user specified data?
         /// </summary>
         bool IsValid { get; }
+
+        IEnumerable<Id<LocalizedText>> ExistingLocalizations { get; }
     }
 }

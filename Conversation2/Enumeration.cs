@@ -121,11 +121,8 @@ namespace Conversation
 
         public EnumerationData GetData(string name)
         {
-            EnumerationData data;
-            data.TypeID = this.TypeId;
-            data.Name = name;
-            data.Elements = m_options.Select(o => new EnumerationData.Element(o.Value, o.Key)).ToList();
-            return data;
+            return new EnumerationData(name, this.TypeId,
+                                       m_options.Select(o => new EnumerationData.Element(o.Value, o.Key)).ToList());
         }
 
         internal void SetOptions(List<EnumerationData.Element> elements)

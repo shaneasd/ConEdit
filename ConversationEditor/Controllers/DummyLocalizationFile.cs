@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Conversation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,8 @@ namespace ConversationEditor
             throw new NotSupportedException("Attempting to modify localization values of a dummy localization file");
         }
 
+         IEnumerable<Id<LocalizedText>> ILocalizationFile.ExistingLocalizations { get { throw new NotImplementedException("ExistingLocalizations"); } }
+
         public bool CanRemove(Func<bool> prompt)
         {
             throw new NotSupportedException(); //Can never be in a project
@@ -40,7 +43,6 @@ namespace ConversationEditor
         public event Action FileDeletedExternally { add { } remove { } } //Doesn't exist on disk
 
         public void Dispose() { } //No resources to clean up
-
 
         public bool IsValid
         {

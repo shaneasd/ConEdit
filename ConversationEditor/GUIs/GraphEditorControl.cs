@@ -10,7 +10,6 @@ using System.Windows.Forms;
 using Conversation;
 using Utilities;
 using System.Diagnostics;
-using ConversationEditor.Controllers;
 using System.Reflection;
 using Conversation.Serialization;
 using Utilities.UI;
@@ -116,7 +115,7 @@ namespace ConversationEditor
                 //    }
                 //}
 
-                bool removed = SpatiallyOrderedNodes.Remove(n, c.from);
+                bool removed = SpatiallyOrderedNodes.Remove(n, c.From);
                 //TODO: This block is for diagnosing a bug which probably doesn't exist anymore and as such can be removed
                 if (!removed)
                 {
@@ -124,7 +123,7 @@ namespace ConversationEditor
                     if (location.HasValue)
                     {
                         string message = String.Format("Something went wrong removing a node from the map. expected node at {0}, {1}, {2}, {3} but found at {4}, {5}, {6}, {7}.",
-                            c.from.X, c.from.Y, c.from.Width, c.from.Height, location.Value.X, location.Value.Y, location.Value.Width, location.Value.Height);
+                            c.From.X, c.From.Y, c.From.Width, c.From.Height, location.Value.X, location.Value.Y, location.Value.Width, location.Value.Height);
                         try
                         {
                             throw new Exception(message);
@@ -142,7 +141,7 @@ namespace ConversationEditor
                     else
                         throw new Exception("Something went from removing a node from the map");
                 }
-                SpatiallyOrderedNodes.Add(n, c.to);
+                SpatiallyOrderedNodes.Add(n, c.To);
 
                 //StoreConnections(n, true);
             }
@@ -243,14 +242,14 @@ namespace ConversationEditor
                     {
                         var other = UIInfo(connection);
                         //The nature of the bezier splines means they will never reach outside the bounding rectangle which includes their endpoints
-                        RectangleF fromBounds = RectangleF.Union(change.from, other.Area.Value);
+                        RectangleF fromBounds = RectangleF.Union(change.From, other.Area.Value);
 
                         var pair = UnorderedTuple.Make(connectorTemp, connection);
                         bool removed = SpatiallyOrderedConnections.Remove(Tuple.Create(pair, fromBounds), fromBounds);
                         if (!removed)
                             Debugger.Break();
 
-                        RectangleF toBounds = RectangleF.Union(change.to, other.Area.Value);
+                        RectangleF toBounds = RectangleF.Union(change.To, other.Area.Value);
                         SpatiallyOrderedConnections.Add(Tuple.Create(pair, toBounds), toBounds);
                     }
                 });
@@ -687,10 +686,8 @@ namespace ConversationEditor
                     foreach (char key in shortcutKeys)
                     {
                         Keys k;
-                        if (!Enum.TryParse("" + key, out k))
-                            if (!Enum.TryParse(("" + key).ToUpper(CultureInfo.InvariantCulture), out k))
-                                throw new Exception("Don't understand shortcut " + key);
-                        m_keyMapping[k] = node;
+                        if (Enum.TryParse("" + key, out k) || (Enum.TryParse(("" + key).ToUpper(CultureInfo.InvariantCulture), out k)))
+                            m_keyMapping[k] = node;
                     }
                 }
 

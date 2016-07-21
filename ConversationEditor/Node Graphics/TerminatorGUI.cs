@@ -27,7 +27,7 @@ namespace ConversationEditor
 
         public INodeGui GetRenderer(ConversationNode<INodeGui> n, PointF p, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
-            return new TerminatorGui(n, p, localizer);
+            return new TerminatorGui(n, p);
         }
 
         Guid m_guid = Guid.Parse("aacda2b5-bd9e-4fd2-ad0c-5f6a4d764702");
@@ -40,7 +40,7 @@ namespace ConversationEditor
     internal class TerminatorGui : NodeUI
     {
         Image m_image;
-        public TerminatorGui(ConversationNode<INodeGui> node, PointF p, Func<Id<LocalizedText>, string> localizer)
+        public TerminatorGui(ConversationNode<INodeGui> node, PointF p)
             : base(node, p)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();

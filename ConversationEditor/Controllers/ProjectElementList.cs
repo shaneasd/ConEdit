@@ -100,7 +100,7 @@ namespace ConversationEditor
             foreach (var fileInfo in fileInfos)
             {
                 if (!FileLocationOk(fileInfo.FullName))
-                    throw new Exception("Attempting to load file that is not in a subfolder of the project's parent folder");
+                    throw new InvalidOperationException("Attempting to load file that is not in a subfolder of the project's parent folder");
 
                 //var existing = m_data.FirstOrDefault(e => e.File.File.FullName == fileInfo.FullName);
                 var existing = m_data.ContainsKey(fileInfo.FullName) ? m_data[fileInfo.FullName] : null;

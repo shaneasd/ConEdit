@@ -171,8 +171,8 @@ namespace Conversation.Serialization
                             unknownNode2.AddConnector(link.Item2.Item1);
                         }
 
-                        Output connector1 = node1.Connectors.SingleOrDefault(c => c.ID == link.Item1.Item1);
-                        Output connector2 = node2.Connectors.SingleOrDefault(c => c.ID == link.Item2.Item1);
+                        Output connector1 = node1.Connectors.SingleOrDefault(c => c.Id == link.Item1.Item1);
+                        Output connector2 = node2.Connectors.SingleOrDefault(c => c.Id == link.Item2.Item1);
 
                         if (unknownNode1 != null)
                         {
@@ -323,8 +323,8 @@ namespace Conversation.Serialization
                     {
                         foreach (var cc in c.Connections)
                         {
-                            var pair1 = Tuple.Create(c.ID, n.GraphData);
-                            var pair2 = Tuple.Create(cc.ID, cc.Parent);
+                            var pair1 = Tuple.Create(c.Id, n.GraphData);
+                            var pair2 = Tuple.Create(cc.Id, cc.Parent);
                             links.Add(UnorderedTuple.Make(pair1, pair2));
                         }
                     }

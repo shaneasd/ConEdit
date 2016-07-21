@@ -12,6 +12,6 @@ namespace Conversation
         {
             Connectors = connectors;
         }
-        public readonly UnorderedTuple2<Id<TConnectorDefinition>> Connectors;
+        public UnorderedTuple2<Id<TConnectorDefinition>> Connectors { get; }
     }
 }

@@ -6,7 +6,7 @@ using Conversation;
 using Utilities;
 using System.Collections.ObjectModel;
 
-namespace ConversationEditor.Controllers
+namespace ConversationEditor
 {
     internal sealed class DummyConversationEditorControlData<TNode, TTransitionUI> : IConversationEditorControlData<TNode, TTransitionUI> where TNode : IRenderable<IGui>
     {

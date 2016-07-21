@@ -20,6 +20,19 @@ namespace ConversationEditor
         SaveableFileUndoable m_file;
         public override ISaveableFileUndoable UndoableFile { get { return m_file; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <param name="groups"></param>
+        /// <param name="rawData">Represents the current contents of the file. Reference is not held. A copy is made.</param>
+        /// <param name="file"></param>
+        /// <param name="serializer"></param>
+        /// <param name="errors"></param>
+        /// <param name="nodeFactory"></param>
+        /// <param name="generateAudio"></param>
+        /// <param name="getDocumentSource"></param>
+        /// <param name="audioProvider"></param>
         public ConversationFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ISerializer<TData> serializer,
             ReadOnlyCollection<LoadError> errors, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio,
             Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider)
@@ -49,7 +62,7 @@ namespace ConversationEditor
             m_serializer.Write(SerializationUtils.MakeConversationData(Nodes, new ConversationEditorData(Groups)), file);
         }
 
-        public static FileInfo GetAvailableConversationPath(DirectoryInfo directory, IEnumerable<ISaveableFileProvider> projectFiles, Func<FileInfo, bool> pathOk)
+        public static FileInfo GetAvailableConversationPath(DirectoryInfo directory, IEnumerable<ISaveableFileProvider> projectFiles)
         {
             //Create a stream under an available filename
             for (int i = 0; ; i++)
@@ -60,40 +73,43 @@ namespace ConversationEditor
             }
         }
 
-        public static ConversationFile CreateEmpty(DirectoryInfo directory, Project project, Func<FileInfo, bool> pathOk, INodeFactory<ConversationNode> nodeFactory,
+        public static ConversationFile CreateEmpty(DirectoryInfo directory, Project project, INodeFactory<ConversationNode> nodeFactory,
             Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider)
         {
-            var file = GetAvailableConversationPath(directory, project.Elements, pathOk);
+            var file = GetAvailableConversationPath(directory, project.Elements);
 
             var nodes = Enumerable.Empty<GraphAndUI<NodeUIData>>();
             var groups = new List<NodeGroup>();
 
             //Fill the stream with the essential content
-            MemoryStream m = new MemoryStream();
-            using (FileStream stream = Util.LoadFileStream(file, FileMode.CreateNew, FileAccess.Write))
+            using (MemoryStream m = new MemoryStream())
             {
-                project.ConversationSerializer.Write(SerializationUtils.MakeConversationData(nodes, new ConversationEditorData(groups)), m);
-                m.Position = 0;
-                m.CopyTo(stream);
-            }
+                using (FileStream stream = Util.LoadFileStream(file, FileMode.CreateNew, FileAccess.Write))
+                {
+                    project.ConversationSerializer.Write(SerializationUtils.MakeConversationData(nodes, new ConversationEditorData(groups)), m);
+                    m.Position = 0;
+                    m.CopyTo(stream);
+                }
 
-            return new ConversationFile(nodes, groups, m, file, project.ConversationSerializer, new ReadOnlyCollection<LoadError>(new LoadError[0]), nodeFactory, generateAudio, getDocumentSource, audioProvider);
+                return new ConversationFile(nodes, groups, m, file, project.ConversationSerializer, new ReadOnlyCollection<LoadError>(new LoadError[0]), nodeFactory, generateAudio, getDocumentSource, audioProvider);
+            }
         }
 
         /// <exception cref="MyFileLoadException">If file can't be read</exception>
         public static ConversationFile Load(FileInfo file, INodeFactory nodeFactory, ISerializerDeserializer<TData> serializer, Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio,
             Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider)
         {
-            TData data;
-            MemoryStream m;
             using (var stream = Util.LoadFileStream(file, FileMode.Open, FileAccess.Read))
             {
-                m = new MemoryStream((int)stream.Length);
-                stream.CopyTo(m);
-                m.Position = 0;
-                data = serializer.Read(m);
+                using (MemoryStream m = new MemoryStream((int)stream.Length))
+                {
+                    stream.CopyTo(m);
+                    stream.Dispose();
+                    m.Position = 0;
+                    TData data = serializer.Read(m);
+                    return new ConversationFile(data.Nodes.ToList(), data.EditorData.Groups.ToList(), m, file, serializer, data.Errors, nodeFactory, generateAudio, getDocumentSource, audioProvider);
+                }
             }
-            return new ConversationFile(data.Nodes.ToList(), data.EditorData.Groups.ToList(), m, file, serializer, data.Errors, nodeFactory, generateAudio, getDocumentSource, audioProvider);
         }
 
         public bool CanRemove(Func<bool> prompt)

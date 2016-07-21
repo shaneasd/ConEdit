@@ -43,6 +43,19 @@ namespace Utilities
 
     public static class Util
     {
+        /// <summary>
+        /// If s represents an int returns that int.
+        /// Else returns null
+        /// </summary>
+        public static int? TryParseInt(string s)
+        {
+            int temp;
+            if (int.TryParse(s, out temp))
+                return temp;
+            else
+                return null;
+        }
+
         public static void Swap<T>(ref T a, ref T b)
         {
             T temp = a;

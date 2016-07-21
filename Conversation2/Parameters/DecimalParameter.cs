@@ -12,13 +12,18 @@ namespace Conversation
         private Definition m_definition;
         public class Definition
         {
-            public decimal? Min = null;
-            public decimal? Max = null;
+            public Definition(decimal? max, decimal? min)
+            {
+                Max = max;
+                Min = min;
+            }
+            public decimal? Min { get; private set; }
+            public decimal? Max { get; private set; }
         }
         public DecimalParameter(string name, Id<Parameter> id, ParameterType typeId, Definition definition, string defaultValue)
-            : base(name, id, typeId,  defaultValue)
+            : base(name, id, typeId, defaultValue)
         {
-            m_definition = definition ?? new Definition();
+            m_definition = definition ?? new Definition(null, null);
             TryDecorrupt(); //The first setting will always be corrupt because definition is null
         }
 

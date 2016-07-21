@@ -66,9 +66,9 @@ namespace ConversationEditor
 
             m_typeSet.Modified += id =>
             {
-                if (!(new[] { allEnums, allDynamicEnums, allLocalDynamicEnums, allIntegers, allDecimals }).Any(e => e.TypeID == id))
+                if (!(new[] { allEnums, allDynamicEnums, allLocalDynamicEnums, allIntegers, allDecimals }).Any(e => e.TypeId == id))
                 {
-                    allEnums.Elements = m_typeSet.VisibleEnums.Select(e => new EnumerationData.Element(e.Name, e.TypeID.Guid)).ToList();
+                    allEnums.Elements = m_typeSet.VisibleEnums.Select(e => new EnumerationData.Element(e.Name, e.TypeId.Guid)).ToList();
                     m_typeSet.ModifyEnum(allEnums);
 
                     allDynamicEnums.Elements = m_typeSet.VisibleDynamicEnums.Select(e => new EnumerationData.Element(e.Name, e.TypeId.Guid)).ToList();
@@ -246,7 +246,7 @@ namespace ConversationEditor
 
         internal IEnumerable<EnumerationData.Element> GetEnumOptions(Guid value)
         {
-            return m_typeSet.VisibleEnums.Where(e => e.TypeID == ParameterType.Basic.FromGuid(value)).Single().Elements;
+            return m_typeSet.VisibleEnums.Where(e => e.TypeId == ParameterType.Basic.FromGuid(value)).Single().Elements;
         }
 
         private void AddAutoCompleteNodes()
@@ -440,7 +440,7 @@ namespace ConversationEditor
             data.Parameters = new List<NodeData.ParameterData> { nameParameter, enumTypeParameter };
             data.Type = parent.Guid;
 
-            Func<Dictionary<ParameterType, IEnumerable<EnumerationData.Element>>> options = () => m_typeSet.VisibleEnums.ToDictionary(e => e.TypeID, e => e.Elements.Select(a => a));
+            Func<Dictionary<ParameterType, IEnumerable<EnumerationData.Element>>> options = () => m_typeSet.VisibleEnums.ToDictionary(e => e.TypeId, e => e.Elements.Select(a => a));
 
             var generator = new GenericEditableGenerator2(data, m_typeSet, ConnectorDefinitions, DomainConnectionRules.Instance,
                 p => new List<Parameter> { new EnumDefaultParameter(options, () => ParameterType.Basic.FromGuid((p.Single(a => a.Id == enumTypeParameter.Id) as IEnumParameter).EditorSelected)) });
