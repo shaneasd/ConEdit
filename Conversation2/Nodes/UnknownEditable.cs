@@ -36,12 +36,12 @@ namespace Conversation
             get { return "Unknown Node"; }
         }
 
-        public ReadOnlyCollection<NodeData.ConfigData> Config
+        public IReadOnlyList<NodeData.ConfigData> Config
         {
             get { return new ReadOnlyCollection<NodeData.ConfigData>(new NodeData.ConfigData[0]); }
         }
 
-        public IEnumerable<Parameter> Parameters
+        public IEnumerable<IParameter> Parameters
         {
             get { return m_parameters; }
         }
@@ -55,10 +55,6 @@ namespace Conversation
         public void ChangeId(Id<NodeTemp> id)
         {
             m_nodeId = id;
-        }
-
-        public void TryDecorrupt()
-        {
         }
 
         class CustomConnectionRules : IConnectionRules
@@ -89,7 +85,7 @@ namespace Conversation
 
         public void AllowConnection(Output connector1, Output connector2)
         {
-            m_rules.Allow(connector1.m_definition.Id, connector2.m_definition.Id);
+            m_rules.Allow(connector1.Definition.Id, connector2.Definition.Id);
         }
 
 

@@ -40,14 +40,14 @@ namespace Clandestine.ErrorCheckers
         {
             foreach (var node in nodes)
             {
-                var controllersConnectors = node.Connectors.Where(c => c.m_definition.Id == CONTROLLER);
+                var controllersConnectors = node.Connectors.Where(c => c.Definition.Id == CONTROLLER);
                 foreach (var connector in controllersConnectors)
                 {
                     if ( !connector.Connections.Any())
                         yield return new CinematicControllerConnectionError2(node);
                     foreach (var connection in connector.Connections)
                     {
-                        if (connection.m_definition.Id != CINEMATIC)
+                        if (connection.Definition.Id != CINEMATIC)
                         {
                             yield return new CinematicControllerConnectionError(node);
                         }

@@ -19,28 +19,24 @@ namespace Conversation
         /// </summary>
         public struct ConnectorData
         {
-            public ConnectorData(Id<TConnector> id, Id<TConnectorDefinition> typeId, List<Parameter> parameters)
+            public ConnectorData(Id<TConnector> id, Id<TConnectorDefinition> typeId, IReadOnlyList<IParameter> parameters)
             {
-                m_id = id;
-                m_typeId = typeId;
-                m_parameters = parameters;
+                Id = id;
+                TypeId = typeId;
+                Parameters = parameters;
             }
-
-            private readonly Id<TConnector> m_id;
-            private readonly Id<TConnectorDefinition> m_typeId;
-            private readonly List<Parameter> m_parameters;
 
             /// <summary>
             /// Identifies this connector for the node type uniquely. A combination of this ID and a node ID will uniquely identify a connector in a graph.
             /// </summary>
-            public Id<TConnector> Id { get { return m_id; } }
+            public Id<TConnector> Id { get; }
 
             /// <summary>
             /// Identifies the connector definition which classifies this connector
             /// </summary>
-            public Id<TConnectorDefinition> TypeId { get { return m_typeId; } }
+            public Id<TConnectorDefinition> TypeId { get; }
 
-            public List<Parameter> Parameters { get { return m_parameters; } }
+            public IReadOnlyList<IParameter> Parameters { get; }
 
             //public Func<IEditable, Output> Make(Func<ID<OutputTemp>, OutputDefinition> definitionFactory)
             //{
@@ -73,13 +69,18 @@ namespace Conversation
                 Config = config;
             }
 
-            public ParameterType Type { get; private set; }
-            public string Name { get; private set; }
-            public Id<Parameter> Id { get; private set; }
-            public string Default { get; private set; } //Can be null, string form of the default value
-            public ReadOnlyCollection<ConfigData> Config { get; private set; }
+            /// <summary>
+            /// The type of the parameter: string, int, etc
+            /// </summary>
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods", Justification = "There isn't a more appropriate name")]
+            public ParameterType Type { get; }
 
-            public Parameter Make(Func<ParameterType, string, Id<Parameter>, string, Parameter> parameterFactory)
+            public string Name { get; }
+            public Id<Parameter> Id { get; }
+            public string Default { get; } //Can be null, string form of the default value
+            public ReadOnlyCollection<ConfigData> Config { get; }
+
+            public IParameter Make(Func<ParameterType, string, Id<Parameter>, string, IParameter> parameterFactory)
             {
                 var result = parameterFactory(Type, Name, Id, Default);
                 //var @default = ;
@@ -95,32 +96,41 @@ namespace Conversation
 
         public struct ConfigData
         {
-            private readonly Id<NodeTypeTemp> m_type;
-            public Id<NodeTypeTemp> Type { get { return m_type; } }
-            public IEnumerable<Parameter> Parameters;
+            /// <summary>
+            /// Unique identifier of the node type corresponding to this configuration
+            /// </summary>
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods", Justification = "There isn't a more appropriate name")]
+            public Id<NodeTypeTemp> Type { get; }
 
-            public ConfigData(Id<NodeTypeTemp> type, IEnumerable<Parameter> parameters)
+            /// <summary>
+            /// Parameters of the config. Typically it would be a single value (e.g. a path to an icon) but can be any number including zero.
+            /// </summary>
+            public IEnumerable<IParameter> Parameters { get; }
+
+            /// <param name="type">Unique identifier of the node type corresponding to this configuration</param>
+            /// <param name="parameters">Parameters of the config. Typically it would be a single value (e.g. a path to an icon) but can be any number including zero.</param>
+            public ConfigData(Id<NodeTypeTemp> type, IEnumerable<IParameter> parameters)
             {
-                m_type = type;
+                Type = type;
                 Parameters = parameters.ToList();
             }
         }
 
-        public NodeData(string name, Guid? type, Id<NodeTypeTemp> guid, List<ConnectorData> connectors, List<ParameterData> parameters, List<ConfigData> config)
+        public NodeData(string name, Guid? category, Id<NodeTypeTemp> guid, IReadOnlyList<ConnectorData> connectors, IReadOnlyList<ParameterData> parameters, IReadOnlyList<ConfigData> config)
         {
             Name = name;
-            Type = type;
+            Category = category;
             Guid = guid;
             Connectors = connectors;
             Parameters = parameters;
             Config = config;
         }
 
-        public string Name;
-        public Guid? Type; //Category
-        public Id<NodeTypeTemp> Guid;
-        public List<ConnectorData> Connectors;
-        public List<ParameterData> Parameters;
-        public List<ConfigData> Config;
+        public string Name { get; }
+        public Guid? Category { get; }
+        public Id<NodeTypeTemp> Guid { get; }
+        public IReadOnlyList<ConnectorData> Connectors { get; }
+        public IReadOnlyList<ParameterData> Parameters { get; }
+        public IReadOnlyList<ConfigData> Config { get; }
     }
 }

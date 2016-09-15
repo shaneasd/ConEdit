@@ -19,11 +19,10 @@ namespace Conversation
         {
             if (string.IsNullOrEmpty(value))
                 throw new ArgumentNullException(nameof(value));
-            m_value = value;
+            Value = value;
         }
 
-        private readonly string m_value;
-        public string Value { get { return m_value; } }
+        public string Value { get; }
 
         public static Either<Failed, Audio> Deserialize(string value)
         {
@@ -52,24 +51,31 @@ namespace Conversation
     public class AudioParameter : Parameter<Audio>, IAudioParameter
     {
         public AudioParameter(string name, Id<Parameter> id, ParameterType typeId)
-            : base(name, id, typeId, null) //Audio parameters may require information from the conversation that contains them and as such do not support a constant default value
+            : base(name, id, typeId, null, Tuple.Create(default(Audio), true)) //Audio parameters may require information from the conversation that contains them and as such do not support a constant default value
         {
         }
 
-        protected override bool DeserialiseValue(string value)
+        protected override Tuple<Audio, bool> DeserializeValueInner(string value)
         {
             var deserialized = Audio.Deserialize(value);
-            return deserialized.Transformed(f => { return false; }, a => { m_value = a; return true; });
+            return deserialized.Transformed<Tuple<Audio, bool>>(
+                                            f => { return Tuple.Create(default(Audio), true); },
+                                            a => { return Tuple.Create(a, false); });
         }
 
         protected override string InnerValueAsString()
         {
-            return m_value.Serialize();
+            return Value.Serialize();
         }
 
         public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
         {
-            return m_value.DisplayValue();
+            return Value.DisplayValue();
+        }
+
+        protected override bool ValueValid(Audio value)
+        {
+            return value.Value != null;
         }
     }
 }

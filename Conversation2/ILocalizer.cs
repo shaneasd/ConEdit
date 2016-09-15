@@ -7,8 +7,8 @@ namespace Conversation
 {
     public struct LocalizationElement
     {
-        public readonly string Text;
-        public readonly DateTime Localized;
+        public string Text { get; }
+        public DateTime Localized { get; }
         public LocalizationElement(DateTime localized, string text)
         {
             Localized = localized;

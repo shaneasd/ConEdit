@@ -9,23 +9,32 @@ namespace Conversation
     {
         public static ParameterType ParameterType { get; } = ParameterType.Parse("7ca91556-5526-4c5c-b565-00aff5ae85ce");
 
-        public StringParameter(string name, Id<Parameter> id, ParameterType typeId) : base(name, id, typeId, null) { }
-        public StringParameter(string name, Id<Parameter> id, ParameterType typeId, string defaultValue) : base(name, id, typeId, defaultValue) { }
+        public StringParameter(string name, Id<Parameter> id) : base(name, id, ParameterType, null, StaticDeserialize(null)) { }
+        public StringParameter(string name, Id<Parameter> id, string defaultValue) : base(name, id, ParameterType, defaultValue, StaticDeserialize(defaultValue)) { }
 
-        protected override bool DeserialiseValue(string value)
+        protected override Tuple<string, bool> DeserializeValueInner(string value)
         {
-            m_value = value;
-            return true;
+            return StaticDeserialize(value);
+        }
+
+        private static Tuple<string, bool> StaticDeserialize(string value)
+        {
+            return Tuple.Create(value, value == null);
         }
 
         protected override string InnerValueAsString()
         {
-            return m_value;
+            return Value;
         }
 
         public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
         {
-            return m_value;
+            return Value;
+        }
+
+        protected override bool ValueValid(string value)
+        {
+            return value != null;
         }
     }
 }

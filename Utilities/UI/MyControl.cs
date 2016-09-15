@@ -121,7 +121,7 @@ namespace Utilities.UI
             control.GotFocus += GotFocus;
             control.LostFocus += LostFocus;
 
-            m_disposeActions.Push(() =>
+            PushDisposeActions(() =>
             {
                 control.MouseDown -= MouseDown;
                 control.MouseUp -= MouseUp;
@@ -147,7 +147,11 @@ namespace Utilities.UI
             }
         }
 
-        protected Stack<Action> m_disposeActions = new Stack<Action>();
+        private Stack<Action> m_disposeActions = new Stack<Action>();
+        protected void PushDisposeActions(Action action)
+        {
+            m_disposeActions.Push(action);
+        }
     }
 
     public class DummyMyControl : MyControl

@@ -15,43 +15,23 @@ namespace RawSerialization
             return new RawLocalizationReader(stream);
         }
 
-        struct Range
-        {
-            public uint start;
-            public uint length;
-        }
-
         private Dictionary<Id<LocalizedText>, string> m_stringsCache;
 
         private RawLocalizationReader(Stream stream)
         {
             using (BinaryReader r = new BinaryReader(stream, Encoding.UTF8, true))
             {
+                uint version = r.ReadUInt32();
+                if (version != 0)
+                    throw new Exception("Unexpected version");
                 uint count = r.ReadUInt32();
-
-                Id<LocalizedText>[] ids = new Id<LocalizedText>[count];
-                Range[] ranges = new Range[count];
                 m_stringsCache = new Dictionary<Id<LocalizedText>, string>((int)count);
-                uint maxLength = 0;
-                for (uint i = 0; i < count; i++)
-                {
-                    ids[i] = Id<LocalizedText>.FromGuid(new Guid(r.ReadBytes(16)));
-                    Range range;
-                    range.start = r.ReadUInt32();
-                    range.length = r.ReadUInt32();
-                    ranges[i] = range;
-
-                    maxLength = Math.Max(maxLength, range.length);
-                }
-
-                byte[] buffer = new byte[maxLength];
 
                 for (uint i = 0; i < count; i++)
                 {
-                    stream.Position = ranges[i].start;
-                    int length = (int)ranges[i].length;
-                    r.Read(buffer, 0, length);
-                    m_stringsCache[ids[i]] = Encoding.UTF8.GetString(buffer, 0, length);
+                    var id = Id<LocalizedText>.FromGuid(new Guid(r.ReadBytes(16)));
+                    m_stringsCache[id] = r.ReadString();
+                    //m_stringsCache[id] = Encoding.UTF8.GetString(buffer, 0, (int)length);
                 }
             }
         }

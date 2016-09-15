@@ -11,7 +11,7 @@ namespace Conversation
         public class Source
         {
             //TODO: May not want the weakreference thing
-            
+
             public Source() { }
             Dictionary<WeakReference<DynamicEnumParameter>, string> m_options = new Dictionary<WeakReference<DynamicEnumParameter>, string>(new WeakReferenceComparer<DynamicEnumParameter>());
             public IEnumerable<string> Options { get { PurgeOptions(); return m_options.Values.Distinct().Except("".Only()); } }
@@ -45,25 +45,40 @@ namespace Conversation
         private bool m_local;
 
         public DynamicEnumParameter(string name, Id<Parameter> id, Source source, ParameterType typeId, string defaultValue, bool local)
-            : base(name, id, typeId, defaultValue)
+            : base(name, id, typeId, defaultValue, StaticDeserialize(defaultValue))
         {
             m_source = source;
             m_local = local;
 
             //TODO: This appears to not get deregistered properly for default values
             // Specifically when deleting a node or cancelling creation of a node, the node's parameters do not get cleaned up (i.e. deregistered)
-            m_source.RegisterUsage(this, this.Value);
+            if (!Corrupted)
+                m_source.RegisterUsage(this, this.Value);
         }
 
-        protected override bool DeserialiseValue(string value)
+        protected override Tuple<string, bool> DeserializeValueInner(string value)
         {
-            Value = value;
-            return true;
+            //The static version called from the destructor cannot do this as it can't refer to this.
+            //We don't need it to as we can just register the usage within the construction
+            if (value != null)
+            {
+                if (m_source != null) //m_source is null during construction so we explicitly do the registration there for that case
+                {
+                    m_source.RegisterUsage(this, value);
+                }
+            }
+
+            return StaticDeserialize(value);
+        }
+
+        private static Tuple<string, bool> StaticDeserialize(string value)
+        {
+            return Tuple.Create(value, value == null);
         }
 
         protected override string InnerValueAsString()
         {
-            return m_value;
+            return Value;
         }
 
         public IEnumerable<string> Options
@@ -71,19 +86,16 @@ namespace Conversation
             get { return m_source.Options; }
         }
 
-        public override string Value
+        protected override bool ValueValid(string value)
         {
-            get
+            return value != null;
+        }
+
+        protected override void OnSetValue(string value)
+        {
+            if (m_source != null) //m_source is null during construction so we explicitly do the registration there for that case
             {
-                return base.Value;
-            }
-            set
-            {
-                base.Value = value;
-                if (m_source != null) //m_source is null during construction so we explicitly do the registration there for that case
-                {
-                    m_source.RegisterUsage(this, value);
-                }
+                m_source.RegisterUsage(this, value);
             }
         }
 
@@ -110,7 +122,7 @@ namespace Conversation
 
         public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
         {
-            return m_value;
+            return Value;
         }
 
         /// <summary>

@@ -840,7 +840,7 @@ namespace ConversationEditor
                 item.Click += (a, b) =>
                 {
                     if (m_context.CurrentLocalization.Value.IsValid)
-                        e.Export(m_context.CurrentProject.Value, m_config.ExportPath, l => m_context.CurrentLocalization.Value.Localize(l), m_context.ErrorCheckerUtils());
+                        e.Export(m_context.CurrentProject.Value, m_config.ExportPath, l => Tuple.Create( m_context.CurrentLocalization.Value.Localize(l), m_context.CurrentLocalization.Value.LocalizationTime(l)), m_context.ErrorCheckerUtils());
                     else
                         MessageBox.Show("Cannot export as there is no currently selected localizer");
                 };

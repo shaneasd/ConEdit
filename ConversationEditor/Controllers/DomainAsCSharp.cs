@@ -10,7 +10,7 @@ namespace ConversationEditor
 {
     internal class DomainAsCSharp : IProjectExporter
     {
-        public void Export(IProject2 project, ConfigParameterString exportPath, Func<Id<LocalizedText>, string> localize, IErrorCheckerUtilities<IConversationNode> util)
+        public void Export(IProject2 project, ConfigParameterString exportPath, Func<Id<LocalizedText>, Tuple<string, DateTime>> localize, IErrorCheckerUtilities<IConversationNode> util)
         {
             DomainData builtIn = new DomainData();
             builtIn.Connectors.Add(SpecialConnectors.Input);

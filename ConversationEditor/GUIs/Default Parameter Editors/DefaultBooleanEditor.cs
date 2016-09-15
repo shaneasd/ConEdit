@@ -49,6 +49,7 @@ namespace ConversationEditor
         private static Bitmap ToggleButtonOn;
         private static Bitmap ToggleButtonOnHover;
         private static Bitmap ToggleButtonOnPressed;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = "for performance reasons I only want to call GetExecutingAssembly once")]
         static DefaultBooleanEditor()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();

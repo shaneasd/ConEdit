@@ -5,16 +5,29 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
+using System.Drawing;
 
 namespace Utilities.UI
 {
     public class DrawWindow : UserControl
     {
-        bool m_colorSchemeAssigned = false;
-        ColorScheme m_colorScheme = new ColorScheme();
-        public ColorScheme ColorScheme
+        public interface IColorScheme
         {
-            set { m_colorScheme = value; BackColor = value.Background; m_colorSchemeAssigned = true; }
+            Color Background { get; }
+        }
+
+        public class DefaultColorScheme : IColorScheme
+        {
+            public Color Background { get; } = Color.FromArgb(56, 56, 56);
+        }
+
+        bool m_colorSchemeAssigned = false;
+        IColorScheme m_colorScheme = new DefaultColorScheme();
+        public IColorScheme ColorScheme
+        {
+            set { m_colorScheme = value;
+                BackColor = value.Background;
+                m_colorSchemeAssigned = true; }
             get { return m_colorScheme; }
         }
 
@@ -32,7 +45,7 @@ namespace Utilities.UI
         protected override void OnPaint(PaintEventArgs e)
         {
             if (!m_colorSchemeAssigned && !Util.DesignMode())
-                throw new InvalidOperationException("drawnwindow not given a color scheme");
+                throw new InvalidOperationException("DrawWindow not given a color scheme");
             base.OnPaint(e);
         }
 

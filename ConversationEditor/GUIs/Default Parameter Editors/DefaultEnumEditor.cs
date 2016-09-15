@@ -50,14 +50,16 @@ namespace ConversationEditor
         public DefaultEnumEditor()
         {
             InitializeComponent();
+            drawWindow1.SizeChanged += (a, args) => m_comboBox.AreaChanged();
 
             m_comboBox = new TControl(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), true, m_comboBoxItems);
             m_comboBox.SetupCallbacks();
             m_comboBox.RequestedAreaChanged += () =>
-                {
-                    MinimumSize = new Size(0, (int)m_comboBox.RequestedArea.Height);
-                    Size = m_comboBox.RequestedArea.ToSize();
-                };
+            {
+                MinimumSize = new Size(0, (int)m_comboBox.RequestedArea.Height);
+                Size = m_comboBox.RequestedArea.ToSize();
+                drawWindow1.Size = Size; //This should not be necessary, due to docking, but for some reason is.
+            };
             m_comboBox.SelectionChanged += () => m_parameter.EditorSelected = m_comboBox.SelectedItem.Contents;
             m_comboBox.EnterPressed += () => { Ok.Execute(); };
         }
@@ -88,9 +90,11 @@ namespace ConversationEditor
                 if (valueName != null)
                     m_comboBox.SelectedItem = new TItem(valueName, m_parameter.Value);
                 else
-                    m_comboBox.SelectedItem = new TItem(EnumParameter.InvalidValue);
+                    m_comboBox.SelectedItem = new TItem(InvalidValue);
             }
         }
+
+        public const string InvalidValue = "ERROR: Unknown enumeration value";
 
         public DefaultEnumEditor AsControl
         {
@@ -107,7 +111,7 @@ namespace ConversationEditor
 
         public string IsValid()
         {
-            return m_comboBox.Items.Any(i => i.Contents == m_comboBox.SelectedItem.Contents) ? null : "Selected item doe snot exist in enumeration";
+            return m_comboBox.Items.Any(i => i.Contents == m_comboBox.SelectedItem.Contents) ? null : "Selected item does not exist in enumeration";
         }
 
         public event Action Ok;

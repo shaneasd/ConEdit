@@ -44,6 +44,11 @@ namespace ConversationEditor
 
         public void Dispose() { } //No resources to clean up
 
+        public DateTime LocalizationTime(Id<LocalizedText> id)
+        {
+            return Instance.LocalizationTime(id);
+        }
+
         public bool IsValid
         {
             get { return false; }

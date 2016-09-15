@@ -9,25 +9,6 @@ namespace Arthur
 {
     internal static class NativeMethods
     {
-        // ReSharper disable NotAccessedField.Local
-        // ReSharper disable MemberCanBePrivate.Local
-        // ReSharper disable FieldCanBeMadeReadOnly.Local
-        public struct Rect
-        {
-            private int _left;
-            private int _top;
-            private int _right;
-            private int _bottom;
-
-            public Rect(Rectangle r)
-            {
-                _left = r.Left;
-                _top = r.Top;
-                _bottom = r.Bottom;
-                _right = r.Right;
-            }
-        }
-
         [StructLayout(LayoutKind.Sequential)]
         public struct BlendFunction
         {
@@ -72,10 +53,11 @@ namespace Arthur
         public static extern IntPtr SelectObject([In] IntPtr hdc, [In] IntPtr hgdiobj);
 
         [DllImport("gdi32.dll")]
-        public static extern int SetTextColor(IntPtr hdc, int color);
+        public static extern uint SetTextColor(IntPtr hdc, int color);
 
         [DllImport("gdi32.dll", EntryPoint = "GetTextExtentPoint32W")]
-        public static extern int GetTextExtentPoint32(IntPtr hdc, [MarshalAs(UnmanagedType.LPWStr)] string str, int len, ref Size size);
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetTextExtentPoint32(IntPtr hdc, [MarshalAs(UnmanagedType.LPWStr)] string lpString, int cbString, out Size lpSize);
 
         [DllImport("gdi32.dll", EntryPoint = "GetTextExtentExPointW")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -84,9 +66,6 @@ namespace Arthur
         [DllImport("gdi32.dll", EntryPoint = "TextOutW")]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool TextOut(IntPtr hdc, int x, int y, [MarshalAs(UnmanagedType.LPWStr)] string str, int len);
-
-        [DllImport("user32.dll", EntryPoint = "DrawTextW")]
-        public static extern int DrawText(IntPtr hdc, [MarshalAs(UnmanagedType.LPWStr)] string str, int len, ref Rect rect, uint uFormat);
 
         [DllImport("gdi32.dll")]
         public static extern int SelectClipRgn(IntPtr hdc, IntPtr hrgn);
@@ -122,7 +101,7 @@ namespace Arthur
     /// http://theartofdev.com/2013/08/12/using-native-gdi-for-text-rendering-in-c/<br/>
     /// The MIT License (MIT) Copyright (c) 2014 Arthur Teplitzki.
     /// 
-    /// Some changes made by Shane for P/Invoke fxcop compliance
+    /// Some changes made by Shane for static analysis compliance
     /// </remarks>
     public sealed class NativeTextRenderer : IDisposable
     {
@@ -166,9 +145,15 @@ namespace Arthur
             var clip = _g.Clip.GetHrgn(_g);
 
             _hdc = _g.GetHdc();
-            NativeMethods.SetBkMode(_hdc, 1);
+            if (0 == NativeMethods.SetBkMode(_hdc, 1))
+            {
+                throw new InvalidOperationException("Failed to set background mix mode");
+            }
 
-            NativeMethods.SelectClipRgn(_hdc, clip);
+            if (ERROR == NativeMethods.SelectClipRgn(_hdc, clip))
+            {
+                throw new InvalidOperationException("Failed to select clip region");
+            }
 
             NativeMethods.DeleteObject(clip);
         }
@@ -184,8 +169,9 @@ namespace Arthur
         {
             SetFont(font);
 
-            var size = new Size();
-            NativeMethods.GetTextExtentPoint32(_hdc, str, str.Length, ref size);
+            Size size;
+            if (!NativeMethods.GetTextExtentPoint32(_hdc, str, str.Length, out size))
+                throw new InvalidOperationException("NativeMethods.GetTextExtentPoint32 failed in NativeTextRenderer.MeasureString");
             return size;
         }
 
@@ -234,6 +220,8 @@ namespace Arthur
         /// 3. Draw the text to in-memory DC<br/>
         /// 4. Copy the in-memory DC to the proper location with alpha blend<br/>
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Arthur.NativeMethods.SetTextColor(System.IntPtr,System.Int32)", Justification = "Probably won't happen? 3rd party code anyway")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Arthur.NativeMethods.SetBkMode(System.IntPtr,System.Int32)", Justification ="Probably won't happen? 3rd party code anyway")]
         public void DrawTransparentText(string str, Font font, Color color, Point point, Size size)
         {
             // Create a memory DC so we can work off-screen
@@ -277,6 +265,7 @@ namespace Arthur
         /// <summary>
         /// Release current HDC to be able to use <see cref="Graphics"/> methods.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Arthur.NativeMethods.SelectClipRgn(System.IntPtr,System.IntPtr)", Justification ="We don't want to throw from a disposer even if it fails")]
         public void Dispose()
         {
             if (_hdc != IntPtr.Zero)
@@ -333,16 +322,20 @@ namespace Arthur
             return hfont;
         }
 
+        private const uint CLR_INVALID = 0xffffffff;
+        private const uint ERROR = 0;
+
         /// <summary>
         /// Set the text color of the device context.
         /// </summary>
         private void SetTextColor(Color color)
         {
             int rgb = (color.B & 0xFF) << 16 | (color.G & 0xFF) << 8 | color.R;
-            NativeMethods.SetTextColor(_hdc, rgb);
+            if (CLR_INVALID == NativeMethods.SetTextColor(_hdc, rgb))
+            {
+                throw new InvalidOperationException("SetTextColor failed");
+            }
         }
-
-
 
         #endregion
     }

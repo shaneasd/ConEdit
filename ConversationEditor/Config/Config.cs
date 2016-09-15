@@ -77,15 +77,15 @@ namespace ConversationEditor
         public readonly ErrorCheckersConfig ErrorCheckers = new ErrorCheckersConfig();
         public readonly GraphViewConfig GraphView = new GraphViewConfig();
         //public readonly TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice> ConversationNodeRenderers = new TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice>("NodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultConversation(nodeType));
-        public readonly TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice> DomainNodeRenderers = new TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice>("DomainNodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultDomain(nodeType));
-        public readonly TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice> ProjectNodeRenderers = new TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice>("ProjectNodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultDomain(nodeType));
-        public readonly TypeMapConfig<Id<NodeTypeTemp>, NodeEditorChoice> NodeEditors = new TypeMapConfig<Id<NodeTypeTemp>, NodeEditorChoice>("NodeEditors", nodeType => nodeType.Serialized(), (a, t) => new NodeEditorChoice(a, t), nodeType => NodeEditorChoice.Default(nodeType));
-        public readonly PluginsConfig Plugins = new PluginsConfig();
-        public readonly ConfigParameterList<string> ProjectHistory = new ConfigParameterList<string>("ProjectHistory", () => new JustStringConfigParameter());
-        public readonly ConfigParameterString ExportPath = new ConfigParameterString("ExportPath");
-        public readonly ColorsConfig ColorScheme = new ColorsConfig();
-        public readonly ConfigParameterString AudioCustomization = new ConfigParameterString("AudioCustomization");
-        public readonly FileFilterConfig FileFilters = new FileFilterConfig();
+        public TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice> DomainNodeRenderers { get; } = new TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice>("DomainNodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultDomain(nodeType));
+        public TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice> ProjectNodeRenderers { get; } = new TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice>("ProjectNodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultDomain(nodeType));
+        public TypeMapConfig<Id<NodeTypeTemp>, NodeEditorChoice> NodeEditors { get; } = new TypeMapConfig<Id<NodeTypeTemp>, NodeEditorChoice>("NodeEditors", nodeType => nodeType.Serialized(), (a, t) => new NodeEditorChoice(a, t), nodeType => NodeEditorChoice.Default(nodeType));
+        public PluginsConfig Plugins { get; } = new PluginsConfig();
+        public ConfigParameterList<string> ProjectHistory { get; } = new ConfigParameterList<string>("ProjectHistory", () => new JustStringConfigParameter());
+        public ConfigParameterString ExportPath { get; } = new ConfigParameterString("ExportPath");
+        public ColorsConfig ColorScheme { get; } = new ColorsConfig();
+        public ConfigParameterString AudioCustomization { get; } = new ConfigParameterString("AudioCustomization");
+        public FileFilterConfig FileFilters { get; } = new FileFilterConfig();
 
         string TryLoad(string file)
         {

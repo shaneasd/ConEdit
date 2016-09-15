@@ -108,6 +108,11 @@ namespace ConversationEditor
             }
         }
 
+        protected override void OnGotFocus(EventArgs e)
+        {
+            base.OnGotFocus(e);
+        }
+
         /// <summary> 
         /// Clean up any resources being used.
         /// </summary>

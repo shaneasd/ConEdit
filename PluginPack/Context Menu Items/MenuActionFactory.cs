@@ -11,7 +11,7 @@ namespace PluginPack
 {
     public class MenuActionFactory : IMenuActionFactory<ConversationNode>
     {
-        public IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log)
+        public IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log, Func<Id<LocalizedText>, string> localize)
         {
             Action<ConversationNode, Point> jump = (n, p) =>
                 {

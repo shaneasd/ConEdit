@@ -61,7 +61,7 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public DomainData Data
+        public IDomainData Data
         {
             get
             {

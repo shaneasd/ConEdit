@@ -69,11 +69,14 @@ namespace Conversation
             }
         }
 
-        public class Set : ParameterType
+        /// <summary>
+        /// Type representing a set of values from another type
+        /// </summary>
+        public class ValueSetType : ParameterType
         {
             const string SET_PREFIX = "set:";
             Guid m_of;
-            public Set(Guid of)
+            public ValueSetType(Guid of)
             {
                 m_of = of;
             }
@@ -85,7 +88,7 @@ namespace Conversation
                     Guid g;
                     if (Guid.TryParse(value.Substring(SET_PREFIX.Length), out g))
                     {
-                        return new Set(g);
+                        return new ValueSetType(g);
                     }
                 }
                 return null;
@@ -113,12 +116,12 @@ namespace Conversation
 
             public static ParameterType FromGuid(Guid g)
             {
-                return new Set(g);
+                return new ValueSetType(g);
             }
 
             public override bool Equals(object obj)
             {
-                Set b = obj as Set;
+                ValueSetType b = obj as ValueSetType;
                 if (b == null)
                     return false;
                 return b.Guid.Equals(Guid);
@@ -134,7 +137,7 @@ namespace Conversation
                 if (!(type is Basic))
                     throw new NotImplementedException("Currently only sets of basic types are supported");
                 else
-                    return new Set(type.Guid);
+                    return new ValueSetType(type.Guid);
             }
 
             public override bool IsSet
@@ -146,17 +149,17 @@ namespace Conversation
         public static ParameterType Parse(string guid)
         {
             return Basic.Parse(guid) 
-                ?? Set.Parse(guid)
+                ?? ValueSetType.Parse(guid)
                 ?? null; //Can add other parsers in a chain of ??
         }
 
         public abstract string Serialized();
 
-        public override string ToString()
-        {
-            //We never want to be implicitly converting this to a string
-            throw new NotImplementedException("ParameterType.ToString()");
-        }
+        //public override string ToString()
+        //{
+        //    //We never want to be implicitly converting this to a string (Except for debugging and tests)
+        //    throw new NotImplementedException("ParameterType.ToString()");
+        //}
 
         public abstract Guid Guid { get; }
 
@@ -279,6 +282,8 @@ namespace Conversation
 
         public int CompareTo(Id<T> other)
         {
+            if (other == null)
+                return -1; //I don't know if this puts nulls at the start or the end but it really doesn't matter
             return m_data.CompareTo(other.m_data);
         }
 

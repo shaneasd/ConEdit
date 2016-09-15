@@ -175,19 +175,19 @@ namespace ConversationEditor
 
             if (m_datasource.IsConnector(node.Type))
             {
-                var nodeConnector = node.Connectors.Single(c => c.m_definition.Id == DomainIDs.ConnectorOutputDefinition.Id);
+                var nodeConnector = node.Connectors.Single(c => c.Definition.Id == DomainIDs.ConnectorOutputDefinition.Id);
                 var nodes = nodeConnector.Connections.Select(c => c.Parent).Where(n => n.NodeTypeId == DomainIDs.NodeGuid);
                 DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             }
             else if (m_datasource.IsParameter(node.Type))
             {
-                var nodeConnector = node.Connectors.Single(c => c.m_definition.Id == DomainIDs.ParameterOutputDefinition.Id);
+                var nodeConnector = node.Connectors.Single(c => c.Definition.Id == DomainIDs.ParameterOutputDefinition.Id);
                 var nodes = nodeConnector.Connections.Select(c => c.Parent).Where(n => n.NodeTypeId == DomainIDs.NodeGuid);
                 DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             }
             else if (m_datasource.IsConfig(node.Type))
             {
-                var nodeConnector = node.Connectors.Single(c => c.m_definition.Id == DomainIDs.ConfigOutputDefinition.Id);
+                var nodeConnector = node.Connectors.Single(c => c.Definition.Id == DomainIDs.ConfigOutputDefinition.Id);
                 var connected = nodeConnector.Connections.Select(c => c.Parent);
 
                 var nodes = connected.Where(n => n.NodeTypeId == DomainIDs.NodeGuid);
@@ -364,7 +364,7 @@ namespace ConversationEditor
         }
 
         //TODO: Cache this and apply updates rather than regenerating every time
-        public DomainData Data
+        public IDomainData Data
         {
             get
             {

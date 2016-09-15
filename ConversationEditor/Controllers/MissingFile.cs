@@ -52,7 +52,7 @@ namespace ConversationEditor
 
         public IUndoQueue UndoQueue
         {
-            get { return new NoUndoQueue(); }
+            get { return NoUndoQueue.Instance; }
         }
 
         protected override void Dispose(bool disposing)

@@ -15,26 +15,26 @@ namespace Clandestine
     {
         private class LogElement : IErrorListElement
         {
-            public LogElement(IConversationEditorControlData<ConversationNode<INodeGui>, TransitionNoduleUIInfo> file, ConversationNode<INodeGui> node)
+            private ConversationNode<INodeGui> m_node;
+            private Func<Id<LocalizedText>, string> m_localize;
+
+            public LogElement(IConversationEditorControlData<ConversationNode<INodeGui>, TransitionNoduleUIInfo> file, ConversationNode<INodeGui> node, Func<Id<LocalizedText>, string> localize)
             {
                 File = file;
                 m_node = node;
+                m_localize = localize;
             }
 
-            public IConversationEditorControlData<ConversationNode<INodeGui>, TransitionNoduleUIInfo> File
-            {
-                get; private set;
-            }
+            public IConversationEditorControlData<ConversationNode<INodeGui>, TransitionNoduleUIInfo> File { get; }
 
             public string Message
             {
                 get
                 {
-                    return m_node.NodeName + ":  " + string.Join(", ", m_node.Parameters.Select(p => p.Name + ": " + p.ValueAsString()).ToArray());
+                    return m_node.NodeName + ":  " + string.Join(", ", m_node.Parameters.Select(p => p.Name + ": " + p.DisplayValue(m_localize)).ToArray());
                 }
             }
 
-            ConversationNode<INodeGui> m_node;
             public IEnumerable<ConversationNode<INodeGui>> Nodes
             {
                 get
@@ -52,7 +52,7 @@ namespace Clandestine
             }
         }
 
-        public IEnumerable<MenuAction<ConversationNode<INodeGui>>> GetMenuActions(IGraphEditorControl<ConversationNode<INodeGui>> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log)
+        public IEnumerable<MenuAction<ConversationNode<INodeGui>>> GetMenuActions(IGraphEditorControl<ConversationNode<INodeGui>> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log, Func<Id<LocalizedText>, string> localize)
         {
             //XmlGraphData<NodeUIData, ConversationEditorData> data;
             //Assembly assembly = Assembly.GetExecutingAssembly();
@@ -60,11 +60,10 @@ namespace Clandestine
             //{
             //    data = SerializationUtils.ConversationDeserializer(control.DataSource).Read(stream);
             //}
-
             yield return new MenuAction<ConversationNode>("Find Nodes of Type", (a, b) => () =>
             {
-                var nodesofType = project.ConversationFilesCollection.SelectMany(f => f.Nodes.Where(n => n.Type == a.Type));
-                log(nodesofType.Select(n => new LogElement(control.CurrentFile, n)));
+                var nodesofType = project.ConversationFilesCollection.SelectMany(f => f.Nodes.Where(n => n.Type == a.Type).Select(n => new { Node = n, File = f }));
+                log(nodesofType.Select(n => new LogElement(n.File, n.Node, localize)));
             }
             , null, null, null);
         }

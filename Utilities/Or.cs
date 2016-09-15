@@ -20,6 +20,17 @@ namespace Utilities
         {
             return new Either<T, U>(useA, aGenerator, bGenerator);
         }
+
+        public static Tuple<IEnumerable<T>, IEnumerable<U>> Split<T, U>(IEnumerable<Either<T, U>> data)
+        {
+            List<T> l1 = new List<T>();
+            List<U> l2 = new List<U>();
+            foreach (var d in data)
+            {
+                d.Do(a => l1.Add(a), b => l2.Add(b));
+            }
+            return new Tuple<IEnumerable<T>, IEnumerable<U>>(l1, l2);
+        }
     }
 
     public class Either<T, U>

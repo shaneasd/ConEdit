@@ -153,7 +153,7 @@ namespace Utilities.UI
         {
             Debug.Print(Name + "GotFocus");
             m_textBox.GotFocus();
-            m_textBox.CursorPos = new MyTextBox.CP(int.MaxValue);
+            m_textBox.SetCursorPosition(int.MaxValue);
         }
 
         public override void LostFocus()
@@ -219,7 +219,7 @@ namespace Utilities.UI
             {
                 m_selectedItem = value;
                 m_textBox.Text = m_selectedItem.DisplayString;
-                m_textBox.CursorPos = new MyTextBox.CP(int.MaxValue);
+                m_textBox.SetCursorPosition(int.MaxValue);
             }
         }
 

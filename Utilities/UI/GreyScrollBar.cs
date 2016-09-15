@@ -16,6 +16,25 @@ namespace Utilities.UI
 {
     public partial class GreyScrollBar : UserControl
     {
+        public interface IColorScheme
+        {
+            Color Background { get; }
+            DrawWindow.IColorScheme DrawWindowColorScheme { get; }
+        }
+
+        public class DefaultColorScheme : IColorScheme
+        {
+            public Color Background { get; } = Color.FromArgb(56, 56, 56);
+
+            public DrawWindow.IColorScheme DrawWindowColorScheme
+            {
+                get
+                {
+                    return new DrawWindow.DefaultColorScheme();
+                }
+            }
+        }
+
         public static Bitmap ScrollbarUpIcon { get; }
         public static Bitmap ScrollbarUpPressedIcon { get; }
         public static Bitmap ScrollbarBackgroundVerticalIcon { get; }
@@ -28,6 +47,7 @@ namespace Utilities.UI
         public static Bitmap ScrollbarBottomIcon { get; }
         public static Bitmap ScrollbarBottomPressedIcon { get; }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = "I believe this would actually be slower due to the inability to cache Assembly.GetExecutingAssembly()")]
         static GreyScrollBar()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
@@ -98,33 +118,13 @@ namespace Utilities.UI
                 }
             }
         }
-        float m_largeIncremement = 0.1f;
-        [DefaultValue(0.1f)]
-        public float LargeChange
-        {
-            get { return m_largeIncremement; }
-            set { m_largeIncremement = value; }
-        }
+        public float LargeChange { get; set; } = 0.1f;
 
-        float m_smallIncrement = 0.01f;
-        [DefaultValue(0.01f)]
-        public float SmallChange
-        {
-            get { return m_smallIncrement; }
-            set { m_smallIncrement = value; }
-        }
+        public float SmallChange { get; set; } = 0.01f;
 
-        public float Minimum
-        {
-            get;
-            set;
-        }
+        public float Minimum { get; set; }
 
-        public float Maximum
-        {
-            get;
-            set;
-        }
+        public float Maximum { get; set; }
 
         public float Value
         {
@@ -143,15 +143,15 @@ namespace Utilities.UI
             set { m_percentageCovered = value; Invalidate(true); }
         }
 
-        private ColorScheme m_colorScheme = new ColorScheme();
+        private IColorScheme m_colorScheme = new DefaultColorScheme();
         [Browsable(false)]
-        public ColorScheme ColorScheme
+        public IColorScheme ColorScheme
         {
             get { return m_colorScheme; }
             set
             {
                 m_colorScheme = value;
-                drawWindow1.ColorScheme = value;
+                drawWindow1.ColorScheme = value.DrawWindowColorScheme;
             }
         }
 

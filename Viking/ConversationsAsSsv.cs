@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ConversationEditor;
-using System.Windows.Forms;
 using Conversation;
 using Utilities;
 using System.IO;
+using System.Windows.Forms;
 
-namespace Clandestine
+namespace Viking
 {
     public class ConversationsAsSsv : IProjectExporter
     {
         public string Name
         {
-            get { return "Conversations as Semicolon Separated Values"; }
+            get { return "Conversations as Semicolon Separated Values (Viking)"; }
         }
 
-        public void Export(IProject2 project, ConfigParameterString exportPath, Func<Id<LocalizedText>, string> localize, IErrorCheckerUtilities<IConversationNode> util)
+        public void Export(IProject2 project, ConfigParameterString exportPath, Func<Id<LocalizedText>, Tuple<string, DateTime>> localize, IErrorCheckerUtilities<IConversationNode> util)
         {
             if (project == null)
                 throw new ArgumentNullException(nameof(project));
@@ -45,7 +45,7 @@ namespace Clandestine
                         using (var sw = new StreamWriter(stream))
                         {
                             stream = null;
-                            ExportAsSsv ssv = new ExportAsSsv(localize);
+                            ExportAsSsv ssv = new ExportAsSsv(id=>localize(id).Item1);
                             CsvData.WriteTitle(";", sw, true);
                             foreach (var con in project.ConversationFilesCollection)
                                 ssv.WriteConversation(con, sw, true, util);

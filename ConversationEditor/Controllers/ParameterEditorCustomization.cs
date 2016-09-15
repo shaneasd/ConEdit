@@ -25,7 +25,7 @@ namespace ConversationEditor
                 return DefaultBooleanEditorFactory.StaticId;
             else if (type == BaseTypeString.ParameterType)
                 return DefaultStringEditorFactory.StaticId;
-            else if (type == BaseTypeLocalizedString.PARAMETER_TYPE)
+            else if (type == BaseTypeLocalizedString.ParameterType)
                 return DefaultLocalizedStringEditorFactory.StaticId;
             else if (type == BaseTypeAudio.PARAMETER_TYPE)
                 return DefaultAudioEditorFactory.StaticId;
@@ -40,7 +40,7 @@ namespace ConversationEditor
         public ParameterEditorCustomization()
         {
             m_parameters = new List<Parameter>();
-            m_parameters.Add(new EnumParameter("Character", Id<Parameter>.New(), new Enumeration(new[] { Tuple.Create(Guid.NewGuid(), "value") }, ParameterType.Basic.New()), null));
+            m_parameters.Add(new EnumParameter("Character", Id<Parameter>.New(), new ImmutableEnumeration(new[] { Tuple.Create(Guid.NewGuid(), "value") }, ParameterType.Basic.New(), ""), null));
         }
 
         public ParameterEditorCustomization(IDataSource datasource, MapConfig<ParameterType, Guid> typeMapConfig, IEnumerable<IParameterEditorFactory> allEditors)
@@ -51,13 +51,13 @@ namespace ConversationEditor
             {
                 var options = allEditors.Where(e => e.WillEdit(type, WillEdit.Create(datasource))).Select(e => Tuple.Create(e.Guid, e.Name)).ToList();
                 Guid def = m_typeMapConfig[type];
-                var enumeration = new Enumeration(options, type, def);
+                var enumeration = new ImmutableEnumeration(options, type, def);
                 var p = new EnumParameter(datasource.GetTypeName(type), Id<Parameter>.ConvertFrom(type), enumeration, def.ToString());
                 m_parameters.Add(p);
             }
         }
 
-        public IEnumerable<Parameter> Parameters
+        public IEnumerable<IParameter> Parameters
         {
             get { return m_parameters; }
         }
@@ -77,7 +77,7 @@ namespace ConversationEditor
             get { return "Customize parameter editors"; }
         }
 
-        public ReadOnlyCollection<NodeData.ConfigData> Config
+        public IReadOnlyList<NodeData.ConfigData> Config
         {
             get { throw new NotImplementedException(); }
         }
@@ -90,11 +90,6 @@ namespace ConversationEditor
         public event Action Linked { add { } remove { } }
 
         public void ChangeId(Id<NodeTemp> id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void TryDecorrupt()
         {
             throw new NotImplementedException();
         }

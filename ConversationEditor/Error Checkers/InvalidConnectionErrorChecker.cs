@@ -31,7 +31,7 @@ namespace ConversationEditor.ErrorCheckers
                 {
                     foreach (var connection in c.Connections)
                     {
-                        if (!c.Rules.CanConnect(c.m_definition.Id, connection.m_definition.Id))
+                        if (!c.Rules.CanConnect(c.Definition.Id, connection.Definition.Id))
                             results.Add(UnorderedTuple.Make(node, utils.ReverseLookup(connection.Parent)));
                     }
                 }

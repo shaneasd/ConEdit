@@ -38,9 +38,15 @@ namespace ConversationEditor
         public void Draw(Graphics g, bool selected, ColorScheme scheme)
         {
             if (selected)
-                g.FillRectangle(new SolidBrush(scheme.GroupBackgroundSelected), m_area);
+            {
+                using (var brush = new SolidBrush(scheme.GroupBackgroundSelected))
+                    g.FillRectangle(brush, m_area);
+            }
             else
-                g.FillRectangle(new SolidBrush(scheme.GroupBackgroundUnselected), m_area);
+            {
+                using (var brush = new SolidBrush(scheme.GroupBackgroundUnselected))
+                    g.FillRectangle(brush, m_area);
+            }
             g.DrawRectangle(scheme.ForegroundPen, m_area);
         }
 

@@ -215,7 +215,7 @@ namespace Conversation.Serialization
                         foreach (var connectedID in connectedNodes)
                         {
                             var connectedNode = allnodes[connectedID].GraphData;
-                            var orderedConnectors = connectedNode.Connectors.OrderBy(o => o.m_definition.Id != ConnectorDefinitionData.InputDefinitionId); //Put any inputs at the front of the list
+                            var orderedConnectors = connectedNode.Connectors.OrderBy(o => o.Definition.Id != ConnectorDefinitionData.InputDefinitionId); //Put any inputs at the front of the list
                             bool success = false;
                             foreach (var connector in orderedConnectors)
                             {

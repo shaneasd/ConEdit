@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Conversation;
 using Conversation.Serialization;
 using System.Diagnostics;
+using Utilities;
 
 namespace ConversationEditor
 {
@@ -55,30 +56,50 @@ namespace ConversationEditor
         internal static IEnumerable<IAutoCompletePattern> Generate(XmlGraphData<NodeUIData, ConversationEditorData> nodeData, DomainDomain source)
         {
             List<IAutoCompletePattern> result = new List<IAutoCompletePattern>();
-            try
+            List<IError> errors = new List<IError>();
+            var startNodes = nodeData.Nodes.Select(n => n.GraphData).Where(n => !HasParent(n) && !HasPrevious(n));
+            foreach (var startNode in startNodes)
             {
-                //TODO: Before we start processing, make sure there are no cycles which would cause us to recurse forever
+                var processed = Process(startNode, source, 0);
+                processed.Do(a => result.Add(a), b => errors.Add(b));
 
-                var startNodes = nodeData.Nodes.Select(n => n.GraphData).Where(n => !HasParent(n) && !HasPrevious(n));
-                foreach (var startNode in startNodes)
-                {
-                    result.Add(Process(startNode, source));
-                }
             }
-            catch //TODO: Figure out which sort of errors we need to handle
-            {
-                throw;
-            }
+
+            //TODO: How to expose errors to the user?
+
             return result;
         }
 
-        private static Node Process(IEditable node, DomainDomain source)
+        public interface IError { }
+        private class OverRecursionError : IError
+        {
+        }
+
+        private static Either<Node, IError> Process(IEditable node, DomainDomain source, int depth)
         {
             if (node == null)
                 return null;
 
-            Node[] children = Children(node).Select(n => Process(n, source)).ToArray();
-            Node[] nexts = Next(node).Select(n => Process(n, source)).ToArray();
+            depth++;
+
+            if (depth > 100)
+            {
+                return new OverRecursionError();
+            }
+
+            var c = Children(node).Select(n => Process(n, source, depth));
+            var cc = Either.Split(c);
+
+            var ne = Next(node).Select(n => Process(n, source, depth));
+            var nene = Either.Split(ne);
+
+            if (cc.Item2.Any())
+                return new Either<Node, IError>(cc.Item2.First());
+            else if (nene.Item2.Any())
+                return new Either<Node, IError>(nene.Item2.First());
+
+            Node[] children = cc.Item1.ToArray();
+            Node[] nexts = nene.Item1.ToArray();
 
             //Node child = (children.Length == 0) ? null : children.Length == 1 ? children[0] : new OneOf() { Next = null, Options = children };
             //Node next = (nexts.Length == 0) ? null : nexts.Length == 1 ? nexts[0] : new OneOf() { Next = null, Options = nexts };
@@ -193,12 +214,6 @@ namespace ConversationEditor
             /// <returns>collection of all remaining strings after match has been removed i.e. s = match + result.
             /// Thus, an empty string would indicate a perfect match.</returns>
             public abstract IEnumerable<Match> OwnMatches(IParameter p, string s, Func<ParameterType, DynamicEnumParameter.Source> enumSource);
-
-            //public virtual IEnumerable<string> AutoCompleteSuggestions(IParameter p, string s)
-            //{
-            //    //TODO: Implement this properly
-            //    return AutoCompleteSuggestionsDemo(s);
-            //}
         }
 
         private class Count : Node

@@ -222,7 +222,7 @@ namespace Utilities.UI
                 {
                     m_value = value;
                     m_textBox.Text = m_value.ToString(CultureInfo.CurrentCulture);
-                    m_textBox.CursorPos = new MyTextBox.CP(int.MaxValue);
+                    m_textBox.SetCursorPosition(int.MaxValue);
                 }
             }
         }

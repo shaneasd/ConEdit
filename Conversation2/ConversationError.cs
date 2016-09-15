@@ -8,9 +8,7 @@ namespace Conversation
     public abstract class ConversationError<T> where T : IConversationNode
     {
         public abstract string Message { get; }
-        private readonly IEnumerable<T> m_nodes;
-
-        public IEnumerable<T> Nodes { get { return m_nodes; } }
+        public IEnumerable<T> Nodes { get; }
 
         public override string ToString()
         {
@@ -18,7 +16,7 @@ namespace Conversation
         }
         protected ConversationError(IEnumerable<T> nodes)
         {
-            m_nodes = nodes;
+            Nodes = nodes;
         }
     }
 }

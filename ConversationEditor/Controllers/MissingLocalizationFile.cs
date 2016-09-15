@@ -38,6 +38,11 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
+        public DateTime LocalizationTime(Id<LocalizedText> id)
+        {
+            throw new NotImplementedException();
+        }
+        
         Utilities.SimpleUndoPair ILocalizationFile.SetLocalizationAction(Id<LocalizedText> guid, string p)
         {
             throw new NotImplementedException();
@@ -59,7 +64,6 @@ namespace ConversationEditor
         {
             m_file.Dispose();
         }
-
 
         public bool IsValid
         {

@@ -137,11 +137,6 @@ namespace ConversationEditor
             return audioValues;
         }
 
-        private bool Matches(Audio audio, IAudioFile file)
-        {
-            return GetPath(audio).FullName == file.File.File.FullName;
-        }
-
         public void UpdateUsage(Audio audio)
         {
             if (audio.Value == null) //As far as I can tell, only a default constructed Audio can have this property

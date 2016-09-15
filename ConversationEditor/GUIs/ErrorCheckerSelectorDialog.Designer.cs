@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Utilities.UI.ColorScheme colorScheme1 = new Utilities.UI.ColorScheme();
+            ColorScheme colorScheme1 = new ColorScheme();
             this.btnOk = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();

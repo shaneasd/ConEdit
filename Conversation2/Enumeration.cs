@@ -10,98 +10,91 @@ namespace Conversation
     public interface IEnumeration
     {
         IEnumerable<Guid> Options { get; }
-        string GetName(Guid value);
+
+        /// <summary>
+        /// Get the name associated with the specified unique identifier
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>
+        /// If Options contais id: The name associated with the input id
+        /// Else: null
+        /// </returns>
+        string GetName(Guid id);
         ParameterType TypeId { get; }
-        Either<string, Guid> Default { get; }
+        Either<string, Guid> DefaultValue { get; }
     }
 
     public static class EnumerationUtil
     {
+        /// <summary>
+        /// Create an enumeration parameter whose type and data matches this enumeration.
+        /// </summary>
+        /// <param name="e">The enumeration to act as the base type</param>
+        /// <param name="name">The name for the parameter</param>
+        /// <param name="id">The id for the parameter</param>
+        /// <param name="defaultValue">Default value for the parameter. If null, the default is taken from the enumeration itself</param>
         public static Parameter ParameterEnum(this IEnumeration e, string name, Id<Parameter> id, string defaultValue)
         {
             return new EnumParameter(name, id, e, defaultValue);
         }
 
+        /// <summary>
+        /// Create an set of enumeration parameter whose type is a set of values from this enumeration and whose data matches this enumeration.
+        /// </summary>
+        /// <param name="e">The enumeration to act as the base type</param>
+        /// <param name="name">The name for the parameter</param>
+        /// <param name="id">The id for the parameter</param>
+        /// <param name="defaultValue">Default value for the parameter. If null, the default is taken from the enumeration itself</param>
         public static Parameter ParameterSet(this IEnumeration e, string name, Id<Parameter> id, string defaultValue)
         {
             return new SetParameter(name, id, e, defaultValue);
         }
     }
-
-
-    public class WrapperEnumeration : IEnumeration
+    
+    public abstract class Enumeration : IEnumeration
     {
-        private Func<IEnumerable<Guid>> m_options;
-        private Func<Guid, string> m_getName;
-        private ParameterType m_typeID;
-        private Func<Either<string, Guid>> m_default;
-        public WrapperEnumeration(Func<IEnumerable<Guid>> options, Func<Guid, string> getName, Func<Either<string, Guid>> @default, ParameterType typeId)
+        protected abstract Dictionary<Guid, string> OptionsMap { get; }
+
+        public string GetName(Guid id)
         {
-            m_options = options;
-            m_getName = getName;
-            m_typeID = typeId;
-            m_default = @default;
+            if (!OptionsMap.ContainsKey(id))
+                return null;
+            return OptionsMap[id];
         }
 
-        public IEnumerable<Guid> Options
+        protected Enumeration(ParameterType typeId, Either<string, Guid> def)
         {
-            get { return m_options(); }
+            TypeId = typeId;
+            DefaultValue = def;
         }
 
-        public string GetName(Guid value)
-        {
-            return m_getName(value);
-        }
+        public IEnumerable<Guid> Options { get { return OptionsMap.Keys; } }
+        public Either<string, Guid> DefaultValue { get; protected set; }
 
-        public ParameterType TypeId
-        {
-            get { return m_typeID; }
-        }
-
-        public Either<string, Guid> Default
-        {
-            get { return m_default(); }
-        }
+        public ParameterType TypeId { get; }
     }
 
-    public class Enumeration : IEnumeration
+    public class ImmutableEnumeration : Enumeration
     {
-        protected Dictionary<Guid, string> m_options;
+        protected override Dictionary<Guid, string> OptionsMap { get; }
 
-        public string GetName(Guid value)
+        public ImmutableEnumeration(IEnumerable<Tuple<Guid, string>> options, ParameterType typeId, Either<string, Guid> def)
+            : base(typeId, def)
         {
-            if (value == Guid.Empty)
-                return Default.Transformed(s => s, g => null);
-            if (!m_options.ContainsKey(value))
-                return null;
-            return m_options[value];
+            OptionsMap = options.ToDictionary(t => t.Item1, t => t.Item2);
         }
-
-        public Enumeration(IEnumerable<Tuple<Guid, string>> options, ParameterType typeId)
-        {
-            m_options = options.ToDictionary(t => t.Item1, t => t.Item2);
-            m_typeId = typeId;
-            Default = Guid.Empty;
-        }
-
-        public Enumeration(IEnumerable<Tuple<Guid, string>> options, ParameterType typeId, Either<string, Guid> def)
-            : this(options, typeId)
-        {
-            Default = def;
-        }
-
-        public IEnumerable<Guid> Options { get { return m_options.Keys; } }
-        public Either<string, Guid> Default { get; protected set; }
-
-        private readonly ParameterType m_typeId;
-        public ParameterType TypeId { get { return m_typeId; } }
     }
 
     public class MutableEnumeration : Enumeration
     {
+        private Dictionary<Guid, string> m_options;
+
+        protected override Dictionary<Guid, string> OptionsMap { get { return m_options; } }
+
         public MutableEnumeration(IEnumerable<Tuple<Guid, string>> options, ParameterType typeId, Either<string, Guid> def)
-            : base(options, typeId, def)
+            : base(typeId, def)
         {
+            m_options = options.ToDictionary(t => t.Item1, t => t.Item2);
         }
 
         //public void SetName(Guid guid, string name)
@@ -125,7 +118,7 @@ namespace Conversation
                                        m_options.Select(o => new EnumerationData.Element(o.Value, o.Key)).ToList());
         }
 
-        internal void SetOptions(List<EnumerationData.Element> elements)
+        public void SetOptions(IEnumerable<EnumerationData.Element> elements)
         {
             m_options.Clear();
             foreach (var option in elements)

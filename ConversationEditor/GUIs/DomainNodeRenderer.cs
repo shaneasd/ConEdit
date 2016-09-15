@@ -141,7 +141,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return Node.Connectors.Where(c => c.m_definition.Position == ConnectorPosition.Bottom);
+                    return Node.Connectors.Where(c => c.Definition.Position == ConnectorPosition.Bottom);
                 }
             }
 
@@ -180,11 +180,11 @@ namespace ConversationEditor
 
             public static string GetName(Output connector)
             {
-                if (connector.m_definition.Id == DomainIDs.NodeOutputConfigDefinition.Id)
+                if (connector.Definition.Id == DomainIDs.NodeOutputConfigDefinition.Id)
                     return "Config";
-                else if (connector.m_definition.Id == DomainIDs.NodeOutputParametersDefinition.Id)
+                else if (connector.Definition.Id == DomainIDs.NodeOutputParametersDefinition.Id)
                     return "Parameters";
-                else if (connector.m_definition.Id == DomainIDs.NodeOutputConnectorsDefinition.Id)
+                else if (connector.Definition.Id == DomainIDs.NodeOutputConnectorsDefinition.Id)
                     return "Connectors";
                 else
                     return "";

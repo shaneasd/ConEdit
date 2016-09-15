@@ -19,9 +19,9 @@ namespace PluginPack
             get { return "Color"; }
         }
 
-        public IEnumerable<Parameter> MakeParameters()
+        public IEnumerable<IParameter> MakeParameters()
         {
-            yield return new StringParameter("Color", Id<Parameter>.Parse("9baa396d-265d-4b69-8a19-0f4799606a3a"), StringParameter.ParameterType);
+            yield return new StringParameter("Color", Id<Parameter>.Parse("9baa396d-265d-4b69-8a19-0f4799606a3a"));
         }
     }
 }

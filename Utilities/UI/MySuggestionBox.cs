@@ -16,6 +16,8 @@ namespace Utilities.UI
     {
         private static Bitmap UpArrow;
         private static Bitmap DownArrow;
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = "I believe this would actually be slower due to the inability to cache Assembly.GetExecutingAssembly() and UpArrow")]
         static UpArrowItem()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
@@ -227,6 +229,7 @@ namespace Utilities.UI
         const int BUTTON_WIDTH = 20;
 
         Func<RectangleF> m_area;
+        Func<RectangleF> m_textBoxArea;
         public RectangleF Area { get { return m_area(); } }
         ToolStripDropDown m_dropDown;
         private bool m_allowCustomText;
@@ -243,7 +246,7 @@ namespace Utilities.UI
             m_area = area;
             Items = items;
 
-            Func<RectangleF> m_textBoxArea = m_area;
+            m_textBoxArea = m_area;
             if (m_HasDropDownButton)
             {
                 m_buttonArea = () => { var a = area(); return RectangleF.FromLTRB(a.Right - BUTTON_WIDTH, a.Top, a.Right, a.Bottom); };
@@ -290,7 +293,7 @@ namespace Utilities.UI
         {
             Debug.Print(Name + "Got Focus");
             m_textBox.GotFocus();
-            m_textBox.CursorPos = new MyTextBox.CP(int.MaxValue);
+            m_textBox.SetCursorPosition(int.MaxValue);
             //UpdateDropdown();
         }
 
@@ -453,7 +456,7 @@ namespace Utilities.UI
             {
                 m_selectedItem = value;
                 m_textBox.Text = m_selectedItem.DisplayString;
-                m_textBox.CursorPos = new MyTextBox.CP(int.MaxValue);
+                m_textBox.SetCursorPosition(int.MaxValue);
                 m_dropDown.Close();
             }
         }
@@ -527,6 +530,10 @@ namespace Utilities.UI
         public override bool Contains(PointF point)
         {
             return Area.Contains(point);
+        }
+
+        public void AreaChanged()
+        {
         }
     }
 }

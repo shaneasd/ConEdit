@@ -11,6 +11,11 @@ using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeG
 
 namespace ConversationEditor
 {
+    public interface INodeFactory<TNode, in TNodeUI> where TNode : IGraphNode, IConfigurable
+    {
+        TNode MakeNode(IEditable e, TNodeUI uiData);
+    }
+
     internal interface INodeFactory<TNode> : INodeFactory<TNode, NodeUIData> where TNode : IGraphNode, IConfigurable
     {
     }

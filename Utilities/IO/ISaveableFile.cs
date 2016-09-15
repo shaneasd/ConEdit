@@ -128,7 +128,10 @@ namespace Utilities
         {
             var oldPath = File;
             m_upToDateFile.Dispose();
-            m_upToDateFile = new UpToDateFile(new MemoryStream(), path, m_saveTo);
+            using (MemoryStream m = new MemoryStream())
+            {
+                m_upToDateFile = new UpToDateFile(m, path, m_saveTo);
+            }
             m_upToDateFile.FileChanged += () => FileModifiedExternally.Execute();
             m_upToDateFile.FileDeleted += () => FileDeletedExternally.Execute();
             Save();
@@ -263,9 +266,8 @@ namespace Utilities
             m_saved = saved;
             m_lastChanged = false;
         }
-
-        readonly NoUndoQueue m_undoQueue = new NoUndoQueue();
-        public IUndoQueue UndoQueue { get { return m_undoQueue; } }
+        
+        public IUndoQueue UndoQueue { get { return NoUndoQueue.Instance; } }
 
         private Func<bool> m_changed;
         private Action m_saved;
@@ -297,15 +299,15 @@ namespace Utilities
         public event Action Modified;
     }
 
+    [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly", Justification = "Disposable behavior inherited from SaveableFile")]
     public class SaveableFileNotUndoable : SaveableFile, ISaveableFile
     {
         public SaveableFileNotUndoable(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo)
             : base(initialContent, path, saveTo)
         {
         }
-
-        readonly NoUndoQueue m_undoQueue = new NoUndoQueue();
-        public IUndoQueue UndoQueue { get { return m_undoQueue; } }
+        
+        public IUndoQueue UndoQueue { get { return NoUndoQueue.Instance; } }
 
         private bool m_changed = false;
 
@@ -343,7 +345,7 @@ namespace Utilities
 
         public IUndoQueue UndoQueue
         {
-            get { throw new NotImplementedException(); }
+            get { return NoUndoQueue.Instance; }
         }
 
         public event Action<Changed<FileInfo>> Moved;
@@ -463,7 +465,7 @@ namespace Utilities
 
         public IUndoQueue UndoQueue
         {
-            get { return new NoUndoQueue(); }
+            get { return NoUndoQueue.Instance; }
         }
 
         public event Action SaveStateChanged { add { } remove { } } //Can't be modified/saved

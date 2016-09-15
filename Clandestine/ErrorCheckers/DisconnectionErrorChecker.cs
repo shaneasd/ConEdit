@@ -64,8 +64,8 @@ namespace Clandestine
         {
             foreach (var node in nodes)
             {
-                var inputs = node.Connectors.Where(c => c.m_definition.Id == SpecialConnectors.Input.Id);
-                var outputs = node.Connectors.Where(c => c.m_definition.Id == SpecialConnectors.Output.Id);
+                var inputs = node.Connectors.Where(c => c.Definition.Id == SpecialConnectors.Input.Id);
+                var outputs = node.Connectors.Where(c => c.Definition.Id == SpecialConnectors.Output.Id);
 
                 foreach (var input in inputs)
                     if (!input.Connections.Any())

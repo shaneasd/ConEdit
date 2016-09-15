@@ -150,7 +150,7 @@ namespace Utilities.UI
         /// <summary>
         /// Represents a cursor position within a text UI element
         /// </summary>
-        public struct CP
+        private struct CP
         {
             /// <summary>
             /// The index of the cursor. 0 is before the first character. 1 is after the first character.
@@ -204,7 +204,12 @@ namespace Utilities.UI
             }
         }
 
-        public CP CursorPos
+        public void SetCursorPosition(int position)
+        {
+            CursorPos = new CP(position);
+        }
+
+        private CP CursorPos
         {
             get { return m_state.CursorPos; }
             set
@@ -283,7 +288,7 @@ namespace Utilities.UI
 
         public RectangleF TextRectangle { get { return RectangleF.Inflate(Area, -BorderSize, -BorderSize); } }
 
-        public InputFormEnum InputForm;
+        public InputFormEnum InputForm { get; set; }
 
         public enum InputFormEnum { Text, Decimal, Integer, Path, FileName, None }
 
@@ -293,7 +298,6 @@ namespace Utilities.UI
         private bool m_dropDownOpen = false;
         int m_dropDownWindow = 0;
         const int WINDOW_SIZE = 4;
-        public Color SelectedBackgroundColor = Color.Green;
         string[] m_suggestions = new string[] { "shane", "tammy", "shane again" };
         int m_itemIndex = -1;
         private int ItemIndex
@@ -320,7 +324,10 @@ namespace Utilities.UI
                 }
 
                 if (SelectedToolStripItem != null)
-                    SelectedToolStripItem.BackColor = SelectedBackgroundColor;
+                {
+                    //TODO: this seems... odd. Should this be using a ColorScheme?
+                    SelectedToolStripItem.BackColor = Color.Green;
+                }
             }
         }
         private ToolStripItem SelectedToolStripItem
@@ -467,7 +474,7 @@ namespace Utilities.UI
             return new PointF(x, y);
         }
 
-        public CP XYToCursor(float x, float y)
+        private CP XYToCursor(float x, float y)
         {
             if (Text.Length == 0)
                 return new CP(0);
@@ -754,262 +761,59 @@ namespace Utilities.UI
         {
             if (args.KeyCode.IsSet(Keys.A) && args.Control)
             {
-                SelectionLength = -Text.Length;
-                CursorPos = new CP(int.MaxValue);
-                m_additionUndoAction = null;
+                SelectAll();
             }
             else if (args.KeyCode.IsSet(Keys.C) && args.Control)
             {
-                if (!string.IsNullOrEmpty(SelectedText))
-                    Clipboard.SetText(SelectedText);
-                m_additionUndoAction = null;
+                Copy();
             }
             else if (args.KeyCode.IsSet(Keys.X) && args.Control)
             {
-                if (InputForm != InputFormEnum.None)
-                {
-                    if (!string.IsNullOrEmpty(SelectedText))
-                    {
-                        var undo = MakeUndoAction();
-                        if (!string.IsNullOrEmpty(SelectedText))
-                            Clipboard.SetText(SelectedText);
-                        DeleteSelection();
-                        m_additionUndoAction = null;
-                        undo.SetRedo(m_state);
-                    }
-                }
+                Cut();
             }
             else if (args.KeyCode.IsSet(Keys.V) && args.Control)
             {
-                if (Clipboard.ContainsText() && InputForm != InputFormEnum.None)
-                {
-                    var undo = MakeUndoAction();
-                    if (SelectionLength != 0)
-                        DeleteSelection();
-                    var insertText = Clipboard.GetText();
-                    Text = Text.Insert(GetCursorPosInt(), insertText);
-                    CursorPos = new CP(CursorPos.Pos + insertText.Length);
-                    m_additionUndoAction = null;
-                    undo.SetRedo(m_state);
-                }
+                Paste();
             }
             else if (args.KeyCode.IsSet(Keys.Z) && args.Control)
             {
-                m_undoQueue.Undo();
-                m_additionUndoAction = null;
+                Undo();
             }
             else if (args.KeyCode.IsSet(Keys.Y) && args.Control)
             {
-                m_undoQueue.Redo();
-                m_additionUndoAction = null;
+                Redo();
             }
             else if (args.KeyCode.IsSet(Keys.Right))
             {
-                var oldPos = GetCursorPosInt();
-                int nextPos = 1;
-                if (args.Control)
-                {
-                    Regex r = new Regex(@"\s*\S*");
-                    nextPos = r.Match(Text, GetCursorPosInt()).Length;
-                }
-                CursorPos = new CP(CursorPos.Pos + nextPos);
-
-                if (args.Shift)
-                {
-                    if (SelectionLength <= 0)
-                        SelectionLength -= GetCursorPosInt() - oldPos;
-                    else
-                        SelectionLength -= GetCursorPosInt() - oldPos;
-                }
-                else
-                {
-                    SelectionLength = 0;
-                }
-                Redraw();
-                m_additionUndoAction = null;
+                MoveRight(args);
             }
             else if (args.KeyCode.IsSet(Keys.Left))
             {
-                var oldPos = GetCursorPosInt();
-                int nextPos = Math.Max(0, GetCursorPosInt() - 1);
-                if (args.Control)
-                {
-                    Regex r = new Regex(@"\S*\s*$");
-                    string before = Text.Substring(0, GetCursorPosInt());
-                    nextPos = r.Match(before).Index;
-                }
-                CursorPos = new CP(nextPos);
-
-                if (args.Shift)
-                {
-                    if (SelectionLength <= 0)
-                        SelectionLength -= GetCursorPosInt() - oldPos;
-                    else
-                        SelectionLength -= GetCursorPosInt() - oldPos;
-                }
-                else
-                {
-                    SelectionLength = 0;
-                }
-                Redraw();
-                m_additionUndoAction = null;
+                MoveLeft(args);
             }
             else if (args.KeyCode.IsSet(Keys.Up))
             {
-                if (m_dropDownOpen)
-                    ItemIndex--;
-                else
-                {
-                    if (args.Shift)
-                    {
-                        var selectionEnd = GetCursorPosInt() + SelectionLength;
-                        var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
-                        point.Y -= Font.Height;
-                        CursorPos = XYToCursor(point.X, point.Y);
-                        SelectionLength = selectionEnd - GetCursorPosInt();
-                    }
-                    else
-                    {
-                        SelectionLength = 0;
-                        var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
-                        point.Y -= Font.Height;
-                        CursorPos = XYToCursor(point.X, point.Y);
-                    }
-                    Redraw();
-                    m_additionUndoAction = null;
-                }
+                MoveUp(args);
             }
             else if (args.KeyCode.IsSet(Keys.Down))
             {
-                if (m_dropDownOpen)
-                    ItemIndex++;
-                else
-                {
-                    if (args.Shift)
-                    {
-                        var selectionEnd = GetCursorPosInt() + SelectionLength;
-                        var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
-                        point.Y += Font.Height;
-                        CursorPos = XYToCursor(point.X, point.Y);
-                        SelectionLength = selectionEnd - GetCursorPosInt();
-                    }
-                    else
-                    {
-                        SelectionLength = 0;
-                        var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
-                        point.Y += Font.Height;
-                        CursorPos = XYToCursor(point.X, point.Y);
-                    }
-                    Redraw();
-                    m_additionUndoAction = null;
-                }
+                MoveDown(args);
             }
             else if (args.KeyCode.IsSet(Keys.Delete))
             {
-                if (InputForm != InputFormEnum.None)
-                {
-                    var undo = MakeUndoAction();
-                    if (SelectionLength != 0)
-                        DeleteSelection();
-                    else if (GetCursorPosInt() < Text.Length)
-                    {
-                        if (args.Control)
-                        {
-                            Regex r = new Regex(@"\s*\S*");
-                            SelectionLength = r.Match(Text, GetCursorPosInt()).Length;
-                            DeleteSelection();
-                        }
-                        else
-                        {
-                            Text = Text.Remove(GetCursorPosInt(), 1);
-                        }
-                        Redraw();
-                    }
-                    m_additionUndoAction = null;
-                    undo.SetRedo(m_state);
-                }
+                Delete(args);
             }
             else if (args.KeyCode.IsSet(Keys.Back))
             {
-                if (InputForm != InputFormEnum.None)
-                {
-                    var undo = MakeUndoAction();
-                    if (SelectionLength != 0)
-                        DeleteSelection();
-                    else if (GetCursorPosInt() > 0)
-                    {
-                        if (args.Control)
-                        {
-                            Regex r = new Regex(@"\S*\s*$");
-                            string before = Text.Substring(0, GetCursorPosInt());
-                            var match = r.Match(before);
-                            CursorPos = new CP(match.Index);
-                            SelectionLength = match.Length;
-                            DeleteSelection();
-                        }
-                        else
-                        {
-                            Text = Text.Remove(GetCursorPosInt() - 1, 1);
-                            var lines = GetLines().ToList();
-                            CursorPos = new CP(Math.Max(0, CursorPos.Pos - 1), CursorPos.GetUV(lines).X == 0);
-                        }
-                        Redraw();
-                    }
-                    m_additionUndoAction = null;
-                    undo.SetRedo(m_state);
-                }
+                Backspace(args);
             }
             else if (args.KeyCode == Keys.Home)
             {
-                if (args.Shift)
-                {
-                    var end = GetCursorPosInt() + SelectionLength;
-                    var lines = GetLines().ToList();
-                    var uv = CursorPos.GetUV(lines);
-                    CursorPos = new CP(lines.Take(uv.Y).Select(l => l.Length).Concat(0.Only()).Sum());
-                    SelectionLength = end - CursorPos.Pos;
-                }
-                else
-                {
-                    SelectionLength = 0;
-                }
-
-                if (args.Control)
-                {
-                    CursorPos = new CP(0);
-                }
-                else
-                {
-                    var lines = GetLines().ToList();
-                    var uv = CursorPos.GetUV(lines);
-                    CursorPos = new CP(lines.Take(uv.Y).Select(l => l.Length).Concat(0.Only()).Sum());
-                }
-
-                m_additionUndoAction = null;
+                Home(args);
             }
             else if (args.KeyCode == Keys.End)
             {
-                if (args.Shift)
-                {
-                    var start = GetCursorPosInt() + SelectionLength;
-                    var lines = GetLines().ToList();
-                    var pos = CursorPos.End(lines);
-                    SelectionLength = start - pos.Pos;
-                }
-                else
-                {
-                    SelectionLength = 0;
-                }
-
-                if (args.Control)
-                {
-                    CursorPos = new CP(int.MaxValue);
-                }
-                else
-                {
-                    CursorPos = CursorPos.End(GetLines().ToList());
-                }
-                m_additionUndoAction = null;
+                End(args);
             }
             else if (args.KeyCode.IsSet(Keys.Enter))
             {
@@ -1020,6 +824,279 @@ namespace Utilities.UI
                     EnterPressed.Execute();
                 }
             }
+        }
+
+        private void End(KeyEventArgs args)
+        {
+            if (args.Shift)
+            {
+                var start = GetCursorPosInt() + SelectionLength;
+                var lines = GetLines().ToList();
+                var pos = CursorPos.End(lines);
+                SelectionLength = start - pos.Pos;
+            }
+            else
+            {
+                SelectionLength = 0;
+            }
+
+            if (args.Control)
+            {
+                CursorPos = new CP(int.MaxValue);
+            }
+            else
+            {
+                CursorPos = CursorPos.End(GetLines().ToList());
+            }
+            m_additionUndoAction = null;
+        }
+
+        private void Home(KeyEventArgs args)
+        {
+            if (args.Shift)
+            {
+                var end = GetCursorPosInt() + SelectionLength;
+                var lines = GetLines().ToList();
+                var uv = CursorPos.GetUV(lines);
+                CursorPos = new CP(lines.Take(uv.Y).Select(l => l.Length).Concat(0.Only()).Sum());
+                SelectionLength = end - CursorPos.Pos;
+            }
+            else
+            {
+                SelectionLength = 0;
+            }
+
+            if (args.Control)
+            {
+                CursorPos = new CP(0);
+            }
+            else
+            {
+                var lines = GetLines().ToList();
+                var uv = CursorPos.GetUV(lines);
+                CursorPos = new CP(lines.Take(uv.Y).Select(l => l.Length).Concat(0.Only()).Sum());
+            }
+
+            m_additionUndoAction = null;
+        }
+
+        private void Backspace(KeyEventArgs args)
+        {
+            if (InputForm != InputFormEnum.None)
+            {
+                var undo = MakeUndoAction();
+                if (SelectionLength != 0)
+                    DeleteSelection();
+                else if (GetCursorPosInt() > 0)
+                {
+                    if (args.Control)
+                    {
+                        Regex r = new Regex(@"\S*\s*$");
+                        string before = Text.Substring(0, GetCursorPosInt());
+                        var match = r.Match(before);
+                        CursorPos = new CP(match.Index);
+                        SelectionLength = match.Length;
+                        DeleteSelection();
+                    }
+                    else
+                    {
+                        Text = Text.Remove(GetCursorPosInt() - 1, 1);
+                        var lines = GetLines().ToList();
+                        CursorPos = new CP(Math.Max(0, CursorPos.Pos - 1), CursorPos.GetUV(lines).X == 0);
+                    }
+                    Redraw();
+                }
+                m_additionUndoAction = null;
+                undo.SetRedo(m_state);
+            }
+        }
+
+        private void Delete(KeyEventArgs args)
+        {
+            if (InputForm != InputFormEnum.None)
+            {
+                var undo = MakeUndoAction();
+                if (SelectionLength != 0)
+                    DeleteSelection();
+                else if (GetCursorPosInt() < Text.Length)
+                {
+                    if (args.Control)
+                    {
+                        Regex r = new Regex(@"\s*\S*");
+                        SelectionLength = r.Match(Text, GetCursorPosInt()).Length;
+                        DeleteSelection();
+                    }
+                    else
+                    {
+                        Text = Text.Remove(GetCursorPosInt(), 1);
+                    }
+                    Redraw();
+                }
+                m_additionUndoAction = null;
+                undo.SetRedo(m_state);
+            }
+        }
+
+        private void MoveDown(KeyEventArgs args)
+        {
+            if (m_dropDownOpen)
+                ItemIndex++;
+            else
+            {
+                if (args.Shift)
+                {
+                    var selectionEnd = GetCursorPosInt() + SelectionLength;
+                    var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
+                    point.Y += Font.Height;
+                    CursorPos = XYToCursor(point.X, point.Y);
+                    SelectionLength = selectionEnd - GetCursorPosInt();
+                }
+                else
+                {
+                    SelectionLength = 0;
+                    var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
+                    point.Y += Font.Height;
+                    CursorPos = XYToCursor(point.X, point.Y);
+                }
+                Redraw();
+                m_additionUndoAction = null;
+            }
+        }
+
+        private void MoveUp(KeyEventArgs args)
+        {
+            if (m_dropDownOpen)
+                ItemIndex--;
+            else
+            {
+                if (args.Shift)
+                {
+                    var selectionEnd = GetCursorPosInt() + SelectionLength;
+                    var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
+                    point.Y -= Font.Height;
+                    CursorPos = XYToCursor(point.X, point.Y);
+                    SelectionLength = selectionEnd - GetCursorPosInt();
+                }
+                else
+                {
+                    SelectionLength = 0;
+                    var point = CursorToXY(CursorPos.GetUV(GetLines().ToList()));
+                    point.Y -= Font.Height;
+                    CursorPos = XYToCursor(point.X, point.Y);
+                }
+                Redraw();
+                m_additionUndoAction = null;
+            }
+        }
+
+        private void MoveLeft(KeyEventArgs args)
+        {
+            var oldPos = GetCursorPosInt();
+            int nextPos = Math.Max(0, GetCursorPosInt() - 1);
+            if (args.Control)
+            {
+                Regex r = new Regex(@"\S*\s*$");
+                string before = Text.Substring(0, GetCursorPosInt());
+                nextPos = r.Match(before).Index;
+            }
+            CursorPos = new CP(nextPos);
+
+            if (args.Shift)
+            {
+                if (SelectionLength <= 0)
+                    SelectionLength -= GetCursorPosInt() - oldPos;
+                else
+                    SelectionLength -= GetCursorPosInt() - oldPos;
+            }
+            else
+            {
+                SelectionLength = 0;
+            }
+            Redraw();
+            m_additionUndoAction = null;
+        }
+
+        private void MoveRight(KeyEventArgs args)
+        {
+            var oldPos = GetCursorPosInt();
+            int nextPos = 1;
+            if (args.Control)
+            {
+                Regex r = new Regex(@"\s*\S*");
+                nextPos = r.Match(Text, GetCursorPosInt()).Length;
+            }
+            CursorPos = new CP(CursorPos.Pos + nextPos);
+
+            if (args.Shift)
+            {
+                if (SelectionLength <= 0)
+                    SelectionLength -= GetCursorPosInt() - oldPos;
+                else
+                    SelectionLength -= GetCursorPosInt() - oldPos;
+            }
+            else
+            {
+                SelectionLength = 0;
+            }
+            Redraw();
+            m_additionUndoAction = null;
+        }
+
+        private void Redo()
+        {
+            m_undoQueue.Redo();
+            m_additionUndoAction = null;
+        }
+
+        private void Undo()
+        {
+            m_undoQueue.Undo();
+            m_additionUndoAction = null;
+        }
+
+        private void Paste()
+        {
+            if (Clipboard.ContainsText() && InputForm != InputFormEnum.None)
+            {
+                var undo = MakeUndoAction();
+                if (SelectionLength != 0)
+                    DeleteSelection();
+                var insertText = Clipboard.GetText();
+                Text = Text.Insert(GetCursorPosInt(), insertText);
+                CursorPos = new CP(CursorPos.Pos + insertText.Length);
+                m_additionUndoAction = null;
+                undo.SetRedo(m_state);
+            }
+        }
+
+        private void Cut()
+        {
+            if (InputForm != InputFormEnum.None)
+            {
+                if (!string.IsNullOrEmpty(SelectedText))
+                {
+                    var undo = MakeUndoAction();
+                    if (!string.IsNullOrEmpty(SelectedText))
+                        Clipboard.SetText(SelectedText);
+                    DeleteSelection();
+                    m_additionUndoAction = null;
+                    undo.SetRedo(m_state);
+                }
+            }
+        }
+
+        private void Copy()
+        {
+            if (!string.IsNullOrEmpty(SelectedText))
+                Clipboard.SetText(SelectedText);
+            m_additionUndoAction = null;
+        }
+
+        private void SelectAll()
+        {
+            SelectionLength = -Text.Length;
+            CursorPos = new CP(int.MaxValue);
+            m_additionUndoAction = null;
         }
 
         public static void SetupCallbacks(Control control, MyTextBox textBox)
@@ -1044,7 +1121,7 @@ namespace Utilities.UI
             control.GotFocus += GotFocus;
             control.LostFocus += LostFocus;
 
-            textBox.m_disposeActions.Push(() =>
+            textBox.PushDisposeActions(() =>
             {
                 control.MouseDown -= MouseDown;
                 control.MouseUp -= MouseUp;

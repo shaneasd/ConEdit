@@ -25,7 +25,7 @@ namespace Conversation
 
     public interface IConversationNode : IGraphNode
     {
-        IEnumerable<Parameter> Parameters { get; }
+        IEnumerable<IParameter> Parameters { get; }
     }
 
     public interface IConfigurable

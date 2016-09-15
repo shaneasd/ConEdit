@@ -6,7 +6,7 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    public interface INodeGui : INodeUI<INodeGui>, IGui
+    public interface INodeGui : INodeUI<INodeGui>, IGui, IDisposable
     {
     }
 }

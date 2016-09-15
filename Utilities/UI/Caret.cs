@@ -7,46 +7,50 @@ using System.Windows.Forms;
 
 namespace Utilities.UI
 {
-    public class Caret : Disposable
+    internal static class NativeMethods
     {
         [DllImport("User32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool CreateCaret(IntPtr hWnd, IntPtr hBitmap, int nWidth, int nHeight);
+        public static extern bool CreateCaret(IntPtr hWnd, IntPtr hBitmap, int nWidth, int nHeight);
 
         [DllImport("User32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool SetCaretPos(int x, int y);
+        public static extern bool SetCaretPos(int x, int y);
 
         [DllImport("User32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool DestroyCaret();
+        public static extern bool DestroyCaret();
 
         [DllImport("User32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool ShowCaret(IntPtr hWnd);
+        public static extern bool ShowCaret(IntPtr hWnd);
 
         [DllImport("User32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool HideCaret(IntPtr hWnd);
+        public static extern bool HideCaret(IntPtr hWnd);
+    }
 
+    public class Caret : Disposable
+    {
         private IntPtr m_handle;
         public Caret(Control control, int width, int height)
         {
             m_handle = control.Handle;
-            CreateCaret(m_handle, IntPtr.Zero, width, height);
+            NativeMethods.CreateCaret(m_handle, IntPtr.Zero, width, height);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification ="Suits the design")]
         public void MoveTo(int x, int y)
         {
-            SetCaretPos(x, y);
+            NativeMethods.SetCaretPos(x, y);
         }
 
-        public void Show() { ShowCaret(m_handle); }
-        public void Hide() { HideCaret(m_handle); }
+        public void Show() { NativeMethods.ShowCaret(m_handle); }
+        public void Hide() { NativeMethods.HideCaret(m_handle); }
 
         protected override void Dispose(bool disposing)
         {
-            DestroyCaret();
+            NativeMethods.DestroyCaret();
         }
     }
 }

@@ -42,83 +42,47 @@ namespace RawSerialization
         public static void Write(ILocalizationFile localization, Stream stream)
         {
             //File format is
+            // VERSION
             // HEADER
-            // LOOKUPS
             // PAYLOAD
+            //
+            // VERSION consists of
+            // version identifier (unsigned 4 bytes)
             //
             // HEADER consists of
             // Number of items (N)  (unsigned 4 bytes)
             //
-            // LOOKUPS consists of
-            // N occurences of LOOKUP
-            //
-            // LOOKUP consists of
-            // GUID (16 bytes)
-            // Start index of string in payload (unsigned 4 bytes)
-            // Length of string (unsigned 4 bytes)
-            //
             // PAYLOAD consists of
-            // N occurences of STRING
+            // N occurences of ITEM
             //
-            // STRING is a utf-8 representation of a string element with no terminator
+            // ITEM consists of
+            // GUID (16 bytes)
+            // STRING
+            //
+            // STRING is string represented however BinaryWriter/BinaryReader represent it
 
             //When allocating initial memory we'll guess that each string is on average 100 bytes including the header
             const uint BYTES_PER_STRING_GUESS = 100;
-            const uint BYTES_PER_LOOKUP = 16 + 4 + 4;
-            const uint BYTES_HEADER = 4;
 
             var data = localization.ExistingLocalizations.ToDictionary(x => x, x => localization.Localize(x));
 
             stream.SetLength(data.Count * BYTES_PER_STRING_GUESS); //Header size is negligible
-            uint[] starts = new uint[data.Count];
-            uint[] lengths = new uint[data.Count];
 
+            uint VERSION = 0;
 
-            //PAYLOAD
+            using (var binaryWriter = new BinaryWriter(stream, Encoding.UTF8, true))
             {
-                stream.Position = BYTES_HEADER + data.Count * BYTES_PER_LOOKUP;
-                using (var writer = new StreamWriter(stream, Encoding.UTF8, 1024, true))
+                binaryWriter.Write(VERSION);
+                binaryWriter.Write((uint)data.Count);
+                foreach (var kvp in data)
                 {
-                    int index = 0;
-                    foreach (string s in data.Values)
-                    {
-                        starts[index] = (uint)stream.Position;
-                        writer.Write(s);
-                        writer.Flush(); //We're using the stream position to figure out how long the string was so it needs to be up to date
-                        lengths[index] = (uint)stream.Position - starts[index];
-                        index++;
-                    }
+                    var guidBytes = kvp.Key.Guid.ToByteArray();
+                    binaryWriter.Write(guidBytes, 0, guidBytes.Length);
+                    binaryWriter.Write(kvp.Value);
                 }
             }
 
-            //HEADER
-            {
-                stream.Position = 0;
-                using (var writer = new BinaryWriter(stream, Encoding.UTF8, true))
-                {
-                    writer.Write((uint)data.Count);
-                }
-            }
-
-            //LOOKUPS
-            {
-                stream.Position = BYTES_HEADER;
-                using (var writer = new BinaryWriter(stream, Encoding.UTF8, true))
-                {
-                    int index = 0;
-                    foreach (var key in data.Keys)
-                    {
-                        var guidBytes = key.Guid.ToByteArray();
-                        stream.Write(guidBytes, 0, guidBytes.Length);
-                        writer.Write(starts[index]);
-                        writer.Write(lengths[index]);
-                        index++;
-                    }
-                }
-            }
-
-            //Chop off the end
-            stream.SetLength(starts.Last() + lengths.Last());
+            stream.SetLength(stream.Position);
         }
     }
 }

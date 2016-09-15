@@ -100,13 +100,13 @@ namespace ConversationEditor
         {
         }
 
-        public static readonly ParameterType PARAMETER_TYPE = ParameterType.Parse("c72e8222-3e10-4995-b32b-5b3ebd8e0f20");
+        public static readonly ParameterType ParameterType = LocalizedStringParameter.ParameterType;
 
         public override NodeData.ParameterData ReadDomainNode(IEditable parameterNode)
         {
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.ParameterName) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
-            return new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), PARAMETER_TYPE, ReadConfig(parameterNode));
+            return new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), ParameterType, ReadConfig(parameterNode));
         }
 
         public override string Name
@@ -122,7 +122,7 @@ namespace ConversationEditor
         {
         }
 
-        public static readonly ParameterType PARAMETER_TYPE = ParameterType.Parse("3a98d216-7427-45ef-a3ca-cd47431835a0");
+        public static ParameterType PARAMETER_TYPE { get; } = BooleanParameter.ParameterType;
 
         public override NodeData.ParameterData ReadDomainNode(IEditable parameterNode)
         {
@@ -201,7 +201,7 @@ namespace ConversationEditor
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.ParameterName) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
             var parameterTypeParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_TYPE) as IEnumParameter;
-            var parameterType = ParameterType.Set.FromGuid(parameterTypeParameter.Value);
+            var parameterType = ParameterType.ValueSetType.FromGuid(parameterTypeParameter.Value);
 
             //TODO: Defaults for sets are a bit tricky maybe
             //var parameterDefParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_DEFAULT) as DomainDomain.EnumDefaultParameter;
@@ -347,7 +347,7 @@ namespace ConversationEditor
         protected static ReadOnlyCollection<NodeData.ConfigData> ReadConfig(IEditable parameterNode)
         {
             List<NodeData.ConfigData> config = new List<NodeData.ConfigData>();
-            var configs = parameterNode.Connectors.Single(c => c.m_definition.Id == DomainIDs.ParameterConfigConnectorDefinition.Id).Connections.Select(l => l.Parent);
+            var configs = parameterNode.Connectors.Single(c => c.Definition.Id == DomainIDs.ParameterConfigConnectorDefinition.Id).Connections.Select(l => l.Parent);
             foreach (var configNode in configs)
             {
                 config.Add(new NodeData.ConfigData(configNode.NodeTypeId, configNode.Parameters));

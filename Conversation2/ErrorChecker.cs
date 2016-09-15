@@ -11,6 +11,7 @@ namespace Conversation
         T ReverseLookup(IEditable data);
     }
 
+    //TODO: This could probably be an interface but look out for reflection
     public abstract class ErrorChecker<T>
         where T : class, IConversationNode
     {

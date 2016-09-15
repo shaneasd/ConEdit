@@ -132,13 +132,13 @@ namespace Utilities
             }
         }
 
-        public static IEnumerable<T> Merge<T>(this IEnumerable<T> data, Func<T, T, Tuple<bool,T>> tryMerge)
+        public static IEnumerable<T> Merge<T>(this IEnumerable<T> data, Func<T, T, Tuple<bool, T>> tryMerge)
         {
             List<T> d = data.ToList();
 
             for (int i = 0; i < d.Count; i++)
             {
-                for (int j = i+1; j < d.Count; j++)
+                for (int j = i + 1; j < d.Count; j++)
                 {
                     var m = tryMerge(d[i], d[j]);
                     if (m.Item1)
@@ -158,7 +158,7 @@ namespace Utilities
             int i = 0;
             foreach (var test in data)
             {
-                if (object.Equals(search,test))
+                if (object.Equals(search, test))
                 {
                     return i;
                 }
@@ -167,7 +167,7 @@ namespace Utilities
             return -1;
         }
 
-        public static int IndexOf<T>(this IEnumerable<T> data, Func<T,bool> search)
+        public static int IndexOf<T>(this IEnumerable<T> data, Func<T, bool> search)
         {
             int i = 0;
             foreach (var test in data)
@@ -245,9 +245,40 @@ namespace Utilities
         public static bool CountEquals<T>(this IEnumerable<T> data, int value)
         {
             int count = 0;
-            for (var e = data.GetEnumerator(); e.MoveNext() && count < value + 1; )
+            for (var e = data.GetEnumerator(); e.MoveNext() && count < value + 1;)
                 count++;
             return count == value;
+        }
+
+        private static IEnumerable<T> ReplaceImplementation<T>(IEnumerable<T> data, Func<T, bool> condition, Func<T, T> replacement, bool once)
+        {
+            bool got = false;
+            foreach (var d in data)
+            {
+                if (got && once)
+                {
+                    yield return d;
+                }
+                else if (condition(d))
+                {
+                    yield return replacement(d);
+                    got = true;
+                }
+                else
+                {
+                    yield return d;
+                }
+            }
+        }
+
+        public static IEnumerable<T> Replace<T>(this IEnumerable<T> data, Func<T, bool> condition, Func<T, T> replacement)
+        {
+            return ReplaceImplementation(data, condition, replacement, false);
+        }
+
+        public static IEnumerable<T> ReplaceOnce<T>(this IEnumerable<T> data, Func<T, bool> condition, Func<T, T> replacement)
+        {
+            return ReplaceImplementation(data, condition, replacement, true);
         }
     }
 }

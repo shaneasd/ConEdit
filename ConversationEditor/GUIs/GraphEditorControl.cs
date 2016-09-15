@@ -97,53 +97,12 @@ namespace ConversationEditor
             TNode n;
             if (nodeRef.TryGetTarget(out n))
             {
-                //foreach (var connector in n.Connectors)
-                //{
-                //    foreach (var connection in connector.Connections)
-                //    {
-                //        RectangleF bounds;
-                //        var ui1 = UIInfo(connector);
-                //        var ui2 = UIInfo(connection);
-                //        //The nature of the bezier splines means they will never reach outside the bounding rectangle which includes their endpoints
-                //        bounds = RectangleF.Union(ui1.Area.Value, ui2.Area.Value);
-                //        var pair = UnorderedTuple.Make(connector, connection);
-                //        bool removed = SpatiallyOrderedConnections.Remove(Tuple.Create(pair, bounds), bounds);
-                //        if (!removed)
-                //        {
-                //            Debugger.Break();
-                //        }
-                //    }
-                //}
-
                 bool removed = SpatiallyOrderedNodes.Remove(n, c.From);
-                //TODO: This block is for diagnosing a bug which probably doesn't exist anymore and as such can be removed
                 if (!removed)
                 {
-                    RectangleF? location = SpatiallyOrderedNodes.FindAndRemove(n);
-                    if (location.HasValue)
-                    {
-                        string message = String.Format("Something went wrong removing a node from the map. expected node at {0}, {1}, {2}, {3} but found at {4}, {5}, {6}, {7}.",
-                            c.From.X, c.From.Y, c.From.Width, c.From.Height, location.Value.X, location.Value.Y, location.Value.Width, location.Value.Height);
-                        try
-                        {
-                            throw new Exception(message);
-                        }
-                        catch (Exception e)
-                        {
-                            using (ErrorForm errorForm = new ErrorForm())
-                            {
-                                errorForm.SetException(e);
-                                errorForm.ShowDialog();
-                            }
-                        }
-
-                    }
-                    else
-                        throw new Exception("Something went from removing a node from the map");
+                    throw new Exception("Something went from removing a node from the map");
                 }
                 SpatiallyOrderedNodes.Add(n, c.To);
-
-                //StoreConnections(n, true);
             }
         }
 
@@ -922,7 +881,7 @@ namespace ConversationEditor
 
             foreach (var factory in menuFactories)
             {
-                custom.AddRange(factory.GetMenuActions(this, m_project, Log));
+                custom.AddRange(factory.GetMenuActions(this, m_project, Log, m_localization.Localize));
             }
 
             m_contextMenu.ResetCustomNodes(custom.ToArray());

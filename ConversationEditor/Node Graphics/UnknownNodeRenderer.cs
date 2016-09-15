@@ -26,9 +26,11 @@ namespace ConversationEditor
             {
                 g.FillRectangle(background, Area);
             }
-            var pen = new Pen(Brushes.Red, 2);
-            g.DrawRectangle(pen, Area);
-            g.DrawString(Text, Font, Brushes.Black, Area.Location);
+            using (var pen = new Pen(Brushes.Red, 2))
+            {
+                g.DrawRectangle(pen, Area);
+                g.DrawString(Text, Font, Brushes.Black, Area.Location);
+            }
         }
 
         public string Text

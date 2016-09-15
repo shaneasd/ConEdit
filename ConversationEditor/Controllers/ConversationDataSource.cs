@@ -26,8 +26,8 @@ namespace ConversationEditor
         ConversationConnectionRules m_connectionRules = new ConversationConnectionRules();
         TypeSet m_types;
 
-        private CallbackDictionary<Id<NodeTypeTemp>, Tuple<Guid, GenericEditableGenerator2>> m_nodes = new CallbackDictionary<Id<NodeTypeTemp>, Tuple<Guid, GenericEditableGenerator2>>();
-        private NodeType m_nodeHeirarchy;
+        private CallbackDictionary<Id<NodeTypeTemp>, Tuple<Guid, GenericEditableGenerator>> m_nodes = new CallbackDictionary<Id<NodeTypeTemp>, Tuple<Guid, GenericEditableGenerator>>();
+        //private NodeCategory m_nodeHeirarchy;
 
         Dictionary<Id<TConnectorDefinition>, ConnectorDefinitionData> m_connectorDefinitions = new Dictionary<Id<TConnectorDefinition>, ConnectorDefinitionData>()
             {
@@ -39,7 +39,7 @@ namespace ConversationEditor
         /// Fill the data source from all the data stored in all domain files
         /// </summary>
         /// <param name="domains">All the domain files used to populate the datasource</param>
-        public ConversationDataSource(TypeSet typeSet, IEnumerable<DomainData> domains)
+        public ConversationDataSource(TypeSet typeSet, IEnumerable<IDomainData> domains)
         {
             m_types = typeSet;
 
@@ -65,7 +65,7 @@ namespace ConversationEditor
 
             //NodeTypes must be generated before Nodes and can be generated before Types. NodeTypes may have interdependencies between files
             m_categories = domains.SelectMany(d => d.NodeTypes).ToList();
-            GenerateCategories(m_categories);
+            //GenerateCategories(m_categories);
 
             //Connectors must be generated after Types but before Nodes
             foreach (var connector in domains.SelectMany(d => d.Connectors))
@@ -82,15 +82,15 @@ namespace ConversationEditor
             m_connectionRules.SetRules(domains.SelectMany(d => d.Connections));
         }
 
-        void m_nodes_Removing(Id<NodeTypeTemp> id, Tuple<Guid, GenericEditableGenerator2> generator)
+        void m_nodes_Removing(Id<NodeTypeTemp> id, Tuple<Guid, GenericEditableGenerator> generator)
         {
             generator.Item2.Removed();
         }
 
         public void AddNodeType(NodeData node)
         {
-            var nodeGenerator = new GenericEditableGenerator2(node, m_types, m_connectorDefinitions, m_connectionRules);
-            m_nodes[node.Guid] = new Tuple<Guid, GenericEditableGenerator2>(node.Type.GetValueOrDefault(DomainIDs.CategoryNone), nodeGenerator);
+            var nodeGenerator = new GenericEditableGenerator(node, m_types, m_connectorDefinitions, m_connectionRules);
+            m_nodes[node.Guid] = new Tuple<Guid, GenericEditableGenerator>(node.Category.GetValueOrDefault(DomainIDs.CategoryNone), nodeGenerator);
         }
 
         internal void RemoveNodeType(Id<NodeTypeTemp> id)
@@ -108,21 +108,21 @@ namespace ConversationEditor
             m_connectorDefinitions.Remove(id);
         }
 
-        private void GenerateCategories(List<NodeTypeData> nodeTypeData)
+        private NodeCategory GenerateCategories(List<NodeTypeData> nodeTypeData)
         {
             nodeTypeData = nodeTypeData.ToList(); //Copy that shit because we don't want to break m_categories
-            m_nodeHeirarchy = new NodeType(null, DomainIDs.CategoryNone);
+            var nodeHeirarchy = new NodeCategory(null, DomainIDs.CategoryNone);
 
             var duplicates = nodeTypeData.GroupBy(a => a.Guid).Where(g => g.Count() > 1);
             if (duplicates.Any())
                 throw new CategoryGenerationException("The following node types have duplicate definitions: " + string.Join(", ", duplicates.Select(g => g.Key).ToArray()));
-            List<NodeType> nodeTypes = new List<NodeType> { };
+            List<NodeCategory> nodeTypes = new List<NodeCategory> { };
 
-            nodeTypes.Add(m_nodeHeirarchy);
+            nodeTypes.Add(nodeHeirarchy);
 
             //foreach (var data in nodeTypeData.Where(d => d.Parent == DomainIds.CATEGORY_NONE).ToList())
             //{
-            //    var newNodeType = new NodeType(data.Name, data.Guid);
+            //    var newNodeType = new NodeCategory(data.Name, data.Guid);
             //    m_nodes.m_childTypes.Add(newNodeType);
             //    nodeTypes.Add(newNodeType);
             //    nodeTypeData.Remove(data);
@@ -137,7 +137,7 @@ namespace ConversationEditor
                     var parent = nodeTypes[i];
                     foreach (var data in nodeTypeData.Where(d => d.Parent == parent.Guid).ToList())
                     {
-                        var newNodeType = new NodeType(data.Name, data.Guid);
+                        var newNodeType = new NodeCategory(data.Name, data.Guid);
                         parent.AddChildType(newNodeType);
                         nodeTypes.Add(newNodeType);
                         gotOne = true;
@@ -153,9 +153,11 @@ namespace ConversationEditor
                 //    MessageBox.Show("The following node types are ancestors of an unknown node type: " + string.Join(", ", nodeTypeData.Select(d => d.Guid).ToArray()));
                 foreach (var orphan in nodeTypeData)
                 {
-                    m_nodeHeirarchy.AddChildType(new NodeType(orphan.Name, orphan.Guid));
+                    nodeHeirarchy.AddChildType(new NodeCategory(orphan.Name, orphan.Guid));
                 }
             }
+
+            return nodeHeirarchy;
         }
 
         public void AddEnumType(EnumerationData typeData)
@@ -217,15 +219,15 @@ namespace ConversationEditor
         {
             get
             {
-                GenerateCategories(m_categories.ToList());
+                var nodeHeirarchy = GenerateCategories(m_categories.ToList());
 
                 foreach (var node in m_nodes.Values)
                 {
-                    var parent = m_nodeHeirarchy.Collapse(x => x.m_childTypes, x => x.Only()).SingleOrDefault(x => x.Guid == node.Item1) ?? m_nodeHeirarchy;
-                    parent.m_nodes.Add(node.Item2);
+                    var parent = nodeHeirarchy.Collapse(x => x.ChildTypes, x => x.Only()).SingleOrDefault(x => x.Guid == node.Item1) ?? nodeHeirarchy;
+                    parent.AddNode(node.Item2);
                 }
 
-                return m_nodeHeirarchy;
+                return nodeHeirarchy;
             }
         }
 

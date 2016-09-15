@@ -12,7 +12,7 @@ namespace Conversation
     {
         private Id<NodeTemp> m_id;
         private readonly IEditableGenerator m_generator;
-        private List<Parameter> m_parameters;
+        private List<IParameter> m_parameters;
         private readonly IEnumerable<Output> m_connectors;
 
         public Id<NodeTypeTemp> NodeTypeId
@@ -25,7 +25,7 @@ namespace Conversation
             get { return m_generator.Name; }
         }
 
-        public ReadOnlyCollection<NodeData.ConfigData> Config
+        public IReadOnlyList<NodeData.ConfigData> Config
         {
             get { return m_generator.Config; }
         }
@@ -38,7 +38,7 @@ namespace Conversation
             }
         }
 
-        public IEnumerable<Parameter> Parameters
+        public IEnumerable<IParameter> Parameters
         {
             get
             {
@@ -51,14 +51,6 @@ namespace Conversation
             m_id = id;
         }
 
-        public void TryDecorrupt()
-        {
-            foreach (var corrupted in Parameters.Where(p => p.Corrupted))
-            {
-                corrupted.TryDecorrupt();
-            }
-        }
-
         public Id<NodeTemp> NodeId { get { return m_id; } }
 
         public event Action Linked;
@@ -67,7 +59,7 @@ namespace Conversation
             Linked.Execute();
         }
 
-        public ExternalFunction(IEditableGenerator generator, Id<NodeTemp> id, IEnumerable<Func<IEditable, Output>> connectors, IEnumerable<Parameter> parameters)
+        public ExternalFunction(IEditableGenerator generator, Id<NodeTemp> id, IEnumerable<Func<IEditable, Output>> connectors, IEnumerable<IParameter> parameters)
         {
             m_id = id;
             m_parameters = parameters.ToList();

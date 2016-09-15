@@ -437,8 +437,9 @@ namespace ConversationEditor
                     var con = m_contextItem as ConversationItem;
                     if (con != null)
                     {
-                        foreach (var a in m_contextMenuItemsFactory.ConversationContextMenuItems(a => m_context.CurrentLocalization.Value.Localize(a)))
+                        foreach (var aa in m_contextMenuItemsFactory.ConversationContextMenuItems(a => Tuple.Create(m_context.CurrentLocalization.Value.Localize(a), m_context.CurrentLocalization.Value.LocalizationTime(a))))
                         {
+                            var a = aa;
                             var i = new ToolStripMenuItem(a.Name);
                             i.Click += (x, y) => a.Execute(con.Item, m_context.ErrorCheckerUtils());
                             m_contextMenu.Items.Insert(m_contextMenu.Items.IndexOf(importConversationToolStripMenuItem), i);
@@ -452,8 +453,9 @@ namespace ConversationEditor
                     var dom = m_contextItem as DomainItem;
                     if (dom != null)
                     {
-                        foreach (var a in m_contextMenuItemsFactory.DomainContextMenuItems)
+                        foreach (var aa in m_contextMenuItemsFactory.DomainContextMenuItems)
                         {
+                            var a = aa;
                             var i = new ToolStripMenuItem(a.Name);
                             i.Click += (x, y) => a.Execute(dom.Item);
                             m_contextMenu.Items.Insert(m_contextMenu.Items.IndexOf(importDomainToolStripMenuItem), i);
@@ -467,10 +469,32 @@ namespace ConversationEditor
                     var loc = m_contextItem as RealLeafItem<ILocalizationFile, ILocalizationFile>;
                     if (loc != null)
                     {
-                        foreach (var a in m_contextMenuItemsFactory.LocalizationContextMenuItems)
+                        foreach (var aa in m_contextMenuItemsFactory.LocalizationContextMenuItems)
                         {
+                            var a = aa;
                             var i = new ToolStripMenuItem(a.Name);
                             i.Click += (x, y) => a.Execute(loc.Item);
+                            m_contextMenu.Items.Insert(m_contextMenu.Items.IndexOf(makeCurrentLocalizationMenuItem), i);
+                            var temp = m_cleanContextMenu;
+                            m_cleanContextMenu = () => { temp(); m_contextMenu.Items.Remove(i); };
+                        }
+                    }
+                }
+
+                {
+                    var folder = m_contextItem as FolderItem;
+                    if (folder != null)
+                    {
+                        foreach (var aa in m_contextMenuItemsFactory.FolderContextMenuItems(a => Tuple.Create(m_context.CurrentLocalization.Value.Localize(a), m_context.CurrentLocalization.Value.LocalizationTime(a))))
+                        {
+                            var a = aa;
+                            var i = new ToolStripMenuItem(a.Name);
+                            i.Click += (x, y) =>
+                            {
+                                IEnumerable<ConversationItem> conversationItems = folder.AllItems(VisibilityFilter.Just(Conversations: true)).OfType<ConversationItem>();
+                                var conversations = conversationItems.Select(z => z.Item);
+                                a.Execute(conversations);
+                            };
                             m_contextMenu.Items.Insert(m_contextMenu.Items.IndexOf(makeCurrentLocalizationMenuItem), i);
                             var temp = m_cleanContextMenu;
                             m_cleanContextMenu = () => { temp(); m_contextMenu.Items.Remove(i); };

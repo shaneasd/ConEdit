@@ -73,7 +73,8 @@ namespace Utilities
 
     public class Edge
     {
-        public PointF P1, P2;
+        public PointF P1 { get; }
+        public PointF P2 { get; }
         public Edge(PointF p1, PointF p2)
         {
             P1 = p1;
@@ -186,7 +187,8 @@ namespace Utilities
             foreach (var rr in AllRectangles)
             {
                 Color c = Color.FromKnownColor((KnownColor)((rr.Left * 1987 + rr.Top + 1) % 174));
-                g.FillRectangle(new SolidBrush(c), rr);
+                using (var brush = new SolidBrush(c))
+                    g.FillRectangle(brush, rr);
             }
 
             //foreach (var r in AllRectangles)
@@ -236,9 +238,9 @@ namespace Utilities
 
     public class RectangleUnion
     {
-        private List<Shape> m_shapes;
+        private IList<Shape> m_shapes;
 
-        public RectangleUnion(List<Shape> shapes)
+        public RectangleUnion(IList<Shape> shapes)
         {
             m_shapes = shapes;
         }

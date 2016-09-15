@@ -22,15 +22,15 @@ namespace PluginPack
             get { return "Name"; }
         }
 
-        public IEnumerable<Parameter> MakeParameters()
+        public IEnumerable<IParameter> MakeParameters()
         {
-            yield return new StringParameter("Name", Id<Parameter>.Parse("d5428350-4ece-4d7d-bc62-6a1b9c76fb9d"), StringParameter.ParameterType);
+            yield return new StringParameter("Name", Id<Parameter>.Parse("d5428350-4ece-4d7d-bc62-6a1b9c76fb9d"));
         }
 
         /// <summary>
         /// Search the input config for a suitable "name" and return it if found. Otherwise return nulls
         /// </summary>
-        public static string TryGet(ReadOnlyCollection<NodeData.ConfigData> config)
+        public static string TryGet(IReadOnlyCollection<NodeData.ConfigData> config)
         {
             foreach (var c in config.Where(c => c.Type == ID))
             {

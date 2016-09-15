@@ -43,6 +43,7 @@ namespace ConversationEditor
             using (Form f = new Form())
             {
                 NodeEditor editor = new NodeEditor(scheme, data, audioContext, config, localizer, audioProvider, autoCompleteSuggestions);
+
                 f.Text = editor.Title;
                 bool oked = false;
                 editor.Ok += () =>
@@ -67,10 +68,25 @@ namespace ConversationEditor
                     }
                 };
                 editor.Cancel += () => { oked = false; f.Close(); };
+                editor.Dock = DockStyle.Fill;
+                int maxHeight = editor.MaximumHeight + f.Height - f.ClientSize.Height;
+                f.MaximumSize = new Size(999999, maxHeight);
+                editor.NeedsResize += () =>
+                {
+                    bool resize = false;
+                    if (f.Size.Height == f.MaximumSize.Height)
+                    {
+                        resize = true;
+                    }
+                    int m = editor.MaximumHeight + f.Height - f.ClientSize.Height;
+                    f.MaximumSize = new Size(999999, m);
+                    if (resize)
+                    {
+                        f.Size = new Size(f.Size.Width, m);
+                    }
+                };
+                f.Size = new System.Drawing.Size(500, 478);
                 f.Controls.Add(editor);
-                f.AutoSize = true;
-                f.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-                f.FormBorderStyle = FormBorderStyle.FixedSingle;
                 f.ShowDialog();
 
                 if (oked)
@@ -85,37 +101,6 @@ namespace ConversationEditor
             }
         }
 
-        //private static ConfigureResult OnOk(IAudioProvider2 audioProvider, IEnumerable<UpdateParameterData> updates)
-        //{
-        //    List<Action> undo = new List<Action>();
-        //    List<Action> redo = new List<Action>();
-        //    foreach (UpdateParameterData updateParameterData in updates)
-        //    {
-        //        if (updateParameterData != null)
-        //        {
-        //            SimpleUndoPair? actions = updateParameterData.Actions;
-        //            if (actions != null)
-        //            {
-        //                undo.Add(actions.Value.Undo);
-        //                redo.Add(actions.Value.Redo);
-        //            }
-        //            if (updateParameterData.Audio != null)
-        //            {
-        //                undo.Add(() => audioProvider.UpdateUsage(updateParameterData.Audio.Value));
-        //                redo.Add(() => audioProvider.UpdateUsage(updateParameterData.Audio.Value));
-        //            }
-        //        }
-        //    }
-        //    if (undo.Any())
-        //    {
-        //        return new SimpleUndoPair { Redo = () => redo.ForEach(a => a()), Undo = () => undo.ForEach(a => a()) };
-        //    }
-        //    else
-        //    {
-        //        return ConfigureResult.NotApplicable; //This isn't exactly what NotApplicable was intended for but it's the closest match and I can't see a functional difference
-        //    }
-        //}
-
         public string Title { get; private set; }
 
         public NodeEditor(ColorScheme scheme, IEditable data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions)
@@ -125,78 +110,152 @@ namespace ConversationEditor
             m_data = data;
 
             this.SuspendLayout();
-            //tableLayoutPanel1.SuspendLayout();
-            Title = m_data.Name;
-            int parameterCount = 0;
+            flowLayoutPanel1.SuspendLayout();
+            flowLayoutPanel2.SuspendLayout();
 
-            foreach (Parameter p in m_data.Parameters.OrderBy(p => p.Name))
+            //Make the panels really tall so they can visibly contain all the parameter editors.
+            //Note the whole control won't be visible as we'll scroll them by shifting them in Y.
+            flowLayoutPanel1.Height = 10000;
+            flowLayoutPanel2.Height = 10000;
+
+            Title = m_data.Name;
+
+            foreach (Parameter p in m_data.Parameters.OrderByDescending(p => p.Name))
             {
-                var editorData = new ParameterEditorSetupData(p, localizer, audioProvider, audioContext, (s)=> autoCompleteSuggestions(p, s));
+                var editorData = new ParameterEditorSetupData(p, localizer, audioProvider, audioContext, (s) => autoCompleteSuggestions(p, s));
                 var unknown = p as UnknownParameter;
                 if (unknown != null)
                 {
                     UnknownParameterEditor ed = null;
+                    Label label = null;
                     ed = UnknownParameterEditor.Make(Scheme, editorData, m_data.RemoveUnknownParameter(unknown),
                     () =>
                     {
-                        int row = tableLayoutPanel1.GetRow(ed);
-                        tableLayoutPanel1.RowStyles[row].SizeType = SizeType.Absolute;
-                        tableLayoutPanel1.RowStyles[row].Height = 0;
-                        tableLayoutPanel1.Controls.Remove(ed);
+                        flowLayoutPanel2.Controls.Remove(ed);
+                        flowLayoutPanel1.Controls.Remove(label);
+                        SetupScrollbar();
                     });
-                    AddParameter(p, ed.AsControl);
+                    label = AddParameter(p, ed.AsControl);
                 }
                 else
                 {
-                    Stopwatch w = Stopwatch.StartNew();
                     AddParameter(p, config(p.TypeId, editorData));
-                    Debug.WriteLine("Adding parameter time: " + w.Elapsed.TotalMilliseconds);
-                    w.Restart();
                 }
-                parameterCount++;
             }
 
-            //if (parameterCount > 15)
-            //{
-            //    tableLayoutPanel3.ColumnStyles[4].Width = 105;
-            //    tableLayoutPanel3.Controls.Add(new Button() { Width = 100 }, 4, 0);
-            //}
+            flowLayoutPanel1.ResumeLayout();
+            flowLayoutPanel2.ResumeLayout();
 
-            //tableLayoutPanel1.ResumeLayout();
+            SetupScrollbar();
 
-
-            //Add a buffer to fill up the space
-            tableLayoutPanel1.RowCount++;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            if (flowLayoutPanel1.Controls.Count > 0)
+            {
+                flowLayoutPanel2.Controls[0].LocationChanged += (a, b) =>
+                {
+                    NeedsResize.Execute();
+                    DoResize();
+                };
+                flowLayoutPanel2.Controls[0].SizeChanged += (a, b) =>
+                {
+                    NeedsResize.Execute();
+                    DoResize();
+                };
+            };
 
             this.ResumeLayout();
 
-            //tableLayoutPanel1.MaximumSize = new Size(int.MaxValue, 768);
+            this.splitContainer1.Panel2.SizeChanged += Panel2_SizeChanged;
+
+            if (flowLayoutPanel2.Controls.Count > 0)
+            {
+                for (int i = flowLayoutPanel2.Controls.Count - 1; i >= 0; i--)
+                {
+                    (flowLayoutPanel2.Controls[i] as Panel).TabStop = true;
+                    (flowLayoutPanel2.Controls[i] as Panel).TabIndex = flowLayoutPanel2.Controls.Count - i - 1;
+                }
+            }
         }
 
-        public void AddParameter(IParameter parameter, IParameterEditor<Control> editor)
+        public event Action NeedsResize;
+        public void DoResize()
         {
-            Stopwatch w = Stopwatch.StartNew();
+            Height = 999999;
+            SetupScrollbar();
+        }
+
+        private void SetupScrollbar()
+        {
+            if (flowLayoutPanel1.Controls.Count > 0)
+            {
+                greyScrollBar1.PercentageCovered = Util.Clamp((float)WindowSize / TotalSize, 0.0f, 1.0f);
+                greyScrollBar1.Minimum = 0;
+                greyScrollBar1.Maximum = Math.Max(0, TotalSize - WindowSize);
+                greyScrollBar1.Scrolled += GreyScrollBar1_Scrolled;
+            }
+            else
+            {
+                greyScrollBar1.PercentageCovered = 1.0f;
+                greyScrollBar1.Minimum = 0;
+                greyScrollBar1.Maximum = 0;
+            }
+            //Make sure the current state of the scrollbar is reflected in case this was called as a result of a child control resize
+            GreyScrollBar1_Scrolled();
+        }
+
+        private int MaximumHeight
+        {
+            get
+            {
+                return TotalSize + 47;
+            }
+        }
+
+        private void Panel2_SizeChanged(object sender, EventArgs e)
+        {
+            SetupScrollbar();
+        }
+
+        private void GreyScrollBar1_Scrolled()
+        {
+            int pos = -(int)(greyScrollBar1.Value);
+            flowLayoutPanel1.Top = pos + 3;
+            flowLayoutPanel2.Top = pos + 3;
+        }
+
+        int TotalSize { get { return flowLayoutPanel2.Controls[0]?.Bottom ?? 0; } }
+        int WindowSize { get { return splitContainer1.Panel2.Height; } }
+
+        public Label AddParameter(IParameter parameter, IParameterEditor<Control> editor)
+        {
+            Panel p = new Panel();
+            p.Size = new Size(flowLayoutPanel2.Width, editor.AsControl.Height + 3);
+            p.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            p.Dock = DockStyle.Top;
+            editor.AsControl.Width = p.Width;
+            editor.AsControl.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            p.Size = new Size(flowLayoutPanel2.Width, editor.AsControl.Height + 3);
+
             Label label = new Label();
+            label.AutoSize = false;
             label.TextAlign = ContentAlignment.MiddleLeft;
-            label.AutoSize = true;
-            label.Dock = DockStyle.Fill;
+            label.Dock = DockStyle.Top;
             label.Text = parameter.Name;
             label.ForeColor = Scheme.Foreground;
-            Debug.WriteLine("label: " + w.Elapsed.TotalMilliseconds);
-            w.Restart();
+            label.Size = new Size(40, p.Height);
 
-            editor.AsControl.Dock = DockStyle.Top;
+            editor.AsControl.SizeChanged += (a, args) =>
+            {
+                p.Height = editor.AsControl.Height + 3;
+                label.Height = p.Height;
+            };
+            p.Controls.Add(editor.AsControl);
+
             m_parameterEditors.Add(Tuple.Create(editor, parameter));
 
-            Debug.WriteLine("m_parameterEditors: " + w.Elapsed.TotalMilliseconds);
+            flowLayoutPanel1.Controls.Add(label);
+            flowLayoutPanel2.Controls.Add(p);
 
-            tableLayoutPanel1.RowCount++;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            tableLayoutPanel1.Controls.Add(label, 0, tableLayoutPanel1.RowCount - 1);
-            Debug.WriteLine("adding label: " + w.Elapsed.TotalMilliseconds);
-            tableLayoutPanel1.Controls.Add(editor.AsControl, 1, tableLayoutPanel1.RowCount - 1);
-            Debug.WriteLine("adding editor: " + w.Elapsed.TotalMilliseconds);
+            return label;
         }
 
         List<Tuple<IParameterEditor<Control>, IParameter>> m_parameterEditors = new List<Tuple<IParameterEditor<Control>, IParameter>>();
@@ -227,12 +286,6 @@ namespace ConversationEditor
         private void okButton_Click(object sender, EventArgs e)
         {
             m_ok();
-        }
-
-        private void tableLayoutPanel3_Resize(object sender, EventArgs e)
-        {
-            //tableLayoutPanel1.MaximumSize = new Size(int.MaxValue, Math.Max(0, tableLayoutPanel3.Height - 37));
-            //tableLayoutPanel1.MaximumSize = new Size(int.MaxValue, 50);
         }
     }
 

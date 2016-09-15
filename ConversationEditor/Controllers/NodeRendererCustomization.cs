@@ -29,13 +29,13 @@ namespace ConversationEditor
             {
                 var options = allRenderers.Where(e => e.WillRender(type.Guid)).Select(e => Tuple.Create(e.Guid, e.DisplayName)).ToList();
                 Guid def = m_typeMapConfig[type.Guid];
-                var enumeration = new Enumeration(options, ParameterType.Basic.ConvertFrom(type.Guid), def);
+                var enumeration = new ImmutableEnumeration(options, ParameterType.Basic.ConvertFrom(type.Guid), def);
                 var p = new EnumParameter(type.Name, Id<Parameter>.ConvertFrom(type.Guid), enumeration, def.ToString());
                 m_parameters.Add(p);
             }
         }
 
-        public IEnumerable<Parameter> Parameters
+        public IEnumerable<IParameter> Parameters
         {
             get { return m_parameters; }
         }
@@ -55,7 +55,7 @@ namespace ConversationEditor
             get { return "Customize node renderers"; }
         }
 
-        public ReadOnlyCollection<NodeData.ConfigData> Config
+        public IReadOnlyList<NodeData.ConfigData> Config
         {
             get { throw new NotImplementedException(); }
         }
@@ -68,11 +68,6 @@ namespace ConversationEditor
         public event Action Linked { add { } remove { } }
 
         public void ChangeId(Id<NodeTemp> id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void TryDecorrupt()
         {
             throw new NotImplementedException();
         }

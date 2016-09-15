@@ -21,9 +21,9 @@ namespace Clandestine
             get { return "Don't Render"; }
         }
 
-        public IEnumerable<Parameter> MakeParameters()
+        public IEnumerable<IParameter> MakeParameters()
         {
-            return Enumerable.Empty<Parameter>();
+            return Enumerable.Empty<IParameter>();
         }
 
         public static bool TryGet(ReadOnlyCollection<NodeData.ConfigData> config)

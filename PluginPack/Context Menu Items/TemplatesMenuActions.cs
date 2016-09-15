@@ -7,12 +7,13 @@ using System.Reflection;
 using System.IO;
 using ConversationEditor;
 using Conversation.Serialization;
+using Conversation;
 
 namespace PluginPack
 {
     class TemplatesMenuActions : IMenuActionFactory<ConversationNode>
     {
-        public IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log)
+        public IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log, Func<Id<LocalizedText>, string> localize)
         {
             XmlGraphData<NodeUIData, ConversationEditorData> data;
             Assembly assembly = Assembly.GetExecutingAssembly();

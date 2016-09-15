@@ -55,7 +55,6 @@ namespace Tests
 
         public void Dispose()
         {
-            throw new NotImplementedException();
         }
 
         public void Removed()
@@ -64,6 +63,11 @@ namespace Tests
         }
 
         public SimpleUndoPair SetLocalizationAction(Id<LocalizedText> guid, string p)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DateTime LocalizationTime(Id<LocalizedText> id)
         {
             throw new NotImplementedException();
         }

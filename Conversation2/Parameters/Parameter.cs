@@ -14,16 +14,39 @@ namespace Conversation
         /// Guid of the underlying type
         /// </summary>
         ParameterType TypeId { get; }
+
         /// <summary>
         /// Name of the parameter displayed in the editor
         /// </summary>
         string Name { get; }
+
         /// <summary>
         /// Unique identifier identifying this parameter
         /// </summary>
         Id<Parameter> Id { get; }
 
+        /// <summary>
+        /// True iff the parameter has an invalid value (e.g. null, out of range or not within a set of acceptable values)
+        /// This could occur if an old file is loaded with a new domain or vice versa resulting in out of data data or definitions or missing parameter data.
+        /// </summary>
         bool Corrupted { get; }
+
+        /// <summary>
+        /// String representation of the parameter suitable for serialization to a file. This value is not guaranteed to be able to be parsed to a valid value as
+        /// it may simply be the string that was read originally for this parameter.
+        /// </summary>
+        string ValueAsString();
+
+        /// <summary>
+        /// String representation of the parameter suitable for display in the UI
+        /// </summary>
+        /// <param name="localize">Lookup of localized text Ids to strings</param>
+        string DisplayValue(Func<Id<LocalizedText>, string> localize);
+
+        /// <summary>
+        /// Attempt to update current value by parsing the input string. Value and Corrupted may both change as a result of this.
+        /// </summary>
+        void TryDeserialiseValue(string value);
     }
 
     public interface IParameter<T> : IParameter
@@ -101,22 +124,20 @@ namespace Conversation
 
     public abstract class Parameter : IParameter
     {
-        private readonly string m_name;
-        public string Name { get { return m_name; } }
+        public abstract bool Corrupted { get; }
 
-        private readonly Id<Parameter> m_id;
-        public Id<Parameter> Id { get { return m_id; } }
+        public string Name { get; }
 
-        private readonly ParameterType m_typeId;
-        public ParameterType TypeId { get { return m_typeId; } }
-        protected Parameter(string name, Id<Parameter> id, ParameterType typeid, string value)
+        public Id<Parameter> Id { get; }
+
+        public ParameterType TypeId { get; }
+
+        protected Parameter(string name, Id<Parameter> id, ParameterType typeid, string stringValue)
         {
-            m_name = name;
-            m_id = id;
-            m_typeId = typeid;
-            TryDeserialiseValue(value);
-            if (value == null)
-                Corrupted = true; //Corrupt if null so editors don't get confused
+            Name = name;
+            Id = id;
+            TypeId = typeid;
+            m_lastValueString = stringValue;
         }
 
         public abstract string DisplayValue(Func<Id<LocalizedText>, string> localize);
@@ -128,73 +149,88 @@ namespace Conversation
 
         /// <summary>
         /// Attempt to parse the input and store the corresponding value
+        /// updating value and corrupted based on success
         /// </summary>
-        /// <returns>true iff the input was successfully parsed into the appropriate type</returns>
-        protected abstract bool DeserialiseValue(string value);
-        public bool Corrupted { get; protected set; }
+        protected abstract void DeserialiseValue(string value);
 
         private string m_lastValueString = null;
-        public bool TryDeserialiseValue(string value)
+        public void TryDeserialiseValue(string value)
         {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
             m_lastValueString = value;
-            Corrupted = !DeserialiseValue(value);
-            return !Corrupted;
-        }
-
-        /// <summary>
-        /// Make up a value (most likely the default value) if no value has been specified (valid or otherwise)
-        /// </summary>
-        protected abstract void DecorruptFromNull();
-
-        /// <summary>
-        /// Only called on load so doesn't need to be undoable
-        /// </summary>
-        public void TryDecorrupt()
-        {
-            Corrupted = !DeserialiseValue(m_lastValueString);
-            if (Corrupted && m_lastValueString == null)
-                DecorruptFromNull();
+            DeserialiseValue(value);
         }
     }
 
     public abstract class Parameter<T> : Parameter
     {
-        protected T m_value;
-
-        public virtual T Value
+        public T Value
         {
-            get
-            {
-                return m_value;
-            }
-            set
-            {
-                m_value = value;
-                Corrupted = false;
-            }
+            get;
+            private set;
         }
+
+        public sealed override bool Corrupted { get { return m_corrupted; } }
+        private bool m_corrupted;
+
+        /// <summary>
+        /// Change Value to the input value.
+        /// </summary>
+        private void SetValue(T value)
+        {
+            Value = value;
+            OnSetValue(value);
+        }
+
+        protected virtual void OnSetValue(T value)
+        {
+        }
+
+        protected abstract bool ValueValid(T value);
 
         public SimpleUndoPair? SetValueAction(T value)
         {
+            if (!ValueValid(value))
+                throw new ArgumentException("Invalid value");
+
             var wasCorrupted = Corrupted;
-            var oldValue = m_value;
+            var oldValue = Value;
 
             if (value.Equals(oldValue) && !wasCorrupted)
                 return null;
 
             return new SimpleUndoPair
             {
-                Redo = () => { Value = value; Corrupted = false; },
-                Undo = () => { Value = oldValue; Corrupted = wasCorrupted; }
+                Redo = () =>
+                {
+                    if (!this.ValueValid(value))
+                        throw new ArgumentException("Invalid value");
+                    SetValue(value);
+                    m_corrupted = false;
+                },
+                Undo = () =>
+                {
+                    SetValue(oldValue);
+                    m_corrupted = wasCorrupted;
+                }
             };
         }
 
-        string m_defaultValue = null;
-
-        protected Parameter(string name, Id<Parameter> id, ParameterType typeId, string defaultValue)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name">Name of the parameter</param>
+        /// <param name="id">Unique identifier for this parameter</param>
+        /// <param name="typeId">Unique identifier for the type of this parameter</param>
+        /// <param name="defaultValue">Default value this parameter should take when no value is given (e.g. in an incomplete data file)</param>
+        /// <param name="value">Initial value of the parameter and whether that value is corrupted</param>
+        protected Parameter(string name, Id<Parameter> id, ParameterType typeId, string defaultValue, Tuple<T, bool> value)
             : base(name, id, typeId, defaultValue)
         {
-            m_defaultValue = defaultValue;
+            Value = value.Item1;
+            m_corrupted = value.Item2;
         }
 
         public override string ToString()
@@ -202,9 +238,18 @@ namespace Conversation
             throw new InternalLogicException("Dont call this");
         }
 
-        protected override void DecorruptFromNull()
+        protected override void DeserialiseValue(string value)
         {
-            TryDeserialiseValue(m_defaultValue);
+            var a = DeserializeValueInner(value);
+            Value = a.Item1;
+            m_corrupted = a.Item2;
         }
+
+        /// <summary>
+        /// Attempt to deserialize a value from the input string.
+        /// </summary>
+        /// <param name="value">The string to read the value from</param>
+        /// <returns>The value to store and whether that value is corrupted.</returns>
+        protected abstract Tuple<T, bool> DeserializeValueInner(string value);
     }
 }

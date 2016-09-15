@@ -11,16 +11,30 @@ namespace Conversation
     {
         IEnumeration m_enumeration;
         public SetParameter(string name, Id<Parameter> id, IEnumeration enumeration, string defaultValue)
-            : base(name, id, ParameterType.Set.Of(enumeration.TypeId), defaultValue)
+            : base(name, id, ParameterType.ValueSetType.Of(enumeration.TypeId), defaultValue ?? enumeration.DefaultValue.Transformed(a => a, b => b.ToString()), StaticDeserialize(enumeration, defaultValue ?? enumeration.DefaultValue.Transformed(a => a, b => b.ToString())))
         {
             m_enumeration = enumeration;
         }
 
+        //TODO: Isn't there already a mechanism for this at a higher level?
         string m_textOverride = null; //initial string representation of parameter that failed parsing (or null if parsing succeeded or a new value has been specified.
 
-        protected override bool DeserialiseValue(string value)
+        protected override Tuple<ReadonlySet<Guid>, bool> DeserializeValueInner(string value)
         {
-            string[] values = value.Split('+').Select(s=>s.Trim()).Where(s=>s.Length > 0).ToArray();
+            var result = StaticDeserialize(m_enumeration, value);
+            if ( result.Item2 )
+                m_textOverride = value;
+            else
+                m_textOverride = null;
+            return result;
+        }
+
+        private static Tuple<ReadonlySet<Guid>, bool> StaticDeserialize(IEnumeration enumeration, string value)
+        {
+            if ( value == null )
+                return Tuple.Create((ReadonlySet<Guid>)null, true);
+
+            string[] values = value.Split('+').Select(s => s.Trim()).Where(s => s.Length > 0).ToArray();
             Guid[] guids = new Guid[values.Length];
             bool valid = true;
             for (int i = 0; i < values.Length; i++)
@@ -29,39 +43,39 @@ namespace Conversation
                 bool v = Guid.TryParse(values[i], out g);
                 guids[i] = v ? g : Guid.Empty;
                 valid &= v;
-            }            
+            }
 
             if (!valid)
             {
-                m_textOverride = value;
-                return false;
+                return Tuple.Create((ReadonlySet<Guid>)null, true);
             }
             else
             {
-                Value = new ReadonlySet<Guid>(guids);
-                m_textOverride = null;
-                return true;
+                var val = new ReadonlySet<Guid>(guids);
+                return Tuple.Create(val, !StaticValueValid(enumeration, val));
             }
         }
 
-        public override ReadonlySet<Guid> Value
+        protected override void OnSetValue(ReadonlySet<Guid> value)
         {
-            get
-            {
-                return base.Value;
-            }
-            set
-            {
-                base.Value = value;
-                m_textOverride = null;
-            }
+            m_textOverride = null;
+        }
+
+        protected override bool ValueValid(ReadonlySet<Guid> value)
+        {
+            return StaticValueValid(m_enumeration, value);
+        }
+
+        private static bool StaticValueValid(IEnumeration enumeration, ReadonlySet<Guid> value)
+        {
+            return value.All(v => enumeration.Options.Contains(v));
         }
 
         protected override string InnerValueAsString()
         {
             if (m_textOverride != null)
                 return m_textOverride;
-            return string.Join("+", m_value.Select(v => v.ToString()));
+            return string.Join("+", Value.Select(v => v.ToString()));
         }
 
         public IEnumerable<Guid> Options
@@ -84,7 +98,7 @@ namespace Conversation
         {
             if (m_textOverride != null)
                 return m_textOverride;
-            return string.Join(" + ", m_value.Select(v => GetName(v) ?? InvalidValue).OrderBy(a => a));
+            return string.Join(" + ", Value.Select(v => GetName(v) ?? InvalidValue).OrderBy(a => a));
         }
 
         public const string InvalidValue = "ERROR: Unknown enumeration value";

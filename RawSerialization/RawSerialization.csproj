@@ -52,14 +52,17 @@
     <ProjectReference Include="..\Conversation2\Conversation2.csproj">
       <Project>{6b83be91-796d-4abc-98f8-4220b6151a3d}</Project>
       <Name>Conversation2</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\ConversationEditor.PluginBase\ConversationEditor.PluginBase.csproj">
       <Project>{02b54812-8646-46fb-9f6f-eef9f36ddf9c}</Project>
       <Name>ConversationEditor.PluginBase</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Utilities\Utilities.csproj">
       <Project>{bc0871bd-3134-40f0-8e74-0d3aaf3bf65b}</Project>
       <Name>Utilities</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

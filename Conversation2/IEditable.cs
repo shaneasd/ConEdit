@@ -18,9 +18,9 @@ namespace Conversation
         //Node type information
         Id<NodeTypeTemp> NodeTypeId { get; }
         string Name { get; }
-        ReadOnlyCollection<NodeData.ConfigData> Config { get; }
+        IReadOnlyList<NodeData.ConfigData> Config { get; }
 
-        IEnumerable<Parameter> Parameters { get; }
+        IEnumerable<IParameter> Parameters { get; }
         IEnumerable<Output> Connectors { get; }
 
         /// <summary>
@@ -33,11 +33,6 @@ namespace Conversation
         /// </summary>
         /// <param name="id">the new ID</param>
         void ChangeId(Id<NodeTemp> id);
-
-        /// <summary>
-        /// Attempt to decorrupt all corrupted parameters within the node
-        /// </summary>
-        void TryDecorrupt();
 
         SimpleUndoPair RemoveUnknownParameter(UnknownParameter p);
     }

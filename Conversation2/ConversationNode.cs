@@ -40,19 +40,6 @@ namespace Conversation
             }
         }
 
-        /// <summary>
-        /// Attempt to decorrupt the node if it is corrupt. Does nothing if not corrupt.
-        /// This is only called on load so doesn't need to be undoable
-        /// </summary>
-        public void TryDecorrupt()
-        {
-            if (m_data.Parameters.Any(p => p.Corrupted))
-            {
-                m_data.TryDecorrupt();
-                UpdateRendererCorruption();
-            }
-        }
-
         public void UpdateRendererCorruption()
         {
             if (m_data.Parameters.All(p => !p.Corrupted))
@@ -83,13 +70,13 @@ namespace Conversation
             m_nodeUI = newRenderer;
         }
 
-        public readonly IEditable m_data;
+        public IEditable m_data { get; } //TODO: Something wrong with this design
         #region Thin wrapper around m_data
         public Id<NodeTemp> Id { get { return m_data.NodeId; } }
         public Id<NodeTypeTemp> Type { get { return m_data.NodeTypeId; } }
         public event Action Linked { add { m_data.Linked += value; } remove { m_data.Linked -= value; } }
-        public IEnumerable<Parameter> Parameters { get { return m_data.Parameters; } }
-        public ReadOnlyCollection<NodeData.ConfigData> Config { get { return m_data.Config; } }
+        public IEnumerable<IParameter> Parameters { get { return m_data.Parameters; } }
+        public IReadOnlyList<NodeData.ConfigData> Config { get { return m_data.Config; } }
         public IEnumerable<Output> Connectors { get { return m_data.Connectors; } }
         public string NodeName { get { return m_data.Name; } }
         public void ChangeId(Id<NodeTemp> id) { m_data.ChangeId(id); }
@@ -138,7 +125,7 @@ namespace Conversation
             List<Action> undoActions = new List<Action>();
             foreach (var t in Connectors)
             {
-                var disconnectAll = t.DisconnectAll();
+                var disconnectAll = t.DisconnectAllActions();
                 redoActions.Add(disconnectAll.Redo);
                 undoActions.Add(disconnectAll.Undo);
             }

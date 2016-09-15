@@ -7,29 +7,35 @@ namespace Conversation
 {
     public class LocalizedStringParameter : Parameter<Id<LocalizedText>>, ILocalizedStringParameter
     {
-        public LocalizedStringParameter(string name, Id<Parameter> id, ParameterType typeId, string defaultValue) : base(name, id, typeId, defaultValue) { }
+        public static ParameterType ParameterType { get; } = ParameterType.Parse("c72e8222-3e10-4995-b32b-5b3ebd8e0f20");
 
-        protected override bool DeserialiseValue(string value)
+        public LocalizedStringParameter(string name, Id<Parameter> id) : base(name, id, ParameterType, null, new Tuple<Id<LocalizedText>, bool>(null, true)) { }
+
+        protected override Tuple<Id<LocalizedText>, bool> DeserializeValueInner(string value)
         {
-            return Id<LocalizedText>.TryParse(value, out m_value);
+            return StaticDeserialize(value);
+        }
+
+        private static Tuple<Id<LocalizedText>, bool> StaticDeserialize(string value)
+        {
+            Id<LocalizedText> val = null;
+            var result = Id<LocalizedText>.TryParse(value, out val);
+            return Tuple.Create(val, !result);
         }
 
         protected override string InnerValueAsString()
         {
-            if (m_value != null)
-                return m_value.Serialized();
-            else
-                return Id<LocalizedText>.New().Serialized();
+            return Value.Serialized();
         }
 
         public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
         {
-            return localize(m_value);
+            return localize(Value);
         }
 
-        protected override void DecorruptFromNull()
+        protected override bool ValueValid(Id<LocalizedText> value)
         {
-            Value = Id<LocalizedText>.New();
+            return value != null;
         }
     }
 }

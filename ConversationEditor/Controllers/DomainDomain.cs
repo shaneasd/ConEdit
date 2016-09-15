@@ -26,12 +26,12 @@ namespace ConversationEditor
         Id<TConnector> parameterDefinitionConnector1 = Id<TConnector>.Parse("1fd8a64d-271e-42b8-bfd8-85e5174bbf9d");
         Id<TConnector> parameterConfigConnectorID = Id<TConnector>.Parse("3e914fe1-c59c-4494-b53a-da135426ff72");
 
-        NodeType m_nodeHeirarchy;
+        NodeCategory m_nodeHeirarchy;
         Dictionary<Id<NodeTypeTemp>, EditableGenerator> m_nodes = new Dictionary<Id<NodeTypeTemp>, EditableGenerator>();
 
-        NodeType m_nodeMenu;
-        NodeType m_autoCompleteMenu;
-        NodeType m_connectorsMenu;
+        NodeCategory m_nodeMenu;
+        NodeCategory m_autoCompleteMenu;
+        NodeCategory m_connectorsMenu;
 
         static readonly List<NodeData.ConnectorData> NO_CONNECTORS = new List<NodeData.ConnectorData>();
         static readonly ReadOnlyCollection<NodeData.ConfigData> NO_CONFIG = new ReadOnlyCollection<NodeData.ConfigData>(new NodeData.ConfigData[0]);
@@ -68,25 +68,25 @@ namespace ConversationEditor
             {
                 if (!(new[] { allEnums, allDynamicEnums, allLocalDynamicEnums, allIntegers, allDecimals }).Any(e => e.TypeId == id))
                 {
-                    allEnums.Elements = m_typeSet.VisibleEnums.Select(e => new EnumerationData.Element(e.Name, e.TypeId.Guid)).ToList();
+                    allEnums = new EnumerationData(allEnums.Name, allEnums.TypeId, m_typeSet.VisibleEnums.Select(e => new EnumerationData.Element(e.Name, e.TypeId.Guid)).ToList());
                     m_typeSet.ModifyEnum(allEnums);
 
-                    allDynamicEnums.Elements = m_typeSet.VisibleDynamicEnums.Select(e => new EnumerationData.Element(e.Name, e.TypeId.Guid)).ToList();
+                    allDynamicEnums = new EnumerationData(allDynamicEnums.Name, allDynamicEnums.TypeId, m_typeSet.VisibleDynamicEnums.Select(e => new EnumerationData.Element(e.Name, e.TypeId.Guid)).ToList());
                     m_typeSet.ModifyEnum(allDynamicEnums);
 
-                    allLocalDynamicEnums.Elements = m_typeSet.VisibleLocalDynamicEnums.Select(e => new EnumerationData.Element(e.Name, e.TypeId.Guid)).ToList();
+                    allLocalDynamicEnums = new EnumerationData(allLocalDynamicEnums.Name, allLocalDynamicEnums.TypeId, m_typeSet.VisibleLocalDynamicEnums.Select(e => new EnumerationData.Element(e.Name, e.TypeId.Guid)).ToList());
                     m_typeSet.ModifyEnum(allLocalDynamicEnums);
 
-                    allIntegers.Elements = m_typeSet.VisibleIntegers.Select(e => new EnumerationData.Element(e.Name, e.TypeId.Guid)).ToList();
+                    allIntegers = new EnumerationData(allIntegers.Name, allIntegers.TypeId, m_typeSet.VisibleIntegers.Select(e => new EnumerationData.Element(e.Name, e.TypeId.Guid)).ToList());
                     m_typeSet.ModifyEnum(allIntegers);
 
-                    allDecimals.Elements = m_typeSet.VisibleDecimals.Select(e => new EnumerationData.Element(e.Name, e.TypeId.Guid)).ToList();
+                    allDecimals = new EnumerationData(allDecimals.Name, allDecimals.TypeId, m_typeSet.VisibleDecimals.Select(e => new EnumerationData.Element(e.Name, e.TypeId.Guid)).ToList());
                     m_typeSet.ModifyEnum(allDecimals);
                 }
             };
 
             //m_categories = new MutableEnumeration(categoryNone.Only(), DomainIDs.CATEGORY_TYPE, categoryNone.Item1);
-            m_nodeHeirarchy = new NodeType(null, Guid.Empty);
+            m_nodeHeirarchy = new NodeCategory(null, Guid.Empty);
 
             #region Category Definition
             {
@@ -129,7 +129,7 @@ namespace ConversationEditor
             };
             AddNode(BaseType.LocalDynamicEnumeration.NodeType, "Local Dynamic Enumeration", m_nodeHeirarchy, MakeConfig('y', "808080"), NO_CONNECTORS, localDynamicEnumParameters);
 
-            NodeType enumerationMenu = new NodeType("Enumeration", DomainIDs.EnumerationMenu);
+            NodeCategory enumerationMenu = new NodeCategory("Enumeration", DomainIDs.EnumerationMenu);
             m_nodeHeirarchy.AddChildType(enumerationMenu);
 
             Id<TConnector> enumOutput1 = Id<TConnector>.Parse("8c8dc149-52c1-401e-ae1d-69b265a6841e");
@@ -155,10 +155,10 @@ namespace ConversationEditor
             AddNode(DomainIDs.EnumerationValueDeclaration, "Enumeration Value", enumerationMenu, MakeConfig('v', "808080"), enumerationValueConnectors, enumerationValuesParameters);
             #endregion
 
-            m_nodeMenu = new NodeType("Nodes", DomainIDs.NodeMenu);
+            m_nodeMenu = new NodeCategory("Nodes", DomainIDs.NodeMenu);
             m_nodeHeirarchy.AddChildType(m_nodeMenu);
 
-            NodeType parameterMenu = new NodeType("Parameters", DomainIDs.NodeMenu);
+            NodeCategory parameterMenu = new NodeCategory("Parameters", DomainIDs.NodeMenu);
             m_nodeMenu.AddChildType(parameterMenu);
             List<NodeData.ConnectorData> connectorDefinitionConnectors = new List<NodeData.ConnectorData>()
             {
@@ -180,7 +180,7 @@ namespace ConversationEditor
             AddNode(DomainIDs.ConnectionDefinitionGuid, "Connection", m_nodeHeirarchy, MakeConfig('o', "ffbb00"), NO_CONNECTORS, connectionDefinitionParameters);
 
 
-            m_connectorsMenu = new NodeType("Connectors", DomainIDs.NodeMenu);
+            m_connectorsMenu = new NodeCategory("Connectors", DomainIDs.NodeMenu);
             m_nodeMenu.AddChildType(m_connectorsMenu);
 
             #region Parameter Definitions
@@ -222,7 +222,7 @@ namespace ConversationEditor
             RefreshConnectorsMenu();
             #endregion
 
-            NodeType configMenu = new NodeType("Config", DomainIDs.ConfigMenu);
+            NodeCategory configMenu = new NodeCategory("Config", DomainIDs.ConfigMenu);
             m_nodeMenu.AddChildType(configMenu);
 
             Id<TConnector> configOutput1 = Id<TConnector>.Parse("2d88af18-d66d-4f86-868e-5db9e020c99d");
@@ -251,7 +251,7 @@ namespace ConversationEditor
 
         private void AddAutoCompleteNodes()
         {
-            m_autoCompleteMenu = new NodeType("Autocomplete", DomainIDs.AutoComplete.Menu);
+            m_autoCompleteMenu = new NodeCategory("Autocomplete", DomainIDs.AutoComplete.Menu);
             m_nodeHeirarchy.AddChildType(m_autoCompleteMenu);
 
             NodeData.ParameterData enumTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, EnumSetGuid, NO_CONFIG);
@@ -286,6 +286,9 @@ namespace ConversationEditor
 
         public class EnumDefaultParameter : Parameter, IDynamicEnumParameter
         {
+            private bool m_corrupted;
+            public override bool Corrupted { get { return m_corrupted; } }
+
             public new static readonly ParameterType TypeId = ParameterType.Parse("82e83436-f1b0-4f71-8882-51c171d14ff3");
 
             Func<Dictionary<ParameterType, IEnumerable<EnumerationData.Element>>> m_enumOptions;
@@ -355,8 +358,8 @@ namespace ConversationEditor
 
                 return new SimpleUndoPair
                 {
-                    Redo = () => { m_value = value; Corrupted = false; UpdateValueGuid(); },
-                    Undo = () => { m_value = oldValue; Corrupted = oldCorrupted; m_valueGuid = oldGuid; }
+                    Redo = () => { m_value = value; m_corrupted = false; UpdateValueGuid(); },
+                    Undo = () => { m_value = oldValue; m_corrupted = oldCorrupted; m_valueGuid = oldGuid; }
                 };
             }
 
@@ -375,7 +378,7 @@ namespace ConversationEditor
                     return m_value;
             }
 
-            protected override bool DeserialiseValue(string value)
+            protected override void DeserialiseValue(string value)
             {
                 if (Guid.TryParse(value, out m_valueGuid))
                 {
@@ -386,7 +389,7 @@ namespace ConversationEditor
                     m_valueGuid = Guid.Empty;
                     m_value = value;
                 }
-                return true;
+                m_corrupted = false;
             }
 
             public IEnumerable<string> Options
@@ -409,11 +412,6 @@ namespace ConversationEditor
                 }
             }
 
-            protected override void DecorruptFromNull()
-            {
-                //TODO: Do we need to do something here?
-            }
-
             public void MergeInto(DynamicEnumParameter.Source newSource)
             {
                 //TODO: Not really sure what to do about this
@@ -422,7 +420,7 @@ namespace ConversationEditor
             }
         }
 
-        private EditableGenerator AddEnumNode(NodeType parent)
+        private EditableGenerator AddEnumNode(NodeCategory parent)
         {
             Id<NodeTypeTemp> guid = BaseType.Enumeration.ParameterNodeType;
             string name = "Enumeration";
@@ -432,51 +430,31 @@ namespace ConversationEditor
             NodeData.ParameterData nameParameter = new NodeData.ParameterData("Name", DomainIDs.ParameterName, BaseTypeString.ParameterType, NO_CONFIG);
             NodeData.ParameterData enumTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, EnumSetGuid, NO_CONFIG);
 
-            NodeData data;
-            data.Config = MakeConfig('p', "00aaaa");
-            data.Connectors = parameterConnectors;
-            data.Guid = guid;
-            data.Name = name;
-            data.Parameters = new List<NodeData.ParameterData> { nameParameter, enumTypeParameter };
-            data.Type = parent.Guid;
+            NodeData data = new NodeData(name, parent.Guid, guid, parameterConnectors, new List<NodeData.ParameterData> { nameParameter, enumTypeParameter }, MakeConfig('p', "00aaaa"));
 
             Func<Dictionary<ParameterType, IEnumerable<EnumerationData.Element>>> options = () => m_typeSet.VisibleEnums.ToDictionary(e => e.TypeId, e => e.Elements.Select(a => a));
 
-            var generator = new GenericEditableGenerator2(data, m_typeSet, ConnectorDefinitions, DomainConnectionRules.Instance,
-                p => new List<Parameter> { new EnumDefaultParameter(options, () => ParameterType.Basic.FromGuid((p.Single(a => a.Id == enumTypeParameter.Id) as IEnumParameter).EditorSelected)) });
-            parent.m_nodes.Add(generator);
+            var generator = new GenericEditableGenerator(data, m_typeSet, ConnectorDefinitions, DomainConnectionRules.Instance,
+                p => new List<IParameter> { new EnumDefaultParameter(options, () => ParameterType.Basic.FromGuid((p.Single(a => a.Id == enumTypeParameter.Id) as IEnumParameter).EditorSelected)) });
+            parent.AddNode(generator);
             m_nodes[guid] = generator;
             return generator;
         }
 
-        private EditableGenerator AddNode(Id<NodeTypeTemp> guid, string name, NodeType parent, List<NodeData.ConfigData> config, List<NodeData.ConnectorData> connectors, List<NodeData.ParameterData> parameters, Func<List<Parameter>> extraParameters)
+        private EditableGenerator AddNode(Id<NodeTypeTemp> guid, string name, NodeCategory parent, List<NodeData.ConfigData> config, List<NodeData.ConnectorData> connectors, List<NodeData.ParameterData> parameters, Func<List<IParameter>> extraParameters)
         {
-            NodeData data;
-            data.Config = config;
-            data.Connectors = connectors;
-            data.Guid = guid;
-            data.Name = name;
-            data.Parameters = parameters;
-            data.Type = parent.Guid;
-
-            var generator = new GenericEditableGenerator2(data, m_typeSet, ConnectorDefinitions, DomainConnectionRules.Instance, x => extraParameters());
-            parent.m_nodes.Add(generator);
+            NodeData data = new NodeData(name, parent.Guid, guid, connectors, parameters, config);
+            var generator = new GenericEditableGenerator(data, m_typeSet, ConnectorDefinitions, DomainConnectionRules.Instance, x => extraParameters());
+            parent.AddNode(generator);
             m_nodes[guid] = generator;
             return generator;
         }
 
-        private EditableGenerator AddNode(Id<NodeTypeTemp> guid, string name, NodeType parent, List<NodeData.ConfigData> config, List<NodeData.ConnectorData> connectors, List<NodeData.ParameterData> parameters)
+        private EditableGenerator AddNode(Id<NodeTypeTemp> guid, string name, NodeCategory parent, List<NodeData.ConfigData> config, List<NodeData.ConnectorData> connectors, List<NodeData.ParameterData> parameters)
         {
-            NodeData data;
-            data.Config = config;
-            data.Connectors = connectors;
-            data.Guid = guid;
-            data.Name = name;
-            data.Parameters = parameters;
-            data.Type = parent.Guid;
-
-            var generator = new GenericEditableGenerator2(data, m_typeSet, ConnectorDefinitions, DomainConnectionRules.Instance);
-            parent.m_nodes.Add(generator);
+            NodeData data = new NodeData(name, parent.Guid, guid, connectors, parameters, config);
+            var generator = new GenericEditableGenerator(data, m_typeSet, ConnectorDefinitions, DomainConnectionRules.Instance);
+            parent.AddNode(generator);
             m_nodes[guid] = generator;
             return generator;
         }
@@ -502,10 +480,7 @@ namespace ConversationEditor
         public void RenameCategory(string name, Guid guid)
         {
             EnumerationData data = m_typeSet.GetEnumData(DomainIDs.CategoryType);
-            var index = data.Elements.IndexOf(e => e.Guid == guid);
-            var option = data.Elements[index];
-            option.Name = name;
-            data.Elements[index] = option;
+            data = new EnumerationData(data.Name, data.TypeId, data.Elements.ReplaceOnce(e => e.Guid == guid, e => new EnumerationData.Element(name, e.Guid)));
             UpdateEnumeration(data);
             //m_categories.SetName(guid, name);
         }
@@ -513,7 +488,7 @@ namespace ConversationEditor
         public void AddCategory(string name, Guid guid)
         {
             EnumerationData data = m_typeSet.GetEnumData(DomainIDs.CategoryType);
-            data.Elements.Add(new EnumerationData.Element(name, guid));
+            data = new EnumerationData(data.Name, data.TypeId, data.Elements.Concat((new EnumerationData.Element(name, guid).Only())));
             UpdateEnumeration(data);
             //m_categories.Add(guid, name);
         }
@@ -521,7 +496,7 @@ namespace ConversationEditor
         public void RemoveCategory(Guid guid)
         {
             EnumerationData data = m_typeSet.GetEnumData(DomainIDs.CategoryType);
-            data.Elements.RemoveAll(e => e.Guid == guid);
+            data = new EnumerationData(data.Name, data.TypeId, data.Elements.Where(e => e.Guid != guid));
             UpdateEnumeration(data);
             //m_categories.Remove(guid);
         }
@@ -639,13 +614,13 @@ namespace ConversationEditor
                     var category = categoryParameter.Value;
 
                     List<NodeData.ConnectorData> connectors = new List<NodeData.ConnectorData>();
-                    foreach (var connectorNode in node.Connectors.Single(c => c.m_definition.Id == DomainIDs.NodeOutputConnectorsDefinition.Id).Connections)
+                    foreach (var connectorNode in node.Connectors.Single(c => c.Definition.Id == DomainIDs.NodeOutputConnectorsDefinition.Id).Connections)
                     {
                         connectors.Add(new NodeData.ConnectorData(Id<TConnector>.ConvertFrom(connectorNode.Parent.NodeId), Id<TConnectorDefinition>.ConvertFrom(connectorNode.Parent.NodeTypeId), connectorNode.Parent.Parameters.ToList()));
                     }
 
                     List<NodeData.ParameterData> parameters = new List<NodeData.ParameterData>();
-                    var parametersConnector = node.Connectors.Single(c => c.m_definition.Id == DomainIDs.NodeOutputParametersDefinition.Id);
+                    var parametersConnector = node.Connectors.Single(c => c.Definition.Id == DomainIDs.NodeOutputParametersDefinition.Id);
                     IEnumerable<IEditable> parameterNodes = parametersConnector.Connections.Select(l => l.Parent);
                     foreach (var parameterNode in parameterNodes)//.Where(n => BaseType.TypeExists(n.NodeTypeID)))
                     {
@@ -653,7 +628,7 @@ namespace ConversationEditor
                     }
 
                     List<NodeData.ConfigData> config = new List<NodeData.ConfigData>();
-                    var configs = node.Connectors.Single(c => c.m_definition.Id == DomainIDs.NodeOutputConfigDefinition.Id).Connections.Select(l => l.Parent);
+                    var configs = node.Connectors.Single(c => c.Definition.Id == DomainIDs.NodeOutputConfigDefinition.Id).Connections.Select(l => l.Parent);
                     foreach (var configNode in configs)
                     {
                         config.Add(new NodeData.ConfigData(configNode.NodeTypeId, configNode.Parameters));
@@ -734,23 +709,14 @@ namespace ConversationEditor
             return m_typeSet.IsLocalDynamicEnum(type) || type == EnumDefaultParameter.TypeId;
         }
 
-        //CallbackDictionary<ID<TConnectorDefinition>, ConnectorDefinitionData> m_connectorDefinitions = new CallbackDictionary<ID<TConnectorDefinition>, ConnectorDefinitionData>()
-        //{
-        //    { SpecialConnectors.Input.Id, SpecialConnectors.Input },
-        //    { SpecialConnectors.Output.Id, SpecialConnectors.Output },
-        //};
-        //private GenericEditableGenerator m_inputConnector;
-        //private GenericEditableGenerator m_outputConnector;
-
         internal void ModifyConnector(ConnectorDefinitionData cdd)
         {
             ConnectorDefinitions[cdd.Id] = cdd;
 
             EnumerationData data = m_typeSet.GetEnumData(DomainIDs.ConnectionType);
-            var index = data.Elements.IndexOf(e => e.Guid == cdd.Id.Guid);
-            var option = data.Elements[index];
-            option.Name = cdd.Name;
-            data.Elements[index] = option;
+
+            data = new EnumerationData(data.Name, data.TypeId, data.Elements.ReplaceOnce(e => e.Guid == cdd.Id.Guid, e => new EnumerationData.Element(cdd.Name, e.Guid)));
+
             UpdateEnumeration(data);
         }
 
@@ -759,7 +725,7 @@ namespace ConversationEditor
             ConnectorDefinitions.Add(cdd.Id, cdd);
 
             EnumerationData data = m_typeSet.GetEnumData(DomainIDs.ConnectionType);
-            data.Elements.Add(new EnumerationData.Element(cdd.Name, cdd.Id.Guid));
+            data = new EnumerationData(data.Name, data.TypeId, data.Elements.Concat((new EnumerationData.Element(cdd.Name, cdd.Id.Guid)).Only()));
             UpdateEnumeration(data);
         }
 
@@ -768,13 +734,13 @@ namespace ConversationEditor
             ConnectorDefinitions.Remove(cdd.Id);
 
             EnumerationData data = m_typeSet.GetEnumData(DomainIDs.ConnectionType);
-            data.Elements.RemoveAll(e => e.Guid == cdd.Id.Guid);
+            data = new EnumerationData(data.Name, data.TypeId, data.Elements.Where(e => e.Guid != cdd.Id.Guid));
             UpdateEnumeration(data);
         }
 
         private void RefreshConnectorsMenu()
         {
-            m_connectorsMenu.m_nodes.Clear();
+            m_connectorsMenu.ClearNodes();
             foreach (var data in ConnectorDefinitions.Values)
             {
                 if (!data.Hidden)

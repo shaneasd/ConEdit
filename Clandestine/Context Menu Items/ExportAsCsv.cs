@@ -107,9 +107,9 @@ namespace Clandestine
     {
         private Func<Id<LocalizedText>, string> m_localize;
 
-        protected ExportAsSeparatedStrings(Func<Id<LocalizedText>, string> localize)
+        protected ExportAsSeparatedStrings(Func<Id<LocalizedText>, Tuple<string, DateTime>> localize)
         {
-            m_localize = localize;
+            m_localize = id => localize(id).Item1;
         }
 
         public abstract string Name { get; }
@@ -170,7 +170,7 @@ namespace Clandestine
 
                 if (!processed.Contains(start))
                 {
-                    foreach (var output in start.Connectors.Where(c => c.m_definition.Id == SpecialConnectors.Output.Id))
+                    foreach (var output in start.Connectors.Where(c => c.Definition.Id == SpecialConnectors.Output.Id))
                     {
                         foreach (var connection in output.Connections)
                         {
@@ -209,7 +209,7 @@ namespace Clandestine
 
     public class ExportAsCsv : ExportAsSeparatedStrings
     {
-        public ExportAsCsv(Func<Id<LocalizedText>, string> localize)
+        public ExportAsCsv(Func<Id<LocalizedText>, Tuple<string, DateTime>> localize)
             : base(localize)
         {
         }
@@ -221,7 +221,7 @@ namespace Clandestine
 
     public class ExportAsSsv : ExportAsSeparatedStrings
     {
-        public ExportAsSsv(Func<Id<LocalizedText>, string> localize)
+        public ExportAsSsv(Func<Id<LocalizedText>, Tuple<string, DateTime>> localize)
             : base(localize)
         {
         }

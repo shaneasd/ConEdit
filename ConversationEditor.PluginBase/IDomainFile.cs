@@ -9,7 +9,7 @@ namespace ConversationEditor
 {
     public interface IDomainFile : IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>, IInProject
     {
-        DomainData Data { get; }
+        IDomainData Data { get; }
         event Action ConversationDomainModified;
         IEnumerable<string> AutoCompleteSuggestions(IParameter p, string s, Func<ParameterType,DynamicEnumParameter.Source> enumSource);
     }

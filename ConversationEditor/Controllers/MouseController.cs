@@ -277,7 +277,7 @@ namespace ConversationEditor
                 {
                     if (SelectedTransition != null)
                     {
-                        return SelectedTransition.DisconnectAll();
+                        return SelectedTransition.DisconnectAllActions();
                     }
                     else
                         return null;
@@ -361,7 +361,7 @@ namespace ConversationEditor
                     Action<NodeGroup> groupOp = group =>
                     {
                         var totalArea = group.Renderer.Area;
-                        var newResizeState = m_parent.GetResizeOption(totalArea, client);
+                        var newResizeState = MouseController<TNode>.GetResizeOption(totalArea, client);
                         if (newResizeState != ResizeState)
                             m_parent.SetStateToNothingOrSelectingDirection(newResizeState, m_selectedTransition);
                     };
@@ -377,7 +377,7 @@ namespace ConversationEditor
                 {
                     if (SelectedTransition != null)
                     {
-                        return SelectedTransition.DisconnectAll();
+                        return SelectedTransition.DisconnectAllActions();
                     }
                     else
                         return null;
@@ -566,7 +566,7 @@ namespace ConversationEditor
                 {
                     if (SelectedTransition != null)
                     {
-                        return SelectedTransition.DisconnectAll();
+                        return SelectedTransition.DisconnectAllActions();
                     }
                     else
                         return null;
@@ -918,7 +918,7 @@ namespace ConversationEditor
             otherwise();
         }
 
-        public ResizeState? GetResizeOption(RectangleF r, PointF p)
+        public static ResizeState? GetResizeOption(RectangleF r, PointF p)
         {
             var grow = new SizeF(1, 1);
             var leftArea = RectangleF.FromLTRB(r.Left, r.Top, r.Left + 5, r.Bottom);

@@ -47,7 +47,7 @@ namespace Clandestine
             m_datasource = datasource;
         }
 
-        protected override bool ShouldRender(Parameter p)
+        protected override bool ShouldRender(IParameter p)
         {
             if (p == null)
                 throw new ArgumentNullException(nameof(p));

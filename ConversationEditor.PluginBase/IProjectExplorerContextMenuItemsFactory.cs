@@ -31,11 +31,18 @@ namespace ConversationEditor
         void Execute(IAudioFile audio);
     }
 
+    public interface IFolderContextMenuItem
+    {
+        string Name { get; }
+        void Execute(IEnumerable<IConversationFile> conversations);
+    }
+
     public interface IProjectExplorerContextMenuItemsFactory
     {
         IEnumerable<IDomainContextMenuItem> DomainContextMenuItems { get; }
-        IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<Id<LocalizedText>, string> localizer);
+        IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<Id<LocalizedText>, Tuple<string, DateTime>> localizer);
         IEnumerable<ILocalizationContextMenuItem> LocalizationContextMenuItems { get; }
         IEnumerable<IAudioContextMenuItem> AudioContextMenuItems { get; }
+        IEnumerable<IFolderContextMenuItem> FolderContextMenuItems(Func<Id<LocalizedText>, Tuple<string, DateTime>> localizer);
     }
 }

@@ -32,7 +32,7 @@ namespace Conversation.Serialization
         }
     }
 
-    public class CSDomainSerializer<TNodeUI, TUIRawData, TEditorData> : ISerializer<IEnumerable<DomainData>> where TNodeUI : INodeUI<TNodeUI>
+    public class CSDomainSerializer<TNodeUI, TUIRawData, TEditorData> : ISerializer<IEnumerable<IDomainData>> where TNodeUI : INodeUI<TNodeUI>
     {
         static readonly CSharpCodeProvider generator = new CSharpCodeProvider(new Dictionary<string, string> { { "CompilerVersion", "v3.5" } });
         private static readonly List<NodeData.ConfigData> ParameterConfig = new List<NodeData.ConfigData>(); //Parameter config is not relevant to parsing of conversations and so is not written out to the C#
@@ -63,13 +63,13 @@ namespace Conversation.Serialization
             return guess;
         }
 
-        public void Write(IEnumerable<DomainData> data, System.IO.Stream stream)
+        public void Write(IEnumerable<IDomainData> data, System.IO.Stream stream)
         {
             CodeCompileUnit file = new CodeCompileUnit();
 
             HashSet<string> usedNames = new HashSet<string>() { "Node" };
 
-            DomainData fixedData = ConvertData(data, usedNames);
+            IDomainData fixedData = ConvertData(data, usedNames);
 
             Dictionary<ParameterType, string> basicTypeMap = MakeTypeMap(fixedData);
             file.Namespaces.Add(GenerateTypes(fixedData));
@@ -162,7 +162,7 @@ namespace Conversation.Serialization
             return deserializer;
         }
 
-        private static DomainData ConvertData(IEnumerable<DomainData> alldata, HashSet<string> usedNames)
+        private static IDomainData ConvertData(IEnumerable<IDomainData> alldata, HashSet<string> usedNames)
         {
             DomainData data = new DomainData();
             foreach (var a in alldata)
@@ -192,7 +192,7 @@ namespace Conversation.Serialization
                     string name = BestName(b.Name, usedNames);
                     var parameterNames = new HashSet<string>() { name };
                     List<NodeData.ParameterData> parameters = b.Parameters.Select(p => new NodeData.ParameterData(BestName(p.Name, parameterNames), p.Id, p.Type, ParameterConfig.AsReadOnly(), p.Default)).ToList();
-                    data.Nodes.Add(new NodeData(name, b.Type, b.Guid, b.Connectors, parameters, b.Config));
+                    data.Nodes.Add(new NodeData(name, b.Category, b.Guid, b.Connectors, parameters, b.Config));
                 }
                 foreach (var b in a.NodeTypes)
                     data.NodeTypes.Add(new NodeTypeData(BestName(b.Name, usedNames), b.Guid, b.Parent));
@@ -208,7 +208,7 @@ namespace Conversation.Serialization
             return data;
         }
 
-        private static Dictionary<Id<NodeTypeTemp>, string> GenerateNodes(DomainData data, Dictionary<ParameterType, string> basicTypeMap, Tuple<CodeNamespace, Func<Id<TConnectorDefinition>, string>> connectors, Tuple<List<CodeNamespace>, Func<Guid, CodeNamespace>> categoryNameSpaces)
+        private static Dictionary<Id<NodeTypeTemp>, string> GenerateNodes(IDomainData data, Dictionary<ParameterType, string> basicTypeMap, Tuple<CodeNamespace, Func<Id<TConnectorDefinition>, string>> connectors, Tuple<List<CodeNamespace>, Func<Guid, CodeNamespace>> categoryNameSpaces)
         {
             {
                 var baseNamespace = categoryNameSpaces.Item2(Guid.Empty);
@@ -254,7 +254,7 @@ namespace Conversation.Serialization
                 CodeTypeDeclaration type = new CodeTypeDeclaration(nodeType.Name) { IsClass = true, Attributes = MemberAttributes.Final };
                 type.BaseTypes.Add(new CodeTypeReference("Node"));
                 type.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(RuntimeConversation.NodeTypeIdAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression(nodeType.Guid.Guid.ToString()))));
-                var @namespace = categoryNameSpaces.Item2(nodeType.Type ?? Guid.Empty);
+                var @namespace = categoryNameSpaces.Item2(nodeType.Category ?? Guid.Empty);
 
                 //type.Members.Add(new CodeMemberField(typeof(ID<NodeTemp>), "m_id"));
 
@@ -325,7 +325,7 @@ namespace Conversation.Serialization
             return result;
         }
 
-        private Tuple<CodeNamespace, Func<Id<TConnectorDefinition>, string>> GenerateConnectors(DomainData data, Dictionary<ParameterType, string> basicTypeMap)
+        private Tuple<CodeNamespace, Func<Id<TConnectorDefinition>, string>> GenerateConnectors(IDomainData data, Dictionary<ParameterType, string> basicTypeMap)
         {
             CodeNamespace connectorsNamespace = new CodeNamespace(m_namespace + ".Nodes.Connectors");
             connectorsNamespace.Imports.Add(new CodeNamespaceImport("System"));
@@ -383,7 +383,7 @@ namespace Conversation.Serialization
             return Tuple.Create(connectorsNamespace, access);
         }
 
-        private Tuple<List<CodeNamespace>, Func<Guid, CodeNamespace>> GenerateCategories(DomainData data)
+        private Tuple<List<CodeNamespace>, Func<Guid, CodeNamespace>> GenerateCategories(IDomainData data)
         {
             Func<string, CodeNamespace> makeNamespace = name =>
             {
@@ -418,7 +418,7 @@ namespace Conversation.Serialization
             return new Tuple<List<CodeNamespace>, Func<Guid, CodeNamespace>>(list, guid => categoryNameSpace.ContainsKey(guid) ? categoryNameSpace[guid] : rootNodeNamespace);
         }
 
-        private Dictionary<ParameterType, string> MakeTypeMap(DomainData data)
+        private Dictionary<ParameterType, string> MakeTypeMap(IDomainData data)
         {
             Dictionary<ParameterType, string> basicTypeMap = new Dictionary<ParameterType, string>(m_basicTypeMap);
             foreach (var x in data.Decimals)
@@ -432,7 +432,7 @@ namespace Conversation.Serialization
                 basicTypeMap[x.TypeId] = x.Name;
 
                 var name = ReadonlySetOf(x.Name);
-                basicTypeMap[ParameterType.Set.Of(x.TypeId)] = name;
+                basicTypeMap[ParameterType.ValueSetType.Of(x.TypeId)] = name;
             }
             foreach (var x in data.Integers)
                 basicTypeMap[x.TypeId] = x.Name;
@@ -506,7 +506,7 @@ namespace Conversation.Serialization
             return type;
         }
 
-        private CodeNamespace GenerateTypes(DomainData data)
+        private CodeNamespace GenerateTypes(IDomainData data)
         {
             CodeNamespace typesNamespace = new CodeNamespace(m_namespace + ".Types");
             typesNamespace.Imports.Add(new CodeNamespaceImport("System"));

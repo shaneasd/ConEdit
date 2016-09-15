@@ -110,6 +110,14 @@ namespace ConversationEditor
                 return null;
         }
 
+        public DateTime LocalizationTime(Id<LocalizedText> guid)
+        {
+            if (m_data.CanLocalize(guid))
+                return m_data.GetLocalized(guid).Localized;
+            else
+                return DateTime.MinValue;
+        }
+
         public SimpleUndoPair SetLocalizationAction(Id<LocalizedText> guid, string p)
         {
             Either<LocalizationElement, Null> oldValue = Either.Create(m_data.CanLocalize(guid), () => m_data.GetLocalized(guid), Null.Func);

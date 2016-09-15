@@ -206,119 +206,14 @@
       <Namespaces>
        <Namespace Name="Conversation">
         <Types>
-         <Type Name="Audio">
-          <Members>
-           <Member Name="#Value">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'Audio.Value'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="ConnectionDefinitionData">
-          <Members>
-           <Member Name="#Connectors">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'ConnectionDefinitionData.Connectors'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="ConnectorDefinitionData">
-          <Members>
-           <Member Name="#.ctor(System.String,Conversation.Id`1&lt;Conversation.TConnectorDefinition&gt;,System.Collections.Generic.List`1&lt;Conversation.NodeData+ParameterData&gt;,Conversation.ConnectorPosition)">
-            <Messages>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;NodeData.ParameterData&gt;'</Item>
-               <Item>'ConnectorDefinitionData.ConnectorDefinitionData(string, Id&lt;TConnectorDefinition&gt;, List&lt;NodeData.ParameterData&gt;, ConnectorPosition)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#.ctor(System.String,Conversation.Id`1&lt;Conversation.TConnectorDefinition&gt;,System.Collections.Generic.List`1&lt;Conversation.NodeData+ParameterData&gt;,Conversation.ConnectorPosition,System.Boolean)">
-            <Messages>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;NodeData.ParameterData&gt;'</Item>
-               <Item>'ConnectorDefinitionData.ConnectorDefinitionData(string, Id&lt;TConnectorDefinition&gt;, List&lt;NodeData.ParameterData&gt;, ConnectorPosition, bool)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Hidden">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'ConnectorDefinitionData.Hidden'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Id">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'ConnectorDefinitionData.Id'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#MakeWithoutParameters(Conversation.Id`1&lt;Conversation.TConnector&gt;,Conversation.IEditable,Conversation.IConnectionRules)">
-            <Messages>
-             <Message TypeName="DoNotRaiseReservedExceptionTypes" Category="Microsoft.Usage" CheckId="CA2201" Created="2016-07-10 12:22:01Z">
-              <Issue Name="TooGeneric">
-               <Item>'ConnectorDefinitionData.MakeWithoutParameters(Id&lt;TConnector&gt;, IEditable, IConnectionRules)'</Item>
-               <Item>'Exception'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Name">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'ConnectorDefinitionData.Name'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Parameters">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'ConnectorDefinitionData.Parameters'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Position">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'ConnectorDefinitionData.Position'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
          <Type Name="ConnectorPosition">
           <Members>
            <Member Name="#For`1(System.Func`1&lt;!!0&gt;,System.Func`1&lt;!!0&gt;,System.Func`1&lt;!!0&gt;,System.Func`1&lt;!!0&gt;)">
             <Messages>
-             <Message TypeName="DoNotRaiseReservedExceptionTypes" Category="Microsoft.Usage" CheckId="CA2201" Created="2016-07-10 12:22:01Z">
-              <Issue Name="TooGeneric">
+             <Message Id="For" TypeName="IdentifiersShouldNotMatchKeywords" Category="Microsoft.Naming" CheckId="CA1716" Created="2016-08-20 05:49:08Z">
+              <Issue Name="Member">
                <Item>'ConnectorPosition.For&lt;T&gt;(Func&lt;T&gt;, Func&lt;T&gt;, Func&lt;T&gt;, Func&lt;T&gt;)'</Item>
-               <Item>'Exception'</Item>
+               <Item>For</Item>
               </Issue>
              </Message>
             </Messages>
@@ -329,220 +224,23 @@
           <Members>
            <Member Name="#m_data">
             <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
+             <Message Id="data" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2016-08-20 05:49:08Z">
+              <Issue Name="Member">
+               <Item>data</Item>
                <Item>'ConversationNode&lt;TNodeUI&gt;.m_data'</Item>
+               <Item>Data</Item>
               </Issue>
              </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="DecimalParameter+Definition">
-          <Members>
-           <Member Name="#Max">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'DecimalParameter.Definition.Max'</Item>
+             <Message Id="m" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2016-08-20 05:49:08Z">
+              <Issue Name="Member">
+               <Item>m</Item>
+               <Item>'ConversationNode&lt;TNodeUI&gt;.m_data'</Item>
+               <Item>M</Item>
               </Issue>
              </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Min">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'DecimalParameter.Definition.Min'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="DomainData">
-          <Members>
-           <Member Name="#Connections">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'DomainData.Connections'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;ConnectionDefinitionData&gt;'</Item>
-               <Item>'DomainData.Connections'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Connectors">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'DomainData.Connectors'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;ConnectorDefinitionData&gt;'</Item>
-               <Item>'DomainData.Connectors'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Decimals">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'DomainData.Decimals'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;DecimalData&gt;'</Item>
-               <Item>'DomainData.Decimals'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#DynamicEnumerations">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'DomainData.DynamicEnumerations'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;DynamicEnumerationData&gt;'</Item>
-               <Item>'DomainData.DynamicEnumerations'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Enumerations">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'DomainData.Enumerations'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;EnumerationData&gt;'</Item>
-               <Item>'DomainData.Enumerations'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Integers">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'DomainData.Integers'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;IntegerData&gt;'</Item>
-               <Item>'DomainData.Integers'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#LocalDynamicEnumerations">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'DomainData.LocalDynamicEnumerations'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;LocalDynamicEnumerationData&gt;'</Item>
-               <Item>'DomainData.LocalDynamicEnumerations'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Nodes">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'DomainData.Nodes'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;NodeData&gt;'</Item>
-               <Item>'DomainData.Nodes'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#NodeTypes">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'DomainData.NodeTypes'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;NodeTypeData&gt;'</Item>
-               <Item>'DomainData.NodeTypes'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="DynamicEnumerationData">
-          <Members>
-           <Member Name="#Name">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'DynamicEnumerationData.Name'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#TypeId">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'DynamicEnumerationData.TypeId'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="EditableGenerator">
-          <Members>
-           <Member Name="#Generate(Conversation.Id`1&lt;Conversation.NodeTemp&gt;,System.Collections.Generic.List`1&lt;Conversation.EditableGeneratorParameterData&gt;,System.Object)">
-            <Messages>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;EditableGeneratorParameterData&gt;'</Item>
-               <Item>'EditableGenerator.Generate(Id&lt;NodeTemp&gt;, List&lt;EditableGeneratorParameterData&gt;, object)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#MakeParameters(System.Collections.Generic.List`1&lt;Conversation.EditableGeneratorParameterData&gt;,System.Object)">
-            <Messages>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;EditableGeneratorParameterData&gt;'</Item>
-               <Item>'EditableGenerator.MakeParameters(List&lt;EditableGeneratorParameterData&gt;, object)'</Item>
-              </Issue>
-              <Issue>
-               <Item>'List&lt;Parameter&gt;'</Item>
-               <Item>'EditableGenerator.MakeParameters(List&lt;EditableGeneratorParameterData&gt;, object)'</Item>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2016-08-20 05:49:08Z">
+              <Issue Name="Member">
+               <Item>'ConversationNode&lt;TNodeUI&gt;.m_data'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -566,11 +264,6 @@
           <Members>
            <Member Name="#Elements">
             <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'EnumerationData.Elements'</Item>
-              </Issue>
-             </Message>
              <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
               <Issue>
                <Item>'List&lt;EnumerationData.Element&gt;'</Item>
@@ -579,90 +272,21 @@
              </Message>
             </Messages>
            </Member>
-           <Member Name="#Name">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'EnumerationData.Name'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#TypeID">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'EnumerationData.TypeID'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="EnumerationData+Element">
-          <Members>
-           <Member Name="#Guid">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'EnumerationData.Element.Guid'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Name">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'EnumerationData.Element.Name'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="EnumParameter">
-          <Members>
-           <Member Name="#.ctor(System.String,Conversation.Id`1&lt;Conversation.Parameter&gt;,Conversation.IEnumeration,System.String)">
-            <Messages>
-             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'EnumParameter.EnumParameter(string, Id&lt;Parameter&gt;, IEnumeration, string)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="GenericEditableGenerator2">
-          <Members>
-           <Member Name="#Generate(Conversation.Id`1&lt;Conversation.NodeTemp&gt;,System.Collections.Generic.List`1&lt;Conversation.EditableGeneratorParameterData&gt;,System.Object)">
-            <Messages>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;EditableGeneratorParameterData&gt;'</Item>
-               <Item>'GenericEditableGenerator2.Generate(Id&lt;NodeTemp&gt;, List&lt;EditableGeneratorParameterData&gt;, object)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#MakeParameters(System.Collections.Generic.List`1&lt;Conversation.EditableGeneratorParameterData&gt;,System.Object)">
-            <Messages>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;EditableGeneratorParameterData&gt;'</Item>
-               <Item>'GenericEditableGenerator2.MakeParameters(List&lt;EditableGeneratorParameterData&gt;, object)'</Item>
-              </Issue>
-              <Issue>
-               <Item>'List&lt;Parameter&gt;'</Item>
-               <Item>'GenericEditableGenerator2.MakeParameters(List&lt;EditableGeneratorParameterData&gt;, object)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
           </Members>
          </Type>
          <Type Name="Id`1">
+          <Messages>
+           <Message TypeName="OverrideMethodsOnComparableTypes" Category="Microsoft.Design" CheckId="CA1036" Created="2016-08-20 05:49:08Z">
+            <Issue Name="Operator">
+             <Item>'Id&lt;T&gt;'</Item>
+             <Item>&lt;</Item>
+            </Issue>
+            <Issue Name="Operator">
+             <Item>'Id&lt;T&gt;'</Item>
+             <Item>&gt;</Item>
+            </Issue>
+           </Message>
+          </Messages>
           <Members>
            <Member Name="#ToString()">
             <Messages>
@@ -670,34 +294,6 @@
               <Issue Name="NoAllowedExceptions" Level="Warning">
                <Item>'Id&lt;T&gt;.ToString()'</Item>
                <Item>'NotImplementedException'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="IEditableGenerator">
-          <Members>
-           <Member Name="#Generate(Conversation.Id`1&lt;Conversation.NodeTemp&gt;,System.Collections.Generic.List`1&lt;Conversation.EditableGeneratorParameterData&gt;,System.Object)">
-            <Messages>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;EditableGeneratorParameterData&gt;'</Item>
-               <Item>'IEditableGenerator.Generate(Id&lt;NodeTemp&gt;, List&lt;EditableGeneratorParameterData&gt;, object)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#MakeParameters(System.Collections.Generic.List`1&lt;Conversation.EditableGeneratorParameterData&gt;,System.Object)">
-            <Messages>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;EditableGeneratorParameterData&gt;'</Item>
-               <Item>'IEditableGenerator.MakeParameters(List&lt;EditableGeneratorParameterData&gt;, object)'</Item>
-              </Issue>
-              <Issue>
-               <Item>'List&lt;Parameter&gt;'</Item>
-               <Item>'IEditableGenerator.MakeParameters(List&lt;EditableGeneratorParameterData&gt;, object)'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -718,173 +314,14 @@
            </Member>
           </Members>
          </Type>
-         <Type Name="IntegerData">
-          <Members>
-           <Member Name="#.ctor(System.String,Conversation.ParameterType,System.Nullable`1&lt;System.Int32&gt;,System.Nullable`1&lt;System.Int32&gt;)">
-            <Messages>
-             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'IntegerData.IntegerData(string, ParameterType, int?, int?)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="IntegerParameter+Definition">
-          <Members>
-           <Member Name="#Max">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'IntegerParameter.Definition.Max'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Min">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'IntegerParameter.Definition.Min'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="LocalDynamicEnumerationData">
-          <Members>
-           <Member Name="#Name">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'LocalDynamicEnumerationData.Name'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#TypeId">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'LocalDynamicEnumerationData.TypeId'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="LocalizationElement">
-          <Members>
-           <Member Name="#Localized">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'LocalizationElement.Localized'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Text">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'LocalizationElement.Text'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
          <Type Name="NodeData">
           <Members>
-           <Member Name="#.ctor(System.String,System.Nullable`1&lt;System.Guid&gt;,Conversation.Id`1&lt;Conversation.NodeTypeTemp&gt;,System.Collections.Generic.List`1&lt;Conversation.NodeData+ConnectorData&gt;,System.Collections.Generic.List`1&lt;Conversation.NodeData+ParameterData&gt;,System.Collections.Generic.List`1&lt;Conversation.NodeData+ConfigData&gt;)">
-            <Messages>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;NodeData.ConfigData&gt;'</Item>
-               <Item>'NodeData.NodeData(string, Guid?, Id&lt;NodeTypeTemp&gt;, List&lt;NodeData.ConnectorData&gt;, List&lt;NodeData.ParameterData&gt;, List&lt;NodeData.ConfigData&gt;)'</Item>
-              </Issue>
-              <Issue>
-               <Item>'List&lt;NodeData.ConnectorData&gt;'</Item>
-               <Item>'NodeData.NodeData(string, Guid?, Id&lt;NodeTypeTemp&gt;, List&lt;NodeData.ConnectorData&gt;, List&lt;NodeData.ParameterData&gt;, List&lt;NodeData.ConfigData&gt;)'</Item>
-              </Issue>
-              <Issue>
-               <Item>'List&lt;NodeData.ParameterData&gt;'</Item>
-               <Item>'NodeData.NodeData(string, Guid?, Id&lt;NodeTypeTemp&gt;, List&lt;NodeData.ConnectorData&gt;, List&lt;NodeData.ParameterData&gt;, List&lt;NodeData.ConfigData&gt;)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Config">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeData.Config'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;NodeData.ConfigData&gt;'</Item>
-               <Item>'NodeData.Config'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Connectors">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeData.Connectors'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;NodeData.ConnectorData&gt;'</Item>
-               <Item>'NodeData.Connectors'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Guid">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeData.Guid'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Name">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeData.Name'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Parameters">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeData.Parameters'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;NodeData.ParameterData&gt;'</Item>
-               <Item>'NodeData.Parameters'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
            <Member Name="#Type">
             <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
+             <Message TypeName="PropertyNamesShouldNotMatchGetMethods" Category="Microsoft.Naming" CheckId="CA1721" Created="2016-08-20 05:49:08Z">
+              <Issue Name="BaseType">
                <Item>'NodeData.Type'</Item>
+               <Item>'object.GetType()'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -904,56 +341,10 @@
            </Member>
            <Member Name="#Type">
             <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
+             <Message TypeName="PropertyNamesShouldNotMatchGetMethods" Category="Microsoft.Naming" CheckId="CA1721" Created="2016-08-20 05:49:08Z">
+              <Issue Name="BaseType">
                <Item>'NodeData.ConfigData.Type'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="NodeData+ConnectorData">
-          <Members>
-           <Member Name="#.ctor(Conversation.Id`1&lt;Conversation.TConnector&gt;,Conversation.Id`1&lt;Conversation.TConnectorDefinition&gt;,System.Collections.Generic.List`1&lt;Conversation.Parameter&gt;)">
-            <Messages>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;Parameter&gt;'</Item>
-               <Item>'NodeData.ConnectorData.ConnectorData(Id&lt;TConnector&gt;, Id&lt;TConnectorDefinition&gt;, List&lt;Parameter&gt;)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Id">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeData.ConnectorData.Id'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Parameters">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeData.ConnectorData.Parameters'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;Parameter&gt;'</Item>
-               <Item>'NodeData.ConnectorData.Parameters'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#TypeId">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeData.ConnectorData.TypeId'</Item>
+               <Item>'object.GetType()'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -962,130 +353,12 @@
          </Type>
          <Type Name="NodeData+ParameterData">
           <Members>
-           <Member Name="#Config">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeData.ParameterData.Config'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Default">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeData.ParameterData.Default'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Id">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeData.ParameterData.Id'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Name">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeData.ParameterData.Name'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
            <Member Name="#Type">
             <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
+             <Message TypeName="PropertyNamesShouldNotMatchGetMethods" Category="Microsoft.Naming" CheckId="CA1721" Created="2016-08-20 05:49:08Z">
+              <Issue Name="BaseType">
                <Item>'NodeData.ParameterData.Type'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="NodeType">
-          <Members>
-           <Member Name="#m_childTypes">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeType.m_childTypes'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;NodeType&gt;'</Item>
-               <Item>'NodeType.m_childTypes'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#m_guid">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeType.m_guid'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#m_name">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeType.m_name'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#m_nodes">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeType.m_nodes'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;EditableGenerator&gt;'</Item>
-               <Item>'NodeType.m_nodes'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="NodeTypeData">
-          <Members>
-           <Member Name="#Guid">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeTypeData.Guid'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Name">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeTypeData.Name'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Parent">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NodeTypeData.Parent'</Item>
+               <Item>'object.GetType()'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -1094,63 +367,11 @@
          </Type>
          <Type Name="Output">
           <Members>
-           <Member Name="#.ctor(Conversation.Id`1&lt;Conversation.TConnector&gt;,Conversation.ConnectorDefinitionData,Conversation.IEditable,System.Collections.Generic.List`1&lt;Conversation.Parameter&gt;,Conversation.IConnectionRules)">
-            <Messages>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;Parameter&gt;'</Item>
-               <Item>'Output.Output(Id&lt;TConnector&gt;, ConnectorDefinitionData, IEditable, List&lt;Parameter&gt;, IConnectionRules)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#ID">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'Output.ID'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
            <Member Name="#m_definition">
             <Messages>
              <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
               <Issue>
                <Item>'Output.m_definition'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Parameters">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'Output.Parameters'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;Parameter&gt;'</Item>
-               <Item>'Output.Parameters'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Parent">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'Output.Parent'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Rules">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'Output.Rules'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -1238,108 +459,6 @@
            </Message>
           </Messages>
          </Type>
-         <Type Name="StringParameter">
-          <Members>
-           <Member Name="#.ctor(System.String,Conversation.Id`1&lt;Conversation.Parameter&gt;,Conversation.ParameterType,System.String)">
-            <Messages>
-             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'StringParameter.StringParameter(string, Id&lt;Parameter&gt;, ParameterType, string)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="TypeSet">
-          <Members>
-           <Member Name="#AddDecimal(Conversation.DecimalData,System.Boolean)">
-            <Messages>
-             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'TypeSet.AddDecimal(DecimalData, bool)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#AddDynamicEnum(Conversation.DynamicEnumerationData,System.Boolean)">
-            <Messages>
-             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'TypeSet.AddDynamicEnum(DynamicEnumerationData, bool)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#AddEnum(Conversation.EnumerationData,System.Boolean)">
-            <Messages>
-             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'TypeSet.AddEnum(EnumerationData, bool)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#AddLocalDynamicEnum(Conversation.LocalDynamicEnumerationData,System.Boolean)">
-            <Messages>
-             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'TypeSet.AddLocalDynamicEnum(LocalDynamicEnumerationData, bool)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="UnknownParameter">
-          <Members>
-           <Member Name="#s_typeId">
-            <Messages>
-             <Message Id="s" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2016-07-10 12:22:01Z">
-              <Issue Name="Member">
-               <Item>s</Item>
-               <Item>'UnknownParameter.s_typeId'</Item>
-               <Item>S</Item>
-              </Issue>
-             </Message>
-             <Message Id="type" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2016-07-10 12:22:01Z">
-              <Issue Name="Member">
-               <Item>type</Item>
-               <Item>'UnknownParameter.s_typeId'</Item>
-               <Item>Type</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2016-07-10 12:22:01Z">
-              <Issue Name="Member">
-               <Item>'UnknownParameter.s_typeId'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="UpdateParameterData">
-          <Members>
-           <Member Name="#Actions">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'UpdateParameterData.Actions'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Audio">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'UpdateParameterData.Audio'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
         </Types>
        </Namespace>
       </Namespaces>
@@ -1359,19 +478,6 @@
              <Message TypeName="InitializeReferenceTypeStaticFieldsInline" Category="Microsoft.Performance" CheckId="CA1810" Created="2016-06-04 05:47:14Z">
               <Issue>
                <Item>'AudioDefinition'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="AudioProvider">
-          <Members>
-           <Member Name="#Matches(Conversation.Audio,ConversationEditor.IAudioFile)">
-            <Messages>
-             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2016-06-04 05:47:14Z">
-              <Issue>
-               <Item>'AudioProvider.Matches(Audio, IAudioFile)'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -1457,6 +563,15 @@
              <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2016-06-04 05:47:14Z">
               <Issue>
                <Item>'ConversationDataSource.AddCategory(NodeTypeData)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#GenerateCategories(System.Collections.Generic.List`1&lt;Conversation.NodeTypeData&gt;)">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2016-08-20 05:49:08Z" FixCategory="NonBreaking">
+              <Issue>
+               <Item>'ConversationDataSource.GenerateCategories(List&lt;NodeTypeData&gt;)'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -1548,20 +663,6 @@
            </Member>
           </Members>
          </Type>
-         <Type Name="ConversationFile">
-          <Members>
-           <Member Name="#GetAvailableConversationPath(System.IO.DirectoryInfo,System.Collections.Generic.IEnumerable`1&lt;Utilities.ISaveableFileProvider&gt;,System.Func`2&lt;System.IO.FileInfo,System.Boolean&gt;)">
-            <Messages>
-             <Message Id="pathOk" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2016-06-04 05:47:14Z" FixCategory="NonBreaking">
-              <Issue>
-               <Item>'pathOk'</Item>
-               <Item>'ConversationFile.GetAvailableConversationPath(DirectoryInfo, IEnumerable&lt;ISaveableFileProvider&gt;, Func&lt;FileInfo, bool&gt;)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
          <Type Name="DefaultAudioEditor">
           <Members>
            <Member Name="#IsValid()">
@@ -1586,16 +687,6 @@
               </Messages>
              </Accessor>
             </Accessors>
-           </Member>
-           <Member Name="#UpdateParameterAction()">
-            <Messages>
-             <Message TypeName="DoNotRaiseReservedExceptionTypes" Category="Microsoft.Usage" CheckId="CA2201" Created="2016-06-04 05:47:14Z">
-              <Issue Name="TooGeneric">
-               <Item>'DefaultAudioEditor.UpdateParameterAction()'</Item>
-               <Item>'Exception'</Item>
-              </Issue>
-             </Message>
-            </Messages>
            </Member>
           </Members>
          </Type>
@@ -1674,31 +765,10 @@
              </Accessor>
             </Accessors>
            </Member>
-           <Member Name="#UpdateParameterAction()">
-            <Messages>
-             <Message TypeName="DoNotRaiseReservedExceptionTypes" Category="Microsoft.Usage" CheckId="CA2201" Created="2016-06-04 05:47:14Z">
-              <Issue Name="TooGeneric">
-               <Item>'DefaultEnumEditor.UpdateParameterAction()'</Item>
-               <Item>'Exception'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
           </Members>
          </Type>
          <Type Name="DefaultLocalizedStringEditor">
           <Members>
-           <Member Name="#Dispose(System.Boolean)">
-            <Messages>
-             <Message Id="m_textBox" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2016-06-04 05:47:14Z">
-              <Issue>
-               <Item>'DefaultLocalizedStringEditor'</Item>
-               <Item>'DefaultLocalizedStringEditor.m_textBox'</Item>
-               <Item>'MyTextBox'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
            <Member Name="#Scheme">
             <Accessors>
              <Accessor Name="#get_Scheme()">
@@ -1711,20 +781,6 @@
               </Messages>
              </Accessor>
             </Accessors>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="DefaultSetEditor">
-          <Members>
-           <Member Name="#UpdateParameterAction()">
-            <Messages>
-             <Message TypeName="DoNotRaiseReservedExceptionTypes" Category="Microsoft.Usage" CheckId="CA2201" Created="2016-06-04 05:47:14Z">
-              <Issue Name="TooGeneric">
-               <Item>'DefaultSetEditor.UpdateParameterAction()'</Item>
-               <Item>'Exception'</Item>
-              </Issue>
-             </Message>
-            </Messages>
            </Member>
           </Members>
          </Type>
@@ -1798,32 +854,6 @@
              <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2016-06-04 05:47:14Z" FixCategory="NonBreaking">
               <Issue>
                <Item>'DomainNodeRenderer.DrawBorder(Graphics, GraphicsPath, bool)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="DomainUsage">
-          <Members>
-           <Member Name="#EnumerationValueUsage(Conversation.IConversationNode)">
-            <Messages>
-             <Message Id="ppp" TypeName="RemoveUnusedLocals" Category="Microsoft.Performance" CheckId="CA1804" Created="2016-06-04 05:47:14Z">
-              <Issue>
-               <Item>'DomainUsage.EnumerationValueUsage(IConversationNode)'</Item>
-               <Item>'ppp'</Item>
-               <Item>'IEnumerable&lt;Parameter&gt;'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Usages(Conversation.IConversationNode)">
-            <Messages>
-             <Message Id="temp" TypeName="RemoveUnusedLocals" Category="Microsoft.Performance" CheckId="CA1804" Created="2016-06-04 05:47:14Z">
-              <Issue>
-               <Item>'DomainUsage.Usages(IConversationNode)'</Item>
-               <Item>'temp'</Item>
-               <Item>'IEnumerable&lt;string&gt;'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -1930,17 +960,7 @@
           <Members>
            <Member Name="#NodeAreaChanged(System.WeakReference`1&lt;!0&gt;,Utilities.Changed`1&lt;System.Drawing.RectangleF&gt;)">
             <Messages>
-             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2016-07-10 05:28:31Z">
-              <Issue>
-               <Item>'GraphEditorControl&lt;TNode&gt;.NodeAreaChanged(WeakReference&lt;TNode&gt;, Changed&lt;RectangleF&gt;)'</Item>
-               <Item>'Exception'</Item>
-              </Issue>
-             </Message>
              <Message TypeName="DoNotRaiseReservedExceptionTypes" Category="Microsoft.Usage" CheckId="CA2201" Created="2016-07-10 05:28:31Z">
-              <Issue Name="TooGeneric">
-               <Item>'GraphEditorControl&lt;TNode&gt;.NodeAreaChanged(WeakReference&lt;TNode&gt;, Changed&lt;RectangleF&gt;)'</Item>
-               <Item>'Exception'</Item>
-              </Issue>
               <Issue Name="TooGeneric">
                <Item>'GraphEditorControl&lt;TNode&gt;.NodeAreaChanged(WeakReference&lt;TNode&gt;, Changed&lt;RectangleF&gt;)'</Item>
                <Item>'Exception'</Item>
@@ -1950,35 +970,9 @@
            </Member>
            <Member Name="#SanityTest()">
             <Messages>
-             <Message Id="connections" TypeName="RemoveUnusedLocals" Category="Microsoft.Performance" CheckId="CA1804" Created="2016-06-08 07:42:56Z">
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2016-08-20 05:49:08Z" FixCategory="NonBreaking">
               <Issue>
                <Item>'GraphEditorControl&lt;TNode&gt;.SanityTest()'</Item>
-               <Item>'connections'</Item>
-               <Item>'List&lt;Tuple&lt;UnorderedTuple2&lt;Output&gt;, RectangleF&gt;&gt;'</Item>
-              </Issue>
-             </Message>
-             <Message Id="extraConnections" TypeName="RemoveUnusedLocals" Category="Microsoft.Performance" CheckId="CA1804" Created="2016-06-08 07:42:56Z">
-              <Issue>
-               <Item>'GraphEditorControl&lt;TNode&gt;.SanityTest()'</Item>
-               <Item>'extraConnections'</Item>
-               <Item>'IEnumerable&lt;Tuple&lt;UnorderedTuple2&lt;Output&gt;, RectangleF&gt;&gt;'</Item>
-              </Issue>
-             </Message>
-             <Message Id="missingConnections" TypeName="RemoveUnusedLocals" Category="Microsoft.Performance" CheckId="CA1804" Created="2016-06-08 07:42:56Z">
-              <Issue>
-               <Item>'GraphEditorControl&lt;TNode&gt;.SanityTest()'</Item>
-               <Item>'missingConnections'</Item>
-               <Item>'List&lt;Tuple&lt;UnorderedTuple2&lt;Output&gt;, RectangleF&gt;&gt;'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#UpdateKeyMappings()">
-            <Messages>
-             <Message TypeName="DoNotRaiseReservedExceptionTypes" Category="Microsoft.Usage" CheckId="CA2201" Created="2016-06-04 05:47:14Z">
-              <Issue Name="TooGeneric">
-               <Item>'GraphEditorControl&lt;TNode&gt;.UpdateKeyMappings()'</Item>
-               <Item>'Exception'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -1987,20 +981,6 @@
          </Type>
          <Type Name="GraphViewConfig">
           <Members>
-           <Member Name="#Load(System.Xml.Linq.XElement)">
-            <Messages>
-             <Message Id="System.Int32.TryParse(System.String,System.Int32@)" TypeName="DoNotIgnoreMethodResults" Category="Microsoft.Usage" CheckId="CA1806" Created="2016-06-04 05:47:14Z">
-              <Issue Name="TryParse">
-               <Item>'GraphViewConfig.Load(XElement)'</Item>
-               <Item>'int.TryParse(string, out int)'</Item>
-              </Issue>
-              <Issue Name="TryParse">
-               <Item>'GraphViewConfig.Load(XElement)'</Item>
-               <Item>'int.TryParse(string, out int)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
            <Member Name="#MajorGridSpacing">
             <Accessors>
              <Accessor Name="#set_MajorGridSpacing(System.Int32)">
@@ -2091,32 +1071,6 @@
            </Member>
           </Members>
          </Type>
-         <Type Name="LocalizationEngine">
-          <Members>
-           <Member Name="#GuidUsed(Conversation.Id`1&lt;Conversation.LocalizedText&gt;)">
-            <Messages>
-             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2016-07-10 05:28:31Z">
-              <Issue>
-               <Item>'LocalizationEngine.GuidUsed(Id&lt;LocalizedText&gt;)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#UsedGuids">
-            <Accessors>
-             <Accessor Name="#get_UsedGuids()">
-              <Messages>
-               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2016-06-04 05:47:14Z">
-                <Issue>
-                 <Item>'LocalizationEngine.UsedGuids.get()'</Item>
-                </Issue>
-               </Message>
-              </Messages>
-             </Accessor>
-            </Accessors>
-           </Member>
-          </Members>
-         </Type>
          <Type Name="LocalizationFile">
           <Members>
            <Member Name="#Contains(Conversation.Id`1&lt;Conversation.LocalizedText&gt;)">
@@ -2124,29 +1078,6 @@
              <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2016-06-04 05:47:14Z">
               <Issue>
                <Item>'LocalizationFile.Contains(Id&lt;LocalizedText&gt;)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="MapConfig`2">
-          <Messages>
-           <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Created="2016-07-10 05:28:31Z" FixCategory="DependsOnFix">
-            <Issue Name="DependsOnFix">
-             <Item>'MapConfig&lt;TKey, TData&gt;'</Item>
-             <Item>'SuppressibleAction'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
-         <Type Name="MouseController`1">
-          <Members>
-           <Member Name="#GetResizeOption(System.Drawing.RectangleF,System.Drawing.PointF)">
-            <Messages>
-             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2016-06-04 05:47:14Z" FixCategory="NonBreaking">
-              <Issue>
-               <Item>'MouseController&lt;TNode&gt;.GetResizeOption(RectangleF, PointF)'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -2198,34 +1129,6 @@
               <Issue>
                <Item>'PluginsConfig.Load(XElement)'</Item>
                <Item>'object'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="Project">
-          <Members>
-           <Member Name="#Rerout(System.Collections.Generic.IEnumerable`1&lt;System.String&gt;)">
-            <Messages>
-             <Message TypeName="DoNotRaiseReservedExceptionTypes" Category="Microsoft.Usage" CheckId="CA2201" Created="2016-06-04 05:47:14Z">
-              <Issue Name="TooGeneric">
-               <Item>'Project.Rerout(IEnumerable&lt;string&gt;)'</Item>
-               <Item>'Exception'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="ProjectElementList`3">
-          <Members>
-           <Member Name="#Load(System.Collections.Generic.IEnumerable`1&lt;System.IO.FileInfo&gt;)">
-            <Messages>
-             <Message TypeName="DoNotRaiseReservedExceptionTypes" Category="Microsoft.Usage" CheckId="CA2201" Created="2016-06-04 05:47:14Z">
-              <Issue Name="TooGeneric">
-               <Item>'ProjectElementList&lt;TReal, TMissing, TInterface&gt;.Load(IEnumerable&lt;FileInfo&gt;)'</Item>
-               <Item>'Exception'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -2301,64 +1204,52 @@
              </Message>
             </Messages>
            </Member>
-           <Member Name="#MinimizedIconRectangle(System.Drawing.Graphics,System.Drawing.RectangleF,System.Single)">
+           <Member Name="#MinimizedIconRectangle(System.Drawing.RectangleF,System.Single)">
             <Messages>
-             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2016-06-04 05:47:14Z" FixCategory="NonBreaking">
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2016-08-20 05:49:08Z" FixCategory="NonBreaking">
               <Issue>
-               <Item>'ProjectExplorer.Item.MinimizedIconRectangle(Graphics, RectangleF, float)'</Item>
-              </Issue>
-             </Message>
-             <Message Id="g" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2016-06-04 05:47:14Z" FixCategory="NonBreaking">
-              <Issue>
-               <Item>'g'</Item>
-               <Item>'ProjectExplorer.Item.MinimizedIconRectangle(Graphics, RectangleF, float)'</Item>
+               <Item>'ProjectExplorer.Item.MinimizedIconRectangle(RectangleF, float)'</Item>
               </Issue>
              </Message>
             </Messages>
            </Member>
           </Members>
          </Type>
-         <Type Name="ProjectMenuController">
+        </Types>
+       </Namespace>
+      </Namespaces>
+     </Module>
+    </Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/../ConEdit/ConversationEditor.PluginBase.dll">
+    <Modules>
+     <Module Name="conversationeditor.pluginbase.dll">
+      <Namespaces>
+       <Namespace Name="ConversationEditor">
+        <Types>
+         <Type Name="ColorScheme">
           <Members>
-           <Member Name="#.ctor(ConversationEditor.SharedContext,ConversationEditor.ConfigParameterList`1&lt;System.String&gt;,ConversationEditor.INodeFactory,ConversationEditor.INodeFactory,ConversationEditor.ProjectExplorer,System.Action`1&lt;System.Action&gt;,ConversationEditor.PluginsConfig,System.Func`1&lt;ConversationEditor.IAudioProviderCustomization&gt;)">
+           <Member Name="#Dispose(System.Boolean)">
             <Messages>
-             <Message Id="list" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2016-06-04 05:47:14Z" FixCategory="NonBreaking">
+             <Message Id="m_hatch" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2016-08-20 05:49:08Z">
               <Issue>
-               <Item>'list'</Item>
-               <Item>'ProjectMenuController.ProjectMenuController(SharedContext, ConfigParameterList&lt;string&gt;, INodeFactory, INodeFactory, ProjectExplorer, Action&lt;Action&gt;, PluginsConfig, Func&lt;IAudioProviderCustomization&gt;)'</Item>
+               <Item>'ColorScheme'</Item>
+               <Item>'ColorScheme.m_hatch'</Item>
+               <Item>'Brush'</Item>
               </Issue>
              </Message>
             </Messages>
            </Member>
           </Members>
          </Type>
-         <Type Name="StartGui">
-          <Members>
-           <Member Name="#.ctor(Conversation.ConversationNode`1&lt;ConversationEditor.INodeGui&gt;,System.Drawing.PointF,System.Func`2&lt;Conversation.Id`1&lt;Conversation.LocalizedText&gt;,System.String&gt;)">
-            <Messages>
-             <Message Id="localizer" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2016-06-04 05:47:14Z" FixCategory="NonBreaking">
-              <Issue>
-               <Item>'localizer'</Item>
-               <Item>'StartGui.StartGui(ConversationNode&lt;INodeGui&gt;, PointF, Func&lt;Id&lt;LocalizedText&gt;, string&gt;)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="TerminatorGui">
-          <Members>
-           <Member Name="#.ctor(Conversation.ConversationNode`1&lt;ConversationEditor.INodeGui&gt;,System.Drawing.PointF,System.Func`2&lt;Conversation.Id`1&lt;Conversation.LocalizedText&gt;,System.String&gt;)">
-            <Messages>
-             <Message Id="localizer" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2016-06-04 05:47:14Z" FixCategory="NonBreaking">
-              <Issue>
-               <Item>'localizer'</Item>
-               <Item>'TerminatorGui.TerminatorGui(ConversationNode&lt;INodeGui&gt;, PointF, Func&lt;Id&lt;LocalizedText&gt;, string&gt;)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
+         <Type Name="NodeUI">
+          <Messages>
+           <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2016-08-20 05:49:08Z">
+            <Issue Name="IDisposableReimplementation">
+             <Item>'NodeUI'</Item>
+            </Issue>
+           </Message>
+          </Messages>
          </Type>
         </Types>
        </Namespace>
@@ -2392,32 +1283,6 @@
          </Type>
         </Types>
        </Namespace>
-       <Namespace Name="RuntimeConversation">
-        <Types>
-         <Type Name="CustomDeserializerParameter">
-          <Members>
-           <Member Name="#Guid">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'CustomDeserializerParameter.Guid'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Value">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'CustomDeserializerParameter.Value'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-        </Types>
-       </Namespace>
       </Namespaces>
      </Module>
     </Modules>
@@ -2441,6 +1306,22 @@
             </Notes>
            </Message>
           </Messages>
+         </Type>
+         <Type Name="ExportAsSeparatedStrings">
+          <Members>
+           <Member Name="#WriteConversation(ConversationEditor.IConversationFile,System.IO.StreamWriter,System.Boolean,Conversation.IErrorCheckerUtilities`1&lt;Conversation.IConversationNode&gt;)">
+            <Messages>
+             <Message TypeName="ConsiderPassingBaseTypesAsParameters" Category="Microsoft.Design" CheckId="CA1011" Created="2016-08-20 05:49:08Z">
+              <Issue>
+               <Item>'conversation'</Item>
+               <Item>'ExportAsSeparatedStrings.WriteConversation(IConversationFile, StreamWriter, bool, IErrorCheckerUtilities&lt;IConversationNode&gt;)'</Item>
+               <Item>'IConversationFile'</Item>
+               <Item>'IConversationEditorControlData&lt;ConversationNode&lt;INodeGui&gt;, TransitionNoduleUIInfo&gt;'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
          </Type>
         </Types>
        </Namespace>
@@ -2485,53 +1366,11 @@
       <Namespaces>
        <Namespace Name="Arthur">
         <Types>
-         <Type Name="NativeMethods">
-          <Members>
-           <Member Name="#DrawText(System.IntPtr,System.String,System.Int32,Arthur.NativeMethods+Rect&amp;,System.UInt32)">
-            <Messages>
-             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NativeMethods.DrawText(IntPtr, string, int, ref NativeMethods.Rect, uint)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="NativeMethods+Rect">
-          <Members>
-           <Member Name="#.ctor(System.Drawing.Rectangle)">
-            <Messages>
-             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'NativeMethods.Rect.Rect(Rectangle)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
          <Type Name="NativeTextRenderer">
           <Members>
-           <Member Name="#.ctor(System.Drawing.Graphics)">
-            <Messages>
-             <Message Id="Arthur.NativeMethods.SelectClipRgn(System.IntPtr,System.IntPtr)" TypeName="DoNotIgnoreMethodResults" Category="Microsoft.Usage" CheckId="CA1806" Created="2016-07-10 12:22:01Z">
-              <Issue Name="HResultOrErrorCode">
-               <Item>'NativeTextRenderer.NativeTextRenderer(Graphics)'</Item>
-               <Item>'NativeMethods.SelectClipRgn(IntPtr, IntPtr)'</Item>
-              </Issue>
-             </Message>
-             <Message Id="Arthur.NativeMethods.SetBkMode(System.IntPtr,System.Int32)" TypeName="DoNotIgnoreMethodResults" Category="Microsoft.Usage" CheckId="CA1806" Created="2016-07-10 12:22:01Z">
-              <Issue Name="HResultOrErrorCode">
-               <Item>'NativeTextRenderer.NativeTextRenderer(Graphics)'</Item>
-               <Item>'NativeMethods.SetBkMode(IntPtr, int)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
            <Member Name="#Dispose()">
             <Messages>
-             <Message Id="Arthur.NativeMethods.SelectClipRgn(System.IntPtr,System.IntPtr)" TypeName="DoNotIgnoreMethodResults" Category="Microsoft.Usage" CheckId="CA1806" Created="2016-07-10 12:22:01Z">
+             <Message Id="Arthur.NativeMethods.SelectClipRgn(System.IntPtr,System.IntPtr)" TypeName="DoNotIgnoreMethodResults" Category="Microsoft.Usage" CheckId="CA1806" Created="2016-08-20 07:27:41Z">
               <Issue Name="HResultOrErrorCode">
                <Item>'NativeTextRenderer.Dispose()'</Item>
                <Item>'NativeMethods.SelectClipRgn(IntPtr, IntPtr)'</Item>
@@ -2541,35 +1380,15 @@
            </Member>
            <Member Name="#DrawTransparentText(System.String,System.Drawing.Font,System.Drawing.Color,System.Drawing.Point,System.Drawing.Size)">
             <Messages>
-             <Message Id="Arthur.NativeMethods.SetBkMode(System.IntPtr,System.Int32)" TypeName="DoNotIgnoreMethodResults" Category="Microsoft.Usage" CheckId="CA1806" Created="2016-07-10 12:22:01Z">
+             <Message Id="Arthur.NativeMethods.SetBkMode(System.IntPtr,System.Int32)" TypeName="DoNotIgnoreMethodResults" Category="Microsoft.Usage" CheckId="CA1806" Created="2016-08-20 07:27:41Z">
               <Issue Name="HResultOrErrorCode">
                <Item>'NativeTextRenderer.DrawTransparentText(string, Font, Color, Point, Size)'</Item>
                <Item>'NativeMethods.SetBkMode(IntPtr, int)'</Item>
               </Issue>
              </Message>
-             <Message Id="Arthur.NativeMethods.SetTextColor(System.IntPtr,System.Int32)" TypeName="DoNotIgnoreMethodResults" Category="Microsoft.Usage" CheckId="CA1806" Created="2016-07-10 12:22:01Z">
+             <Message Id="Arthur.NativeMethods.SetTextColor(System.IntPtr,System.Int32)" TypeName="DoNotIgnoreMethodResults" Category="Microsoft.Usage" CheckId="CA1806" Created="2016-08-20 07:27:41Z">
               <Issue Name="HResultOrErrorCode">
                <Item>'NativeTextRenderer.DrawTransparentText(string, Font, Color, Point, Size)'</Item>
-               <Item>'NativeMethods.SetTextColor(IntPtr, int)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#MeasureString(System.String,System.Drawing.Font)">
-            <Messages>
-             <Message Id="Arthur.NativeMethods.GetTextExtentPoint32(System.IntPtr,System.String,System.Int32,System.Drawing.Size@)" TypeName="DoNotIgnoreMethodResults" Category="Microsoft.Usage" CheckId="CA1806" Created="2016-07-10 12:22:01Z">
-              <Issue Name="HResultOrErrorCode">
-               <Item>'NativeTextRenderer.MeasureString(string, Font)'</Item>
-               <Item>'NativeMethods.GetTextExtentPoint32(IntPtr, string, int, ref Size)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#SetTextColor(System.Drawing.Color)">
-            <Messages>
-             <Message Id="Arthur.NativeMethods.SetTextColor(System.IntPtr,System.Int32)" TypeName="DoNotIgnoreMethodResults" Category="Microsoft.Usage" CheckId="CA1806" Created="2016-07-10 12:22:01Z">
-              <Issue Name="HResultOrErrorCode">
-               <Item>'NativeTextRenderer.SetTextColor(Color)'</Item>
                <Item>'NativeMethods.SetTextColor(IntPtr, int)'</Item>
               </Issue>
              </Message>
@@ -2581,78 +1400,26 @@
        </Namespace>
        <Namespace Name="Utilities">
         <Types>
-         <Type Name="AssemblyUtils">
-          <Members>
-           <Member Name="#TypesAssignableFrom`1(System.Reflection.Assembly)">
-            <Messages>
-             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'AssemblyUtils.TypesAssignableFrom&lt;T&gt;(this Assembly)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="Changed`1">
-          <Members>
-           <Member Name="#from">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'Changed&lt;T&gt;.from'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#to">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'Changed&lt;T&gt;.to'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="DirectoryInfoHashed">
-          <Members>
-           <Member Name="#collisions">
-            <Messages>
-             <Message TypeName="NonConstantFieldsShouldNotBeVisible" Category="Microsoft.Usage" CheckId="CA2211" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'DirectoryInfoHashed.collisions'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="Edge">
-          <Members>
-           <Member Name="#P1">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'Edge.P1'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#P2">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'Edge.P2'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
          <Type Name="FileSystem">
           <Members>
+           <Member Name="#AncestorOf(System.IO.FileInfo,System.IO.DirectoryInfo)">
+            <Messages>
+             <Message TypeName="ConsiderPassingBaseTypesAsParameters" Category="Microsoft.Design" CheckId="CA1011" Created="2016-08-20 07:27:41Z">
+              <Issue>
+               <Item>'ancestor'</Item>
+               <Item>'FileSystem.AncestorOf(this FileInfo, DirectoryInfo)'</Item>
+               <Item>'DirectoryInfo'</Item>
+               <Item>'FileSystemInfo'</Item>
+              </Issue>
+              <Issue>
+               <Item>'descendant'</Item>
+               <Item>'FileSystem.AncestorOf(this FileInfo, DirectoryInfo)'</Item>
+               <Item>'FileInfo'</Item>
+               <Item>'FileSystemInfo'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
            <Member Name="#ChangeIfDifferent(System.IO.MemoryStream&amp;,System.IO.Stream,System.Threading.WaitHandle)">
             <Messages>
              <Message Id="0#" TypeName="DoNotPassTypesByReference" Category="Microsoft.Design" CheckId="CA1045" Created="2016-07-10 12:22:01Z">
@@ -2662,190 +1429,89 @@
              </Message>
             </Messages>
            </Member>
-           <Member Name="#PathToFrom(System.IO.DirectoryInfo,System.IO.DirectoryInfo)">
-            <Messages>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;DirectoryInfo&gt;'</Item>
-               <Item>'FileSystem.PathToFrom(DirectoryInfo, DirectoryInfo)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#PathToFrom(System.IO.FileInfo,System.IO.DirectoryInfo)">
-            <Messages>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;DirectoryInfo&gt;'</Item>
-               <Item>'FileSystem.PathToFrom(FileInfo, DirectoryInfo)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
           </Members>
-         </Type>
-         <Type Name="LegacyWeakReference`1">
-          <Messages>
-           <Message TypeName="AvoidUninstantiatedInternalClasses" Category="Microsoft.Performance" CheckId="CA1812" Created="2016-07-10 12:22:01Z">
-            <Issue>
-             <Item>'LegacyWeakReference&lt;T&gt;'</Item>
-            </Issue>
-           </Message>
-          </Messages>
          </Type>
          <Type Name="Polynomial">
           <Members>
            <Member Name="#op_Addition(Utilities.Polynomial,Utilities.Polynomial)">
             <Messages>
-             <Message TypeName="OverloadOperatorEqualsOnOverloadingAddAndSubtract" Category="Microsoft.Design" CheckId="CA1013" Created="2016-07-10 12:22:01Z">
+             <Message TypeName="OverloadOperatorEqualsOnOverloadingAddAndSubtract" Category="Microsoft.Design" CheckId="CA1013" Status="Excluded" Created="2016-07-10 12:22:01Z">
               <Issue>
                <Item>'Polynomial'</Item>
                <Item>'Polynomial.operator +(Polynomial, Polynomial)'</Item>
               </Issue>
+              <Notes>
+               <User Name="shane">
+                <Note Id="2" />
+               </User>
+              </Notes>
              </Message>
             </Messages>
            </Member>
           </Members>
          </Type>
-         <Type Name="QuadTreeElement`1">
-          <Members>
-           <Member Name="#Bounds">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'QuadTreeElement&lt;T&gt;.Bounds'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Bounds00">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'QuadTreeElement&lt;T&gt;.Bounds00'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Bounds01">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'QuadTreeElement&lt;T&gt;.Bounds01'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Bounds10">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'QuadTreeElement&lt;T&gt;.Bounds10'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Bounds11">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'QuadTreeElement&lt;T&gt;.Bounds11'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="ReadonlyFileUnmonitored">
-          <Members>
-           <Member Name="#UndoQueue">
-            <Accessors>
-             <Accessor Name="#get_UndoQueue()">
-              <Messages>
-               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Created="2016-07-10 12:22:01Z" FixCategory="Breaking">
-                <Issue Name="PropertyGetter" Level="Warning">
-                 <Item>'ReadonlyFileUnmonitored.UndoQueue.get()'</Item>
-                 <Item>'NotImplementedException'</Item>
-                </Issue>
-               </Message>
-              </Messages>
-             </Accessor>
-            </Accessors>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="RectangleUnion">
-          <Members>
-           <Member Name="#.ctor(System.Collections.Generic.List`1&lt;Utilities.Shape&gt;)">
-            <Messages>
-             <Message TypeName="DoNotExposeGenericLists" Category="Microsoft.Design" CheckId="CA1002" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'List&lt;Shape&gt;'</Item>
-               <Item>'RectangleUnion.RectangleUnion(List&lt;Shape&gt;)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="SaveableFile">
-          <Members>
-           <Member Name="#CanClose()">
-            <Messages>
-             <Message TypeName="DoNotRaiseReservedExceptionTypes" Category="Microsoft.Usage" CheckId="CA2201" Created="2016-07-10 12:22:01Z">
-              <Issue Name="TooGeneric">
-               <Item>'SaveableFile.CanClose()'</Item>
-               <Item>'Exception'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
+         <Type Name="SaveableFileExternalChangedSource">
+          <Messages>
+           <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2016-08-20 07:27:41Z">
+            <Issue Name="IDisposableReimplementation">
+             <Item>'SaveableFileExternalChangedSource'</Item>
+            </Issue>
+           </Message>
+          </Messages>
          </Type>
          <Type Name="SaveableFileNotUndoable">
           <Messages>
-           <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2016-07-10 12:22:01Z">
+           <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2016-08-20 07:27:41Z">
             <Issue Name="IDisposableReimplementation">
              <Item>'SaveableFileNotUndoable'</Item>
             </Issue>
            </Message>
           </Messages>
          </Type>
-         <Type Name="UnorderedTuple2`1">
-          <Members>
-           <Member Name="#Item1">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'UnorderedTuple2&lt;T&gt;.Item1'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Item2">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'UnorderedTuple2&lt;T&gt;.Item2'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
+         <Type Name="SaveableFileUndoable">
+          <Messages>
+           <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2016-08-20 07:27:41Z">
+            <Issue Name="IDisposableReimplementation">
+             <Item>'SaveableFileUndoable'</Item>
+            </Issue>
+           </Message>
+          </Messages>
          </Type>
          <Type Name="Util">
           <Members>
+           <Member Name="#LoadFileStream(System.IO.FileInfo,System.IO.FileMode,System.IO.FileAccess,System.Int32)">
+            <Messages>
+             <Message TypeName="ConsiderPassingBaseTypesAsParameters" Category="Microsoft.Design" CheckId="CA1011" Created="2016-08-20 07:27:41Z">
+              <Issue>
+               <Item>'path'</Item>
+               <Item>'Util.LoadFileStream(FileInfo, FileMode, FileAccess, int)'</Item>
+               <Item>'FileInfo'</Item>
+               <Item>'FileSystemInfo'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
            <Member Name="#Swap`1(!!0&amp;,!!0&amp;)">
             <Messages>
-             <Message Id="0#" TypeName="DoNotPassTypesByReference" Category="Microsoft.Design" CheckId="CA1045" Created="2016-07-10 12:22:01Z">
+             <Message Id="0#" TypeName="DoNotPassTypesByReference" Category="Microsoft.Design" CheckId="CA1045" Status="Excluded" Created="2016-07-10 12:22:01Z">
               <Issue Level="CriticalWarning">
                <Item>'a'</Item>
               </Issue>
+              <Notes>
+               <User Name="shane">
+                <Note Id="3" />
+               </User>
+              </Notes>
              </Message>
-             <Message Id="1#" TypeName="DoNotPassTypesByReference" Category="Microsoft.Design" CheckId="CA1045" Created="2016-07-10 12:22:01Z">
+             <Message Id="1#" TypeName="DoNotPassTypesByReference" Category="Microsoft.Design" CheckId="CA1045" Status="Excluded" Created="2016-07-10 12:22:01Z">
               <Issue Level="CriticalWarning">
                <Item>'b'</Item>
               </Issue>
+              <Notes>
+               <User Name="shane">
+                <Note Id="4" />
+               </User>
+              </Notes>
              </Message>
             </Messages>
            </Member>
@@ -2859,23 +1525,9 @@
           <Members>
            <Member Name="#MoveTo(System.Int32,System.Int32)">
             <Messages>
-             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2016-07-10 12:22:01Z" FixCategory="DependsOnFix">
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2016-08-20 07:27:41Z" FixCategory="DependsOnFix">
               <Issue>
                <Item>'Caret.MoveTo(int, int)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="DrawWindow">
-          <Members>
-           <Member Name="#OnPaint(System.Windows.Forms.PaintEventArgs)">
-            <Messages>
-             <Message TypeName="DoNotRaiseReservedExceptionTypes" Category="Microsoft.Usage" CheckId="CA2201" Created="2016-07-10 12:22:01Z">
-              <Issue Name="TooGeneric">
-               <Item>'DrawWindow.OnPaint(PaintEventArgs)'</Item>
-               <Item>'Exception'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -2886,205 +1538,9 @@
           <Members>
            <Member Name="#.cctor()">
             <Messages>
-             <Message TypeName="InitializeReferenceTypeStaticFieldsInline" Category="Microsoft.Performance" CheckId="CA1810" Created="2016-07-10 12:22:01Z">
+             <Message TypeName="InitializeReferenceTypeStaticFieldsInline" Category="Microsoft.Performance" CheckId="CA1810" Created="2016-08-20 07:27:41Z">
               <Issue>
                <Item>'GreyScrollBar'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Dispose(System.Boolean)">
-            <Messages>
-             <Message Id="m_colorScheme" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'GreyScrollBar'</Item>
-               <Item>'GreyScrollBar.m_colorScheme'</Item>
-               <Item>'ColorScheme'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#drawWindow1_Paint(System.Object,System.Windows.Forms.PaintEventArgs)">
-            <Messages>
-             <Message Id="area" TypeName="RemoveUnusedLocals" Category="Microsoft.Performance" CheckId="CA1804" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'GreyScrollBar.drawWindow1_Paint(object, PaintEventArgs)'</Item>
-               <Item>'area'</Item>
-               <Item>'RectangleF'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="HighlightableImageButton">
-          <Members>
-           <Member Name="#HighlightBackground">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'HighlightableImageButton.HighlightBackground'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#SelectionPen">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'HighlightableImageButton.SelectionPen'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="MyComboBox`1">
-          <Members>
-           <Member Name="#Items">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'MyComboBox&lt;T&gt;.Items'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="MyControl">
-          <Members>
-           <Member Name="#m_disposeActions">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'MyControl.m_disposeActions'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Name">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'MyControl.Name'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="MySuggestionBox`1">
-          <Members>
-           <Member Name="#Items">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'MySuggestionBox&lt;T&gt;.Items'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#SelectedBackgroundColor">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'MySuggestionBox&lt;T&gt;.SelectedBackgroundColor'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="MyTextBox">
-          <Members>
-           <Member Name="#Dispose(System.Boolean)">
-            <Messages>
-             <Message Id="m_dropDown" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'MyTextBox'</Item>
-               <Item>'MyTextBox.m_dropDown'</Item>
-               <Item>'ToolStripDropDown'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#InputForm">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'MyTextBox.InputForm'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#KeyDown(System.Windows.Forms.KeyEventArgs)">
-            <Messages>
-             <Message TypeName="AvoidExcessiveLocals" Category="Microsoft.Performance" CheckId="CA1809" Created="2016-07-10 12:22:01Z">
-              <Issue Name="Compiler">
-               <Item>'MyTextBox.KeyDown(KeyEventArgs)'</Item>
-               <Item>79</Item>
-               <Item>48</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#SelectedBackgroundColor">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'MyTextBox.SelectedBackgroundColor'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Text">
-            <Accessors>
-             <Accessor Name="#set_Text(System.String)">
-              <Messages>
-               <Message TypeName="DoNotRaiseReservedExceptionTypes" Category="Microsoft.Usage" CheckId="CA2201" Created="2016-07-10 12:22:01Z">
-                <Issue Name="TooGeneric">
-                 <Item>'MyTextBox.Text.set(string)'</Item>
-                 <Item>'Exception'</Item>
-                </Issue>
-               </Message>
-              </Messages>
-             </Accessor>
-            </Accessors>
-           </Member>
-           <Member Name="#UpdateDropdown()">
-            <Messages>
-             <Message Id="itemitem" TypeName="RemoveUnusedLocals" Category="Microsoft.Performance" CheckId="CA1804" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'MyTextBox.UpdateDropdown()'</Item>
-               <Item>'itemitem'</Item>
-               <Item>'string'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="MyTextBox+CP">
-          <Members>
-           <Member Name="#Pos">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'MyTextBox.CP.Pos'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="ToStringWrapper`1">
-          <Members>
-           <Member Name="#Value">
-            <Messages>
-             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2016-07-10 12:22:01Z">
-              <Issue>
-               <Item>'ToStringWrapper&lt;T&gt;.Value'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -3095,7 +1551,7 @@
           <Members>
            <Member Name="#.cctor()">
             <Messages>
-             <Message TypeName="InitializeReferenceTypeStaticFieldsInline" Category="Microsoft.Performance" CheckId="CA1810" Created="2016-07-10 12:22:01Z">
+             <Message TypeName="InitializeReferenceTypeStaticFieldsInline" Category="Microsoft.Performance" CheckId="CA1810" Created="2016-08-20 07:27:41Z">
               <Issue>
                <Item>'UpArrowItem'</Item>
               </Issue>
@@ -3115,21 +1571,21 @@
    <User Name="shane">
     <Note Id="0" Modified="2015-04-13 16:02:43Z">I genuinely want to carry on no matter what goes wrong here</Note>
     <Note Id="1" Modified="2016-06-04 05:58:53Z">This type does not own m_scheme</Note>
+    <Note Id="2" Modified="2016-08-20 05:58:44Z">Doesn't make sense for floating point comparison</Note>
+    <Note Id="3" Modified="2016-08-20 05:59:10Z">that's the whole point</Note>
+    <Note Id="4" Modified="2016-08-20 05:59:16Z">that's the whole point</Note>
     <Note Id="8" Modified="2015-04-12 07:30:04Z">instantiated via reflection</Note>
    </User>
   </Notes>
   <Rules>
-   <Rule TypeName="AvoidExcessiveLocals" Category="Microsoft.Performance" CheckId="CA1809">
-    <Resolution Name="Compiler">{0} has {1} local variables, {2} of which were generated by the compiler. Refactor {0} so that it uses fewer than 64 local variables.</Resolution>
-   </Rule>
    <Rule TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811">
     <Resolution Name="Default">{0} appears to have no upstream public or protected callers.</Resolution>
    </Rule>
    <Rule TypeName="AvoidUninstantiatedInternalClasses" Category="Microsoft.Performance" CheckId="CA1812">
     <Resolution Name="Default">{0} is an internal class that is apparently never instantiated. If so, remove the code from the assembly. If this class is intended to contain only static methods, consider adding a private constructor to prevent the compiler from generating a default constructor.</Resolution>
    </Rule>
-   <Rule TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026">
-    <Resolution Name="Default">Replace method {0} with an overload that supplies all default arguments.</Resolution>
+   <Rule TypeName="ConsiderPassingBaseTypesAsParameters" Category="Microsoft.Design" CheckId="CA1011">
+    <Resolution Name="Default">Consider changing the type of parameter {0} in {1} from {2} to its base type {3}. This method appears to only require base class members in its implementation. Suppress this violation if there is a compelling reason to require the more derived type in the method signature.</Resolution>
    </Rule>
    <Rule TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213">
     <Resolution Name="Default">{0} contains field {1} that is of IDisposable type: {2}. Change the Dispose method on {0} to call Dispose or Close on this field.</Resolution>
@@ -3149,14 +1605,12 @@
    <Rule TypeName="DoNotIgnoreMethodResults" Category="Microsoft.Usage" CheckId="CA1806">
     <Resolution Name="HResultOrErrorCode">{0} calls {1} but does not use the HRESULT or error code that the method returns. This could lead to unexpected behavior in error conditions or low-resource situations. Use the result in a conditional statement, assign the result to a variable, or pass it as an argument to another method.</Resolution>
     <Resolution Name="ObjectCreation">{0} creates a new instance of {1} which is never used. Pass the instance as an argument to another method, assign the instance to a variable, or remove the object creation if it is unnecessary.</Resolution>
-    <Resolution Name="TryParse">{0} calls {1} but does not explicitly check whether the conversion succeeded. Either use the return value in a conditional statement or verify that the call site expects that the out argument will be set to the default value when the conversion fails.</Resolution>
    </Rule>
    <Rule TypeName="DoNotPassTypesByReference" Category="Microsoft.Design" CheckId="CA1045">
     <Resolution Name="Default">Consider a design that does not require that {0} be a reference parameter.</Resolution>
    </Rule>
    <Rule TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065">
     <Resolution Name="NoAllowedExceptions">{0} creates an exception of type {1}. Exceptions should not be raised in this type of method. If this exception instance might be raised, change this method's logic so it no longer raises an exception.</Resolution>
-    <Resolution Name="PropertyGetter">{0} creates an exception of type {1}, an exception type that should not be raised in a property. If this exception instance might be raised, use a different exception type, convert this property into a method, or change this property's logic so that it no longer raises an exception.</Resolution>
    </Rule>
    <Rule TypeName="DoNotRaiseReservedExceptionTypes" Category="Microsoft.Usage" CheckId="CA2201">
     <Resolution Name="TooGeneric">{0} creates an exception of type {1}, an exception type that is not sufficiently specific and should never be raised by user code. If this exception instance might be thrown, use a different exception type.</Resolution>
@@ -3183,20 +1637,17 @@
    <Rule TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822">
     <Resolution Name="Default">The 'this' parameter (or 'Me' in Visual Basic) of {0} is never used. Mark the member as static (or Shared in Visual Basic) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Resolution>
    </Rule>
-   <Rule TypeName="NonConstantFieldsShouldNotBeVisible" Category="Microsoft.Usage" CheckId="CA2211">
-    <Resolution Name="Default">Consider making {0} non-public or a constant.</Resolution>
-   </Rule>
    <Rule TypeName="OverloadOperatorEqualsOnOverloadingAddAndSubtract" Category="Microsoft.Design" CheckId="CA1013">
     <Resolution Name="Default">Consider adding an overload of the equality operator for {0} that takes the same parameters as {1}.</Resolution>
    </Rule>
-   <Rule TypeName="RemoveUnusedLocals" Category="Microsoft.Performance" CheckId="CA1804">
-    <Resolution Name="Default">{0} declares a variable, {1}, of type {2}, which is never used or is only assigned to. Use this variable or remove it.</Resolution>
+   <Rule TypeName="OverrideMethodsOnComparableTypes" Category="Microsoft.Design" CheckId="CA1036">
+    <Resolution Name="Operator">{0} should define operator '{1}' since it implements IComparable.</Resolution>
+   </Rule>
+   <Rule TypeName="PropertyNamesShouldNotMatchGetMethods" Category="Microsoft.Naming" CheckId="CA1721">
+    <Resolution Name="BaseType">The property name {0} is confusing given the existence of inherited method {1}. Rename or remove this property.</Resolution>
    </Rule>
    <Rule TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801">
     <Resolution Name="Default">Parameter {0} of {1} is never used. Remove the parameter or use it in the method body.</Resolution>
-   </Rule>
-   <Rule TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001">
-    <Resolution Name="DependsOnFix">Implement IDisposable on {0} because it creates members of the following IDisposable types: {1}. If {0} has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Resolution>
    </Rule>
   </Rules>
  </FxCopReport>

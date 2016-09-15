@@ -34,7 +34,7 @@ namespace ConversationEditor
         Dictionary<Output, TransitionNoduleUIInfo> m_cachedNodeUI = new Dictionary<Output, TransitionNoduleUIInfo>();
 
         private INodeFactory<ConversationNode> m_nodeFactory;
-        private Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> m_generateAudio;
+        private Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> m_generateAudio;
         private Func<IDynamicEnumParameter, DynamicEnumParameter.Source> m_getDocumentSource;
         private IAudioLibrary m_audioProvider;
 
@@ -44,7 +44,7 @@ namespace ConversationEditor
         }
 
         protected GraphFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, ReadOnlyCollection<LoadError> errors, INodeFactory<ConversationNode> nodeFactory,
-            Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> generateAudio, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider)
+            Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> generateAudio, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider)
         {
             Contract.Assert(getDocumentSource != null);
             m_nodeFactory = nodeFactory;
@@ -136,11 +136,14 @@ namespace ConversationEditor
                     foreach (var p in node.Parameters.OfType<LocalizedStringParameter>())
                     {
                         var result = localization.DuplicateActions(p.Value);
-                        p.Value = result.Item1;
+                        var action = p.SetValueAction(result.Item1);
+                        if (action != null)
+                            action.Value.Redo(); //If we undo the whole operation the parameter wont exist so no need to ever undo this value change.
                         undoActions.Add(result.Item2.Undo);
                         redoActions.Add(result.Item2.Redo);
                     }
 
+                    //TODO: Seems like we're updating audioparameters twice here...
                     foreach (var p in node.Parameters.OfType<IAudioParameter>())
                     {
                         //No need to update audio usage as this will occur when the node is added/removed
@@ -152,7 +155,9 @@ namespace ConversationEditor
 
                     foreach (var p in node.Parameters.OfType<AudioParameter>())
                     {
-                        p.Value = new Audio(Guid.NewGuid().ToString());
+                        var action = p.SetValueAction(new Audio(Guid.NewGuid().ToString()));
+                        if (action != null)
+                            action.Value.Redo(); //If we undo the whole operation the parameter wont exist so no need to ever undo this value change.
                     }
 
                     var oldID = node.Id;
@@ -364,7 +369,7 @@ namespace ConversationEditor
 
         public void RemoveLinks(Output o)
         {
-            UndoableFile.Change(new GenericUndoAction(o.DisconnectAll(), "Removed links"));
+            UndoableFile.Change(new GenericUndoAction(o.DisconnectAllActions(), "Removed links"));
         }
 
         public abstract ISaveableFileUndoable UndoableFile { get; }
@@ -416,8 +421,8 @@ namespace ConversationEditor
                 var node = m_nodes.Where(n => n.Connectors.Any(c => c.Id == connection.Id && n.Id == connection.Parent.NodeId)).SingleOrDefault();
                 if (node == null && canFail)
                     return null;
-                var comparable = node.Connectors.Where(c => c.m_definition.Position == connection.m_definition.Position);
-                m_cachedNodeUI[connection] = CreateTransitionUIInfo(node, connection.m_definition.Position, comparable.IndexOf(connection), comparable.Count());
+                var comparable = node.Connectors.Where(c => c.Definition.Position == connection.Definition.Position);
+                m_cachedNodeUI[connection] = CreateTransitionUIInfo(node, connection.Definition.Position, comparable.IndexOf(connection), comparable.Count());
             }
             return m_cachedNodeUI[connection];
         }
@@ -452,10 +457,10 @@ namespace ConversationEditor
                 return new RectangleF(x, area.Top + (int)(per * (i + 0.5f)) - 5, 10, 10);
             };
 
-            var result = new TransitionNoduleUIInfo(position.For(() => top(node.Renderer.Area), () => bottom(node.Renderer.Area), () => left(node.Renderer.Area), () => right(node.Renderer.Area)));
+            var result = new TransitionNoduleUIInfo(position.ForPosition(() => top(node.Renderer.Area), () => bottom(node.Renderer.Area), () => left(node.Renderer.Area), () => right(node.Renderer.Area)));
             Action<Changed<RectangleF>> areaChanged = c =>
             {
-                result.Area.Value = position.For(() => top(node.Renderer.Area), () => bottom(node.Renderer.Area), () => left(node.Renderer.Area), () => right(node.Renderer.Area));
+                result.Area.Value = position.ForPosition(() => top(node.Renderer.Area), () => bottom(node.Renderer.Area), () => left(node.Renderer.Area), () => right(node.Renderer.Area));
             };
             node.Renderer.AreaChanged += areaChanged;
             node.RendererChanging += () => node.Renderer.AreaChanged -= areaChanged;

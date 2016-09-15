@@ -22,15 +22,15 @@ namespace PluginPack
             get { return "Icon"; }
         }
 
-        public IEnumerable<Parameter> MakeParameters()
+        public IEnumerable<IParameter> MakeParameters()
         {
-            yield return new StringParameter("Icon", Id<Parameter>.Parse("70de2664-9d86-470d-b3b5-2a23e5afae91"), StringParameter.ParameterType);
+            yield return new StringParameter("Icon", Id<Parameter>.Parse("70de2664-9d86-470d-b3b5-2a23e5afae91"));
         }
 
         /// <summary>
         /// Retrieve the string for the icon path stored in the input config or null if the config does not contain this data
         /// </summary>
-        public static string TryGet(ReadOnlyCollection<NodeData.ConfigData> config)
+        public static string TryGet(IReadOnlyCollection<NodeData.ConfigData> config)
         {
             foreach (var c in config.Where(c => c.Type == ID))
             {

@@ -17,7 +17,7 @@ namespace ConversationEditor
 
         public bool WillRender(Id<NodeTypeTemp> nodeType)
         {
-            return nodeType != SpecialNodes.Start;
+            return true;
         }
 
         public string DisplayName
@@ -40,7 +40,7 @@ namespace ConversationEditor
         public static Pen Thin { get; } = new Pen(Brushes.Black, 1);
         public static Pen Thick { get; } = new Pen(Brushes.White, 3);
 
-        protected virtual bool ShouldRender(Parameter p)
+        protected virtual bool ShouldRender(IParameter p)
         {
             return true;
         }
@@ -60,19 +60,27 @@ namespace ConversationEditor
         static GraphicsPath RoundedRectangle(RectangleF notRounded, int radius)
         {
             GraphicsPath result = new GraphicsPath(FillMode.Winding);
-            var o = notRounded.Location;
-            var w = notRounded.Width;
-            var h = notRounded.Height;
-            result.AddLine(o.X + w, o.Y + radius, o.X + w, o.Y + h - radius);
-            result.AddArc(o.X + w - radius * 2, o.Y + h - radius * 2, radius * 2, radius * 2, 0, 90);
-            result.AddLine(o.X + w - radius, o.Y + h, o.X + radius, o.Y + h);
-            result.AddArc(o.X, o.Y + h - radius * 2, radius * 2, radius * 2, 90, 90);
-            result.AddLine(o.X, o.Y + h - radius, o.X, o.Y + radius);
-            result.AddArc(o.X, o.Y, radius * 2, radius * 2, 180, 90);
-            result.AddLine(o.X + radius, o.Y, o.X + w - radius, o.Y);
-            result.AddArc(o.X + w - radius * 2, o.Y, radius * 2, radius * 2, -90, 90);
-            result.CloseFigure();
-            return result;
+            try
+            {
+                var o = notRounded.Location;
+                var w = notRounded.Width;
+                var h = notRounded.Height;
+                result.AddLine(o.X + w, o.Y + radius, o.X + w, o.Y + h - radius);
+                result.AddArc(o.X + w - radius * 2, o.Y + h - radius * 2, radius * 2, radius * 2, 0, 90);
+                result.AddLine(o.X + w - radius, o.Y + h, o.X + radius, o.Y + h);
+                result.AddArc(o.X, o.Y + h - radius * 2, radius * 2, radius * 2, 90, 90);
+                result.AddLine(o.X, o.Y + h - radius, o.X, o.Y + radius);
+                result.AddArc(o.X, o.Y, radius * 2, radius * 2, 180, 90);
+                result.AddLine(o.X + radius, o.Y, o.X + w - radius, o.Y);
+                result.AddArc(o.X + w - radius * 2, o.Y, radius * 2, radius * 2, -90, 90);
+                result.CloseFigure();
+                return result;
+            }
+            catch
+            {
+                result.Dispose();
+                throw;
+            }
         }
 
         protected abstract class Section
@@ -155,7 +163,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return Node.Connectors.Where(c => c.m_definition.Position == ConnectorPosition.Bottom);
+                    return Node.Connectors.Where(c => c.Definition.Position == ConnectorPosition.Bottom);
                 }
             }
 
@@ -203,9 +211,9 @@ namespace ConversationEditor
         protected class ParametersSection : Section
         {
             Func<Id<LocalizedText>, string> m_localizer;
-            Func<Parameter, bool> ShouldRender;
+            Func<IParameter, bool> ShouldRender;
 
-            public ParametersSection(ConversationNode node, Func<Id<LocalizedText>, string> localizer, Func<Parameter, bool> shouldRender)
+            public ParametersSection(ConversationNode node, Func<Id<LocalizedText>, string> localizer, Func<IParameter, bool> shouldRender)
                 : base(node)
             {
                 m_localizer = localizer;
@@ -252,7 +260,7 @@ namespace ConversationEditor
             //}
             #endregion
 
-            private IEnumerable<Parameter> ParametersToRender
+            private IEnumerable<IParameter> ParametersToRender
             {
                 get
                 {
@@ -341,8 +349,16 @@ namespace ConversationEditor
             else
             {
                 GraphicsPath gp = new GraphicsPath();
-                gp.AddRectangle(Area);
-                return gp;
+                try
+                {
+                    gp.AddRectangle(Area);
+                    return gp;
+                }
+                catch
+                {
+                    gp.Dispose();
+                    throw;
+                }
             }
         }
 
@@ -375,14 +391,16 @@ namespace ConversationEditor
             const int SHADOW_SIZE = 5; //This has the wrong effect currently
 
             RectangleF shadowAreaBottom = new RectangleF(Area.X + (Rounded ? 5 : 0), Area.Y + Area.Height, Area.Width - (Rounded ? 5 : 0) - (Rounded ? SHADOW_SIZE : 0), SHADOW_SIZE);
-            using (var lgb = new LinearGradientBrush(shadowAreaBottom, shadowDark, shadowLight, LinearGradientMode.Vertical) { WrapMode = WrapMode.TileFlipXY })
+            using (var lgb = new LinearGradientBrush(shadowAreaBottom, shadowDark, shadowLight, LinearGradientMode.Vertical))
             {
+                lgb.WrapMode = WrapMode.TileFlipXY;
                 g.FillRectangle(lgb, shadowAreaBottom);
             }
 
             RectangleF shadowAreaSide = new RectangleF(Area.X + Area.Width, Area.Y + (Rounded ? 5 : 0), SHADOW_SIZE, Area.Height - (Rounded ? 5 : 0) - (Rounded ? 5 : 0));
-            using (var lgb = new LinearGradientBrush(shadowAreaSide, shadowDark, shadowLight, LinearGradientMode.Horizontal) { WrapMode = WrapMode.TileFlipXY })
+            using (var lgb = new LinearGradientBrush(shadowAreaSide, shadowDark, shadowLight, LinearGradientMode.Horizontal))
             {
+                lgb.WrapMode = WrapMode.TileFlipXY;
                 g.FillRectangle(lgb, shadowAreaSide);
             }
 

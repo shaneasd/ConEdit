@@ -53,8 +53,10 @@ namespace ConversationEditor
             g.DrawImage(m_image, Area);
             if (selected)
             {
-                Pen outline = new Pen(Brushes.Black, 2);
-                g.DrawRectangle(outline, Area);
+                using (Pen outline = new Pen(Brushes.Black, 2))
+                {
+                    g.DrawRectangle(outline, Area);
+                }
             }
         }
 

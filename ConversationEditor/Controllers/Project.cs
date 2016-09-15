@@ -79,8 +79,6 @@ namespace ConversationEditor
             //Start by making sure we can open the file
             MemoryStream m = new MemoryStream();
 
-            m = new MemoryStream();
-
             //Create the new conversation file stream, fill with essential content and close
             conversationFile = ConversationFile.GetAvailableConversationPath(path.Directory, Enumerable.Empty<ISaveableFileProvider>());
             using (FileStream conversationStream = Util.LoadFileStream(conversationFile, FileMode.CreateNew, FileAccess.Write))
@@ -222,7 +220,7 @@ namespace ConversationEditor
                 }
 
                 {
-                    Func<ISaveableFileProvider, IEnumerable<Parameter>, Audio> audio = (c, p) =>
+                    Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> audio = (c, p) =>
                     {
                         return m_audioProvider.Generate(new AudioGenerationParameters(c.File.File, this.File.File));
                     };

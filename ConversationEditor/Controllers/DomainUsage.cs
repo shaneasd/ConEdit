@@ -111,7 +111,7 @@ namespace ConversationEditor
                     {
                         var parameters = n.Parameters;
                         var filteredParameters = parameters.Where(p => p.TypeId == ParameterType.Basic.ConvertFrom(enumTypeID)).Cast<IEnumParameter>()
-                                                           .Concat(parameters.Where(p => p.TypeId == ParameterType.Set.ConvertFrom(enumTypeID)).Cast<IEnumParameter>());
+                                                           .Concat(parameters.Where(p => p.TypeId == ParameterType.ValueSetType.ConvertFrom(enumTypeID)).Cast<IEnumParameter>());
 
                         var usingParameters = filteredParameters.Where(p => p.Value == node.Id.Guid);
                         foreach (var p in usingParameters)

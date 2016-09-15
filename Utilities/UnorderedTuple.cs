@@ -15,8 +15,8 @@ namespace Utilities
 
     public class UnorderedTuple2<T> : IEnumerable<T>
     {
-        public readonly T Item1;
-        public readonly T Item2;
+        public T Item1 { get; }
+        public T Item2 { get; }
         public UnorderedTuple2(T a, T b)
         {
             Item1 = a;

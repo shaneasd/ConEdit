@@ -7,28 +7,39 @@ namespace Conversation
 {
     public class UnknownParameter : Parameter<string>
     {
-        private static readonly ParameterType s_typeId = ParameterType.Parse("c7b4be3f-add0-4d58-9fe4-ae19c8e95a35");
+        public new static ParameterType TypeId { get; } = ParameterType.Parse("c7b4be3f-add0-4d58-9fe4-ae19c8e95a35");
 
         public UnknownParameter(Id<Parameter> id, string value)
-            : base("Unknown parameter " + id.Guid.ToString().Substring(0, 8), id, s_typeId,  value)
+            : base("Unknown parameter " + id.Guid.ToString().Substring(0, 8), id, UnknownParameter.TypeId, value, StaticDeserialize(value))
         {
-            m_value = value;
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
         }
 
         public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
         {
-            return m_value;
+            return Value;
         }
 
         protected override string InnerValueAsString()
         {
-            return m_value;
+            return Value;
         }
 
-        protected override bool DeserialiseValue(string value)
+        protected override Tuple<string, bool> DeserializeValueInner(string value)
         {
-            m_value = value;
-            return true;
+            return StaticDeserialize(value);
+        }
+
+        private static Tuple<string, bool> StaticDeserialize(string value)
+        {
+            return Tuple.Create(value, value == null);
+        }
+
+        protected override bool ValueValid(string value)
+        {
+            //Can't change the value of an unknown parameter. Either make it known or delete it.
+            return false;
         }
     }
 }

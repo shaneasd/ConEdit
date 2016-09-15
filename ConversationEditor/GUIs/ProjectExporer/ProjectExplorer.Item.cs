@@ -227,7 +227,7 @@ namespace ConversationEditor
                     var textArea = CalculateTextArea(area, indent);
                     m_textBox = new MyTextBox(control, () => new RectangleF(textArea.Location.Plus(ToControlTransform().OffsetX, ToControlTransform().OffsetY), textArea.Size), MyTextBox.InputFormEnum.FileName, null);
                     m_textBox.Text = PermanentText;
-                    m_textBox.CursorPos = new MyTextBox.CP(cursorPos);
+                    m_textBox.SetCursorPosition(cursorPos);
                     m_textBox.Colors.Background = Color.Transparent;
                     m_textBox.Colors.BorderPen = Pens.Transparent;
                     MyTextBox.SetupCallbacks(control, m_textBox);

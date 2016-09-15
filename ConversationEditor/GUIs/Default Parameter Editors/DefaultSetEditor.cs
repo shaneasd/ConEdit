@@ -127,7 +127,7 @@ namespace ConversationEditor
                     if (valueName != null)
                         comboBox.SelectedItem = new TItem(valueName, selection);
                     else
-                        comboBox.SelectedItem = new TItem(EnumParameter.InvalidValue);
+                        comboBox.SelectedItem = new TItem(DefaultEnumEditor.InvalidValue);
                 }
             }
 

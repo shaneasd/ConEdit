@@ -16,41 +16,47 @@ namespace Conversation
 
     public sealed class NodeTypeTemp { }
 
-    public class NodeType : INodeType
+    public class NodeCategory : INodeType
     {
-        public NodeType(string name, Guid guid)
+        public NodeCategory(string name, Guid guid)
         {
-            m_name = name;
-            m_guid = guid;
+            Name = name;
+            Guid = guid;
         }
 
-        public List<NodeType> m_childTypes { get; } = new List<NodeType>();
-        public void AddChildType(NodeType childType)
+        private List<NodeCategory> m_childTypes { get; } = new List<NodeCategory>();
+        public void AddChildType(NodeCategory childType)
         {
             m_childTypes.Add(childType);
         }
-        public IEnumerable<INodeType> ChildTypes
+
+        public IEnumerable<NodeCategory> ChildTypes
         {
             get { return m_childTypes; }
         }
 
-        public readonly List<EditableGenerator> m_nodes = new List<EditableGenerator>();
+        IEnumerable<INodeType> INodeType.ChildTypes
+        {
+            get { return m_childTypes; }
+        }
+
+        private List<EditableGenerator> m_nodes { get; } = new List<EditableGenerator>();
         public IEnumerable<IEditableGenerator> Nodes
         {
             get { return m_nodes; }
         }
-
-        public readonly string m_name;
-        public string Name
+        public void AddNode(EditableGenerator node)
         {
-            get { return m_name; }
+            m_nodes.Add(node);
+        }
+        public void ClearNodes()
+        {
+            m_nodes.Clear();
         }
 
-        public readonly Guid m_guid;
-        public Guid Guid
-        {
-            get { return m_guid; }
-        }
+        public string Name { get; }
+
+        public Guid Guid { get; }
     }
 
     public interface IDataSource
@@ -97,7 +103,7 @@ namespace Conversation
 
         INodeType IDataSource.Nodes
         {
-            get { return new NodeType("", Guid.NewGuid()); }
+            get { return new NodeCategory("", Guid.NewGuid()); }
         }
 
         EditableGenerator IDataSource.GetNode(Id<NodeTypeTemp> nodeType)

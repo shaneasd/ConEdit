@@ -9,6 +9,7 @@ using System.Diagnostics;
 
 namespace ConversationEditor
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly", Justification ="IDisposable is implemented in Disposable")]
     public abstract class NodeUI : Disposable, INodeGui
     {
         public interface IFactory //TODO: Distinguish between domain node renderers and conversation node renderers

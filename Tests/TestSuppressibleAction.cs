@@ -67,12 +67,18 @@ namespace Tests
         public static void TestDisposal()
         {
             bool triggered = false;
-            using (SuppressibleAction action = new SuppressibleAction(() => { triggered = true; }))
+            SuppressibleAction action = new SuppressibleAction(() => { triggered = true; });
+            try
             {
                 using (action.SuppressCallback())
                 {
                     action.TryExecute();
+                    action.Dispose();
                 }
+            }
+            finally
+            {
+                action.Dispose();
             }
             Assert.False(triggered);
         }

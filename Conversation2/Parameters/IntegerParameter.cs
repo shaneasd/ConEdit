@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Utilities;
 using System.Globalization;
+using System.Diagnostics.Contracts;
 
 namespace Conversation
 {
@@ -11,8 +12,10 @@ namespace Conversation
     {
         public class Definition
         {
-            public Definition(int? max, int? min)
+            public Definition(int? min, int? max)
             {
+                if (max < min)
+                    throw new ArgumentOutOfRangeException(nameof(max), "max must equal or exceed min");
                 Max = max;
                 Min = min;
             }
@@ -21,29 +24,44 @@ namespace Conversation
         }
 
         public IntegerParameter(string name, Id<Parameter> id, ParameterType typeId, Definition definition, string defaultValue)
-            : base(name, id, typeId, defaultValue)
+            : base(name, id, typeId, defaultValue, StaticDeserialize(definition, defaultValue))
         {
-            m_definition = definition ?? new Definition(null, null);
-            TryDecorrupt(); //The first setting will always be corrupt because definition is null
+            m_definition = definition;
         }
 
-        protected override bool DeserialiseValue(string value)
+        protected override Tuple<int, bool> DeserializeValueInner(string value)
         {
-            if (!int.TryParse(value, out m_value))
+            return StaticDeserialize(m_definition, value);
+        }
+
+        private static Tuple<int, bool> StaticDeserialize(Definition definition, string value)
+        {
+            int val;
+            if (!int.TryParse(value, out val))
+                return Tuple.Create(0, true);
+            else
+                return Tuple.Create(val, !StaticValueValid(definition, val));
+        }
+
+        protected override bool ValueValid(int value)
+        {
+            return StaticValueValid(m_definition, value);
+        }
+
+        private static bool StaticValueValid(Definition definition, int value)
+        {
+            if (definition == null)
+                throw new ArgumentNullException(nameof(definition));
+            if (value > definition.Max)
                 return false;
-            //m_definition is not set the first time this is called (within the parent constructor)
-            if (m_definition == null)
-                return false;
-            if (m_value > m_definition.Max)
-                return false;
-            if (m_value < m_definition.Min)
+            if (value < definition.Min)
                 return false;
             return true;
         }
 
         protected override string InnerValueAsString()
         {
-            return m_value.ToString(CultureInfo.InvariantCulture);
+            return Value.ToString(CultureInfo.InvariantCulture);
         }
 
         private Definition m_definition;
@@ -59,7 +77,7 @@ namespace Conversation
 
         public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
         {
-            return m_value.ToString(CultureInfo.CurrentCulture);
+            return Value.ToString(CultureInfo.CurrentCulture);
         }
     }
 }

@@ -10,6 +10,7 @@ namespace ConversationEditor
     public interface ILocalizationFile : IInProject, ISaveableFileProvider
     {
         string Localize(Id<LocalizedText> id);
+        DateTime LocalizationTime(Id<LocalizedText> id);
         SimpleUndoPair SetLocalizationAction(Id<LocalizedText> guid, string p);
         /// <summary>
         /// Will this localizer localize to real user specified data?

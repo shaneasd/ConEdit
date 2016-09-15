@@ -19,9 +19,9 @@ namespace PluginPack
             get { return "Shortcut Key"; }
         }
 
-        public IEnumerable<Parameter> MakeParameters()
+        public IEnumerable<IParameter> MakeParameters()
         {
-            yield return new StringParameter("Key", Id<Parameter>.Parse("70de2664-9d86-470d-b3b5-2a23e5afae91"), StringParameter.ParameterType);
+            yield return new StringParameter("Key", Id<Parameter>.Parse("70de2664-9d86-470d-b3b5-2a23e5afae91"));
         }
     }
 }

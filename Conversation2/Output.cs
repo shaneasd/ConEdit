@@ -12,28 +12,28 @@ namespace Conversation
         {
             public static ConnectorPosition Instance { get; } = new CTop();
             private CTop() : base("Top", Guid.Parse("24c96d32-1704-4c85-b2bf-b8da8731ea47")) { }
-            public override T For<T>(Func<T> top, Func<T> bottom, Func<T> left, Func<T> right) { return top(); }
+            public override T ForPosition<T>(Func<T> top, Func<T> bottom, Func<T> left, Func<T> right) { return top(); }
         }
 
         private class CBottom : ConnectorPosition
         {
             public static ConnectorPosition Instance { get; } = new CBottom();
             private CBottom() : base("Bottom", Guid.Parse("b5461736-18f1-417c-8a54-2c5a1726483b")) { }
-            public override T For<T>(Func<T> top, Func<T> bottom, Func<T> left, Func<T> right) { return bottom(); }
+            public override T ForPosition<T>(Func<T> top, Func<T> bottom, Func<T> left, Func<T> right) { return bottom(); }
         }
 
         private class CLeft : ConnectorPosition
         {
             public static ConnectorPosition Instance { get; } = new CLeft();
             private CLeft() : base("Left", Guid.Parse("adb2301c-a858-44e8-b76c-93e538231960")) { }
-            public override T For<T>(Func<T> top, Func<T> bottom, Func<T> left, Func<T> right) { return left(); }
+            public override T ForPosition<T>(Func<T> top, Func<T> bottom, Func<T> left, Func<T> right) { return left(); }
         }
 
         private class CRight : ConnectorPosition
         {
             public static ConnectorPosition Instance { get; } = new CRight();
             private CRight() : base("Right", Guid.Parse("d8b8efae-3949-47b3-af7b-8db1e402489e")) { }
-            public override T For<T>(Func<T> top, Func<T> bottom, Func<T> left, Func<T> right) { return right(); }
+            public override T ForPosition<T>(Func<T> top, Func<T> bottom, Func<T> left, Func<T> right) { return right(); }
         }
 
         public static ConnectorPosition Top { get; } = CTop.Instance;
@@ -41,7 +41,7 @@ namespace Conversation
         public static ConnectorPosition Left { get; } = CLeft.Instance;
         public static ConnectorPosition Right { get; } = CRight.Instance;
 
-        public abstract T For<T>(Func<T> top, Func<T> bottom, Func<T> left, Func<T> right);
+        public abstract T ForPosition<T>(Func<T> top, Func<T> bottom, Func<T> left, Func<T> right);
 
         public static bool operator ==(ConnectorPosition a, ConnectorPosition b)
         {
@@ -87,7 +87,7 @@ namespace Conversation
 
         public static EnumParameter MakeParameter()
         {
-            Enumeration enumeration = new Enumeration(new[] { Top.Tuple, Bottom.Tuple, Left.Tuple, Right.Tuple }, EnumId, Bottom.m_guid);
+            IEnumeration enumeration = new ImmutableEnumeration(new[] { Top.Tuple, Bottom.Tuple, Left.Tuple, Right.Tuple }, EnumId, Bottom.m_guid);
             return new EnumParameter("Position", ParameterId, enumeration, null);
         }
 
@@ -140,6 +140,10 @@ namespace Conversation
 
     public interface IConnectionRules
     {
+        /// <summary>
+        /// Can a connection of type 'a' connect to a connection of type 'b'
+        /// This must be a symmetric relationship. i.e. CanConnect(x,y) = CanConnect(y,x)
+        /// </summary>
         bool CanConnect(Id<TConnectorDefinition> a, Id<TConnectorDefinition> b);
     }
 
@@ -147,34 +151,40 @@ namespace Conversation
     public enum ConnectionConsiderations
     {
         None = 0,
+
+        /// <summary>
+        /// Two outputs which have the same parent node
+        /// </summary>
         SameNode = 1,
+
+        /// <summary>
+        /// Two outputs which are already connected
+        /// </summary>
         RedundantConnection = 2,
+
+        /// <summary>
+        /// Two outputs which cannot be connected according to the custom connection rules
+        /// </summary>
         RuleViolation = 4,
     }
 
     public class Output
     {
-        private readonly Id<TConnector> m_id;
-        private readonly IEditable m_parent;
-        private readonly List<Parameter> m_parameters;
-        private readonly IConnectionRules m_rules;
-
-        public readonly ConnectorDefinitionData m_definition;
-
-        public Id<TConnector> Id { get { return m_id; } }
-        public IEditable Parent { get { return m_parent; } }
-        public List<Parameter> Parameters { get { return m_parameters; } }
-        public IConnectionRules Rules { get { return m_rules; } }
+        public ConnectorDefinitionData Definition { get; }
+        public Id<TConnector> Id { get; }
+        public IEditable Parent { get; }
+        public IReadOnlyList<IParameter> Parameters { get; }
+        public IConnectionRules Rules { get; }
 
         private List<Output> m_connections = new List<Output>();
 
-        public Output(Id<TConnector> id, ConnectorDefinitionData definition, IEditable parent, List<Parameter> parameters, IConnectionRules rules)
+        public Output(Id<TConnector> id, ConnectorDefinitionData definition, IEditable parent, IReadOnlyList<IParameter> parameters, IConnectionRules rules)
         {
-            m_definition = definition;
-            m_parent = parent;
-            m_parameters = parameters;
-            m_rules = rules;
-            m_id = id;
+            Definition = definition;
+            Parent = parent;
+            Parameters = parameters;
+            Rules = rules;
+            Id = id;
         }
 
 
@@ -205,7 +215,7 @@ namespace Conversation
             if ((ignore & ConnectionConsiderations.RuleViolation) == ConnectionConsiderations.None)
             {
                 //Can only connect connectors whose types can be paired according to the rules
-                if (!Rules.CanConnect(this.m_definition.Id, other.m_definition.Id))
+                if (!Rules.CanConnect(this.Definition.Id, other.Definition.Id))
                     return false;
             }
 
@@ -252,7 +262,7 @@ namespace Conversation
             CounterDisconnect(other);
         }
 
-        public SimpleUndoPair DisconnectAll()
+        public SimpleUndoPair DisconnectAllActions()
         {
             var connections = m_connections.ToList();
             return new SimpleUndoPair()
@@ -285,16 +295,25 @@ namespace Conversation
             return Tuple.Create(Id, Parent).GetHashCode();
         }
 
+        /// <summary>
+        /// Can be used in user interface to identify the output (more user friendly than the unique id)
+        /// If the there is a parameter with Id ConnectorDefinitionData.OutputName of type IStringParameter we use the value of that parameter
+        /// If there are more than one such parameters we fail (shouldn't be two parameters with the same id)
+        /// Else if there is exactly one string parameter with any Id we use the value of that parameter
+        /// Else we are nameless and return an empty string.
+        /// </summary>
         public string GetName()
         {
-            string name = Parameters.Where(p => p.Id == ConnectorDefinitionData.OutputName).Select(p => p as IStringParameter).Select(p => p.Value).SingleOrDefault();
-            if (name == null)
+            var nameParameter = Parameters.Where(p => p.Id == ConnectorDefinitionData.OutputName).SingleOrDefault();
+            if (nameParameter != null)
             {
-                var stringParameters = Parameters.OfType<IStringParameter>();
-                if (stringParameters.CountEquals(1))
-                    name = stringParameters.Single().Value;
+                var stringParameter = nameParameter as IStringParameter;
+                return stringParameter.Value;
             }
-            return name ?? "";
+            var stringParameters = Parameters.OfType<IStringParameter>();
+            if (stringParameters.CountEquals(1))
+                return stringParameters.Single().Value;
+            return "";
         }
     }
 }

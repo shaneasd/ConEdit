@@ -27,6 +27,12 @@ namespace Utilities
 
     public class NoUndoQueue : IUndoQueue
     {
+        public static NoUndoQueue Instance { get; } = new NoUndoQueue();
+
+        private NoUndoQueue()
+        {
+        }
+
         public void Undo()
         {
             throw new NotImplementedException();

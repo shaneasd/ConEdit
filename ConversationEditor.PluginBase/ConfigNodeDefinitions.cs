@@ -22,12 +22,12 @@ namespace ConversationEditor
             get { return "Shortcut Key"; }
         }
 
-        public IEnumerable<Parameter> MakeParameters()
+        public IEnumerable<IParameter> MakeParameters()
         {
-            yield return new StringParameter("Key", Id<Parameter>.Parse("70de2664-9d86-470d-b3b5-2a23e5afae91"), StringParameter.ParameterType);
+            yield return new StringParameter("Key", Id<Parameter>.Parse("70de2664-9d86-470d-b3b5-2a23e5afae91"));
         }
 
-        public static bool TryGet(ReadOnlyCollection<NodeData.ConfigData> config, out string keys)
+        public static bool TryGet(IReadOnlyCollection<NodeData.ConfigData> config, out string keys)
         {
             keys = "";
             foreach (var c in config.Where(c => c.Type == ID))
@@ -61,12 +61,12 @@ namespace ConversationEditor
             get { return "Color"; }
         }
 
-        public IEnumerable<Parameter> MakeParameters()
+        public IEnumerable<IParameter> MakeParameters()
         {
-            yield return new StringParameter("Color", Id<Parameter>.Parse("9baa396d-265d-4b69-8a19-0f4799606a3a"), StringParameter.ParameterType);
+            yield return new StringParameter("Color", Id<Parameter>.Parse("9baa396d-265d-4b69-8a19-0f4799606a3a"));
         }
 
-        public static Color? TryGet(ReadOnlyCollection<NodeData.ConfigData> config)
+        public static Color? TryGet(IReadOnlyCollection<NodeData.ConfigData> config)
         {
             foreach (var c in config.Where(c => c.Type == ID))
             {
@@ -89,7 +89,7 @@ namespace ConversationEditor
         /// <summary>
         /// Determine the maximum width configuration for the input config or null if it is not specified
         /// </summary>
-        public static float? TryGet(ReadOnlyCollection<NodeData.ConfigData> config)
+        public static float? TryGet(IReadOnlyCollection<NodeData.ConfigData> config)
         {
             foreach (var c in config.Where(c => c.Type == GenericNodeConfigDefinition.StaticId))
             {
@@ -105,7 +105,7 @@ namespace ConversationEditor
 
     public static class RoundedConfig
     {
-        public static bool? TryGet(ReadOnlyCollection<NodeData.ConfigData> config)
+        public static bool? TryGet(IReadOnlyCollection<NodeData.ConfigData> config)
         {
             foreach (var c in config.Where(c => c.Type == GenericNodeConfigDefinition.StaticId))
             {
@@ -135,16 +135,16 @@ namespace ConversationEditor
             get { return "Generic Config"; }
         }
 
-        public IEnumerable<Parameter> MakeParameters()
+        public IEnumerable<IParameter> MakeParameters()
         {
-            yield return new StringParameter("Key", ConfigKey, StringParameter.ParameterType);
-            yield return new StringParameter("Value", ConfigValue, StringParameter.ParameterType);
+            yield return new StringParameter("Key", ConfigKey);
+            yield return new StringParameter("Value", ConfigValue);
         }
 
         public static NodeData.ConfigData Make(string name, string value)
         {
-            var pName = new StringParameter("Key", ConfigKey, StringParameter.ParameterType) { Value = name };
-            var pValue = new StringParameter("Value", ConfigValue, StringParameter.ParameterType) { Value = value };
+            var pName = new StringParameter("Key", ConfigKey, name);
+            var pValue = new StringParameter("Value", ConfigValue, value);
             return new NodeData.ConfigData(StaticId, new[] { pName, pValue });
         }
 

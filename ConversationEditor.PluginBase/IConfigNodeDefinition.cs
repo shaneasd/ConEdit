@@ -9,6 +9,6 @@ namespace Conversation
     {
         Id<NodeTypeTemp> Id { get; }
         string Name { get; }
-        IEnumerable<Parameter> MakeParameters();
+        IEnumerable<IParameter> MakeParameters();
     }
 }
