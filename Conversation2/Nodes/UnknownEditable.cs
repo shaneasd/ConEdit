@@ -7,12 +7,12 @@ using System.Collections.ObjectModel;
 
 namespace Conversation
 {
-    public class UnknownEditable : IEditable
+    public class UnknownEditable : IConversationNodeData
     {
         private Id<NodeTemp> m_nodeId;
         private Id<NodeTypeTemp> m_nodeTypeId;
         private List<UnknownParameter> m_parameters;
-        public event Action Linked { add { } remove { } }
+        public event Action Linked;
 
         public UnknownEditable(Id<NodeTemp> nodeId, Id<NodeTypeTemp> nodeTypeId, IEnumerable<UnknownParameter> parameters)
         {
@@ -79,15 +79,22 @@ namespace Conversation
             if (!m_connectors.Any(c => c.Id == id))
             {
                 ConnectorDefinitionData data = new ConnectorDefinitionData("", Id<TConnectorDefinition>.ConvertFrom(id), new List<NodeData.ParameterData>(), ConnectorPosition.Bottom);
-                m_connectors.Add(new Output(id, data, this, new List<Parameter>(), m_rules));
+                var connector = new Output(id, data, this, new List<Parameter>(), m_rules);
+                connector.Connected += (a) => Linked.Execute();
+                connector.Disconnected += (a) => Linked.Execute();
+                m_connectors.Add(connector);
             }
         }
 
+        //TODO: Couldn't we just say unknown connections are a violation of the connection rules but then allow them from disk anyway?
+        /// <summary>
+        /// Updates the rules to permit connection of the input connectors
+        /// Since the node is of an unknown type we don't know whether the connectors are allowed to be connected so assume they are
+        /// </summary>
         public void AllowConnection(Output connector1, Output connector2)
         {
             m_rules.Allow(connector1.Definition.Id, connector2.Definition.Id);
         }
-
 
         public SimpleUndoPair RemoveUnknownParameter(UnknownParameter p)
         {

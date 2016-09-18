@@ -120,7 +120,7 @@ namespace ConversationEditor
         public event Action<ConversationNode> NodeRemoved { add { } remove { } }
 
 
-        public ConversationNode MakeNode(IEditable e, NodeUIData uiData)
+        public ConversationNode MakeNode(IConversationNodeData e, NodeUIData uiData)
         {
             throw new NotImplementedException();
         }

@@ -38,6 +38,6 @@ namespace ConversationEditor
         event Action<TNode> NodeRemoved;
         int RelativePosition(TNode ofNode, TNode relativeTo);
 
-        TNode MakeNode(IEditable e, NodeUIData uiData);
+        TNode MakeNode(IConversationNodeData e, NodeUIData uiData);
     }
 }

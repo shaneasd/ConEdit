@@ -11,12 +11,12 @@ using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeG
 
 namespace ConversationEditor
 {
-    public interface INodeFactory<TNode, in TNodeUI> where TNode : IGraphNode, IConfigurable
+    public interface INodeFactory<TNode, in TNodeUI> where TNode : IConversationNode, IConfigurable
     {
-        TNode MakeNode(IEditable e, TNodeUI uiData);
+        TNode MakeNode(IConversationNodeData e, TNodeUI uiData);
     }
 
-    internal interface INodeFactory<TNode> : INodeFactory<TNode, NodeUIData> where TNode : IGraphNode, IConfigurable
+    internal interface INodeFactory<TNode> : INodeFactory<TNode, NodeUIData> where TNode : IConversationNode, IConfigurable
     {
     }
 
@@ -54,7 +54,7 @@ namespace ConversationEditor
 
         public INodeGui MakeRenderer(ConversationNode n, PointF p)
         {
-            if (n.m_data is UnknownEditable)
+            if (n.Data is UnknownEditable)
                 return new UnknownNodeRenderer(n, p);
 
             m_toUpdate.Add(n);
@@ -64,12 +64,12 @@ namespace ConversationEditor
 
         private static INodeGui MakeCorruptedRenderer(ConversationNode n, PointF p)
         {
-            if (n.m_data is UnknownEditable)
+            if (n.Data is UnknownEditable)
                 return new UnknownNodeRenderer(n, p);
             return new CorruptedNodeRenderer(n, n.Renderer == null ? p : n.Renderer.Area.Center());
         }
 
-        public ConversationNode MakeNode(IEditable e, NodeUIData uiData)
+        public ConversationNode MakeNode(IConversationNodeData e, NodeUIData uiData)
         {
             PointF p = uiData.Area.Center();
             var result = new ConversationNode<INodeGui>(e, n => MakeRenderer(n, n.Renderer == null ? p : n.Renderer.Area.Center()), n => MakeCorruptedRenderer(n, p));

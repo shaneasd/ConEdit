@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tests.Conversation
 {
-    public static class GenericEditableGeneratorTest
+    public static class ConnectorPositionTest
     {
         [Test]
         public static void Test()

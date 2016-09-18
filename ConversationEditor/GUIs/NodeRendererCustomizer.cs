@@ -82,7 +82,7 @@ namespace ConversationEditor
 
         protected abstract IEnumerable<TChoice> GetItemsFor(Id<NodeTypeTemp> guid);
 
-        void AddNode(IEditableGenerator node, int indent)
+        void AddNode(INodeDataGenerator node, int indent)
         {
             //TODO: It would be a lot better if node renderer customization used a traditional combobox rather than a suggestion box
 
@@ -121,9 +121,9 @@ namespace ConversationEditor
         {
             this.SuspendLayout();
 
-            IEnumerable<IEditableGenerator> nodeGenerators = Collection.Collapse(m_datasource.Nodes, t => t.ChildTypes, t => t.Nodes);
+            IEnumerable<INodeDataGenerator> nodeGenerators = Collection.Collapse(m_datasource.Nodes, t => t.ChildTypes, t => t.Nodes);
 
-            foreach (EditableGenerator nodeType in nodeGenerators)
+            foreach (INodeDataGenerator nodeType in nodeGenerators)
             {
                 if (!m_config.ContainsKey(nodeType.Guid))
                     m_config[nodeType.Guid] = Default(nodeType.Guid);

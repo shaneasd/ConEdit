@@ -69,15 +69,30 @@ namespace Viking
             foreach (var conversation in conversations)
             {
                 root.Add(new XComment(conversation.File.File.Name));
+                var info = conversation.Nodes.SingleOrDefault(a => a.Type == Id<NodeTypeTemp>.Parse("d5974ffe-777b-419c-b9bc-bde980cb99a6"));
+                if (info != null)
+                {
+                    var context = info.Parameters.Where(p => p.Id == Id<Parameter>.Parse("6940a618-5905-4e81-a59b-281d92a90782")).Select(a => a as IStringParameter).SingleOrDefault();
+                    if (context != null)
+                    {
+                        root.Add(new XComment(context.Value));
+                    }
+                }
                 foreach (var node in conversation.Nodes)
                 {
+                    string speaker = node.Parameters.Where(p=>p.Id == Id<Parameter>.Parse("d6a6b382-43d0-44d3-b4e7-b9c9362a509b")).OfType<IDynamicEnumParameter>().Select(e => e.DisplayValue(a => null)).SingleOrDefault() ?? "";
+
                     foreach (var localized in node.Parameters.OfType<ILocalizedStringParameter>())
                     {
                         var key = localized.Value;
                         var data = m_localizer(key);
                         var value = data.Item1;
                         var date = data.Item2;
-                        var element = new XElement("Localize", new XAttribute("id", key.Serialized()), new XAttribute("localized", date.Ticks.ToString(CultureInfo.InvariantCulture)), value);
+                        var element = new XElement("Localize", new XAttribute("id", key.Serialized()),
+                                                               new XAttribute("localized", date.Ticks.ToString(CultureInfo.InvariantCulture)),
+                                                               new XAttribute("speaker", speaker),
+                                                               new XAttribute("type", node.Data.Name),
+                                                               value);
                         root.Add(element);
                     }
                 }

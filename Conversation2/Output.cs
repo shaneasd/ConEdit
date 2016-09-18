@@ -6,6 +6,7 @@ using Utilities;
 
 namespace Conversation
 {
+    //TODO: This is very UI centric. Is there some way to shift it up a level
     public abstract class ConnectorPosition
     {
         private class CTop : ConnectorPosition
@@ -172,13 +173,13 @@ namespace Conversation
     {
         public ConnectorDefinitionData Definition { get; }
         public Id<TConnector> Id { get; }
-        public IEditable Parent { get; }
+        public IConversationNodeData Parent { get; }
         public IReadOnlyList<IParameter> Parameters { get; }
         public IConnectionRules Rules { get; }
 
         private List<Output> m_connections = new List<Output>();
 
-        public Output(Id<TConnector> id, ConnectorDefinitionData definition, IEditable parent, IReadOnlyList<IParameter> parameters, IConnectionRules rules)
+        public Output(Id<TConnector> id, ConnectorDefinitionData definition, IConversationNodeData parent, IReadOnlyList<IParameter> parameters, IConnectionRules rules)
         {
             Definition = definition;
             Parent = parent;

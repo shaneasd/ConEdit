@@ -315,7 +315,7 @@ namespace ConversationEditor
         }
 
         private MouseController<TNode> m_mouseController;
-        private Func<IEditable, AudioGenerationParameters, ConfigureResult> Edit;
+        private Func<IConversationNodeData, AudioGenerationParameters, ConfigureResult> Edit;
         private CopyPasteController<TNode, TransitionNoduleUIInfo> m_copyPasteController;
 
         Matrix GetTransform()
@@ -403,7 +403,7 @@ namespace ConversationEditor
 
         Action<IEnumerable<IErrorListElement>> Log;
 
-        internal void Initialise(Func<IEditable, AudioGenerationParameters, ConfigureResult> editNode, CopyPasteController<TNode, TransitionNoduleUIInfo> copyPasteController, Action<IEnumerable<IErrorListElement>> log)
+        internal void Initialise(Func<IConversationNodeData, AudioGenerationParameters, ConfigureResult> editNode, CopyPasteController<TNode, TransitionNoduleUIInfo> copyPasteController, Action<IEnumerable<IErrorListElement>> log)
         {
             Edit = editNode;
             m_copyPasteController = copyPasteController;
@@ -530,9 +530,9 @@ namespace ConversationEditor
 
         }
 
-        Dictionary<Keys, IEditableGenerator> m_keyMapping = new Dictionary<Keys, IEditableGenerator>();
+        Dictionary<Keys, INodeDataGenerator> m_keyMapping = new Dictionary<Keys, INodeDataGenerator>();
 
-        private ConfigureResult MyEdit(IEditable data)
+        private ConfigureResult MyEdit(IConversationNodeData data)
         {
             return Edit(data, new AudioGenerationParameters(CurrentFile.File.File, m_project.File.File));
         }
@@ -636,7 +636,7 @@ namespace ConversationEditor
 
         public void UpdateKeyMappings()
         {
-            m_keyMapping = new Dictionary<Keys, IEditableGenerator>();
+            m_keyMapping = new Dictionary<Keys, INodeDataGenerator>();
             foreach (var node in DataSource.AllNodes())
             {
                 string shortcutKeys;
@@ -848,11 +848,11 @@ namespace ConversationEditor
             }
         }
 
-        public void AddNode(IEditableGenerator node, Point p)
+        public void AddNode(INodeDataGenerator node, Point p)
         {
             if (CurrentFile.File.Exists)
             {
-                TNode g = CurrentFile.MakeNode(node.Generate(Id<NodeTemp>.New(), new List<EditableGeneratorParameterData>(), CurrentFile), new NodeUIData(p));
+                TNode g = CurrentFile.MakeNode(node.Generate(Id<NodeTemp>.New(), new List<NodeDataGeneratorParameterData>(), CurrentFile), new NodeUIData(p));
                 Action addNode = () => { CurrentFile.Add(g.Only(), Enumerable.Empty<NodeGroup>()); };
                 g.Configure(MyEdit).Do
                 (

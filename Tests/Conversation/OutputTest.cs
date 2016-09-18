@@ -11,7 +11,7 @@ namespace Tests.Conversation
 {
     public static class OutputTest
     {
-        class Editable : IEditable
+        class Editable : IConversationNodeData
         {
             public Editable(Id<NodeTemp> id)
             {
@@ -45,6 +45,14 @@ namespace Tests.Conversation
             public Id<NodeTemp> NodeId { get; }
 
             public Id<NodeTypeTemp> NodeTypeId
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            public string NodeTypeName
             {
                 get
                 {

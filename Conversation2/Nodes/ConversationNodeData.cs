@@ -8,10 +8,10 @@ using System.Collections.ObjectModel;
 
 namespace Conversation
 {
-    internal class ExternalFunction : IEditable
+    internal class ConversationNodeData : IConversationNodeData
     {
         private Id<NodeTemp> m_id;
-        private readonly IEditableGenerator m_generator;
+        private readonly INodeDataGenerator m_generator;
         private List<IParameter> m_parameters;
         private readonly IEnumerable<Output> m_connectors;
 
@@ -59,11 +59,11 @@ namespace Conversation
             Linked.Execute();
         }
 
-        public ExternalFunction(IEditableGenerator generator, Id<NodeTemp> id, IEnumerable<Func<IEditable, Output>> connectors, IEnumerable<IParameter> parameters)
+        public ConversationNodeData(INodeDataGenerator generator, Id<NodeTemp> id, IEnumerable<Func<IConversationNodeData, Output>> connectors, IEnumerable<IParameter> parameters)
         {
             m_id = id;
             m_parameters = parameters.ToList();
-            m_connectors = connectors.Select(i => i(this)).OrderBy(o=>o.GetName()).Evaluate(); //TODO: Ordering by name is a little awkward what with many connectors not having one
+            m_connectors = connectors.Select(i => i(this)).OrderBy(o => o.GetName()).Evaluate(); //TODO: Ordering by name is a little awkward what with many connectors not having one
             foreach (var connector in Connectors)
             {
                 connector.Connected += OnOutputLinked;

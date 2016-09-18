@@ -104,7 +104,7 @@ namespace ConversationEditor
             m_contents.UnionWith(contents);
         }
 
-        public static NodeGroup Make<TNode>(IEnumerable<TNode> contents) where TNode : class, IGraphNode, IRenderable<IGui>
+        public static NodeGroup Make<TNode>(IEnumerable<TNode> contents) where TNode : class, IConversationNode, IRenderable<IGui>
         {
             var l = contents.Min(n => n.Renderer.Area.Left) - 20;
             var r = contents.Max(n => n.Renderer.Area.Right) + 20;

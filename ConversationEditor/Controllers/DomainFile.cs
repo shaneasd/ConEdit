@@ -81,14 +81,14 @@ namespace ConversationEditor
             {
                 var n = node;
                 node.Modified += () => NodeModified(n);
-                node.Linked += () => NodeLinked(n);
+                node.Data.Linked += () => NodeLinked(n);
             }
             m_nodes.Inserting += (n) =>
             {
-                AddToData(n.m_data.Only(), m_datasource);
+                AddToData(n.Data.Only(), m_datasource);
                 ConversationDomainModified.Execute(); //No need to be picky about false positives
                 n.Modified += () => NodeModified(n);
-                n.Linked += () => NodeLinked(n);
+                n.Data.Linked += () => NodeLinked(n);
             };
             m_nodes.Removing += RemoveFromData;
             m_nodes.Clearing += ClearData; //Currently nothing clears the list
@@ -236,7 +236,7 @@ namespace ConversationEditor
             ConversationDomainModified.Execute(); //No need to be picky about false positives
         }
 
-        private static void AddToData(IEnumerable<IEditable> nodes, DomainDomain datasource)
+        private static void AddToData(IEnumerable<IConversationNodeData> nodes, DomainDomain datasource)
         {
             Action<NodeTypeData> categoryAction = category =>
             {

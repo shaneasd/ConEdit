@@ -11,7 +11,7 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    internal class MouseController<TNode> where TNode : IRenderable<IGui>, IGraphNode, IConfigurable
+    internal class MouseController<TNode> where TNode : IRenderable<IGui>, IConversationNode, IConfigurable
     {
         public class State
         {
@@ -813,7 +813,7 @@ namespace ConversationEditor
         public event Action<UndoAction> Changed;
         private readonly Func<PointF, PointF> Snap;
         private readonly Func<PointF, PointF> SnapGroup;
-        private readonly Func<IEditable, ConfigureResult> Edit;
+        private readonly Func<IConversationNodeData, ConfigureResult> Edit;
         private readonly Func<TNode, bool> RemoveNode;
         private readonly Func<Id<NodeTemp>, TNode> GetNode;
         public event Action<Point> PlainClick;
@@ -851,7 +851,7 @@ namespace ConversationEditor
         private TransitionNoduleUIInfo UIInfo(Output output) { return m_UIInfo(output, false); }
         ColorScheme m_scheme;
 
-        public MouseController(ColorScheme scheme, Action refreshDisplay, Action<Point> shift, Action<PointF?> scrollIfRequired, Action<Point, float> scale, Func<IReadonlyQuadTree<TNode>> nodes, Func<IReadonlyQuadTree<UnorderedTuple2<Output>>> connections, Func<IEnumerable<NodeGroup>> groups, Func<IEditable, ConfigureResult> edit, Func<TNode, bool> removeNode, Func<PointF, PointF> snap, Func<PointF, PointF> snapGroup, Func<Output, bool, TransitionNoduleUIInfo> uiInfo, Func<Id<NodeTemp>, TNode> getNode)
+        public MouseController(ColorScheme scheme, Action refreshDisplay, Action<Point> shift, Action<PointF?> scrollIfRequired, Action<Point, float> scale, Func<IReadonlyQuadTree<TNode>> nodes, Func<IReadonlyQuadTree<UnorderedTuple2<Output>>> connections, Func<IEnumerable<NodeGroup>> groups, Func<IConversationNodeData, ConfigureResult> edit, Func<TNode, bool> removeNode, Func<PointF, PointF> snap, Func<PointF, PointF> snapGroup, Func<Output, bool, TransitionNoduleUIInfo> uiInfo, Func<Id<NodeTemp>, TNode> getNode)
         {
             m_scheme = scheme;
             m_innerState = new State.Nothing(this, null, null);

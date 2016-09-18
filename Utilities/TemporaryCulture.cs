@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Utilities
 {
-    public class TemporaryCulture : IDisposable
+    public class TemporaryCulture : Disposable
     {
         public static TemporaryCulture English()
         {
@@ -27,9 +27,14 @@ namespace Utilities
             CultureInfo.CurrentCulture = new CultureInfo(culture);
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            CultureInfo.CurrentCulture = m_culture;
+            //If this was triggered from a finalizer then it's still tempting to reset our state to try to ensure we eventually revert to the current culture
+            //however this will result in undefined timing as to when this occurs. Better to have a predictable permanent problem than an intermittent one.
+            if (disposing)
+            {
+                CultureInfo.CurrentCulture = m_culture;
+            }
         }
     }
 }

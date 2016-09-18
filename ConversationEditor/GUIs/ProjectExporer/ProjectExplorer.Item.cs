@@ -116,7 +116,7 @@ namespace ConversationEditor
                 var indent = CalculateIndent(wholeArea);
                 return MinimizedIconRectangle(wholeArea, indent);
             }
-            public RectangleF MinimizedIconRectangle(RectangleF area, float indent)
+            private static RectangleF MinimizedIconRectangle(RectangleF area, float indent)
             {
                 const int minimizeRectangleSize = 8;
                 //return new Rectangle((int)(m_area.Location.Plus(textStart).X + textSize.Width + 2), (int)(m_area.Location.Plus(textStart).Y + (textSize.Height - minimizeRectangleSize) / 2), minimizeRectangleSize, minimizeRectangleSize);

@@ -1063,11 +1063,13 @@ namespace ConversationEditor
             if (DragItem != null)
             {
                 const int SIZE = 16;
-                Bitmap bmp = new Bitmap(SIZE, SIZE);
-                using (var g = Graphics.FromImage(bmp))
-                    DragItem.DrawIcon(g, new RectangleF(0, 0, SIZE, SIZE));
-                Cursor c = CreateCursor(bmp, 0, 0);
+                using (Bitmap bmp = new Bitmap(SIZE, SIZE))
+                {
+                    using (var g = Graphics.FromImage(bmp))
+                        DragItem.DrawIcon(g, new RectangleF(0, 0, SIZE, SIZE));
+                    Cursor c = CreateCursor(bmp, 0, 0);
                 Cursor = c;
+                }
             }
             else
                 Cursor = DefaultCursor;

@@ -53,10 +53,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Conversation\ConnectorPositionTest.cs" />
     <Compile Include="Conversation\ConversationNodeTest.cs" />
     <Compile Include="Conversation\EnumerationTest.cs" />
-    <Compile Include="Conversation\ExternalFunctionTest.cs" />
-    <Compile Include="Conversation\GenericEditableGeneratorTest.cs" />
+    <Compile Include="Conversation\NodeDataGeneratorTest.cs" />
     <Compile Include="Conversation\IdTest.cs" />
     <Compile Include="Conversation\OutputTest.cs" />
     <Compile Include="Conversation\ParameterTypeTest.cs" />

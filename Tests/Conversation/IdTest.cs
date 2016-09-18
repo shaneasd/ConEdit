@@ -10,8 +10,11 @@ namespace Tests.Conversation
 {
     public static class IdTest
     {
-        class A { }
-        class B { }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Exists to be used as a type parameter")]
+        class A { private A() { } }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Exists to be used as a type parameter")]
+        class B { private B() { } }
+
         [Test]
         public static void Test()
         {

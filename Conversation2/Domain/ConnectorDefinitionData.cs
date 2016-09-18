@@ -31,7 +31,7 @@ namespace Conversation
         public static Id<TConnectorDefinition> OutputDefinitionId { get; } = Id<TConnectorDefinition>.Parse("a800357f-5013-44c1-8637-c8a60cff240b");
         public static Id<Parameter> OutputName { get; } = Id<Parameter>.Parse("ec0c0b5c-57d9-484b-8946-c8dcf3e09b38");
 
-        public Func<IEditable, IReadOnlyList<IParameter>, Output> Make(Id<TConnector> id, IConnectionRules rules)
+        public Func<IConversationNodeData, IReadOnlyList<IParameter>, Output> Make(Id<TConnector> id, IConnectionRules rules)
         {
             var thisCopy = this; //Make a copy because the lamba can't capture this because this is a struct
             return (parent, parameters) => new Output(id, thisCopy, parent, parameters, rules);

@@ -27,7 +27,7 @@ namespace ConversationEditor
         public ErrorCheckerUtils<ConversationNode> ErrorCheckerUtils()
         {
             //TODO: Should have a concept of current conversation so we don't have to search the whole project
-            Func<IEditable, ConversationNode> reverseLookup = f => CurrentProject.Value.Conversations.SelectMany(c => c.Nodes).Where(n => n.m_data == f).First();
+            Func<IConversationNodeData, ConversationNode> reverseLookup = f => CurrentProject.Value.Conversations.SelectMany(c => c.Nodes).Where(n => n.Data == f).First();
             return new ErrorCheckerUtils<ConversationNode>(CurrentProject.Value.ConversationDataSource, reverseLookup);
         }
 

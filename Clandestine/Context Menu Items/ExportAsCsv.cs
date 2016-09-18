@@ -152,7 +152,7 @@ namespace Clandestine
 
             var nodes = conversation.Nodes;
 
-            Stack<IEditable> startNodes = new Stack<IEditable>(nodes.Where(n => Clandestine.Util.IsStartNode(n.Type, util)).Select(n => n.m_data));
+            Stack<IConversationNodeData> startNodes = new Stack<IConversationNodeData>(nodes.Where(n => Clandestine.Util.IsStartNode(n.Type, util)).Select(n => n.Data));
 
             var conversationInfo = conversation.Nodes.Where(n => n.Type == CsvData.CONVERSATIONINFO).FirstOrDefault();
             var playerSpeechNodes = conversation.Nodes.Where(n => n.Type == CsvData.PLAYER_SPEECH).Select(n => new { Key = n, Value = CsvData.GetPlayerSpeechData(n, conversationInfo, m_localize) });
@@ -160,8 +160,8 @@ namespace Clandestine
             var radioSpeechNodes = conversation.Nodes.Where(n => n.Type == CsvData.RADIO_SPEECH).Select(n => new { Key = n, Value = CsvData.GetSpeechData(n, conversationInfo, m_localize) });
             var optionNodes = conversation.Nodes.Where(n => n.Type == CsvData.OPTION).Select(n => new { Key = n, Value = CsvData.GetOptionData(n, conversationInfo, m_localize) });
 
-            var allcontent = playerSpeechNodes.Concat(npcSpeechNodes).Concat(radioSpeechNodes).Concat(optionNodes).ToDictionary(kvp => kvp.Key.m_data, kvp => kvp.Value);
-            HashSet<IEditable> processed = new HashSet<IEditable>();
+            var allcontent = playerSpeechNodes.Concat(npcSpeechNodes).Concat(radioSpeechNodes).Concat(optionNodes).ToDictionary(kvp => kvp.Key.Data, kvp => kvp.Value);
+            HashSet<IConversationNodeData> processed = new HashSet<IConversationNodeData>();
 
             //Depth first iterate through the conversation starting at start nodes
             while (startNodes.Any())
@@ -191,7 +191,7 @@ namespace Clandestine
             }
 
             //Pick up any leftover nodes that are not connected to a start node
-            foreach (var node in nodes.Select(n => n.m_data))
+            foreach (var node in nodes.Select(n => n.Data))
             {
                 if (!processed.Contains(node))
                 {

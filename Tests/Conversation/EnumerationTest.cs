@@ -23,28 +23,28 @@ namespace Tests.Conversation
 
             ImmutableEnumeration immutable = new ImmutableEnumeration(options, immutableType, "4c555837-24dc-41b7-ba45-20bde741a4c6");
             MutableEnumeration mutable = new MutableEnumeration(options, mutableType, "4c555837-24dc-41b7-ba45-20bde741a4c6");
-            CheckEnumParameter(options, immutable, id, "db99b72c-1d07-4956-9d4b-33d202234de7");
-            CheckEnumParameter(options, mutable, id, "db99b72c-1d07-4956-9d4b-33d202234de7");
-            CheckSetParameter(options, immutable, id, "db99b72c-1d07-4956-9d4b-33d202234de7");
-            CheckSetParameter(options, mutable, id, "db99b72c-1d07-4956-9d4b-33d202234de7");
-            CheckEnumParameter(options, immutable, id, null);
-            CheckEnumParameter(options, mutable, id, null);
-            CheckSetParameter(options, immutable, id, null);
-            CheckSetParameter(options, mutable, id, null);
+            CheckEnumParameter(options, immutable, id, "db99b72c-1d07-4956-9d4b-33d202234de7", false);
+            CheckEnumParameter(options, mutable, id, "db99b72c-1d07-4956-9d4b-33d202234de7", false);
+            CheckSetParameter(options, immutable, id, "db99b72c-1d07-4956-9d4b-33d202234de7", false);
+            CheckSetParameter(options, mutable, id, "db99b72c-1d07-4956-9d4b-33d202234de7", false);
+            CheckEnumParameter(options, immutable, id, null, false);
+            CheckEnumParameter(options, mutable, id, null, false);
+            CheckSetParameter(options, immutable, id, null, false);
+            CheckSetParameter(options, mutable, id, null, false);
 
             ImmutableEnumeration immutable2 = new ImmutableEnumeration(options, immutableType, "asd");
             MutableEnumeration mutable2 = new MutableEnumeration(options, mutableType, "asd");
-            CheckEnumParameter(options, immutable, id, null);
-            CheckEnumParameter(options, mutable, id, null);
-            CheckSetParameter(options, immutable, id, null);
-            CheckSetParameter(options, mutable, id, null);
+            CheckEnumParameter(options, immutable2, id, null, true);
+            CheckEnumParameter(options, mutable2, id, null, true);
+            CheckSetParameter(options, immutable2, id, null, true);
+            CheckSetParameter(options, mutable2, id, null, true);
         }
 
-        private static void CheckEnumParameter(Tuple<Guid, string>[] options, IEnumeration enumeration, Id<Parameter> id, string def)
+        private static void CheckEnumParameter(Tuple<Guid, string>[] options, IEnumeration enumeration, Id<Parameter> id, string def, bool corrupt)
         {
             string name = "testEnumParameter";
             var enumParameter = enumeration.ParameterEnum(name, id, def);
-            Assert.That(enumParameter.Corrupted, Is.False);
+            Assert.That(enumParameter.Corrupted, Is.EqualTo(corrupt));
             Assert.That(enumParameter.ValueAsString(), Is.EqualTo(def ?? enumeration.DefaultValue.Transformed(s => s, g => enumeration.GetName(g))));
             Assert.That(enumParameter.Id, Is.EqualTo(id));
             Assert.That(enumParameter.Name, Is.EqualTo(name));
@@ -53,11 +53,11 @@ namespace Tests.Conversation
             Assert.That((enumParameter as IEnumParameter).Options, Is.EquivalentTo(options.Select(o => o.Item1)));
         }
 
-        private static void CheckSetParameter(Tuple<Guid, string>[] options, IEnumeration enumeration, Id<Parameter> id, string def)
+        private static void CheckSetParameter(Tuple<Guid, string>[] options, IEnumeration enumeration, Id<Parameter> id, string def, bool corrupt)
         {
             string name = "testSetParameter";
             var setParameter = enumeration.ParameterSet(name, id, def);
-            Assert.That(setParameter.Corrupted, Is.False);
+            Assert.That(setParameter.Corrupted, Is.EqualTo(corrupt));
             Assert.That(setParameter.ValueAsString(), Is.EqualTo(def ?? enumeration.DefaultValue.Transformed(s => s, g => enumeration.GetName(g))));
             Assert.That(setParameter.Id, Is.EqualTo(id));
             Assert.That(setParameter.Name, Is.EqualTo(name));

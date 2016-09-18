@@ -26,7 +26,7 @@ namespace ConversationEditor
         ConversationConnectionRules m_connectionRules = new ConversationConnectionRules();
         TypeSet m_types;
 
-        private CallbackDictionary<Id<NodeTypeTemp>, Tuple<Guid, GenericEditableGenerator>> m_nodes = new CallbackDictionary<Id<NodeTypeTemp>, Tuple<Guid, GenericEditableGenerator>>();
+        private CallbackDictionary<Id<NodeTypeTemp>, Tuple<Guid, NodeDataGenerator>> m_nodes = new CallbackDictionary<Id<NodeTypeTemp>, Tuple<Guid, NodeDataGenerator>>();
         //private NodeCategory m_nodeHeirarchy;
 
         Dictionary<Id<TConnectorDefinition>, ConnectorDefinitionData> m_connectorDefinitions = new Dictionary<Id<TConnectorDefinition>, ConnectorDefinitionData>()
@@ -82,15 +82,15 @@ namespace ConversationEditor
             m_connectionRules.SetRules(domains.SelectMany(d => d.Connections));
         }
 
-        void m_nodes_Removing(Id<NodeTypeTemp> id, Tuple<Guid, GenericEditableGenerator> generator)
+        void m_nodes_Removing(Id<NodeTypeTemp> id, Tuple<Guid, NodeDataGenerator> generator)
         {
             generator.Item2.Removed();
         }
 
         public void AddNodeType(NodeData node)
         {
-            var nodeGenerator = new GenericEditableGenerator(node, m_types, m_connectorDefinitions, m_connectionRules);
-            m_nodes[node.Guid] = new Tuple<Guid, GenericEditableGenerator>(node.Category.GetValueOrDefault(DomainIDs.CategoryNone), nodeGenerator);
+            var nodeGenerator = new NodeDataGenerator(node, m_types, m_connectorDefinitions, m_connectionRules, null);
+            m_nodes[node.Guid] = new Tuple<Guid, NodeDataGenerator>(node.Category.GetValueOrDefault(DomainIDs.CategoryNone), nodeGenerator);
         }
 
         internal void RemoveNodeType(Id<NodeTypeTemp> id)
@@ -108,7 +108,7 @@ namespace ConversationEditor
             m_connectorDefinitions.Remove(id);
         }
 
-        private NodeCategory GenerateCategories(List<NodeTypeData> nodeTypeData)
+        private static NodeCategory GenerateCategories(List<NodeTypeData> nodeTypeData)
         {
             nodeTypeData = nodeTypeData.ToList(); //Copy that shit because we don't want to break m_categories
             var nodeHeirarchy = new NodeCategory(null, DomainIDs.CategoryNone);
@@ -231,7 +231,7 @@ namespace ConversationEditor
             }
         }
 
-        public EditableGenerator GetNode(Id<NodeTypeTemp> guid)
+        public INodeDataGenerator GetNode(Id<NodeTypeTemp> guid)
         {
             if (m_nodes.ContainsKey(guid))
                 return m_nodes[guid].Item2;

@@ -42,7 +42,7 @@ namespace Conversation
 
         public void UpdateRendererCorruption()
         {
-            if (m_data.Parameters.All(p => !p.Corrupted))
+            if (Data.Parameters.All(p => !p.Corrupted))
             {
                 if (m_currentRenderer != m_nodeUI)
                 {
@@ -70,25 +70,23 @@ namespace Conversation
             m_nodeUI = newRenderer;
         }
 
-        public IEditable m_data { get; } //TODO: Something wrong with this design
-        #region Thin wrapper around m_data
-        public Id<NodeTemp> Id { get { return m_data.NodeId; } }
-        public Id<NodeTypeTemp> Type { get { return m_data.NodeTypeId; } }
-        public event Action Linked { add { m_data.Linked += value; } remove { m_data.Linked -= value; } }
-        public IEnumerable<IParameter> Parameters { get { return m_data.Parameters; } }
-        public IReadOnlyList<NodeData.ConfigData> Config { get { return m_data.Config; } }
-        public IEnumerable<Output> Connectors { get { return m_data.Connectors; } }
-        public string NodeName { get { return m_data.Name; } }
-        public void ChangeId(Id<NodeTemp> id) { m_data.ChangeId(id); }
+        public IConversationNodeData Data { get; }
+        #region Thin wrapper around Data
+        public Id<NodeTemp> Id { get { return Data.NodeId; } }
+        public Id<NodeTypeTemp> Type { get { return Data.NodeTypeId; } }
+        public IEnumerable<IParameter> Parameters { get { return Data.Parameters; } }
+        public IReadOnlyList<NodeData.ConfigData> Config { get { return Data.Config; } }
+        public IEnumerable<Output> Connectors { get { return Data.Connectors; } }
+        public string NodeName { get { return Data.Name; } }
         #endregion
 
         public event Action Modified;
         public event Action RendererChanging;
         public event Action RendererChanged;
 
-        public ConfigureResult Configure(Func<IEditable, ConfigureResult> configureData)
+        public ConfigureResult Configure(Func<IConversationNodeData, ConfigureResult> configureData)
         {
-            ConfigureResult result = configureData(m_data);
+            ConfigureResult result = configureData(Data);
             return result.Transformed<ConfigureResult>(sup => new SimpleUndoPair
             {
                 Redo = () =>
@@ -106,9 +104,9 @@ namespace Conversation
             }, crno => crno);
         }
 
-        public ConversationNode(IEditable data, Func<ConversationNode<TNodeUI>, TNodeUI> nodeUI, Func<ConversationNode<TNodeUI>, TNodeUI> corruptedUI)
+        public ConversationNode(IConversationNodeData data, Func<ConversationNode<TNodeUI>, TNodeUI> nodeUI, Func<ConversationNode<TNodeUI>, TNodeUI> corruptedUI)
         {
-            m_data = data;
+            Data = data;
             m_nodeUI = nodeUI;
             m_corruptedUI = corruptedUI;
 

@@ -17,7 +17,7 @@ namespace ConversationEditor
 
     public static class AutoCompletePattern
     {
-        private static bool HasParent(IEditable node)
+        private static bool HasParent(IConversationNodeData node)
         {
             var parentConnector = node.Connectors.Where(c => c.Id == DomainIDs.AutoComplete.parent.Id).SingleOrDefault();
             if (parentConnector == null)
@@ -26,7 +26,7 @@ namespace ConversationEditor
                 return parentConnector.Connections.Any();
         }
 
-        private static bool HasPrevious(IEditable node)
+        private static bool HasPrevious(IConversationNodeData node)
         {
             var previousConnector = node.Connectors.Where(c => c.Id == DomainIDs.AutoComplete.previous.Id).SingleOrDefault();
             if (previousConnector == null)
@@ -35,20 +35,20 @@ namespace ConversationEditor
                 return previousConnector.Connections.Any();
         }
 
-        private static IEnumerable<IEditable> Children(IEditable node)
+        private static IEnumerable<IConversationNodeData> Children(IConversationNodeData node)
         {
             var childConnector = node.Connectors.Where(c => c.Id == DomainIDs.AutoComplete.child.Id).SingleOrDefault();
             if (childConnector == null)
-                return Enumerable.Empty<IEditable>();
+                return Enumerable.Empty<IConversationNodeData>();
             else
                 return childConnector.Connections.Select(c => c.Parent);
         }
 
-        private static IEnumerable<IEditable> Next(IEditable node)
+        private static IEnumerable<IConversationNodeData> Next(IConversationNodeData node)
         {
             var nextConnector = node.Connectors.Where(c => c.Id == DomainIDs.AutoComplete.next.Id).SingleOrDefault();
             if (nextConnector == null)
-                return Enumerable.Empty<IEditable>();
+                return Enumerable.Empty<IConversationNodeData>();
             else
                 return nextConnector.Connections.Select(c => c.Parent);
         }
@@ -70,12 +70,13 @@ namespace ConversationEditor
             return result;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1040:AvoidEmptyInterfaces", Justification = "Interface needed for storage in a list. May wish to add members later")]
         public interface IError { }
         private class OverRecursionError : IError
         {
         }
 
-        private static Either<Node, IError> Process(IEditable node, DomainDomain source, int depth)
+        private static Either<Node, IError> Process(IConversationNodeData node, DomainDomain source, int depth)
         {
             if (node == null)
                 return null;

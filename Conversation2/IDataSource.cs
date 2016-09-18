@@ -9,7 +9,7 @@ namespace Conversation
     public interface INodeType
     {
         IEnumerable<INodeType> ChildTypes { get; }
-        IEnumerable<IEditableGenerator> Nodes { get; }
+        IEnumerable<INodeDataGenerator> Nodes { get; }
         string Name { get; }
         Guid Guid { get; }
     }
@@ -40,12 +40,12 @@ namespace Conversation
             get { return m_childTypes; }
         }
 
-        private List<EditableGenerator> m_nodes { get; } = new List<EditableGenerator>();
-        public IEnumerable<IEditableGenerator> Nodes
+        private List<INodeDataGenerator> m_nodes { get; } = new List<INodeDataGenerator>();
+        public IEnumerable<INodeDataGenerator> Nodes
         {
             get { return m_nodes; }
         }
-        public void AddNode(EditableGenerator node)
+        public void AddNode(INodeDataGenerator node)
         {
             m_nodes.Add(node);
         }
@@ -63,7 +63,7 @@ namespace Conversation
     {
         IEnumerable<ParameterType> ParameterTypes { get; }
         INodeType Nodes { get; }
-        EditableGenerator GetNode(Id<NodeTypeTemp> guid);
+        INodeDataGenerator GetNode(Id<NodeTypeTemp> guid);
         bool IsInteger(ParameterType type);
         bool IsDecimal(ParameterType type);
         bool IsEnum(ParameterType type);
@@ -85,7 +85,7 @@ namespace Conversation
 
     public static class DataSourceUtils
     {
-        public static IEnumerable<IEditableGenerator> AllNodes(this IDataSource datasource)
+        public static IEnumerable<INodeDataGenerator> AllNodes(this IDataSource datasource)
         {
             return datasource.Nodes.Collapse(n => n.ChildTypes, n => n.Nodes);
         }
@@ -106,7 +106,7 @@ namespace Conversation
             get { return new NodeCategory("", Guid.NewGuid()); }
         }
 
-        EditableGenerator IDataSource.GetNode(Id<NodeTypeTemp> nodeType)
+        INodeDataGenerator IDataSource.GetNode(Id<NodeTypeTemp> nodeType)
         {
             throw new NotImplementedException();
         }

@@ -10,6 +10,7 @@ namespace Tests.Conversation.Parameters
 {
     public static class TestUnknownParameter
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Conversation.UnknownParameter", Justification = "The point is to see if constructing the thing causes errors")]
         [Test]
         public static void TestNullValue()
         {

@@ -22,7 +22,7 @@ namespace ConversationEditor
 
         public static IntegerData Data { get { return new IntegerData(NAME, PARAMETER_TYPE, null, null); } }
 
-        public override NodeData.ParameterData ReadDomainNode(IEditable parameterNode)
+        public override NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode)
         {
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.ParameterName) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
@@ -52,7 +52,7 @@ namespace ConversationEditor
 
         public static DecimalData Data { get { return new DecimalData(NAME, PARAMETER_TYPE, null, null); } }
 
-        public override NodeData.ParameterData ReadDomainNode(IEditable parameterNode)
+        public override NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode)
         {
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.ParameterName) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
@@ -78,7 +78,7 @@ namespace ConversationEditor
 
         public static readonly ParameterType ParameterType = StringParameter.ParameterType;
 
-        public override NodeData.ParameterData ReadDomainNode(IEditable parameterNode)
+        public override NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode)
         {
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.ParameterName) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
@@ -102,7 +102,7 @@ namespace ConversationEditor
 
         public static readonly ParameterType ParameterType = LocalizedStringParameter.ParameterType;
 
-        public override NodeData.ParameterData ReadDomainNode(IEditable parameterNode)
+        public override NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode)
         {
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.ParameterName) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
@@ -124,7 +124,7 @@ namespace ConversationEditor
 
         public static ParameterType PARAMETER_TYPE { get; } = BooleanParameter.ParameterType;
 
-        public override NodeData.ParameterData ReadDomainNode(IEditable parameterNode)
+        public override NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode)
         {
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.ParameterName) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
@@ -148,7 +148,7 @@ namespace ConversationEditor
 
         public static readonly ParameterType PARAMETER_TYPE = ParameterType.Parse("05b29166-31c5-449f-bb91-d63a603183db");
 
-        public override NodeData.ParameterData ReadDomainNode(IEditable parameterNode)
+        public override NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode)
         {
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.ParameterName) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
@@ -169,7 +169,7 @@ namespace ConversationEditor
         {
         }
 
-        public override NodeData.ParameterData ReadDomainNode(IEditable parameterNode)
+        public override NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode)
         {
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.ParameterName) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
@@ -196,7 +196,7 @@ namespace ConversationEditor
         {
         }
 
-        public override NodeData.ParameterData ReadDomainNode(IEditable parameterNode)
+        public override NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode)
         {
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.ParameterName) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
@@ -224,7 +224,7 @@ namespace ConversationEditor
                    nodeType: TypeDefinitionNodeIds.DynamicEnumeration)
         { }
 
-        public override NodeData.ParameterData ReadDomainNode(IEditable parameterNode)
+        public override NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode)
         {
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.ParameterName) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
@@ -248,7 +248,7 @@ namespace ConversationEditor
                    nodeType: TypeDefinitionNodeIds.LocalDynamicEnumeration)
         { }
 
-        public override NodeData.ParameterData ReadDomainNode(IEditable parameterNode)
+        public override NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode)
         {
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.ParameterName) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
@@ -299,16 +299,16 @@ namespace ConversationEditor
             NodeType = nodeType;
         }
 
-        public static readonly BaseTypeInteger Integer = new BaseTypeInteger();
-        public static readonly BaseTypeDecimal Decimal = new BaseTypeDecimal();
-        public static readonly BaseTypeString String = new BaseTypeString();
-        public static readonly BaseTypeLocalizedString LocalizedString = new BaseTypeLocalizedString();
-        public static readonly BaseTypeBoolean Boolean = new BaseTypeBoolean();
-        public static readonly BaseTypeAudio Audio = new BaseTypeAudio();
-        public static readonly BaseTypeEnumeration Enumeration = new BaseTypeEnumeration();
-        public static readonly BaseTypeDynamicEnumeration DynamicEnumeration = new BaseTypeDynamicEnumeration();
-        public static readonly BaseTypeLocalDynamicEnumeration LocalDynamicEnumeration = new BaseTypeLocalDynamicEnumeration();
-        public static readonly BaseTypeFlags Set = new BaseTypeFlags();
+        public static BaseTypeInteger Integer { get; } = new BaseTypeInteger();
+        public static BaseTypeDecimal Decimal { get; } = new BaseTypeDecimal();
+        public static BaseTypeString String { get; } = new BaseTypeString();
+        public static BaseTypeLocalizedString LocalizedString { get; } = new BaseTypeLocalizedString();
+        public static BaseTypeBoolean Boolean { get; } = new BaseTypeBoolean();
+        public static BaseTypeAudio Audio { get; } = new BaseTypeAudio();
+        public static BaseTypeEnumeration Enumeration { get; } = new BaseTypeEnumeration();
+        public static BaseTypeDynamicEnumeration DynamicEnumeration { get; } = new BaseTypeDynamicEnumeration();
+        public static BaseTypeLocalDynamicEnumeration LocalDynamicEnumeration { get; } = new BaseTypeLocalDynamicEnumeration();
+        public static BaseTypeFlags Set { get; } = new BaseTypeFlags();
 
         static BaseType()
         {
@@ -340,11 +340,11 @@ namespace ConversationEditor
             return m_parameterNodeTypeToBaseTypeMapping.ContainsKey(parameterNodeType);
         }
 
-        public abstract NodeData.ParameterData ReadDomainNode(IEditable parameterNode);
+        public abstract NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode);
 
         public abstract string Name { get; }
 
-        protected static ReadOnlyCollection<NodeData.ConfigData> ReadConfig(IEditable parameterNode)
+        protected static ReadOnlyCollection<NodeData.ConfigData> ReadConfig(IConversationNodeData parameterNode)
         {
             List<NodeData.ConfigData> config = new List<NodeData.ConfigData>();
             var configs = parameterNode.Connectors.Single(c => c.Definition.Id == DomainIDs.ParameterConfigConnectorDefinition.Id).Connections.Select(l => l.Parent);

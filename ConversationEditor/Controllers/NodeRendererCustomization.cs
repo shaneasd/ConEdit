@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 
 namespace ConversationEditor
 {
-    internal class NodeRendererCustomization : IEditable
+    internal class NodeRendererCustomization : IConversationNodeData
     {
         //public static Guid DefaultRenderer(ID<NodeTypeTemp> nodeType)
         //{
@@ -49,6 +49,8 @@ namespace ConversationEditor
         {
             get { throw new NotImplementedException(); }
         }
+
+        public string NodeTypeName { get { throw new NotImplementedException(); } }
 
         public string Name
         {

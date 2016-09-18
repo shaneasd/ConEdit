@@ -69,7 +69,7 @@ namespace ConversationEditor
 
         public static XmlGraphData<NodeUIData, ConversationEditorData> MakeDomainData(IEnumerable<ConversationNode<INodeGui>> nodes, ConversationEditorData data)
         {
-            var nodeData = nodes.Select(n => new GraphAndUI<NodeUIData>(n.m_data, NodeUIData.Make(n.Renderer)));
+            var nodeData = nodes.Select(n => new GraphAndUI<NodeUIData>(n.Data, NodeUIData.Make(n.Renderer)));
             return MakeDomainData(nodeData, data);
         }
 
@@ -99,7 +99,7 @@ namespace ConversationEditor
 
         public static XmlGraphData<NodeUIData, ConversationEditorData> MakeConversationData(IEnumerable<ConversationNode<INodeGui>> nodes, ConversationEditorData data)
         {
-            var nodeData = nodes.Select(n => new GraphAndUI<NodeUIData>(n.m_data, NodeUIData.Make(n.Renderer)));
+            var nodeData = nodes.Select(n => new GraphAndUI<NodeUIData>(n.Data, NodeUIData.Make(n.Renderer)));
             return MakeConversationData(nodeData, data);
         }
 

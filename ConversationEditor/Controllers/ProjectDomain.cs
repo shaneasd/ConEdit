@@ -20,7 +20,7 @@ namespace ConversationEditor
             get { throw new NotImplementedException(); }
         }
 
-        public EditableGenerator GetNode(Id<NodeTypeTemp> guid)
+        public INodeDataGenerator GetNode(Id<NodeTypeTemp> guid)
         {
             throw new NotImplementedException();
         }

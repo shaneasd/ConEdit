@@ -29,13 +29,13 @@ namespace Conversation.Serialization
 
     public class GraphAndUI<TUIRawData>
     {
-        public IEditable GraphData { get { return m_graphData; } }
+        public IConversationNodeData GraphData { get { return m_graphData; } }
         public TUIRawData UIData { get { return m_uiData; } }
 
-        private readonly IEditable m_graphData;
+        private readonly IConversationNodeData m_graphData;
         private readonly TUIRawData m_uiData;
 
-        public GraphAndUI(IEditable graphData, TUIRawData uiData)
+        public GraphAndUI(IConversationNodeData graphData, TUIRawData uiData)
         {
             m_graphData = graphData;
             m_uiData = uiData;
@@ -156,8 +156,8 @@ namespace Conversation.Serialization
                     var id2 = link.Item2.Item2;
                     if (allnodes.ContainsKey(id1) && allnodes.ContainsKey(id2)) //If copy/pasting a piece of graph, linked nodes may not exist
                     {
-                        IEditable node1 = allnodes[id1].GraphData;
-                        IEditable node2 = allnodes[id2].GraphData;
+                        IConversationNodeData node1 = allnodes[id1].GraphData;
+                        IConversationNodeData node2 = allnodes[id2].GraphData;
 
                         var unknownNode1 = node1 as UnknownEditable;
                         var unknownNode2 = node2 as UnknownEditable;
@@ -193,7 +193,7 @@ namespace Conversation.Serialization
                             {
                                 success = connector1.ConnectTo(connector2, true);
                                 if (!success)
-                                    errors.Add(new LoadError("Tried to connect two connectors that could not be connected"));
+                                    errors.Add(new LoadError("Tried to connect two connectors that could not be connected")); //TODO: Might be better to add the connection in violation of the rule to avoid modifying the file then have an error checker
                             }
                         }
                     }
@@ -248,16 +248,16 @@ namespace Conversation.Serialization
                 Id<NodeTemp> id = Id<NodeTemp>.Parse(node.Attribute("Id").Value);
                 Id<NodeTypeTemp> guid = Id<NodeTypeTemp>.Parse(node.Attribute("Guid").Value);
 
-                EditableGenerator editableGenerator = datasource.GetNode(guid);
+                INodeDataGenerator editableGenerator = datasource.GetNode(guid);
 
                 Either<GraphAndUI<TUIRawData>, LoadError> result;
 
                 var parameterNodes = node.Elements("Parameter");
-                var parameterData = parameterNodes.Select(p => new EditableGeneratorParameterData(Id<Parameter>.Parse(p.Attribute("guid").Value), p.Attribute("value").Value)).ToList();
+                var parameterData = parameterNodes.Select(p => new NodeDataGeneratorParameterData(Id<Parameter>.Parse(p.Attribute("guid").Value), p.Attribute("value").Value)).ToList();
 
                 if (editableGenerator != null)
                 {
-                    IEditable editable = editableGenerator.Generate(id, parameterData, documentID);
+                    IConversationNodeData editable = editableGenerator.Generate(id, parameterData, documentID);
                     result = new GraphAndUI<TUIRawData>(editable, m_nodeUIDeserializer.Read(node));
                 }
                 else
@@ -316,7 +316,7 @@ namespace Conversation.Serialization
 
             private static void WriteLinks(XmlGraphData<TUIRawData, TEditorData> conversation, XElement root)
             {
-                HashSet<UnorderedTuple2<Tuple<Id<TConnector>, IEditable>>> links = new HashSet<UnorderedTuple2<Tuple<Id<TConnector>, IEditable>>>();
+                HashSet<UnorderedTuple2<Tuple<Id<TConnector>, IConversationNodeData>>> links = new HashSet<UnorderedTuple2<Tuple<Id<TConnector>, IConversationNodeData>>>();
                 foreach (var n in conversation.Nodes)
                 {
                     foreach (var c in n.GraphData.Connectors)

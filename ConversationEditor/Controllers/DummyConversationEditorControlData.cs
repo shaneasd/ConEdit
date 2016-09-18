@@ -95,7 +95,7 @@ namespace ConversationEditor
         public event Action<TNode> NodeAdded { add { } remove { } }
         public event Action<TNode> NodeRemoved { add { } remove { } }
 
-        public TNode MakeNode(IEditable e, NodeUIData uiData)
+        public TNode MakeNode(IConversationNodeData e, NodeUIData uiData)
         {
             throw new NotImplementedException();
         }

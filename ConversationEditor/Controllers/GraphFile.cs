@@ -38,7 +38,7 @@ namespace ConversationEditor
         private Func<IDynamicEnumParameter, DynamicEnumParameter.Source> m_getDocumentSource;
         private IAudioLibrary m_audioProvider;
 
-        public ConversationNode MakeNode(IEditable e, NodeUIData uiData)
+        public ConversationNode MakeNode(IConversationNodeData e, NodeUIData uiData)
         {
             return m_nodeFactory.MakeNode(e, uiData);
         }
@@ -161,7 +161,7 @@ namespace ConversationEditor
                     }
 
                     var oldID = node.Id;
-                    node.ChangeId(Id<NodeTemp>.New());
+                    node.Data.ChangeId(Id<NodeTemp>.New());
                     foreach (var group in groups)
                     {
                         if (group.Contents.Contains(oldID))

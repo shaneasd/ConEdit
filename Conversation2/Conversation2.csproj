@@ -68,11 +68,10 @@
     <Compile Include="Domain\NodeData.cs" />
     <Compile Include="Domain\TypeSet.cs" />
     <Compile Include="ErrorChecker.cs" />
-    <Compile Include="IConversationNode.cs" />
+    <Compile Include="Nodes\IConversationNode.cs" />
     <Compile Include="Id.cs" />
     <Compile Include="ILocalizer.cs" />
     <Compile Include="InternalLogicException.cs" />
-    <Compile Include="Node.cs" />
     <Compile Include="Nodes\NodeGenerator.cs" />
     <Compile Include="Nodes\SpecialNodes.cs" />
     <Compile Include="Nodes\UnknownEditable.cs" />
@@ -84,8 +83,8 @@
     <Compile Include="Parameters\DynamicEnumParameter.cs" />
     <Compile Include="Enumeration.cs" />
     <Compile Include="Parameters\EnumParameter.cs" />
-    <Compile Include="Nodes\ExternalFunction.cs" />
-    <Compile Include="IEditable.cs" />
+    <Compile Include="Nodes\ConversationNodeData.cs" />
+    <Compile Include="Nodes\IConversationNodeData.cs" />
     <Compile Include="Parameters\IntegerParameter.cs" />
     <Compile Include="Parameters\LocalizedStringParameter.cs" />
     <Compile Include="Parameters\Parameter.cs" />

@@ -15,7 +15,9 @@ namespace Tests
     {
         static void Main()
         {
-            EnumerationTest.Mutable();
+            ParameterTypeTest.TestSet();
+            UnknownEditableTest.Test();
+            //EnumerationTest.ParameterEnum();
             //OutputTest.GetName();
             //TypeSetTest.Test();
             //TestReplace.TestReplaceOnce();

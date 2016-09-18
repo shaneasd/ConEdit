@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 
 namespace ConversationEditor
 {
-    internal class ParameterEditorCustomization : IEditable
+    internal class ParameterEditorCustomization : IConversationNodeData
     {
         public static Guid DefaultEditor(ParameterType type, WillEdit willEdit)
         {
@@ -71,6 +71,8 @@ namespace ConversationEditor
         {
             get { throw new NotImplementedException(); }
         }
+
+        public string NodeTypeName { get { throw new NotImplementedException(); } }
 
         public string Name
         {

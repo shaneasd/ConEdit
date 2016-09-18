@@ -449,7 +449,7 @@ namespace ConversationEditor
             return GetParameterEditor(m_config.ParameterEditors[id], data);
         }
 
-        private ConfigureResult Edit(IEditable data, AudioGenerationParameters audioContext)
+        private ConfigureResult Edit(IConversationNodeData data, AudioGenerationParameters audioContext)
         {
             if (data is UnknownEditable)
             {

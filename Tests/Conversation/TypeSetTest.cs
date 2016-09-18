@@ -147,7 +147,7 @@ namespace Tests.Conversation
         public static void Test()
         {
             Random random = new Random(0);
-            Func<string> randomString = () => "test" + random.NextDouble().ToString();
+            Func<string> randomString = () => "test" + random.NextDouble().ToString(CultureInfo.InvariantCulture);
             Func<Id<Parameter>> randomParameterId = () =>
             {
                 byte[] bytes = new byte[16];

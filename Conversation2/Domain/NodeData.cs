@@ -47,21 +47,14 @@ namespace Conversation
 
         public struct ParameterData
         {
-            public ParameterData(string name, Id<Parameter> id, ParameterType type, ReadOnlyCollection<ConfigData> config)
+            public ParameterData(string name, Id<Parameter> id, ParameterType type, ReadOnlyCollection<ConfigData> config) : this(name, id, type, config, null)
             {
-                if (config == null)
-                    throw new InternalLogicException("Parameter config cannot be null (A)");
-                Type = type;
-                Name = name;
-                Id = id;
-                Default = null;
-                Config = config;
             }
 
             public ParameterData(string name, Id<Parameter> id, ParameterType type, ReadOnlyCollection<ConfigData> config, string def)
             {
                 if (config == null)
-                    throw new InternalLogicException("Parameter config cannot be null (B)");
+                    throw new ArgumentNullException(nameof(config));
                 Type = type;
                 Name = name;
                 Id = id;

@@ -15,7 +15,7 @@ namespace Conversation
                 m_value = value;
             }
 
-            public new static ParameterType Parse(string value)
+            public new static Basic Parse(string value)
             {
                 Guid g;
                 if (Guid.TryParse(value, out g))
@@ -35,19 +35,19 @@ namespace Conversation
                 return Guid.ToString();
             }
 
-            public static ParameterType New()
+            public static Basic New()
             {
                 return new Basic(Guid.NewGuid());
             }
 
-            public static ParameterType ConvertFrom<T>(Id<T> type)
+            public static Basic ConvertFrom<T>(Id<T> type)
             {
                 return new Basic(type.Guid);
             }
 
-            public static ParameterType FromGuid(Guid g)
+            public static Basic FromGuid(Guid guid)
             {
-                return new Basic(g);
+                return new Basic(guid);
             }
 
             public override bool Equals(object obj)
@@ -106,12 +106,12 @@ namespace Conversation
 
             public static ParameterType New()
             {
-                return new Basic(Guid.NewGuid());
+                return new ValueSetType(Guid.NewGuid());
             }
 
             public static ParameterType ConvertFrom<T>(Id<T> type)
             {
-                return new Basic(type.Guid);
+                return new ValueSetType(type.Guid);
             }
 
             public static ParameterType FromGuid(Guid g)
@@ -185,6 +185,9 @@ namespace Conversation
 
         public abstract bool IsSet { get; }
     }
+
+    //TODO: This needs a rename
+    public sealed class NodeTemp { }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
     public class Id<T> : IComparable<Id<T>>, IComparable

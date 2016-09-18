@@ -9,9 +9,9 @@ namespace ConversationEditor
     internal class ErrorCheckerUtils<T> : IErrorCheckerUtilities<T> where T : class, IConversationNode
     {
         private IDataSource m_dataSource;
-        private Func<IEditable, T> m_reverseLookup;
+        private Func<IConversationNodeData, T> m_reverseLookup;
 
-        public ErrorCheckerUtils(IDataSource datasource, Func<IEditable, T> reverseLookup)
+        public ErrorCheckerUtils(IDataSource datasource, Func<IConversationNodeData, T> reverseLookup)
         {
             m_dataSource = datasource;
             m_reverseLookup = reverseLookup;
@@ -22,7 +22,7 @@ namespace ConversationEditor
             return m_dataSource.GetCategory(type);
         }
 
-        public T ReverseLookup(IEditable data)
+        public T ReverseLookup(IConversationNodeData data)
         {
             return m_reverseLookup(data);
         }
