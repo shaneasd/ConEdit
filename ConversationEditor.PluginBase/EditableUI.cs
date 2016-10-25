@@ -100,7 +100,7 @@ namespace ConversationEditor
                     if (Node != null)
                     {
                         Color result;
-                        result = BackgroundColor.TryGet(Node.Config) ?? Color.Gray;
+                        result = BackgroundColor.TryGet(Node.Data.Config) ?? Color.Gray;
                         result = Color.FromArgb(result.R, result.G, result.B);
                         return result;
                     }
@@ -143,7 +143,7 @@ namespace ConversationEditor
             public TitleSection(ConversationNode node) : base(node) { }
             public override SizeF Measure(Graphics g)
             {
-                return SizeF.Add(g.MeasureString(Node.NodeName, BoldFont), new SizeF(4, 4));
+                return SizeF.Add(g.MeasureString(Node.Data.Name, BoldFont), new SizeF(4, 4));
             }
 
             public override void Draw(Graphics g, PointF location)
@@ -151,7 +151,7 @@ namespace ConversationEditor
                 float brightnessFactor = 0.75f;
                 float darknessFactor = 0;
                 DrawChunk(g, brightnessFactor, darknessFactor, location);
-                g.DrawString(Node.NodeName, BoldFont, Brushes.Black, new PointF(location.X + 2, location.Y + 2));
+                g.DrawString(Node.Data.Name, BoldFont, Brushes.Black, new PointF(location.X + 2, location.Y + 2));
             }
         }
 
@@ -163,7 +163,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return Node.Connectors.Where(c => c.Definition.Position == ConnectorPosition.Bottom);
+                    return Node.Data.Connectors.Where(c => c.Definition.Position == ConnectorPosition.Bottom);
                 }
             }
 
@@ -224,7 +224,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return MaxWidthConfig.TryGet(Node.Config) ?? EditableUI.MaxWidth;
+                    return MaxWidthConfig.TryGet(Node.Data.Config) ?? EditableUI.MaxWidth;
                 }
             }
 
@@ -264,7 +264,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return Node.Parameters.Where(ShouldRender);
+                    return Node.Data.Parameters.Where(ShouldRender);
                 }
             }
 
@@ -366,7 +366,7 @@ namespace ConversationEditor
         {
             get
             {
-                return RoundedConfig.TryGet(Node.Config) ?? false;
+                return RoundedConfig.TryGet(Node.Data.Config) ?? false;
             }
         }
 

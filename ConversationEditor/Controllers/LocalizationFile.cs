@@ -60,9 +60,9 @@ namespace ConversationEditor
             using (var file = Util.LoadFileStream(path, FileMode.CreateNew, FileAccess.Write))
             {
             }
-            using (MemoryStream m = new MemoryStream())
+            using (var mem = new MemoryStream())
             {
-                LocalizationFile result = new LocalizationFile(new MemoryStream(), path, data, serializer(path.FullName)); //Make a new localization file for an existing project
+                LocalizationFile result = new LocalizationFile(mem, path, data, serializer(path.FullName)); //Make a new localization file for an existing project
                 result.File.Writable.Save();
                 return result;
             }

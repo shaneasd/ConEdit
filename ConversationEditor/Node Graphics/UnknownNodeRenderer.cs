@@ -37,7 +37,7 @@ namespace ConversationEditor
         {
             get
             {
-                return Node.Parameters.Aggregate(Node.NodeName, (a, p) => a + "\r\n  -  " + p.Name, s => s);
+                return Node.Data.Parameters.Aggregate(Node.Data.Name, (a, p) => a + "\r\n  -  " + p.Name, s => s);
             }
         }
 

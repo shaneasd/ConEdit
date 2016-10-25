@@ -33,6 +33,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet />
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -59,6 +60,8 @@
     <Compile Include="Config\ConfigParameterString.cs" />
     <Compile Include="ConversationEditorData.cs" />
     <Compile Include="EditableUI.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="IColorScheme.cs" />
     <Compile Include="IErrorListElement.cs" />
     <Compile Include="IAudioFile.cs" />
     <Compile Include="IAudioProvider.cs" />

@@ -31,7 +31,7 @@ namespace Clandestine
             {
                 get
                 {
-                    return m_node.NodeName + ":  " + string.Join(", ", m_node.Parameters.Select(p => p.Name + ": " + p.DisplayValue(m_localize)).ToArray());
+                    return m_node.Data.Name + ":  " + string.Join(", ", m_node.Data.Parameters.Select(p => p.Name + ": " + p.DisplayValue(m_localize)).ToArray());
                 }
             }
 
@@ -62,7 +62,7 @@ namespace Clandestine
             //}
             yield return new MenuAction<ConversationNode>("Find Nodes of Type", (a, b) => () =>
             {
-                var nodesofType = project.ConversationFilesCollection.SelectMany(f => f.Nodes.Where(n => n.Type == a.Type).Select(n => new { Node = n, File = f }));
+                var nodesofType = project.ConversationFilesCollection.SelectMany(f => f.Nodes.Where(n => n.Data.NodeTypeId == a.Data.NodeTypeId).Select(n => new { Node = n, File = f }));
                 log(nodesofType.Select(n => new LogElement(n.File, n.Node, localize)));
             }
             , null, null, null);

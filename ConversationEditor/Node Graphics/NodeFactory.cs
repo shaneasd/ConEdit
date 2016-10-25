@@ -59,7 +59,7 @@ namespace ConversationEditor
 
             m_toUpdate.Add(n);
 
-            return GetNodeRendererChoice(n.Type, n, p);
+            return GetNodeRendererChoice(n.Data.NodeTypeId, n, p);
         }
 
         private static INodeGui MakeCorruptedRenderer(ConversationNode n, PointF p)

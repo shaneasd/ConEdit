@@ -18,10 +18,11 @@ namespace ConversationEditor
             m_factory = factory;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFile", Justification = "Can't see an alternative method...")]
         public NodeRendererChoice(string assembly, string type)
             : base(assembly, type)
         {
-            m_factory = (NodeUI.IFactory)Assembly.LoadFrom(assembly).GetType(type).GetConstructor(new Type[0]).Invoke(new object[0]);
+            m_factory = (NodeUI.IFactory)Assembly.LoadFile(assembly).GetType(type).GetConstructor(new Type[0]).Invoke(new object[0]);
         }
 
         public bool WillRender(Id<NodeTypeTemp> guid)

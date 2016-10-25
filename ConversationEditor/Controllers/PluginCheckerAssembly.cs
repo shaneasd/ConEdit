@@ -15,6 +15,7 @@ namespace ConversationEditor
     {
         public readonly string FileName; //Null if main assembly
         public readonly Assembly Assembly;
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFile", Justification = "Can't see an alternative method...")]
         public PluginAssembly(string fileName)
         {
             FileName = fileName;

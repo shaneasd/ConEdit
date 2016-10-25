@@ -110,7 +110,7 @@ namespace ConversationEditor
                 foreach (var node in file.Nodes.Evaluate())
                 {
 
-                    foreach (var parameter in node.Parameters.OfType<IStringParameter>())
+                    foreach (var parameter in node.Data.Parameters.OfType<IStringParameter>())
                     {
                         if (!radLocalizedTextOnly.Checked)
                         {
@@ -124,7 +124,7 @@ namespace ConversationEditor
                         }
                     }
 
-                    foreach (var parameter in node.Parameters.OfType<ILocalizedStringParameter>())
+                    foreach (var parameter in node.Data.Parameters.OfType<ILocalizedStringParameter>())
                     {
                         if (!radNonLocalizedTextOnly.Checked)
                         {

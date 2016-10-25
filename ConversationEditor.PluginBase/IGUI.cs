@@ -11,7 +11,7 @@ namespace ConversationEditor
     {
         RectangleF Area { get; }
         void UpdateArea();
-        void Draw(Graphics g, bool selected, ColorScheme scheme);
+        void Draw(Graphics g, bool selected, IColorScheme scheme);
         void MoveTo(PointF location);
         event Action<Changed<RectangleF>> AreaChanged;
     }

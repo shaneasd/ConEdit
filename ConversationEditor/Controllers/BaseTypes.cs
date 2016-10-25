@@ -310,9 +310,10 @@ namespace ConversationEditor
         public static BaseTypeLocalDynamicEnumeration LocalDynamicEnumeration { get; } = new BaseTypeLocalDynamicEnumeration();
         public static BaseTypeFlags Set { get; } = new BaseTypeFlags();
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static BaseType()
         {
-            Action<BaseType> AddMapping = b => { m_parameterNodeTypeToBaseTypeMapping.Add(b.ParameterNodeType, b); };
+            Action<BaseType> AddMapping = b => { s_parameterNodeTypeToBaseTypeMapping.Add(b.ParameterNodeType, b); };
 
             AddMapping(Integer);
             AddMapping(Decimal);
@@ -326,18 +327,18 @@ namespace ConversationEditor
             AddMapping(Set);
         }
 
-        private static Dictionary<Id<NodeTypeTemp>, BaseType> m_parameterNodeTypeToBaseTypeMapping = new Dictionary<Id<NodeTypeTemp>, BaseType>();
+        private static Dictionary<Id<NodeTypeTemp>, BaseType> s_parameterNodeTypeToBaseTypeMapping = new Dictionary<Id<NodeTypeTemp>, BaseType>();
 
-        public static IEnumerable<BaseType> BaseTypes { get { return m_parameterNodeTypeToBaseTypeMapping.Values; } }
+        public static IEnumerable<BaseType> BaseTypes { get { return s_parameterNodeTypeToBaseTypeMapping.Values; } }
 
         public static BaseType GetType(Id<NodeTypeTemp> parameterNodeType)
         {
-            return m_parameterNodeTypeToBaseTypeMapping[parameterNodeType];
+            return s_parameterNodeTypeToBaseTypeMapping[parameterNodeType];
         }
 
         public static bool TypeExists(Id<NodeTypeTemp> parameterNodeType)
         {
-            return m_parameterNodeTypeToBaseTypeMapping.ContainsKey(parameterNodeType);
+            return s_parameterNodeTypeToBaseTypeMapping.ContainsKey(parameterNodeType);
         }
 
         public abstract NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode);

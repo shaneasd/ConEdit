@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            ColorScheme colorScheme1 = new ColorScheme();
             this.btnOk = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -80,7 +79,6 @@
             // drawWindow1
             // 
             this.drawWindow1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(56)))), ((int)(((byte)(56)))));
-            this.drawWindow1.ColorScheme = colorScheme1;
             this.drawWindow1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.drawWindow1.HandleNavigation = false;
             this.drawWindow1.Location = new System.Drawing.Point(0, 0);

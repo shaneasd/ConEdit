@@ -15,7 +15,14 @@ namespace Conversation
 
     public enum ConfigureResultNotOk
     {
+        /// <summary>
+        /// The user instigated an edit but subsequently cancelled that operation prior to its taking effect
+        /// </summary>
         Cancel,
+
+        /// <summary>
+        /// The user instigated an edit but no editing of the target is possible irrespective of user action
+        /// </summary>
         NotApplicable
     }
 
@@ -47,6 +54,9 @@ namespace Conversation
     }
 
 
+    /// <summary>
+    /// Represents an update action (and counteraction) of a parameters's data
+    /// </summary>
     public class UpdateParameterData
     {
         /// <summary>
@@ -64,7 +74,11 @@ namespace Conversation
         }
     }
 
-
+    /// <summary>
+    /// Represents the result of a user's attempt to modify a node
+    /// If a UpdateParameterData[], it is the actions required to modify those parameters on the node that the user has specified to their new, user specified values
+    /// If a ConfigureResultNotOk indicates that no changes are required for the reason indicated by the specified value of the ConfigureResultNotOk
+    /// </summary>
     public class ConfigureResult2 : Either<UpdateParameterData[], ConfigureResultNotOk>
     {
         public const ConfigureResultNotOk Cancel = ConfigureResultNotOk.Cancel;

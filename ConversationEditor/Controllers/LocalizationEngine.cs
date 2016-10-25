@@ -10,7 +10,7 @@ using Conversation.Serialization;
 
 namespace ConversationEditor
 {
-    internal class LocalizationEngine : Disposable, ILocalizationEngine
+    internal class LocalizationEngine : ILocalizationEngine
     {
         public const string MISSING_LOCALIZATION = "Missing Localization";
 
@@ -88,11 +88,6 @@ namespace ConversationEditor
         public bool CanLocalize
         {
             get { return m_localizers.Any(); } //Assume that if localizers exist then one is selected
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            m_localizers.Dispose();
         }
     }
 }

@@ -192,17 +192,16 @@ namespace Conversation
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
     public class Id<T> : IComparable<Id<T>>, IComparable
     {
-        public Guid Guid { get { return m_data; } }
+        public Guid Guid { get; }
 
-        private readonly Guid m_data;
         public Id()
         {
-            m_data = Guid.NewGuid();
+            Guid = Guid.NewGuid();
         }
 
         private Id(Guid data)
         {
-            m_data = data;
+            Guid = data;
         }
 
         public static Id<T> ConvertFrom<U>(Id<U> other)
@@ -227,7 +226,7 @@ namespace Conversation
 
         public override int GetHashCode()
         {
-            return m_data.GetHashCode();
+            return Guid.GetHashCode();
         }
 
         public static bool operator ==(Id<T> a, Id<T> b)
@@ -239,7 +238,7 @@ namespace Conversation
             else if (aNull || bNull)
                 return false;
             else
-                return object.Equals(a.m_data, b.m_data);
+                return object.Equals(a.Guid, b.Guid);
         }
 
         public static bool operator !=(Id<T> a, Id<T> b)
@@ -255,7 +254,7 @@ namespace Conversation
 
         public string Serialized()
         {
-            return m_data.ToString();
+            return Guid.ToString();
         }
 
         public static Id<T> FromGuid(System.Guid guid)
@@ -287,13 +286,13 @@ namespace Conversation
         {
             if (other == null)
                 return -1; //I don't know if this puts nulls at the start or the end but it really doesn't matter
-            return m_data.CompareTo(other.m_data);
+            return Guid.CompareTo(other.Guid);
         }
 
         public int CompareTo(object obj)
         {
             Id<T> other = obj as Id<T>;
-            return m_data.CompareTo(other.m_data);
+            return Guid.CompareTo(other.Guid);
         }
     }
 

@@ -35,7 +35,7 @@ namespace ConversationEditor
 
         public void UpdateArea() { } //The area isn't calculated automatically
 
-        public void Draw(Graphics g, bool selected, ColorScheme scheme)
+        public void Draw(Graphics g, bool selected, IColorScheme scheme)
         {
             if (selected)
             {
@@ -110,7 +110,7 @@ namespace ConversationEditor
             var r = contents.Max(n => n.Renderer.Area.Right) + 20;
             var t = contents.Min(n => n.Renderer.Area.Top) - 20;
             var b = contents.Max(n => n.Renderer.Area.Bottom) + 20;
-            return new NodeGroup(RectangleF.FromLTRB(l, t, r, b), contents.Select(n => n.Id));
+            return new NodeGroup(RectangleF.FromLTRB(l, t, r, b), contents.Select(n => n.Data.NodeId));
         }
 
         public NodeGroup(RectangleF area)

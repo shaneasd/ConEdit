@@ -8,6 +8,7 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using System.IO;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Utilities
 {
@@ -65,7 +66,7 @@ namespace Utilities
 
         public static bool DesignMode()
         {
-            return System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime;
+            return Process.GetCurrentProcess().ProcessName == "devenv";
         }
 
         public static T Clamp<T>(this T val, T min, T max) where T : IComparable

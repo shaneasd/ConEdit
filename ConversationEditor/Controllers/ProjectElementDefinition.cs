@@ -91,26 +91,26 @@ namespace ConversationEditor
     internal class LocalizationDefinition : ProjectElementDefinition<ILocalizationFile>
     {
         public static ProjectElementDefinition Instance = new LocalizationDefinition();
-        private static Bitmap m_icon;
-        private static Bitmap m_missingIcon;
+        private static Bitmap s_icon;
+        private static Bitmap s_missingIcon;
 
         static LocalizationDefinition()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.LocalisationFile.png"))
-                m_icon = new Bitmap(stream);
+                s_icon = new Bitmap(stream);
             using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.LocalisationFileMissing.png"))
-                m_missingIcon = new Bitmap(stream);
+                s_missingIcon = new Bitmap(stream);
         }
 
         public override Bitmap Icon
         {
-            get { return m_icon; }
+            get { return s_icon; }
         }
 
         public override Bitmap MissingIcon
         {
-            get { return m_missingIcon; }
+            get { return s_missingIcon; }
         }
 
         public override ProjectExplorer.Item MakeMissingElement(Func<RectangleF> area, ILocalizationFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
@@ -139,26 +139,26 @@ namespace ConversationEditor
     internal class DomainDefinition : ProjectElementDefinition<IDomainFile>
     {
         public static ProjectElementDefinition Instance = new DomainDefinition();
-        private static Bitmap m_icon;
-        private static Bitmap m_missingIcon;
+        private static Bitmap s_icon;
+        private static Bitmap s_missingIcon;
 
         static DomainDefinition()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.Domain.png"))
-                m_icon = new Bitmap(stream);
+                s_icon = new Bitmap(stream);
             using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.DomainMissing.png"))
-                m_missingIcon = new Bitmap(stream);
+                s_missingIcon = new Bitmap(stream);
         }
 
         public override Bitmap Icon
         {
-            get { return m_icon; }
+            get { return s_icon; }
         }
 
         public override Bitmap MissingIcon
         {
-            get { return m_missingIcon; }
+            get { return s_missingIcon; }
         }
 
         public override ProjectExplorer.Item MakeMissingElement(Func<RectangleF> area, IDomainFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)

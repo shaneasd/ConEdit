@@ -12,7 +12,7 @@ namespace ConversationEditor
         private List<Tuple<PointF, PointF, bool>> m_connections = new List<Tuple<PointF, PointF, bool>>();
         private LineDrawer m_drawer;
 
-        public ConnectionDrawer(ColorScheme scheme)
+        public ConnectionDrawer(IColorScheme scheme)
         {
             m_drawer = new LineDrawer(scheme);
         }

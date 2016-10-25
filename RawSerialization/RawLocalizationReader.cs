@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +11,26 @@ namespace RawSerialization
 {
     public class RawLocalizationReader
     {
+        [Serializable]
+        public class ReadException : Exception
+        {
+            public ReadException() : base()
+            {
+            }
+
+            public ReadException(string message) : base(message)
+            {
+            }
+
+            public ReadException(string message, Exception inner) : base(message, inner)
+            {
+            }
+
+            protected ReadException(SerializationInfo info, StreamingContext context) : base(info, context)
+            {
+            }
+        }
+
         public static RawLocalizationReader Read(Stream stream)
         {
             return new RawLocalizationReader(stream);
@@ -23,7 +44,7 @@ namespace RawSerialization
             {
                 uint version = r.ReadUInt32();
                 if (version != 0)
-                    throw new Exception("Unexpected version");
+                    throw new ReadException("Unexpected version");
                 uint count = r.ReadUInt32();
                 m_stringsCache = new Dictionary<Id<LocalizedText>, string>((int)count);
 

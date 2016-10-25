@@ -24,8 +24,19 @@ namespace Conversation
     public class ConversationNode<TNodeUI> : IConversationNode, IRenderable<TNodeUI>, IConfigurable
         where TNodeUI : INodeUI<TNodeUI>
     {
-        private Func<ConversationNode<TNodeUI>, TNodeUI> m_nodeUI;
+        /// <summary>
+        /// Generator for the renderer to use when the node is not corrupted
+        /// </summary>
+        private Func<ConversationNode<TNodeUI>, TNodeUI> m_uncorruptedUI;
+
+        /// <summary>
+        /// Generator for the renderer to use when the node is corrupted
+        /// </summary>
         private Func<ConversationNode<TNodeUI>, TNodeUI> m_corruptedUI;
+
+        /// <summary>
+        /// Either m_uncorruptedUI or m_corruptedUI based on whether the node is currently corrupted
+        /// </summary>
         private Func<ConversationNode<TNodeUI>, TNodeUI> m_currentRenderer;
 
         private TNodeUI m_renderer;
@@ -44,9 +55,9 @@ namespace Conversation
         {
             if (Data.Parameters.All(p => !p.Corrupted))
             {
-                if (m_currentRenderer != m_nodeUI)
+                if (m_currentRenderer != m_uncorruptedUI)
                 {
-                    m_currentRenderer = m_nodeUI;
+                    m_currentRenderer = m_uncorruptedUI;
                     Renderer = m_currentRenderer(this);
                 }
             }
@@ -62,29 +73,24 @@ namespace Conversation
 
         public void SetRenderer(Func<ConversationNode<TNodeUI>, TNodeUI> newRenderer)
         {
-            if (m_currentRenderer == m_nodeUI)
+            if (m_currentRenderer == m_uncorruptedUI)
             {
                 m_currentRenderer = newRenderer;
                 Renderer = newRenderer(this);
             }
-            m_nodeUI = newRenderer;
+            m_uncorruptedUI = newRenderer;
         }
 
         public IConversationNodeData Data { get; }
-        #region Thin wrapper around Data
-        public Id<NodeTemp> Id { get { return Data.NodeId; } }
-        public Id<NodeTypeTemp> Type { get { return Data.NodeTypeId; } }
-        public IEnumerable<IParameter> Parameters { get { return Data.Parameters; } }
-        public IReadOnlyList<NodeData.ConfigData> Config { get { return Data.Config; } }
-        public IEnumerable<Output> Connectors { get { return Data.Connectors; } }
-        public string NodeName { get { return Data.Name; } }
-        #endregion
 
+        /// <summary>
+        /// Triggered after the node has been modified as a result of an action returned from Configure
+        /// </summary>
         public event Action Modified;
         public event Action RendererChanging;
         public event Action RendererChanged;
 
-        public ConfigureResult Configure(Func<IConversationNodeData, ConfigureResult> configureData)
+        public ConfigureResult Configure(NodeEditOperation configureData)
         {
             ConfigureResult result = configureData(Data);
             return result.Transformed<ConfigureResult>(sup => new SimpleUndoPair
@@ -107,7 +113,7 @@ namespace Conversation
         public ConversationNode(IConversationNodeData data, Func<ConversationNode<TNodeUI>, TNodeUI> nodeUI, Func<ConversationNode<TNodeUI>, TNodeUI> corruptedUI)
         {
             Data = data;
-            m_nodeUI = nodeUI;
+            m_uncorruptedUI = nodeUI;
             m_corruptedUI = corruptedUI;
 
             if (data.Parameters.Any(p => p.Corrupted))
@@ -121,7 +127,7 @@ namespace Conversation
         {
             List<Action> redoActions = new List<Action>();
             List<Action> undoActions = new List<Action>();
-            foreach (var t in Connectors)
+            foreach (var t in Data.Connectors)
             {
                 var disconnectAll = t.DisconnectAllActions();
                 redoActions.Add(disconnectAll.Redo);

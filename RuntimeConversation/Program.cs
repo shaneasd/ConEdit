@@ -13,7 +13,7 @@ namespace RuntimeConversation
         {
             //Application.Run();
             //var f = new ConversationForm(@"E:\ConEdit\Viking\Resources\Conversations\DemoIntro.xml", @"E:\ConEdit\Viking\Resources\Localization\Dialogue\DialogueEnglish.xml");
-            var f = new ConversationForm(@"DemoIntro.xml", @"DialogueEnglish.xml");
+            //var f = new ConversationForm(@"DemoIntro.xml", @"DialogueEnglish.xml");
             //Application.Run(new ConversationForm());
         }
     }

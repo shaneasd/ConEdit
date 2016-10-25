@@ -34,8 +34,9 @@ namespace ConversationEditor
             m_assembly = type.Assembly.Location;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFile", Justification ="Can't see an alternative method...")]
         protected TypeChoice(string assembly, string type)
-             : this(Assembly.LoadFrom(assembly).GetType(type))
+             : this(Assembly.LoadFile(assembly).GetType(type))
         {
         }
 

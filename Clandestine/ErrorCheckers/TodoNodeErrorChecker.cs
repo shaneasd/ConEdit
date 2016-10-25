@@ -24,7 +24,7 @@ namespace Clandestine
 
         public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
         {
-            return nodes.Where(e => e.Type == SpecialNodes.ToDo).Select(node => new TodoError(node));
+            return nodes.Where(e => e.Data.NodeTypeId == SpecialNodes.ToDo).Select(node => new TodoError(node));
         }
 
         public override string Name

@@ -54,6 +54,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <CodeAnalysisRuleSet />
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>2F31BDAC2FF2A43C53D2A64B25E70F1EB3521833</ManifestCertificateThumbprint>
@@ -137,6 +138,7 @@
     <Compile Include="Controllers\SharedContext.cs" />
     <Compile Include="Customization\WrapperContextMenuItemsFactory.cs" />
     <Compile Include="Error Checkers\InvalidConnectionErrorChecker.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="GUIs\Default Parameter Editors\DefaultLocalDynamicEnumEditor.cs" />
     <Compile Include="GUIs\Default Parameter Editors\DefaultSetEditor.cs" />
     <Compile Include="GUIs\Default Parameter Editors\DefaultSetEditor.Designer.cs">
@@ -164,6 +166,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="INodeGUIUtils.cs" />
+    <Compile Include="NativeMethods.cs" />
     <Compile Include="Node Graphics\UnknownNodeRenderer.cs" />
     <Compile Include="Controllers\ErrorCheckerController.cs" />
     <Compile Include="GUIs\DomainNodeRenderer.cs" />

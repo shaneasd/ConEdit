@@ -52,7 +52,7 @@ namespace ConversationEditor
                     foreach (var node in m_controller.m_nodes().Evaluate())
                     {
                         if (RectangleF.Intersect(SelectionRectangle(), node.Renderer.Area) != RectangleF.Empty)
-                            m_controller.m_selection.Add(node.Id);
+                            m_controller.m_selection.Add(node.Data.NodeId);
                     }
                     m_parent.SetStateToNothingOrSelectingDirection(null, null);
                 }
@@ -689,7 +689,7 @@ namespace ConversationEditor
             }).ToList();
             var nodes = m_nodes().Where(n =>
             {
-                if (groups.Any(g => g.Contents.Contains(n.Id)))
+                if (groups.Any(g => g.Contents.Contains(n.Data.NodeId)))
                     return false;
                 var groupArea = n.Renderer.Area;
                 var groupCenter = groupArea.Center();
@@ -700,7 +700,7 @@ namespace ConversationEditor
                        (yError - groupArea.Height / 2) * dir.Y <= 0 &&
                        (yError + groupArea.Height / 2) * dir.Y <= 0;
             }).ToList();
-            SetSelection(nodes.Select(n => n.Id), groups);
+            SetSelection(nodes.Select(n => n.Data.NodeId), groups);
         }
 
         public enum ResizeState
@@ -789,7 +789,7 @@ namespace ConversationEditor
         private Output BestConnector(PointF? from, PointF p0, Func<Output, bool> filter)
         {
             var nodes = m_nodes();
-            var connectors = nodes.SelectMany(n => n.Connectors);
+            var connectors = nodes.SelectMany(n => n.Data.Connectors);
             var filteredConnectors = connectors.Where(filter);
             if (filteredConnectors.Any())
             {
@@ -813,7 +813,7 @@ namespace ConversationEditor
         public event Action<UndoAction> Changed;
         private readonly Func<PointF, PointF> Snap;
         private readonly Func<PointF, PointF> SnapGroup;
-        private readonly Func<IConversationNodeData, ConfigureResult> Edit;
+        private readonly NodeEditOperation Edit;
         private readonly Func<TNode, bool> RemoveNode;
         private readonly Func<Id<NodeTemp>, TNode> GetNode;
         public event Action<Point> PlainClick;
@@ -849,9 +849,9 @@ namespace ConversationEditor
         private readonly Func<Output, bool, TransitionNoduleUIInfo> m_UIInfo;
         private TransitionNoduleUIInfo UIInfo(Output output, bool canFail) { return m_UIInfo(output, canFail); }
         private TransitionNoduleUIInfo UIInfo(Output output) { return m_UIInfo(output, false); }
-        ColorScheme m_scheme;
+        IColorScheme m_scheme;
 
-        public MouseController(ColorScheme scheme, Action refreshDisplay, Action<Point> shift, Action<PointF?> scrollIfRequired, Action<Point, float> scale, Func<IReadonlyQuadTree<TNode>> nodes, Func<IReadonlyQuadTree<UnorderedTuple2<Output>>> connections, Func<IEnumerable<NodeGroup>> groups, Func<IConversationNodeData, ConfigureResult> edit, Func<TNode, bool> removeNode, Func<PointF, PointF> snap, Func<PointF, PointF> snapGroup, Func<Output, bool, TransitionNoduleUIInfo> uiInfo, Func<Id<NodeTemp>, TNode> getNode)
+        public MouseController(IColorScheme scheme, Action refreshDisplay, Action<Point> shift, Action<PointF?> scrollIfRequired, Action<Point, float> scale, Func<IReadonlyQuadTree<TNode>> nodes, Func<IReadonlyQuadTree<UnorderedTuple2<Output>>> connections, Func<IEnumerable<NodeGroup>> groups, NodeEditOperation edit, Func<TNode, bool> removeNode, Func<PointF, PointF> snap, Func<PointF, PointF> snapGroup, Func<Output, bool, TransitionNoduleUIInfo> uiInfo, Func<Id<NodeTemp>, TNode> getNode)
         {
             m_scheme = scheme;
             m_innerState = new State.Nothing(this, null, null);
@@ -890,7 +890,7 @@ namespace ConversationEditor
                 return;
             }
 
-            var connector = nearbyNodes.SelectMany(n => n.Connectors).FirstOrDefault(t => UIInfo(t).Area.Value.Contains(p));
+            var connector = nearbyNodes.SelectMany(n => n.Data.Connectors).FirstOrDefault(t => UIInfo(t).Area.Value.Contains(p));
             if (connector != null)
             {
                 transitionOp(connector);
@@ -978,14 +978,14 @@ namespace ConversationEditor
             {
                 Action<TNode> nodeOp = clicked =>
                     {
-                        if (m_selection.Nodes.Contains(clicked.Id) && ctrl)
-                            m_selection.Remove(clicked.Id);
+                        if (m_selection.Nodes.Contains(clicked.Data.NodeId) && ctrl)
+                            m_selection.Remove(clicked.Data.NodeId);
                         else
                         {
-                            if (!m_selection.Nodes.Contains(clicked.Id))
+                            if (!m_selection.Nodes.Contains(clicked.Data.NodeId))
                                 if (!ctrl)
                                     m_selection.Clear();
-                            m_selection.Add(clicked.Id);
+                            m_selection.Add(clicked.Data.NodeId);
                             m_state = new State.Dragging(this, clicked.Renderer.Area.Center(), client, clicked);
                         }
                     };
@@ -1094,8 +1094,8 @@ namespace ConversationEditor
             }
             foreach (var node in m_nodes().Where(n => group.Renderer.Area.Contains(n.Renderer.Area)))
             {
-                group.Contents.Add(node.Id);
-                toAdd.Add(node.Id);
+                group.Contents.Add(node.Data.NodeId);
+                toAdd.Add(node.Data.NodeId);
             }
 
             foreach (var node in toAdd)

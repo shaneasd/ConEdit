@@ -8,6 +8,7 @@ using System.IO;
 using System.Threading;
 using NUnit.Framework;
 using Tests.Conversation;
+using System.Runtime.InteropServices;
 
 namespace Tests
 {
@@ -15,8 +16,8 @@ namespace Tests
     {
         static void Main()
         {
-            ParameterTypeTest.TestSet();
-            UnknownEditableTest.Test();
+            ConversationNodeTest.TestInitialState();
+            //ConversationNodeTest.Test();
             //EnumerationTest.ParameterEnum();
             //OutputTest.GetName();
             //TypeSetTest.Test();

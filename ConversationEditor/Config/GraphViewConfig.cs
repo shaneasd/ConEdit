@@ -106,28 +106,12 @@ namespace ConversationEditor
         public int MinorGridSpacing
         {
             get { return m_minorGridSpacing; }
-            set
-            {
-                if (value != m_minorGridSpacing)
-                {
-                    m_minorGridSpacing = value;
-                    ValueChanged.Execute();
-                }
-            }
         }
 
         private int m_majorGridSpacing = 80;
         public int MajorGridSpacing
         {
             get { return m_majorGridSpacing; }
-            set
-            {
-                if (value != -m_majorGridSpacing)
-                {
-                    m_majorGridSpacing = value;
-                    ValueChanged.Execute();
-                }
-            }
         }
     }
 }

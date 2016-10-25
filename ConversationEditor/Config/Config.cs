@@ -12,31 +12,31 @@ using System.Reflection;
 
 namespace ConversationEditor
 {
-    internal class Config : Disposable
+    [Serializable()]
+    public class ConfigLoadFailedException : Exception
     {
-        [Serializable()]
-        public class LoadFailedException : Exception
+        public ConfigLoadFailedException()
+            : base("Failed to load config")
         {
-            public LoadFailedException()
-                : base("Failed to load config")
-            {
-            }
-
-            public LoadFailedException(string message)
-                : base(message)
-            {
-            }
-            public LoadFailedException(string message, Exception innerException) :
-                base(message, innerException)
-            {
-            }
-            protected LoadFailedException(System.Runtime.Serialization.SerializationInfo info,
-               System.Runtime.Serialization.StreamingContext context)
-                : base(info, context)
-            {
-            }
         }
 
+        public ConfigLoadFailedException(string message)
+            : base(message)
+        {
+        }
+        public ConfigLoadFailedException(string message, Exception innerException) :
+            base(message, innerException)
+        {
+        }
+        protected ConfigLoadFailedException(System.Runtime.Serialization.SerializationInfo info,
+           System.Runtime.Serialization.StreamingContext context)
+            : base(info, context)
+        {
+        }
+    }
+
+    internal class Config : Disposable
+    {
         string m_file;
         public Config(string file, WillEdit willEdit)
         {
@@ -141,7 +141,7 @@ namespace ConversationEditor
                 }
                 else
                 {
-                    throw new LoadFailedException();
+                    throw new ConfigLoadFailedException();
                 }
             }
         }
@@ -168,6 +168,8 @@ namespace ConversationEditor
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "<ProjectHistory>k__BackingField",
+            Justification = "https://connect.microsoft.com/VisualStudio/feedback/details/1798055/code-analysis-rule-ca2213-disposablefieldsshouldbedisposed-doesnt-understand-read-only-auto-properties-being-disposed")]
         protected override void Dispose(bool disposing)
         {
             if (disposing)

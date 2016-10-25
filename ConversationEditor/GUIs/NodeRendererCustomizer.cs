@@ -86,29 +86,60 @@ namespace ConversationEditor
         {
             //TODO: It would be a lot better if node renderer customization used a traditional combobox rather than a suggestion box
 
-            Panel panel = new Panel();
-            panel.Height = 30;
-            panel.Dock = DockStyle.Top;
-
-            const int BUFFER_WIDTH = 30;
             ComboBox c = new ComboBox();
-            c.Dock = DockStyle.Right;
-            c.Width = 200;
-
-            foreach (TChoice renderChoice in GetItemsFor(node.Guid))
+            Panel panel = new Panel();
+            try
             {
-                c.Items.Add(ToStringWrapper.Make(renderChoice, renderChoice.DisplayName));
+                panel.Height = 30;
+                panel.Dock = DockStyle.Top;
+
+                const int BUFFER_WIDTH = 30;
+                c.Dock = DockStyle.Right;
+                c.Width = 200;
+
+                foreach (TChoice renderChoice in GetItemsFor(node.Guid))
+                {
+                    c.Items.Add(ToStringWrapper.Make(renderChoice, renderChoice.DisplayName));
+                }
+                var item = ToStringWrapper.Make(m_config[node.Guid], m_config[node.Guid].DisplayName);
+                c.SelectedItem = item;
+                if (c.Items.Count < 2)
+                    c.ForeColor = SystemColors.GrayText;
+
+                panel.Controls.Add(c);
+                Label label = new Label();
+                try
+                {
+                    label.Text = node.Name;
+                    label.Dock = DockStyle.Left;
+                }
+                catch
+                {
+                    label.Dispose();
+                    throw;
+                }
+                panel.Controls.Add(label);
+
+                Panel p = new Panel();
+                try
+                {
+                    p.Width = BUFFER_WIDTH * indent;
+                    p.Dock = DockStyle.Left;
+                }
+                catch
+                {
+                    p.Dispose();
+                    throw;
+                }
+                panel.Controls.Add(p);
+
+                panel1.Controls.Add(panel);
             }
-            var item = ToStringWrapper.Make(m_config[node.Guid], m_config[node.Guid].DisplayName);
-            c.SelectedItem = item;
-            if (c.Items.Count < 2)
-                c.ForeColor = SystemColors.GrayText;
-
-            panel.Controls.Add(c);
-            panel.Controls.Add(new Label() { Text = node.Name, Dock = DockStyle.Left });
-            panel.Controls.Add(new Panel() { Width = BUFFER_WIDTH * indent, Dock = DockStyle.Left });
-
-            panel1.Controls.Add(panel);
+            catch
+            {
+                panel.Dispose();
+                throw;
+            }
 
             panel1.ScrollControlIntoView(panel);
 

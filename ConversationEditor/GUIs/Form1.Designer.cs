@@ -16,9 +16,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            ConversationEditor.ColorScheme colorScheme4 = new ConversationEditor.ColorScheme();
-            ConversationEditor.ColorScheme colorScheme5 = new ConversationEditor.ColorScheme();
-            ConversationEditor.ColorScheme colorScheme6 = new ConversationEditor.ColorScheme();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.projectNewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -395,8 +392,6 @@
             this.projectExplorer.Location = new System.Drawing.Point(0, 0);
             this.projectExplorer.Margin = new System.Windows.Forms.Padding(0);
             this.projectExplorer.Name = "projectExplorer";
-            colorScheme4.Connectors = System.Drawing.Color.Black;
-            this.projectExplorer.Scheme = colorScheme4;
             this.projectExplorer.Size = new System.Drawing.Size(181, 561);
             this.projectExplorer.TabIndex = 0;
             // 
@@ -422,8 +417,6 @@
             // conversationEditorControl1
             // 
             this.m_conversationEditor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            colorScheme5.Connectors = System.Drawing.Color.Black;
-            this.m_conversationEditor.Colors = colorScheme5;
             this.m_conversationEditor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_conversationEditor.GraphScale = 1F;
             this.m_conversationEditor.Location = new System.Drawing.Point(0, 0);
@@ -439,8 +432,6 @@
             // 
             // errorList1
             // 
-            colorScheme6.Connectors = System.Drawing.Color.Black;
-            this.errorList1.ColorScheme = colorScheme6;
             this.errorList1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.errorList1.Location = new System.Drawing.Point(0, 0);
             this.errorList1.Name = "errorList1";
@@ -453,7 +444,6 @@
             this.sanityTestToolStripMenuItem.Name = "sanityTestToolStripMenuItem";
             this.sanityTestToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.sanityTestToolStripMenuItem.Text = "Sanity Test";
-            this.sanityTestToolStripMenuItem.Click += new System.EventHandler(this.SanityTest);
             // 
             // Form1
             // 

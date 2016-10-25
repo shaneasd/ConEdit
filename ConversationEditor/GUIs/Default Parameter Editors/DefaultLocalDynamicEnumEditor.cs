@@ -33,11 +33,9 @@ namespace ConversationEditor
             get { return StaticId; }
         }
 
-        public IParameterEditor<Control> Make(ColorScheme scheme)
+        public IParameterEditor<Control> Make(IColorScheme scheme)
         {
-            var result = new DefaultDynamicEnumEditor();
-            result.Scheme = scheme;
-            return result;
+            return new DefaultDynamicEnumEditor(scheme);
         }
     }
 }

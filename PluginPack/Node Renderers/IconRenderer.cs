@@ -48,17 +48,17 @@ namespace PluginPack
         private void SetName()
         {
             m_name = "Node name not found";
-            string parameterName = NameConfig.TryGet(Node.Config);
+            string parameterName = NameConfig.TryGet(Node.Data.Config);
             if (parameterName != null)
             {
-                var stringParameters = Node.Parameters.OfType<IStringParameter>().Where(p => p.Name == parameterName);
+                var stringParameters = Node.Data.Parameters.OfType<IStringParameter>().Where(p => p.Name == parameterName);
                 if (stringParameters.Any())
                 {
                     m_name = stringParameters.First().Value;
                 }
                 else
                 {
-                    var localizedStringParameters = Node.Parameters.OfType<ILocalizedStringParameter>().Where(p => p.Name == parameterName);
+                    var localizedStringParameters = Node.Data.Parameters.OfType<ILocalizedStringParameter>().Where(p => p.Name == parameterName);
                     if (localizedStringParameters.Any())
                     {
                         m_name = m_localizer(localizedStringParameters.First().Value);
@@ -70,7 +70,7 @@ namespace PluginPack
         private void SetIcon()
         {
             m_image = null;
-            string icon = IconConfig.TryGet(Node.Config);
+            string icon = IconConfig.TryGet(Node.Data.Config);
             if (icon != null)
             {
                 try

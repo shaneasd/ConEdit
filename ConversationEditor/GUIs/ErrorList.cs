@@ -131,6 +131,7 @@ namespace ConversationEditor
         private class ErrorItem
         {
             const float HEIGHT = 23;
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
             public float Height { get { return HEIGHT; } }
 
             IErrorListElement m_data;
@@ -141,7 +142,7 @@ namespace ConversationEditor
                 m_data = data;
             }
 
-            internal void Draw(ColorScheme scheme, Graphics g, float y, float width, bool selected)
+            internal void Draw(IColorScheme scheme, Graphics g, float y, float width, bool selected)
             {
                 using (Brush background = new SolidBrush(selected ? scheme.SelectedConversationListItemSecondaryBackground : scheme.Background))
                 {
@@ -171,8 +172,8 @@ namespace ConversationEditor
             greyScrollBar1.PercentageCovered = Height / totalHeight;
         }
 
-        ColorScheme m_scheme = new ColorScheme(); //So the designer has something to work with
-        public ColorScheme ColorScheme
+        IColorScheme m_scheme = ConversationEditor.ColorScheme.Default; //So the designer has something to work with
+        public IColorScheme ColorScheme
         {
             get { return m_scheme; }
             set

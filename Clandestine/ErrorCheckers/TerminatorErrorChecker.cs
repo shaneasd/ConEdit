@@ -38,15 +38,15 @@ namespace Clandestine
 
         private IEnumerable<ConversationError<T>> CheckStart(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
         {
-            HashSet<T> connected = new HashSet<T>(nodes.Where(n => Clandestine.Util.IsStartNode(n.Type, utils)));
+            HashSet<T> connected = new HashSet<T>(nodes.Where(n => Clandestine.Util.IsStartNode(n.Data.NodeTypeId, utils)));
 
-            var editableMapping = nodes.ToDictionary(n => n.Id, n => n);
+            var editableMapping = nodes.ToDictionary(n => n.Data.NodeId, n => n);
 
             List<T> toProcess = connected.ToList();
             for (int i = 0; i < toProcess.Count; i++)
             {
                 var node = toProcess[i];
-                var connections = node.Connectors.SelectMany(c => c.Connections).Select(c => c.Parent);
+                var connections = node.Data.Connectors.SelectMany(c => c.Connections).Select(c => c.Parent);
                 foreach (var connection in connections)
                 {
                     var x = editableMapping[connection.NodeId];
@@ -61,22 +61,22 @@ namespace Clandestine
             foreach (var node in nodes)
             {
                 if (!connected.Contains(node))
-                    if (node.Connectors.Any())
+                    if (node.Data.Connectors.Any())
                         yield return new StartError(node);
             }
         }
 
         private IEnumerable<ConversationError<T>> CheckEnd(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
         {
-            HashSet<T> connected = new HashSet<T>(nodes.Where(n => n.Type == SpecialNodes.Terminator));
+            HashSet<T> connected = new HashSet<T>(nodes.Where(n => n.Data.NodeTypeId == SpecialNodes.Terminator));
 
-            var editableMapping = nodes.ToDictionary(n => n.Id, n => n);
+            var editableMapping = nodes.ToDictionary(n => n.Data.NodeId, n => n);
 
             List<T> toProcess = connected.ToList();
             for (int i = 0; i < toProcess.Count; i++)
             {
                 var node = toProcess[i];
-                var connections = node.Connectors.SelectMany(c => c.Connections).Select(c => c.Parent);
+                var connections = node.Data.Connectors.SelectMany(c => c.Connections).Select(c => c.Parent);
                 foreach (var connection in connections)
                 {
                     var x = editableMapping[connection.NodeId];
@@ -91,7 +91,7 @@ namespace Clandestine
             foreach (var node in nodes)
             {
                 if (!connected.Contains(node))
-                    if (node.Connectors.Any())
+                    if (node.Data.Connectors.Any())
                         yield return new TerminatorError(node);
             }
         }

@@ -51,7 +51,7 @@ namespace Clandestine
         {
             foreach (var node in nodes)
             {
-                var connectors = node.Connectors;
+                var connectors = node.Data.Connectors;
                 var nonoptionalConnectors = connectors.Where(c=>!IsOptional(c));
 
                 foreach (var input in nonoptionalConnectors)
@@ -64,13 +64,13 @@ namespace Clandestine
         {
             foreach (var node in nodes)
             {
-                var inputs = node.Connectors.Where(c => c.Definition.Id == SpecialConnectors.Input.Id);
-                var outputs = node.Connectors.Where(c => c.Definition.Id == SpecialConnectors.Output.Id);
+                var inputs = node.Data.Connectors.Where(c => c.Definition.Id == SpecialConnectors.Input.Id);
+                var outputs = node.Data.Connectors.Where(c => c.Definition.Id == SpecialConnectors.Output.Id);
 
                 foreach (var input in inputs)
                     if (!input.Connections.Any())
                         yield return new DisconnectedInputError(node);
-                if (node.Type == SpecialNodes.Branch)
+                if (node.Data.NodeTypeId == SpecialNodes.Branch)
                 {
                     if (!outputs.Any(c => c.Connections.Any()))
                         yield return new DisconnectedOutputError(node);

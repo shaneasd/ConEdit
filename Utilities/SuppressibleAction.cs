@@ -11,7 +11,7 @@ namespace Utilities
     /// Once the callback is restored, if it would have executed, it then executes.
     /// This is useful for suppressing callbacks that update state when it is known that further updates are expected
     /// </summary>
-    public class SuppressibleAction : Disposable
+    public class SuppressibleAction
     {
         private Action m_action;
         private bool m_needToExecute = false;
@@ -62,13 +62,9 @@ namespace Utilities
 
         public bool Suppressed { get { return m_actionSuppressors.Any(); } }
 
-        protected override void Dispose(bool disposing)
+        public void Dispose()
         {
-            if (disposing)
-            {
-                //Reset the action so even if any rogue suppressors are leftover they won't trigger the event anymore
-                m_action = () => { };
-            }
+            m_action = () => { };
         }
     }
 }

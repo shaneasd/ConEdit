@@ -33,11 +33,9 @@ namespace ConversationEditor
             get { return StaticId; }
         }
 
-        public IParameterEditor<Control> Make(ColorScheme scheme)
+        public IParameterEditor<Control> Make(IColorScheme scheme)
         {
-            var result = new DefaultEnumEditor();
-            result.Scheme = scheme;
-            return result;
+            return new DefaultEnumEditor(scheme);
         }
     }
 
@@ -46,6 +44,11 @@ namespace ConversationEditor
         TControl m_comboBox;
         List<TItem> m_comboBoxItems = new List<TItem>();
         IEnumParameter m_parameter;
+
+        public DefaultEnumEditor(IColorScheme scheme) : this()
+        {
+            Scheme = scheme;
+        }
 
         public DefaultEnumEditor()
         {
@@ -116,8 +119,8 @@ namespace ConversationEditor
 
         public event Action Ok;
 
-        ColorScheme m_scheme;
-        public ColorScheme Scheme
+        IColorScheme m_scheme;
+        public IColorScheme Scheme
         {
             get { return m_scheme; }
             set

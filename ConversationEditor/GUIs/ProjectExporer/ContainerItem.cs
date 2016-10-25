@@ -97,7 +97,7 @@ namespace ConversationEditor
             public readonly NotifierProperty<bool> Minimized = new NotifierProperty<bool>(false);
 
             #region Drawing
-            public override void DrawTree(Graphics g, RectangleF iconRectangle, VisibilityFilter filter, ColorScheme scheme)
+            public override void DrawTree(Graphics g, RectangleF iconRectangle, VisibilityFilter filter, IColorScheme scheme)
             {
                 var start = iconRectangle.Center();
 
@@ -113,7 +113,7 @@ namespace ConversationEditor
                     g.DrawLine(scheme.TreePen, start, new PointF(start.X, start.Y + HEIGHT * (itemsBeforeLastChild + 1) + 1));
                 }
             }
-            protected override void DrawMinimizeIcon(Graphics g, RectangleF minimizeIconRectangle, VisibilityFilter filter, ColorScheme scheme)
+            protected override void DrawMinimizeIcon(Graphics g, RectangleF minimizeIconRectangle, VisibilityFilter filter, IColorScheme scheme)
             {
                 if (m_subItems.Any(a => a.AllItems(filter).Any()))
                 {

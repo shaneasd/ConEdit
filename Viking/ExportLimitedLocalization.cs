@@ -69,10 +69,10 @@ namespace Viking
             foreach (var conversation in conversations)
             {
                 root.Add(new XComment(conversation.File.File.Name));
-                var info = conversation.Nodes.SingleOrDefault(a => a.Type == Id<NodeTypeTemp>.Parse("d5974ffe-777b-419c-b9bc-bde980cb99a6"));
+                var info = conversation.Nodes.SingleOrDefault(a => a.Data.NodeTypeId == Id<NodeTypeTemp>.Parse("d5974ffe-777b-419c-b9bc-bde980cb99a6"));
                 if (info != null)
                 {
-                    var context = info.Parameters.Where(p => p.Id == Id<Parameter>.Parse("6940a618-5905-4e81-a59b-281d92a90782")).Select(a => a as IStringParameter).SingleOrDefault();
+                    var context = info.Data.Parameters.Where(p => p.Id == Id<Parameter>.Parse("6940a618-5905-4e81-a59b-281d92a90782")).Select(a => a as IStringParameter).SingleOrDefault();
                     if (context != null)
                     {
                         root.Add(new XComment(context.Value));
@@ -80,9 +80,9 @@ namespace Viking
                 }
                 foreach (var node in conversation.Nodes)
                 {
-                    string speaker = node.Parameters.Where(p=>p.Id == Id<Parameter>.Parse("d6a6b382-43d0-44d3-b4e7-b9c9362a509b")).OfType<IDynamicEnumParameter>().Select(e => e.DisplayValue(a => null)).SingleOrDefault() ?? "";
+                    string speaker = node.Data.Parameters.Where(p => p.Id == Id<Parameter>.Parse("08da4734-e5a3-4dec-807e-29628ef4ba3e") || p.Id == Id<Parameter>.Parse("d6a6b382-43d0-44d3-b4e7-b9c9362a509b")).OfType<IDynamicEnumParameter>().Select(e => e.DisplayValue(a => null)).SingleOrDefault() ?? "";
 
-                    foreach (var localized in node.Parameters.OfType<ILocalizedStringParameter>())
+                    foreach (var localized in node.Data.Parameters.OfType<ILocalizedStringParameter>())
                     {
                         var key = localized.Value;
                         var data = m_localizer(key);
@@ -92,6 +92,7 @@ namespace Viking
                                                                new XAttribute("localized", date.Ticks.ToString(CultureInfo.InvariantCulture)),
                                                                new XAttribute("speaker", speaker),
                                                                new XAttribute("type", node.Data.Name),
+                                                               new XAttribute("parameter", localized.Name),
                                                                value);
                         root.Add(element);
                     }

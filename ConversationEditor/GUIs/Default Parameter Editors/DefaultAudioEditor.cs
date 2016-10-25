@@ -31,17 +31,20 @@ namespace ConversationEditor
             get { return StaticId; }
         }
 
-        public IParameterEditor<Control> Make(ColorScheme scheme)
+        public IParameterEditor<Control> Make(IColorScheme scheme)
         {
-            var result = new DefaultAudioEditor();
-            result.Scheme = scheme;
-            return result;
+            return new DefaultAudioEditor(scheme);
         }
     }
 
     internal partial class DefaultAudioEditor : UserControl, IParameterEditor<DefaultAudioEditor>
     {
         private MyTextBox m_textBox;
+
+        public DefaultAudioEditor(IColorScheme scheme) : this()
+        {
+            Scheme = scheme;
+        }
 
         public DefaultAudioEditor()
         {
@@ -134,8 +137,8 @@ namespace ConversationEditor
             Generate();
         }
 
-        private ColorScheme m_scheme;
-        public ColorScheme Scheme
+        private IColorScheme m_scheme;
+        public IColorScheme Scheme
         {
             get { return m_scheme; }
             set

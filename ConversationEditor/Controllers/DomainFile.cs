@@ -173,21 +173,21 @@ namespace ConversationEditor
                 //Doesn't affect the domain domain
             };
 
-            if (m_datasource.IsConnector(node.Type))
+            if (m_datasource.IsConnector(node.Data.NodeTypeId))
             {
-                var nodeConnector = node.Connectors.Single(c => c.Definition.Id == DomainIDs.ConnectorOutputDefinition.Id);
+                var nodeConnector = node.Data.Connectors.Single(c => c.Definition.Id == DomainIDs.ConnectorOutputDefinition.Id);
                 var nodes = nodeConnector.Connections.Select(c => c.Parent).Where(n => n.NodeTypeId == DomainIDs.NodeGuid);
                 DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             }
-            else if (m_datasource.IsParameter(node.Type))
+            else if (m_datasource.IsParameter(node.Data.NodeTypeId))
             {
-                var nodeConnector = node.Connectors.Single(c => c.Definition.Id == DomainIDs.ParameterOutputDefinition.Id);
+                var nodeConnector = node.Data.Connectors.Single(c => c.Definition.Id == DomainIDs.ParameterOutputDefinition.Id);
                 var nodes = nodeConnector.Connections.Select(c => c.Parent).Where(n => n.NodeTypeId == DomainIDs.NodeGuid);
                 DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             }
-            else if (m_datasource.IsConfig(node.Type))
+            else if (m_datasource.IsConfig(node.Data.NodeTypeId))
             {
-                var nodeConnector = node.Connectors.Single(c => c.Definition.Id == DomainIDs.ConfigOutputDefinition.Id);
+                var nodeConnector = node.Data.Connectors.Single(c => c.Definition.Id == DomainIDs.ConfigOutputDefinition.Id);
                 var connected = nodeConnector.Connections.Select(c => c.Parent);
 
                 var nodes = connected.Where(n => n.NodeTypeId == DomainIDs.NodeGuid);
@@ -384,10 +384,7 @@ namespace ConversationEditor
                 {
                     using (var stream = Util.LoadFileStream(path, FileMode.Open, FileAccess.Read))
                     {
-                        MemoryStream m = new MemoryStream((int)stream.Length);
-                        stream.CopyTo(m);
-                        m.Position = 0;
-                        return (Either<Tuple<MemoryStream, FileInfo>, MissingDomainFile>)Tuple.Create(m, path);
+                        return (Either<Tuple<MemoryStream, FileInfo>, MissingDomainFile>)Tuple.Create(StreamUtil.Copy(stream), path);
                     }
                 }
                 catch (MyFileLoadException e)
@@ -400,7 +397,20 @@ namespace ConversationEditor
                         MessageBox.Show("File: " + path.Name + " exists but could not be accessed");
                     else
                         MessageBox.Show("File: " + path.Name + " does not exist");
-                    return (Either<Tuple<MemoryStream, FileInfo>, MissingDomainFile>)(new MissingDomainFile(path));
+
+                    MissingDomainFile temp = null;
+                    try
+                    {
+                        temp = new MissingDomainFile(path);
+                        var result = (Either<Tuple<MemoryStream, FileInfo>, MissingDomainFile>)(temp);
+                        temp = null;
+                        return result;
+                    }
+                    finally
+                    {
+                        if (temp != null)
+                            temp.Dispose();
+                    }
                 }
             }).Evaluate();
 

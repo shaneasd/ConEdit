@@ -32,7 +32,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>Utilities.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
@@ -61,6 +62,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IO\DirectoryEqualityComparer.cs" />
     <Compile Include="IO\ISaveableFile.cs" />
+    <Compile Include="IO\StreamUtil.cs" />
     <Compile Include="IO\UpToDateFile.cs" />
     <Compile Include="Math\Bezier.cs" />
     <Compile Include="BoolRef.cs" />
@@ -69,6 +71,7 @@
     <Compile Include="NativeTextRenderer.cs" />
     <Compile Include="NotfierProperty.cs" />
     <Compile Include="QuadTree.cs" />
+    <Compile Include="SharedResource.cs" />
     <Compile Include="StringUtil.cs" />
     <Compile Include="TemporaryCulture.cs" />
     <Compile Include="UI\Caret.cs" />

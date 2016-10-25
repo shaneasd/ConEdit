@@ -19,7 +19,8 @@ namespace ConversationEditor
         {
             public const float HEIGHT = 20;
             const int CARET_HEIGHT = 15;
-            public static TextureBrush ReadonlyBackgroundBrush;
+            public static TextureBrush ReadonlyBackgroundBrush { get; }
+            public static Item Null { get; } = null;
             static Item()
             {
                 Assembly assembly = Assembly.GetExecutingAssembly();
@@ -28,10 +29,12 @@ namespace ConversationEditor
                     //Something about the image makes it unsuitable for the TextureBrush causing an out of memory exception but I'm not sure what
                     using (Image temp = new Bitmap(stream))
                     {
-                        Image buffer = new Bitmap(temp.Width, temp.Height);
-                        using (var fg = Graphics.FromImage(buffer))
-                            fg.DrawImage(temp, 0, 0, temp.Width, temp.Height);
-                        ReadonlyBackgroundBrush = new TextureBrush(buffer);
+                        using (Image buffer = new Bitmap(temp.Width, temp.Height))
+                        {
+                            using (var fg = Graphics.FromImage(buffer))
+                                fg.DrawImage(temp, 0, 0, temp.Width, temp.Height);
+                            ReadonlyBackgroundBrush = new TextureBrush(buffer);
+                        }
                     }
                 }
             }
@@ -50,7 +53,7 @@ namespace ConversationEditor
             {
                 item.m_parent = parent;
             }
-            
+
             public struct ConstructorParams
             {
                 public readonly Func<RectangleF> Area;
@@ -80,8 +83,6 @@ namespace ConversationEditor
                 ToControlTransform = parameters.ToControlTransform;
                 Rename = parameters.Rename;
             }
-
-            public readonly static Item Null = null;
 
             protected virtual string PermanentText { get { return File.Name; } }
             public string Text
@@ -125,7 +126,7 @@ namespace ConversationEditor
                                       minimizeRectangleSize, minimizeRectangleSize);
             }
 
-            public void DrawSelection(Graphics g, RectangleF area, bool selected, bool conversationSelected, ColorScheme scheme)
+            public void DrawSelection(Graphics g, RectangleF area, bool selected, bool conversationSelected, IColorScheme scheme)
             {
                 if (selected)
                 {
@@ -145,7 +146,7 @@ namespace ConversationEditor
                 }
             }
 
-            public void Draw(Graphics g, VisibilityFilter filter, RectangleF area, ColorScheme scheme)
+            public void Draw(Graphics g, VisibilityFilter filter, RectangleF area, IColorScheme scheme)
             {
                 float indent = CalculateIndent(area);
                 var iconRectangle = CalculateIconRectangle(area);
@@ -162,7 +163,7 @@ namespace ConversationEditor
                 }
             }
 
-            public void DrawText(Arthur.NativeTextRenderer renderer, VisibilityFilter Visibility, RectangleF area, ColorScheme scheme)
+            public void DrawText(Arthur.NativeTextRenderer renderer, VisibilityFilter Visibility, RectangleF area, IColorScheme scheme)
             {
                 //g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
                 //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
@@ -180,7 +181,7 @@ namespace ConversationEditor
                 }
             }
 
-            protected virtual void DrawMinimizeIcon(Graphics g, RectangleF minimizeIconRectangle, VisibilityFilter filter,ColorScheme scheme) { }
+            protected virtual void DrawMinimizeIcon(Graphics g, RectangleF minimizeIconRectangle, VisibilityFilter filter, IColorScheme scheme) { }
 
             public int CursorPosition(float x, Graphics g)
             {
@@ -205,7 +206,7 @@ namespace ConversationEditor
                 return Text.Length;
             }
 
-            public abstract void DrawTree(Graphics g, RectangleF iconRectangle, VisibilityFilter filter, ColorScheme scheme);
+            public abstract void DrawTree(Graphics g, RectangleF iconRectangle, VisibilityFilter filter, IColorScheme scheme);
             public abstract void DrawIcon(Graphics g, RectangleF iconRectangle);
             public abstract IEnumerable<Item> AllItems(VisibilityFilter filter);
             public abstract IEnumerable<Item> Children(VisibilityFilter filter);

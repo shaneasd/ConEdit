@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Drawing;
+using System.ComponentModel;
 
 namespace Utilities.UI
 {
@@ -23,6 +24,7 @@ namespace Utilities.UI
 
         bool m_colorSchemeAssigned = false;
         IColorScheme m_colorScheme = new DefaultColorScheme();
+        [Browsable(false)]
         public IColorScheme ColorScheme
         {
             set { m_colorScheme = value;

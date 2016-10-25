@@ -30,8 +30,8 @@ namespace ConversationEditor
         private ContextMenuStrip m_contextMenu;
         private SharedContext m_context;
 
-        ColorScheme m_scheme = new ColorScheme(); //So the designer has something to work with
-        public ColorScheme Scheme
+        IColorScheme m_scheme = ColorScheme.Default; //So the designer has something to work with
+        public IColorScheme Scheme
         {
             get { return m_scheme; }
             set
@@ -200,39 +200,41 @@ namespace ConversationEditor
 
         #region http://tech.pro/tutorial/732/csharp-tutorial-how-to-use-custom-cursors
 
-        public struct IconInfo
-        {
-            public bool fIcon;
-            public int xHotspot;
-            public int yHotspot;
-            private IntPtr hbmMask;
-            private IntPtr hbmColor;
-        }
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool GetIconInfo(IntPtr hIcon, ref IconInfo pIconInfo);
-
-        [DllImport("user32.dll")]
-        internal static extern IntPtr CreateIconIndirect(ref IconInfo icon);
-
         public static Cursor CreateCursor(Bitmap bmp, int xHotSpot, int yHotSpot)
         {
             IntPtr ptr = bmp.GetHicon();
             IconInfo tmp = new IconInfo();
-            GetIconInfo(ptr, ref tmp);
+            NativeMethods.GetIconInfo(ptr, ref tmp);
             tmp.xHotspot = xHotSpot;
             tmp.yHotspot = yHotSpot;
             tmp.fIcon = false;
-            ptr = CreateIconIndirect(ref tmp);
+            ptr = NativeMethods.CreateIconIndirect(ref tmp);
             return new Cursor(ptr);
         }
         #endregion
 
-        OpenFileDialog m_ofdConversation = new OpenFileDialog() { DefaultExt = "xml", Filter = "Conversations|*.xml", Multiselect = true, ValidateNames = false };
-        OpenFileDialog m_ofdDomain = new OpenFileDialog() { DefaultExt = "dom", Filter = "Domains|*.dom|xml|*.xml", Multiselect = true, ValidateNames = false };
-        OpenFileDialog m_ofdLocalization = new OpenFileDialog() { DefaultExt = "loc", Filter = "Localizations|*.loc|xml|*.xml", Multiselect = true, ValidateNames = false };
-        OpenFileDialog m_ofdAudio = new OpenFileDialog() { DefaultExt = "ogg", Filter = "Ogg Vorbis|*.ogg|All files (*.*)|*.*", Multiselect = true, ValidateNames = false };
+        private static OpenFileDialog MakeOpenFileDiaglog(string DefaultExt, string Filter, bool Multiselect, bool ValidateNames)
+        {
+            var result = new OpenFileDialog();
+            try
+            {
+                result.DefaultExt = "xml";
+                result.Filter = "Conversations|*.xml";
+                result.Multiselect = true;
+                result.ValidateNames = false;
+            }
+            catch
+            {
+                result.Dispose();
+                throw;
+            }
+            return result;
+        }
+
+        OpenFileDialog m_ofdConversation = MakeOpenFileDiaglog(DefaultExt : "xml", Filter : "Conversations|*.xml", Multiselect : true, ValidateNames : false);
+        OpenFileDialog m_ofdDomain = MakeOpenFileDiaglog(DefaultExt : "dom", Filter : "Domains|*.dom|xml|*.xml", Multiselect : true, ValidateNames : false);
+        OpenFileDialog m_ofdLocalization = MakeOpenFileDiaglog(DefaultExt : "loc", Filter : "Localizations|*.loc|xml|*.xml", Multiselect : true, ValidateNames : false);
+        OpenFileDialog m_ofdAudio = MakeOpenFileDiaglog(DefaultExt : "ogg", Filter : "Ogg Vorbis|*.ogg|All files (*.*)|*.*", Multiselect : true, ValidateNames : false);
 
         public SuppressibleAction m_suppressibleItemSelected;
         public event Action ItemSelected;
@@ -555,7 +557,15 @@ namespace ConversationEditor
         private ProjectItem MakeNewProjectItem(IProject p)
         {
             var result = new ProjectItem(() => RectangleForItem(m_root), p, () => TransformToRenderSurface, RenameItem);
-            result.File.SaveStateChanged += InvalidateImage;
+            try
+            {
+                result.File.SaveStateChanged += InvalidateImage;
+            }
+            catch
+            {
+                result.Dispose();
+                throw;
+            }
             return result;
         }
 
@@ -1068,7 +1078,7 @@ namespace ConversationEditor
                     using (var g = Graphics.FromImage(bmp))
                         DragItem.DrawIcon(g, new RectangleF(0, 0, SIZE, SIZE));
                     Cursor c = CreateCursor(bmp, 0, 0);
-                Cursor = c;
+                    Cursor = c;
                 }
             }
             else

@@ -11,12 +11,12 @@ namespace PluginPack
     {
         public static string GetId(T node)
         {
-            return (node.Parameters.Single(n => string.Equals(n.Name, "ID", StringComparison.OrdinalIgnoreCase)) as IDynamicEnumParameter).Value;
+            return (node.Data.Parameters.Single(n => string.Equals(n.Name, "ID", StringComparison.OrdinalIgnoreCase)) as IDynamicEnumParameter).Value;
         }
 
         public static string GetTarget(T node)
         {
-            return (node.Parameters.Single(n => string.Equals(n.Name, "Target", StringComparison.OrdinalIgnoreCase)) as IDynamicEnumParameter).Value;
+            return (node.Data.Parameters.Single(n => string.Equals(n.Name, "Target", StringComparison.OrdinalIgnoreCase)) as IDynamicEnumParameter).Value;
         }
 
         class DuplicatedTargetError : ConversationError<T>
@@ -56,8 +56,8 @@ namespace PluginPack
 
         public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
         {
-            var targetnodes = nodes.Where(a => a.Type == SpecialNodes.JumpTarget);
-            var jumpnodes = nodes.Where(a => a.Type == SpecialNodes.JumpTo);
+            var targetnodes = nodes.Where(a => a.Data.NodeTypeId == SpecialNodes.JumpTarget);
+            var jumpnodes = nodes.Where(a => a.Data.NodeTypeId == SpecialNodes.JumpTo);
 
             //Find all the jump targets with duplicate ids
             foreach (var d in targetnodes.GroupBy(GetId, a => a).Where(g => g.Count() > 1))

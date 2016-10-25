@@ -52,13 +52,13 @@ namespace ConversationEditor
             m_getDocumentSource = a => getDocumentSource(a, this);
             m_audioProvider = audioProvider;
             m_nodes = new CallbackList<ConversationNode>(nodes.Select(gnu => MakeNode(gnu.GraphData, gnu.UIData)));
-            m_nodesLookup = new O1LookupWrapper<ConversationNode, Id<NodeTemp>>(m_nodes, n => n.Id);
+            m_nodesLookup = new O1LookupWrapper<ConversationNode, Id<NodeTemp>>(m_nodes, n => n.Data.NodeId);
             m_nodesOrdered = new SortedWrapper<ConversationNode>(m_nodes);
             m_groups = new CallbackList<NodeGroup>(groups);
             m_groupsOrdered = new SortedWrapper<NodeGroup>(m_groups);
             m_errors = errors;
 
-            IEnumerable<IDynamicEnumParameter> localDynamicEnumerationParameters = m_nodes.SelectMany(n => n.Parameters.OfType<IDynamicEnumParameter>());
+            IEnumerable<IDynamicEnumParameter> localDynamicEnumerationParameters = m_nodes.SelectMany(n => n.Data.Parameters.OfType<IDynamicEnumParameter>());
             foreach (var ldep in localDynamicEnumerationParameters)
             {
                 ldep.MergeInto(m_getDocumentSource(ldep));
@@ -72,7 +72,7 @@ namespace ConversationEditor
 
         private void M_nodes_Clearing()
         {
-            foreach (var parameter in m_nodes.SelectMany(n => n.Parameters).OfType<IDynamicEnumParameter>())
+            foreach (var parameter in m_nodes.SelectMany(n => n.Data.Parameters).OfType<IDynamicEnumParameter>())
             {
                 //Give it a junk source so it's value stops counting towards the real source
                 parameter.MergeInto(new DynamicEnumParameter.Source());
@@ -83,7 +83,7 @@ namespace ConversationEditor
 
         private void M_nodes_Removing(ConversationNode<INodeGui> node)
         {
-            foreach (var parameter in node.Parameters.OfType<IDynamicEnumParameter>())
+            foreach (var parameter in node.Data.Parameters.OfType<IDynamicEnumParameter>())
             {
                 //Give it a junk source so it's value stops counting towards the real source
                 parameter.MergeInto(new DynamicEnumParameter.Source());
@@ -93,7 +93,7 @@ namespace ConversationEditor
 
         private void M_nodes_Inserting(ConversationNode<INodeGui> node)
         {
-            foreach (var parameter in node.Parameters.OfType<IDynamicEnumParameter>())
+            foreach (var parameter in node.Data.Parameters.OfType<IDynamicEnumParameter>())
             {
                 parameter.MergeInto(m_getDocumentSource(parameter));
             }
@@ -119,7 +119,7 @@ namespace ConversationEditor
         {
             var nodes = nodeData.Select(gnu => MakeNode(gnu.GraphData, gnu.UIData)).Evaluate();
 
-            IEnumerable<IDynamicEnumParameter> localDynamicEnumerationParameters = nodes.SelectMany(n => n.Parameters.OfType<IDynamicEnumParameter>().Where(p => p.Local));
+            IEnumerable<IDynamicEnumParameter> localDynamicEnumerationParameters = nodes.SelectMany(n => n.Data.Parameters.OfType<IDynamicEnumParameter>().Where(p => p.Local));
             foreach (var ldep in localDynamicEnumerationParameters)
             {
                 ldep.MergeInto(m_getDocumentSource(ldep));
@@ -133,7 +133,7 @@ namespace ConversationEditor
                 //Changes to these nodes don't need to be undoable as they're new nodes
                 foreach (var node in nodes)
                 {
-                    foreach (var p in node.Parameters.OfType<LocalizedStringParameter>())
+                    foreach (var p in node.Data.Parameters.OfType<LocalizedStringParameter>())
                     {
                         var result = localization.DuplicateActions(p.Value);
                         var action = p.SetValueAction(result.Item1);
@@ -144,30 +144,30 @@ namespace ConversationEditor
                     }
 
                     //TODO: Seems like we're updating audioparameters twice here...
-                    foreach (var p in node.Parameters.OfType<IAudioParameter>())
+                    foreach (var p in node.Data.Parameters.OfType<IAudioParameter>())
                     {
                         //No need to update audio usage as this will occur when the node is added/removed
-                        var audio = m_generateAudio(this, node.Parameters);
+                        var audio = m_generateAudio(this, node.Data.Parameters);
                         var actions = p.SetValueAction(audio);
                         undoActions.Add(actions.Value.Undo);
                         redoActions.Add(actions.Value.Redo);
                     }
 
-                    foreach (var p in node.Parameters.OfType<AudioParameter>())
+                    foreach (var p in node.Data.Parameters.OfType<AudioParameter>())
                     {
                         var action = p.SetValueAction(new Audio(Guid.NewGuid().ToString()));
                         if (action != null)
                             action.Value.Redo(); //If we undo the whole operation the parameter wont exist so no need to ever undo this value change.
                     }
 
-                    var oldID = node.Id;
+                    var oldID = node.Data.NodeId;
                     node.Data.ChangeId(Id<NodeTemp>.New());
                     foreach (var group in groups)
                     {
                         if (group.Contents.Contains(oldID))
                         {
                             group.Contents.Remove(oldID);
-                            group.Contents.Add(node.Id);
+                            group.Contents.Add(node.Data.NodeId);
                         }
                     }
                 }
@@ -232,13 +232,13 @@ namespace ConversationEditor
             {
                 var n = node;
                 var actions = n.GetNodeRemoveActions();
-                var containingGroups = m_groups.Where(g => g.Contents.Contains(n.Id)).Evaluate();
+                var containingGroups = m_groups.Where(g => g.Contents.Contains(n.Data.NodeId)).Evaluate();
                 redoActions.Add(() =>
                 {
                     m_nodes.Add(n);
                     m_audioProvider.UpdateUsage(n);
                     foreach (var group in containingGroups)
-                        group.Contents.Add(n.Id);
+                        group.Contents.Add(n.Data.NodeId);
                     actions.Undo();
                 });
                 undoActions.Add(() =>
@@ -248,7 +248,7 @@ namespace ConversationEditor
                         m_nodes.Remove(n);
                     }
                     foreach (var group in containingGroups)
-                        group.Contents.Remove(n.Id);
+                        group.Contents.Remove(n.Data.NodeId);
                     actions.Redo();
                     NodesDeleted.Execute();
                 });
@@ -318,12 +318,12 @@ namespace ConversationEditor
                 {
                     var n = node;
                     var actions = n.GetNodeRemoveActions();
-                    var containingGroups = m_groups.Where(g => g.Contents.Contains(n.Id)).Evaluate();
+                    var containingGroups = m_groups.Where(g => g.Contents.Contains(n.Data.NodeId)).Evaluate();
                     undoActions.Add(() =>
                     {
                         actions.Undo(); //Connect after adding the node
                         foreach (var group in containingGroups)
-                            group.Contents.Add(n.Id);
+                            group.Contents.Add(n.Data.NodeId);
                         m_audioProvider.UpdateUsage(n);
                     });
                     redoActions.Add(() =>
@@ -331,7 +331,7 @@ namespace ConversationEditor
                         actions.Redo(); //Disconnect before removing the node
                         m_nodes.Remove(n);
                         foreach (var group in containingGroups)
-                            group.Contents.Remove(n.Id);
+                            group.Contents.Remove(n.Data.NodeId);
                         NodesDeleted.Execute();
                     });
                 }
@@ -418,10 +418,10 @@ namespace ConversationEditor
         {
             if (!m_cachedNodeUI.ContainsKey(connection))
             {
-                var node = m_nodes.Where(n => n.Connectors.Any(c => c.Id == connection.Id && n.Id == connection.Parent.NodeId)).SingleOrDefault();
+                var node = m_nodes.Where(n => n.Data.Connectors.Any(c => c.Id == connection.Id && n.Data.NodeId == connection.Parent.NodeId)).SingleOrDefault();
                 if (node == null && canFail)
                     return null;
-                var comparable = node.Connectors.Where(c => c.Definition.Position == connection.Definition.Position);
+                var comparable = node.Data.Connectors.Where(c => c.Definition.Position == connection.Definition.Position);
                 m_cachedNodeUI[connection] = CreateTransitionUIInfo(node, connection.Definition.Position, comparable.IndexOf(connection), comparable.Count());
             }
             return m_cachedNodeUI[connection];

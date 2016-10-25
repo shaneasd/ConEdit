@@ -10,6 +10,7 @@ namespace Tests.Conversation
 {
     public static class ParameterTypeTest
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as a type parameter marker")]
         class MyType { }
 
         [Test]

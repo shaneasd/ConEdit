@@ -40,7 +40,9 @@ namespace ConversationEditor
         public AudioGenerationParameters AudioGenerationParameters { get { return m_audioGenerationParameters; } }
         public Func<string, IEnumerable<string>> AutoCompleteSuggestions { get { return m_autoCompleteSuggestions; } }
     }
-    public interface IParameterEditor<out TUI>
+
+    //TODO: Fairly sure AsControl could just return Control and we could get rid of TUI
+    public interface IParameterEditor<out TUI> : IDisposable
     {
         void Setup(ParameterEditorSetupData data);
         TUI AsControl { get; }

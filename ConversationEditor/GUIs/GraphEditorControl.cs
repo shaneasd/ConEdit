@@ -26,7 +26,7 @@ namespace ConversationEditor
         {
             InitializeComponent();
 
-            Colors = new ColorScheme();
+            Colors = ColorScheme.Default;
 
             hScrollBar1.Scrolled += Redraw;
             vScrollBar1.Scrolled += Redraw;
@@ -100,7 +100,7 @@ namespace ConversationEditor
                 bool removed = SpatiallyOrderedNodes.Remove(n, c.From);
                 if (!removed)
                 {
-                    throw new Exception("Something went from removing a node from the map");
+                    throw new InvalidOperationException("Something went from removing a node from the map");
                 }
                 SpatiallyOrderedNodes.Add(n, c.To);
             }
@@ -149,7 +149,7 @@ namespace ConversationEditor
             if (!register)
                 return; //TODO: Need to actually deregister
 
-            foreach (var connector in node.Connectors)
+            foreach (var connector in node.Data.Connectors)
             {
                 var connectorTemp = connector;
                 Action<Output, bool> connected = (connection, mustExist) =>
@@ -321,8 +321,16 @@ namespace ConversationEditor
         Matrix GetTransform()
         {
             Matrix result = new Matrix();
-            result.Scale((float)GraphScale, (float)GraphScale);
-            result.Translate(-hScrollBar1.Value, -vScrollBar1.Value);
+            try
+            {
+                result.Scale((float)GraphScale, (float)GraphScale);
+                result.Translate(-hScrollBar1.Value, -vScrollBar1.Value);
+            }
+            catch
+            {
+                result.Dispose();
+                throw;
+            }
             return result;
         }
 
@@ -337,8 +345,8 @@ namespace ConversationEditor
         public int MajorGridSpacing { get { return m_majorGridSpacing; } set { m_majorGridSpacing = value; Redraw(); } }
 
         public bool ShowIds { get; set; }
-        private ColorScheme m_colorScheme;
-        public ColorScheme Colors
+        private IColorScheme m_colorScheme;
+        public IColorScheme Colors
         {
             get { return m_colorScheme; }
             set
@@ -381,7 +389,7 @@ namespace ConversationEditor
 
         public void SetSelection(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups)
         {
-            m_mouseController.SetSelection(nodes.Select(n => n.Id), groups);
+            m_mouseController.SetSelection(nodes.Select(n => n.Data.NodeId), groups);
         }
 
         public void SetSelection(IEnumerable<Id<NodeTemp>> nodes, IEnumerable<NodeGroup> groups)
@@ -591,7 +599,7 @@ namespace ConversationEditor
                     if (ShowIds)
                     {
                         m_toolTip.Active = true;
-                        m_toolTip.SetToolTip(drawWindow, m_mouseController.HoverNode.Id.Serialized());
+                        m_toolTip.SetToolTip(drawWindow, m_mouseController.HoverNode.Data.NodeId.Serialized());
                         m_toolTip.OwnerDraw = false;
                     }
                     else
@@ -603,12 +611,14 @@ namespace ConversationEditor
                         ToolTipPopup = (sender, e) => { e.ToolTipSize = renderer.Area.Size.ToSize(); };
                         DrawToolTip = (sender, e) =>
                         {
-                            var m = new Matrix();
-                            m.Translate(renderer.Area.Width / 2, renderer.Area.Height / 2);
-                            e.Graphics.Transform = m;
+                            using (var m = new Matrix())
+                            {
+                                m.Translate(renderer.Area.Width / 2, renderer.Area.Height / 2);
+                                e.Graphics.Transform = m;
+                            }
                             renderer.Draw(e.Graphics, false, m_colorScheme);
                         };
-                        m_toolTip.SetToolTip(drawWindow, m_mouseController.HoverNode.Id.Serialized());
+                        m_toolTip.SetToolTip(drawWindow, m_mouseController.HoverNode.Data.NodeId.Serialized());
                         m_toolTip.Active = true;
                     }
                 }
@@ -718,8 +728,8 @@ namespace ConversationEditor
 
                 if (CurrentFile != null)
                 {
-                    var orderedUnselectedNodes = CurrentFile.Nodes.Reverse().Where(n => !m_mouseController.Selected.Nodes.Contains(n.Id));
-                    var orderedSelectedNodes = CurrentFile.Nodes.Reverse().Where(n => m_mouseController.Selected.Nodes.Contains(n.Id));
+                    var orderedUnselectedNodes = CurrentFile.Nodes.Reverse().Where(n => !m_mouseController.Selected.Nodes.Contains(n.Data.NodeId));
+                    var orderedSelectedNodes = CurrentFile.Nodes.Reverse().Where(n => m_mouseController.Selected.Nodes.Contains(n.Data.NodeId));
 
                     //Make sure the nodes are the right size so the connectors end up in the right place
                     foreach (var node in CurrentFile.Nodes)
@@ -731,7 +741,7 @@ namespace ConversationEditor
 
                     foreach (var node in orderedUnselectedNodes)
                     {
-                        foreach (var t in node.Connectors)
+                        foreach (var t in node.Data.Connectors)
                         {
                             foreach (var connection in t.Connections)
                             {
@@ -754,7 +764,7 @@ namespace ConversationEditor
 
                     foreach (var node in orderedSelectedNodes)
                     {
-                        foreach (var t in node.Connectors)
+                        foreach (var t in node.Data.Connectors)
                         {
                             foreach (var connection in t.Connections)
                             {
@@ -794,8 +804,8 @@ namespace ConversationEditor
                     //Draw all the unselected nodes
                     foreach (TNode node in orderedUnselectedNodes)
                     {
-                        node.Renderer.Draw(g, m_mouseController.Selected.Nodes.Contains(node.Id), m_colorScheme);
-                        foreach (var t in node.Connectors)
+                        node.Renderer.Draw(g, m_mouseController.Selected.Nodes.Contains(node.Data.NodeId), m_colorScheme);
+                        foreach (var t in node.Data.Connectors)
                         {
                             bool selected = m_mouseController.IsSelected(t);
                             UIInfo(t).Draw(g, selected ? Colors.Foreground : Colors.Connectors);
@@ -813,8 +823,8 @@ namespace ConversationEditor
                     //Draw all the selected nodes
                     foreach (TNode node in orderedSelectedNodes)
                     {
-                        node.Renderer.Draw(g, m_mouseController.Selected.Nodes.Contains(node.Id), m_colorScheme);
-                        foreach (var t in node.Connectors)
+                        node.Renderer.Draw(g, m_mouseController.Selected.Nodes.Contains(node.Data.NodeId), m_colorScheme);
+                        foreach (var t in node.Data.Connectors)
                         {
                             bool selected = m_mouseController.IsSelected(t);
                             UIInfo(t).Draw(g, selected ? Colors.Foreground : Colors.Connectors);
@@ -862,7 +872,7 @@ namespace ConversationEditor
                         if (resultNotOk == ConfigureResult.Cancel)
                         {
                             //Merge the parameter into a junk source so it doesn't count towards the real source
-                            foreach (var parameter in g.Parameters.OfType<IDynamicEnumParameter>())
+                            foreach (var parameter in g.Data.Parameters.OfType<IDynamicEnumParameter>())
                                 parameter.MergeInto(new DynamicEnumParameter.Source());
                         }
                         else
@@ -955,10 +965,6 @@ namespace ConversationEditor
         private TransitionNoduleUIInfo UIInfo(Output connection, bool canFail = false)
         {
             return CurrentFile.UIInfo(connection, canFail);
-        }
-
-        internal void SanityTest()
-        {
         }
     }
 

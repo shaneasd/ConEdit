@@ -83,7 +83,7 @@ namespace Tests.Conversation
                 }
             }
 
-            bool Compare(Output output, Tuple<NodeData.ConnectorData, ConnectorDefinitionData> connectorData)
+            private static bool Compare(Output output, Tuple<NodeData.ConnectorData, ConnectorDefinitionData> connectorData)
             {
                 bool equal = true;
                 equal &= Is.EqualTo(connectorData.Item2).Matches(output.Definition);

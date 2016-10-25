@@ -13,7 +13,7 @@ namespace RawSerialization
     {
         public string Name { get { return "Generate Binary Localization"; } }
 
-        private Stream DetermineFileStream()
+        private static Stream DetermineFileStream()
         {
             using (SaveFileDialog sfd = new SaveFileDialog())
             {

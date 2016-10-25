@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            ColorScheme colorScheme1 = new ColorScheme();
             this.cancelButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
@@ -125,7 +124,6 @@
             // 
             // greyScrollBar1
             // 
-            this.greyScrollBar1.ColorScheme = colorScheme1;
             this.greyScrollBar1.Dock = System.Windows.Forms.DockStyle.Right;
             this.greyScrollBar1.Horizontal = false;
             this.greyScrollBar1.LargeChange = 0.1F;

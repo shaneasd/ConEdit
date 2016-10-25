@@ -49,7 +49,7 @@ namespace ConversationEditor
             m_list.UpdateScrollBar(greyScrollBar1, drawWindow1.Height);
         }
 
-        public void Initalize(ColorScheme scheme, PluginsConfig config)
+        public void Initalize(IColorScheme scheme, PluginsConfig config)
         {
             m_config = config;
             Scheme = scheme;
@@ -103,8 +103,8 @@ namespace ConversationEditor
             drawWindow1.Invalidate(true);
         }
 
-        private ColorScheme m_scheme;
-        public ColorScheme Scheme
+        private IColorScheme m_scheme;
+        public IColorScheme Scheme
         {
             get { return m_scheme; }
             set
@@ -159,7 +159,7 @@ namespace ConversationEditor
             return new Rectangle(SPACING, checked(1 + index * (BOX_SIZE + SPACING)), BOX_SIZE, BOX_SIZE);
         }
 
-        public void DrawItems(ColorScheme scheme, Graphics g, int scroll)
+        public void DrawItems(IColorScheme scheme, Graphics g, int scroll)
         {
             for (int index = 0; index < m_items.Count; index++)
             {
@@ -167,7 +167,7 @@ namespace ConversationEditor
             }
         }
 
-        private void DrawItem(ColorScheme scheme, Graphics g, int index, int scroll)
+        private void DrawItem(IColorScheme scheme, Graphics g, int index, int scroll)
         {
             var item = m_items[index];
             bool check = item.Checked;

@@ -73,18 +73,29 @@ namespace ConversationEditor
         public event Action Ok { add { } remove { } }
         public event Action Remove;
 
-        internal static UnknownParameterEditor Make(ColorScheme scheme, ParameterEditorSetupData data, SimpleUndoPair removeParameter, Action remove)
+        internal static UnknownParameterEditor Make(IColorScheme scheme, ParameterEditorSetupData data, SimpleUndoPair removeParameter, Action remove)
         {
-            var result = new UnknownParameterEditor();
-            result.Scheme = scheme;
-            result.Setup(data);
-            result.m_removeParameter = removeParameter;
-            result.Remove += remove;
-            return result;
+            UnknownParameterEditor x = null;
+            try
+            {
+                x = new UnknownParameterEditor();
+                x.Scheme = scheme;
+                x.Setup(data);
+                x.m_removeParameter = removeParameter;
+                x.Remove += remove;
+                var result = x;
+                x = null;
+                return result;
+            }
+            finally
+            {
+                if (x != null)
+                    x.Dispose();
+            }
         }
 
-        ColorScheme m_scheme;
-        public ColorScheme Scheme
+        IColorScheme m_scheme;
+        public IColorScheme Scheme
         {
             get { return m_scheme; }
             set

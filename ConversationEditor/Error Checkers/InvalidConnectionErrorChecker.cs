@@ -27,7 +27,7 @@ namespace ConversationEditor.ErrorCheckers
             HashSet<UnorderedTuple2<T>> results = new HashSet<UnorderedTuple2<T>>();
             foreach (var node in nodes)
             {
-                foreach (var c in node.Connectors)
+                foreach (var c in node.Data.Connectors)
                 {
                     foreach (var connection in c.Connections)
                     {

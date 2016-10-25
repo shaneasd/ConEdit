@@ -83,16 +83,15 @@ namespace RuntimeConversation
 
     public abstract class NodeBase
     {
-        private readonly Id<NodeTemp> m_id;
         //public abstract IEnumerable<Connector> Connectors { get; }
-        public Id<NodeTemp> Id { get { return m_id; } }
+        public Id<NodeTemp> Id { get; }
 
         private readonly PointF m_position;
         public PointF Position { get { return m_position; } }
 
         protected NodeBase(Id<NodeTemp> id, PointF position)
         {
-            m_id = id;
+            Id = id;
             m_position = position;
         }
 

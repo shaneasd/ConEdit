@@ -18,8 +18,8 @@ namespace ConversationEditor
         private ErrorCheckersConfig m_config;
         private PluginsConfig m_pluginsConfig;
 
-        ColorScheme m_scheme;
-        public ColorScheme Scheme
+        IColorScheme m_scheme;
+        public IColorScheme Scheme
         {
             get { return m_scheme; }
             set

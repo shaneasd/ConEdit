@@ -33,7 +33,7 @@ namespace ConversationEditor
                 return Enumerable.Empty<Item>();
             }
 
-            public override void DrawTree(Graphics g, RectangleF iconRectangle, VisibilityFilter filter, ColorScheme scheme)
+            public override void DrawTree(Graphics g, RectangleF iconRectangle, VisibilityFilter filter, IColorScheme scheme)
             {
                 var start = iconRectangle.Center();
                 float treeBranchX = start.X - HEIGHT + 6; //The x coordinate of the point where this node's connector line joins the parents branch line

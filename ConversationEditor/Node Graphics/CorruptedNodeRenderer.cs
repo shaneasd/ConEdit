@@ -26,10 +26,12 @@ namespace ConversationEditor
             //var r = Area.Location.X + Area.Width;
             //var t = Area.Location.Y;
             //var b = Area.Location.Y + Area.Height;
-            var pen = new Pen(Brushes.Red, 2);
-            g.DrawRectangle(pen, Area);
-            //g.DrawLine(pen, l, t, r, b);
-            //g.DrawLine(pen, l, b, r, t);
+            using (var pen = new Pen(Brushes.Red, 2))
+            {
+                g.DrawRectangle(pen, Area);
+                //g.DrawLine(pen, l, t, r, b);
+                //g.DrawLine(pen, l, b, r, t);
+            }
             g.DrawString(Text, Font, Brushes.Black, Area.Location);
         }
 
@@ -37,7 +39,7 @@ namespace ConversationEditor
         {
             get
             {
-                return Node.Parameters.Where(p=>p.Corrupted).Aggregate("Corrupted " + Node.NodeName + " ID: " + Node.Id.Guid, (a, p) => a + "\r\n  -  " + p.Name, s => s);
+                return Node.Data.Parameters.Where(p=>p.Corrupted).Aggregate("Corrupted " + Node.Data.Name + " ID: " + Node.Data.NodeId.Guid, (a, p) => a + "\r\n  -  " + p.Name, s => s);
             }
         }
 

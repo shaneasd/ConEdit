@@ -16,7 +16,7 @@ namespace PluginPack
             return true;
         }
 
-        public override Conversation.ConfigureResult2 Edit(ConversationEditor.ColorScheme scheme, Conversation.IConversationNodeData node, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions)
+        public override Conversation.ConfigureResult2 Edit(IColorScheme scheme, Conversation.IConversationNodeData node, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions)
         {
             return ConfigureResult2.NotApplicable;
         }

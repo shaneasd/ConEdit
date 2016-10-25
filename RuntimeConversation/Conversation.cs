@@ -69,7 +69,7 @@ namespace RuntimeConversation
             };
             processor.EnteringDialog += () => { Console.WriteLine("ENTERING DIALOGUE"); Console.ReadKey(); };
             processor.ExitingDialog += () => { Console.WriteLine("EXITING DIALOGUE"); Console.ReadKey(); };
-            processor.PlaySpeech += (speaker, listener, speech) => { Console.WriteLine(speaker + " says to " + listener + " : " + speech); Console.ReadKey(); };
+            processor.PlaySpeech += (speaker, speech) => { Console.WriteLine(speaker + " says: " + speech); Console.ReadKey(); };
 
             Viking.Nodes.Node node = start;
 
@@ -80,16 +80,24 @@ namespace RuntimeConversation
                 {
                     Form f = new Form();
                     var ff = new FlowLayoutPanel();
-                    ff.Dock = DockStyle.Fill;
                     f.Controls.Add(ff);
+                    ff.Dock = DockStyle.Fill;
                     foreach (var option in next)
                     {
                         var o = option;
                         var b = new Button();
-                        b.Text = option.Text;
-                        b.Click += (x, y) => { f.Close(); node = o.Node; };
-                        b.AutoSize = true;
-                        b.Height = 100;
+                        try
+                        {
+                            b.Text = option.Text;
+                            b.Click += (x, y) => { f.Close(); node = o.Node; };
+                            b.AutoSize = true;
+                            b.Height = 100;
+                        }
+                        catch
+                        {
+                            b.Dispose();
+                            throw;
+                        }
                         ff.Controls.Add(b);
                     }
                     f.ShowDialog();

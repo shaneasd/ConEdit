@@ -29,8 +29,8 @@ namespace ConversationEditor
         INodeFactory m_domainNodeFactory;
         ProjectMenuController m_projectMenuController;
 
-        ConversationEditorControl m_domainEditor = new ConversationEditorControl() { Dock = DockStyle.Fill, ShowGrid = true };
-        ConversationEditorControl m_projectGraphEditor = new ConversationEditorControl() { Dock = DockStyle.Fill, ShowGrid = true };
+        ConversationEditorControl m_domainEditor;
+        ConversationEditorControl m_projectGraphEditor;
 
         IGraphEditorControl<ConversationNode> m_currentEditor = null;
         IGraphEditorControl<ConversationNode> CurrentEditor
@@ -110,48 +110,70 @@ namespace ConversationEditor
 
             KeyPreview = true;
 
+            m_domainEditor = new ConversationEditorControl();
             try
             {
-                var willEdit = new WillEdit
-                (
-                    isDecimal:  guid => m_context.CurrentProject.Value.ConversationDataSource.IsDecimal(guid) || m_context.CurrentProject.Value.DomainDataSource.IsDecimal(guid),
-                    isDynamicEnum: guid => m_context.CurrentProject.Value.ConversationDataSource.IsDynamicEnum(guid) || m_context.CurrentProject.Value.DomainDataSource.IsDynamicEnum(guid),
-                    isLocalDynamicEnum: guid => m_context.CurrentProject.Value.ConversationDataSource.IsLocalDynamicEnum(guid) || m_context.CurrentProject.Value.DomainDataSource.IsLocalDynamicEnum(guid),
-                    isEnum: guid => m_context.CurrentProject.Value.ConversationDataSource.IsEnum(guid) || m_context.CurrentProject.Value.DomainDataSource.IsEnum(guid),
-                    isInteger: guid => m_context.CurrentProject.Value.ConversationDataSource.IsInteger(guid) || m_context.CurrentProject.Value.DomainDataSource.IsInteger(guid)
-                );
-                m_config = new Config("config.xml", willEdit);
+                m_domainEditor.Dock = DockStyle.Fill;
+                m_domainEditor.ShowGrid = true;
+                m_projectGraphEditor = new ConversationEditorControl();
+                try
+                {
+                    m_projectGraphEditor.Dock = DockStyle.Fill;
+                    m_projectGraphEditor.ShowGrid = true;
+                    try
+                    {
+                        var willEdit = new WillEdit
+                        (
+                            isDecimal: guid => m_context.CurrentProject.Value.ConversationDataSource.IsDecimal(guid) || m_context.CurrentProject.Value.DomainDataSource.IsDecimal(guid),
+                            isDynamicEnum: guid => m_context.CurrentProject.Value.ConversationDataSource.IsDynamicEnum(guid) || m_context.CurrentProject.Value.DomainDataSource.IsDynamicEnum(guid),
+                            isLocalDynamicEnum: guid => m_context.CurrentProject.Value.ConversationDataSource.IsLocalDynamicEnum(guid) || m_context.CurrentProject.Value.DomainDataSource.IsLocalDynamicEnum(guid),
+                            isEnum: guid => m_context.CurrentProject.Value.ConversationDataSource.IsEnum(guid) || m_context.CurrentProject.Value.DomainDataSource.IsEnum(guid),
+                            isInteger: guid => m_context.CurrentProject.Value.ConversationDataSource.IsInteger(guid) || m_context.CurrentProject.Value.DomainDataSource.IsInteger(guid)
+                        );
+                        m_config = new Config("config.xml", willEdit);
+                    }
+                    catch (ConfigLoadFailedException)
+                    {
+                        throw;
+                    }
+
+                    projectExplorer.Initialize(m_context, m_config.FileFilters);
+
+                    InitialiseNodeFactory();
+                    InitialiseFileMenu();
+                    InitialiseEditMenu();
+                    InitialiseProjectMenu();
+                    InitialiseConversationEditor();
+                    InitializeDomainEditor();
+                    InitialiseOptionsMenu();
+                    InitialiseExportMenu();
+                    m_errorCheckerController = new ErrorCheckerController(m_config.ErrorCheckers, m_config.Plugins);
+
+                    errorList1.HightlightNode += errorList1_HightlightNode;
+
+                    menuStrip1.Renderer = m_scheme.ContextMenu;
+                    splitContainer1.BackColor = m_scheme.FormBackground;
+                    splitContainer1.ForeColor = m_scheme.Foreground;
+                    splitContainer2.BackColor = m_scheme.FormBackground;
+                    splitContainer2.ForeColor = m_scheme.Foreground;
+                    BackColor = m_scheme.FormBackground;
+                    ForeColor = m_scheme.Foreground;
+                    errorList1.ForeColor = m_scheme.Foreground;
+                    errorList1.BackColor = m_scheme.Background;
+
+                    projectExplorer.m_contextMenuItemsFactory = new WrapperContextMenuItemsFactory((mainAssembly) => m_config.Plugins.UnfilteredAssemblies(mainAssembly));
+                }
+                catch
+                {
+                    m_projectGraphEditor.Dispose();
+                    throw;
+                }
             }
-            catch (Config.LoadFailedException)
+            catch
             {
+                m_domainEditor.Dispose();
                 throw;
             }
-
-            projectExplorer.Initialize(m_context, m_config.FileFilters);
-
-            InitialiseNodeFactory();
-            InitialiseFileMenu();
-            InitialiseEditMenu();
-            InitialiseProjectMenu();
-            InitialiseConversationEditor();
-            InitializeDomainEditor();
-            InitialiseOptionsMenu();
-            InitialiseExportMenu();
-            m_errorCheckerController = new ErrorCheckerController(m_config.ErrorCheckers, m_config.Plugins);
-
-            errorList1.HightlightNode += errorList1_HightlightNode;
-
-            menuStrip1.Renderer = m_scheme.ContextMenu;
-            splitContainer1.BackColor = m_scheme.FormBackground;
-            splitContainer1.ForeColor = m_scheme.Foreground;
-            splitContainer2.BackColor = m_scheme.FormBackground;
-            splitContainer2.ForeColor = m_scheme.Foreground;
-            BackColor = m_scheme.FormBackground;
-            ForeColor = m_scheme.Foreground;
-            errorList1.ForeColor = m_scheme.Foreground;
-            errorList1.BackColor = m_scheme.Background;
-
-            projectExplorer.m_contextMenuItemsFactory = new WrapperContextMenuItemsFactory((mainAssembly) => m_config.Plugins.UnfilteredAssemblies(mainAssembly));
         }
 
         private void InitialiseNodeFactory()
@@ -322,14 +344,22 @@ namespace ConversationEditor
                 var e = element;
 
                 ToolStripMenuItem item = new ToolStripMenuItem(e.Description);
-                item.Click += (b, c) => { e.UndoUpToAndIncluding(); UpdateUndoMenu(); };
-                undoToolStripMenuItem.DropDownItems.Add(item);
-
-                if (first)
+                try
                 {
-                    item.ShortcutKeys = Keys.Control | Keys.Z;
-                    first = false;
+                    item.Click += (b, c) => { e.UndoUpToAndIncluding(); UpdateUndoMenu(); };
+                    if (first)
+                    {
+                        item.ShortcutKeys = Keys.Control | Keys.Z;
+                        first = false;
+                    }
                 }
+                catch
+                {
+                    item.Dispose();
+                    throw;
+                }
+
+                undoToolStripMenuItem.DropDownItems.Add(item);
             }
         }
 
@@ -641,8 +671,16 @@ namespace ConversationEditor
             Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config = (id, d) =>
             {
                 var result = new DefaultEnumEditor();
-                result.Scheme = m_scheme;
-                result.Setup(d);
+                try
+                {
+                    result.Scheme = m_scheme;
+                    result.Setup(d);
+                }
+                catch
+                {
+                    result.Dispose();
+                    throw;
+                }
                 return result;
             };
 
@@ -667,12 +705,20 @@ namespace ConversationEditor
             Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config = (id, d) =>
             {
                 var result = new DefaultEnumEditor();
-                result.Scheme = m_scheme;
-                result.Setup(d);
+                try
+                {
+                    result.Scheme = m_scheme;
+                    result.Setup(d);
+                }
+                catch
+                {
+                    result.Dispose();
+                    throw;
+                }
                 return result;
             };
             var editor = new DefaultNodeEditorFactory();
-            editor.Edit(m_scheme, data, null, config, null, null, null).Transformed(a => OnOk(DummyAudioLibrary.Instance, a), a => a).Do(a => a.Redo(), a=> { });
+            editor.Edit(m_scheme, data, null, config, null, null, null).Transformed(a => OnOk(DummyAudioLibrary.Instance, a), a => a).Do(a => a.Redo(), a => { });
             using (m_config.ConversationNodeRenderers.SuppressValueChanged())
             {
                 foreach (var d in data.Parameters)
@@ -705,6 +751,7 @@ namespace ConversationEditor
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "http://stackoverflow.com/questions/8795005/code-analysis-warning-about-disposing-a-form")]
         private void findAndReplaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             IEnumerable<IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>> search;
@@ -758,7 +805,7 @@ namespace ConversationEditor
                 };
 
             IEnumerable<IConversationFile> conversations = m_context.CurrentProject.Value.Conversations;
-            var allAudioReferences = (conversations.SelectMany(c => c.Nodes.SelectMany(n => n.Parameters.OfType<IAudioParameter>().Select(p => new { Node = n, Path = rooted(p.Value.Value).FullName, Document = c })))).ToHashSet();
+            var allAudioReferences = (conversations.SelectMany(c => c.Nodes.SelectMany(n => n.Data.Parameters.OfType<IAudioParameter>().Select(p => new { Node = n, Path = rooted(p.Value.Value).FullName, Document = c })))).ToHashSet();
 
             var audioFiles = m_context.CurrentProject.Value.AudioFiles.Select(a => a.File.File.FullName).Evaluate();
 
@@ -840,7 +887,7 @@ namespace ConversationEditor
                 item.Click += (a, b) =>
                 {
                     if (m_context.CurrentLocalization.Value.IsValid)
-                        e.Export(m_context.CurrentProject.Value, m_config.ExportPath, l => Tuple.Create( m_context.CurrentLocalization.Value.Localize(l), m_context.CurrentLocalization.Value.LocalizationTime(l)), m_context.ErrorCheckerUtils());
+                        e.Export(m_context.CurrentProject.Value, m_config.ExportPath, l => Tuple.Create(m_context.CurrentLocalization.Value.Localize(l), m_context.CurrentLocalization.Value.LocalizationTime(l)), m_context.ErrorCheckerUtils());
                     else
                         MessageBox.Show("Cannot export as there is no currently selected localizer");
                 };
@@ -860,11 +907,6 @@ namespace ConversationEditor
                 m_config.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private void SanityTest(object sender, EventArgs e)
-        {
-            m_conversationEditor.SanityTest();
         }
     }
 }

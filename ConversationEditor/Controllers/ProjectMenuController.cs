@@ -17,8 +17,41 @@ namespace ConversationEditor
         private INodeFactory m_conversationNodeFactory;
         private INodeFactory m_domainNodeFactory;
         private ConfigParameterList<string> m_config;
-        private OpenFileDialog m_ofd = new OpenFileDialog() { DefaultExt = "prj", Filter = "Conversation Projects|*.prj|All Files (*.*)|*.*" };
-        private SaveFileDialog m_sfd = new SaveFileDialog() { DefaultExt = "prj", Filter = "Conversation Projects|*.prj|All Files (*.*)|*.*" };
+
+        private static OpenFileDialog MakeOpenFileDialog()
+        {
+            var result = new OpenFileDialog();
+            try
+            {
+                result.DefaultExt = "prj";
+                result.Filter = "Conversation Projects|*.prj|All Files (*.*)|*.*";
+                return result;
+            }
+            catch
+            {
+                result.Dispose();
+                throw;
+            }
+        }
+
+        private static SaveFileDialog MakeSaveFileDialog()
+        {
+            var result = new SaveFileDialog();
+            try
+            {
+                result.DefaultExt = "prj";
+                result.Filter = "Conversation Projects|*.prj|All Files (*.*)|*.*";
+                return result;
+            }
+            catch
+            {
+                result.Dispose();
+                throw;
+            }
+        }
+
+        private OpenFileDialog m_ofd = MakeOpenFileDialog();
+        private SaveFileDialog m_sfd = MakeSaveFileDialog();
 
         /// <summary>
         /// Updates the stored (in m_config) list of recently opened projects to ensure that the current project is first in the list
@@ -110,15 +143,10 @@ namespace ConversationEditor
         public void OpenProject(string path)
         {
             MemoryStream m = null;
-
+            FileStream projectFile = null;
             try
             {
-                using (var projectFile = Util.LoadFileStream(path, FileMode.Open, FileAccess.Read, 0))
-                {
-                    m = new MemoryStream((int)projectFile.Length);
-                    projectFile.CopyTo(m);
-                    m.Position = 0;
-                }
+                projectFile = Util.LoadFileStream(path, FileMode.Open, FileAccess.Read, 0);
             }
             catch (MyFileLoadException e)
             {
@@ -127,10 +155,22 @@ namespace ConversationEditor
                 Console.Out.WriteLine(e.InnerException.Message);
                 Console.Out.WriteLine(e.InnerException.StackTrace);
                 MessageBox.Show("Project: " + path + " could not be accessed");
+                return;
             }
 
-            if (m != null)
+            try
             {
+                try
+                {
+                    m = new MemoryStream((int)projectFile.Length);
+                    projectFile.CopyTo(m);
+                    m.Position = 0;
+                }
+                finally
+                {
+                    projectFile.Dispose();
+                }
+
                 var deserializer = new XMLProject.Deserializer();
                 var projectData = deserializer.Read(m);
                 var project = new Project(m_context, projectData, m_conversationNodeFactory, m_domainNodeFactory, m, new FileInfo(path),
@@ -166,12 +206,17 @@ namespace ConversationEditor
                     //informing the user that the file they just deleted was just deleted. As this is pointless
                     //we check if the project in question is in the project. We could simply detach the callback at
                     //the appropriate time but this way seems more resilient to potential bugs
-                    if ( m_context.CurrentProject.Value.Conversations.Contains(element))
+                    if (m_context.CurrentProject.Value.Conversations.Contains(element))
                     {
-                        MessageBox.Show("Project element " + element.File.File.FullName + " deleted by another application"); 
+                        MessageBox.Show("Project element " + element.File.File.FullName + " deleted by another application");
                     }
                 });
                 m_context.CurrentProject.Value = project;
+            }
+            finally
+            {
+                if (m != null)
+                    m.Dispose();
             }
         }
 
@@ -197,28 +242,39 @@ namespace ConversationEditor
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public void New()
         {
             if (CanClose(true)) //Attempt to clear all the existing conversations
             {
                 if (DialogResult.OK == m_sfd.ShowDialog())
                 {
+                    Project project = null;
                     try
                     {
-                        m_context.CurrentProject.Value = Project.CreateEmpty(m_context, new FileInfo(m_sfd.FileName), m_conversationNodeFactory, m_domainNodeFactory,
-                                                                             new XMLProject.Serializer(),
-                                                                             SerializationUtils.ConversationSerializer,
-                                                                             SerializationUtils.ConversationSerializerDeserializer,
-                                                                             SerializationUtils.DomainSerializer, m_pluginsConfig, m_audioCustomization);
+                        try
+                        {
+                            project = Project.CreateEmpty(m_context, new FileInfo(m_sfd.FileName), m_conversationNodeFactory, m_domainNodeFactory,
+                                                                                 new XMLProject.Serializer(),
+                                                                                 SerializationUtils.ConversationSerializer,
+                                                                                 SerializationUtils.ConversationSerializerDeserializer,
+                                                                                 SerializationUtils.DomainSerializer, m_pluginsConfig, m_audioCustomization);
+                            m_context.CurrentProject.Value = project;
+                        }
+                        catch (MyFileLoadException e)
+                        {
+                            Console.Out.WriteLine(e.Message);
+                            Console.Out.WriteLine(e.StackTrace);
+                            Console.Out.WriteLine(e.InnerException);
+                            Console.Out.WriteLine(e.InnerException.StackTrace);
+                            MessageBox.Show("Failed to access file");
+                            return;
+                        }
                     }
-                    catch (MyFileLoadException e)
+                    catch
                     {
-                        Console.Out.WriteLine(e.Message);
-                        Console.Out.WriteLine(e.StackTrace);
-                        Console.Out.WriteLine(e.InnerException);
-                        Console.Out.WriteLine(e.InnerException.StackTrace);
-                        MessageBox.Show("Failed to access file");
-                        return;
+                        project.Dispose();
+                        throw;
                     }
                 }
             }

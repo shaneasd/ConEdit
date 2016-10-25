@@ -302,6 +302,12 @@ namespace Utilities
     [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly", Justification = "Disposable behavior inherited from SaveableFile")]
     public class SaveableFileNotUndoable : SaveableFile, ISaveableFile
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="initialContent">Represents the current contents of the file. Reference is not held. A copy is made.</param>
+        /// <param name="path"></param>
+        /// <param name="saveTo"></param>
         public SaveableFileNotUndoable(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo)
             : base(initialContent, path, saveTo)
         {

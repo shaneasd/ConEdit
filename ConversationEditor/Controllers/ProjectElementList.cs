@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace ConversationEditor
 {
-    internal class ProjectElementList<TReal, TMissing, TInterface> : IProjectElementList<TReal, TInterface>, IDisposable
+    internal class ProjectElementList<TReal, TMissing, TInterface> : IProjectElementList<TReal, TInterface>
         where TReal : TInterface
         where TMissing : TInterface
         where TInterface : class, ISaveableFileProvider, IInProject
@@ -223,14 +223,13 @@ namespace ConversationEditor
                 {
                     MessageBox.Show("Failed to delete file");
                 }
+                catch (UnauthorizedAccessException)
+                {
+                    MessageBox.Show("Failed to delete file");
+                }
                 m_data.Remove(element.File.File.FullName);
                 Removed(element);
             }
-        }
-
-        public void Dispose()
-        {
-            m_suppressibleGotChanged.Dispose();
         }
     }
 }

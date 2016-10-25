@@ -33,11 +33,9 @@ namespace ConversationEditor
             get { return StaticId; }
         }
 
-        public IParameterEditor<Control> Make(ColorScheme scheme)
+        public IParameterEditor<Control> Make(IColorScheme scheme)
         {
-            var result = new DefaultBooleanEditor();
-            result.Scheme = scheme;
-            return result;
+            return new DefaultBooleanEditor(scheme);
         }
     }
 
@@ -67,8 +65,8 @@ namespace ConversationEditor
                 ToggleButtonOnPressed = new Bitmap(stream);
         }
 
-        ColorScheme m_colorScheme;
-        public ColorScheme Scheme
+        IColorScheme m_colorScheme;
+        public IColorScheme Scheme
         {
             get { return m_colorScheme; }
             set
@@ -77,6 +75,12 @@ namespace ConversationEditor
                 drawWindow1.ColorScheme = value;
             }
         }
+
+        public DefaultBooleanEditor(IColorScheme scheme) : this()
+        {
+            Scheme = scheme;
+        }
+
         public DefaultBooleanEditor()
         {
             InitializeComponent();
@@ -166,7 +170,7 @@ namespace ConversationEditor
             if (boxRectangle.Contains(e.Location))
                 m_hovered = true;
             else
-                m_hovered = false; 
+                m_hovered = false;
             Invalidate(true);
         }
 

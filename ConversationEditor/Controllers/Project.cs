@@ -76,41 +76,42 @@ namespace ConversationEditor
             Project result = null;
             FileInfo conversationFile;
             LocalizationFile localizationFile;
-            //Start by making sure we can open the file
-            MemoryStream m = new MemoryStream();
 
-            //Create the new conversation file stream, fill with essential content and close
-            conversationFile = ConversationFile.GetAvailableConversationPath(path.Directory, Enumerable.Empty<ISaveableFileProvider>());
-            using (FileStream conversationStream = Util.LoadFileStream(conversationFile, FileMode.CreateNew, FileAccess.Write))
+            using (MemoryStream m = new MemoryStream())
             {
-                conversationSerializer.Write(SerializationUtils.MakeConversationData(Enumerable.Empty<ConversationNode>(), new ConversationEditorData()), conversationStream);
+                //Create the new conversation file stream, fill with essential content and close
+                conversationFile = ConversationFile.GetAvailableConversationPath(path.Directory, Enumerable.Empty<ISaveableFileProvider>());
+                using (FileStream conversationStream = Util.LoadFileStream(conversationFile, FileMode.CreateNew, FileAccess.Write))
+                {
+                    conversationSerializer.Write(SerializationUtils.MakeConversationData(Enumerable.Empty<ConversationNode>(), new ConversationEditorData()), conversationStream);
+                }
+
+                LocalizationEngine temp = new LocalizationEngine(context, () => new HashSet<Id<LocalizedText>>(), s => false, s => false, p => !p.Exists, s => true);
+                localizationFile = LocalizationFile.MakeNew(path.Directory, s => temp.MakeSerializer(s), p => !p.Exists);
+
+                //Create the new project
+                Write(conversationFile.Only(), localizationFile.File.File.Only(), Enumerable.Empty<FileInfo>(), Enumerable.Empty<FileInfo>(), m, path.Directory, serializer);
+                using (FileStream projectfile = Util.LoadFileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    m.Position = 0;
+                    m.CopyTo(projectfile);
+                    m.Position = 0;
+                }
+
+                var conversationPaths = conversationFile.Only().Select(c => FileSystem.RelativePath(c, path.Directory));
+                var localizationPaths = localizationFile.Only().Select(l => FileSystem.RelativePath(l.File.File, path.Directory));
+                var domainPaths = Enumerable.Empty<string>();
+
+                TData data = new TData(conversationPaths, domainPaths, localizationPaths, Enumerable.Empty<string>());
+
+                result = new Project(context, data, conversationNodeFactory, domainNodeFactory, m, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig, audioCustomization);
+                return result;
             }
-
-            LocalizationEngine temp = new LocalizationEngine(context, () => new HashSet<Id<LocalizedText>>(), s => false, s => false, p => !p.Exists, s => true);
-            localizationFile = LocalizationFile.MakeNew(path.Directory, s => temp.MakeSerializer(s), p => !p.Exists);
-
-            //Create the new project
-            Write(conversationFile.Only(), localizationFile.File.File.Only(), Enumerable.Empty<FileInfo>(), Enumerable.Empty<FileInfo>(), m, path.Directory, serializer);
-            using (FileStream projectfile = Util.LoadFileStream(path, FileMode.Create, FileAccess.Write))
-            {
-                m.Position = 0;
-                m.CopyTo(projectfile);
-                m.Position = 0;
-            }
-
-            var conversationPaths = conversationFile.Only().Select(c => FileSystem.RelativePath(c, path.Directory));
-            var localizationPaths = localizationFile.Only().Select(l => FileSystem.RelativePath(l.File.File, path.Directory));
-            var domainPaths = Enumerable.Empty<string>();
-
-            TData data = new TData(conversationPaths, domainPaths, localizationPaths, Enumerable.Empty<string>());
-
-            result = new Project(context, data, conversationNodeFactory, domainNodeFactory, m, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig, audioCustomization);
-            return result;
         }
 
         public HashSet<Id<LocalizedText>> UsedLocalizations()
         {
-            return new HashSet<Id<LocalizedText>>(m_conversations.SelectMany(f => f.Nodes).SelectMany(f => f.Parameters).OfType<LocalizedStringParameter>().Where(p => !p.Corrupted).Select(p => p.Value));
+            return new HashSet<Id<LocalizedText>>(m_conversations.SelectMany(f => f.Nodes).SelectMany(f => f.Data.Parameters).OfType<LocalizedStringParameter>().Where(p => !p.Corrupted).Select(p => p.Value));
         }
 
         public bool ShouldExpand(string file)
@@ -163,6 +164,21 @@ namespace ConversationEditor
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="data"></param>
+        /// <param name="conversationNodeFactory"></param>
+        /// <param name="domainNodeFactory"></param>
+        /// <param name="initialContent">Represents the current contents of the file. Reference is not held. A copy is made.</param>
+        /// <param name="projectFile"></param>
+        /// <param name="serializer"></param>
+        /// <param name="conversationSerializer"></param>
+        /// <param name="conversationSerializerDeserializerFactory"></param>
+        /// <param name="domainSerializer"></param>
+        /// <param name="pluginsConfig"></param>
+        /// <param name="audioCustomization"></param>
         public Project(ILocalizationContext context, TData data, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, MemoryStream initialData, FileInfo projectFile, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializerFactory, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
         {
             Action<Stream> saveTo = stream => { Write(Conversations.Select(c => c.File.File), LocalizationFiles.Select(l => l.File.File), DomainFiles.Select(d => d.File.File), AudioFiles.Select(a => a.File.File), stream, Origin, m_serializer); };
@@ -196,7 +212,7 @@ namespace ConversationEditor
                                      //if (!domainEnumSource.ContainsKey(k))
                                      //domainEnumSource[k] = new DynamicEnumParameter.Source();
                                      //return domainEnumSource[k];
-                    };
+                        };
 
                     m_domainDataSource = new DomainDomain(pluginsConfig);
                     Func<IEnumerable<FileInfo>, IEnumerable<Either<DomainFile, MissingDomainFile>>> loader = paths =>
@@ -446,9 +462,6 @@ namespace ConversationEditor
                 foreach (var element in ElementsExceptThis)
                     element.Dispose();
                 m_file.Dispose();
-                m_conversations.Dispose();
-                m_domainFiles.Dispose();
-                m_localizer.Dispose();
             }
         }
 

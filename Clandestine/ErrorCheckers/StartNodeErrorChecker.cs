@@ -25,7 +25,7 @@ namespace Clandestine
 
         public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
         {
-            var startNodes = nodes.Where(n => Clandestine.Util.IsStartNode(n.Type, utils)).ToList();
+            var startNodes = nodes.Where(n => Clandestine.Util.IsStartNode(n.Data.NodeTypeId, utils)).ToList();
             if (startNodes.Count != 1)
                 yield return new StartNodeCountError(startNodes);
         }

@@ -34,11 +34,9 @@ namespace ConversationEditor
             get { return StaticId; }
         }
 
-        public IParameterEditor<Control> Make(ColorScheme scheme)
+        public IParameterEditor<Control> Make(IColorScheme scheme)
         {
-            var result = new DefaultSetEditor();
-            result.Scheme = scheme;
-            return result;
+            return new DefaultSetEditor(scheme);
         }
     }
 
@@ -48,6 +46,11 @@ namespace ConversationEditor
         List<CrossButton> m_buttons = new List<CrossButton>();
         List<TItem> m_comboBoxItems = new List<TItem>();
         ISetParameter m_parameter;
+
+        public DefaultSetEditor(IColorScheme scheme) : this()
+        {
+            Scheme = scheme;
+        }
 
         public DefaultSetEditor()
         {
@@ -88,9 +91,19 @@ namespace ConversationEditor
             if (m_comboBoxes.Count > 1)
             {
                 int i = m_comboBoxes.Count - 2;
-                CrossButton button = new CrossButton(() => new RectangleF(i * (COMBO_WIDTH + drawWindow1.Height) + COMBO_WIDTH, 0, drawWindow1.Height, drawWindow1.Height), () => { Remove(i); }, Scheme.ControlBorder, Scheme.BackgroundBrush);
-                button.RegisterCallbacks(m_focusProvider, drawWindow1);
-                m_buttons.Add(button);
+                CrossButton button = null;
+                try
+                {
+                    button = new CrossButton(() => new RectangleF(i * (COMBO_WIDTH + drawWindow1.Height) + COMBO_WIDTH, 0, drawWindow1.Height, drawWindow1.Height), () => { Remove(i); }, Scheme.ControlBorder, Scheme.BackgroundBrush);
+                    button.RegisterCallbacks(m_focusProvider, drawWindow1);
+                    m_buttons.Add(button);
+                    button = null;
+                }
+                finally
+                {
+                    if (button != null)
+                        button.Dispose();
+                }
             }
         }
 
@@ -164,8 +177,8 @@ namespace ConversationEditor
             remove { }
         }
 
-        ColorScheme m_scheme;
-        public ColorScheme Scheme
+        IColorScheme m_scheme;
+        public IColorScheme Scheme
         {
             get { return m_scheme; }
             set
@@ -184,7 +197,7 @@ namespace ConversationEditor
             }
         }
 
-        private static void SetupColors(ColorScheme value, TControl b)
+        private static void SetupColors(IColorScheme value, TControl b)
         {
             b.TextBoxColors.BorderPen = value.ControlBorder;
             //b.SelectedBackgroundColor = value.SelectedConversationListItemPrimaryBackground; //TODO: We want this if we use a suggestion box

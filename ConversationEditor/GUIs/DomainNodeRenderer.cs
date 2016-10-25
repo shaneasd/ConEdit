@@ -55,18 +55,26 @@ namespace ConversationEditor
         static GraphicsPath RoundedRectangle(RectangleF notRounded, int radius)
         {
             GraphicsPath result = new GraphicsPath(FillMode.Winding);
-            var o = notRounded.Location;
-            var w = notRounded.Width;
-            var h = notRounded.Height;
-            result.AddLine(o.X + w, o.Y + radius, o.X + w, o.Y + h - radius);
-            result.AddArc(o.X + w - radius * 2, o.Y + h - radius * 2, radius * 2, radius * 2, 0, 90);
-            result.AddLine(o.X + w - radius, o.Y + h, o.X + radius, o.Y + h);
-            result.AddArc(o.X, o.Y + h - radius * 2, radius * 2, radius * 2, 90, 90);
-            result.AddLine(o.X, o.Y + h - radius, o.X, o.Y + radius);
-            result.AddArc(o.X, o.Y, radius * 2, radius * 2, 180, 90);
-            result.AddLine(o.X + radius, o.Y, o.X + w - radius, o.Y);
-            result.AddArc(o.X + w - radius * 2, o.Y, radius * 2, radius * 2, -90, 90);
-            result.CloseFigure();
+            try
+            {
+                var o = notRounded.Location;
+                var w = notRounded.Width;
+                var h = notRounded.Height;
+                result.AddLine(o.X + w, o.Y + radius, o.X + w, o.Y + h - radius);
+                result.AddArc(o.X + w - radius * 2, o.Y + h - radius * 2, radius * 2, radius * 2, 0, 90);
+                result.AddLine(o.X + w - radius, o.Y + h, o.X + radius, o.Y + h);
+                result.AddArc(o.X, o.Y + h - radius * 2, radius * 2, radius * 2, 90, 90);
+                result.AddLine(o.X, o.Y + h - radius, o.X, o.Y + radius);
+                result.AddArc(o.X, o.Y, radius * 2, radius * 2, 180, 90);
+                result.AddLine(o.X + radius, o.Y, o.X + w - radius, o.Y);
+                result.AddArc(o.X + w - radius * 2, o.Y, radius * 2, radius * 2, -90, 90);
+                result.CloseFigure();
+            }
+            catch
+            {
+                result.Dispose();
+                throw;
+            }
             return result;
         }
 
@@ -81,7 +89,7 @@ namespace ConversationEditor
 
                 if (node != null)
                 {
-                    baseColor = BackgroundColor.TryGet(Node.Config) ?? baseColor;
+                    baseColor = BackgroundColor.TryGet(Node.Data.Config) ?? baseColor;
                     baseColor = Color.FromArgb(baseColor.R, baseColor.G, baseColor.B);
                 }
             }
@@ -121,7 +129,7 @@ namespace ConversationEditor
             public TitleSection(ConversationNode node) : base(node) { }
             public override SizeF Measure(Graphics g)
             {
-                return SizeF.Add(g.MeasureString(Node.NodeName, BoldFont), new SizeF(4, 4));
+                return SizeF.Add(g.MeasureString(Node.Data.Name, BoldFont), new SizeF(4, 4));
             }
 
             public override void Draw(Graphics g, PointF location)
@@ -129,7 +137,7 @@ namespace ConversationEditor
                 float brightnessFactor = 0.75f;
                 float darknessFactor = 0;
                 DrawChunk(g, brightnessFactor, darknessFactor, location);
-                g.DrawString(Node.NodeName, BoldFont, Brushes.Black, new PointF(location.X + 2, location.Y + 2));
+                g.DrawString(Node.Data.Name, BoldFont, Brushes.Black, new PointF(location.X + 2, location.Y + 2));
             }
         }
 
@@ -141,7 +149,7 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return Node.Connectors.Where(c => c.Definition.Position == ConnectorPosition.Bottom);
+                    return Node.Data.Connectors.Where(c => c.Definition.Position == ConnectorPosition.Bottom);
                 }
             }
 
@@ -205,18 +213,18 @@ namespace ConversationEditor
             {
                 get
                 {
-                    return MaxWidthConfig.TryGet(Node.Config) ?? DomainNodeRenderer.MaxWidth;
+                    return MaxWidthConfig.TryGet(Node.Data.Config) ?? DomainNodeRenderer.MaxWidth;
                 }
             }
 
             public override SizeF Measure(Graphics g)
             {
-                if (Node.Parameters.Any())
+                if (Node.Data.Parameters.Any())
                 {
-                    IEnumerable<SizeF> titleSizes = Node.Parameters.Select(p => g.MeasureString(p.Name + " ", BoldFont, MaxTitleWidth));
+                    IEnumerable<SizeF> titleSizes = Node.Data.Parameters.Select(p => g.MeasureString(p.Name + " ", BoldFont, MaxTitleWidth));
                     float headingWidth = titleSizes.Max(s => s.Width + 2);
 
-                    IEnumerable<SizeF> dataSizes = Node.Parameters.Select(p => g.MeasureString(p.DisplayValue(m_localizer), Font, (int)(MaxWidth - headingWidth)));
+                    IEnumerable<SizeF> dataSizes = Node.Data.Parameters.Select(p => g.MeasureString(p.DisplayValue(m_localizer), Font, (int)(MaxWidth - headingWidth)));
                     float dataWidth = dataSizes.Max(s => s.Width + 2);
 
                     float totalHeight = titleSizes.Zip(dataSizes, (a, b) => Math.Max(a.Height, b.Height)).Sum() + 4;
@@ -232,7 +240,7 @@ namespace ConversationEditor
 
             public override void Draw(Graphics g, PointF location)
             {
-                if (Node.Parameters.Any())
+                if (Node.Data.Parameters.Any())
                 {
                     float brightnessFactor = 0.5f;
                     float darknessFactor = 0.5f;
@@ -240,10 +248,10 @@ namespace ConversationEditor
                     DrawChunk(g, brightnessFactor, darknessFactor, location);
                     PointF renderAt = new PointF(location.X + 2, location.Y + 2);
 
-                    IEnumerable<SizeF> titleSizes = Node.Parameters.Select(p => g.MeasureString(p.Name + " ", BoldFont, MaxTitleWidth));
+                    IEnumerable<SizeF> titleSizes = Node.Data.Parameters.Select(p => g.MeasureString(p.Name + " ", BoldFont, MaxTitleWidth));
                     float headingWidth = titleSizes.Max(s => s.Width + 2);
 
-                    foreach (var parameter in Node.Parameters)
+                    foreach (var parameter in Node.Data.Parameters)
                     {
                         var name = parameter.Name;
                         var data = parameter.DisplayValue(m_localizer);
@@ -290,7 +298,15 @@ namespace ConversationEditor
             else
             {
                 GraphicsPath gp = new GraphicsPath();
-                gp.AddRectangle(Area);
+                try
+                {
+                    gp.AddRectangle(Area);
+                }
+                catch
+                {
+                    gp.Dispose();
+                    throw;
+                }
                 return gp;
             }
         }
@@ -299,11 +315,11 @@ namespace ConversationEditor
         {
             get
             {
-                return RoundedConfig.TryGet(Node.Config) ?? false;
+                return RoundedConfig.TryGet(Node.Data.Config) ?? false;
             }
         }
 
-        private void DrawBorder(Graphics g, GraphicsPath nodeShape, bool selected)
+        private static void DrawBorder(Graphics g, GraphicsPath nodeShape, bool selected)
         {
             if (selected)
             {
@@ -324,14 +340,16 @@ namespace ConversationEditor
             const int SHADOW_SIZE = 5; //This has the wrong effect currently
 
             RectangleF shadowAreaBottom = new RectangleF(Area.X + (Rounded ? 5 : 0), Area.Y + Area.Height, Area.Width - (Rounded ? 5 : 0) - (Rounded ? SHADOW_SIZE : 0), SHADOW_SIZE);
-            using (var lgb = new LinearGradientBrush(shadowAreaBottom, shadowDark, shadowLight, LinearGradientMode.Vertical) { WrapMode = WrapMode.TileFlipXY })
+            using (var lgb = new LinearGradientBrush(shadowAreaBottom, shadowDark, shadowLight, LinearGradientMode.Vertical))
             {
+                lgb.WrapMode = WrapMode.TileFlipXY;
                 g.FillRectangle(lgb, shadowAreaBottom);
             }
 
             RectangleF shadowAreaSide = new RectangleF(Area.X + Area.Width, Area.Y + (Rounded ? 5 : 0), SHADOW_SIZE, Area.Height - (Rounded ? 5 : 0) - (Rounded ? 5 : 0));
-            using (var lgb = new LinearGradientBrush(shadowAreaSide, shadowDark, shadowLight, LinearGradientMode.Horizontal) { WrapMode = WrapMode.TileFlipXY })
+            using (var lgb = new LinearGradientBrush(shadowAreaSide, shadowDark, shadowLight, LinearGradientMode.Horizontal))
             {
+                lgb.WrapMode = WrapMode.TileFlipXY;
                 g.FillRectangle(lgb, shadowAreaSide);
             }
 

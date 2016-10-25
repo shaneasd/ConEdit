@@ -31,10 +31,10 @@ namespace Clandestine
 
         public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
         {
-            var filteredNodes = nodes.Where(n => !Clandestine.Util.IsAIBark(n.Type, utils) && n.Type != SpecialNodes.Random);
+            var filteredNodes = nodes.Where(n => !Clandestine.Util.IsAIBark(n.Data.NodeTypeId, utils) && n.Data.NodeTypeId != SpecialNodes.Random);
             foreach (var n in filteredNodes)
             {
-                var outputs = n.Connectors.Where(c => c.Definition.Id == SpecialConnectors.Output.Id);
+                var outputs = n.Data.Connectors.Where(c => c.Definition.Id == SpecialConnectors.Output.Id);
                 foreach (var transitionOut in outputs)
                 {
                     var connectedNodes = transitionOut.Connections.Select(c => c.Parent).Evaluate();

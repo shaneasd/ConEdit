@@ -29,7 +29,7 @@ namespace ConversationEditor
             }
         }
 
-        public ContextMenu(ColorScheme scheme, MouseController<TNode> mouseController, Func<Point, Point> toGraphSpace, Func<bool> conversationReal)
+        public ContextMenu(IColorScheme scheme, MouseController<TNode> mouseController, Func<Point, Point> toGraphSpace, Func<bool> conversationReal)
         {
             m_mouseController = mouseController;
             ToGraphSpace = toGraphSpace;

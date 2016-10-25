@@ -52,14 +52,6 @@ namespace Tests.Conversation
                 }
             }
 
-            public string NodeTypeName
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
             public IEnumerable<IParameter> Parameters
             {
                 get

@@ -30,11 +30,9 @@ namespace ConversationEditor
             get { return StaticId; }
         }
 
-        public IParameterEditor<Control> Make(ColorScheme scheme)
+        public IParameterEditor<Control> Make(IColorScheme scheme)
         {
-            var result = new DefaultStringEditor();
-            result.Scheme = scheme;
-            return result;
+            return new DefaultStringEditor(scheme);
         }
     }
 
@@ -50,6 +48,11 @@ namespace ConversationEditor
                 return m_autoCompleteSuggestions(arg);
             else
                 return Enumerable.Empty<string>();
+        }
+
+        public DefaultStringEditor(IColorScheme scheme) : this()
+        {
+            Scheme = scheme;
         }
 
         public DefaultStringEditor()
@@ -94,10 +97,10 @@ namespace ConversationEditor
 
         public event Action Ok;
 
-        ColorScheme m_scheme;
+        IColorScheme m_scheme;
         private Func<string, IEnumerable<string>> m_autoCompleteSuggestions;
 
-        public ColorScheme Scheme
+        public IColorScheme Scheme
         {
             get { return m_scheme; }
             set

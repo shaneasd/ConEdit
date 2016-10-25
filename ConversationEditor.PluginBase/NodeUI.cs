@@ -75,7 +75,7 @@ namespace ConversationEditor
         }
 
 
-        public void Draw(Graphics g, bool selected, ColorScheme scheme)
+        public void Draw(Graphics g, bool selected, IColorScheme scheme)
         {
             UpdateArea();
 

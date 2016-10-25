@@ -42,8 +42,8 @@ namespace ConversationEditor
             yield return new MenuAction<ConversationNode>("Reset Zoom", (n, p) => null, null, null, (p) => { control.GraphScale = 1; });
             yield return new MenuAction<ConversationNode>("Paste", (n, p) => null, null, null, (p) => { control.Paste(p); });
             yield return new MenuAction<ConversationNode>("Delete", (n, p) => () => { control.CurrentFile.Remove(n.Only(), Enumerable.Empty<NodeGroup>()); }, null, null, null);
-            yield return new MenuAction<ConversationNode>("Remove Links", (n, p) => () => { foreach (var c in n.Connectors) control.CurrentFile.RemoveLinks(c); }, (i, p) => { control.CurrentFile.RemoveLinks(i); }, null, null);
-            yield return new MenuAction<ConversationNode>("Copy ID", (n, p) => control.ShowIds ? () => Clipboard.SetText(n.Id.Serialized()) : (Action)null, null, null, null);
+            yield return new MenuAction<ConversationNode>("Remove Links", (n, p) => () => { foreach (var c in n.Data.Connectors) control.CurrentFile.RemoveLinks(c); }, (i, p) => { control.CurrentFile.RemoveLinks(i); }, null, null);
+            yield return new MenuAction<ConversationNode>("Copy ID", (n, p) => control.ShowIds ? () => Clipboard.SetText(n.Data.NodeId.Serialized()) : (Action)null, null, null, null);
         }
 
         private void AddNodeMenuItem(MenuAction<ConversationNode> menu, INodeType node, IGraphEditorControl<ConversationNode> control)

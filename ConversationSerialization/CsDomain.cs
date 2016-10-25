@@ -11,6 +11,7 @@ using System.IO;
 using System.Reflection;
 using System.Globalization;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace Conversation.Serialization
 {
@@ -39,11 +40,9 @@ namespace Conversation.Serialization
 
         private static string RemoveSpaces(string a)
         {
-            var result = a.Replace(' ', '_').Replace('-', '_').Where(c => char.IsLetterOrDigit(c) || c == '_');
-            if (result.Any())
-                if (char.IsDigit(result.First()))
-                    result = '_'.Only().Concat(result);
-            return new string(result.ToArray());
+            var resultChars = a.Trim().Replace(' ', '_').Replace('-', '_').Where(c => char.IsLetterOrDigit(c) || c == '_');
+            var resultString = new string(resultChars.ToArray());
+            return resultString;
         }
 
         private readonly string m_namespace;
@@ -57,9 +56,17 @@ namespace Conversation.Serialization
         private static string BestName(string start, HashSet<string> usedNames)
         {
             var guess = RemoveSpaces(start);
+            if (guess.Length == 0)
+                guess = "unnamed";
             while (usedNames.Contains(guess))
                 guess += "_";
+            if (guess.StartsWith("_", StringComparison.Ordinal))
+                guess = "fixed" + guess;
             usedNames.Add(guess);
+
+            if (guess == "id")
+                Debugger.Break();
+
             return guess;
         }
 
@@ -67,7 +74,7 @@ namespace Conversation.Serialization
         {
             CodeCompileUnit file = new CodeCompileUnit();
 
-            HashSet<string> usedNames = new HashSet<string>() { "Node" };
+            HashSet<string> usedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "Node", "ID", "Process", "Connector", "GetConnector", "Connect", "Position", "GetParameter" };
 
             IDomainData fixedData = ConvertData(data, usedNames);
 
@@ -120,6 +127,7 @@ namespace Conversation.Serialization
         {
             CodeTypeDeclaration deserializer = new CodeTypeDeclaration("Deserializer") { TypeAttributes = TypeAttributes.Public, IsClass = true };
             deserializer.BaseTypes.Add(typeof(IDeserializer<RuntimeConversation.Conversation>));
+            deserializer.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(GeneratedCodeAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression("ConversationEditor")), new CodeAttributeArgument(new CodePrimitiveExpression("Beta"))));
 
             //var connectorLookupFactory = new CodeMemberMethod() { Attributes = MemberAttributes.Private | MemberAttributes.Static , Name = "MakeConnectorLookup"};
             //var lookuptype = new CodeTypeReference(typeof(Dictionary<ID<TConnector>, Func<RuntimeConversation.Node, RuntimeConversation.Connector>>));
@@ -170,7 +178,7 @@ namespace Conversation.Serialization
                 foreach (var b in a.Connectors)
                 {
                     string name = BestName(b.Name, usedNames);
-                    var parameterNames = new HashSet<string>() { name };
+                    var parameterNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { name, "Node", "ID", "Process", "Connector", "GetConnector", "Connect", "Position", "GetParameter" };
                     List<NodeData.ParameterData> parameters = b.Parameters.Select(p => new NodeData.ParameterData(BestName(p.Name, parameterNames), p.Id, p.Type, ParameterConfig.AsReadOnly(), p.Default)).ToList();
                     data.Connectors.Add(new ConnectorDefinitionData(name, b.Id, parameters, b.Position));
                 }
@@ -182,7 +190,7 @@ namespace Conversation.Serialization
                     data.LocalDynamicEnumerations.Add(new LocalDynamicEnumerationData(BestName(b.Name, usedNames), b.TypeId));
                 foreach (var b in a.Enumerations)
                 {
-                    var enumValueNames = new HashSet<string>() { };
+                    var enumValueNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "Node", "ID", "Process", "Connector", "GetConnector", "Connect", "Position", "GetParameter" };
                     data.Enumerations.Add(new EnumerationData(BestName(b.Name, usedNames), b.TypeId, b.Elements.Select(e => new EnumerationData.Element(BestName(e.Name, enumValueNames), e.Guid))));
                 }
                 foreach (var b in a.Integers)
@@ -190,7 +198,7 @@ namespace Conversation.Serialization
                 foreach (var b in a.Nodes)
                 {
                     string name = BestName(b.Name, usedNames);
-                    var parameterNames = new HashSet<string>() { name };
+                    var parameterNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { name, "Node", "ID", "Process", "Connector", "GetConnector", "Connect", "Position", "GetParameter" };
                     List<NodeData.ParameterData> parameters = b.Parameters.Select(p => new NodeData.ParameterData(BestName(p.Name, parameterNames), p.Id, p.Type, ParameterConfig.AsReadOnly(), p.Default)).ToList();
                     data.Nodes.Add(new NodeData(name, b.Category, b.Guid, b.Connectors, parameters, b.Config));
                 }
@@ -223,22 +231,22 @@ namespace Conversation.Serialization
                 processT.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference("IProcessor", new CodeTypeReference("T")), "processor"));
                 processT.ReturnType = new CodeTypeReference("T");
 
-                var constructor = new CodeConstructor() { Attributes = MemberAttributes.Public };
+                var constructor = new CodeConstructor() { Attributes = MemberAttributes.Family };
                 constructor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(Id<NodeTemp>), "id"));
                 constructor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(PointF), "position"));
                 constructor.BaseConstructorArgs.Add(new CodeArgumentReferenceExpression("id"));
                 constructor.BaseConstructorArgs.Add(new CodeArgumentReferenceExpression("position"));
                 baseNode.Members.Add(constructor);
 
-                var Connector = new CodeMemberMethod() { Attributes = MemberAttributes.Public | MemberAttributes.Abstract, ReturnType = new CodeTypeReference("Connector"), Name = "Connector" };
+                var Connector = new CodeMemberMethod() { Attributes = MemberAttributes.Public | MemberAttributes.Abstract, ReturnType = new CodeTypeReference("Connector"), Name = "GetConnector" };
                 Connector.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(Id<TConnector>)), "connector"));
 
                 var Connect = new CodeMemberMethod() { Attributes = MemberAttributes.Public | MemberAttributes.Override, Name = "Connect" };
-                Connect.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(Id<TConnector>)), "thisConnectorID"));
+                Connect.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(Id<TConnector>)), "thisConnectorId"));
                 Connect.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(RuntimeConversation.NodeBase)), "other"));
-                Connect.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(Id<TConnector>)), "otherConnectorID"));
-                Connect.Statements.Add(new CodeMethodInvokeExpression(new CodeMethodInvokeExpression(new CodeThisReferenceExpression(), "Connector", new CodeArgumentReferenceExpression("thisConnectorID")), "ConnectTo",
-                                                                      new CodeMethodInvokeExpression(new CodeCastExpression(new CodeTypeReference("Node"), new CodeArgumentReferenceExpression("other")), "Connector", new CodeArgumentReferenceExpression("otherConnectorID"))));
+                Connect.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(typeof(Id<TConnector>)), "otherConnectorId"));
+                Connect.Statements.Add(new CodeMethodInvokeExpression(new CodeMethodInvokeExpression(new CodeThisReferenceExpression(), "GetConnector", new CodeArgumentReferenceExpression("thisConnectorId")), "ConnectTo",
+                                                                      new CodeMethodInvokeExpression(new CodeCastExpression(new CodeTypeReference("Node"), new CodeArgumentReferenceExpression("other")), "GetConnector", new CodeArgumentReferenceExpression("otherConnectorId"))));
 
                 baseNode.Members.Add(Connect);
                 baseNode.Members.Add(process);
@@ -254,6 +262,7 @@ namespace Conversation.Serialization
                 CodeTypeDeclaration type = new CodeTypeDeclaration(nodeType.Name) { IsClass = true, Attributes = MemberAttributes.Final };
                 type.BaseTypes.Add(new CodeTypeReference("Node"));
                 type.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(RuntimeConversation.NodeTypeIdAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression(nodeType.Guid.Guid.ToString()))));
+                type.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(GeneratedCodeAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression("ConversationEditor")), new CodeAttributeArgument(new CodePrimitiveExpression("Beta"))));
                 var @namespace = categoryNameSpaces.Item2(nodeType.Category ?? Guid.Empty);
 
                 //type.Members.Add(new CodeMemberField(typeof(ID<NodeTemp>), "m_id"));
@@ -267,7 +276,7 @@ namespace Conversation.Serialization
                     //constructor.Statements.Add(new CodeAssignStatement(new CodeFieldReferenceExpression(null, "m_id"), new CodeArgumentReferenceExpression("id")));
                     type.Members.Add(constructor);
 
-                    var connector = new CodeMemberMethod() { Attributes = MemberAttributes.Public | MemberAttributes.Override, Name = "Connector", ReturnType = new CodeTypeReference("Connector") };
+                    var connector = new CodeMemberMethod() { Attributes = MemberAttributes.Public | MemberAttributes.Override, Name = "GetConnector", ReturnType = new CodeTypeReference("Connector") };
                     connector.Parameters.Add(new CodeParameterDeclarationExpression(typeof(Id<TConnector>), "connector"));
                     foreach (var c in nodeType.Connectors)
                     {
@@ -336,7 +345,7 @@ namespace Conversation.Serialization
             {
                 var connector = new CodeTypeDeclaration() { TypeAttributes = TypeAttributes.Abstract | TypeAttributes.Public, IsClass = true, Name = "Connector" };
                 connector.BaseTypes.Add(new CodeTypeReference(typeof(RuntimeConversation.ConnectorBase)));
-                var constructor = new CodeConstructor() { Attributes = MemberAttributes.Public };
+                var constructor = new CodeConstructor() { Attributes = MemberAttributes.Family };
                 constructor.Parameters.Add(new CodeParameterDeclarationExpression("Node", "parent"));
                 constructor.Parameters.Add(new CodeParameterDeclarationExpression(typeof(Id<TConnector>), "id"));
                 constructor.BaseConstructorArgs.Add(new CodeArgumentReferenceExpression("id"));
@@ -352,10 +361,12 @@ namespace Conversation.Serialization
 
                 var connectorListType = new CodeTypeReference(typeof(List<>));
                 connectorListType.TypeArguments.Add("Connector");
+                var connectorReadonlyListType = new CodeTypeReference(typeof(System.Collections.Generic.IReadOnlyList<>));
+                connectorReadonlyListType.TypeArguments.Add("Connector");
                 var m_connections = new CodeMemberField(connectorListType, "m_connections");
                 m_connections.InitExpression = new CodeObjectCreateExpression(connectorListType);
                 connector.Members.Add(m_connections);
-                var Connections = new CodeMemberProperty() { Attributes = MemberAttributes.Public, Name = "Connections", HasGet = true, HasSet = false, Type = connectorListType };
+                var Connections = new CodeMemberProperty() { Attributes = MemberAttributes.Public, Name = "Connections", HasGet = true, HasSet = false, Type = connectorReadonlyListType };
                 Connections.GetStatements.Add(new CodeMethodReturnStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), "m_connections")));
                 connector.Members.Add(Connections);
 
@@ -474,6 +485,7 @@ namespace Conversation.Serialization
         {
             CodeTypeDeclaration type = new CodeTypeDeclaration(connectorType.Name) { IsClass = true };
             type.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(RuntimeConversation.ConnectorTypeIdAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression(connectorType.Id.Guid.ToString()))));
+            type.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(GeneratedCodeAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression("ConversationEditor")), new CodeAttributeArgument(new CodePrimitiveExpression("Beta"))));
 
             type.BaseTypes.Add(new CodeTypeReference("Connector"));
 
@@ -516,6 +528,7 @@ namespace Conversation.Serialization
             CodeTypeDeclaration TypeDeserializer = new CodeTypeDeclaration("TypeDeserializer") { TypeAttributes = TypeAttributes.Public };
             TypeDeserializer.BaseTypes.Add(new CodeTypeReference(typeof(RuntimeConversation.TypeDeserializerBase)));
             TypeDeserializer.IsClass = true;
+            TypeDeserializer.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(GeneratedCodeAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression("ConversationEditor")), new CodeAttributeArgument(new CodePrimitiveExpression("Beta"))));
 
             foreach (var enumeration in data.Enumerations)
             {
@@ -643,6 +656,7 @@ namespace Conversation.Serialization
             var name = enumeration.Name;
             CodeTypeDeclaration type = new CodeTypeDeclaration(name) { IsEnum = true };
             type.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(RuntimeConversation.TypeIdAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression(enumeration.TypeId.Guid.ToString()))));
+            type.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(GeneratedCodeAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression("ConversationEditor")), new CodeAttributeArgument(new CodePrimitiveExpression("Beta"))));
 
             foreach (var element in enumeration.Elements)
             {
@@ -658,7 +672,8 @@ namespace Conversation.Serialization
         private static CodeTypeDeclaration GenerateNumeric<T>(string name, Guid guid, T max, T min)
         {
             CodeTypeDeclaration result = new CodeTypeDeclaration(name) { IsStruct = true };
-            result.CustomAttributes.Add(new CodeAttributeDeclaration("RuntimeConversation.TypeIDAttribute", new CodeAttributeArgument(new CodePrimitiveExpression(guid.ToString()))));
+            result.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(RuntimeConversation.TypeIdAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression(guid.ToString()))));
+            result.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(GeneratedCodeAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression("ConversationEditor")), new CodeAttributeArgument(new CodePrimitiveExpression("Beta"))));
 
             result.Members.Add(new CodeMemberField(typeof(T), "Max") { Attributes = MemberAttributes.Const, InitExpression = new CodePrimitiveExpression(max) });
             result.Members.Add(new CodeMemberField(typeof(T), "Min") { Attributes = MemberAttributes.Const, InitExpression = new CodePrimitiveExpression(min) });
@@ -694,9 +709,9 @@ namespace Conversation.Serialization
             var fromValue = new CodeMemberMethod() { Name = "FromValue", Attributes = MemberAttributes.Public | MemberAttributes.Static, ReturnType = new CodeTypeReference(name) };
             fromValue.Parameters.Add(new CodeParameterDeclarationExpression(typeof(T), "value"));
             fromValue.Statements.Add(new CodeConditionStatement(new CodeBinaryOperatorExpression(value, CodeBinaryOperatorType.GreaterThan, maxField),
-                                                      new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(ArgumentOutOfRangeException), new CodePrimitiveExpression("value cannot be greater than Max in FromValue. Consider using FromValueClamped if clamping is desired")))));
+                                                      new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(ArgumentOutOfRangeException), new CodeSnippetExpression("\"value\""), new CodePrimitiveExpression("value cannot be greater than Max in FromValue. Consider using FromValueClamped if clamping is desired")))));
             fromValue.Statements.Add(new CodeConditionStatement(new CodeBinaryOperatorExpression(value, CodeBinaryOperatorType.LessThan, minField),
-                                                      new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(ArgumentOutOfRangeException), new CodePrimitiveExpression("value cannot be less than Max in FromValue. Consider using FromValueClamped if clamping is desired")))));
+                                                      new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(ArgumentOutOfRangeException), new CodeSnippetExpression("\"value\""), new CodePrimitiveExpression("value cannot be less than Max in FromValue. Consider using FromValueClamped if clamping is desired")))));
             fromValue.Statements.Add(new CodeMethodReturnStatement(new CodeObjectCreateExpression(name, value)));
             result.Members.Add(fromValue);
 
@@ -709,7 +724,8 @@ namespace Conversation.Serialization
         {
             var name = dynamicEnum.Name;
             CodeTypeDeclaration type = new CodeTypeDeclaration(name) { IsEnum = true };
-            type.CustomAttributes.Add(new CodeAttributeDeclaration("RuntimeConversation.TypeIDAttribute", new CodeAttributeArgument(new CodePrimitiveExpression(dynamicEnum.TypeId.Guid.ToString()))));
+            type.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(RuntimeConversation.TypeIdAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression(dynamicEnum.TypeId.Guid.ToString()))));
+            type.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(GeneratedCodeAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression("ConversationEditor")), new CodeAttributeArgument(new CodePrimitiveExpression("Beta"))));
 
             //TODO: Need a better way to generate dynamicEnum options
             //foreach (var element in dynamicEnum.Options)
@@ -727,7 +743,8 @@ namespace Conversation.Serialization
             var name = dynamicEnum.Name;
             CodeTypeDeclaration type = new CodeTypeDeclaration(name) { IsStruct = true };
             type.Members.Add(new CodeMemberField(new CodeTypeReference(typeof(string)), "Value") { Attributes = MemberAttributes.Public });
-            type.CustomAttributes.Add(new CodeAttributeDeclaration("RuntimeConversation.TypeIDAttribute", new CodeAttributeArgument(new CodePrimitiveExpression(dynamicEnum.TypeId.Guid.ToString()))));
+            type.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(RuntimeConversation.TypeIdAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression(dynamicEnum.TypeId.Guid.ToString()))));
+            type.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(GeneratedCodeAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression("ConversationEditor")), new CodeAttributeArgument(new CodePrimitiveExpression("Beta"))));
             return type;
         }
     }

@@ -46,13 +46,13 @@ namespace Viking
             return new CsvData()
             {
                 Character = "Player",
-                Script = node.Parameters.Single(p => p.Id == CsvData.OPTION_SCRIPT).DisplayValue(localize),
-                Subtitle = node.Parameters.Single(p => p.Id == CsvData.OPTION_SUBTITLES).DisplayValue(localize),
-                Direction = node.Parameters.Single(p => p.Id == CsvData.OPTION_DIRECTION).DisplayValue(localize),
-                Language = node.Parameters.Single(p => p.Id == CsvData.OPTION_LANGUAGE).DisplayValue(localize),
-                Context = conversationInfo != null ? conversationInfo.Parameters.Single(p => p.Id == CsvData.CONVERSATIONINFO_CONTEXT).DisplayValue(localize) : "",
-                Notes = conversationInfo != null ? conversationInfo.Parameters.Single(p => p.Id == CsvData.CONVERSATIONINFO_NOTES).DisplayValue(localize) : "",
-                Audio = node.Parameters.Single(p => p.Id == CsvData.OPTION_AUDIO).ValueAsString(),
+                Script = node.Data.Parameters.Single(p => p.Id == CsvData.OPTION_SCRIPT).DisplayValue(localize),
+                Subtitle = node.Data.Parameters.Single(p => p.Id == CsvData.OPTION_SUBTITLES).DisplayValue(localize),
+                Direction = node.Data.Parameters.Single(p => p.Id == CsvData.OPTION_DIRECTION).DisplayValue(localize),
+                Language = node.Data.Parameters.Single(p => p.Id == CsvData.OPTION_LANGUAGE).DisplayValue(localize),
+                Context = conversationInfo != null ? conversationInfo.Data.Parameters.Single(p => p.Id == CsvData.CONVERSATIONINFO_CONTEXT).DisplayValue(localize) : "",
+                Notes = conversationInfo != null ? conversationInfo.Data.Parameters.Single(p => p.Id == CsvData.CONVERSATIONINFO_NOTES).DisplayValue(localize) : "",
+                Audio = node.Data.Parameters.Single(p => p.Id == CsvData.OPTION_AUDIO).ValueAsString(),
             };
         }
 
@@ -60,14 +60,14 @@ namespace Viking
         {
             return new CsvData()
             {
-                Character = node.Parameters.Single(p => p.Id == CsvData.SPEECH_CHARACTER).DisplayValue(localize),
-                Script = node.Parameters.Single(p => p.Id == CsvData.SPEECH_SCRIPT).DisplayValue(localize),
-                Subtitle = node.Parameters.Single(p => p.Id == CsvData.SPEECH_SUBTITLE).DisplayValue(localize),
-                Direction = node.Parameters.Single(p => p.Id == CsvData.SPEECH_DIRECTION).DisplayValue(localize),
-                Language = node.Parameters.Single(p => p.Id == CsvData.SPEECH_LANGUAGE).DisplayValue(localize),
-                Context = conversationInfo != null ? conversationInfo.Parameters.Single(p => p.Id == CsvData.CONVERSATIONINFO_CONTEXT).DisplayValue(localize) : "",
-                Notes = conversationInfo != null ? conversationInfo.Parameters.Single(p => p.Id == CsvData.CONVERSATIONINFO_NOTES).DisplayValue(localize) : "",
-                Audio = node.Parameters.Single(p => p.Id == CsvData.SPEECH_AUDIO).ValueAsString(),
+                Character = node.Data.Parameters.Single(p => p.Id == CsvData.SPEECH_CHARACTER).DisplayValue(localize),
+                Script = node.Data.Parameters.Single(p => p.Id == CsvData.SPEECH_SCRIPT).DisplayValue(localize),
+                Subtitle = node.Data.Parameters.Single(p => p.Id == CsvData.SPEECH_SUBTITLE).DisplayValue(localize),
+                Direction = node.Data.Parameters.Single(p => p.Id == CsvData.SPEECH_DIRECTION).DisplayValue(localize),
+                Language = node.Data.Parameters.Single(p => p.Id == CsvData.SPEECH_LANGUAGE).DisplayValue(localize),
+                Context = conversationInfo != null ? conversationInfo.Data.Parameters.Single(p => p.Id == CsvData.CONVERSATIONINFO_CONTEXT).DisplayValue(localize) : "",
+                Notes = conversationInfo != null ? conversationInfo.Data.Parameters.Single(p => p.Id == CsvData.CONVERSATIONINFO_NOTES).DisplayValue(localize) : "",
+                Audio = node.Data.Parameters.Single(p => p.Id == CsvData.SPEECH_AUDIO).ValueAsString(),
             };
         }
 
@@ -76,13 +76,13 @@ namespace Viking
             return new CsvData()
             {
                 Character = "Player",
-                Script = node.Parameters.Single(p => p.Id == CsvData.SPEECH_SCRIPT).DisplayValue(localize),
-                Subtitle = node.Parameters.Single(p => p.Id == CsvData.SPEECH_SUBTITLE).DisplayValue(localize),
-                Direction = node.Parameters.Single(p => p.Id == CsvData.SPEECH_DIRECTION).DisplayValue(localize),
-                Language = node.Parameters.Single(p => p.Id == CsvData.SPEECH_LANGUAGE).DisplayValue(localize),
-                Context = conversationInfo != null ? conversationInfo.Parameters.Single(p => p.Id == CsvData.CONVERSATIONINFO_CONTEXT).DisplayValue(localize) : "",
-                Notes = conversationInfo != null ? conversationInfo.Parameters.Single(p => p.Id == CsvData.CONVERSATIONINFO_NOTES).DisplayValue(localize) : "",
-                Audio = node.Parameters.Single(p => p.Id == CsvData.SPEECH_AUDIO).ValueAsString(),
+                Script = node.Data.Parameters.Single(p => p.Id == CsvData.SPEECH_SCRIPT).DisplayValue(localize),
+                Subtitle = node.Data.Parameters.Single(p => p.Id == CsvData.SPEECH_SUBTITLE).DisplayValue(localize),
+                Direction = node.Data.Parameters.Single(p => p.Id == CsvData.SPEECH_DIRECTION).DisplayValue(localize),
+                Language = node.Data.Parameters.Single(p => p.Id == CsvData.SPEECH_LANGUAGE).DisplayValue(localize),
+                Context = conversationInfo != null ? conversationInfo.Data.Parameters.Single(p => p.Id == CsvData.CONVERSATIONINFO_CONTEXT).DisplayValue(localize) : "",
+                Notes = conversationInfo != null ? conversationInfo.Data.Parameters.Single(p => p.Id == CsvData.CONVERSATIONINFO_NOTES).DisplayValue(localize) : "",
+                Audio = node.Data.Parameters.Single(p => p.Id == CsvData.SPEECH_AUDIO).ValueAsString(),
             };
         }
 
@@ -152,13 +152,13 @@ namespace Viking
 
             var nodes = conversation.Nodes;
 
-            Stack<IConversationNodeData> startNodes = new Stack<IConversationNodeData>(nodes.Where(n => Viking.Util.IsStartNode(n.Type, util)).Select(n => n.Data));
+            Stack<IConversationNodeData> startNodes = new Stack<IConversationNodeData>(nodes.Where(n => Viking.Util.IsStartNode(n.Data.NodeTypeId, util)).Select(n => n.Data));
 
-            var conversationInfo = conversation.Nodes.Where(n => n.Type == CsvData.CONVERSATIONINFO).FirstOrDefault();
-            var playerSpeechNodes = conversation.Nodes.Where(n => n.Type == CsvData.PLAYER_SPEECH).Select(n => new { Key = n, Value = CsvData.GetPlayerSpeechData(n, conversationInfo, m_localize) });
-            var npcSpeechNodes = conversation.Nodes.Where(n => n.Type == CsvData.NPC_SPEECH).Select(n => new { Key = n, Value = CsvData.GetSpeechData(n, conversationInfo, m_localize) });
-            var radioSpeechNodes = conversation.Nodes.Where(n => n.Type == CsvData.RADIO_SPEECH).Select(n => new { Key = n, Value = CsvData.GetSpeechData(n, conversationInfo, m_localize) });
-            var optionNodes = conversation.Nodes.Where(n => n.Type == CsvData.OPTION).Select(n => new { Key = n, Value = CsvData.GetOptionData(n, conversationInfo, m_localize) });
+            var conversationInfo = conversation.Nodes.Where(n => n.Data.NodeTypeId == CsvData.CONVERSATIONINFO).FirstOrDefault();
+            var playerSpeechNodes = conversation.Nodes.Where(n => n.Data.NodeTypeId == CsvData.PLAYER_SPEECH).Select(n => new { Key = n, Value = CsvData.GetPlayerSpeechData(n, conversationInfo, m_localize) });
+            var npcSpeechNodes = conversation.Nodes.Where(n => n.Data.NodeTypeId == CsvData.NPC_SPEECH).Select(n => new { Key = n, Value = CsvData.GetSpeechData(n, conversationInfo, m_localize) });
+            var radioSpeechNodes = conversation.Nodes.Where(n => n.Data.NodeTypeId == CsvData.RADIO_SPEECH).Select(n => new { Key = n, Value = CsvData.GetSpeechData(n, conversationInfo, m_localize) });
+            var optionNodes = conversation.Nodes.Where(n => n.Data.NodeTypeId == CsvData.OPTION).Select(n => new { Key = n, Value = CsvData.GetOptionData(n, conversationInfo, m_localize) });
 
             var allcontent = playerSpeechNodes.Concat(npcSpeechNodes).Concat(radioSpeechNodes).Concat(optionNodes).ToDictionary(kvp => kvp.Key.Data, kvp => kvp.Value);
             HashSet<IConversationNodeData> processed = new HashSet<IConversationNodeData>();

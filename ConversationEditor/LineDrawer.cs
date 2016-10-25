@@ -11,10 +11,30 @@ namespace ConversationEditor
 {
     internal class LineDrawer : Disposable
     {
-        public LineDrawer(ColorScheme scheme)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "pretty sure I am disposing them")]
+        public LineDrawer(IColorScheme scheme)
         {
-            Outline = new Pen(new SolidBrush(Color.FromArgb(128, scheme.Connectors)), 2);
-            SelectedOutline = new Pen(new SolidBrush(scheme.SelectedConnectors), 2);
+            SolidBrush outlineBrush = null;
+            SolidBrush selectedBrush = null;
+            try
+            {
+                outlineBrush = new SolidBrush(Color.FromArgb(128, scheme.Connectors));
+                Outline = new Pen(outlineBrush, 2);
+                selectedBrush = new SolidBrush(scheme.SelectedConnectors);
+                SelectedOutline = new Pen(selectedBrush, 2);
+            }
+            catch
+            {
+                if (outlineBrush != null)
+                    outlineBrush.Dispose();
+                if (Outline != null)
+                    Outline.Dispose();
+                if (selectedBrush != null)
+                    selectedBrush.Dispose();
+                if (SelectedOutline != null)
+                    SelectedOutline.Dispose();
+                throw;
+            }
         }
         private readonly Pen Outline;
         public readonly Pen SelectedOutline;
@@ -36,12 +56,14 @@ namespace ConversationEditor
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public static void DrawPoint(Graphics g, float x, float y)
         {
             g.DrawLine(Pens.Green, new PointF(x - 1, y), new PointF(x + 1, y));
             g.DrawLine(Pens.Green, new PointF(x, y - 1), new PointF(x, y + 1));
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public void DrawCurvedLine(Graphics g, PointF[] points, int radius)
         {
             using (GraphicsPath path = new GraphicsPath())
@@ -85,6 +107,7 @@ namespace ConversationEditor
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         public static void DrawArc(Graphics g, PointF p1, PointF p2, PointF p3, int radius)
         {
             PointF Q = GetQ(p1, p2, p3, radius);
@@ -92,6 +115,7 @@ namespace ConversationEditor
             DrawPoint(g, p2.X + Q.X, p2.Y + Q.Y);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         private static PointF GetQ(PointF p1, PointF p2, PointF p3, int radius)
         {
             PointF A = p1.Take(p2).Normalised();
@@ -104,6 +128,7 @@ namespace ConversationEditor
             return Q;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         private void DrawReachAround(Graphics g, PointF p1, PointF p2, IEnumerable<Rectangle> Obstacles)
         {
             var a = Obstacles.ToArray();

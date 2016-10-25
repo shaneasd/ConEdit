@@ -49,9 +49,7 @@ namespace ConversationEditor
         {
             get { throw new NotImplementedException(); }
         }
-
-        public string NodeTypeName { get { throw new NotImplementedException(); } }
-
+        
         public string Name
         {
             get { return "Customize node renderers"; }

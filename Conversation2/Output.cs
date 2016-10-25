@@ -7,6 +7,7 @@ using Utilities;
 namespace Conversation
 {
     //TODO: This is very UI centric. Is there some way to shift it up a level
+    //Possibly simply make this an IEnumParameter?
     public abstract class ConnectorPosition
     {
         private class CTop : ConnectorPosition

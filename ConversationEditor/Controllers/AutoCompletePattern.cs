@@ -336,7 +336,7 @@ namespace ConversationEditor
                 return new Count { Min = 1, Max = 1, Subjects = options.Select(o => new String { Value = o, Next = new Node[0] }).ToArray() };
             }
 
-            internal static Node MakeDynamic(IEnumParameter parameter, DomainDomain source, ConversationDataSource conversationSource, object newSourceId)
+            internal static Node MakeDynamic(IEnumParameter parameter, ConversationDataSource conversationSource, object newSourceId)
             {
                 var enumsource = conversationSource.GetSource(ParameterType.Basic.FromGuid(parameter.Value), newSourceId);
                 var options = enumsource.Options;

@@ -45,8 +45,9 @@ namespace ConversationEditor
                 {
                     mainForm = new Form1();
                 }
-                catch (Config.LoadFailedException)
+                catch (ConfigLoadFailedException)
                 {
+                    MessageBox.Show("Failed to load config file");
                     return;
                 }
                 Application.Run(mainForm);

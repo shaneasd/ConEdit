@@ -783,6 +783,7 @@ namespace ConversationEditor
                 return false;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public bool IsParameter(Id<NodeTypeTemp> id)
         {
             return BaseType.BaseTypes.Any(t => id == t.ParameterNodeType);

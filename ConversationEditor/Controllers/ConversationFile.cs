@@ -43,11 +43,11 @@ namespace ConversationEditor
 
             foreach (var node in m_nodes)
             {
-                var audios = node.Parameters.OfType<IAudioParameter>();
+                var audios = node.Data.Parameters.OfType<IAudioParameter>();
                 foreach (var aud in audios)
                     if (aud.Corrupted)
                     {
-                        var val = generateAudio(this, node.Parameters);
+                        var val = generateAudio(this, node.Data.Parameters);
                         aud.SetValueAction(val).Value.Redo();
                         m_file.ChangeNoUndo();
                         audioProvider.UpdateUsage(val);

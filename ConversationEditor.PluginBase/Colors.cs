@@ -10,8 +10,13 @@ using Utilities.UI;
 
 namespace ConversationEditor
 {
-    public class ColorScheme : Disposable, GreyScrollBar.IColorScheme, DrawWindow.IColorScheme
+    public class ColorScheme : Disposable, IColorScheme
     {
+        /// <summary>
+        /// A default color scheme to be used by controls that have not had their color scheme set
+        /// </summary>
+        public static IColorScheme Default { get; } = new ColorScheme();
+
         public ColorScheme()
         {
             Connectors = Color.Black;
@@ -116,8 +121,8 @@ namespace ConversationEditor
 
         private class ToolStripRenderer : ToolStripProfessionalRenderer
         {
-            private ColorScheme m_scheme;
-            public ToolStripRenderer(ColorScheme scheme)
+            private IColorScheme m_scheme;
+            public ToolStripRenderer(IColorScheme scheme)
                 : base(new ContextMenuClass(scheme))
             {
                 m_scheme = scheme;
@@ -161,8 +166,8 @@ namespace ConversationEditor
 
         private class ContextMenuClass : ProfessionalColorTable
         {
-            ColorScheme m_scheme;
-            public ContextMenuClass(ColorScheme scheme)
+            IColorScheme m_scheme;
+            public ContextMenuClass(IColorScheme scheme)
             {
                 m_scheme = scheme;
             }

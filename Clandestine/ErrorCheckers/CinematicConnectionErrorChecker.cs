@@ -40,7 +40,7 @@ namespace Clandestine.ErrorCheckers
         {
             foreach (var node in nodes)
             {
-                var controllersConnectors = node.Connectors.Where(c => c.Definition.Id == CONTROLLER);
+                var controllersConnectors = node.Data.Connectors.Where(c => c.Definition.Id == CONTROLLER);
                 foreach (var connector in controllersConnectors)
                 {
                     if ( !connector.Connections.Any())

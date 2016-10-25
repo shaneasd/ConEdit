@@ -13,7 +13,7 @@ namespace Tests
         public static void TestZeroSuppressions()
         {
             bool triggered = false;
-            using (SuppressibleAction action = new SuppressibleAction(() => { triggered = true; }))
+            SuppressibleAction action = new SuppressibleAction(() => { triggered = true; });
             {
                 Assert.False(action.Suppressed);
                 var executed = action.TryExecute();
@@ -26,7 +26,7 @@ namespace Tests
         public static void TestOneSuppression()
         {
             bool triggered = false;
-            using (SuppressibleAction action = new SuppressibleAction(() => { triggered = true; }))
+            SuppressibleAction action = new SuppressibleAction(() => { triggered = true; });
             {
                 using (action.SuppressCallback())
                 {
@@ -44,7 +44,7 @@ namespace Tests
         public static void TestManySuppression()
         {
             bool triggered = false;
-            using (SuppressibleAction action = new SuppressibleAction(() => { triggered = true; }))
+            SuppressibleAction action = new SuppressibleAction(() => { triggered = true; });
             {
                 using (action.SuppressCallback())
                 {
@@ -63,24 +63,24 @@ namespace Tests
             }
         }
 
-        [NUnit.Framework.Test]
-        public static void TestDisposal()
-        {
-            bool triggered = false;
-            SuppressibleAction action = new SuppressibleAction(() => { triggered = true; });
-            try
-            {
-                using (action.SuppressCallback())
-                {
-                    action.TryExecute();
-                    action.Dispose();
-                }
-            }
-            finally
-            {
-                action.Dispose();
-            }
-            Assert.False(triggered);
-        }
+        //[NUnit.Framework.Test]
+        //public static void TestDisposal()
+        //{
+        //    bool triggered = false;
+        //    SuppressibleAction action = new SuppressibleAction(() => { triggered = true; });
+        //    try
+        //    {
+        //        using (action.SuppressCallback())
+        //        {
+        //            action.TryExecute();
+        //            action.Dispose();
+        //        }
+        //    }
+        //    finally
+        //    {
+        //        action.Dispose();
+        //    }
+        //    Assert.False(triggered);
+        //}
     }
 }

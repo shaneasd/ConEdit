@@ -36,7 +36,7 @@ namespace ConversationEditor
         }
     }
 
-    internal class AudioProvider : Disposable, IAudioLibrary, IDisposable
+    internal class AudioProvider : IAudioLibrary
     {
         private class TDefaultCustomization : IAudioProviderCustomization
         {
@@ -132,7 +132,7 @@ namespace ConversationEditor
 
         public IEnumerable<Audio> UsedAudio(ConversationNode<INodeGui> n)
         {
-            var audioParameters = n.Parameters.OfType<IAudioParameter>();
+            var audioParameters = n.Data.Parameters.OfType<IAudioParameter>();
             var audioValues = audioParameters.Select(a => a.Value);
             return audioValues;
         }
@@ -200,15 +200,6 @@ namespace ConversationEditor
         public Audio Generate(AudioGenerationParameters parameters)
         {
             return m_customization.Generate(parameters);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                m_audioFiles.Dispose();
-                UpdateQueued.Dispose();
-            }
         }
     }
 }

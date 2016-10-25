@@ -41,7 +41,7 @@ namespace Viking
                     {
                         foreach (var node in conversation.Nodes)
                         {
-                            foreach (var parameter in node.Parameters.OfType<ILocalizedStringParameter>())
+                            foreach (var parameter in node.Data.Parameters.OfType<ILocalizedStringParameter>())
                             {
                                 var id = parameter.Value;
                                 sw.WriteLine("<Localize id =\"" + id.Serialized() + "\" localized =\"" + localizer(id).Item2.Ticks.ToString() + "\">" + localizer(id).Item1 + "</Localize>");
