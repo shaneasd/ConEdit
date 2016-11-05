@@ -78,25 +78,71 @@ namespace Viking
                         root.Add(new XComment(context.Value));
                     }
                 }
-                foreach (var node in conversation.Nodes)
-                {
-                    string speaker = node.Data.Parameters.Where(p => p.Id == Id<Parameter>.Parse("08da4734-e5a3-4dec-807e-29628ef4ba3e") || p.Id == Id<Parameter>.Parse("d6a6b382-43d0-44d3-b4e7-b9c9362a509b")).OfType<IDynamicEnumParameter>().Select(e => e.DisplayValue(a => null)).SingleOrDefault() ?? "";
 
-                    foreach (var localized in node.Data.Parameters.OfType<ILocalizedStringParameter>())
+                var startNodes = conversation.Nodes.Where(n => n.Data.NodeTypeId == Id<NodeTypeTemp>.Parse("656a48b2-324e-4484-a1b1-c3b91ad10c3e"));
+                HashSet<IConversationNodeData> added = new HashSet<IConversationNodeData>();
+
+                Action<IConversationNodeData> addNode = null;
+                addNode = node =>
+                {
+                    if (!added.Contains(node))
                     {
-                        var key = localized.Value;
-                        var data = m_localizer(key);
-                        var value = data.Item1;
-                        var date = data.Item2;
-                        var element = new XElement("Localize", new XAttribute("id", key.Serialized()),
-                                                               new XAttribute("localized", date.Ticks.ToString(CultureInfo.InvariantCulture)),
-                                                               new XAttribute("speaker", speaker),
-                                                               new XAttribute("type", node.Data.Name),
-                                                               new XAttribute("parameter", localized.Name),
-                                                               value);
-                        root.Add(element);
+                        added.Add(node);
+                        string speaker = node.Parameters.Where(p => p.Id == Id<Parameter>.Parse("08da4734-e5a3-4dec-807e-29628ef4ba3e") || p.Id == Id<Parameter>.Parse("d6a6b382-43d0-44d3-b4e7-b9c9362a509b")).OfType<IDynamicEnumParameter>().Select(e => e.DisplayValue(a => null)).SingleOrDefault() ?? "";
+
+                        foreach (var localized in node.Parameters.OfType<ILocalizedStringParameter>())
+                        {
+                            var key = localized.Value;
+                            var data = m_localizer(key);
+                            var value = data.Item1;
+                            var date = data.Item2;
+                            var element = new XElement("Localize", new XAttribute("id", key.Serialized()),
+                                                                   new XAttribute("localized", date.Ticks.ToString(CultureInfo.InvariantCulture)),
+                                                                   new XAttribute("speaker", speaker),
+                                                                   new XAttribute("type", node.Name),
+                                                                   new XAttribute("parameter", localized.Name),
+                                                                   value);
+                            root.Add(element);
+                        }
+                        foreach (var output in node.Connectors.Where(c => c.Definition.Id == SpecialConnectors.Output.Id))
+                        {
+                            foreach (var connection in output.Connections)
+                            {
+                                addNode(connection.Parent);
+                            }
+                        }
                     }
+                };
+
+                foreach (var start in startNodes)
+                {
+                    addNode(start.Data);
                 }
+
+                foreach (var node in conversation.Nodes.Select(n => n.Data).Where(n => !added.Contains(n)))
+                {
+                    addNode(node);
+                }
+
+                //foreach (var node in conversation.Nodes)
+                //{
+                //    string speaker = node.Data.Parameters.Where(p => p.Id == Id<Parameter>.Parse("08da4734-e5a3-4dec-807e-29628ef4ba3e") || p.Id == Id<Parameter>.Parse("d6a6b382-43d0-44d3-b4e7-b9c9362a509b")).OfType<IDynamicEnumParameter>().Select(e => e.DisplayValue(a => null)).SingleOrDefault() ?? "";
+
+                //    foreach (var localized in node.Data.Parameters.OfType<ILocalizedStringParameter>())
+                //    {
+                //        var key = localized.Value;
+                //        var data = m_localizer(key);
+                //        var value = data.Item1;
+                //        var date = data.Item2;
+                //        var element = new XElement("Localize", new XAttribute("id", key.Serialized()),
+                //                                               new XAttribute("localized", date.Ticks.ToString(CultureInfo.InvariantCulture)),
+                //                                               new XAttribute("speaker", speaker),
+                //                                               new XAttribute("type", node.Data.Name),
+                //                                               new XAttribute("parameter", localized.Name),
+                //                                               value);
+                //        root.Add(element);
+                //    }
+                //}
             }
 
             stream.Position = 0;

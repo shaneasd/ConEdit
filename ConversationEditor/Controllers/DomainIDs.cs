@@ -88,10 +88,12 @@ namespace ConversationEditor
             public static readonly Id<NodeTypeTemp> ZeroOrOne = Id<NodeTypeTemp>.Parse("e367eeab-3e88-4460-9979-08aff54c1f5d");
             public static readonly Id<NodeTypeTemp> ExactlyOne = Id<NodeTypeTemp>.Parse("638241c9-13d9-4f82-8d9b-6afe0378d394");
             public static readonly Id<NodeTypeTemp> String = Id<NodeTypeTemp>.Parse("3cc5503f-cfd1-4596-8913-1e293cdac3a9");
+            public static readonly Id<Parameter> StringParameter = Id<Parameter>.Parse("db341485-8177-4194-be8d-f2a7dafa1c6d");
             public static readonly Id<NodeTypeTemp> EnumerationValue = Id<NodeTypeTemp>.Parse("cf2e2170-7e25-4062-b7c1-6eaa6f4261bc");
             public static readonly Id<NodeTypeTemp> DynamicEnumerationValue = Id<NodeTypeTemp>.Parse("94f22e43-55d1-41c2-805d-7c97e56a3d5b");
             public static readonly Id<NodeTypeTemp> LocalDynamicEnumerationValue = Id<NodeTypeTemp>.Parse("f4776511-b2a3-44d9-8df6-2ab3c566030a");
             public static readonly Id<NodeTypeTemp> Character = Id<NodeTypeTemp>.Parse("8e75d2aa-f408-46f9-bf1b-6be398b62ace");
+            public static readonly Id<Parameter> CharacterParameter = Id<Parameter>.Parse("cb13c985-559f-44bd-8ef8-56ba6ea8f74a");
 
             public static bool IsAutoCompleteNode(Id<NodeTypeTemp> node)
             {

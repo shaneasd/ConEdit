@@ -123,11 +123,11 @@ namespace ConversationEditor
             }
             else if (node.NodeTypeId == DomainIDs.AutoComplete.String)
             {
-                return new String() { Next = nexts, Value = node.Parameters.Single().ValueAsString() }; //TODO: Be less lazy and get the parameter by Id rather than assuming there's only one
+                return new String() { Next = nexts, Value = node.Parameters.Single(p=>p.Id == DomainIDs.AutoComplete.StringParameter).ValueAsString() };
             }
             else if (node.NodeTypeId == DomainIDs.AutoComplete.Character)
             {
-                var result = Character.Make(node.Parameters.Single().ValueAsString());
+                var result = Character.Make(node.Parameters.Single(p => p.Id == DomainIDs.AutoComplete.CharacterParameter).ValueAsString());
                 result.Next = nexts;
                 return result;
             }

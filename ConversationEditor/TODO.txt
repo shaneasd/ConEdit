@@ -1,0 +1,39 @@
+OTHER:
+Feature list
+Manual
+
+Installer builder project
+
+WORKFLOW:
+
+P2	When finding references to node definitions, list the parameter data of the result nodes rather than their guids
+
+P3	Scroll bar for node editor is a bit messed up
+
+P4	Handle user specifying a default value for a parameter that is outside the acceptable range
+
+P5	Handle changes to domain dynamically affecting conversations
+		- Warn when removing things that are in use
+		- constrain defaults for custom numeric types based on min/max
+
+P3	Unity color scheme whole application
+	- Customize Node editors
+	- Search and Replace dialog
+	- Message boxes
+	- Border for title bar
+
+P5	Combobox list close window on second arrow click
+
+P6	Node avoidance line drawing
+
+	A way to move domain nodes between files without losing their IDs (copy-paste will make a copy)
+	Autosave
+	error report including project content
+
+Error Checkers:
+P2	Separate error checkers for domains
+
+TECHNICAL DEBT
+
+P3	Refactor corrupted nodes, Groups and Conversation nodes into a common parent
+P5	Move project serialization code out of editor project?
