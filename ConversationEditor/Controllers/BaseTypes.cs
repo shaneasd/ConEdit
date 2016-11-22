@@ -17,7 +17,7 @@ namespace ConversationEditor
         {
         }
 
-        public static readonly ParameterType PARAMETER_TYPE = ParameterType.Parse("fa7245b2-7bbf-4f31-ad3d-41e78577131e");
+        public static ParameterType PARAMETER_TYPE { get; } = ParameterType.Parse("fa7245b2-7bbf-4f31-ad3d-41e78577131e");
         private const string NAME = "Integer";
 
         public static IntegerData Data { get { return new IntegerData(NAME, PARAMETER_TYPE, null, null); } }
@@ -47,7 +47,7 @@ namespace ConversationEditor
         {
         }
 
-        public static readonly ParameterType PARAMETER_TYPE = ParameterType.Parse("0222b56d-0e1b-40ac-bf86-5ab6399f6fc2");
+        public static ParameterType PARAMETER_TYPE { get; } = ParameterType.Parse("0222b56d-0e1b-40ac-bf86-5ab6399f6fc2");
         private const string NAME = "Decimal";
 
         public static DecimalData Data { get { return new DecimalData(NAME, PARAMETER_TYPE, null, null); } }
@@ -146,7 +146,7 @@ namespace ConversationEditor
         {
         }
 
-        public static readonly ParameterType PARAMETER_TYPE = ParameterType.Parse("05b29166-31c5-449f-bb91-d63a603183db");
+        public static ParameterType PARAMETER_TYPE { get; } = AudioParameter.ParameterType;
 
         public override NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode)
         {

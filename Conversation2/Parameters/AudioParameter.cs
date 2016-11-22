@@ -50,8 +50,10 @@ namespace Conversation
 
     public class AudioParameter : Parameter<Audio>, IAudioParameter
     {
-        public AudioParameter(string name, Id<Parameter> id, ParameterType typeId)
-            : base(name, id, typeId, null, Tuple.Create(default(Audio), true)) //Audio parameters may require information from the conversation that contains them and as such do not support a constant default value
+        public static ParameterType ParameterType { get; } = ParameterType.Parse("05b29166-31c5-449f-bb91-d63a603183db");
+
+        public AudioParameter(string name, Id<Parameter> id)
+            : base(name, id, ParameterType, null, Tuple.Create(default(Audio), true)) //Audio parameters may require information from the conversation that contains them and as such do not support a constant default value
         {
         }
 

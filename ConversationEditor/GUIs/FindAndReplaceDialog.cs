@@ -15,17 +15,42 @@ namespace ConversationEditor
 {
     using TData = IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>;
     using System.Globalization;
+    using System.Diagnostics;
+
     internal partial class FindAndReplaceDialog : Form
     {
+        private class ResultListElement : IErrorListElement
+        {
+            public ResultListElement(TData file, string message, ConversationNode<INodeGui> node)
+            {
+                File = file;
+                Message = message;
+                Nodes = node.Only();
+            }
+
+            public TData File { get; }
+
+            public string Message { get; }
+
+            public IEnumerable<ConversationNode<INodeGui>> Nodes { get; }
+
+            public IEnumerator<Tuple<ConversationNode<INodeGui>, TData>> MakeEnumerator()
+            {
+                return Nodes.Select(n => new Tuple<ConversationNode, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>>(n, File)).InfiniteRepeat().GetEnumerator();
+            }
+        }
+
         private IEnumerable<TData> m_search;
         private LocalizationEngine m_localizer;
         private Func<IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>> m_currentDocument;
-        public FindAndReplaceDialog(IEnumerable<TData> search, LocalizationEngine localizer, Func<IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>> currentDocument)
+        private Action<IEnumerable<IErrorListElement>> m_showResults;
+        public FindAndReplaceDialog(IEnumerable<TData> search, LocalizationEngine localizer, Func<IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>> currentDocument, Action<IEnumerable<IErrorListElement>> showResults)
             : this()
         {
             m_search = search;
             m_localizer = localizer;
             m_currentDocument = currentDocument;
+            m_showResults = showResults;
         }
 
         public FindAndReplaceDialog()
@@ -39,10 +64,27 @@ namespace ConversationEditor
             Close();
         }
 
-        private bool Replace(string input, string replace, string with, out string output)
+        Regex GenerateRegex(string replace)
         {
             bool matchCase = chkMatchCase.Checked;
             bool wholeWord = chkWholeWord.Checked;
+
+            if (!chkRegex.Checked)
+                replace = Regex.Escape(replace);
+            if (wholeWord)
+                replace = @"\b" + replace + @"\b";
+            try
+            {
+                return new Regex(replace, matchCase ? RegexOptions.None : RegexOptions.IgnoreCase);
+            }
+            catch (ArgumentException)
+            {
+                return null;
+            }
+        }
+
+        private bool Replace(string input, Regex r, string with, out string output)
+        {
             bool cleverCase = chkPreserveCase.Checked;
             Func<string, string> casedReplace = s =>
                 {
@@ -57,9 +99,7 @@ namespace ConversationEditor
                     }
                     return with;
                 };
-            if (wholeWord)
-                replace = @"\b" + replace + @"\b";
-            output = Regex.Replace(input, replace, m => cleverCase ? casedReplace(m.Value) : with, matchCase ? RegexOptions.None : RegexOptions.IgnoreCase);
+            output = r.Replace(input, m => cleverCase ? casedReplace(m.Value) : with);
             return output != input;
         }
 
@@ -74,17 +114,18 @@ namespace ConversationEditor
 
         struct ReplaceAction
         {
-            public ReplaceAction(SimpleUndoPair undoredo, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo> file, ConversationNode node)
-                : this(undoredo.Undo, undoredo.Redo, file, node)
+            public ReplaceAction(SimpleUndoPair undoredo, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo> file, ConversationNode node, IParameter parameter)
+                : this(undoredo.Undo, undoredo.Redo, file, node, parameter)
             {
             }
 
-            public ReplaceAction(Action undo, Action redo, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo> file, ConversationNode node)
+            public ReplaceAction(Action undo, Action redo, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo> file, ConversationNode node, IParameter parameter)
             {
                 m_undo = undo;
                 m_redo = redo;
                 File = file;
                 Node = node;
+                Parameter = parameter;
                 m_done = false;
             }
 
@@ -92,6 +133,7 @@ namespace ConversationEditor
             Action m_redo;
             public readonly IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo> File;
             public readonly ConversationNode Node;
+            public readonly IParameter Parameter;
             bool m_done;
             public bool Done { get { return m_done; } }
             public void Execute()
@@ -105,40 +147,65 @@ namespace ConversationEditor
         {
             IEnumerable<TData> search = chkCurrentConversationOnly.Checked ? m_currentDocument().Only<TData>() : m_search;
 
+            Regex find = GenerateRegex(txtFind.Text);
+
+            if (find == null)
+            {
+                MessageBox.Show("Invalid regular expression");
+                yield break;
+            }
+
             foreach (var file in search)
             {
                 foreach (var node in file.Nodes.Evaluate())
                 {
 
-                    foreach (var parameter in node.Data.Parameters.OfType<IStringParameter>())
+                    if (chkStrings.Checked)
                     {
-                        if (!radLocalizedTextOnly.Checked)
+                        foreach (var parameter in node.Data.Parameters.OfType<IStringParameter>())
                         {
                             string original = parameter.Value;
                             string output;
-                            if (Replace(original, txtFind.Text, txtReplace.Text, out output))
+                            if (Replace(original, find, txtReplace.Text, out output))
                             {
                                 //Treat replace actions as true actions even if they don't actually alter the value of the parameter
-                                yield return new ReplaceAction(parameter.SetValueAction(output) ?? new SimpleUndoPair() { Redo = () => {}, Undo = ()=> {}}, file, node);
+                                yield return new ReplaceAction(parameter.SetValueAction(output) ?? new SimpleUndoPair() { Redo = () => { }, Undo = () => { } }, file, node, parameter);
                             };
                         }
                     }
 
-                    foreach (var parameter in node.Data.Parameters.OfType<ILocalizedStringParameter>())
+                    if (chkLocalizedStrings.Checked)
                     {
-                        if (!radNonLocalizedTextOnly.Checked)
+                        foreach (var parameter in node.Data.Parameters.OfType<ILocalizedStringParameter>())
                         {
                             var original = m_localizer.Localize(parameter.Value);
                             if (original != null)
                             {
                                 string output;
-                                if (Replace(original, txtFind.Text, txtReplace.Text, out output))
+                                if (Replace(original, find, txtReplace.Text, out output))
                                 {
                                     SimpleUndoPair redoUndo = m_localizer.SetLocalizationAction(parameter.Value, output);
                                     Action redo = () => { redoUndo.Redo(); UpdateDisplay.Execute(); };
                                     Action undo = () => { redoUndo.Undo(); UpdateDisplay.Execute(); };
-                                    yield return new ReplaceAction(undo, redo, file, node);
+                                    yield return new ReplaceAction(undo, redo, file, node, parameter);
                                 }
+                            }
+                        }
+                    }
+
+                    if (chkDynamicEnumerations.Checked)
+                    {
+                        foreach (var parameter in node.Data.Parameters.OfType<IDynamicEnumParameter>().Where(x => !x.Corrupted))
+                        {
+                            string original = parameter.Value;
+                            string output;
+                            if (original != null) //DynamicEnumParameters shouldn't have a value of null typically but DomainDomain.EnumDefaultParameter can
+                            {
+                                if (Replace(original, find, txtReplace.Text, out output))
+                                {
+                                    //Treat replace actions as true actions even if they don't actually alter the value of the parameter
+                                    yield return new ReplaceAction(parameter.SetValueAction(output) ?? new SimpleUndoPair() { Redo = () => { }, Undo = () => { } }, file, node, parameter);
+                                };
                             }
                         }
                     }
@@ -168,6 +235,7 @@ namespace ConversationEditor
             }
             else
             {
+                //TODO: if any search parameter changes reset m_currentItem so we don't get this message
                 MessageBox.Show("Find reached the starting point of the search");
                 m_currentItem = null;
             }
@@ -181,6 +249,16 @@ namespace ConversationEditor
                 return;
             m_currentItem.Current.Execute();
             MoveNext();
+        }
+
+        private void btnFindAll_Click(object sender, EventArgs e)
+        {
+            m_showResults(FindAll().Select(x => new ResultListElement(x.File, x.Node.Data.Name + ": " + x.Parameter.Name, x.Node)));
+        }
+
+        private void SettingChanged(object sender, EventArgs e)
+        {
+            m_currentItem = null;
         }
     }
 }

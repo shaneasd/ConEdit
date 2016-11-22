@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConversationSerialization\XmlConversationTest.cs" />
     <Compile Include="Conversation\ConnectorPositionTest.cs" />
     <Compile Include="Conversation\ConversationNodeTest.cs" />
     <Compile Include="Conversation\EnumerationTest.cs" />
@@ -107,6 +108,10 @@
     <ProjectReference Include="..\ConversationEditor\ConversationEditor.csproj">
       <Project>{D904BED7-0716-4B54-8BBE-D53A7F938C8D}</Project>
       <Name>ConversationEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConversationSerialization\ConversationSerialization.csproj">
+      <Project>{abef494e-1fdb-427a-ba80-1bd98c82f041}</Project>
+      <Name>ConversationSerialization</Name>
     </ProjectReference>
     <ProjectReference Include="..\RawSerialization\RawSerialization.csproj">
       <Project>{eacd784a-8b25-4f0b-ad33-bfa8f3fc96ee}</Project>

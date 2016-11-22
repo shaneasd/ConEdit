@@ -15,11 +15,10 @@ namespace Tests.Conversation.Parameters
             {
                 string name = "bdfgbsgaudio";
                 Id<Parameter> id = Id<Parameter>.Parse("BC123324-1BA2-4BCD-83D3-419D854CFE3D");
-                ParameterType type = ParameterType.Parse("85C098A7-0CBB-4C23-8C33-8B6596C2A258");
-                AudioParameter p = new AudioParameter(name, id, type);
+                AudioParameter p = new AudioParameter(name, id);
                 Assert.That(p.Name, Is.EqualTo(name));
                 Assert.That(p.Id, Is.EqualTo(id));
-                Assert.That(p.TypeId, Is.EqualTo(type));
+                Assert.That(p.TypeId, Is.EqualTo(AudioParameter.ParameterType));
                 Assert.That(p.Corrupted, Is.True);
                 //AudioParameters are always constructed corrupted and the conversation files automatically decorrupt them by generating new values for them
             }
@@ -27,11 +26,10 @@ namespace Tests.Conversation.Parameters
             {
                 string name = "bdfgadio";
                 Id<Parameter> id = Id<Parameter>.Parse("3F8D6F37-36B8-48A7-BAC6-4F524728D1FE");
-                ParameterType type = ParameterType.Parse("12103BA0-7680-44B8-AB80-6F987D885690");
-                AudioParameter p = new AudioParameter(name, id, type);
+                AudioParameter p = new AudioParameter(name, id);
                 Assert.That(p.Name, Is.EqualTo(name));
                 Assert.That(p.Id, Is.EqualTo(id));
-                Assert.That(p.TypeId, Is.EqualTo(type));
+                Assert.That(p.TypeId, Is.EqualTo(AudioParameter.ParameterType));
                 Assert.That(p.Corrupted, Is.True);
                 //AudioParameters are always constructed corrupted and the conversation files automatically decorrupt them by generating new values for them
             }
@@ -42,8 +40,7 @@ namespace Tests.Conversation.Parameters
         {
             string name = "bdfgbsgaudio";
             Id<Parameter> id = Id<Parameter>.Parse("BC123324-1BA2-4BCD-83D3-419D854CFE3D");
-            ParameterType type = ParameterType.Parse("85C098A7-0CBB-4C23-8C33-8B6596C2A258");
-            AudioParameter p = new AudioParameter(name, id, type);
+            AudioParameter p = new AudioParameter(name, id);
 
             var value1 = new Audio("asdkavds\\asdasd");
             var action = p.SetValueAction(value1);

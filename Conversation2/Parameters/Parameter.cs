@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using System.IO;
 using Utilities;
+using System.Diagnostics;
 
 namespace Conversation
 {
@@ -241,7 +242,7 @@ namespace Conversation
         protected override void DeserialiseValue(string value)
         {
             var a = DeserializeValueInner(value);
-            Value = a.Item1;
+            SetValue(a.Item1);
             m_corrupted = a.Item2;
         }
 

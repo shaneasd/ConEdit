@@ -110,8 +110,9 @@ namespace ConversationEditor
         {
             SpatiallyOrderedNodes = new QuadTree<TNode>(RectangleF.FromLTRB(0, 0, 2048, 2048));
             SpatiallyOrderedConnections = new QuadTree<Tuple<UnorderedTuple2<Output>, RectangleF>>(RectangleF.FromLTRB(0, 0, 2048, 2048));
-            foreach (var deregister in m_connectionDeregisterActions)
-                deregister();
+            foreach (var list in m_connectionDeregisterActions.Values)
+                foreach (var deregister in list)
+                    deregister();
             m_connectionDeregisterActions.Clear();
 
             foreach (var node in CurrentFile.Nodes)
@@ -147,7 +148,12 @@ namespace ConversationEditor
         private void StoreConnections(TNode node, bool register)
         {
             if (!register)
-                return; //TODO: Need to actually deregister
+            {
+                if (m_connectionDeregisterActions.ContainsKey(node))
+                    foreach (var deregister in m_connectionDeregisterActions[node])
+                        deregister();
+                return;
+            }
 
             foreach (var connector in node.Data.Connectors)
             {
@@ -212,7 +218,9 @@ namespace ConversationEditor
                         SpatiallyOrderedConnections.Add(Tuple.Create(pair, toBounds), toBounds);
                     }
                 });
-                m_connectionDeregisterActions.Add(deregister);
+                if (!m_connectionDeregisterActions.ContainsKey(node))
+                    m_connectionDeregisterActions[node] = new List<Action>();
+                m_connectionDeregisterActions[node].Add(deregister);
             }
         }
 
@@ -237,7 +245,7 @@ namespace ConversationEditor
 
         QuadTree<TNode> SpatiallyOrderedNodes = new QuadTree<TNode>(RectangleF.FromLTRB(0, 0, 2048, 2048));
         QuadTree<Tuple<UnorderedTuple2<Output>, RectangleF>> SpatiallyOrderedConnections = new QuadTree<Tuple<UnorderedTuple2<Output>, RectangleF>>(RectangleF.FromLTRB(0, 0, 2048, 2048));
-        List<Action> m_connectionDeregisterActions = new List<Action>();
+        Dictionary<TNode, List<Action>> m_connectionDeregisterActions = new Dictionary<TNode, List<Action>>();
 
         private void OnNodesDeleted()
         {
@@ -289,11 +297,12 @@ namespace ConversationEditor
 
         LocalizationEngine m_localization;
 
-        internal void SetContext(IDataSource datasource, LocalizationEngine localization, IProject project)
+        internal void SetContext(IDataSource datasource, LocalizationEngine localization, IProject project, SharedContext context)
         {
             m_datasource = datasource;
             m_localization = localization;
             m_project = project;
+            m_context = context;
         }
 
         public ContextMenu<TNode> m_contextMenu;
@@ -480,6 +489,15 @@ namespace ConversationEditor
                                                                          "Deleted");
                         CurrentFile.UndoableFile.Change(action);
                     }
+                }
+            }
+            else if (e.KeyCode == Keys.Tab && e.Control)
+            {
+                int index = m_context.CurrentProject.Value.LocalizationFiles.IndexOf(m_context.CurrentLocalization.Value);
+                if (index >= 0)
+                {
+                    m_context.CurrentLocalization.Value = m_context.CurrentProject.Value.LocalizationFiles.InfiniteRepeat().ElementAt(index + 1);
+                    Redraw();
                 }
             }
         }
@@ -669,6 +687,7 @@ namespace ConversationEditor
         }
 
         Keys m_keyHeld = Keys.None;
+        private SharedContext m_context;
 
         public void DrawGrid(PaintEventArgs e)
         {

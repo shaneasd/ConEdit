@@ -169,7 +169,7 @@
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Node Graphics\UnknownNodeRenderer.cs" />
     <Compile Include="Controllers\ErrorCheckerController.cs" />
-    <Compile Include="GUIs\DomainNodeRenderer.cs" />
+    <Compile Include="Node Graphics\DomainNodeRenderer.cs" />
     <Compile Include="GUIs\ProjectExporer\RealLeafItem.cs">
       <SubType>UserControl</SubType>
     </Compile>

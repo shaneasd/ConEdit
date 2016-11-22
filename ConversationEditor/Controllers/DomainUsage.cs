@@ -47,7 +47,7 @@ namespace ConversationEditor
                     var parentParameter = categoryNode.Data.Parameters.Single(p => p.Id == DomainIDs.CategoryParent) as IEnumParameter;
                     if (parentParameter.Value == id.Guid)
                     {
-                        result.Add(new Usage(categoryNode, domainFile, "Category definition " + categoryNode.Data.NodeId.Serialized()));
+                        result.Add(new Usage(categoryNode, domainFile, "Category definition " + categoryNode.Data.Parameters.Where(x=>x.Id == DomainIDs.CategoryName).Single().ValueAsString()));
                     }
                 }
 
@@ -57,7 +57,7 @@ namespace ConversationEditor
                     var category = nodeDefinitionNode.Data.Parameters.Single(p => p.Id == DomainIDs.NodeCategory) as IEnumParameter;
                     if (category.Value == id.Guid)
                     {
-                        result.Add(new Usage(nodeDefinitionNode, domainFile, "Node definition " + nodeDefinitionNode.Data.NodeId.Serialized()));
+                        result.Add(new Usage(nodeDefinitionNode, domainFile, "Node definition " + nodeDefinitionNode.Data.Parameters.Where(x=>x.Id == DomainIDs.NodeName).Single().ValueAsString()));
                     }
                 }
             }
@@ -81,7 +81,7 @@ namespace ConversationEditor
                     var typeParameter = parameterNode.Data.Parameters.SingleOrDefault(p => p.Id == DomainIDs.PARAMETER_TYPE) as IEnumParameter; //Identifies what subtype of the base type it is (e.g. what kind of integer)
                     if (typeParameter.Value == id.Guid)
                     {
-                        result.Add(new Usage(parameterNode, domainFile, type.Name + " parameter " + parameterNode.Data.NodeId.Serialized()));
+                        result.Add(new Usage(parameterNode, domainFile, type.Name + " parameter " + parameterNode.Data.Parameters.Where(x=>x.Id == DomainIDs.ParameterName).Single().ValueAsString()));
                     }
                 }
             }
@@ -115,7 +115,7 @@ namespace ConversationEditor
 
                         var usingParameters = filteredParameters.Where(p => p.Value == node.Data.NodeId.Guid);
                         foreach (var p in usingParameters)
-                            result.Add(new Usage(n, conversationFile, "Node " + n.Data.NodeId.Serialized() + " with Enum parameter " + p.Id.Serialized()));
+                            result.Add(new Usage(n, conversationFile, "Node " + n.Data.Name + " with Enum parameter " + p.Name));
                     }
                 }
 
@@ -132,7 +132,7 @@ namespace ConversationEditor
                                 var defaultParameter = n.Data.Parameters.Single(p => p.Id == DomainIDs.ParameterDefault) as IDynamicEnumParameter;
                                 var expectedValue = (node.Data.Parameters.Single(p => p.Id == DomainIDs.EnumerationValueParameter) as IStringParameter).Value;
                                 if (defaultParameter.Value == expectedValue)
-                                    result.Add(new Usage(n, domainFile, "Enum definition " + n.Data.NodeId.Serialized()));
+                                    result.Add(new Usage(n, domainFile, "Enum definition " + n.Data.Parameters.Where(x=>x.Id == DomainIDs.ParameterName).Single().ValueAsString() + " default value"));
                             }
                         }
                     }
@@ -151,9 +151,12 @@ namespace ConversationEditor
                 {
                     Id<NodeTypeTemp> id = Id<NodeTypeTemp>.ConvertFrom(i);
                     var connectors = domainFile.Nodes.Where(n => n.Data.NodeTypeId == id);
-                    result.AddRange(connectors.Select(c => new Usage(c, domainFile, "Connector " + c.Data.NodeId.Serialized())));
+                    result.AddRange(connectors.Select(c => new Usage(c, domainFile, "Connector on node " + c.Data.Name)));
                 }
             }
+
+            //TODO: Should also highlight 'Connection' nodes that link connectors of this type with connectors with some other (or the same) type
+
             return result;
         }
 
@@ -177,6 +180,8 @@ namespace ConversationEditor
                 {
                     if (typeIDs.Contains(n.Data.NodeTypeId))
                         result.Add(new Usage(n, conversationFile, "Node " + n.Data.NodeId.Serialized()));
+
+                    //TODO: When finding references to node definitions, list the parameter data of the result nodes rather than their guids
                 }
             }
             return result;

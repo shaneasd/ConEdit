@@ -18,9 +18,6 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    //TODO: Background color given to DrawText is wrong when the item is selected
-    //TODO: Scroll an item into view when it's selected programatically (e.g. when clicking an error in the error list)
-
     internal partial class ProjectExplorer : UserControl
     {
         public static Bitmap ProjectIcon;
@@ -231,10 +228,10 @@ namespace ConversationEditor
             return result;
         }
 
-        OpenFileDialog m_ofdConversation = MakeOpenFileDiaglog(DefaultExt : "xml", Filter : "Conversations|*.xml", Multiselect : true, ValidateNames : false);
-        OpenFileDialog m_ofdDomain = MakeOpenFileDiaglog(DefaultExt : "dom", Filter : "Domains|*.dom|xml|*.xml", Multiselect : true, ValidateNames : false);
-        OpenFileDialog m_ofdLocalization = MakeOpenFileDiaglog(DefaultExt : "loc", Filter : "Localizations|*.loc|xml|*.xml", Multiselect : true, ValidateNames : false);
-        OpenFileDialog m_ofdAudio = MakeOpenFileDiaglog(DefaultExt : "ogg", Filter : "Ogg Vorbis|*.ogg|All files (*.*)|*.*", Multiselect : true, ValidateNames : false);
+        OpenFileDialog m_ofdConversation = MakeOpenFileDiaglog(DefaultExt: "xml", Filter: "Conversations|*.xml", Multiselect: true, ValidateNames: false);
+        OpenFileDialog m_ofdDomain = MakeOpenFileDiaglog(DefaultExt: "dom", Filter: "Domains|*.dom|xml|*.xml", Multiselect: true, ValidateNames: false);
+        OpenFileDialog m_ofdLocalization = MakeOpenFileDiaglog(DefaultExt: "loc", Filter: "Localizations|*.loc|xml|*.xml", Multiselect: true, ValidateNames: false);
+        OpenFileDialog m_ofdAudio = MakeOpenFileDiaglog(DefaultExt: "ogg", Filter: "Ogg Vorbis|*.ogg|All files (*.*)|*.*", Multiselect: true, ValidateNames: false);
 
         public SuppressibleAction m_suppressibleItemSelected;
         public event Action ItemSelected;
@@ -257,6 +254,26 @@ namespace ConversationEditor
         {
             return (int)((y + greyScrollBar1.Value) / Item.HEIGHT);
             //return (int)((y) / Item.HEIGHT);
+        }
+
+        /// <summary>
+        /// Set the scrollbar's value such that the specified item is visible
+        /// </summary>
+        private void ScrollForVisibility(Item item)
+        {
+            Func<float, float> YToIndexFloat = y => ((y + greyScrollBar1.Value) / Item.HEIGHT);
+
+            float topIndex = YToIndexFloat(0);
+            float bottomIndex = YToIndexFloat(drawWindow1.Height);
+
+            if (IndexOf(item) < topIndex)
+            {
+                greyScrollBar1.Value += (IndexOf(item) - topIndex) * Item.HEIGHT;
+            }
+            else if (IndexOf(item) + 1 > bottomIndex)
+            {
+                greyScrollBar1.Value += (IndexOf(item) + 1 - bottomIndex) * Item.HEIGHT;
+            }
         }
 
         private RectangleF RectangleForIndex(int i)
@@ -371,6 +388,7 @@ namespace ConversationEditor
                 {
                     if (item.Select(ref m_selectedItem, ref m_selectedEditable))
                     {
+                        ScrollForVisibility(item);
                         m_suppressibleItemSelected.TryExecute();
                         InvalidateImage();
                     }

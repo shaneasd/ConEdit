@@ -256,7 +256,7 @@ namespace ConversationEditor
         private void InitializeGraphEditor(ConversationCopyPasteController copyPasteController, IDataSource datasource, GraphEditorControl<ConversationNode> editor, IMenuActionFactory<ConversationNode> basicItems)
         {
             editor.Initialise(Edit, copyPasteController, errorList1.SetErrors);
-            editor.SetContext(datasource, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value);
+            editor.SetContext(datasource, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value, m_context);
             editor.m_contextMenu.Opening += () => editor.RefreshContextMenu(basicItems.Only().Concat(GetAllOfType<IMenuActionFactory<ConversationNode>>(MainAssemblies.Ignore)));
 
             Action updateGraphViewFromConfig = () =>
@@ -298,7 +298,7 @@ namespace ConversationEditor
                     {
                         if (m_context.CurrentProject.Value.ReloadConversationDatasourceIfRequired())
                         {
-                            m_conversationEditor.SetContext(m_context.CurrentProject.Value.ConversationDataSource, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value);
+                            m_conversationEditor.SetContext(m_context.CurrentProject.Value.ConversationDataSource, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value, m_context);
                             m_conversationEditor.UpdateKeyMappings();
                         }
                     }
@@ -367,10 +367,10 @@ namespace ConversationEditor
         {
             Project.TConfig projectConfig = ReadProjectConfig(project);
 
-            m_conversationEditor.SetContext(project.ConversationDataSource, project.Localizer, project);
+            m_conversationEditor.SetContext(project.ConversationDataSource, project.Localizer, project, m_context);
             m_conversationEditor.UpdateKeyMappings();
 
-            m_domainEditor.SetContext(project.DomainDataSource, project.Localizer, project);
+            m_domainEditor.SetContext(project.DomainDataSource, project.Localizer, project, m_context);
             m_domainEditor.UpdateKeyMappings();
 
             projectExplorer.SetProject(project, projectConfig);
@@ -768,7 +768,7 @@ namespace ConversationEditor
                 throw new InternalLogicException("fvjblanbl");
             }
 
-            var d = new FindAndReplaceDialog(search, m_context.CurrentProject.Value.Localizer, () => CurrentFile);
+            var d = new FindAndReplaceDialog(search, m_context.CurrentProject.Value.Localizer, () => CurrentFile, errorList1.SetErrors);
 
             d.FocusNode += (node, file) =>
             {

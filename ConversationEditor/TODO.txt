@@ -6,8 +6,6 @@ Installer builder project
 
 WORKFLOW:
 
-P2	When finding references to node definitions, list the parameter data of the result nodes rather than their guids
-
 P3	Scroll bar for node editor is a bit messed up
 
 P4	Handle user specifying a default value for a parameter that is outside the acceptable range
@@ -29,6 +27,10 @@ P6	Node avoidance line drawing
 	A way to move domain nodes between files without losing their IDs (copy-paste will make a copy)
 	Autosave
 	error report including project content
+
+P1	Deleting and then undoing deletion of an integer definition causes it to be readded to the collection of integers resulting in an exception
+
+Jonas: If you delete a node with localized text does it remove the text from the localization file?
 
 Error Checkers:
 P2	Separate error checkers for domains
