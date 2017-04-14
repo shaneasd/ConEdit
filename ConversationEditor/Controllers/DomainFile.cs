@@ -15,7 +15,7 @@ namespace ConversationEditor
     using System.Windows;
     using System.Collections.ObjectModel;
 
-    internal class DomainFile : GraphFile, IDomainFile
+    public class DomainFile : GraphFile, IDomainFile
     {
         DomainDomain m_datasource;
         //ConversationDataSource m_conversationDatasource;

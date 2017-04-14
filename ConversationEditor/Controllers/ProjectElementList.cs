@@ -231,5 +231,15 @@ namespace ConversationEditor
                 Removed(element);
             }
         }
+
+        internal void Rename(string from, string to)
+        {
+            if (m_data.ContainsKey(from))
+            {
+                var item = m_data[from];
+                m_data.Remove(from);
+                m_data.Add(to, item);
+            }
+        }
     }
 }

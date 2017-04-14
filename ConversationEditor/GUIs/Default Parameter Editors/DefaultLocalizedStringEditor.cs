@@ -31,13 +31,13 @@ namespace ConversationEditor
             get { return StaticId; }
         }
 
-        public IParameterEditor<Control> Make(IColorScheme scheme)
+        public IParameterEditor Make(IColorScheme scheme)
         {
             return new DefaultLocalizedStringEditor(scheme);
         }
     }
 
-    internal partial class DefaultLocalizedStringEditor : UserControl, IParameterEditor<DefaultLocalizedStringEditor>
+    internal partial class DefaultLocalizedStringEditor : UserControl, IParameterEditor
     {
         private MyTextBox m_textBox;
 
@@ -87,7 +87,7 @@ namespace ConversationEditor
             m_autoCompleteSuggestions = data.AutoCompleteSuggestions;
         }
 
-        public DefaultLocalizedStringEditor AsControl
+        public Control AsControl
         {
             get { return this; }
         }

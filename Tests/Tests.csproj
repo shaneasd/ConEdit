@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConversationEditor\ConversationFileTest.cs" />
     <Compile Include="ConversationSerialization\XmlConversationTest.cs" />
     <Compile Include="Conversation\ConnectorPositionTest.cs" />
     <Compile Include="Conversation\ConversationNodeTest.cs" />

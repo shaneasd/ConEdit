@@ -11,7 +11,7 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    internal class MouseController<TNode> where TNode : IRenderable<IGui>, IConversationNode, IConfigurable
+    public class MouseController<TNode> where TNode : IRenderable<IGui>, IConversationNode, IConfigurable
     {
         public class State
         {
@@ -99,65 +99,18 @@ namespace ConversationEditor
 
                 public override void LeftMouseUp(Point client, Point screen)
                 {
-                    var currentSelection = m_parent.m_selection.Clone();
+                    //ChangingState() handles the actual logic for saving the node movement
+                    m_parent.SetStateToNothingOrSelectingDirection(null, null);
+                }
 
-                    List<Action> undoList = new List<Action>();
-                    List<Action> redoList = new List<Action>();
+                internal override void ChangingState()
+                {
                     var offset = m_moveOrigin.Take(m_dragTarget.Renderer.Area.Center());
 
                     if (!offset.IsEmpty)
                     {
-                        foreach (var a in currentSelection.Renderable(id => m_parent.GetNode(id)))
-                        {
-                            var aa = a;
-                            undoList.Add(() => { aa.Renderer.Offset(offset); });
-                            var currentPos = aa.Renderer.Area.Center();
-                            redoList.Add(() => { aa.Renderer.MoveTo(currentPos); });
-                        }
-
-                        var groups = m_parent.m_groups();
-                        foreach (var node in currentSelection.Nodes)
-                        {
-                            var n = node;
-                            if (!currentSelection.Groups.Any(g => g.Contents.Contains(n)))
-                            {
-                                foreach (var group in groups)
-                                {
-                                    if (group.Contents.Contains(n))
-                                    {
-                                        undoList.Add(() => { group.Contents.Add(n); });
-                                        Action redoOp = () => { group.Contents.Remove(n); };
-                                        redoList.Add(redoOp);
-                                        redoOp();
-                                    }
-                                }
-
-                                var caught = groups.FirstOrDefault(g => g.Renderer.Area.Contains(m_parent.GetNode(n).Renderer.Area));
-                                if (caught != null)
-                                {
-                                    undoList.Add(() => { caught.Contents.Remove(n); });
-                                    Action redoOp = () => { caught.Contents.Add(n); };
-                                    redoList.Add(redoOp);
-                                    redoOp();
-                                }
-                            }
-                        }
-
-                        Action undo = () =>
-                        {
-                            foreach (Action a in undoList)
-                                a();
-                        };
-
-                        Action redo = () =>
-                        {
-                            foreach (Action a in redoList)
-                                a();
-                        };
-                        m_parent.Changed.Execute(new GenericUndoAction(undo, redo, "Dragged " + currentSelection.Count() + " things"));
+                        m_parent.MoveSelected(offset);
                     }
-
-                    m_parent.SetStateToNothingOrSelectingDirection(null, null);
                 }
             }
             public class Linking : State
@@ -672,6 +625,65 @@ namespace ConversationEditor
             {
                 return SelectedTransition == connector;
             }
+
+            internal virtual void ChangingState()
+            {
+            }
+        }
+
+        public void MoveSelected(PointF offset)
+        {
+            var currentSelection = m_selection.Clone();
+            List<Action> undoList = new List<Action>();
+            List<Action> redoList = new List<Action>();
+            foreach (var a in currentSelection.Renderable(id => GetNode(id)))
+            {
+                var aa = a;
+                undoList.Add(() => { aa.Renderer.Offset(offset); });
+                var currentPos = aa.Renderer.Area.Center();
+                redoList.Add(() => { aa.Renderer.MoveTo(currentPos); });
+            }
+
+            var groups = m_groups();
+            foreach (var node in currentSelection.Nodes)
+            {
+                var n = node;
+                if (!currentSelection.Groups.Any(g => g.Contents.Contains(n)))
+                {
+                    foreach (var group in groups)
+                    {
+                        if (group.Contents.Contains(n))
+                        {
+                            undoList.Add(() => { group.Contents.Add(n); });
+                            Action redoOp = () => { group.Contents.Remove(n); };
+                            redoList.Add(redoOp);
+                            redoOp();
+                        }
+                    }
+
+                    var caught = groups.FirstOrDefault(g => g.Renderer.Area.Contains(GetNode(n).Renderer.Area));
+                    if (caught != null)
+                    {
+                        undoList.Add(() => { caught.Contents.Remove(n); });
+                        Action redoOp = () => { caught.Contents.Add(n); };
+                        redoList.Add(redoOp);
+                        redoOp();
+                    }
+                }
+            }
+
+            Action undo = () =>
+            {
+                foreach (Action a in undoList)
+                    a();
+            };
+
+            Action redo = () =>
+            {
+                foreach (Action a in redoList)
+                    a();
+            };
+            Changed.Execute(new GenericUndoAction(undo, redo, "Dragged " + currentSelection.Count() + " things"));
         }
 
         private void SelectAllNodesAndGroupsRelativeToPoint(Point p, Point dir)
@@ -709,7 +721,7 @@ namespace ConversationEditor
         }
 
         State m_innerState;
-        public State m_state { get { return m_innerState; } set { m_innerState = value; StateChanged.Execute(); } }
+        public State m_state { get { return m_innerState; } set { m_innerState.ChangingState(); m_innerState = value; StateChanged.Execute(); } }
         public event Action StateChanged;
         NodeSet m_selection = new NodeSet();
 
@@ -872,8 +884,9 @@ namespace ConversationEditor
 
         /// <summary>
         /// If p is over a Node then execute nodeOp(n) where n is the topmost node overlapping p
-        /// else if p is over a transition in node then execute transitionInOp(n) where n is the topmost transition in node overlapping p
-        /// else if p is over a transition out node then execute transitionsOutOp(n) where n is the topmost transition out node overlapping p
+        /// else if p is over a connector then execute transitionOp(n) where n is the topmost connector overlapping p
+        /// else if p is over a connection then execute connectionOp(n) where n is the topmost connection overlapping p
+        /// else if p is over a ground then execute groupOp(n) where n is the topmost group overlapping p
         /// else execute otherwise()
         /// </summary>
         public void ForClickedOn(PointF p, Action<TNode> nodeOp, Action<Output> transitionOp, Action<Output, Output> connectionOp, Action<NodeGroup> groupOp, Action otherwise)
@@ -881,7 +894,7 @@ namespace ConversationEditor
             var nodes = m_nodes();
             //Make the search rectangle large enough to capture nodes which we haven't clicked on but whose connectors we might have
             RectangleF searchRectangle = RectangleF.FromLTRB(p.X - 20, p.Y - 20, p.X + 20, p.Y + 20);//TODO: Making a big assumption here about the nature of connectors
-            var nearbyNodes = nodes.FindTouchingRegion(new RectangleF(p, SizeF.Empty)).ToArray();
+            var nearbyNodes = nodes.FindTouchingRegion(searchRectangle).ToArray();
             TNode clicked = nearbyNodes.FirstOrDefault(n => n.Renderer.Area.Contains(p));
 
             if (clicked != null)
@@ -897,13 +910,6 @@ namespace ConversationEditor
                 return;
             }
 
-            var groups = m_groups();
-            var group = groups.FirstOrDefault(g => g.Renderer.Area.Contains(p));
-            if (group != null)
-            {
-                groupOp(group);
-                return;
-            }
             var connections = m_connections();
             foreach (var connection in connections.FindTouchingRegion(searchRectangle))
             {
@@ -913,6 +919,14 @@ namespace ConversationEditor
                     connectionOp(connection.Item1, connection.Item2);
                     return;
                 }
+            }
+
+            var groups = m_groups();
+            var group = groups.FirstOrDefault(g => g.Renderer.Area.Contains(p));
+            if (group != null)
+            {
+                groupOp(group);
+                return;
             }
 
             otherwise();
@@ -1064,10 +1078,12 @@ namespace ConversationEditor
                 };
                 ForClickedOn(client, nodeOp, a => { otherwise(); }, (a, b) => { otherwise(); }, g => { }, otherwise);
             }
-            else
-            {
-                m_selection.Clear();
-            }
+            //If you deselect on right click you can't select a group and then right click them.
+            //You also can't add a 'move selection' action to an undo queue before changing State because the selection will be cleared first
+            //else
+            //{
+            //    m_selection.Clear();
+            //}
         }
 
         public void MouseUp(Point client, Point screen, MouseButtons button)

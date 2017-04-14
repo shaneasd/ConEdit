@@ -68,8 +68,10 @@
     <Compile Include="BoolRef.cs" />
     <Compile Include="Algorithm\CallbackDictionary.cs" />
     <Compile Include="Algorithm\CallbackList.cs" />
+    <Compile Include="Mouse.cs" />
     <Compile Include="NativeTextRenderer.cs" />
     <Compile Include="NotfierProperty.cs" />
+    <Compile Include="PassiveLogger.cs" />
     <Compile Include="QuadTree.cs" />
     <Compile Include="SharedResource.cs" />
     <Compile Include="StringUtil.cs" />

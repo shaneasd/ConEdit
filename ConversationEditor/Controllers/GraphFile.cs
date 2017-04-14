@@ -16,7 +16,7 @@ namespace ConversationEditor
     using System.Diagnostics.Contracts;
     using System.Diagnostics;
 
-    internal abstract class GraphFile : Disposable, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>, IDisposable
+    public abstract class GraphFile : Disposable, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>, IDisposable
     {
         public ConversationNode GetNode(Id<NodeTemp> id)
         {
@@ -138,7 +138,13 @@ namespace ConversationEditor
                         var result = localization.DuplicateActions(p.Value);
                         var action = p.SetValueAction(result.Item1);
                         if (action != null)
-                            action.Value.Redo(); //If we undo the whole operation the parameter wont exist so no need to ever undo this value change.
+                        {
+                            //Don't this node is a duplicate of another. The old node's localization data is irrelevant. We should never return to it.
+                            //undoActions.Add(action.Value.Undo);
+                            redoActions.Add(action.Value.Redo);
+                            action.Value.Redo(); //Change the value immediately. The old value is irrelevant and we should never return to it.
+                        }
+                        result.Item2.Redo(); //Add the localization immediately. Otherwise when adding the node we won't know how to undo deletion of the node's localization data.
                         undoActions.Add(result.Item2.Undo);
                         redoActions.Add(result.Item2.Redo);
                     }
@@ -148,7 +154,7 @@ namespace ConversationEditor
                     {
                         //No need to update audio usage as this will occur when the node is added/removed
                         var audio = m_generateAudio(this, node.Data.Parameters);
-                        var actions = p.SetValueAction(audio);
+                        var actions = p.SetValueAction(audio); //TODO: Investigate what happens to Audio parameter usage if you duplicate a node and then undo
                         undoActions.Add(actions.Value.Undo);
                         redoActions.Add(actions.Value.Redo);
                     }
@@ -183,7 +189,7 @@ namespace ConversationEditor
                     group.Renderer.Offset(offset);
                 }
 
-                SimpleUndoPair addActions = InnerAddNodes(nodes, groups);
+                SimpleUndoPair addActions = InnerAddNodes(nodes, groups, localization);
 
                 Action undo = () =>
                 {
@@ -202,12 +208,12 @@ namespace ConversationEditor
             return Tuple.Create(nodes, groups);
         }
 
-        public void Add(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups)
+        public void Add(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization)
         {
             nodes = nodes.Evaluate();
             groups = groups.ToList();
 
-            SimpleUndoPair addActions = InnerAddNodes(nodes, groups);
+            SimpleUndoPair addActions = InnerAddNodes(nodes, groups, localization);
 
             bool addedNodes = nodes.Any();
             bool addedGroups = groups.Any();
@@ -222,7 +228,7 @@ namespace ConversationEditor
                 throw new InternalLogicException("why would you do this?");
         }
 
-        private SimpleUndoPair InnerAddNodes(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups)
+        private SimpleUndoPair InnerAddNodes(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization)
         {
             List<Action> undoActions = new List<Action>();
             List<Action> redoActions = new List<Action>();
@@ -231,7 +237,19 @@ namespace ConversationEditor
             foreach (var node in nodes)
             {
                 var n = node;
-                var actions = n.GetNodeRemoveActions();
+                SimpleUndoPair actions = n.GetNodeRemoveActions();
+
+                //Ensure that the localization engine is up to date in terms of usage of localized data
+                foreach (var parameter in n.Data.Parameters.OfType<ILocalizedStringParameter>())
+                {
+                    if (parameter.Value != null)
+                    {
+                        SimpleUndoPair clearLocalization = localization.ClearLocalizationAction(parameter.Value);
+                        undoActions.Add(clearLocalization.Redo);
+                        redoActions.Add(clearLocalization.Undo);
+                    }
+                }
+
                 var containingGroups = m_groups.Where(g => g.Contents.Contains(n.Data.NodeId)).Evaluate();
                 redoActions.Add(() =>
                 {
@@ -239,7 +257,7 @@ namespace ConversationEditor
                     m_audioProvider.UpdateUsage(n);
                     foreach (var group in containingGroups)
                         group.Contents.Add(n.Data.NodeId);
-                    actions.Undo();
+                    actions.Undo(); //Undo the node removal
                 });
                 undoActions.Add(() =>
                 {
@@ -249,7 +267,7 @@ namespace ConversationEditor
                     }
                     foreach (var group in containingGroups)
                         group.Contents.Remove(n.Data.NodeId);
-                    actions.Redo();
+                    actions.Redo(); //Redo the node removal
                     NodesDeleted.Execute();
                 });
             }
@@ -289,7 +307,7 @@ namespace ConversationEditor
             };
         }
 
-        public bool Remove(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups)
+        public bool Remove(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization)
         {
             nodes = nodes.ToList();
             groups = groups.ToList();
@@ -318,6 +336,15 @@ namespace ConversationEditor
                 {
                     var n = node;
                     var actions = n.GetNodeRemoveActions();
+
+                    //Ensure that the localization engine is up to date in terms of usage of localized data
+                    foreach (var parameter in n.Data.Parameters.OfType<ILocalizedStringParameter>())
+                    {
+                        SimpleUndoPair clearLocalization = localization.ClearLocalizationAction(parameter.Value);
+                        undoActions.Add(clearLocalization.Undo);
+                        redoActions.Add(clearLocalization.Redo);
+                    }
+
                     var containingGroups = m_groups.Where(g => g.Contents.Contains(n.Data.NodeId)).Evaluate();
                     undoActions.Add(() =>
                     {
@@ -375,10 +402,7 @@ namespace ConversationEditor
         public abstract ISaveableFileUndoable UndoableFile { get; }
         ISaveableFile ISaveableFileProvider.File { get { return UndoableFile; } }
 
-        public ReadOnlyCollection<LoadError> Errors
-        {
-            get { return m_errors; }
-        }
+        public ReadOnlyCollection<LoadError> Errors { get { return m_errors; } }
 
         public void ClearErrors()
         {

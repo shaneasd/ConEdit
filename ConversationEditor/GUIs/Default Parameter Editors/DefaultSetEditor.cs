@@ -34,13 +34,13 @@ namespace ConversationEditor
             get { return StaticId; }
         }
 
-        public IParameterEditor<Control> Make(IColorScheme scheme)
+        public IParameterEditor Make(IColorScheme scheme)
         {
             return new DefaultSetEditor(scheme);
         }
     }
 
-    internal partial class DefaultSetEditor : UserControl, IParameterEditor<DefaultSetEditor>
+    internal partial class DefaultSetEditor : UserControl, IParameterEditor
     {
         List<TControl> m_comboBoxes = new List<TControl>();
         List<CrossButton> m_buttons = new List<CrossButton>();
@@ -74,7 +74,8 @@ namespace ConversationEditor
             comboBox.RequestedAreaChanged += () =>
             {
                 MinimumSize = new Size(0, (int)comboBox.RequestedArea.Height);
-                Size = comboBox.RequestedArea.ToSize();
+                Size = m_comboBoxes.Select(b => b.RequestedArea.ToSize()).Aggregate(Size.Empty, (a, b) => new Size(a.Width + COMBO_WIDTH + drawWindow1.Height, Math.Max(a.Height, b.Height)));
+                drawWindow1.Size = Size; //This should not be necessary, due to docking, but for some reason is.
             };
 
             comboBox.RegisterCallbacks(m_focusProvider, drawWindow1);
@@ -87,6 +88,8 @@ namespace ConversationEditor
 
             //comboBox.EnterPressed += () => { Ok.Execute(); };
             m_comboBoxes.Add(comboBox);
+            Size = m_comboBoxes.Select(b => b.RequestedArea.ToSize()).Aggregate(Size.Empty, (a, b) => new Size(a.Width + COMBO_WIDTH + drawWindow1.Height, Math.Max(a.Height, b.Height)));
+            drawWindow1.Size = Size; //This should not be necessary, due to docking, but for some reason is.
 
             if (m_comboBoxes.Count > 1)
             {
@@ -151,7 +154,7 @@ namespace ConversationEditor
             }
         }
 
-        public DefaultSetEditor AsControl
+        public Control AsControl
         {
             get { return this; }
         }

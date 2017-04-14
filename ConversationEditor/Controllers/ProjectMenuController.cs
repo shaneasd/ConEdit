@@ -297,6 +297,7 @@ namespace ConversationEditor
         {
             if (CanClose(true))
             {
+                m_context.CurrentProject.Value.Dispose();
                 m_context.CurrentProject.Value = DummyProject.Instance;
                 return true;
             }

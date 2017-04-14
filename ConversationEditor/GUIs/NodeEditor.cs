@@ -38,9 +38,15 @@ namespace ConversationEditor
         public NodeEditor()
         {
             InitializeComponent();
+            this.Resize += NodeEditor_Resize;
         }
 
-        public static ConfigureResult2 Edit(IColorScheme scheme, IConversationNodeData data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions)
+        private void NodeEditor_Resize(object sender, EventArgs e)
+        {
+            UpdateScrollbarVisibility();
+        }
+
+        public static ConfigureResult2 Edit(IColorScheme scheme, IConversationNodeData data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions)
         {
             using (Form f = new Form())
             {
@@ -105,7 +111,22 @@ namespace ConversationEditor
 
         public string Title { get; private set; }
 
-        public NodeEditor(IColorScheme scheme, IConversationNodeData data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions)
+
+        protected override void WndProc(ref Message m)
+        {
+            /// <summary>
+            /// The WM_MOUSEACTIVATE message is sent when the cursor is in an inactive window and the user presses a mouse button. The parent window receives this message only if the child window passes it to the DefWindowProc function.
+            /// </summary>
+            const int MOUSEACTIVATE = 0x0021;
+
+            base.WndProc(ref m);
+            if (m.Msg == MOUSEACTIVATE)
+                MouseActivated.Execute();
+        }
+
+        event Action MouseActivated;
+
+        public NodeEditor(IColorScheme scheme, IConversationNodeData data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions)
             : this()
         {
             Scheme = scheme;
@@ -137,7 +158,7 @@ namespace ConversationEditor
                         flowLayoutPanel1.Controls.Remove(label);
                         SetupScrollbar();
                     });
-                    label = AddParameter(p, ed.AsControl);
+                    label = AddParameter(p, ed);
                 }
                 else
                 {
@@ -202,6 +223,13 @@ namespace ConversationEditor
             }
             //Make sure the current state of the scrollbar is reflected in case this was called as a result of a child control resize
             GreyScrollBar1_Scrolled();
+
+            UpdateScrollbarVisibility();
+        }
+
+        private void UpdateScrollbarVisibility()
+        {
+            greyScrollBar1.Visible = greyScrollBar1.MinRenderHeight <= greyScrollBar1.Height;
         }
 
         private int MaximumHeight
@@ -227,7 +255,7 @@ namespace ConversationEditor
         int TotalSize { get { return flowLayoutPanel2.Controls[0]?.Bottom ?? 0; } }
         int WindowSize { get { return splitContainer1.Panel2.Height; } }
 
-        public Label AddParameter(IParameter parameter, IParameterEditor<Control> editor)
+        public Label AddParameter(IParameter parameter, IParameterEditor editor)
         {
             Panel p = new Panel();
             p.Size = new Size(flowLayoutPanel2.Width, editor.AsControl.Height + 3);
@@ -257,10 +285,15 @@ namespace ConversationEditor
             flowLayoutPanel1.Controls.Add(label);
             flowLayoutPanel2.Controls.Add(p);
 
+            //TODO: Awful hack
+            var enumEditor = editor as DefaultEnumEditor;
+            if (enumEditor != null)
+                MouseActivated += enumEditor.ParentFormMouseActivatedHack;
+
             return label;
         }
 
-        List<Tuple<IParameterEditor<Control>, IParameter>> m_parameterEditors = new List<Tuple<IParameterEditor<Control>, IParameter>>();
+        List<Tuple<IParameterEditor, IParameter>> m_parameterEditors = new List<Tuple<IParameterEditor, IParameter>>();
 
         public event Action Cancel;
         public event Action Ok
@@ -299,7 +332,7 @@ namespace ConversationEditor
             return true;
         }
 
-        public override ConfigureResult2 Edit(IColorScheme scheme, IConversationNodeData node, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions)
+        public override ConfigureResult2 Edit(IColorScheme scheme, IConversationNodeData node, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions)
         {
             if (node.Parameters.Any())
                 return NodeEditor.Edit(scheme, node, audioContext, config, localizer, audioProvider, autoCompleteSuggestions);

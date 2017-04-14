@@ -17,8 +17,8 @@ namespace ConversationEditor
     {
         TNode GetNode(Id<NodeTemp> id);
         Tuple<IEnumerable<TNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, object documentId, PointF location, ILocalizationEngine localization);
-        void Add(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups);
-        bool Remove(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups);
+        void Add(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization);
+        bool Remove(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization);
         IEnumerableReversible<TNode> Nodes { get; }
         IEnumerableReversible<NodeGroup> Groups { get; }
         void RemoveLinks(Output o);
@@ -26,7 +26,7 @@ namespace ConversationEditor
         /// Issues that were detected in deserialization that can be automatically resolved but with possible loss of data
         /// e.g. removing links that point to non-existent nodes
         /// </summary>
-        ReadOnlyCollection<LoadError> Errors { get; }
+        ReadOnlyCollection<LoadError> Errors { get; } //TODO: This could possibly be implemented using an Error : IConversationEditorControlData class.
         void ClearErrors();
 
         void BringToFront(IReadonlyNodeSet selected);

@@ -211,9 +211,10 @@ namespace Utilities
         {
             FileModifiedExternally += () => m_undoQueue.NeverSaved();
             FileDeletedExternally += () => m_undoQueue.NeverSaved();
+            m_undoQueue = new UndoQueue(path.Name);
         }
 
-        readonly UndoQueue m_undoQueue = new UndoQueue();
+        readonly UndoQueue m_undoQueue; 
         public IUndoQueue UndoQueue { get { return m_undoQueue; } }
 
         public override bool Changed { get { return m_undoQueue.Modified; } }

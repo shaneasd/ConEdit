@@ -13,7 +13,7 @@ namespace ConversationEditor
         public static IConversationEditorControlData<TNode, TTransitionUI> Instance = new DummyConversationEditorControlData<TNode, TTransitionUI>();
         private DummyConversationEditorControlData() { }
 
-        public bool Remove(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups)
+        public bool Remove(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization)
         {
             throw new NotImplementedException();
         }
@@ -81,7 +81,7 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public void Add(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups)
+        public void Add(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization)
         {
             throw new NotImplementedException();
         }

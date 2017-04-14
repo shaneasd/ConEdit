@@ -13,7 +13,7 @@ namespace PluginPack
 {
     class TemplatesMenuActions : IMenuActionFactory<ConversationNode>
     {
-        public IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log, Func<Id<LocalizedText>, string> localize)
+        public IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log, ILocalizationEngine localizer)
         {
             XmlGraphData<NodeUIData, ConversationEditorData> data;
             Assembly assembly = Assembly.GetExecutingAssembly();

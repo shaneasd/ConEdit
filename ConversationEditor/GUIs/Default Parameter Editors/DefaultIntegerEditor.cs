@@ -30,13 +30,13 @@ namespace ConversationEditor
             get { return StaticId; }
         }
 
-        public IParameterEditor<Control> Make(IColorScheme scheme)
+        public IParameterEditor Make(IColorScheme scheme)
         {
             return new DefaultIntegerEditor(scheme);
         }
     }
 
-    internal partial class DefaultIntegerEditor : UserControl, IParameterEditor<DefaultIntegerEditor>
+    internal partial class DefaultIntegerEditor : UserControl, IParameterEditor
     {
         MyNumericUpDown<int> m_numericUpDown;
 
@@ -67,7 +67,7 @@ namespace ConversationEditor
             m_numericUpDown.Value = m_parameter.Value;
         }
 
-        public DefaultIntegerEditor AsControl
+        public Control AsControl
         {
             get { return this; }
         }
@@ -79,9 +79,9 @@ namespace ConversationEditor
 
         public string IsValid()
         {
-            if (m_numericUpDown.Value > m_numericUpDown.Maximum)
+            if (m_numericUpDown.Value > m_parameter.Max)
                 return "Entered value is greater than maximum allowed value";
-            else if (m_numericUpDown.Value < m_numericUpDown.Minimum)
+            else if (m_numericUpDown.Value < m_parameter.Min)
                 return "Entered value is less than minimum allowed value";
             else
                 return null;

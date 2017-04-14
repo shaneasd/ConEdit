@@ -33,13 +33,13 @@ namespace ConversationEditor
             get { return StaticId; }
         }
 
-        public IParameterEditor<Control> Make(IColorScheme scheme)
+        public IParameterEditor Make(IColorScheme scheme)
         {
             return new DefaultBooleanEditor(scheme);
         }
     }
 
-    internal partial class DefaultBooleanEditor : UserControl, IParameterEditor<DefaultBooleanEditor>
+    internal partial class DefaultBooleanEditor : UserControl, IParameterEditor
     {
         private static Bitmap ToggleButtonOff;
         private static Bitmap ToggleButtonOffHover;
@@ -183,7 +183,7 @@ namespace ConversationEditor
                 Checked = m_parameter.Value;
         }
 
-        public DefaultBooleanEditor AsControl
+        public Control AsControl
         {
             get { return this; }
         }

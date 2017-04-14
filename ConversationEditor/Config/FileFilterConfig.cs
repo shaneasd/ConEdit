@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ConversationEditor
 {
-    class FileFilterConfig : IConfigParameter
+    public class FileFilterConfig : IConfigParameter
     {
         public ConfigParameterBool Folders = new ConfigParameterBool("Folders", true);
         public ConfigParameterBool Domains = new ConfigParameterBool("Domains", true);

@@ -54,6 +54,7 @@ namespace Utilities
         }
     }
 
+    //TODO: Kinda defeats the purpose of maintaining the spatial information if we're just going to ignore it.
     public class Fake<T> : IReadonlyQuadTree<T>
     {
         IEnumerable<T> wrapped;

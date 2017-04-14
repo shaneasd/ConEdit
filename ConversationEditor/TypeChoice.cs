@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace ConversationEditor
 {
-    internal abstract class TypeChoice
+    public abstract class TypeChoice
     {
         public readonly Type m_type;
         public readonly string m_typeName;

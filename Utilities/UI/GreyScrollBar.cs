@@ -99,6 +99,17 @@ namespace Utilities.UI
         Button TopButton;
         Button BottomButton;
 
+        public int MinRenderHeight
+        {
+            get
+            {
+                if (Horizontal)
+                    return Math.Max(TopButton.Area.Height, BottomButton.Area.Height);
+                else
+                    return TopButton.Area.Height + BottomButton.Area.Height + BUTTON_SIZE;
+            }
+        }
+
         public event Action Scrolled;
 
         public bool Horizontal { get; set; }

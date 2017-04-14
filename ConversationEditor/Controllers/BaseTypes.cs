@@ -9,7 +9,7 @@ using System.Globalization;
 
 namespace ConversationEditor
 {
-    internal class BaseTypeInteger : BaseType
+    public class BaseTypeInteger : BaseType
     {
         public BaseTypeInteger()
             : base(parameterNodeType: Id<NodeTypeTemp>.Parse("eb8c2038-52ff-4f69-a36f-3a431d7c29cd"),
@@ -39,7 +39,7 @@ namespace ConversationEditor
         }
     }
 
-    internal class BaseTypeDecimal : BaseType
+    public class BaseTypeDecimal : BaseType
     {
         public BaseTypeDecimal()
             : base(parameterNodeType: Id<NodeTypeTemp>.Parse("9c27b9b0-2105-4480-bcc1-5512d901afc1"),
@@ -69,7 +69,7 @@ namespace ConversationEditor
         }
     }
 
-    internal class BaseTypeString : BaseType
+    public class BaseTypeString : BaseType
     {
         public BaseTypeString()
             : base(parameterNodeType: Id<NodeTypeTemp>.Parse("1559995a-c744-477d-a46e-fadd20f4bf0a"))
@@ -93,7 +93,7 @@ namespace ConversationEditor
         }
     }
 
-    internal class BaseTypeLocalizedString : BaseType
+    public class BaseTypeLocalizedString : BaseType
     {
         public BaseTypeLocalizedString()
             : base(parameterNodeType: Id<NodeTypeTemp>.Parse("3114c980-6729-4a17-bc2c-0e4781ee1e7c"))
@@ -115,7 +115,7 @@ namespace ConversationEditor
         }
     }
 
-    internal class BaseTypeBoolean : BaseType
+    public class BaseTypeBoolean : BaseType
     {
         public BaseTypeBoolean()
             : base(parameterNodeType: Id<NodeTypeTemp>.Parse("9a6d0cd1-649a-4b76-be74-f486435fac3f"))
@@ -139,7 +139,7 @@ namespace ConversationEditor
         }
     }
 
-    internal class BaseTypeAudio : BaseType
+    public class BaseTypeAudio : BaseType
     {
         public BaseTypeAudio()
             : base(parameterNodeType: Id<NodeTypeTemp>.Parse("0acba480-9e53-4945-91f2-61032eba4769"))
@@ -161,7 +161,7 @@ namespace ConversationEditor
         }
     }
 
-    internal class BaseTypeEnumeration : BaseType
+    public class BaseTypeEnumeration : BaseType
     {
         public BaseTypeEnumeration()
             : base(parameterNodeType: Id<NodeTypeTemp>.Parse("a3bbcba8-036b-4fdb-938f-a4c51053946b"),
@@ -188,7 +188,7 @@ namespace ConversationEditor
         }
     }
 
-    internal class BaseTypeFlags : BaseType
+    public class BaseTypeFlags : BaseType
     {
         public BaseTypeFlags()
             : base(parameterNodeType: Id<NodeTypeTemp>.Parse("d60469d8-2c7a-4cef-8dd3-c372a3481c8a"),
@@ -217,7 +217,7 @@ namespace ConversationEditor
         }
     }
 
-    internal class BaseTypeDynamicEnumeration : BaseType
+    public class BaseTypeDynamicEnumeration : BaseType
     {
         public BaseTypeDynamicEnumeration()
             : base(parameterNodeType: Id<NodeTypeTemp>.Parse("16dcbe34-3e14-40d6-b907-227514a40847"),
@@ -241,7 +241,7 @@ namespace ConversationEditor
         }
     }
 
-    internal class BaseTypeLocalDynamicEnumeration : BaseType
+    public class BaseTypeLocalDynamicEnumeration : BaseType
     {
         public BaseTypeLocalDynamicEnumeration()
             : base(parameterNodeType: Id<NodeTypeTemp>.Parse("9a778089-974e-4153-9b07-b18e4b3e39bc"),
@@ -288,7 +288,7 @@ namespace ConversationEditor
     //    }
     //}
 
-    internal abstract class BaseType
+    public abstract class BaseType
     {
         public readonly Id<NodeTypeTemp> NodeType;           //Type ID of the node which defines a new subtype of this type
         public readonly Id<NodeTypeTemp> ParameterNodeType;  //Type ID of the node which defines a new parameter of this type

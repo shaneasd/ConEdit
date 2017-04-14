@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Utilities;
 
+//TODO: Clean up this file. One class per file.
+
 namespace Conversation
 {
     //TODO: This is very UI centric. Is there some way to shift it up a level

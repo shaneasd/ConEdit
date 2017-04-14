@@ -9,7 +9,7 @@ using Utilities.UI;
 
 namespace ConversationEditor
 {
-    internal partial class ProjectExplorer
+    public partial class ProjectExplorer
     {
         public abstract class ContainerItem : Item
         {

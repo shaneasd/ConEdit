@@ -18,7 +18,7 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    internal partial class ProjectExplorer : UserControl
+    public partial class ProjectExplorer : UserControl
     {
         public static Bitmap ProjectIcon;
         public static Bitmap FolderIcon;
@@ -564,8 +564,10 @@ namespace ConversationEditor
 
         private bool RenameItem(FileSystemObject item, string to)
         {
+            string from = item.FullName;
             if (m_root.RenameElement(item, to, ShouldReplaceFile))
             {
+                m_root.Project.Renamed(item, from, to);
                 InvalidateImage();
                 return true;
             }
@@ -1173,6 +1175,16 @@ namespace ConversationEditor
             }
 
             base.Dispose(disposing);
+        }
+
+        private void importIntoLocalizationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var item = m_contextItem as RealLeafItem<ILocalizationFile, ILocalizationFile>;
+
+            if (m_ofdLocalization.ShowDialog() == DialogResult.OK)
+            {
+                item.Item.ImportInto(m_ofdLocalization.FileNames);
+            }
         }
     }
 }

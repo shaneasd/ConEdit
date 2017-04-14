@@ -30,14 +30,14 @@ namespace ConversationEditor
             get { return StaticId; }
         }
 
-        public IParameterEditor<Control> Make(IColorScheme scheme)
+        public IParameterEditor Make(IColorScheme scheme)
         {
             return new DefaultStringEditor(scheme);
         }
     }
 
 
-    internal partial class DefaultStringEditor : UserControl, IParameterEditor<DefaultStringEditor>
+    internal partial class DefaultStringEditor : UserControl, IParameterEditor
     {
 
         private MyTextBox m_textBox;
@@ -80,7 +80,7 @@ namespace ConversationEditor
             m_autoCompleteSuggestions = data.AutoCompleteSuggestions;
         }
 
-        public DefaultStringEditor AsControl
+        public Control AsControl
         {
             get { return this; }
         }

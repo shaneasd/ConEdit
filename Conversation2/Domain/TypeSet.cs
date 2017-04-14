@@ -17,9 +17,19 @@ namespace Conversation
     /// </summary>
     public class TypeSet
     {
+        private class TypeData
+        {
+            public ParameterGenerator Generator;
+            public string Name;
+            public TypeData(ParameterGenerator generator, string name)
+            {
+                Generator = generator;
+                Name = name;
+            }
+        }
+
         private Dictionary<ParameterType, bool> m_hidden = new Dictionary<ParameterType, bool>();
-        private Dictionary<ParameterType, ParameterGenerator> m_types = new Dictionary<ParameterType, ParameterGenerator>();
-        private Dictionary<ParameterType, string> m_typeNames = new Dictionary<ParameterType, string>();
+        private Dictionary<ParameterType, TypeData> m_types = new Dictionary<ParameterType, TypeData>();
         private Dictionary<ParameterType, DynamicEnumerationData> m_dynamicEnums = new Dictionary<ParameterType, DynamicEnumerationData>();
         private Dictionary<ParameterType, LocalDynamicEnumerationData> m_localDynamicEnums = new Dictionary<ParameterType, LocalDynamicEnumerationData>();
         private Dictionary<ParameterType, Tuple<string, MutableEnumeration>> m_enums = new Dictionary<ParameterType, Tuple<string, MutableEnumeration>>();
@@ -35,25 +45,29 @@ namespace Conversation
         public IEnumerable<IntegerData> VisibleIntegers { get { return m_integers.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
         public IEnumerable<DecimalData> VisibleDecimals { get { return m_decimals.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
 
+        public Tuple<int?,int?> GetIntegerRange(ParameterType type)
+        {
+            var data = m_integers[type];
+            return Tuple.Create(data.Min, data.Max);
+        }
+
         public IParameter Make(ParameterType typeid, string name, Id<Parameter> id, string defaultValue, TDocument document)
         {
-            return m_types[typeid](name, id, defaultValue, document);
+            return m_types[typeid].Generator(name, id, defaultValue, document);
         }
 
         public void AddInteger(IntegerData typeData)
         {
             m_hidden[typeData.TypeId] = false;
             m_integers.Add(typeData.TypeId, typeData);
-            m_types.Add(typeData.TypeId, (name, id, defaultValue, document) => new IntegerParameter(name, id, typeData.TypeId, m_integers[typeData.TypeId].Definition(), defaultValue));
-            m_typeNames.Add(typeData.TypeId, typeData.Name);
+            m_types.Add(typeData.TypeId, new TypeData((name, id, defaultValue, document) => new IntegerParameter(name, id, typeData.TypeId, m_integers[typeData.TypeId].Definition(), defaultValue), typeData.Name));
             Modified.Execute(typeData.TypeId);
         }
 
         public void ModifyInteger(IntegerData typeData)
         {
-            m_types[typeData.TypeId] = (name, id, defaultValue, document) => new IntegerParameter(name, id, typeData.TypeId, typeData.Definition(), defaultValue);
+            m_types[typeData.TypeId] = new TypeData((name, id, defaultValue, document) => new IntegerParameter(name, id, typeData.TypeId, typeData.Definition(), defaultValue), typeData.Name);
             m_integers[typeData.TypeId] = typeData;
-            m_typeNames[typeData.TypeId] = typeData.Name;
             Modified.Execute(typeData.TypeId);
         }
 
@@ -61,15 +75,13 @@ namespace Conversation
         {
             m_hidden[typeData.TypeId] = false;
             m_decimals.Add(typeData.TypeId, typeData);
-            m_types.Add(typeData.TypeId, (name, id, defaultValue, document) => new DecimalParameter(name, id, typeData.TypeId, typeData.Definition(), defaultValue));
-            m_typeNames.Add(typeData.TypeId, typeData.Name);
+            m_types.Add(typeData.TypeId, new TypeData((name, id, defaultValue, document) => new DecimalParameter(name, id, typeData.TypeId, typeData.Definition(), defaultValue), typeData.Name));
             Modified.Execute(typeData.TypeId);
         }
 
         public void ModifyDecimal(DecimalData typeData)
         {
-            m_types[typeData.TypeId] = (name, id, defaultValue, document) => new DecimalParameter(name, id, typeData.TypeId, m_decimals[typeData.TypeId].Definition(), defaultValue);
-            m_typeNames[typeData.TypeId] = typeData.Name;
+            m_types[typeData.TypeId] = new TypeData((name, id, defaultValue, document) => new DecimalParameter(name, id, typeData.TypeId, m_decimals[typeData.TypeId].Definition(), defaultValue), typeData.Name);
             m_decimals[typeData.TypeId] = typeData;
             Modified.Execute(typeData.TypeId);
         }
@@ -83,10 +95,8 @@ namespace Conversation
             var elements = typeData.Elements.Select(e => Tuple.Create(e.Guid, e.Name));
             MutableEnumeration enumeration = new MutableEnumeration(elements, enumType, "");
             m_enums.Add(enumType, Tuple.Create(typeData.Name, enumeration));
-            m_types.Add(enumType, (a, b, c, d) => m_enums[enumType].Item2.ParameterEnum(a, b, c));
-            m_types.Add(setType, (a, b, c, d) => m_enums[enumType].Item2.ParameterSet(a, b, c));
-            m_typeNames.Add(enumType, typeData.Name);
-            m_typeNames.Add(setType, "Set of " + typeData.Name);
+            m_types.Add(enumType, new TypeData((a, b, c, d) => m_enums[enumType].Item2.ParameterEnum(a, b, c), typeData.Name));
+            m_types.Add(setType, new TypeData((a, b, c, d) => m_enums[enumType].Item2.ParameterSet(a, b, c), "Set of " + typeData.Name));
             Modified.Execute(enumType);
         }
 
@@ -94,8 +104,8 @@ namespace Conversation
         {
             if (m_enums.ContainsKey(typeData.TypeId)) //If we're removing an entire domain file, an enum declaration can be removed before its values. In this circumstance, when the values are removed, this method will be called but the enum wont exist.
             {
-                m_typeNames[typeData.TypeId] = typeData.Name;
-                m_typeNames[ParameterType.ValueSetType.Of(typeData.TypeId)] = "Set of " + typeData.Name;
+                m_types[typeData.TypeId].Name = typeData.Name;
+                m_types[ParameterType.ValueSetType.Of(typeData.TypeId)].Name = "Set of " + typeData.Name;
                 m_enums[typeData.TypeId] = Tuple.Create(typeData.Name, m_enums[typeData.TypeId].Item2);
                 MutableEnumeration e = m_enums[typeData.TypeId].Item2;
                 e.SetOptions(typeData.Elements);
@@ -112,8 +122,7 @@ namespace Conversation
         {
             m_hidden[typeData.TypeId] = false;
             m_dynamicEnums.Add(typeData.TypeId, typeData);
-            m_types.Add(typeData.TypeId, (a, b, c, document) => typeData.Make(a, b, c, GetDynamicEnumSource(typeData.TypeId)));
-            m_typeNames.Add(typeData.TypeId, typeData.Name);
+            m_types.Add(typeData.TypeId, new TypeData((a, b, c, document) => typeData.Make(a, b, c, GetDynamicEnumSource(typeData.TypeId)), typeData.Name));
             Modified.Execute(typeData.TypeId);
         }
 
@@ -142,8 +151,7 @@ namespace Conversation
         {
             m_hidden[typeData.TypeId] = false;
             m_localDynamicEnums.Add(typeData.TypeId, typeData);
-            m_types.Add(typeData.TypeId, (name, id, defaultValue, document) => typeData.Make(name, id, defaultValue, GetLocalDynamicEnumSource(typeData.TypeId, document)));
-            m_typeNames.Add(typeData.TypeId, typeData.Name);
+            m_types.Add(typeData.TypeId, new TypeData((name, id, defaultValue, document) => typeData.Make(name, id, defaultValue, GetLocalDynamicEnumSource(typeData.TypeId, document)), typeData.Name));
             Modified.Execute(typeData.TypeId);
         }
 
@@ -161,8 +169,7 @@ namespace Conversation
 
         public void AddOther(ParameterType id, string name, ParameterGenerator factory)
         {
-            m_types.Add(id, factory);
-            m_typeNames.Add(id, name);
+            m_types.Add(id, new TypeData(factory, name));
             Modified.Execute(id);
         }
 
@@ -193,12 +200,12 @@ namespace Conversation
 
         public string GetTypeName(ParameterType guid)
         {
-            return m_typeNames[guid];
+            return m_types[guid].Name;
         }
 
         public void RenameType(ParameterType guid, string name)
         {
-            m_typeNames[guid] = name;
+            m_types[guid].Name = name;
             if (IsInteger(guid))
             {
                 IntegerData data = m_integers[guid];

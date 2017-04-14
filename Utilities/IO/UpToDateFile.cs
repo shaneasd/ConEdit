@@ -99,12 +99,6 @@ namespace Utilities
                                     lock (m_onDiskAccess)
                                     {
                                         fileChanged = FileSystem.ChangeIfDifferent(ref m_onDisk, stream, m_abort.WaitHandle);
-
-                                        //TODO: Remove this. It's purely for debugging
-                                        if (fileChanged)
-                                        {
-                                            //FileSystem.ChangeIfDifferent(ref m_onDisk, stream, m_abort.WaitHandle);
-                                        }
                                         break;
                                     }
                                 }

@@ -13,7 +13,7 @@ namespace ConversationEditor
 {
     public delegate Output OutputDefinition(IConversationNodeData parent);
 
-    internal class DomainDomain : IDataSource
+    public class DomainDomain : IDomainDataSource
     {
         TypeSet m_typeSet;
 
@@ -193,7 +193,6 @@ namespace ConversationEditor
                 NodeData.ParameterData decimalTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, DecimalSetGuid, NO_CONFIG, BaseTypeDecimal.PARAMETER_TYPE.Guid.ToString());
                 NodeData.ParameterData dynamicEnumTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, DynamicEnumSetGuid, NO_CONFIG);
                 NodeData.ParameterData localDynamicEnumTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, LocalDynamicEnumSetGuid, NO_CONFIG);
-                NodeData.ParameterData integerDefaultParameter = new NodeData.ParameterData("Default", DomainIDs.ParameterDefault, BaseTypeInteger.PARAMETER_TYPE, NO_CONFIG);
                 NodeData.ParameterData decimalDefaultParameter = new NodeData.ParameterData("Default", DomainIDs.ParameterDefault, BaseTypeDecimal.PARAMETER_TYPE, NO_CONFIG);
                 NodeData.ParameterData stringDefaultParameter = new NodeData.ParameterData("Default", DomainIDs.ParameterDefault, BaseTypeString.ParameterType, NO_CONFIG);
                 NodeData.ParameterData booleanDefaultParameter = new NodeData.ParameterData("Default", DomainIDs.ParameterDefault, BaseTypeBoolean.PARAMETER_TYPE, NO_CONFIG);
@@ -201,7 +200,19 @@ namespace ConversationEditor
 
                 List<NodeData.ConnectorData> parameterConnectors = new List<NodeData.ConnectorData> { parameterOutput, parameterConfigConnector };
 
-                AddNode(BaseType.Integer.ParameterNodeType, "Integer", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, integerTypeParameter, integerDefaultParameter });
+                AddNode(BaseType.Integer.ParameterNodeType, "Integer", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, integerTypeParameter }, p => new List<IParameter>()
+                { new IntegerParameter("Default", DomainIDs.ParameterDefault, BaseTypeInteger.PARAMETER_TYPE,
+                ()=>
+                {
+                    var selection = p.Where(x=>x.Id == DomainIDs.PARAMETER_TYPE).OfType<IEnumParameter>().Single();
+                    if ( selection.EditorSelected == Guid.Empty )
+                        return new IntegerParameter.Definition(int.MinValue, int.MaxValue);
+                    else
+                    {
+                        var range = m_typeSet.GetIntegerRange(new ParameterType.Basic(selection.EditorSelected));
+                        return new IntegerParameter.Definition(range.Item1, range.Item2);
+                    }
+                }, "0") });
                 AddNode(BaseType.Decimal.ParameterNodeType, "Decimal", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, decimalTypeParameter, decimalDefaultParameter });
                 AddNode(BaseType.String.ParameterNodeType, "String", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, stringDefaultParameter });
                 AddNode(BaseType.LocalizedString.ParameterNodeType, "Localized String", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter });
@@ -232,7 +243,7 @@ namespace ConversationEditor
             foreach (var configNodeDefinition in configNodeDefitions)
             {
                 var cnd = configNodeDefinition;
-                AddNode(cnd.Id, cnd.Name, configMenu, MakeConfig('c', "aabb00"), new List<NodeData.ConnectorData> { configConnector }, new List<NodeData.ParameterData>(), () => cnd.MakeParameters().ToList());
+                AddNode(cnd.Id, cnd.Name, configMenu, MakeConfig('c', "aabb00"), new List<NodeData.ConnectorData> { configConnector }, new List<NodeData.ParameterData>(), (x) => cnd.MakeParameters().ToList());
             }
 
             var category = new NodeData.ParameterData("Category", DomainIDs.NodeCategory, DomainIDs.CategoryType, NO_CONFIG, DomainIDs.CategoryNone.ToString());
@@ -441,10 +452,10 @@ namespace ConversationEditor
             return generator;
         }
 
-        private INodeDataGenerator AddNode(Id<NodeTypeTemp> guid, string name, NodeCategory parent, List<NodeData.ConfigData> config, List<NodeData.ConnectorData> connectors, List<NodeData.ParameterData> parameters, Func<List<IParameter>> extraParameters)
+        private INodeDataGenerator AddNode(Id<NodeTypeTemp> guid, string name, NodeCategory parent, List<NodeData.ConfigData> config, List<NodeData.ConnectorData> connectors, List<NodeData.ParameterData> parameters, Func<IParameter[], List<IParameter>> extraParameters)
         {
             NodeData data = new NodeData(name, parent.Guid, guid, connectors, parameters, config);
-            var generator = new NodeDataGenerator(data, m_typeSet, ConnectorDefinitions, DomainConnectionRules.Instance, x => extraParameters());
+            var generator = new NodeDataGenerator(data, m_typeSet, ConnectorDefinitions, DomainConnectionRules.Instance, x => extraParameters(x));
             parent.AddNode(generator);
             m_nodes[guid] = generator;
             return generator;
@@ -813,18 +824,6 @@ namespace ConversationEditor
         public bool IsAutoCompleteNode(Id<NodeTypeTemp> id)
         {
             return DomainIDs.AutoComplete.IsAutoCompleteNode(id);
-        }
-
-        public static bool IsConnector(IDataSource datasource, Id<NodeTypeTemp> id)
-        {
-            //TODO: This seems wrong
-            if (!datasource.IsNodeDefinition(id))
-                return false;
-            if (id == DomainIDs.NodeGuid)
-                return false;
-            if (BaseType.BaseTypes.Any(t => id == t.ParameterNodeType))
-                return false;
-            return true;
         }
 
         internal bool IsConfig(Id<NodeTypeTemp> iD)

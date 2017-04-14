@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 namespace ConversationEditor
 {
     //TODO: Rename
-    public interface IProject2 : ISaveableFileProvider
+    public interface IProject2 : ISaveableFileProvider, IDisposable
     {
         IEnumerable<IDomainFile> DomainFilesCollection { get; }
 

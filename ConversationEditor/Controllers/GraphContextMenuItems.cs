@@ -17,9 +17,9 @@ namespace ConversationEditor
         {
         }
 
-        public override IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log, Func<Id<LocalizedText>, string> localize)
+        public override IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log, ILocalizationEngine localizer)
         {
-            foreach (var action in base.GetMenuActions(control, project, log, localize))
+            foreach (var action in base.GetMenuActions(control, project, log, localizer))
                 yield return action;
             yield return new MenuAction<ConversationNode>("Find References", (n, p) => () => FileReferences(n), null, null, null);
         }
@@ -33,7 +33,7 @@ namespace ConversationEditor
             FileReferences = findReferences;
         }
 
-        public virtual IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log, Func<Id<LocalizedText>, string> localize)
+        public virtual IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log, ILocalizationEngine localizer)
         {
             MenuAction<ConversationNode> addNodes = new MenuAction<ConversationNode>("Add Node", (n, p) => null, null, null, p => { });
             AddNodeMenuItem(addNodes, control.DataSource.Nodes, control);
@@ -41,7 +41,7 @@ namespace ConversationEditor
 
             yield return new MenuAction<ConversationNode>("Reset Zoom", (n, p) => null, null, null, (p) => { control.GraphScale = 1; });
             yield return new MenuAction<ConversationNode>("Paste", (n, p) => null, null, null, (p) => { control.Paste(p); });
-            yield return new MenuAction<ConversationNode>("Delete", (n, p) => () => { control.CurrentFile.Remove(n.Only(), Enumerable.Empty<NodeGroup>()); }, null, null, null);
+            yield return new MenuAction<ConversationNode>("Delete", (n, p) => () => { control.CurrentFile.Remove(n.Only(), Enumerable.Empty<NodeGroup>(), localizer); }, null, null, null);
             yield return new MenuAction<ConversationNode>("Remove Links", (n, p) => () => { foreach (var c in n.Data.Connectors) control.CurrentFile.RemoveLinks(c); }, (i, p) => { control.CurrentFile.RemoveLinks(i); }, null, null);
             yield return new MenuAction<ConversationNode>("Copy ID", (n, p) => control.ShowIds ? () => Clipboard.SetText(n.Data.NodeId.Serialized()) : (Action)null, null, null, null);
         }

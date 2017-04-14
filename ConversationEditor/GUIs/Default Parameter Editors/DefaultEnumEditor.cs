@@ -33,13 +33,13 @@ namespace ConversationEditor
             get { return StaticId; }
         }
 
-        public IParameterEditor<Control> Make(IColorScheme scheme)
+        public IParameterEditor Make(IColorScheme scheme)
         {
             return new DefaultEnumEditor(scheme);
         }
     }
 
-    internal partial class DefaultEnumEditor : UserControl, IParameterEditor<DefaultEnumEditor>
+    internal partial class DefaultEnumEditor : UserControl, IParameterEditor
     {
         TControl m_comboBox;
         List<TItem> m_comboBoxItems = new List<TItem>();
@@ -99,7 +99,7 @@ namespace ConversationEditor
 
         public const string InvalidValue = "ERROR: Unknown enumeration value";
 
-        public DefaultEnumEditor AsControl
+        public Control AsControl
         {
             get { return this; }
         }
@@ -131,6 +131,12 @@ namespace ConversationEditor
                 m_comboBox.Renderer = value.ContextMenu;
                 drawWindow1.ColorScheme = value;
             }
+        }
+
+        //TODO: Awful hack
+        internal void ParentFormMouseActivatedHack()
+        {
+            m_comboBox.ParentFormMouseActivatedHack();
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Utilities;
 using Conversation;
+using System.Windows.Forms;
 
 namespace ConversationEditor
 {
@@ -16,6 +17,8 @@ namespace ConversationEditor
         string Localize(Id<LocalizedText> id);
 
         SimpleUndoPair SetLocalizationAction(Id<LocalizedText> id, string p);
+
+        SimpleUndoPair ClearLocalizationAction(Id<LocalizedText> id);
     }
 
     public struct ParameterEditorSetupData
@@ -42,10 +45,10 @@ namespace ConversationEditor
     }
 
     //TODO: Fairly sure AsControl could just return Control and we could get rid of TUI
-    public interface IParameterEditor<out TUI> : IDisposable
+    public interface IParameterEditor : IDisposable
     {
         void Setup(ParameterEditorSetupData data);
-        TUI AsControl { get; }
+        Control AsControl { get; }
         /// <summary>
         /// Get the action pair for actions to 
         /// Redo: set the edited parameter to the value currently entered in the editor

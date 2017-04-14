@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace ConversationEditor
 {
-    internal class NodeRendererChoice : TypeChoice
+    public class NodeRendererChoice : TypeChoice
     {
         NodeUI.IFactory m_factory;
 

@@ -9,7 +9,7 @@ namespace ConversationEditor
 {
     using ConversationNode = ConversationNode<INodeGui>;
 
-    internal abstract class IDomainUsage<TNode, TTransition> where TNode : IRenderable<IGui>
+    public abstract class IDomainUsage<TNode, TTransition> where TNode : IRenderable<IGui>
     {
         public abstract IEnumerable<Usage> Usages(IConversationNode node);
 
@@ -152,10 +152,31 @@ namespace ConversationEditor
                     Id<NodeTypeTemp> id = Id<NodeTypeTemp>.ConvertFrom(i);
                     var connectors = domainFile.Nodes.Where(n => n.Data.NodeTypeId == id);
                     result.AddRange(connectors.Select(c => new Usage(c, domainFile, "Connector on node " + c.Data.Name)));
+
+                    foreach (var n in domainFile.Nodes)
+                    {
+                        if (n.Data.NodeTypeId == DomainIDs.ConnectionDefinitionGuid)
+                        {
+                            var parameters = n.Data.Parameters.Where(p => p.Id == DomainIDs.ConnectionDefinitionConnector1 || p.Id == DomainIDs.ConnectionDefinitionConnector2);
+                            var enumParameters = parameters.OfType<IEnumParameter>();
+                            if (enumParameters.Any(p => p.Value == i.Guid))
+                                result.Add(new Usage(n, domainFile, "Connection to connector"));
+                        }
+                    }
                 }
             }
 
-            //TODO: Should also highlight 'Connection' nodes that link connectors of this type with connectors with some other (or the same) type
+            foreach (var conversationFile in m_project.Conversations)
+            {
+                foreach (var node in conversationFile.Nodes)
+                {
+                    foreach (var i in ids)
+                    {
+                        if (node.Data.Connectors.Where(c => c.Definition.Id == i).Any(c => c.Connections.Any()))
+                            result.Add(new Usage(node, conversationFile, "Node connection using connector"));
+                    }
+                }
+            }
 
             return result;
         }
@@ -271,9 +292,12 @@ namespace ConversationEditor
             }
         }
 
+        /// <summary>
+        /// Is this node the connector part of a node definition
+        /// </summary>
         private bool IsConnector(IConversationNode node)
         {
-            return DomainDomain.IsConnector(m_project.DomainDataSource, node.Data.NodeTypeId);
+            return m_project.DomainDataSource.IsConnector(node.Data.NodeTypeId);
         }
     }
 }

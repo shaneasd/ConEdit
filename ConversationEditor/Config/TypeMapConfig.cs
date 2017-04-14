@@ -8,7 +8,7 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    internal class TypeMapConfig<TKey, TData> : IConfigParameter where TData : TypeChoice
+    public class TypeMapConfig<TKey, TData> : IConfigParameter where TData : TypeChoice
     {
         protected Dictionary<string, TData> m_data = new Dictionary<string, TData>();
         protected readonly string m_nodeName;

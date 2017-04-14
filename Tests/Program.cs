@@ -10,6 +10,7 @@ using NUnit.Framework;
 using Tests.Conversation;
 using System.Runtime.InteropServices;
 using Tests.ConversationSerialization;
+using Tests.ConversationEditor;
 
 namespace Tests
 {
@@ -17,7 +18,8 @@ namespace Tests
     {
         static void Main()
         {
-            XmlConversationTest.TestConsistency();
+            ConversationFileTest.Test();
+            //XmlConversationTest.TestConsistency();
             //ConversationNodeTest.TestInitialState();
             //ConversationNodeTest.Test();
             //EnumerationTest.ParameterEnum();

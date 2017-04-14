@@ -10,9 +10,9 @@ namespace ConversationEditor
 {
     using ConversationNode = ConversationNode<INodeGui>;
 
-    internal interface IProject : IProject2
+    public interface IProject : IProject2
     {
-        IDataSource DomainDataSource { get; }
+        IDomainDataSource DomainDataSource { get; }
         IDataSource ConversationDataSource { get; }
         bool ReloadConversationDatasourceIfRequired();
         DirectoryInfo Origin { get; }
@@ -45,6 +45,8 @@ namespace ConversationEditor
         /// For an input parameter, current user entered value of that parameter and source for local data, suggest values extending upon that value
         /// </summary>
         Func<IParameter, string, Func<ParameterType, DynamicEnumParameter.Source>, IEnumerable<string>> AutoCompleteSuggestions { get; }
+
+        void Renamed(ProjectExplorer.FileSystemObject item, string from, string to);
     }
 
 }

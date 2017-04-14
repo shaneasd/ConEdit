@@ -7,7 +7,7 @@ using System.Globalization;
 
 namespace ConversationEditor
 {
-    internal class ConfigParameterBool : ConfigParameter<bool>
+    public class ConfigParameterBool : ConfigParameter<bool>
     {
         string m_name;
         public ConfigParameterBool(string name, bool @default)

@@ -16,16 +16,16 @@ namespace ConversationEditor
         TNode MakeNode(IConversationNodeData e, TNodeUI uiData);
     }
 
-    internal interface INodeFactory<TNode> : INodeFactory<TNode, NodeUIData> where TNode : IConversationNode, IConfigurable
+    public interface INodeFactory<TNode> : INodeFactory<TNode, NodeUIData> where TNode : IConversationNode, IConfigurable
     {
     }
 
 
-    internal interface INodeFactory : INodeFactory<ConversationNode>
+    public interface INodeFactory : INodeFactory<ConversationNode>
     {
     }
 
-    internal class NodeFactory : INodeFactory
+    public class NodeFactory : INodeFactory
     {
         private Func<Id<NodeTypeTemp>, ConversationNode, PointF, INodeGui> GetNodeRendererChoice;
 

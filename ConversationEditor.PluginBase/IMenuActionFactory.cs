@@ -15,6 +15,6 @@ namespace ConversationEditor
     /// <typeparam name="TNode"></typeparam>
     public interface IMenuActionFactory<TNode> where TNode : class, IRenderable<IGui>, IConversationNode, IConfigurable
     {
-        IEnumerable<MenuAction<TNode>> GetMenuActions(IGraphEditorControl<TNode> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log, Func<Id<LocalizedText>, string> localize);
+        IEnumerable<MenuAction<TNode>> GetMenuActions(IGraphEditorControl<TNode> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log, ILocalizationEngine localizer);
     }
 }

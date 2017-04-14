@@ -11,17 +11,27 @@ namespace ConversationEditor
         public static readonly DummyLocalizationFile Instance = new DummyLocalizationFile();
         private DummyLocalizationFile() { }
 
-        public string Localize(Conversation.Id<Conversation.LocalizedText> id)
+        public string Localize(Id<LocalizedText> id)
         {
             return LocalizationEngine.MISSING_LOCALIZATION;
         }
 
-        public Utilities.SimpleUndoPair SetLocalizationAction(Conversation.Id<Conversation.LocalizedText> guid, string p)
+        public Utilities.SimpleUndoPair SetLocalizationAction(Id<LocalizedText> guid, string p)
         {
             throw new NotSupportedException("Attempting to modify localization values of a dummy localization file");
         }
 
-         IEnumerable<Id<LocalizedText>> ILocalizationFile.ExistingLocalizations { get { throw new NotImplementedException("ExistingLocalizations"); } }
+        Utilities.SimpleUndoPair ILocalizationFile.ClearLocalizationAction(Id<LocalizedText> guid)
+        {
+            throw new NotSupportedException("Attempting to modify localization values of a dummy localization file");
+        }
+
+        IEnumerable<Id<LocalizedText>> ILocalizationFile.ExistingLocalizations { get { throw new NotImplementedException("ExistingLocalizations"); } }
+
+        void ILocalizationFile.ImportInto(string[] fileNames)
+        {
+            throw new NotImplementedException("ExistingLocalizations");
+        }
 
         public bool CanRemove(Func<bool> prompt)
         {

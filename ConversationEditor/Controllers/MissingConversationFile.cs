@@ -31,7 +31,7 @@ namespace ConversationEditor
             get { return EnumerableReversible.Empty<NodeGroup>(); }
         }
 
-        public bool Remove(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups)
+        public bool Remove(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization)
         {
             throw new NotImplementedException();
         }
@@ -110,7 +110,7 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public void Add(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups)
+        public void Add(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization)
         {
             throw new NotImplementedException();
         }

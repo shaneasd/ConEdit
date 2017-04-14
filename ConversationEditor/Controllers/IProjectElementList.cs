@@ -6,7 +6,7 @@ using System.IO;
 
 namespace ConversationEditor
 {
-    internal interface IProjectElementList<out TReal, TInterface> : IEnumerable<TInterface>
+    public interface IProjectElementList<out TReal, TInterface> : IEnumerable<TInterface>
         where TReal : TInterface
     {
         IEnumerable<TInterface> Load(IEnumerable<FileInfo> fileInfos);

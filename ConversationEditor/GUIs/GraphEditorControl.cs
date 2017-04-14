@@ -100,9 +100,25 @@ namespace ConversationEditor
                 bool removed = SpatiallyOrderedNodes.Remove(n, c.From);
                 if (!removed)
                 {
-                    throw new InvalidOperationException("Something went from removing a node from the map");
+                    throw new InvalidOperationException("Something went wrong removing a node from the map in NodeAreaChanged");
                 }
                 SpatiallyOrderedNodes.Add(n, c.To);
+
+                foreach (var connector in n.Data.Connectors)
+                {
+                    foreach (var connection in connector.Connections)
+                    {
+                        DisconnectionUpdate(connector, connection, c.From);
+                    }
+                }
+
+                foreach (var connector in n.Data.Connectors)
+                {
+                    foreach (var connection in connector.Connections)
+                    {
+                        ConnectionUpdate(connection, connector, true);
+                    }
+                }
             }
         }
 
@@ -118,6 +134,10 @@ namespace ConversationEditor
             foreach (var node in CurrentFile.Nodes)
             {
                 node.Renderer.UpdateArea();
+            }
+
+            foreach (var node in CurrentFile.Nodes)
+            {
                 SpatiallyOrderedNodes.Add(node, node.Renderer.Area);
                 AddNodeMovedCallbacks(node);
 
@@ -160,40 +180,12 @@ namespace ConversationEditor
                 var connectorTemp = connector;
                 Action<Output, bool> connected = (connection, mustExist) =>
                 {
-                    var ui1 = UIInfo(connectorTemp, false);
-                    var ui2 = UIInfo(connection, !mustExist);
-                    if (ui2 != null)
-                    {
-                        //The nature of the bezier splines means they will never reach outside the bounding rectangle which includes their endpoints
-                        RectangleF bounds = RectangleF.Union(ui1.Area.Value, ui2.Area.Value);
-
-                        var pair = UnorderedTuple.Make(connectorTemp, connection);
-                        bool exists = SpatiallyOrderedConnections.FindTouchingRegion(bounds).Contains(Tuple.Create(pair, bounds));
-                        if (!exists)
-                        {
-                            SpatiallyOrderedConnections.Add(Tuple.Create(pair, bounds), bounds);
-                        }
-                        else
-                        {
-                        }
-                    }
+                    ConnectionUpdate(connection, connectorTemp, mustExist);
                 };
                 connectorTemp.Connected += c => connected(c, true);
                 connectorTemp.Disconnected += connection =>
                 {
-                    var ui1 = UIInfo(connectorTemp);
-                    var ui2 = UIInfo(connection);
-                    //The nature of the bezier splines means they will never reach outside the bounding rectangle which includes their endpoints
-                    RectangleF bounds = RectangleF.Union(ui1.Area.Value, ui2.Area.Value);
-
-                    var pair = UnorderedTuple.Make(connectorTemp, connection);
-                    bool exists = SpatiallyOrderedConnections.FindTouchingRegion(bounds).Contains(Tuple.Create(pair, bounds));
-                    if (exists)
-                    {
-                        bool removed = SpatiallyOrderedConnections.Remove(Tuple.Create(pair, bounds), bounds);
-                        if (!removed)
-                            Debugger.Break();
-                    }
+                    DisconnectionUpdate(connection, connectorTemp, UIInfo(connection).Area.Value);
                 };
 
                 foreach (var connection in connectorTemp.Connections)
@@ -212,7 +204,9 @@ namespace ConversationEditor
                         var pair = UnorderedTuple.Make(connectorTemp, connection);
                         bool removed = SpatiallyOrderedConnections.Remove(Tuple.Create(pair, fromBounds), fromBounds);
                         if (!removed)
-                            Debugger.Break();
+                        {
+                            throw new InvalidOperationException("Something went wrong removing a connector from the map in deregister");
+                        }
 
                         RectangleF toBounds = RectangleF.Union(change.To, other.Area.Value);
                         SpatiallyOrderedConnections.Add(Tuple.Create(pair, toBounds), toBounds);
@@ -221,6 +215,45 @@ namespace ConversationEditor
                 if (!m_connectionDeregisterActions.ContainsKey(node))
                     m_connectionDeregisterActions[node] = new List<Action>();
                 m_connectionDeregisterActions[node].Add(deregister);
+            }
+        }
+
+        private void ConnectionUpdate(Output connection, Output connectorTemp, bool mustExist)
+        {
+            var ui1 = UIInfo(connectorTemp, false);
+            var ui2 = UIInfo(connection, !mustExist);
+            if (ui2 != null)
+            {
+                //The nature of the bezier splines means they will never reach outside the bounding rectangle which includes their endpoints
+                RectangleF bounds = RectangleF.Union(ui1.Area.Value, ui2.Area.Value);
+
+                var pair = UnorderedTuple.Make(connectorTemp, connection);
+                bool exists = SpatiallyOrderedConnections.FindTouchingRegion(bounds).Contains(Tuple.Create(pair, bounds));
+                if (!exists)
+                {
+                    SpatiallyOrderedConnections.Add(Tuple.Create(pair, bounds), bounds);
+                }
+                else
+                {
+                }
+            }
+        }
+
+        private void DisconnectionUpdate(Output connection, Output connectorTemp, RectangleF connectorPosition)
+        {
+            var ui1 = UIInfo(connectorTemp);
+            //The nature of the bezier splines means they will never reach outside the bounding rectangle which includes their endpoints
+            RectangleF bounds = RectangleF.Union(ui1.Area.Value, connectorPosition);
+
+            var pair = UnorderedTuple.Make(connectorTemp, connection);
+            bool exists = SpatiallyOrderedConnections.FindTouchingRegion(bounds).Contains(Tuple.Create(pair, bounds));
+            if (exists)
+            {
+                bool removed = SpatiallyOrderedConnections.Remove(Tuple.Create(pair, bounds), bounds);
+                if (!removed)
+                {
+                    throw new InvalidOperationException("Something went wrong removing a connector from the map in connectorTemp.Disconnected");
+                }
             }
         }
 
@@ -238,7 +271,9 @@ namespace ConversationEditor
             StoreConnections(node, false);
             bool removed = SpatiallyOrderedNodes.Remove(node, node.Renderer.Area);
             if (!removed)
-                Debugger.Break();
+            {
+                throw new InvalidOperationException("Something went wrong removing a node from the map in OnNodeRemoved");
+            }
             node.Renderer.AreaChanged -= m_nodeMovedCallbacks[node];
             m_nodeMovedCallbacks.Remove(node);
         }
@@ -477,7 +512,7 @@ namespace ConversationEditor
                 if (m_mouseController.Selected.Nodes.Any() || m_mouseController.Selected.Groups.Any())
                 {
                     //TODO: This would probably make more sense in MouseController.Delete
-                    CurrentFile.Remove(m_mouseController.Selected.Nodes.Select(CurrentFile.GetNode), m_mouseController.Selected.Groups);
+                    CurrentFile.Remove(m_mouseController.Selected.Nodes.Select(CurrentFile.GetNode), m_mouseController.Selected.Groups, m_localization);
                 }
                 else
                 {
@@ -568,7 +603,7 @@ namespace ConversationEditor
 
         private void InitialiseMouseController()
         {
-            m_mouseController = new MouseController<TNode>(Colors, Redraw, shift => Shift(shift), (screen) => ScrollIfRequired(screen), (p, z) => Zoom(p, z), () => new ZOrderedQuadTree<TNode>(SpatiallyOrderedNodes, CurrentFile.RelativePosition), () => new Fake<UnorderedTuple2<Output>>(SpatiallyOrderedConnections.Select(a => a.Item1)), () => CurrentFile.Groups, MyEdit, n => CurrentFile.Remove(n.Only(), Enumerable.Empty<NodeGroup>()), Snap, SnapGroup, UIInfo, id => CurrentFile.GetNode(id));
+            m_mouseController = new MouseController<TNode>(Colors, Redraw, shift => Shift(shift), (screen) => ScrollIfRequired(screen), (p, z) => Zoom(p, z), () => new ZOrderedQuadTree<TNode>(SpatiallyOrderedNodes, CurrentFile.RelativePosition), () => new Fake<UnorderedTuple2<Output>>(SpatiallyOrderedConnections.Select(a => a.Item1)), () => CurrentFile.Groups, MyEdit, n => CurrentFile.Remove(n.Only(), Enumerable.Empty<NodeGroup>(), m_localization), Snap, SnapGroup, UIInfo, id => CurrentFile.GetNode(id));
             drawWindow.MouseDown += (a, args) => m_mouseController.MouseDown(DrawWindowToGraphSpace(args.Location), args.Location, args.Button);
             drawWindow.MouseUp += (a, args) => m_mouseController.MouseUp(DrawWindowToGraphSpace(args.Location), args.Location, args.Button);
             drawWindow.MouseMove += (a, args) =>
@@ -882,10 +917,13 @@ namespace ConversationEditor
             if (CurrentFile.File.Exists)
             {
                 TNode g = CurrentFile.MakeNode(node.Generate(Id<NodeTemp>.New(), new List<NodeDataGeneratorParameterData>(), CurrentFile), new NodeUIData(p));
-                Action addNode = () => { CurrentFile.Add(g.Only(), Enumerable.Empty<NodeGroup>()); };
+                Action addNode = () => { CurrentFile.Add(g.Only(), Enumerable.Empty<NodeGroup>(), m_localization); };
                 g.Configure(MyEdit).Do
                 (
-                    simpleUndoPair => { addNode(); simpleUndoPair.Redo(); }, //Add the node and Configure it. Configure doesn't need to be undoable as we never need to revert the node to an unconfigured state.
+                    //Configure the node and then add it. We need to configure the node before adding so that it is in a valid state
+                    //when added. Failure to do so results in localized string parameters having a null value meaning their undo
+                    //behavior can't be set up correctly.
+                    simpleUndoPair => { simpleUndoPair.Redo(); addNode(); },
                     resultNotOk =>
                     {
                         if (resultNotOk == ConfigureResult.Cancel)
@@ -910,7 +948,7 @@ namespace ConversationEditor
 
             foreach (var factory in menuFactories)
             {
-                custom.AddRange(factory.GetMenuActions(this, m_project, Log, m_localization.Localize));
+                custom.AddRange(factory.GetMenuActions(this, m_project, Log, m_localization));
             }
 
             m_contextMenu.ResetCustomNodes(custom.ToArray());
@@ -921,7 +959,7 @@ namespace ConversationEditor
             if (Selected.Nodes.Any())
             {
                 NodeGroup newGroup = NodeGroup.Make(Selected.Nodes.Select(CurrentFile.GetNode));
-                CurrentFile.Add(Enumerable.Empty<TNode>(), newGroup.Only());
+                CurrentFile.Add(Enumerable.Empty<TNode>(), newGroup.Only(), m_localization);
                 SetSelection(Selected.Nodes.Evaluate(), Selected.Groups.Concat(newGroup.Only()).Evaluate());
 
                 Redraw();
@@ -932,7 +970,7 @@ namespace ConversationEditor
         {
             if (Selected.Groups.Any())
             {
-                CurrentFile.Remove(Enumerable.Empty<TNode>(), Selected.Groups);
+                CurrentFile.Remove(Enumerable.Empty<TNode>(), Selected.Groups, m_localization);
                 SetSelection(Selected.Nodes.Evaluate(), Enumerable.Empty<NodeGroup>());
 
                 Redraw();

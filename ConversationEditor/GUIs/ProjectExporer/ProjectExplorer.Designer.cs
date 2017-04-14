@@ -16,12 +16,16 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            Utilities.UI.DrawWindow.DefaultColorScheme defaultColorScheme4 = new Utilities.UI.DrawWindow.DefaultColorScheme();
+            Utilities.UI.GreyScrollBar.DefaultColorScheme defaultColorScheme5 = new Utilities.UI.GreyScrollBar.DefaultColorScheme();
+            Utilities.UI.DrawWindow.DefaultColorScheme defaultColorScheme6 = new Utilities.UI.DrawWindow.DefaultColorScheme();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.newConversationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importConversationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.newLocalizationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importLocalizationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importIntoLocalizationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.makeCurrentLocalizationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.newDomainToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -30,6 +34,7 @@
             this.importAudioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -37,7 +42,6 @@
             this.drawWindow1 = new Utilities.UI.DrawWindow();
             this.greyScrollBar1 = new Utilities.UI.GreyScrollBar();
             this.drawWindow2 = new Utilities.UI.DrawWindow();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,6 +53,7 @@
             this.toolStripSeparator1,
             this.newLocalizationToolStripMenuItem,
             this.importLocalizationToolStripMenuItem,
+            this.importIntoLocalizationMenuItem,
             this.makeCurrentLocalizationMenuItem,
             this.toolStripSeparator2,
             this.newDomainToolStripMenuItem,
@@ -97,6 +102,13 @@
             this.importLocalizationToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
             this.importLocalizationToolStripMenuItem.Text = "Import Localization";
             this.importLocalizationToolStripMenuItem.Click += new System.EventHandler(this.importLocalizationToolStripMenuItem_Click);
+            // 
+            // importIntoLocalizationMenuItem
+            // 
+            this.importIntoLocalizationMenuItem.Name = "importIntoLocalizationMenuItem";
+            this.importIntoLocalizationMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.importIntoLocalizationMenuItem.Text = "Import Into Localization";
+            this.importIntoLocalizationMenuItem.Click += new System.EventHandler(this.importIntoLocalizationToolStripMenuItem_Click);
             // 
             // makeCurrentLocalizationMenuItem
             // 
@@ -148,6 +160,13 @@
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(194, 6);
             // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
@@ -179,6 +198,7 @@
             // drawWindow1
             // 
             this.drawWindow1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(56)))), ((int)(((byte)(56)))));
+            this.drawWindow1.ColorScheme = defaultColorScheme4;
             this.drawWindow1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.drawWindow1.HandleNavigation = true;
             this.drawWindow1.Location = new System.Drawing.Point(0, 0);
@@ -195,8 +215,10 @@
             // 
             // greyScrollBar1
             // 
+            this.greyScrollBar1.ColorScheme = defaultColorScheme5;
             this.greyScrollBar1.Dock = System.Windows.Forms.DockStyle.Right;
             this.greyScrollBar1.Horizontal = false;
+            this.greyScrollBar1.LargeChange = 0.1F;
             this.greyScrollBar1.Location = new System.Drawing.Point(380, 0);
             this.greyScrollBar1.Maximum = 0F;
             this.greyScrollBar1.Minimum = 0F;
@@ -204,12 +226,14 @@
             this.greyScrollBar1.Name = "greyScrollBar1";
             this.greyScrollBar1.PercentageCovered = 0F;
             this.greyScrollBar1.Size = new System.Drawing.Size(15, 476);
+            this.greyScrollBar1.SmallChange = 0.01F;
             this.greyScrollBar1.TabIndex = 1;
             this.greyScrollBar1.Value = 0F;
             // 
             // drawWindow2
             // 
             this.drawWindow2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(56)))), ((int)(((byte)(56)))));
+            this.drawWindow2.ColorScheme = defaultColorScheme6;
             this.drawWindow2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.drawWindow2.HandleNavigation = false;
             this.drawWindow2.Location = new System.Drawing.Point(0, 476);
@@ -218,13 +242,6 @@
             this.drawWindow2.TabIndex = 2;
             this.drawWindow2.Paint += new System.Windows.Forms.PaintEventHandler(this.drawWindow2_Paint);
             this.drawWindow2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.drawWindow2_MouseClick);
-            // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.saveToolStripMenuItem.Text = "Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // ProjectExplorer
             // 
@@ -264,5 +281,6 @@
         private Utilities.UI.DrawWindow drawWindow2;
         private System.Windows.Forms.ToolStripMenuItem newFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importIntoLocalizationMenuItem;
     }
 }

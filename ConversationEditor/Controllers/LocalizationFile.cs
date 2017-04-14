@@ -8,10 +8,11 @@ using Conversation;
 using System.Xml.Linq;
 using System.Xml;
 using Conversation.Serialization;
+using System.Windows;
 
 namespace ConversationEditor
 {
-    internal class LocalizationFile : Disposable, ILocalizationFile
+    public class LocalizationFile : Disposable, ILocalizationFile
     {
         public delegate bool ShouldSaveQuery(Id<LocalizedText> guid);
         private LocalizerData m_data;
@@ -121,12 +122,17 @@ namespace ConversationEditor
         public SimpleUndoPair SetLocalizationAction(Id<LocalizedText> guid, string p)
         {
             Either<LocalizationElement, Null> oldValue = Either.Create(m_data.CanLocalize(guid), () => m_data.GetLocalized(guid), Null.Func);
+            return InnerSetLocalizationAction(guid, new LocalizationElement(DateTime.Now, p), oldValue);
+        }
+
+        private SimpleUndoPair InnerSetLocalizationAction(Id<LocalizedText> guid, Either<LocalizationElement, Null> newValue, Either<LocalizationElement, Null> oldValue)
+        {
             object change = new object();
             return new SimpleUndoPair
             {
                 Redo = () =>
                 {
-                    m_data.SetLocalized(guid, new LocalizationElement(DateTime.Now, p));
+                    newValue.Do(a => m_data.SetLocalized(guid, a), b => m_data.ClearLocaliation(guid));
                     m_currentChanges.Add(change);
                     m_file.Change();
                 },
@@ -139,18 +145,26 @@ namespace ConversationEditor
             };
         }
 
+        public SimpleUndoPair ClearLocalizationAction(Id<LocalizedText> guid)
+        {
+            Either<LocalizationElement, Null> oldValue = Either.Create(m_data.CanLocalize(guid), () => m_data.GetLocalized(guid), Null.Func);
+            return InnerSetLocalizationAction(guid, Null.Func(), oldValue);
+        }
+
         public IEnumerable<Id<LocalizedText>> ExistingLocalizations { get { return m_data.AllLocalizations.Select(kvp => kvp.Key); } }
 
         public SimpleUndoPair DuplicateAction(Id<LocalizedText> guid, Id<LocalizedText> result)
         {
             object change = new object();
+            LocalizationElement? value = m_data.CanLocalize(guid) ? m_data.GetLocalized(guid) : (LocalizationElement?)null;
+
             return new SimpleUndoPair
             {
                 Redo = () =>
                 {
-                    if (m_data.CanLocalize(guid))
+                    if (value.HasValue)
                     {
-                        m_data.SetLocalized(result, m_data.GetLocalized(guid));
+                        m_data.SetLocalized(result, value.Value);
                         m_currentChanges.Add(change);
                         m_file.Change();
                     }
@@ -181,6 +195,50 @@ namespace ConversationEditor
             if (disposing)
             {
                 m_file.Dispose();
+            }
+        }
+
+        public void ImportInto(string[] fileNames)
+        {
+            var localizations = fileNames.Select(path => new { Path = path, Localization = Load(new FileInfo(path), null) });
+
+            string message = "";
+
+            var keys = m_data.AllLocalizations.Select(kvp => kvp.Key);
+            foreach (var localization in localizations)
+            {
+                foreach (var key in localization.Localization.ExistingLocalizations)
+                {
+                    if (keys.Contains(key))
+                        message += "Trying to import localization for " + key.Serialized() + " from " + localization.Path + " which already exists in the destination\n";
+                }
+            }
+
+            Dictionary<Id<LocalizedText>, string> paths = new Dictionary<Id<LocalizedText>, string>();
+            foreach (var loc in localizations)
+            {
+                foreach (var key in loc.Localization.ExistingLocalizations)
+                {
+                    if (paths.ContainsKey(key))
+                        message += "Trying to import localization for " + key.Serialized() + " from " + loc.Path + " and from " + paths[key] + "\n";
+                    else
+                        paths[key] = loc.Path;
+                }
+            }
+
+            if (message != "")
+            {
+                MessageBox.Show(message);
+            }
+            else
+            {
+                foreach (var loc in localizations)
+                {
+                    foreach (var key in loc.Localization.ExistingLocalizations)
+                    {
+                        SetLocalizationAction(key, loc.Localization.Localize(key)).Redo();
+                    }
+                }
             }
         }
 

@@ -34,9 +34,14 @@ namespace ConversationEditor
         {
             return new Disposable();
         }
+
+        public void Rename(string from, string to)
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    internal class AudioProvider : IAudioLibrary
+    public class AudioProvider : IAudioLibrary
     {
         private class TDefaultCustomization : IAudioProviderCustomization
         {
@@ -200,6 +205,11 @@ namespace ConversationEditor
         public Audio Generate(AudioGenerationParameters parameters)
         {
             return m_customization.Generate(parameters);
+        }
+
+        public void Rename(string from, string to)
+        {
+            m_audioFiles.Rename(from, to);
         }
     }
 }

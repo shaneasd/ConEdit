@@ -10,7 +10,7 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    internal interface IAutoCompletePattern
+    public interface IAutoCompletePattern
     {
         IEnumerable<string> AutoCompleteSuggestions(IParameter p, string s, Func<ParameterType, DynamicEnumParameter.Source> enumSource);
     }

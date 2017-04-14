@@ -33,13 +33,13 @@ namespace ConversationEditor
             get { return StaticId; }
         }
 
-        public IParameterEditor<Control> Make(IColorScheme scheme)
+        public IParameterEditor Make(IColorScheme scheme)
         {
             return new DefaultDynamicEnumEditor(scheme);
         }
     }
 
-    internal partial class DefaultDynamicEnumEditor : UserControl, IParameterEditor<DefaultDynamicEnumEditor>
+    internal partial class DefaultDynamicEnumEditor : UserControl, IParameterEditor
     {
         private TControl m_comboBox;
         private IEnumerable<TItem> m_comboBoxItems;
@@ -74,7 +74,7 @@ namespace ConversationEditor
                 m_comboBox.SelectedItem = new TItem(m_parameter.Value, m_parameter.Value);
         }
 
-        public DefaultDynamicEnumEditor AsControl
+        public Control AsControl
         {
             get { return this; }
         }

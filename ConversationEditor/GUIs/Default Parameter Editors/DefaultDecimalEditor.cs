@@ -30,13 +30,13 @@ namespace ConversationEditor
             get { return StaticId; }
         }
 
-        public IParameterEditor<Control> Make(IColorScheme scheme)
+        public IParameterEditor Make(IColorScheme scheme)
         {
             return new DefaultDecimalEditor(scheme);
         }
     }
 
-    internal partial class DefaultDecimalEditor : UserControl, IParameterEditor<DefaultDecimalEditor>
+    internal partial class DefaultDecimalEditor : UserControl, IParameterEditor
     {
         MyNumericUpDown<decimal> m_numericUpDown;
 
@@ -67,7 +67,7 @@ namespace ConversationEditor
             m_numericUpDown.Value = m_parameter.Value;
         }
 
-        public DefaultDecimalEditor AsControl
+        public Control AsControl
         {
             get { return this; }
         }

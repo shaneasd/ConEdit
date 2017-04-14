@@ -13,7 +13,7 @@ namespace ConversationEditor
     using TData = XmlGraphData<NodeUIData, ConversationEditorData>;
     using System.Collections.ObjectModel;
 
-    internal class ConversationFile : GraphFile, IConversationFile
+    public class ConversationFile : GraphFile, IConversationFile
     {
         private ISerializer<TData> m_serializer;
 

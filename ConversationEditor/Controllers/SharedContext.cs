@@ -9,7 +9,7 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    internal interface ILocalizationContext
+    public interface ILocalizationContext
     {
         NotifierProperty<ILocalizationFile> CurrentLocalization { get; }
     }
@@ -17,7 +17,7 @@ namespace ConversationEditor
     /// <summary>
     /// Context of the editor shared by several controls
     /// </summary>
-    internal class SharedContext : ILocalizationContext
+    public class SharedContext : ILocalizationContext
     {
         public NotifierProperty<IProject> CurrentProject = new NotifierProperty<IProject>(DummyProject.Instance);
         public event Action<Changed<FileInfo>> ProjectMoved;

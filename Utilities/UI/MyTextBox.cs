@@ -47,6 +47,11 @@ namespace Utilities.UI
             {
                 get { return "Edited text box"; }
             }
+
+            public override string LogDescription
+            {
+                get { return Description; }
+            }
         }
 
         private struct State
@@ -240,7 +245,7 @@ namespace Utilities.UI
 
         public int SelectionLength { get { return m_state.SelectionLength; } set { m_state.SelectionLength = value; } }
 
-        UndoQueue m_undoQueue = new UndoQueue();
+        UndoQueue m_undoQueue = new UndoQueue("Textbox");
         UndoAction m_additionUndoAction = null;
         private UndoAction MakeUndoAction()
         {

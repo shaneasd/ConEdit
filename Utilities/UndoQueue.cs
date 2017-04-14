@@ -63,6 +63,16 @@ namespace Utilities
 
     public class UndoQueue : IUndoQueue
     {
+        string m_name;
+
+        public UndoQueue(string name)
+        {
+            m_name = name;
+        }
+
+
+        public static PassiveLogger m_logger = new PassiveLogger();
+
         /// <summary>
         /// This should be on the top of the undo queue for the file to be considered unmodified
         /// </summary>
@@ -148,6 +158,7 @@ namespace Utilities
             m_redoActions.Clear();
             m_undoActions.Push(action);
             Changed.Execute();
+            m_logger.Log(m_name + "changes.txt", "Action: " + action.LogDescription);
             if (!modified)
                 ModifiedChanged.Execute();
         }
@@ -163,6 +174,7 @@ namespace Utilities
                 if (modified != Modified)
                     ModifiedChanged.Execute();
                 Changed.Execute();
+                m_logger.Log(m_name + "changes.txt", "Undo: " + a.LogDescription);
             }
         }
 
@@ -187,6 +199,7 @@ namespace Utilities
                 if (modified != Modified)
                     ModifiedChanged.Execute();
                 Changed.Execute();
+                m_logger.Log(m_name + "changes.txt", "Redo: " + a.LogDescription);
             }
         }
 

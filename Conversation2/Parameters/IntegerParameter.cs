@@ -23,15 +23,23 @@ namespace Conversation
             public int? Min { get; private set; }
         }
 
-        public IntegerParameter(string name, Id<Parameter> id, ParameterType typeId, Definition definition, string defaultValue)
-            : base(name, id, typeId, defaultValue, StaticDeserialize(definition, defaultValue))
+        private Func<Definition> m_definition;
+
+        public IntegerParameter(string name, Id<Parameter> id, ParameterType typeId, Func<Definition> definition, string defaultValue)
+            : base(name, id, typeId, defaultValue, StaticDeserialize(definition(), defaultValue))
         {
             m_definition = definition;
         }
 
+        public IntegerParameter(string name, Id<Parameter> id, ParameterType typeId, Definition definition, string defaultValue)
+            : this(name, id, typeId, () => definition, defaultValue)
+        {
+        }
+
+
         protected override Tuple<int, bool> DeserializeValueInner(string value)
         {
-            return StaticDeserialize(m_definition, value);
+            return StaticDeserialize(m_definition(), value);
         }
 
         private static Tuple<int, bool> StaticDeserialize(Definition definition, string value)
@@ -45,7 +53,7 @@ namespace Conversation
 
         protected override bool ValueValid(int value)
         {
-            return StaticValueValid(m_definition, value);
+            return StaticValueValid(m_definition(), value);
         }
 
         private static bool StaticValueValid(Definition definition, int value)
@@ -64,15 +72,14 @@ namespace Conversation
             return Value.ToString(CultureInfo.InvariantCulture);
         }
 
-        private Definition m_definition;
         public int Max
         {
-            get { return m_definition.Max ?? int.MaxValue; }
+            get { return m_definition().Max ?? int.MaxValue; }
         }
 
         public int Min
         {
-            get { return m_definition.Min ?? int.MinValue; }
+            get { return m_definition().Min ?? int.MinValue; }
         }
 
         public override string DisplayValue(Func<Id<LocalizedText>, string> localize)

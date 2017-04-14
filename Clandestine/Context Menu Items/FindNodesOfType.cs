@@ -18,11 +18,11 @@ namespace Clandestine
             private ConversationNode<INodeGui> m_node;
             private Func<Id<LocalizedText>, string> m_localize;
 
-            public LogElement(IConversationEditorControlData<ConversationNode<INodeGui>, TransitionNoduleUIInfo> file, ConversationNode<INodeGui> node, Func<Id<LocalizedText>, string> localize)
+            public LogElement(IConversationEditorControlData<ConversationNode<INodeGui>, TransitionNoduleUIInfo> file, ConversationNode<INodeGui> node, ILocalizationEngine localizer)
             {
                 File = file;
                 m_node = node;
-                m_localize = localize;
+                m_localize = localizer.Localize;
             }
 
             public IConversationEditorControlData<ConversationNode<INodeGui>, TransitionNoduleUIInfo> File { get; }
@@ -52,7 +52,7 @@ namespace Clandestine
             }
         }
 
-        public IEnumerable<MenuAction<ConversationNode<INodeGui>>> GetMenuActions(IGraphEditorControl<ConversationNode<INodeGui>> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log, Func<Id<LocalizedText>, string> localize)
+        public IEnumerable<MenuAction<ConversationNode<INodeGui>>> GetMenuActions(IGraphEditorControl<ConversationNode<INodeGui>> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log, ILocalizationEngine localizer)
         {
             //XmlGraphData<NodeUIData, ConversationEditorData> data;
             //Assembly assembly = Assembly.GetExecutingAssembly();
@@ -63,7 +63,7 @@ namespace Clandestine
             yield return new MenuAction<ConversationNode>("Find Nodes of Type", (a, b) => () =>
             {
                 var nodesofType = project.ConversationFilesCollection.SelectMany(f => f.Nodes.Where(n => n.Data.NodeTypeId == a.Data.NodeTypeId).Select(n => new { Node = n, File = f }));
-                log(nodesofType.Select(n => new LogElement(n.File, n.Node, localize)));
+                log(nodesofType.Select(n => new LogElement(n.File, n.Node, localizer)));
             }
             , null, null, null);
         }

@@ -21,7 +21,7 @@ namespace ConversationEditor
     using System.Diagnostics;
     using System.Collections.ObjectModel;
 
-    internal class Project : Disposable, IProject, ISaveableFileProvider
+    public class Project : Disposable, IProject, ISaveableFileProvider
     {
         public static ILocalizationFile SelectNewLocalizer(IProjectElementList<LocalizationFile, ILocalizationFile> localizers)
         {
@@ -396,7 +396,7 @@ namespace ConversationEditor
             m_file.Change();
         }
 
-        public IDataSource DomainDataSource
+        public IDomainDataSource DomainDataSource
         {
             get { return m_domainDataSource; }
         }
@@ -463,6 +463,14 @@ namespace ConversationEditor
                     element.Dispose();
                 m_file.Dispose();
             }
+        }
+
+        public void Renamed(ProjectExplorer.FileSystemObject item, string from, string to)
+        {
+            m_conversations.Rename(from, to);
+            m_domainFiles.Rename(from, to);
+            m_localizer.Rename(from, to);
+            m_audioProvider.Rename(from, to);
         }
 
         public IEnumerable<IDomainFile> DomainFilesCollection

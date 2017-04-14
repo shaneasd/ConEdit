@@ -11,7 +11,7 @@ namespace ConversationEditor
 {
     using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
 
-    internal class PluginAssembly
+    public class PluginAssembly
     {
         public readonly string FileName; //Null if main assembly
         public readonly Assembly Assembly;

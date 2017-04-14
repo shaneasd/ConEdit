@@ -10,7 +10,7 @@ using Conversation.Serialization;
 
 namespace ConversationEditor
 {
-    internal class LocalizationEngine : ILocalizationEngine
+    public class LocalizationEngine : ILocalizationEngine
     {
         public const string MISSING_LOCALIZATION = "Missing Localization";
 
@@ -85,9 +85,24 @@ namespace ConversationEditor
             return m_context.CurrentLocalization.Value.SetLocalizationAction(guid, value);
         }
 
+        public SimpleUndoPair ClearLocalizationAction(Id<LocalizedText> guid)
+        {
+            List<SimpleUndoPair> actions = new List<SimpleUndoPair>();
+            foreach (var loc in Localizers.OfType<LocalizationFile>())
+            {
+                actions.Add(loc.ClearLocalizationAction(guid));
+            }
+            return new SimpleUndoPair { Redo = () => actions.ForEach(a => a.Redo()), Undo = () => actions.ForEach(a => a.Undo()) };
+        }
+
         public bool CanLocalize
         {
             get { return m_localizers.Any(); } //Assume that if localizers exist then one is selected
+        }
+
+        internal void Rename(string from, string to)
+        {
+            m_localizers.Rename(from, to);
         }
     }
 }

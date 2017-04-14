@@ -19,6 +19,7 @@ namespace Utilities
         public abstract void Undo();
         public abstract void Redo();
         public abstract string Description { get; }
+        public abstract string LogDescription { get; }
 
         public static UndoAction NeverSaved { get; } = new DummyUndoAction();
 
@@ -27,6 +28,7 @@ namespace Utilities
             public override void Undo() { }
             public override void Redo() { }
             public override string Description { get { return ""; } }
+            public override string LogDescription { get { return "DummyUndoAction"; } }
         }
     }
 
@@ -43,12 +45,14 @@ namespace Utilities
         private Action m_undo;
         private Action m_redo;
         private string m_description;
+        private string m_logDescription;
 
         public GenericUndoAction(SimpleUndoPair undoredo, string description)
         {
             m_undo = undoredo.Undo;
             m_redo = undoredo.Redo;
             m_description = description;
+            m_logDescription = description;
         }
 
         public GenericUndoAction(Action undo, Action redo, string description)
@@ -56,6 +60,7 @@ namespace Utilities
             m_undo = undo;
             m_redo = redo;
             m_description = description;
+            m_logDescription = description;
         }
 
         public override void Undo()
@@ -69,6 +74,8 @@ namespace Utilities
         }
 
         public override string Description { get { return m_description; } }
+        
+        public override string LogDescription { get { return m_logDescription; } }
     }
 
     //public class MoveAction : UndoAction

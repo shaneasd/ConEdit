@@ -7,7 +7,7 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    internal class ConnectionDrawer : Disposable
+    public class ConnectionDrawer : Disposable
     {
         private List<Tuple<PointF, PointF, bool>> m_connections = new List<Tuple<PointF, PointF, bool>>();
         private LineDrawer m_drawer;

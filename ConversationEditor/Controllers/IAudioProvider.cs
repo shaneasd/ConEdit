@@ -7,7 +7,7 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    internal interface IAudioLibrary : IAudioParameterEditorCallbacks
+    public interface IAudioLibrary : IAudioParameterEditorCallbacks
     {
         /// <summary>
         /// Play the audio associated with the specified audio file
@@ -40,6 +40,7 @@ namespace ConversationEditor
         void UpdateUsage(Audio audio);
 
         IDisposable SuppressUpdates();
+        void Rename(string from, string to);
     }
 
     internal class DummyAudioLibrary : IAudioLibrary
@@ -91,6 +92,11 @@ namespace ConversationEditor
         }
 
         public Audio Generate(AudioGenerationParameters parameters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Rename(string from, string to)
         {
             throw new NotImplementedException();
         }

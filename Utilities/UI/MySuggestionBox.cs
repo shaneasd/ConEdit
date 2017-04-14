@@ -522,7 +522,6 @@ namespace Utilities.UI
         }
 
         public System.Windows.Forms.ToolStripRenderer Renderer { get { return m_dropDown.Renderer; } set { m_dropDown.Renderer = value; } }
-        //public System.Windows.Forms.ToolStripRenderer Renderer { get { return (m_dropDown.Renderer as ToolStripRenderer).Inner; } set { (m_dropDown.Renderer as ToolStripRenderer).Inner = value; } }
         public IEnumerable<MyComboBoxItem<T>> Items { get; }
 
         public event Action EnterPressed;
@@ -534,6 +533,12 @@ namespace Utilities.UI
 
         public void AreaChanged()
         {
+        }
+
+        //TODO: Awful hack
+        public void ParentFormMouseActivatedHack()
+        {
+            m_dropDown.Close();
         }
     }
 }

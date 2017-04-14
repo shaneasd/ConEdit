@@ -25,7 +25,7 @@ namespace ConversationEditor
             get { return DummyProjectElementList<LocalizationFile, ILocalizationFile>.Instance; }
         }
 
-        IDataSource IProject.DomainDataSource
+        IDomainDataSource IProject.DomainDataSource
         {
             get { return DummyDataSource.Instance; }
         }
@@ -114,6 +114,11 @@ namespace ConversationEditor
         }
 
         IEnumerable<FileInfo> IProject.Rerout(IEnumerable<string> paths)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IProject.Renamed(ProjectExplorer.FileSystemObject item, string from, string to)
         {
             throw new NotImplementedException();
         }

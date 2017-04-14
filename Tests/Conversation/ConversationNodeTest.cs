@@ -308,6 +308,9 @@ namespace Tests.Conversation
             CheckAllConnected();
 
             var actions = node1.GetNodeRemoveActions();
+
+            //TODO: Test that localizations are removed/readded correctly
+
             CheckAllConnected();
 
             actions.Redo();

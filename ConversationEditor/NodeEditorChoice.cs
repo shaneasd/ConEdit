@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace ConversationEditor
 {
-    internal class NodeEditorChoice : TypeChoice
+    public class NodeEditorChoice : TypeChoice
     {
         public NodeEditorChoice(Type type)
             : base(type)

@@ -67,7 +67,17 @@ namespace Tests
             throw new NotImplementedException();
         }
 
+        public SimpleUndoPair ClearLocalizationAction(Id<LocalizedText> guid)
+        {
+            throw new NotImplementedException();
+        }
+
         public DateTime LocalizationTime(Id<LocalizedText> id)
+        {
+            throw new NotImplementedException();
+        }
+
+        void ILocalizationFile.ImportInto(string[] fileNames)
         {
             throw new NotImplementedException();
         }

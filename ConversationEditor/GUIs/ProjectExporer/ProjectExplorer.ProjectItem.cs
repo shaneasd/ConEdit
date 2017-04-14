@@ -114,10 +114,11 @@ namespace ConversationEditor
 
             internal bool RenameElement(FileSystemObject item, string path, Func<string, bool> ShouldReplaceFile)
             {
+                string oldName = item.FullName;
                 if (item.Move(path, () => ShouldReplaceFile(path)))
                 {
                     //This is done implicitly by RemoveProjectChild and InsertChildAlphabetically
-                    m_contents.Remove(item.FullName);
+                    m_contents.Remove(oldName);
                     m_contents.Add(path);
                     return true;
                 }

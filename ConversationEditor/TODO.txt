@@ -1,3 +1,5 @@
+TODO: This is the todo list
+
 OTHER:
 Feature list
 Manual
@@ -6,9 +8,21 @@ Installer builder project
 
 WORKFLOW:
 
+https://xkcd.com/1806/ : scroll wheel undo/redo
+
+[1:33:59 AM] Jonas Wæver: One is ghost connections, which is when you delete a connection but it seems to still be there in the graph view - you can click on empty space sometimes and a deleted connection will show up as highlighted
+EDITING A NODE WILL POTENTIALLY RESIZE IT WHICH CAN MOVE THE CONNECTOR POSITIONS POTENTIALLY WITHOUT UPDATING THE QUAD TREE
+
+I may have fixed this. Waiting on feedback:
+[1:34:11 AM] Jonas Wæver: The other, which I suspect is related, is when the editor loses track of where a connector is
+[1:34:39 AM] Jonas Wæver: So you can click on a connector and nothing happens, or you can click and hold on another connector and drag it to the connector and it'll fail to connect
+[1:34:51 AM] Jonas Wæver: In those cases though, strangely, if you hold down Shift it can still snap to the "broken" connector
+
 P3	Scroll bar for node editor is a bit messed up
 
 P4	Handle user specifying a default value for a parameter that is outside the acceptable range
+    This seems to be mostly done for integers (TODO: copy for decimals) but there is an outstanding issue
+	where the numeric up down is not informed when the integer type changes (and thus the range is no longer correct.)
 
 P5	Handle changes to domain dynamically affecting conversations
 		- Warn when removing things that are in use
@@ -28,14 +42,9 @@ P6	Node avoidance line drawing
 	Autosave
 	error report including project content
 
-P1	Deleting and then undoing deletion of an integer definition causes it to be readded to the collection of integers resulting in an exception
-
-Jonas: If you delete a node with localized text does it remove the text from the localization file?
-
 Error Checkers:
 P2	Separate error checkers for domains
 
 TECHNICAL DEBT
 
-P3	Refactor corrupted nodes, Groups and Conversation nodes into a common parent
 P5	Move project serialization code out of editor project?

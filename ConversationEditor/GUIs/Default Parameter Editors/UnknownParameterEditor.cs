@@ -12,7 +12,7 @@ using Utilities.UI;
 
 namespace ConversationEditor
 {
-    internal partial class UnknownParameterEditor : UserControl, IFocusProvider, IParameterEditor<UnknownParameterEditor>
+    internal partial class UnknownParameterEditor : UserControl, IFocusProvider, IParameterEditor
     {
         private MyTextBox m_textBox;
         private CrossButton m_button;
@@ -50,7 +50,7 @@ namespace ConversationEditor
                 m_textBox.Text = m_parameter.Value;
         }
 
-        public UnknownParameterEditor AsControl
+        public Control AsControl
         {
             get { return this; }
         }

@@ -12,6 +12,6 @@ namespace ConversationEditor
         bool WillEdit(ParameterType type, WillEdit queries);
         string Name { get; }
         Guid Guid { get; }
-        IParameterEditor<Control> Make(IColorScheme scheme);
+        IParameterEditor Make(IColorScheme scheme);
     }
 }

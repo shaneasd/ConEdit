@@ -83,6 +83,11 @@ namespace Conversation
         DynamicEnumParameter.Source GetSource(ParameterType type, object newSourceId);
     }
 
+    public interface IDomainDataSource : IDataSource
+    {
+        bool IsConnector(Id<NodeTypeTemp> id);
+    }
+
     public static class DataSourceUtils
     {
         public static IEnumerable<INodeDataGenerator> AllNodes(this IDataSource datasource)
@@ -91,10 +96,10 @@ namespace Conversation
         }
     }
 
-    public sealed class DummyDataSource : IDataSource
+    public sealed class DummyDataSource : IDomainDataSource
     {
         private DummyDataSource() { }
-        public static IDataSource Instance { get; } = new DummyDataSource();
+        public static IDomainDataSource Instance { get; } = new DummyDataSource();
 
         IEnumerable<ParameterType> IDataSource.ParameterTypes
         {
@@ -172,6 +177,11 @@ namespace Conversation
         }
 
         DynamicEnumParameter.Source IDataSource.GetSource(ParameterType type, object newSourceId)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IDomainDataSource.IsConnector(Id<NodeTypeTemp> id)
         {
             throw new NotImplementedException();
         }

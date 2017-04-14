@@ -16,6 +16,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            ConversationEditor.ColorScheme colorScheme1 = new ConversationEditor.ColorScheme();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.projectNewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,13 +53,14 @@
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.throwTestExceptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sanityTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.projectExplorer = new ConversationEditor.ProjectExplorer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.m_conversationEditor = new ConversationEditor.ConversationEditorControl();
             this.errorList1 = new ConversationEditor.ErrorList();
-            this.sanityTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wordCountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -78,7 +80,8 @@
             this.toolsToolStripMenuItem,
             this.errorCheckToolStripMenuItem,
             this.exportToolStripMenuItem,
-            this.debugToolStripMenuItem});
+            this.debugToolStripMenuItem,
+            this.wordCountToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
@@ -363,6 +366,12 @@
             this.throwTestExceptionToolStripMenuItem.Text = "Throw test Exception";
             this.throwTestExceptionToolStripMenuItem.Click += new System.EventHandler(this.throwTestExceptionToolStripMenuItem_Click);
             // 
+            // sanityTestToolStripMenuItem
+            // 
+            this.sanityTestToolStripMenuItem.Name = "sanityTestToolStripMenuItem";
+            this.sanityTestToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.sanityTestToolStripMenuItem.Text = "Sanity Test";
+            // 
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
@@ -392,6 +401,8 @@
             this.projectExplorer.Location = new System.Drawing.Point(0, 0);
             this.projectExplorer.Margin = new System.Windows.Forms.Padding(0);
             this.projectExplorer.Name = "projectExplorer";
+            colorScheme1.Connectors = System.Drawing.Color.Black;
+            this.projectExplorer.Scheme = colorScheme1;
             this.projectExplorer.Size = new System.Drawing.Size(181, 561);
             this.projectExplorer.TabIndex = 0;
             // 
@@ -414,15 +425,16 @@
             this.splitContainer2.SplitterDistance = 419;
             this.splitContainer2.TabIndex = 4;
             // 
-            // conversationEditorControl1
+            // m_conversationEditor
             // 
             this.m_conversationEditor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.m_conversationEditor.Colors = colorScheme1;
             this.m_conversationEditor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_conversationEditor.GraphScale = 1F;
             this.m_conversationEditor.Location = new System.Drawing.Point(0, 0);
             this.m_conversationEditor.MajorGridSpacing = 0;
             this.m_conversationEditor.MinorGridSpacing = 0;
-            this.m_conversationEditor.Name = "conversationEditorControl1";
+            this.m_conversationEditor.Name = "m_conversationEditor";
             this.m_conversationEditor.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.m_conversationEditor.ShowGrid = false;
             this.m_conversationEditor.ShowIds = true;
@@ -432,6 +444,7 @@
             // 
             // errorList1
             // 
+            this.errorList1.ColorScheme = colorScheme1;
             this.errorList1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.errorList1.Location = new System.Drawing.Point(0, 0);
             this.errorList1.Name = "errorList1";
@@ -439,11 +452,12 @@
             this.errorList1.Size = new System.Drawing.Size(804, 138);
             this.errorList1.TabIndex = 3;
             // 
-            // sanityTestToolStripMenuItem
+            // wordCountToolStripMenuItem
             // 
-            this.sanityTestToolStripMenuItem.Name = "sanityTestToolStripMenuItem";
-            this.sanityTestToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.sanityTestToolStripMenuItem.Text = "Sanity Test";
+            this.wordCountToolStripMenuItem.Name = "wordCountToolStripMenuItem";
+            this.wordCountToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
+            this.wordCountToolStripMenuItem.Text = "Word Count";
+            this.wordCountToolStripMenuItem.Click += new System.EventHandler(this.wordCountToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -518,6 +532,7 @@
         private System.Windows.Forms.ToolStripMenuItem defaultToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem testEverythingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sanityTestToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem wordCountToolStripMenuItem;
     }
 }
 

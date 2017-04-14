@@ -8,7 +8,7 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    internal class AudioFile : Disposable, IAudioFile
+    public class AudioFile : Disposable, IAudioFile
     {
         ReadonlyFileUnmonitored m_file;
         private AudioProvider m_provider;

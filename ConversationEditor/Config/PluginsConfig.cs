@@ -13,13 +13,13 @@ namespace ConversationEditor
     /// <summary>
     /// Whether to consider the main assembly or just plugin assemblies when importing factories
     /// </summary>
-    internal enum MainAssemblies
+    public enum MainAssemblies
     {
         Include,
         Ignore,
     }
 
-    internal class PluginsConfig : IConfigParameter
+    public class PluginsConfig : IConfigParameter
     {
         private List<PluginAssembly> m_filteredAssemblies = new List<PluginAssembly>();
         public IEnumerable<PluginAssembly> FilteredAssemblies { get { return m_filteredAssemblies; } }
@@ -110,7 +110,9 @@ namespace ConversationEditor
                         var assembly = new PluginAssembly(filename);
                         m_filteredAssemblies.Add(assembly);
                     }
-                    catch //TODO: Should really limit this to catching failures to load the assembly
+                    //https://msdn.microsoft.com/en-us/library/ms972962.aspx#pluginframework_topic5
+                    //Seems to suggest that a generic try catch is the way to go.
+                    catch
                     {
                         MessageBox.Show("Failed to load assembly '" + filename + "'. This assembly will not be saved in the config file.");
                     }

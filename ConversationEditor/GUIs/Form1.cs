@@ -466,15 +466,15 @@ namespace ConversationEditor
             //CurrentFile = m_projectMenuController.CurrentProject.Files.FirstOrDefault();
         }
 
-        private IParameterEditor<Control> GetParameterEditor(Guid id, ParameterEditorSetupData data)
+        private IParameterEditor GetParameterEditor(Guid id, ParameterEditorSetupData data)
         {
             var editorFactory = GetAllOfType<IParameterEditorFactory>().Where(e => e.Guid == id).Single();
-            IParameterEditor<Control> editor = editorFactory.Make(m_scheme);
+            IParameterEditor editor = editorFactory.Make(m_scheme);
             editor.Setup(data);
             return editor;
         }
 
-        private IParameterEditor<Control> GetParameterEditor(ParameterType id, ParameterEditorSetupData data)
+        private IParameterEditor GetParameterEditor(ParameterType id, ParameterEditorSetupData data)
         {
             return GetParameterEditor(m_config.ParameterEditors[id], data);
         }
@@ -621,6 +621,10 @@ namespace ConversationEditor
                     }
                 }
             }
+
+            //TODO: Globals ewww
+            if (!e.Cancel)
+                UndoQueue.m_logger.Dispose();
         }
 
         private void throwTestExceptionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -668,7 +672,7 @@ namespace ConversationEditor
             //var config = new MapConfig<ParameterType, Guid>("ParameterEditors", kvp => new KeyValuePair<string,string>(kvp.Key.Serialized(), kvp.Value.ToString())
             //                                                    , kvp => new KeyValuePair<ParameterType,Guid>(ParameterType.Parse(kvp.Key), Guid.Parse(kvp.Value))
             //                                                    , g => DefaultEnumEditor.Factory.GUID);
-            Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config = (id, d) =>
+            Func<ParameterType, ParameterEditorSetupData, IParameterEditor> config = (id, d) =>
             {
                 var result = new DefaultEnumEditor();
                 try
@@ -702,7 +706,7 @@ namespace ConversationEditor
         private void customiseNodeRendererToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var data = new NodeRendererCustomization(m_context.CurrentProject.Value.ConversationDataSource, m_config.ConversationNodeRenderers, GetAllOfType<NodeUI.IFactory>());
-            Func<ParameterType, ParameterEditorSetupData, IParameterEditor<Control>> config = (id, d) =>
+            Func<ParameterType, ParameterEditorSetupData, IParameterEditor> config = (id, d) =>
             {
                 var result = new DefaultEnumEditor();
                 try
@@ -902,11 +906,34 @@ namespace ConversationEditor
         {
             if (disposing && (components != null))
             {
-                components.Dispose();
-                m_scheme.Dispose();
-                m_config.Dispose();
+                Cleanup();
             }
             base.Dispose(disposing);
+        }
+
+        private void Cleanup()
+        {
+            if (components != null)
+                components.Dispose();
+            if (m_scheme != null)
+                m_scheme.Dispose();
+            if (m_config != null)
+                m_config.Dispose();
+            if (m_context.CurrentProject != null)
+                m_context.CurrentProject.Value.Dispose();
+        }
+
+        private void wordCountToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var localization = m_context.CurrentLocalization.Value;
+            var totalWordCount = localization.ExistingLocalizations.Select(id => StringUtil.WordCount(localization.Localize(id))).Sum();
+            StringBuilder builder = new StringBuilder("Total word count: " + totalWordCount + "\n");
+            if (m_currentEditor == m_conversationEditor)
+            {
+                var conversationWordCount = m_currentEditor.CurrentFile.Nodes.SelectMany(n => n.Data.Parameters.OfType<ILocalizedStringParameter>()).Select(p => StringUtil.WordCount(localization.Localize(p.Value))).Sum();
+                builder.AppendLine("Current conversation word count: " + conversationWordCount);
+            }
+            MessageBox.Show(builder.ToString());
         }
     }
 }
