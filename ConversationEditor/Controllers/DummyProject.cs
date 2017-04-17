@@ -12,6 +12,7 @@ namespace ConversationEditor
 
     internal sealed class DummyProject : IProject
     {
+        UpToDateFile.Backend m_backend = new UpToDateFile.Backend();
         public static readonly IProject Instance = new DummyProject();
 
         private DummyProject() { }
@@ -72,7 +73,7 @@ namespace ConversationEditor
 
         LocalizationEngine IProject.Localizer
         {
-            get { return new LocalizationEngine(null, () => new HashSet<Id<LocalizedText>>(), s => false, s => false, p => true, s => true); }
+            get { return new LocalizationEngine(null, () => new HashSet<Id<LocalizedText>>(), s => false, s => false, p => true, s => true, m_backend); }
         }
 
         IProjectElementList<AudioFile, IAudioFile> IProject.AudioFiles

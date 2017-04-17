@@ -88,8 +88,9 @@ namespace ConversationEditor
         private PluginsConfig m_pluginsConfig;
         private Func<IAudioProviderCustomization> m_audioCustomization;
         SharedContext m_context;
+        private UpToDateFile.Backend m_backend;
 
-        public ProjectMenuController(SharedContext context, ConfigParameterList<string> config, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, Action<Action> executeInGuiThread, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
+        public ProjectMenuController(SharedContext context, ConfigParameterList<string> config, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, Action<Action> executeInGuiThread, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization, UpToDateFile.Backend backend)
         {
             m_context = context;
             m_executeInGuiThread = executeInGuiThread;
@@ -98,6 +99,7 @@ namespace ConversationEditor
             m_config = config;
             m_pluginsConfig = pluginsConfig;
             m_audioCustomization = audioCustomization;
+            m_backend = backend;
             m_context.ProjectMoved += WeakCallback<Changed<FileInfo>>.Handler(this, (me, a) => me.ProjectMoved(a.From, a.To));
             m_context.CurrentProject.Changed.Register(this, (a, b) => UpdateRecentlyOpenedConfig());
 
@@ -177,7 +179,7 @@ namespace ConversationEditor
                     new XMLProject.Serializer(),
                     SerializationUtils.ConversationSerializer,
                     SerializationUtils.ConversationSerializerDeserializer,
-                    SerializationUtils.DomainSerializer, m_pluginsConfig, m_audioCustomization);
+                    SerializationUtils.DomainSerializer, m_pluginsConfig, m_audioCustomization, m_backend);
 
                 project.FileDeletedExternally += () => m_executeInGuiThread(() => { MessageBox.Show("Project file deleted by another application"); });
                 project.FileModifiedExternally += () => m_executeInGuiThread(() =>
@@ -258,7 +260,7 @@ namespace ConversationEditor
                                                                                  new XMLProject.Serializer(),
                                                                                  SerializationUtils.ConversationSerializer,
                                                                                  SerializationUtils.ConversationSerializerDeserializer,
-                                                                                 SerializationUtils.DomainSerializer, m_pluginsConfig, m_audioCustomization);
+                                                                                 SerializationUtils.DomainSerializer, m_pluginsConfig, m_audioCustomization, m_backend);
                             m_context.CurrentProject.Value = project;
                         }
                         catch (MyFileLoadException e)

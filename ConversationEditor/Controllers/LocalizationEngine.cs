@@ -27,15 +27,15 @@ namespace ConversationEditor
         /// <param name="shouldExpand"></param>
         /// <param name="pathOk">Path is an acceptable filename for a new localization file</param>
         /// <param name="fileLocationOk">Path is an acceptable location from which to import an existing localization file</param>
-        public LocalizationEngine(ILocalizationContext context, Func<HashSet<Id<LocalizedText>>> usedGuids, Func<string, bool> shouldClean, Func<string, bool> shouldExpand, Func<FileInfo, bool> pathOk, Func<string, bool> fileLocationOk)
+        public LocalizationEngine(ILocalizationContext context, Func<HashSet<Id<LocalizedText>>> usedGuids, Func<string, bool> shouldClean, Func<string, bool> shouldExpand, Func<FileInfo, bool> pathOk, Func<string, bool> fileLocationOk, UpToDateFile.Backend backend)
         {
             m_context = context;
             m_usedGuids = usedGuids;
             ShouldClean = shouldClean;
             ShouldExpand = shouldExpand;
 
-            Func<IEnumerable<FileInfo>, IEnumerable<LocalizationFile>> load = files => files.Select(file => LocalizationFile.Load(file, MakeSerializer(file.Name)));
-            Func<DirectoryInfo, LocalizationFile> makeEmpty = path => LocalizationFile.MakeNew(path, MakeSerializer, pathOk);
+            Func<IEnumerable<FileInfo>, IEnumerable<LocalizationFile>> load = files => files.Select(file => LocalizationFile.Load(file, MakeSerializer(file.Name), backend));
+            Func<DirectoryInfo, LocalizationFile> makeEmpty = path => LocalizationFile.MakeNew(path, MakeSerializer, pathOk, backend);
             Func<FileInfo, MissingLocalizationFile> makeMissing = file => new MissingLocalizationFile(file);
             m_localizers = new ProjectElementList<LocalizationFile, MissingLocalizationFile, ILocalizationFile>(fileLocationOk, load, makeEmpty, makeMissing);
             m_localizers.GotChanged += () =>

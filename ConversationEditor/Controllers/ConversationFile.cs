@@ -35,10 +35,10 @@ namespace ConversationEditor
         /// <param name="audioProvider"></param>
         public ConversationFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ISerializer<TData> serializer,
             ReadOnlyCollection<LoadError> errors, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> generateAudio,
-            Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider)
+            Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.Backend backend)
             : base(nodes, groups, errors, nodeFactory, generateAudio, getDocumentSource, audioProvider)
         {
-            m_file = new SaveableFileUndoable(rawData, file, SaveTo);
+            m_file = new SaveableFileUndoable(rawData, file, SaveTo, backend);
             m_serializer = serializer;
 
             foreach (var node in m_nodes)
@@ -74,7 +74,7 @@ namespace ConversationEditor
         }
 
         public static ConversationFile CreateEmpty(DirectoryInfo directory, Project project, INodeFactory<ConversationNode> nodeFactory,
-            Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> generateAudio, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider)
+            Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> generateAudio, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.Backend backend)
         {
             var file = GetAvailableConversationPath(directory, project.Elements);
 
@@ -91,13 +91,13 @@ namespace ConversationEditor
                     m.CopyTo(stream);
                 }
 
-                return new ConversationFile(nodes, groups, m, file, project.ConversationSerializer, new ReadOnlyCollection<LoadError>(new LoadError[0]), nodeFactory, generateAudio, getDocumentSource, audioProvider);
+                return new ConversationFile(nodes, groups, m, file, project.ConversationSerializer, new ReadOnlyCollection<LoadError>(new LoadError[0]), nodeFactory, generateAudio, getDocumentSource, audioProvider, backend);
             }
         }
 
         /// <exception cref="MyFileLoadException">If file can't be read</exception>
         public static ConversationFile Load(FileInfo file, INodeFactory nodeFactory, ISerializerDeserializer<TData> serializer, Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> generateAudio,
-            Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider)
+            Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.Backend backend)
         {
             using (var stream = Util.LoadFileStream(file, FileMode.Open, FileAccess.Read))
             {
@@ -107,7 +107,7 @@ namespace ConversationEditor
                     stream.Dispose();
                     m.Position = 0;
                     TData data = serializer.Read(m);
-                    return new ConversationFile(data.Nodes.ToList(), data.EditorData.Groups.ToList(), m, file, serializer, data.Errors, nodeFactory, generateAudio, getDocumentSource, audioProvider);
+                    return new ConversationFile(data.Nodes.ToList(), data.EditorData.Groups.ToList(), m, file, serializer, data.Errors, nodeFactory, generateAudio, getDocumentSource, audioProvider, backend);
                 }
             }
         }

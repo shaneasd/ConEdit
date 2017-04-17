@@ -19,6 +19,7 @@ namespace ConversationEditor
         SaveableFileExternalChangedSource m_file;
         HashSet<object> m_changesLastSave = new HashSet<object>();
         HashSet<object> m_currentChanges = new HashSet<object>();
+        private UpToDateFile.Backend m_backend;
 
         private bool Changed()
         {
@@ -38,15 +39,16 @@ namespace ConversationEditor
         /// <param name="path"></param>
         /// <param name="data"></param>
         /// <param name="serializer"></param>
-        private LocalizationFile(MemoryStream initialData, FileInfo path, LocalizerData data, ISerializer<LocalizerData> serializer)
+        private LocalizationFile(MemoryStream initialData, FileInfo path, LocalizerData data, ISerializer<LocalizerData> serializer, UpToDateFile.Backend backend)
         {
-            m_file = new SaveableFileExternalChangedSource(initialData, path, s => { serializer.Write(m_data, s); }, Changed, Saved);
+            m_backend = backend;
+            m_file = new SaveableFileExternalChangedSource(initialData, path, s => { serializer.Write(m_data, s); }, Changed, Saved, backend);
             m_data = data;
         }
 
         public ISaveableFile File { get { return m_file; } }
 
-        internal static LocalizationFile MakeNew(DirectoryInfo directory, Func<string, ISerializer<LocalizerData>> serializer, Func<FileInfo, bool> pathOk)
+        internal static LocalizationFile MakeNew(DirectoryInfo directory, Func<string, ISerializer<LocalizerData>> serializer, Func<FileInfo, bool> pathOk, UpToDateFile.Backend backend)
         {
             //Create a stream under an available filename
             FileInfo path = null;
@@ -63,13 +65,13 @@ namespace ConversationEditor
             }
             using (var mem = new MemoryStream())
             {
-                LocalizationFile result = new LocalizationFile(mem, path, data, serializer(path.FullName)); //Make a new localization file for an existing project
+                LocalizationFile result = new LocalizationFile(mem, path, data, serializer(path.FullName), backend); //Make a new localization file for an existing project
                 result.File.Writable.Save();
                 return result;
             }
         }
 
-        internal static LocalizationFile Load(FileInfo path, ISerializer<LocalizerData> serializer)
+        internal static LocalizationFile Load(FileInfo path, ISerializer<LocalizerData> serializer, UpToDateFile.Backend backend)
         {
             LocalizerData data;
             using (FileStream file = Util.LoadFileStream(path, FileMode.Open, FileAccess.Read))
@@ -81,7 +83,7 @@ namespace ConversationEditor
                     XmlLocalization.Deserializer d = new XmlLocalization.Deserializer();
                     data = d.Read(m);
                     m.Position = 0;
-                    LocalizationFile result = new LocalizationFile(m, path, data, serializer);
+                    LocalizationFile result = new LocalizationFile(m, path, data, serializer, backend);
                     return result;
                 }
             }
@@ -200,7 +202,7 @@ namespace ConversationEditor
 
         public void ImportInto(string[] fileNames)
         {
-            var localizations = fileNames.Select(path => new { Path = path, Localization = Load(new FileInfo(path), null) });
+            var localizations = fileNames.Select(path => new { Path = path, Localization = Load(new FileInfo(path), null, m_backend) });
 
             string message = "";
 

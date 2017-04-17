@@ -14,9 +14,10 @@ namespace Tests
         [NUnit.Framework.Test]
         public static void TestEverything()
         {
+            UpToDateFile.Backend backend = new UpToDateFile.Backend();
             using (MemoryStream m = new MemoryStream())
             {
-                using (SaveableFileUndoable file = new SaveableFileUndoable(m, new FileInfo("ignore.txt"), a => { }))
+                using (SaveableFileUndoable file = new SaveableFileUndoable(m, new FileInfo("ignore.txt"), a => { }, backend))
                 {
                     Assert.False(file.Changed);
                     file.Change(new GenericUndoAction(() => { }, () => { }, ""));

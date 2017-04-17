@@ -10,6 +10,8 @@ WORKFLOW:
 
 https://xkcd.com/1806/ : scroll wheel undo/redo
 
+Editor crashes if integer definition used in a conversation does not exist in domain
+
 [1:33:59 AM] Jonas Wæver: One is ghost connections, which is when you delete a connection but it seems to still be there in the graph view - you can click on empty space sometimes and a deleted connection will show up as highlighted
 EDITING A NODE WILL POTENTIALLY RESIZE IT WHICH CAN MOVE THE CONNECTOR POSITIONS POTENTIALLY WITHOUT UPDATING THE QUAD TREE
 

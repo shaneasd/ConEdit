@@ -280,5 +280,23 @@ namespace Utilities
         {
             return ReplaceImplementation(data, condition, replacement, true);
         }
+
+        public static IEnumerable<T> SelectTwo<T, U>(this IEnumerable<U> data, Func<U, T> a, Func<U, T> b)
+        {
+            foreach (var element in data)
+            {
+                yield return a(element);
+                yield return b(element);
+            }
+        }
+
+        public static void CopyTo<T>(this IEnumerable<T> data, T[] sink, int start)
+        {
+            foreach (var element in data)
+            {
+                sink[start] = element;
+                start++;
+            }
+        }
     }
 }

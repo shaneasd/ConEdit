@@ -170,8 +170,8 @@ namespace Tests.ConversationEditor
             states.Add(new List<ConversationNode>());
 
             Random r = new Random(0);
-
-            using (ConversationFile conversationFile = new ConversationFile(nodes, groups, rawData, file, serializer, errors, nodeFactory, generateAudio, getDocumentSource, audioProvider))
+            UpToDateFile.Backend backend = new UpToDateFile.Backend();
+            using (ConversationFile conversationFile = new ConversationFile(nodes, groups, rawData, file, serializer, errors, nodeFactory, generateAudio, getDocumentSource, audioProvider, backend))
             {
                 for (int i = 0; i < 10; i++)
                 {

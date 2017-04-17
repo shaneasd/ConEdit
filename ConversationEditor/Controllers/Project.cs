@@ -71,7 +71,7 @@ namespace ConversationEditor
         private ConversationDataSource m_conversationDataSource;
         SaveableFileNotUndoable m_file;
 
-        public static Project CreateEmpty(ILocalizationContext context, FileInfo path, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializer, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
+        public static Project CreateEmpty(ILocalizationContext context, FileInfo path, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializer, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization, UpToDateFile.Backend backend)
         {
             Project result = null;
             FileInfo conversationFile;
@@ -86,8 +86,8 @@ namespace ConversationEditor
                     conversationSerializer.Write(SerializationUtils.MakeConversationData(Enumerable.Empty<ConversationNode>(), new ConversationEditorData()), conversationStream);
                 }
 
-                LocalizationEngine temp = new LocalizationEngine(context, () => new HashSet<Id<LocalizedText>>(), s => false, s => false, p => !p.Exists, s => true);
-                localizationFile = LocalizationFile.MakeNew(path.Directory, s => temp.MakeSerializer(s), p => !p.Exists);
+                LocalizationEngine temp = new LocalizationEngine(context, () => new HashSet<Id<LocalizedText>>(), s => false, s => false, p => !p.Exists, s => true, backend);
+                localizationFile = LocalizationFile.MakeNew(path.Directory, s => temp.MakeSerializer(s), p => !p.Exists, backend);
 
                 //Create the new project
                 Write(conversationFile.Only(), localizationFile.File.File.Only(), Enumerable.Empty<FileInfo>(), Enumerable.Empty<FileInfo>(), m, path.Directory, serializer);
@@ -104,7 +104,7 @@ namespace ConversationEditor
 
                 TData data = new TData(conversationPaths, domainPaths, localizationPaths, Enumerable.Empty<string>());
 
-                result = new Project(context, data, conversationNodeFactory, domainNodeFactory, m, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig, audioCustomization);
+                result = new Project(context, data, conversationNodeFactory, domainNodeFactory, m, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig, audioCustomization, backend);
                 return result;
             }
         }
@@ -179,10 +179,10 @@ namespace ConversationEditor
         /// <param name="domainSerializer"></param>
         /// <param name="pluginsConfig"></param>
         /// <param name="audioCustomization"></param>
-        public Project(ILocalizationContext context, TData data, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, MemoryStream initialData, FileInfo projectFile, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializerFactory, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization)
+        public Project(ILocalizationContext context, TData data, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, MemoryStream initialData, FileInfo projectFile, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializerFactory, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization, UpToDateFile.Backend backend)
         {
             Action<Stream> saveTo = stream => { Write(Conversations.Select(c => c.File.File), LocalizationFiles.Select(l => l.File.File), DomainFiles.Select(d => d.File.File), AudioFiles.Select(a => a.File.File), stream, Origin, m_serializer); };
-            m_file = new SaveableFileNotUndoable(initialData, projectFile, saveTo);
+            m_file = new SaveableFileNotUndoable(initialData, projectFile, saveTo, backend);
             ConversationNodeFactory = conversationNodeFactory;
             DomainNodeFactory = domainNodeFactory;
             m_serializer = serializer;
@@ -212,16 +212,16 @@ namespace ConversationEditor
                                      //if (!domainEnumSource.ContainsKey(k))
                                      //domainEnumSource[k] = new DynamicEnumParameter.Source();
                                      //return domainEnumSource[k];
-                        };
+                    };
 
                     m_domainDataSource = new DomainDomain(pluginsConfig);
                     Func<IEnumerable<FileInfo>, IEnumerable<Either<DomainFile, MissingDomainFile>>> loader = paths =>
                     {
-                        var result = DomainFile.Load(paths, m_domainDataSource, document => DomainSerializerDeserializer.Make(m_domainDataSource), DomainNodeFactory, () => DomainUsage, getDomainEnumSource).Evaluate();
+                        var result = DomainFile.Load(paths, m_domainDataSource, document => DomainSerializerDeserializer.Make(m_domainDataSource), DomainNodeFactory, () => DomainUsage, getDomainEnumSource, backend).Evaluate();
                         result.ForAll(a => a.Do(b => b.ConversationDomainModified += ConversationDatasourceModified, null));
                         return result;
                     };
-                    Func<DirectoryInfo, DomainFile> makeEmpty = path => DomainFile.CreateEmpty(path, m_domainDataSource, m_domainSerializer, pathOk, DomainNodeFactory, () => DomainUsage, getDomainEnumSource);
+                    Func<DirectoryInfo, DomainFile> makeEmpty = path => DomainFile.CreateEmpty(path, m_domainDataSource, m_domainSerializer, pathOk, DomainNodeFactory, () => DomainUsage, getDomainEnumSource, backend);
                     m_domainFiles = new ProjectElementList<DomainFile, MissingDomainFile, IDomainFile>(s => CheckFolder(s, Origin), loader, makeEmpty);
                     IEnumerable<FileInfo> toLoad = Rerout(domainPaths);
                     m_domainFiles.Load(toLoad);
@@ -230,7 +230,7 @@ namespace ConversationEditor
 
 
                 {
-                    m_localizer = new LocalizationEngine(context, UsedLocalizations, ShouldContract, ShouldExpand, pathOk, s => CheckFolder(s, Origin));
+                    m_localizer = new LocalizationEngine(context, UsedLocalizations, ShouldContract, ShouldExpand, pathOk, s => CheckFolder(s, Origin), backend);
                     IEnumerable<FileInfo> toLoad = Rerout(localizerPaths);
                     m_localizer.Localizers.Load(toLoad);
                 }
@@ -244,8 +244,8 @@ namespace ConversationEditor
                     {
                         return m_conversationDataSource.GetSource(localEnum, newSourceID);
                     };
-                    Func<IEnumerable<FileInfo>, IEnumerable<ConversationFile>> loadConversation = files => files.Select(file => ConversationFile.Load(file, ConversationNodeFactory, m_conversationSerializerFactory(m_conversationDataSource), audio, getSource, m_audioProvider));
-                    Func<DirectoryInfo, ConversationFile> makeEmpty = path => ConversationFile.CreateEmpty(path, this, ConversationNodeFactory, audio, getSource, m_audioProvider);
+                    Func<IEnumerable<FileInfo>, IEnumerable<ConversationFile>> loadConversation = files => files.Select(file => ConversationFile.Load(file, ConversationNodeFactory, m_conversationSerializerFactory(m_conversationDataSource), audio, getSource, m_audioProvider, backend));
+                    Func<DirectoryInfo, ConversationFile> makeEmpty = path => ConversationFile.CreateEmpty(path, this, ConversationNodeFactory, audio, getSource, m_audioProvider, backend);
                     Func<FileInfo, MissingConversationFile> makeMissing = file => new MissingConversationFile(file);
                     m_conversations = new ProjectElementList<ConversationFile, MissingConversationFile, IConversationFile>(s => CheckFolder(s, Origin), loadConversation, makeEmpty, makeMissing);
                     IEnumerable<FileInfo> toLoad = Rerout(conversationPaths);

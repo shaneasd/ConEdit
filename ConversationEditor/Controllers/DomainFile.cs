@@ -72,10 +72,10 @@ namespace ConversationEditor
         /// <param name="domainUsage"></param>
         /// <param name="getDocumentSource"></param>
         /// <param name="autoCompletePatterns"></param>
-        public DomainFile(List<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ReadOnlyCollection<LoadError> errors, DomainDomain datasource, ISerializer<TData> serializer, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, List<IAutoCompletePattern> autoCompletePatterns)
+        public DomainFile(List<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ReadOnlyCollection<LoadError> errors, DomainDomain datasource, ISerializer<TData> serializer, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, List<IAutoCompletePattern> autoCompletePatterns, UpToDateFile.Backend backend)
             : base(nodes, groups, errors, nodeFactory, null, getDocumentSource, NoAudio.Instance)
         {
-            m_file = new SaveableFileUndoable(rawData, file, SaveTo);
+            m_file = new SaveableFileUndoable(rawData, file, SaveTo, backend);
             m_domainUsage = domainUsage;
             foreach (var node in m_nodes)
             {
@@ -98,7 +98,7 @@ namespace ConversationEditor
             m_autoCompletePatterns = autoCompletePatterns;
         }
 
-        public static DomainFile CreateEmpty(DirectoryInfo directory, DomainDomain datasource, ISerializer<TData> serializer, Func<FileInfo, bool> pathOk, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource)
+        public static DomainFile CreateEmpty(DirectoryInfo directory, DomainDomain datasource, ISerializer<TData> serializer, Func<FileInfo, bool> pathOk, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, UpToDateFile.Backend backend)
         {
             //Create a stream under an available filename
             FileInfo path = null;
@@ -117,7 +117,7 @@ namespace ConversationEditor
                     m.CopyTo(stream);
                 }
 
-                return new DomainFile(new List<GraphAndUI<NodeUIData>>(), new List<NodeGroup>(), m, path, new ReadOnlyCollection<LoadError>(new LoadError[0]), datasource, serializer, nodeFactory, domainUsage, getDocumentSource, new List<IAutoCompletePattern>());
+                return new DomainFile(new List<GraphAndUI<NodeUIData>>(), new List<NodeGroup>(), m, path, new ReadOnlyCollection<LoadError>(new LoadError[0]), datasource, serializer, nodeFactory, domainUsage, getDocumentSource, new List<IAutoCompletePattern>(), backend);
             }
         }
 
@@ -374,7 +374,7 @@ namespace ConversationEditor
             }
         }
 
-        internal static IEnumerable<Either<DomainFile, MissingDomainFile>> Load(IEnumerable<FileInfo> paths, DomainDomain source, Func<FileInfo, DomainSerializerDeserializer> serializerdeserializer, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource)
+        internal static IEnumerable<Either<DomainFile, MissingDomainFile>> Load(IEnumerable<FileInfo> paths, DomainDomain source, Func<FileInfo, DomainSerializerDeserializer> serializerdeserializer, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, UpToDateFile.Backend backend)
         {
             //List<FileStream> streams = new List<FileStream>();
 
@@ -457,7 +457,7 @@ namespace ConversationEditor
                     var nodeData = serializerdeserializer(stream.Item2).AutoCompleteSuggestionsDeserializer.Read(stream.Item1);
                     autoCompletePatterns.AddRange(AutoCompletePattern.Generate(nodeData, source));
 
-                    return new DomainFile(allData.Nodes.ToList(), editorData.EditorData.Groups.ToList(), stream.Item1, stream.Item2, allData.Errors, source, serializerdeserializer(stream.Item2).Serializer, nodeFactory, domainUsage, getDocumentSource, autoCompletePatterns);
+                    return new DomainFile(allData.Nodes.ToList(), editorData.EditorData.Groups.ToList(), stream.Item1, stream.Item2, allData.Errors, source, serializerdeserializer(stream.Item2).Serializer, nodeFactory, domainUsage, getDocumentSource, autoCompletePatterns, backend);
                 }, b => b));
             //var data = streams.Select(stream =>
             //{
