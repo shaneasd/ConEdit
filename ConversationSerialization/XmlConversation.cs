@@ -128,7 +128,8 @@ namespace Conversation.Serialization
                 if (root.Attribute("xmlversion") == null || !XmlVersionRead.Contains(root.Attribute("xmlversion").Value))
                     throw new UnknownXmlVersionException("unrecognised conversation xml version");
 
-                IEnumerable<Either<GraphAndUI<TUIRawData>, LoadError>> editables = root.Elements("Node").Select(n => ReadEditable(n, m_datasource, documentID)).Evaluate();
+                var filteredNodes = root.Elements("Node").Where(n => m_filter(ReadType(n)));
+                IEnumerable <Either<GraphAndUI<TUIRawData>, LoadError>> editables = filteredNodes.Select(n => ReadEditable(n, m_datasource, documentID)).Evaluate();
                 var allnodes = new Dictionary<Id<NodeTemp>, GraphAndUI<TUIRawData>>();
                 var errors = new List<LoadError>();
 
@@ -143,12 +144,7 @@ namespace Conversation.Serialization
                     });
                 }
 
-                //This makes a lot of assumptions but I'm fairly sure they're assumptions that currently hold
-                IEnumerable<Id<NodeTemp>> filteredNodes = allnodes.Keys.Where(k => m_filter(allnodes[k].GraphData.NodeTypeId)).Evaluate();
-
-                var links = ReadLinks(filteredNodes, root);
-
-                //HashSet<ID<NodeTemp>> filteredNodes = new HashSet<ID<NodeTemp>>(primaryFiltered.Union(links.SelectMany(t => new[] { t.Item1.Item2, t.Item2.Item2 })));
+                var links = ReadLinks(allnodes.Values.Select(n => n.GraphData.NodeId), root);
 
                 foreach (var link in links)
                 {
@@ -240,13 +236,18 @@ namespace Conversation.Serialization
                     }
                 }
 
-                return new XmlGraphData<TUIRawData, TEditorData>(filteredNodes.Select(a => allnodes[a]), m_editorDataDeserializer.Read(root), new ReadOnlyCollection<LoadError>(errors), documentID);
+                return new XmlGraphData<TUIRawData, TEditorData>(allnodes.Values, m_editorDataDeserializer.Read(root), new ReadOnlyCollection<LoadError>(errors), documentID);
+            }
+
+            private Id<NodeTypeTemp> ReadType(XElement node)
+            {
+                return Id<NodeTypeTemp>.Parse(node.Attribute("Guid").Value);
             }
 
             private Either<GraphAndUI<TUIRawData>, LoadError> ReadEditable(XElement node, IDataSource datasource, object documentID)
             {
                 Id<NodeTemp> id = Id<NodeTemp>.Parse(node.Attribute("Id").Value);
-                Id<NodeTypeTemp> guid = Id<NodeTypeTemp>.Parse(node.Attribute("Guid").Value);
+                Id<NodeTypeTemp> guid = ReadType(node);
 
                 INodeDataGenerator editableGenerator = datasource.GetNode(guid);
 
