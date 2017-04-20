@@ -772,18 +772,29 @@ namespace ConversationEditor
         {
             Graphics g = e.Graphics;
 
+            Matrix transform = GetTransform();
+
+            var tl = transform.Inverse().TransformPoint(new PointF(0, 0));
+            var br = transform.Inverse().TransformPoint(new PointF(Width, Height));
+            RectangleF bounds = RectangleF.FromLTRB(tl.X, tl.Y, br.X, br.Y);
+
             using (g.Clip = new Region(new RectangleF(0, 0, DocumentSize.Width * GraphScale, DocumentSize.Height * GraphScale)))
             {
                 var originalState = g.Save();
 
                 DrawGrid(e);
 
-                g.Transform = GetTransform();
+                g.Transform = transform;
 
                 if (CurrentFile != null)
                 {
-                    var orderedUnselectedNodes = CurrentFile.Nodes.Reverse().Where(n => !m_mouseController.Selected.Nodes.Contains(n.Data.NodeId));
-                    var orderedSelectedNodes = CurrentFile.Nodes.Reverse().Where(n => m_mouseController.Selected.Nodes.Contains(n.Data.NodeId));
+                    //var orderedUnselectedNodes = CurrentFile.Nodes.Reverse().Where(n => !m_mouseController.Selected.Nodes.Contains(n.Data.NodeId));
+                    //var orderedSelectedNodes = CurrentFile.Nodes.Reverse().Where(n => m_mouseController.Selected.Nodes.Contains(n.Data.NodeId));
+
+                    var tree = new ZOrderedQuadTree<TNode>(SpatiallyOrderedNodes, CurrentFile.RelativePosition);
+                    var nodes = tree.FindTouchingRegion(bounds).Reverse();
+                    var orderedUnselectedNodes = nodes.Where(n => !m_mouseController.Selected.Nodes.Contains(n.Data.NodeId));
+                    var orderedSelectedNodes = nodes.Where(n => m_mouseController.Selected.Nodes.Contains(n.Data.NodeId));
 
                     //Make sure the nodes are the right size so the connectors end up in the right place
                     foreach (var node in CurrentFile.Nodes)
