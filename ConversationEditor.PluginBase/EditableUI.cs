@@ -51,11 +51,13 @@ namespace ConversationEditor
             m_titleSection = new TitleSection(node);
             m_outputsSection = new OutputsSection(node);
             m_parametersSection = new ParametersSection(node, localizer, ShouldRender);
+            m_rounded = RoundedConfig.TryGet(Node.Data.Config) ?? false;
         }
 
         private Section m_titleSection;
         private Section m_parametersSection;
         private Section m_outputsSection;
+        private bool m_rounded;
 
         static GraphicsPath RoundedRectangle(RectangleF notRounded, int radius)
         {
@@ -212,19 +214,33 @@ namespace ConversationEditor
         {
             Func<Id<LocalizedText>, string> m_localizer;
             Func<IParameter, bool> ShouldRender;
+            private float m_maxWidth;
 
             public ParametersSection(ConversationNode node, Func<Id<LocalizedText>, string> localizer, Func<IParameter, bool> shouldRender)
                 : base(node)
             {
                 m_localizer = localizer;
                 ShouldRender = shouldRender;
+                m_maxWidth = MaxWidthConfig.TryGet(Node.Data.Config) ?? EditableUI.MaxWidth;
             }
 
             public float MaxWidth
             {
                 get
                 {
-                    return MaxWidthConfig.TryGet(Node.Data.Config) ?? EditableUI.MaxWidth;
+                    float result = MaxWidthConfig.TryGet(Node.Data.Config) ?? EditableUI.MaxWidth;
+                    //TODO: Profiling of a test in which I scrolled around a large conversation a bunch
+                    //      idicated that 8% of time was spent querying MaxWidth. As far as I can see,
+                    //      since this is a property of the nodes config it should not change unless the
+                    //      domain changes and thus the conversation is reloaded (or at the very least
+                    //      the open document is changed). As such I'm reasonably confident we can just
+                    //      cache it in the constructor. Once this check has been around for a while to
+                    //      test this assertion this property can just return m_maxWidth. 19/04/2017
+                    if (Math.Abs(m_maxWidth - result) > 1)
+                    {
+                        throw new Exception("Optimization failure in ParameterSection.MaxWidth");
+                    }
+                    return result;
                 }
             }
 
@@ -366,7 +382,19 @@ namespace ConversationEditor
         {
             get
             {
-                return RoundedConfig.TryGet(Node.Data.Config) ?? false;
+                bool result = RoundedConfig.TryGet(Node.Data.Config) ?? false;
+                //TODO: Profiling of a test in which I scrolled around a large conversation a bunch
+                //      idicated that 9% of time was spent querying Rounded. As far as I can see,
+                //      since this is a property of the nodes config it should not change unless the
+                //      domain changes and thus the conversation is reloaded (or at the very least
+                //      the open document is changed). As such I'm reasonably confident we can just
+                //      cache it in the constructor. Once this check has been around for a while to
+                //      test this assertion this property can just return m_maxWidth. 19/04/2017
+                if (m_rounded != result)
+                {
+                    throw new Exception("Optimization failure in ParameterSection.Rounded");
+                }
+                return result;
             }
         }
 
