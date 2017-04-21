@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithm\ReadonlySet.cs" />
+    <Compile Include="BottleNeck.cs" />
     <Compile Include="Disposable.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IO\DirectoryEqualityComparer.cs" />
