@@ -8,6 +8,13 @@ Installer builder project
 
 WORKFLOW:
 
+mousewheel scrollbar for project explorer
+minimise all button for project explorer
+read all conversation files in parallel assuming load time is bound by cpu and not disk
+dragging lots of nodes around on a large conversation has poor performance because of the constant adding/removing to/from the quad tree.
+
+Investigate construction of dynamicenumeration data sources. It seems like we create a whole bunch in the TypeSet and then migrate them all into the sources created by the project.
+
 https://xkcd.com/1806/ : scroll wheel undo/redo
 
 Editor crashes if integer definition used in a conversation does not exist in domain
