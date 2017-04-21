@@ -35,7 +35,9 @@ namespace Utilities
 
     public class Either<T, U>
     {
-        bool m_aSpecified;
+        readonly bool m_aSpecified;
+        readonly T A;
+        readonly U B;
 
         public Either(T a)
         {
@@ -49,8 +51,6 @@ namespace Utilities
             A = default(T);
             B = b;
         }
-        readonly T A;
-        readonly U B;
 
         public Either(bool useA, Func<T> aGenerator, Func<U> bGenerator)
         {
