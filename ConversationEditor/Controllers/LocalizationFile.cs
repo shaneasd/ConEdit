@@ -71,21 +71,40 @@ namespace ConversationEditor
             }
         }
 
-        internal static LocalizationFile Load(FileInfo path, ISerializer<LocalizerData> serializer, UpToDateFile.Backend backend)
+        internal static Either<LocalizationFile, MissingLocalizationFile, ILocalizationFile> Load(FileInfo path, ISerializer<LocalizerData> serializer, UpToDateFile.Backend backend)
         {
-            LocalizerData data;
-            using (FileStream file = Util.LoadFileStream(path, FileMode.Open, FileAccess.Read))
+            if (path.Exists)
             {
-                using (MemoryStream m = new MemoryStream((int)file.Length))
+                try
                 {
-                    file.CopyTo(m);
-                    m.Position = 0;
-                    XmlLocalization.Deserializer d = new XmlLocalization.Deserializer();
-                    data = d.Read(m);
-                    m.Position = 0;
-                    LocalizationFile result = new LocalizationFile(m, path, data, serializer, backend);
-                    return result;
+                    LocalizerData data;
+                    using (FileStream file = Util.LoadFileStream(path, FileMode.Open, FileAccess.Read))
+                    {
+                        using (MemoryStream m = new MemoryStream((int)file.Length))
+                        {
+                            file.CopyTo(m);
+                            m.Position = 0;
+                            XmlLocalization.Deserializer d = new XmlLocalization.Deserializer();
+                            data = d.Read(m);
+                            m.Position = 0;
+                            LocalizationFile result = new LocalizationFile(m, path, data, serializer, backend);
+                            return result;
+                        }
+                    }
                 }
+                catch (MyFileLoadException e)
+                {
+                    Console.Out.WriteLine(e.Message);
+                    Console.Out.WriteLine(e.StackTrace);
+                    Console.Out.WriteLine(e.InnerException.Message);
+                    Console.Out.WriteLine(e.InnerException.StackTrace);
+                    MessageBox.Show("File: " + path.Name + " exists but could not be accessed");
+                    return new MissingLocalizationFile(path);
+                }
+            }
+            else
+            {
+                return new MissingLocalizationFile(path);
             }
         }
 
@@ -209,7 +228,7 @@ namespace ConversationEditor
             var keys = m_data.AllLocalizations.Select(kvp => kvp.Key);
             foreach (var localization in localizations)
             {
-                foreach (var key in localization.Localization.ExistingLocalizations)
+                foreach (var key in localization.Localization.UpCast().ExistingLocalizations)
                 {
                     if (keys.Contains(key))
                         message += "Trying to import localization for " + key.Serialized() + " from " + localization.Path + " which already exists in the destination\n";
@@ -219,7 +238,7 @@ namespace ConversationEditor
             Dictionary<Id<LocalizedText>, string> paths = new Dictionary<Id<LocalizedText>, string>();
             foreach (var loc in localizations)
             {
-                foreach (var key in loc.Localization.ExistingLocalizations)
+                foreach (var key in loc.Localization.UpCast().ExistingLocalizations)
                 {
                     if (paths.ContainsKey(key))
                         message += "Trying to import localization for " + key.Serialized() + " from " + loc.Path + " and from " + paths[key] + "\n";
@@ -236,9 +255,9 @@ namespace ConversationEditor
             {
                 foreach (var loc in localizations)
                 {
-                    foreach (var key in loc.Localization.ExistingLocalizations)
+                    foreach (var key in loc.Localization.UpCast().ExistingLocalizations)
                     {
-                        SetLocalizationAction(key, loc.Localization.Localize(key)).Redo();
+                        SetLocalizationAction(key, loc.Localization.UpCast().Localize(key)).Redo();
                     }
                 }
             }

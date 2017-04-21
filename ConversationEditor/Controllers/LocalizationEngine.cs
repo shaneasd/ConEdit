@@ -34,10 +34,13 @@ namespace ConversationEditor
             ShouldClean = shouldClean;
             ShouldExpand = shouldExpand;
 
-            Func<IEnumerable<FileInfo>, IEnumerable<LocalizationFile>> load = files => files.Select(file => LocalizationFile.Load(file, MakeSerializer(file.Name), backend));
+            Func<IEnumerable<FileInfo>, IEnumerable<Either<LocalizationFile, MissingLocalizationFile>>> load = files =>
+            {
+                return files.Select(file => LocalizationFile.Load(file, MakeSerializer(file.Name), backend));
+                //return ParallelEnumerable.Select(files.AsParallel(), file => LocalizationFile.Load(file, MakeSerializer(file.Name), backend));
+            };
             Func<DirectoryInfo, LocalizationFile> makeEmpty = path => LocalizationFile.MakeNew(path, MakeSerializer, pathOk, backend);
-            Func<FileInfo, MissingLocalizationFile> makeMissing = file => new MissingLocalizationFile(file);
-            m_localizers = new ProjectElementList<LocalizationFile, MissingLocalizationFile, ILocalizationFile>(fileLocationOk, load, makeEmpty, makeMissing);
+            m_localizers = new ProjectElementList<LocalizationFile, MissingLocalizationFile, ILocalizationFile>(fileLocationOk.BottleNeck(), load, makeEmpty);
             m_localizers.GotChanged += () =>
             {
                 //If there is only one localizer then it must be the current localizer
