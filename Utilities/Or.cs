@@ -159,4 +159,40 @@ namespace Utilities
                 b.Execute(B);
         }
     }
+
+    //TODO: Pretty much any usage of this class is me being lazy and probably deserves its own class
+    public class Either<T, U, I> : Either<T, U> where T : I where U : I
+    {
+        public Either(T a) : base(true, () => a, null)
+        {
+        }
+
+        public Either(U b) : base(false, null, () => b)
+        {
+        }
+
+        public Either(bool useA, Func<T> aGenerator, Func<U> bGenerator) : base(useA, aGenerator, bGenerator)
+        {
+        }
+
+        public static implicit operator Either<T, U, I>(T a)
+        {
+            return new Either<T, U, I>(a);
+        }
+
+        public static implicit operator Either<T, U, I>(U b)
+        {
+            return new Either<T, U, I>(b);
+        }
+
+        public static implicit operator I (Either<T, U, I> either)
+        {
+            return either.Transformed<I>(a => a, b => b);
+        }
+
+        public I UpCast()
+        {
+            return this;
+        }
+    }
 }
