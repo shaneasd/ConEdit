@@ -105,20 +105,20 @@ namespace Conversation
         {
             var parameters = m_data.Parameters.Select(p => p.Make((a, b, c, d) => m_types.Make(a, b, c, d, document))).ToArray();
 
-            var result = parameters.Concat(m_extraParameters(parameters)).ToList();
+            Dictionary<Id<Parameter>, IParameter> result = parameters.Concat(m_extraParameters(parameters)).ToDictionary(p => p.Id);
             foreach (var d in parameterData)
             {
-                var parameter = result.SingleOrDefault(p => p.Id == d.Guid);
-                if (parameter != null)
+                IParameter parameter;
+                if (result.TryGetValue(d.Guid, out parameter))
                 {
                     parameter.TryDeserialiseValue(d.Value);
                 }
                 else
                 {
-                    result.Add(new UnknownParameter(d.Guid, d.Value));
+                    result.Add(d.Guid, new UnknownParameter(d.Guid, d.Value));
                 }
             }
-            return result;
+            return result.Values;
         }
 
         public ReadOnlyCollection<NodeData.ConfigData> GetParameterConfig(Id<Parameter> parameterId)
