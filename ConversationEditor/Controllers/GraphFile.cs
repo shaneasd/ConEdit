@@ -78,7 +78,12 @@ namespace ConversationEditor
                 parameter.MergeInto(new DynamicEnumParameter.Source());
             }
             foreach (var node in m_nodes)
+            {
                 NodeRemoved.Execute(node);
+
+                foreach (Output connection in node.Data.Connectors)
+                    m_cachedNodeUI.Remove(connection);
+            }
         }
 
         private void M_nodes_Removing(ConversationNode<INodeGui> node)
@@ -89,6 +94,8 @@ namespace ConversationEditor
                 parameter.MergeInto(new DynamicEnumParameter.Source());
             }
             NodeRemoved.Execute(node);
+            foreach (Output connection in node.Data.Connectors)
+                m_cachedNodeUI.Remove(connection);
         }
 
         private void M_nodes_Inserting(ConversationNode<INodeGui> node)
@@ -102,6 +109,9 @@ namespace ConversationEditor
         private void M_nodes_Inserted(ConversationNode<INodeGui> node)
         {
             NodeAdded.Execute(node);
+
+            foreach (Output connection in node.Data.Connectors)
+                UIInfo(connection, false);
         }
 
         public IEnumerableReversible<ConversationNode> Nodes
