@@ -109,7 +109,8 @@ namespace Utilities
 
         public void Add(T element, RectangleF bounds)
         {
-            Debugging.WriteLine("Count: {0}", this.Count());
+            if (Debugging.Enabled)
+                Debugging.WriteLine("Count: {0}", this.Count());
             Debugging.WriteLine("Adding {0}", bounds);
             try
             {
@@ -145,13 +146,15 @@ namespace Utilities
             }
             finally
             {
-                Debugging.WriteLine("Count: {0}", this.Count());
+                if (Debugging.Enabled)
+                    Debugging.WriteLine("Count: {0}", this.Count());
             }
         }
 
         public bool Remove(T node, RectangleF area)
         {
-            Debugging.WriteLine("Count: {0}", this.Count());
+            if (Debugging.Enabled)
+                Debugging.WriteLine("Count: {0}", this.Count());
             try
             {
                 Debugging.WriteLine("Removing {0}", area);
@@ -162,7 +165,8 @@ namespace Utilities
             }
             finally
             {
-                Debugging.WriteLine("Count: {0}", this.Count());
+                if (Debugging.Enabled)
+                    Debugging.WriteLine("Count: {0}", this.Count());
             }
         }
 
@@ -173,7 +177,8 @@ namespace Utilities
 
         public IEnumerable<T> FindTouchingRegion(RectangleF bounds)
         {
-            Debugging.WriteLine("Count: {0}", this.Count());
+            if (Debugging.Enabled)
+                Debugging.WriteLine("Count: {0}", this.Count());
             return m_root.FindTouchingRegion(bounds);
         }
 
