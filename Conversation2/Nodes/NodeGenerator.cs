@@ -16,7 +16,7 @@ namespace Conversation
 
         public NodeDataGeneratorParameterData(Id<Parameter> guid, string value)
         {
-            if (guid == null)
+            if (object.ReferenceEquals(guid, null))
                 throw new ArgumentNullException(nameof(guid));
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
