@@ -113,7 +113,7 @@ namespace Conversation.Serialization
                 m_datasource = datasource;
                 m_nodeUIDeserializer = nodeUISerializer;
                 m_editorDataDeserializer = editorDataDeserializer;
-                m_filter = filter ?? new Func<Id<NodeTypeTemp>, bool>(i => true);
+                m_filter = filter;
             }
 
             public XmlGraphData<TUIRawData, TEditorData> Read(Stream stream)
@@ -128,7 +128,8 @@ namespace Conversation.Serialization
                 if (root.Attribute("xmlversion") == null || !XmlVersionRead.Contains(root.Attribute("xmlversion").Value))
                     throw new UnknownXmlVersionException("unrecognised conversation xml version");
 
-                var filteredNodes = root.Elements("Node").Where(n => m_filter(ReadType(n)));
+                var nodeElements = root.Elements("Node");
+                var filteredNodes = m_filter != null ? nodeElements.Where(n => m_filter(ReadType(n))) : nodeElements;
                 IEnumerable <Either<GraphAndUI<TUIRawData>, LoadError>> editables = filteredNodes.Select(n => ReadEditable(n, m_datasource, documentID)).Evaluate();
                 var allnodes = new Dictionary<Id<NodeTemp>, GraphAndUI<TUIRawData>>();
                 var errors = new List<LoadError>();
