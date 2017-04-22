@@ -402,7 +402,7 @@ namespace ConversationEditor
                     try
                     {
                         temp = new MissingDomainFile(path);
-                        var result = (Either<Tuple<MemoryStream, FileInfo>, MissingDomainFile>)(temp);
+                        Either<Tuple<MemoryStream, FileInfo>, MissingDomainFile> result = temp;
                         temp = null;
                         return result;
                     }

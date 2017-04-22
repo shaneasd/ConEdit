@@ -45,7 +45,7 @@ namespace Conversation
         public IEnumerable<IntegerData> VisibleIntegers { get { return m_integers.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
         public IEnumerable<DecimalData> VisibleDecimals { get { return m_decimals.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
 
-        public Tuple<int?,int?> GetIntegerRange(ParameterType type)
+        public Tuple<int?, int?> GetIntegerRange(ParameterType type)
         {
             var data = m_integers[type];
             return Tuple.Create(data.Min, data.Max);
