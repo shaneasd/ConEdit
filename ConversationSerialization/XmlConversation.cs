@@ -145,7 +145,7 @@ namespace Conversation.Serialization
                     });
                 }
 
-                var links = ReadLinks(allnodes.Values.Select(n => n.GraphData.NodeId), root);
+                var links = ReadLinks(n => allnodes.ContainsKey(n), root);
 
                 foreach (var link in links)
                 {
@@ -272,7 +272,7 @@ namespace Conversation.Serialization
                 return result;
             }
 
-            private static HashSet<UnorderedTuple2<Tuple<Id<TConnector>, Id<NodeTemp>>>> ReadLinks(IEnumerable<Id<NodeTemp>> filteredNodes, XElement root)
+            private static HashSet<UnorderedTuple2<Tuple<Id<TConnector>, Id<NodeTemp>>>> ReadLinks(Func<Id<NodeTemp>, bool> filteredNodesContains, XElement root)
             {
                 HashSet<UnorderedTuple2<Tuple<Id<TConnector>, Id<NodeTemp>>>> result = new HashSet<UnorderedTuple2<Tuple<Id<TConnector>, Id<NodeTemp>>>>();
 
@@ -283,7 +283,7 @@ namespace Conversation.Serialization
                     Id<NodeTemp> node2 = Id<NodeTemp>.Parse(link.Attribute("node2").Value);
                     Id<TConnector> connector2 = Id<TConnector>.Parse(link.Attribute("connector2").Value);
 
-                    if (filteredNodes.Any(n => n.Equals(node1) || n.Equals(node2)))
+                    if (filteredNodesContains(node1) || filteredNodesContains(node2))
                         result.Add(UnorderedTuple.Make(Tuple.Create(connector1, node1), Tuple.Create(connector2, node2)));
                 }
                 return result;
