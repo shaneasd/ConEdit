@@ -196,6 +196,7 @@ namespace Utilities
         public class Element : IEnumerable<T>
         {
             List<T> Data = new List<T>();
+            List<Tuple<T, RectangleF>> ExtraData = new List<Tuple<T, RectangleF>>();
             Element Lower00 = null;
             Element Lower01 = null;
             Element Lower10 = null;
@@ -206,6 +207,7 @@ namespace Utilities
             internal readonly RectangleF Bounds01;
             internal readonly RectangleF Bounds10;
             internal readonly RectangleF Bounds11;
+            int m_splitSize = 2;
 
             public Element(RectangleF bounds)
             {
@@ -219,13 +221,23 @@ namespace Utilities
 
             public Element Add(T element, RectangleF area)
             {
-                //Apply a minimum size
-                if (Bounds.Width * Bounds.Height < 1)
+                if (ExtraData.Count >= m_splitSize)
                 {
-                    Data.Add(element);
+                    m_splitSize = 0;
+                    foreach (var x in ExtraData)
+                        ReallyAdd(x.Item1, x.Item2);
+                    ExtraData.Clear();
+                    return ReallyAdd(element, area);
+                }
+                else
+                {
+                    ExtraData.Add(Tuple.Create(element, area));
                     return this;
                 }
+            }
 
+            private Element ReallyAdd(T element, RectangleF area)
+            {
                 var center = Bounds.Center();
                 if (area.Top > center.Y) //It's in the bottom half only
                 {
@@ -270,30 +282,14 @@ namespace Utilities
                     }
                 }
 
-                //else if (Bounds01.Contains(bounds))
-                //{
-
-                //    return Lower01.Add(element, bounds);
-                //}
-                //else if (Bounds10.Contains(bounds))
-                //{
-
-                //    return Lower10.Add(element, bounds);
-                //}
-                //else if (Bounds11.Contains(bounds))
-                //{
-
-                //    return Lower11.Add(element, bounds);
-                //}
-                //else
-                {
-                    Data.Add(element);
-                    return this;
-                }
+                Data.Add(element);
+                return this;
             }
 
             public bool Remove(T node, RectangleF area)
             {
+                if (ExtraData.Remove(Tuple.Create(node, area)))
+                    return true;
                 var center = Bounds.Center();
                 if (area.Top > center.Y) //It's in the bottom half only
                 {
@@ -340,7 +336,7 @@ namespace Utilities
 
             public IEnumerator<T> GetEnumerator()
             {
-                return Data.Concat(LowerNonNull.SelectMany(x => x)).GetEnumerator();
+                return ExtraData.Select(a => a.Item1).Concat(Data.Concat(LowerNonNull.SelectMany(x => x))).GetEnumerator();
             }
 
             IEnumerator IEnumerable.GetEnumerator()
@@ -384,6 +380,8 @@ namespace Utilities
             {
                 if (Bounds.IntersectsWith(bounds))
                 {
+                    foreach (var d in ExtraData)
+                        yield return d.Item1;
                     foreach (var d in Data)
                         yield return d;
                 }
@@ -396,6 +394,14 @@ namespace Utilities
 
             internal RectangleF? FindAndRemnove(T n)
             {
+                int i = ExtraData.FindIndex(a => a.Item1.Equals(n));
+                if (i >= 0)
+                {
+                    var result = ExtraData[i];
+                    ExtraData.RemoveAt(i);
+                    return result.Item2;
+                }
+
                 if (Data.Remove(n))
                     return Bounds;
                 else
