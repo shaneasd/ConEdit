@@ -54,13 +54,16 @@
             this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.throwTestExceptionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sanityTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wordCountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wordCountToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.nodeCountToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.parameterCountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.projectExplorer = new ConversationEditor.ProjectExplorer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.m_conversationEditor = new ConversationEditor.ConversationEditorControl();
             this.errorList1 = new ConversationEditor.ErrorList();
-            this.wordCountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -372,6 +375,37 @@
             this.sanityTestToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
             this.sanityTestToolStripMenuItem.Text = "Sanity Test";
             // 
+            // wordCountToolStripMenuItem
+            // 
+            this.wordCountToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.wordCountToolStripMenuItem1,
+            this.nodeCountToolStripMenuItem1,
+            this.parameterCountToolStripMenuItem});
+            this.wordCountToolStripMenuItem.Name = "wordCountToolStripMenuItem";
+            this.wordCountToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
+            this.wordCountToolStripMenuItem.Text = "Word Count";
+            // 
+            // wordCountToolStripMenuItem1
+            // 
+            this.wordCountToolStripMenuItem1.Name = "wordCountToolStripMenuItem1";
+            this.wordCountToolStripMenuItem1.Size = new System.Drawing.Size(156, 22);
+            this.wordCountToolStripMenuItem1.Text = "Word Count";
+            this.wordCountToolStripMenuItem1.Click += new System.EventHandler(this.wordCountToolStripMenuItem_Click);
+            // 
+            // nodeCountToolStripMenuItem1
+            // 
+            this.nodeCountToolStripMenuItem1.Name = "nodeCountToolStripMenuItem1";
+            this.nodeCountToolStripMenuItem1.Size = new System.Drawing.Size(156, 22);
+            this.nodeCountToolStripMenuItem1.Text = "Node Count";
+            this.nodeCountToolStripMenuItem1.Click += new System.EventHandler(this.nodeCountToolStripMenuItem1_Click);
+            // 
+            // parameterCountToolStripMenuItem
+            // 
+            this.parameterCountToolStripMenuItem.Name = "parameterCountToolStripMenuItem";
+            this.parameterCountToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.parameterCountToolStripMenuItem.Text = "Parameter Count";
+            this.parameterCountToolStripMenuItem.Click += new System.EventHandler(this.parameterCountToolStripMenuItem_Click);
+            // 
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
@@ -452,13 +486,6 @@
             this.errorList1.Size = new System.Drawing.Size(804, 138);
             this.errorList1.TabIndex = 3;
             // 
-            // wordCountToolStripMenuItem
-            // 
-            this.wordCountToolStripMenuItem.Name = "wordCountToolStripMenuItem";
-            this.wordCountToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
-            this.wordCountToolStripMenuItem.Text = "Word Count";
-            this.wordCountToolStripMenuItem.Click += new System.EventHandler(this.wordCountToolStripMenuItem_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -533,6 +560,9 @@
         private System.Windows.Forms.ToolStripMenuItem testEverythingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sanityTestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wordCountToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem wordCountToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem nodeCountToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem parameterCountToolStripMenuItem;
     }
 }
 

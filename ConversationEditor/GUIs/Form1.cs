@@ -935,5 +935,36 @@ namespace ConversationEditor
             }
             MessageBox.Show(builder.ToString());
         }
+
+        private void nodeCountToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            int nodeCount = 0;
+            foreach (var doc in m_context.CurrentProject.Value.DomainFiles)
+                nodeCount += doc.Nodes.Count();
+            foreach (var doc in m_context.CurrentProject.Value.Conversations)
+                nodeCount += doc.Nodes.Count();
+
+            string message = "Total Nodes: " + nodeCount.ToString();
+            message += "\n";
+            message += "Current file nodes: " + CurrentFile.Nodes.Count();
+
+            MessageBox.Show(message);
+        }
+
+        private void parameterCountToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int count = 0;
+            foreach (var doc in m_context.CurrentProject.Value.DomainFiles)
+                foreach (var node in doc.Nodes)
+                    count += node.Data.Parameters.Count();
+            foreach (var doc in m_context.CurrentProject.Value.Conversations)
+                foreach (var node in doc.Nodes)
+                    count += node.Data.Parameters.Count();
+            string message = "Total Parameters: " + count.ToString();
+            message += "\n";
+            message += "Current file parameters: " + CurrentFile.Nodes.SelectMany(n => n.Data.Parameters).Count();
+
+            MessageBox.Show(message);
+        }
     }
 }
