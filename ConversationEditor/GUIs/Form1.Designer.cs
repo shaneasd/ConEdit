@@ -64,6 +64,7 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.m_conversationEditor = new ConversationEditor.ConversationEditorControl();
             this.errorList1 = new ConversationEditor.ErrorList();
+            this.cyclomaticComplexityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -380,7 +381,8 @@
             this.wordCountToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.wordCountToolStripMenuItem1,
             this.nodeCountToolStripMenuItem1,
-            this.parameterCountToolStripMenuItem});
+            this.parameterCountToolStripMenuItem,
+            this.cyclomaticComplexityToolStripMenuItem});
             this.wordCountToolStripMenuItem.Name = "wordCountToolStripMenuItem";
             this.wordCountToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
             this.wordCountToolStripMenuItem.Text = "Word Count";
@@ -388,21 +390,21 @@
             // wordCountToolStripMenuItem1
             // 
             this.wordCountToolStripMenuItem1.Name = "wordCountToolStripMenuItem1";
-            this.wordCountToolStripMenuItem1.Size = new System.Drawing.Size(156, 22);
+            this.wordCountToolStripMenuItem1.Size = new System.Drawing.Size(181, 22);
             this.wordCountToolStripMenuItem1.Text = "Word Count";
             this.wordCountToolStripMenuItem1.Click += new System.EventHandler(this.wordCountToolStripMenuItem_Click);
             // 
             // nodeCountToolStripMenuItem1
             // 
             this.nodeCountToolStripMenuItem1.Name = "nodeCountToolStripMenuItem1";
-            this.nodeCountToolStripMenuItem1.Size = new System.Drawing.Size(156, 22);
+            this.nodeCountToolStripMenuItem1.Size = new System.Drawing.Size(181, 22);
             this.nodeCountToolStripMenuItem1.Text = "Node Count";
             this.nodeCountToolStripMenuItem1.Click += new System.EventHandler(this.nodeCountToolStripMenuItem1_Click);
             // 
             // parameterCountToolStripMenuItem
             // 
             this.parameterCountToolStripMenuItem.Name = "parameterCountToolStripMenuItem";
-            this.parameterCountToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.parameterCountToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.parameterCountToolStripMenuItem.Text = "Parameter Count";
             this.parameterCountToolStripMenuItem.Click += new System.EventHandler(this.parameterCountToolStripMenuItem_Click);
             // 
@@ -486,6 +488,13 @@
             this.errorList1.Size = new System.Drawing.Size(804, 138);
             this.errorList1.TabIndex = 3;
             // 
+            // cyclomaticComplexityToolStripMenuItem
+            // 
+            this.cyclomaticComplexityToolStripMenuItem.Name = "cyclomaticComplexityToolStripMenuItem";
+            this.cyclomaticComplexityToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.cyclomaticComplexityToolStripMenuItem.Text = "Cyclomatic Complexity";
+            this.cyclomaticComplexityToolStripMenuItem.Click += new System.EventHandler(this.cyclomaticComplexityToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -563,6 +572,7 @@
         private System.Windows.Forms.ToolStripMenuItem wordCountToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem nodeCountToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem parameterCountToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cyclomaticComplexityToolStripMenuItem;
     }
 }
 

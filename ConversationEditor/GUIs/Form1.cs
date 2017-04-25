@@ -946,7 +946,7 @@ namespace ConversationEditor
 
             string message = "Total Nodes: " + nodeCount.ToString();
             message += "\n";
-            message += "Current file nodes: " + CurrentFile.Nodes.Count();
+            message += "Current document nodes: " + CurrentFile.Nodes.Count();
 
             MessageBox.Show(message);
         }
@@ -962,9 +962,38 @@ namespace ConversationEditor
                     count += node.Data.Parameters.Count();
             string message = "Total Parameters: " + count.ToString();
             message += "\n";
-            message += "Current file parameters: " + CurrentFile.Nodes.SelectMany(n => n.Data.Parameters).Count();
+            message += "Current document parameters: " + CurrentFile.Nodes.SelectMany(n => n.Data.Parameters).Count();
 
             MessageBox.Show(message);
+        }
+
+        private void cyclomaticComplexityToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            {
+                var document = CurrentFile;
+                int complexity = CalculateCyclomaticComplexity(document);
+                MessageBox.Show("Current document cyclomatic complexity: " + complexity);
+            }
+
+            using (StreamWriter w = new StreamWriter("complexity.csv", false))
+            {
+                foreach (var conversation in m_context.CurrentProject.Value.Conversations)
+                {
+                    int complexity = CalculateCyclomaticComplexity(conversation);
+                    w.WriteLine(conversation.File.File.Name + ", " + complexity);
+                }
+            }
+        }
+
+        private static int CalculateCyclomaticComplexity(IConversationEditorControlData<ConversationNode<INodeGui>, TransitionNoduleUIInfo> document)
+        {
+            int nodes;
+            int connections;
+            int endpoints;
+            nodes = document.Nodes.Count();
+            connections = document.Nodes.SelectMany(n => n.Data.Connectors).SelectMany(c => c.Connections).Count() / 2;
+            endpoints = document.Nodes.Where(n => n.Data.Connectors.Where(c => c.Connections.Any()).Count() < 2).Count(); //Nodes that aren't in the middle of a chain
+            return connections - nodes + endpoints;
         }
     }
 }
