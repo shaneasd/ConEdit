@@ -298,5 +298,16 @@ namespace Utilities
                 start++;
             }
         }
+
+        public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue> getvalue)
+        {
+            TValue result;
+            if (!dict.TryGetValue(key, out result))
+            {
+                result = getvalue(key);
+                dict[key] = result;
+            }
+            return result;
+        }
     }
 }

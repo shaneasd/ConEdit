@@ -131,9 +131,7 @@ namespace Conversation
         public DynamicEnumParameter.Source GetDynamicEnumSource(ParameterType type)
         {
             var key = Tuple.Create(type, (object)null);
-            if (!m_localDynamicEnumSources.ContainsKey(key))
-                m_localDynamicEnumSources[key] = new DynamicEnumParameter.Source();
-            return m_localDynamicEnumSources[key];
+            return m_localDynamicEnumSources.GetOrAdd(key, k => new DynamicEnumParameter.Source());
         }
 
         public DynamicEnumParameter.Source GetLocalDynamicEnumSource(ParameterType type, TDocument document)
@@ -142,9 +140,7 @@ namespace Conversation
                 throw new ArgumentNullException(nameof(document));
 
             var key = Tuple.Create(type, document);
-            if (!m_localDynamicEnumSources.ContainsKey(key))
-                m_localDynamicEnumSources[key] = new DynamicEnumParameter.Source();
-            return m_localDynamicEnumSources[key];
+            return m_localDynamicEnumSources.GetOrAdd(key, k => new DynamicEnumParameter.Source());
         }
 
         public void AddLocalDynamicEnum(LocalDynamicEnumerationData typeData)
