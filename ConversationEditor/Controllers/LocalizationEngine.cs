@@ -74,7 +74,7 @@ namespace ConversationEditor
 
         public Tuple<Id<LocalizedText>, SimpleUndoPair> DuplicateActions(Id<LocalizedText> guid)
         {
-            Id<LocalizedText> result = new Id<LocalizedText>();
+            Id<LocalizedText> result = Id<LocalizedText>.New();
             List<SimpleUndoPair> actions = new List<SimpleUndoPair>();
             foreach (var loc in Localizers.OfType<LocalizationFile>())
             {

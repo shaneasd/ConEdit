@@ -99,7 +99,7 @@ namespace ConversationEditor
             {
                 if (m_parameter.Corrupted)
                 {
-                    Id<LocalizedText> id = new Id<LocalizedText>();
+                    Id<LocalizedText> id = Id<LocalizedText>.New();
                     var parameterAction = m_parameter.SetValueAction(id);
                     var localizerAction = m_localizer.SetLocalizationAction(id, m_textBox.Text);
                     return new SimpleUndoPair
