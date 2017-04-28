@@ -47,7 +47,7 @@ namespace ConversationEditor
                     var parentParameter = categoryNode.Data.Parameters.Single(p => p.Id == DomainIDs.CategoryParent) as IEnumParameter;
                     if (parentParameter.Value == id.Guid)
                     {
-                        result.Add(new Usage(categoryNode, domainFile, "Category definition " + categoryNode.Data.Parameters.Where(x=>x.Id == DomainIDs.CategoryName).Single().ValueAsString()));
+                        result.Add(new Usage(categoryNode, domainFile, "Category definition " + categoryNode.Data.Parameters.Where(x => x.Id == DomainIDs.CategoryName).Single().ValueAsString()));
                     }
                 }
 
@@ -57,7 +57,7 @@ namespace ConversationEditor
                     var category = nodeDefinitionNode.Data.Parameters.Single(p => p.Id == DomainIDs.NodeCategory) as IEnumParameter;
                     if (category.Value == id.Guid)
                     {
-                        result.Add(new Usage(nodeDefinitionNode, domainFile, "Node definition " + nodeDefinitionNode.Data.Parameters.Where(x=>x.Id == DomainIDs.NodeName).Single().ValueAsString()));
+                        result.Add(new Usage(nodeDefinitionNode, domainFile, "Node definition " + nodeDefinitionNode.Data.Parameters.Where(x => x.Id == DomainIDs.NodeName).Single().ValueAsString()));
                     }
                 }
             }
@@ -81,7 +81,7 @@ namespace ConversationEditor
                     var typeParameter = parameterNode.Data.Parameters.SingleOrDefault(p => p.Id == DomainIDs.PARAMETER_TYPE) as IEnumParameter; //Identifies what subtype of the base type it is (e.g. what kind of integer)
                     if (typeParameter.Value == id.Guid)
                     {
-                        result.Add(new Usage(parameterNode, domainFile, type.Name + " parameter " + parameterNode.Data.Parameters.Where(x=>x.Id == DomainIDs.ParameterName).Single().ValueAsString()));
+                        result.Add(new Usage(parameterNode, domainFile, type.Name + " parameter " + parameterNode.Data.Parameters.Where(x => x.Id == DomainIDs.ParameterName).Single().ValueAsString()));
                     }
                 }
             }
@@ -132,7 +132,7 @@ namespace ConversationEditor
                                 var defaultParameter = n.Data.Parameters.Single(p => p.Id == DomainIDs.ParameterDefault) as IDynamicEnumParameter;
                                 var expectedValue = (node.Data.Parameters.Single(p => p.Id == DomainIDs.EnumerationValueParameter) as IStringParameter).Value;
                                 if (defaultParameter.Value == expectedValue)
-                                    result.Add(new Usage(n, domainFile, "Enum definition " + n.Data.Parameters.Where(x=>x.Id == DomainIDs.ParameterName).Single().ValueAsString() + " default value"));
+                                    result.Add(new Usage(n, domainFile, "Enum definition " + n.Data.Parameters.Where(x => x.Id == DomainIDs.ParameterName).Single().ValueAsString() + " default value"));
                             }
                         }
                     }
