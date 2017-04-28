@@ -221,6 +221,7 @@ namespace ConversationEditor
              * Enumeration Value
              * 
              * Connector Definition
+             * Connection Definition
              * 
              * Integer Parameter
              * Decimal Parameter
@@ -266,7 +267,7 @@ namespace ConversationEditor
             }
             else if (id == DomainIDs.ConnectionDefinitionGuid)
             {
-                return Enumerable.Empty<Usage>(); //TODO: Figure out usage implications of connection definitions on usage
+                return ConnectionDefinitionUsages(node.Data);
             }
             //It's a parameter
             else if (BaseType.BaseTypes.Any(t => t.ParameterNodeType == id))
@@ -290,6 +291,36 @@ namespace ConversationEditor
                 //This node is of a type unknown to the domain domain (i.e. it's presumably in the conversation domain)
                 return Enumerable.Empty<Usage>();
             }
+        }
+
+        private IEnumerable<Usage> ConnectionDefinitionUsages(IConversationNodeData data)
+        {
+            Id<TConnectorDefinition> connector1 = Id<TConnectorDefinition>.FromGuid(data.Parameters.Where(p => p.Id == DomainIDs.ConnectionDefinitionConnector1).OfType<IEnumParameter>().Single().Value);
+            Id<TConnectorDefinition> connector2 = Id<TConnectorDefinition>.FromGuid(data.Parameters.Where(p => p.Id == DomainIDs.ConnectionDefinitionConnector2).OfType<IEnumParameter>().Single().Value);
+            var reference = UnorderedTuple.Make(connector1, connector2);
+
+            foreach (var conversationFile in m_project.Conversations)
+            {
+                HashSet<UnorderedTuple2<Output>> connections = new HashSet<UnorderedTuple2<Output>>();
+                foreach (var node in conversationFile.Nodes)
+                {
+                    foreach (var connector in node.Data.Connectors)
+                    {
+                        if (connector.Definition.Id == connector1 || connector.Definition.Id == connector2)
+                        {
+                            foreach (var connection in connector.Connections)
+                            {
+                                var c = UnorderedTuple.Make(connector.Definition.Id, connection.Definition.Id);
+                                if (c == reference)
+                                    connections.Add(UnorderedTuple.Make(connector, connection));
+
+                                yield return new Usage(node, conversationFile, "Node connection using connector definition");
+                            }
+                        }
+                    }
+                }
+            }
+
         }
 
         /// <summary>
