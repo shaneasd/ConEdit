@@ -309,5 +309,11 @@ namespace Utilities
             }
             return result;
         }
+
+        public static bool TryRemove<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, out TValue value)
+        {
+            dict.TryGetValue(key, out value);
+            return dict.Remove(key);
+        }
     }
 }
