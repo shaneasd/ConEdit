@@ -18,7 +18,7 @@ namespace Utilities
 
             private ManualResetEventSlim m_abort;
             private ManualResetEventSlim m_aborted;
-            private ManualResetEventSlim m_event;
+            private AutoResetEvent m_event;
             private Thread m_worker;
 
             public WaitHandle AbortHandle { get { return m_abort.WaitHandle; } }
@@ -27,7 +27,7 @@ namespace Utilities
             {
                 m_abort = new ManualResetEventSlim(false);
                 m_aborted = new ManualResetEventSlim(false);
-                m_event = new ManualResetEventSlim(false);
+                m_event = new AutoResetEvent(false);
                 m_worker = new Thread(UpdateThread);
                 m_worker.IsBackground = true;
                 m_worker.Start();
@@ -41,7 +41,7 @@ namespace Utilities
                     {
                         WaitHandle[] handles = new WaitHandle[2];
                         handles[0] = m_abort.WaitHandle;
-                        handles[1] = m_event.WaitHandle;
+                        handles[1] = m_event;
 
                         int index = WaitHandle.WaitAny(handles);
 
