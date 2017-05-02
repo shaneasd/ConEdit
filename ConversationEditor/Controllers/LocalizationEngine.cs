@@ -36,8 +36,9 @@ namespace ConversationEditor
 
             Func<IEnumerable<FileInfo>, IEnumerable<Either<LocalizationFile, MissingLocalizationFile>>> load = files =>
             {
-                return files.Select(file => LocalizationFile.Load(file, MakeSerializer(file.Name), backend));
-                //return ParallelEnumerable.Select(files.AsParallel(), file => LocalizationFile.Load(file, MakeSerializer(file.Name), backend));
+                //return files.Select(file => LocalizationFile.Load(file, MakeSerializer(file.Name), backend));
+                var filesAndSerializer = files.Select(f => new { File = f, Serializer = MakeSerializer(f.Name) }).ToList();
+                return ParallelEnumerable.Select(filesAndSerializer.AsParallel(), fs => LocalizationFile.Load(fs.File, fs.Serializer, backend));
             };
             Func<DirectoryInfo, LocalizationFile> makeEmpty = path => LocalizationFile.MakeNew(path, MakeSerializer, pathOk, backend);
             m_localizers = new ProjectElementList<LocalizationFile, MissingLocalizationFile, ILocalizationFile>(fileLocationOk.BottleNeck(), load, makeEmpty);
