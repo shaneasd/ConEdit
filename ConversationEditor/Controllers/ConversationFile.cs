@@ -34,7 +34,7 @@ namespace ConversationEditor
         /// <param name="getDocumentSource"></param>
         /// <param name="audioProvider"></param>
         public ConversationFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ISerializer<TData> serializer,
-            ReadOnlyCollection<LoadError> errors, INodeFactory<ConversationNode> nodeFactory, Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> generateAudio,
+            ReadOnlyCollection<LoadError> errors, INodeFactory nodeFactory, Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> generateAudio,
             Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.Backend backend)
             : base(nodes, groups, errors, nodeFactory, generateAudio, getDocumentSource, audioProvider)
         {
@@ -73,7 +73,7 @@ namespace ConversationEditor
             }
         }
 
-        public static ConversationFile CreateEmpty(DirectoryInfo directory, Project project, INodeFactory<ConversationNode> nodeFactory,
+        public static ConversationFile CreateEmpty(DirectoryInfo directory, Project project, INodeFactory nodeFactory,
             Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> generateAudio, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.Backend backend)
         {
             var file = GetAvailableConversationPath(directory, project.Elements);

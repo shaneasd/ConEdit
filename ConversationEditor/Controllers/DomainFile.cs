@@ -72,7 +72,7 @@ namespace ConversationEditor
         /// <param name="domainUsage"></param>
         /// <param name="getDocumentSource"></param>
         /// <param name="autoCompletePatterns"></param>
-        public DomainFile(List<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ReadOnlyCollection<LoadError> errors, DomainDomain datasource, ISerializer<TData> serializer, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, List<IAutoCompletePattern> autoCompletePatterns, UpToDateFile.Backend backend)
+        public DomainFile(List<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ReadOnlyCollection<LoadError> errors, DomainDomain datasource, ISerializer<TData> serializer, INodeFactory nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, List<IAutoCompletePattern> autoCompletePatterns, UpToDateFile.Backend backend)
             : base(nodes, groups, errors, nodeFactory, null, getDocumentSource, NoAudio.Instance)
         {
             m_file = new SaveableFileUndoable(rawData, file, SaveTo, backend);
@@ -98,7 +98,7 @@ namespace ConversationEditor
             m_autoCompletePatterns = autoCompletePatterns;
         }
 
-        public static DomainFile CreateEmpty(DirectoryInfo directory, DomainDomain datasource, ISerializer<TData> serializer, Func<FileInfo, bool> pathOk, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, UpToDateFile.Backend backend)
+        public static DomainFile CreateEmpty(DirectoryInfo directory, DomainDomain datasource, ISerializer<TData> serializer, Func<FileInfo, bool> pathOk, INodeFactory nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, UpToDateFile.Backend backend)
         {
             //Create a stream under an available filename
             FileInfo path = null;
@@ -374,7 +374,7 @@ namespace ConversationEditor
             }
         }
 
-        internal static IEnumerable<Either<DomainFile, MissingDomainFile>> Load(IEnumerable<FileInfo> paths, DomainDomain source, Func<FileInfo, DomainSerializerDeserializer> serializerdeserializer, INodeFactory<ConversationNode> nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, UpToDateFile.Backend backend)
+        internal static IEnumerable<Either<DomainFile, MissingDomainFile>> Load(IEnumerable<FileInfo> paths, DomainDomain source, Func<FileInfo, DomainSerializerDeserializer> serializerdeserializer, INodeFactory nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, UpToDateFile.Backend backend)
         {
             //List<FileStream> streams = new List<FileStream>();
 

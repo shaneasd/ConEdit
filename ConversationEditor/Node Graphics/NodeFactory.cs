@@ -16,12 +16,7 @@ namespace ConversationEditor
         TNode MakeNode(IConversationNodeData e, TNodeUI uiData);
     }
 
-    public interface INodeFactory<TNode> : INodeFactory<TNode, NodeUIData> where TNode : IConversationNode, IConfigurable
-    {
-    }
-
-
-    public interface INodeFactory : INodeFactory<ConversationNode>
+    public interface INodeFactory : INodeFactory<ConversationNode, NodeUIData>
     {
     }
 

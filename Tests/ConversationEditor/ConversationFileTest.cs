@@ -160,7 +160,7 @@ namespace Tests.ConversationEditor
             FileInfo file = new FileInfo("DeleteMe.txt");
             ISerializer<TData> serializer = null;
             ReadOnlyCollection<LoadError> errors = new ReadOnlyCollection<LoadError>(new List<LoadError>());
-            INodeFactory<ConversationNode> nodeFactory = null;
+            INodeFactory nodeFactory = null;
             Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> generateAudio = null;
             var source = new DynamicEnumParameter.Source();
             Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource = (a, b) => source;

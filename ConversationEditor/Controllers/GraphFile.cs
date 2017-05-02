@@ -33,7 +33,7 @@ namespace ConversationEditor
         protected ReadOnlyCollection<LoadError> m_errors;
         Dictionary<Output, TransitionNoduleUIInfo> m_cachedNodeUI = new Dictionary<Output, TransitionNoduleUIInfo>();
 
-        private INodeFactory<ConversationNode> m_nodeFactory;
+        private INodeFactory m_nodeFactory;
         private Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> m_generateAudio;
         private Func<IDynamicEnumParameter, DynamicEnumParameter.Source> m_getDocumentSource;
         private IAudioLibrary m_audioProvider;
@@ -43,7 +43,7 @@ namespace ConversationEditor
             return m_nodeFactory.MakeNode(e, uiData);
         }
 
-        protected GraphFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, ReadOnlyCollection<LoadError> errors, INodeFactory<ConversationNode> nodeFactory,
+        protected GraphFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, ReadOnlyCollection<LoadError> errors, INodeFactory nodeFactory,
             Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> generateAudio, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider)
         {
             Contract.Assert(getDocumentSource != null);
