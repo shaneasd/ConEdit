@@ -11,6 +11,9 @@ namespace Utilities
 {
     public class UpToDateFile : Disposable
     {
+        /// <summary>
+        /// Access to this class is threadsafe (other than constructor and disposer)
+        /// </summary>
         public class Backend : Disposable
         {
             HashSet<UpToDateFile> m_deleted = new HashSet<UpToDateFile>();
