@@ -11,15 +11,25 @@ using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeG
 
 namespace ConversationEditor
 {
+    /// <summary>
+    /// Implementers of this interface must be threadsafe.
+    /// i.e. calls to MakeNode must be able to be safely made from worker threads potentially in parallel
+    /// </summary>
     public interface INodeFactory<TNode, in TNodeUI> where TNode : IConversationNode, IConfigurable
     {
         TNode MakeNode(IConversationNodeData e, TNodeUI uiData);
     }
 
+    /// <summary>
+    /// See threadsafety note on INodeFactory<TNode, in TNodeUI>
+    /// </summary>
     public interface INodeFactory : INodeFactory<ConversationNode, NodeUIData>
     {
     }
 
+    /// <summary>
+    /// This class is threadsafe after construction. i.e. its public members can be called from multiple threads in parallel
+    /// </summary>
     public class NodeFactory : INodeFactory
     {
         private Func<Id<NodeTypeTemp>, ConversationNode, PointF, INodeGui> GetNodeRendererChoice;
@@ -37,13 +47,18 @@ namespace ConversationEditor
             changedCallback(UpdateRenderers);
         }
 
+        object m_lock = new object();
+
         private List<ConversationNode> m_toUpdate = new List<ConversationNode>();
         public void UpdateRenderers()
         {
-            foreach (var n in m_toUpdate.ToList())
+            lock (m_lock)
             {
-                n.SetRenderer(nn => MakeRenderer(nn, nn.Renderer.Area.Center()));
-                m_toUpdate.Remove(n);
+                foreach (var n in m_toUpdate.ToList())
+                {
+                    n.SetRenderer(nn => MakeRenderer(nn, nn.Renderer.Area.Center()));
+                    m_toUpdate.Remove(n);
+                }
             }
         }
 
@@ -52,9 +67,11 @@ namespace ConversationEditor
             if (n.Data is UnknownEditable)
                 return new UnknownNodeRenderer(n, p);
 
-            m_toUpdate.Add(n);
-
-            return GetNodeRendererChoice(n.Data.NodeTypeId, n, p);
+            lock (m_lock)
+            {
+                m_toUpdate.Add(n);
+                return GetNodeRendererChoice(n.Data.NodeTypeId, n, p);
+            }
         }
 
         private static INodeGui MakeCorruptedRenderer(ConversationNode n, PointF p)
