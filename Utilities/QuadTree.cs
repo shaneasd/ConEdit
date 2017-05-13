@@ -236,49 +236,57 @@ namespace Utilities
                 }
             }
 
+            private bool TooSmall(RectangleF area)
+            {
+                return area.Width * area.Height < 1;//Avoid subdividing forever
+            }
+
             private Element ReallyAdd(T element, RectangleF area)
             {
                 var center = Bounds.Center();
-                if (area.Top > center.Y) //It's in the bottom half only
+                if (!TooSmall(area))
                 {
-                    if (area.Left > center.X) //It's in the right half only
+                    if (area.Top > center.Y) //It's in the bottom half only
                     {
-                        if (Lower11 == null)
+                        if (area.Left > center.X) //It's in the right half only
                         {
-                            Lower11 = new Element(Bounds11);
-                            LowerNonNull.Add(Lower11);
+                            if (Lower11 == null)
+                            {
+                                Lower11 = new Element(Bounds11);
+                                LowerNonNull.Add(Lower11);
+                            }
+                            return Lower11.Add(element, area);
                         }
-                        return Lower11.Add(element, area);
+                        else if (area.Right <= center.X) //It's in the left half only
+                        {
+                            if (Lower01 == null)
+                            {
+                                Lower01 = new Element(Bounds01);
+                                LowerNonNull.Add(Lower01);
+                            }
+                            return Lower01.Add(element, area);
+                        }
                     }
-                    else if (area.Right <= center.X) //It's in the left half only
+                    else if (area.Bottom <= center.Y) //It's in the top half only
                     {
-                        if (Lower01 == null)
+                        if (area.Left > center.X) //It's in the right half only
                         {
-                            Lower01 = new Element(Bounds01);
-                            LowerNonNull.Add(Lower01);
+                            if (Lower10 == null)
+                            {
+                                Lower10 = new Element(Bounds10);
+                                LowerNonNull.Add(Lower10);
+                            }
+                            return Lower10.Add(element, area);
                         }
-                        return Lower01.Add(element, area);
-                    }
-                }
-                else if (area.Bottom <= center.Y) //It's in the top half only
-                {
-                    if (area.Left > center.X) //It's in the right half only
-                    {
-                        if (Lower10 == null)
+                        else if (area.Right <= center.X) //It's in the left half only
                         {
-                            Lower10 = new Element(Bounds10);
-                            LowerNonNull.Add(Lower10);
+                            if (Lower00 == null)
+                            {
+                                Lower00 = new Element(Bounds00);
+                                LowerNonNull.Add(Lower00);
+                            }
+                            return Lower00.Add(element, area);
                         }
-                        return Lower10.Add(element, area);
-                    }
-                    else if (area.Right <= center.X) //It's in the left half only
-                    {
-                        if (Lower00 == null)
-                        {
-                            Lower00 = new Element(Bounds00);
-                            LowerNonNull.Add(Lower00);
-                        }
-                        return Lower00.Add(element, area);
                     }
                 }
 
@@ -291,30 +299,33 @@ namespace Utilities
                 if (ExtraData.Remove(Tuple.Create(node, area)))
                     return true;
                 var center = Bounds.Center();
-                if (area.Top > center.Y) //It's in the bottom half only
+                if (!TooSmall(area))
                 {
-                    if (area.Left > center.X) //It's in the right half only
+                    if (area.Top > center.Y) //It's in the bottom half only
                     {
-                        if (Lower11 != null)
-                            return Lower11.Remove(node, area);
+                        if (area.Left > center.X) //It's in the right half only
+                        {
+                            if (Lower11 != null)
+                                return Lower11.Remove(node, area);
+                        }
+                        else if (area.Right <= center.X) //It's in the left half only
+                        {
+                            if (Lower01 != null)
+                                return Lower01.Remove(node, area);
+                        }
                     }
-                    else if (area.Right <= center.X) //It's in the left half only
+                    else if (area.Bottom <= center.Y) //It's in the top half only
                     {
-                        if (Lower01 != null)
-                            return Lower01.Remove(node, area);
-                    }
-                }
-                else if (area.Bottom <= center.Y) //It's in the top half only
-                {
-                    if (area.Left > center.X) //It's in the right half only
-                    {
-                        if (Lower10 != null)
-                            return Lower10.Remove(node, area);
-                    }
-                    else if (area.Right <= center.X) //It's in the left half only
-                    {
-                        if (Lower00 != null)
-                            return Lower00.Remove(node, area);
+                        if (area.Left > center.X) //It's in the right half only
+                        {
+                            if (Lower10 != null)
+                                return Lower10.Remove(node, area);
+                        }
+                        else if (area.Right <= center.X) //It's in the left half only
+                        {
+                            if (Lower00 != null)
+                                return Lower00.Remove(node, area);
+                        }
                     }
                 }
 
