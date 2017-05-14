@@ -6,16 +6,160 @@ using Utilities;
 using System.IO;
 
 using TDocument = System.Object;
+using System.Collections.Concurrent;
 
 namespace Conversation
 {
     public delegate IParameter ParameterGenerator(string name, Id<Parameter> id, string defaultValue, TDocument document);
+
+    /// <summary>
+    /// A TypeSet with types which cannot be modified by this interface
+    /// </summary>
+    public interface ITypeSetFixedTypes
+    {
+        IEnumerable<ParameterType> AllTypes { get; }
+        string GetTypeName(ParameterType guid);
+        DynamicEnumParameter.Source GetDynamicEnumSource(ParameterType type);
+        DynamicEnumParameter.Source GetLocalDynamicEnumSource(ParameterType type, TDocument document);
+        bool IsInteger(ParameterType type);
+        bool IsDecimal(ParameterType type);
+        bool IsEnum(ParameterType type);
+        bool IsDynamicEnum(ParameterType type);
+        bool IsLocalDynamicEnum(ParameterType type);
+        IParameter Make(ParameterType typeid, string name, Id<Parameter> id, string defaultValue, TDocument document);
+    }
+
+    /// <summary>
+    /// A TypeSet whose types do not change once created
+    /// This class is threadsafe
+    /// </summary>
+    public class ConstantTypeSet : ITypeSetFixedTypes
+    {
+        private class TypeData
+        {
+            public ParameterGenerator Generator;
+            public string Name;
+            public TypeData(ParameterGenerator generator, string name)
+            {
+                Generator = generator;
+                Name = name;
+            }
+        }
+
+        private Dictionary<ParameterType, TypeData> m_types = new Dictionary<ParameterType, TypeData>();
+        private Dictionary<ParameterType, DynamicEnumerationData> m_dynamicEnums = new Dictionary<ParameterType, DynamicEnumerationData>();
+        private Dictionary<ParameterType, LocalDynamicEnumerationData> m_localDynamicEnums = new Dictionary<ParameterType, LocalDynamicEnumerationData>();
+        private Dictionary<ParameterType, Tuple<string, ImmutableEnumeration>> m_enums = new Dictionary<ParameterType, Tuple<string, ImmutableEnumeration>>();
+        private Dictionary<ParameterType, IntegerData> m_integers = new Dictionary<ParameterType, IntegerData>();
+        private Dictionary<ParameterType, DecimalData> m_decimals = new Dictionary<ParameterType, DecimalData>();
+
+        //The contents of this collection can change as the enum source is a transient property of the types
+        ConcurrentDictionary<Tuple<ParameterType, TDocument>, DynamicEnumParameter.Source> m_localDynamicEnumSources = new ConcurrentDictionary<Tuple<ParameterType, TDocument>, DynamicEnumParameter.Source>();
+
+        public ConstantTypeSet(IEnumerable<DynamicEnumerationData> dynamicEnumerations, IEnumerable<LocalDynamicEnumerationData> localDynamicEnumerations, IEnumerable<EnumerationData> enumerations, IEnumerable<DecimalData> decimals, IEnumerable<IntegerData> integers, IEnumerable<Tuple<ParameterType, string, ParameterGenerator>> others)
+        {
+            foreach (var other in others)
+            {
+                m_types.Add(other.Item1, new TypeData(other.Item3, other.Item2));
+            }
+
+            //Types must be generated before Nodes and can be generated before NodeTypes
+            foreach (var typeData in dynamicEnumerations)
+            {
+                m_dynamicEnums.Add(typeData.TypeId, typeData);
+                m_types.Add(typeData.TypeId, new TypeData((a, b, c, document) => typeData.Make(a, b, c, GetDynamicEnumSource(typeData.TypeId)), typeData.Name));
+            }
+
+            foreach (var typeData in localDynamicEnumerations)
+            {
+                m_localDynamicEnums.Add(typeData.TypeId, typeData);
+                m_types.Add(typeData.TypeId, new TypeData((name, id, defaultValue, document) => typeData.Make(name, id, defaultValue, GetLocalDynamicEnumSource(typeData.TypeId, document)), typeData.Name));
+            }
+
+            foreach (var typeData in enumerations)
+            {
+                var enumType = typeData.TypeId;
+                var setType = ParameterType.ValueSetType.Of(enumType);
+
+                var elements = typeData.Elements.Select(e => Tuple.Create(e.Guid, e.Name));
+                ImmutableEnumeration enumeration = new ImmutableEnumeration(elements, enumType, "");
+                m_enums.Add(enumType, Tuple.Create(typeData.Name, enumeration));
+                m_types.Add(enumType, new TypeData((a, b, c, d) => m_enums[enumType].Item2.ParameterEnum(a, b, c), typeData.Name));
+                m_types.Add(setType, new TypeData((a, b, c, d) => m_enums[enumType].Item2.ParameterSet(a, b, c), "Set of " + typeData.Name));
+            }
+
+            foreach (var typeData in decimals)
+            {
+                m_decimals.Add(typeData.TypeId, typeData);
+                m_types.Add(typeData.TypeId, new TypeData((name, id, defaultValue, document) => new DecimalParameter(name, id, typeData.TypeId, typeData.Definition(), defaultValue), typeData.Name));
+            }
+
+            foreach (var typeData in integers)
+            {
+                m_integers.Add(typeData.TypeId, typeData);
+                m_types.Add(typeData.TypeId, new TypeData((name, id, defaultValue, document) => new IntegerParameter(name, id, typeData.TypeId, m_integers[typeData.TypeId].Definition(), defaultValue), typeData.Name));
+            }
+        }
+
+        public IEnumerable<ParameterType> AllTypes { get { return m_types.Keys; } }
+
+        public DynamicEnumParameter.Source GetDynamicEnumSource(ParameterType type)
+        {
+            var key = Tuple.Create(type, (object)null);
+            return m_localDynamicEnumSources.GetOrAdd(key, k => new DynamicEnumParameter.Source());
+        }
+
+        public DynamicEnumParameter.Source GetLocalDynamicEnumSource(ParameterType type, TDocument document)
+        {
+            if (document == null)
+                throw new ArgumentNullException(nameof(document));
+
+            var key = Tuple.Create(type, document);
+            return m_localDynamicEnumSources.GetOrAdd(key, k => new DynamicEnumParameter.Source());
+        }
+
+        public string GetTypeName(ParameterType guid)
+        {
+            return m_types[guid].Name;
+        }
+
+        public bool IsDecimal(ParameterType type)
+        {
+            return m_decimals.ContainsKey(type);
+        }
+
+        public bool IsDynamicEnum(ParameterType type)
+        {
+            return m_dynamicEnums.ContainsKey(type);
+        }
+
+        public bool IsEnum(ParameterType type)
+        {
+            return m_enums.ContainsKey(type);
+        }
+
+        public bool IsInteger(ParameterType type)
+        {
+            return m_integers.ContainsKey(type);
+        }
+
+        public bool IsLocalDynamicEnum(ParameterType type)
+        {
+            return m_localDynamicEnums.ContainsKey(type);
+        }
+
+        public IParameter Make(ParameterType typeid, string name, Id<Parameter> id, string defaultValue, TDocument document)
+        {
+            return m_types[typeid].Generator(name, id, defaultValue, document);
+        }
+    }
+
     /// <summary>
     /// Keeps track of all types within a domain.
     /// Can be queried to determine the base type of a typeID
     /// Can generate a Parameter for a given ParameterType
     /// </summary>
-    public class TypeSet
+    public class TypeSet : ITypeSetFixedTypes
     {
         private class TypeData
         {
@@ -234,5 +378,4 @@ namespace Conversation
             Modified.Execute(guid);
         }
     }
-
 }

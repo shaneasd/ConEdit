@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,14 +11,12 @@ namespace Conversation
     {
         public class Source
         {
-            //TODO: May not want the weakreference thing
-
             public Source() { }
-            Dictionary<WeakReference<DynamicEnumParameter>, string> m_options = new Dictionary<WeakReference<DynamicEnumParameter>, string>(new WeakReferenceComparer<DynamicEnumParameter>());
-            public IEnumerable<string> Options { get { PurgeOptions(); return m_options.Values.Distinct().Except("".Only()); } }
+            ConcurrentDictionary<DynamicEnumParameter, string> m_options = new ConcurrentDictionary<DynamicEnumParameter, string>();
+            public IEnumerable<string> Options { get { return m_options.Values.Distinct().Except("".Only()); } }
             public void RegisterUsage(DynamicEnumParameter user, string value)
             {
-                m_options[new WeakReference<DynamicEnumParameter>(user)] = value;
+                m_options[user] = value;
             }
 
             public void Clear()
@@ -27,17 +26,8 @@ namespace Conversation
 
             internal void DeregisterUsage(DynamicEnumParameter dynamicEnumParameter)
             {
-                m_options.Remove(new WeakReference<DynamicEnumParameter>(dynamicEnumParameter));
-            }
-
-            void PurgeOptions()
-            {
-                foreach (var key in m_options.Keys)
-                {
-                    DynamicEnumParameter val;
-                    if (!key.TryGetTarget(out val))
-                        m_options.Remove(key);
-                }
+                string dontCare;
+                m_options.TryRemove(dynamicEnumParameter, out dontCare);
             }
         }
 
@@ -124,6 +114,9 @@ namespace Conversation
         {
             return Value;
         }
+
+        //TODO: Should probably be merging parameters into a null source when their entire conversation file is removed from the project.
+        //      Possibly the reverse when an existing conversation is loaded (may already be occuring).
 
         /// <summary>
         /// Change data source to newSource and update usage in newSource to reflect current value

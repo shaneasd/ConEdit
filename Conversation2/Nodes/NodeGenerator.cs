@@ -74,7 +74,7 @@ namespace Conversation
 
     public class NodeDataGenerator : INodeDataGenerator
     {
-        TypeSet m_types;
+        ITypeSetFixedTypes m_types;
         IDictionary<Id<TConnectorDefinition>, ConnectorDefinitionData> m_connectorDefinitions;
         IConnectionRules m_rules;
         NodeData m_data;
@@ -82,7 +82,7 @@ namespace Conversation
         //private List<ExternalFunction> m_generated = new List<ExternalFunction>();
         bool m_exists = true;
 
-        public NodeDataGenerator(NodeData data, TypeSet types, IDictionary<Id<TConnectorDefinition>, ConnectorDefinitionData> connectorDefinitions, IConnectionRules rules, Func<IParameter[], List<IParameter>> extraParameters)
+        public NodeDataGenerator(NodeData data, ITypeSetFixedTypes types, IDictionary<Id<TConnectorDefinition>, ConnectorDefinitionData> connectorDefinitions, IConnectionRules rules, Func<IParameter[], List<IParameter>> extraParameters)
         {
             m_data = data;
             m_types = types;

@@ -12,6 +12,7 @@ namespace ConversationEditor
     using ConversationNode = ConversationNode<INodeGui>;
     using TData = XmlGraphData<NodeUIData, ConversationEditorData>;
     using System.Collections.ObjectModel;
+    using System.Windows;
 
     public class ConversationFile : GraphFile, IConversationFile
     {
@@ -34,7 +35,7 @@ namespace ConversationEditor
         /// <param name="getDocumentSource"></param>
         /// <param name="audioProvider"></param>
         public ConversationFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ISerializer<TData> serializer,
-            ReadOnlyCollection<LoadError> errors, INodeFactory nodeFactory, Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> generateAudio,
+            ReadOnlyCollection<LoadError> errors, INodeFactory nodeFactory, GenerateAudio generateAudio,
             Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.Backend backend)
             : base(nodes, groups, errors, nodeFactory, generateAudio, getDocumentSource, audioProvider)
         {
@@ -43,11 +44,12 @@ namespace ConversationEditor
 
             foreach (var node in m_nodes)
             {
+                //TODO: Why are we automatically decorrupting specifically audio parameters?
                 var audios = node.Data.Parameters.OfType<IAudioParameter>();
                 foreach (var aud in audios)
                     if (aud.Corrupted)
                     {
-                        var val = generateAudio(this, node.Data.Parameters);
+                        var val = generateAudio(this);
                         aud.SetValueAction(val).Value.Redo();
                         m_file.ChangeNoUndo();
                         audioProvider.UpdateUsage(val);
@@ -74,7 +76,7 @@ namespace ConversationEditor
         }
 
         public static ConversationFile CreateEmpty(DirectoryInfo directory, Project project, INodeFactory nodeFactory,
-            Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> generateAudio, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.Backend backend)
+            GenerateAudio generateAudio, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.Backend backend)
         {
             var file = GetAvailableConversationPath(directory, project.Elements);
 
@@ -95,20 +97,32 @@ namespace ConversationEditor
             }
         }
 
-        /// <exception cref="MyFileLoadException">If file can't be read</exception>
-        public static ConversationFile Load(FileInfo file, INodeFactory nodeFactory, ISerializerDeserializer<TData> serializer, Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> generateAudio,
+        public static Either<ConversationFile, MissingConversationFile> Load(FileInfo file, INodeFactory nodeFactory, ISerializerDeserializer<TData> serializer, GenerateAudio generateAudio,
             Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.Backend backend)
         {
-            using (var stream = Util.LoadFileStream(file, FileMode.Open, FileAccess.Read))
+            try
             {
-                using (MemoryStream m = new MemoryStream((int)stream.Length))
+                using (var stream = Util.LoadFileStream(file, FileMode.Open, FileAccess.Read))
                 {
-                    stream.CopyTo(m);
-                    stream.Dispose();
-                    m.Position = 0;
-                    TData data = serializer.Read(m);
-                    return new ConversationFile(data.Nodes.ToList(), data.EditorData.Groups.ToList(), m, file, serializer, data.Errors, nodeFactory, generateAudio, getDocumentSource, audioProvider, backend);
+                    using (MemoryStream m = new MemoryStream((int)stream.Length))
+                    {
+                        stream.CopyTo(m);
+                        stream.Dispose();
+                        m.Position = 0;
+                        TData data = serializer.Read(m);
+                        return new ConversationFile(data.Nodes.ToList(), data.EditorData.Groups.ToList(), m, file, serializer, data.Errors, nodeFactory, generateAudio, getDocumentSource, audioProvider, backend);
+                    }
                 }
+            }
+            catch (MyFileLoadException e)
+            {
+                Console.Out.WriteLine(e.Message);
+                Console.Out.WriteLine(e.StackTrace);
+                Console.Out.WriteLine(e.InnerException.Message);
+                Console.Out.WriteLine(e.InnerException.StackTrace);
+
+                MessageBox.Show("File: " + file.Name + " could not be accessed");
+                return new MissingConversationFile(file);
             }
         }
 

@@ -157,7 +157,7 @@ namespace ConversationEditor
             if (m_conversationDatasourceModified)
             {
                 m_conversationDatasourceModified = false;
-                m_conversationDataSource = new ConversationDataSource(BaseTypeSet.Make(), m_domainFiles.Select(f => f.Data));
+                m_conversationDataSource = new ConversationDataSource(m_domainFiles.Select(f => f.Data));
                 m_conversations.Reload(); //Reload all conversations
                 return true;
             }
@@ -203,7 +203,6 @@ namespace ConversationEditor
                     m_audioProvider.AudioFiles.Load(toLoad);
                 }
 
-                //m_conversationDataSource = new ConversationDataSource(BaseTypeSet.Make(), Enumerable.Empty<DomainData>());
                 {
                     //Dictionary<IDynamicEnumParameter, DynamicEnumParameter.Source> domainEnumSource = new Dictionary<IDynamicEnumParameter, DynamicEnumParameter.Source>();
                     Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDomainEnumSource = (k, o) =>
@@ -226,7 +225,7 @@ namespace ConversationEditor
                     IEnumerable<FileInfo> toLoad = Rerout(domainPaths);
                     m_domainFiles.Load(toLoad);
                 }
-                m_conversationDataSource = new ConversationDataSource(BaseTypeSet.Make(), m_domainFiles.Select(df => df.Data));
+                m_conversationDataSource = new ConversationDataSource(m_domainFiles.Select(df => df.Data));
 
 
                 {
@@ -236,18 +235,29 @@ namespace ConversationEditor
                 }
 
                 {
-                    Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> audio = (c, p) =>
+                    GenerateAudio audio = (c) =>
                     {
                         return m_audioProvider.Generate(new AudioGenerationParameters(c.File.File, this.File.File));
                     };
+
+                    //This can be called from multiple threads simultaneously and in arbitrary orders by design of
+                    //ConversationDataSource and the underlying ConstantTypeSet and DynamicEnumParameter.Source
                     Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getSource = (localEnum, newSourceID) =>
                     {
-                        return m_conversationDataSource.GetSource(localEnum, newSourceID);
+                        return m_conversationDataSource.GetSource(localEnum.TypeId, newSourceID);
                     };
-                    Func<IEnumerable<FileInfo>, IEnumerable<ConversationFile>> loadConversation = files => files.Select(file => ConversationFile.Load(file, ConversationNodeFactory, m_conversationSerializerFactory(m_conversationDataSource), audio, getSource, m_audioProvider, backend));
+
+                    Func<IEnumerable<FileInfo>, IEnumerable<Either<ConversationFile, MissingConversationFile>>> loadConversations = files =>
+                    {
+                        ISerializerDeserializer<XmlGraphData<NodeUIData, ConversationEditorData>> conversationSerializerDeserializer = m_conversationSerializerFactory(m_conversationDataSource);
+                        //                                                 _/          _/                           _/                         X        _/             X            _/
+                        //return files.Select(file => ConversationFile.Load(file, ConversationNodeFactory, conversationSerializerDeserializer, audio, getSource, m_audioProvider, backend));
+                        //TODO: This is ok as long as we're not using audio parameters at all
+                        return ParallelEnumerable.Select(files.AsParallel(), file => ConversationFile.Load(file, ConversationNodeFactory, m_conversationSerializerFactory(m_conversationDataSource), audio, getSource, m_audioProvider, backend));
+                    };
                     Func<DirectoryInfo, ConversationFile> makeEmpty = path => ConversationFile.CreateEmpty(path, this, ConversationNodeFactory, audio, getSource, m_audioProvider, backend);
                     Func<FileInfo, MissingConversationFile> makeMissing = file => new MissingConversationFile(file);
-                    m_conversations = new ProjectElementList<ConversationFile, MissingConversationFile, IConversationFile>(s => CheckFolder(s, Origin), loadConversation, makeEmpty, makeMissing);
+                    m_conversations = new ProjectElementList<ConversationFile, MissingConversationFile, IConversationFile>(s => CheckFolder(s, Origin), loadConversations, makeEmpty);
                     IEnumerable<FileInfo> toLoad = Rerout(conversationPaths);
                     m_conversations.Load(toLoad);
                 }

@@ -24,7 +24,7 @@ namespace ConversationEditor
     internal class ConversationDataSource : IDataSource
     {
         ConversationConnectionRules m_connectionRules = new ConversationConnectionRules();
-        TypeSet m_types;
+        ConstantTypeSet m_types;
 
         private CallbackDictionary<Id<NodeTypeTemp>, Tuple<Guid, NodeDataGenerator>> m_nodes = new CallbackDictionary<Id<NodeTypeTemp>, Tuple<Guid, NodeDataGenerator>>();
         //private NodeCategory m_nodeHeirarchy;
@@ -39,29 +39,18 @@ namespace ConversationEditor
         /// Fill the data source from all the data stored in all domain files
         /// </summary>
         /// <param name="domains">All the domain files used to populate the datasource</param>
-        public ConversationDataSource(TypeSet typeSet, IEnumerable<IDomainData> domains)
+        public ConversationDataSource(IEnumerable<IDomainData> domains)
         {
-            m_types = typeSet;
+            domains = domains.Evaluate(); //We're going to be iterating over this a lot
+            IEnumerable<DynamicEnumerationData> dynamicEnumerations = domains.SelectMany(d => d.DynamicEnumerations);
+            IEnumerable<LocalDynamicEnumerationData> localDynamicEnumerations = domains.SelectMany(d => d.LocalDynamicEnumerations);
+            IEnumerable<EnumerationData> enumerations = domains.SelectMany(d => d.Enumerations);
+            IEnumerable<DecimalData> decimals = domains.SelectMany(d => d.Decimals);
+            IEnumerable<IntegerData> integers = domains.SelectMany(d => d.Integers);
+
+            m_types = BaseTypeSet.MakeConstant(dynamicEnumerations, localDynamicEnumerations, enumerations, decimals, integers);
 
             m_nodes.Removing += m_nodes_Removing;
-
-            domains = domains.Evaluate();
-
-            //Types must be generated before Nodes and can be generated before NodeTypes
-            foreach (var typeData in domains.SelectMany(d => d.DynamicEnumerations))
-                AddDynamicEnumType(typeData);
-
-            foreach (var typeData in domains.SelectMany(d => d.LocalDynamicEnumerations))
-                AddLocalDynamicEnumType(typeData);
-
-            foreach (var typeData in domains.SelectMany(d => d.Enumerations))
-                AddEnumType(typeData);
-
-            foreach (var typeData in domains.SelectMany(d => d.Decimals))
-                AddDecimalType(typeData);
-
-            foreach (var typeData in domains.SelectMany(d => d.Integers))
-                AddIntegerType(typeData);
 
             //NodeTypes must be generated before Nodes and can be generated before Types. NodeTypes may have interdependencies between files
             m_categories = domains.SelectMany(d => d.NodeTypes).ToList();
@@ -158,51 +147,6 @@ namespace ConversationEditor
             }
 
             return nodeHeirarchy;
-        }
-
-        public void AddEnumType(EnumerationData typeData)
-        {
-            m_types.AddEnum(typeData, false);
-        }
-
-        public void UpdateEnumeration(EnumerationData data)
-        {
-            m_types.ModifyEnum(data);
-        }
-
-        public void RemoveType(ParameterType id)
-        {
-            m_types.Remove(id);
-        }
-
-        public void AddDynamicEnumType(DynamicEnumerationData typeData)
-        {
-            m_types.AddDynamicEnum(typeData);
-        }
-
-        public void AddLocalDynamicEnumType(LocalDynamicEnumerationData typeData)
-        {
-            m_types.AddLocalDynamicEnum(typeData);
-        }
-
-        public void AddDecimalType(DecimalData typeData)
-        {
-            m_types.AddDecimal(typeData);
-        }
-
-        internal void ModifyDecimalType(DecimalData typeData)
-        {
-            m_types.ModifyDecimal(typeData);
-        }
-
-        public void AddIntegerType(IntegerData typeData)
-        {
-            m_types.AddInteger(typeData);
-        }
-
-        internal void ModifyIntegerType(IntegerData typeData)
-        {
-            m_types.ModifyInteger(typeData);
         }
 
         public IEnumerable<ParameterType> ParameterTypes
@@ -319,11 +263,12 @@ namespace ConversationEditor
             return Guid.Empty;
         }
 
-        internal DynamicEnumParameter.Source GetSource(IDynamicEnumParameter parameter, object newSourceID)
-        {
-            return GetSource(parameter.TypeId, newSourceID);
-        }
-
+        /// <summary>
+        /// Threadsafe
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="newSourceId"></param>
+        /// <returns></returns>
         public DynamicEnumParameter.Source GetSource(ParameterType type, object newSourceId)
         {
             if (IsLocalDynamicEnum(type))

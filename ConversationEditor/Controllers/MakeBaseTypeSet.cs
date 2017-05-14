@@ -37,5 +37,21 @@ namespace ConversationEditor
             typeMap[AudioParameter.ParameterType] = "RuntimeConversation.Audio";
             return typeMap;
         }
+
+        internal static ConstantTypeSet MakeConstant(IEnumerable<DynamicEnumerationData> dynamicEnumerations, IEnumerable<LocalDynamicEnumerationData> localDynamicEnumerations, IEnumerable<EnumerationData> enumerations, IEnumerable<DecimalData> decimals, IEnumerable<IntegerData> integers)
+        {
+            IEnumerable<Tuple<ParameterType, string, ParameterGenerator>> others = new List<Tuple<ParameterType, string, ParameterGenerator>>()
+            {
+                Tuple.Create<ParameterType, string, ParameterGenerator>(StringParameter.ParameterType, "String", (name, id, def, document) => new StringParameter(name, id, def)),
+                Tuple.Create<ParameterType, string, ParameterGenerator>(LocalizedStringParameter.ParameterType, "Localized String", (name, id, def, document) => new LocalizedStringParameter(name, id)),
+                Tuple.Create<ParameterType, string, ParameterGenerator>(BooleanParameter.ParameterType, "Boolean", (name, id, def, document) => new BooleanParameter(name, id, def)),
+                Tuple.Create<ParameterType, string, ParameterGenerator>(AudioParameter.ParameterType, "Audio", (name, id, def, document) => new AudioParameter(name, id)),
+            };
+
+            var result = new ConstantTypeSet(dynamicEnumerations, localDynamicEnumerations, enumerations, decimals.Concat(BaseTypeDecimal.Data.Only()), integers.Concat(BaseTypeInteger.Data.Only()), others);
+
+
+            return result;
+        }
     }
 }

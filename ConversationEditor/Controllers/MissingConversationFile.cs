@@ -12,7 +12,7 @@ namespace ConversationEditor
     using ConversationNode = ConversationNode<INodeGui>;
     using System.Collections.ObjectModel;
 
-    internal sealed class MissingConversationFile : IConversationFile
+    public sealed class MissingConversationFile : IConversationFile
     {
         private MissingFile m_file;
 

@@ -98,7 +98,7 @@ namespace ConversationEditor
                     Console.Out.WriteLine(e.StackTrace);
                     Console.Out.WriteLine(e.InnerException.Message);
                     Console.Out.WriteLine(e.InnerException.StackTrace);
-                    MessageBox.Show("File: " + path.Name + " exists but could not be accessed");
+                    MessageBox.Show("File: " + path.Name + " could not be accessed");
                     return new MissingLocalizationFile(path);
                 }
             }

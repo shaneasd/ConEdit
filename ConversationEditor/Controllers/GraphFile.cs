@@ -16,6 +16,8 @@ namespace ConversationEditor
     using System.Diagnostics.Contracts;
     using System.Diagnostics;
 
+    public delegate Audio GenerateAudio(ISaveableFileProvider provider);
+
     public abstract class GraphFile : Disposable, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>, IDisposable
     {
         public ConversationNode GetNode(Id<NodeTemp> id)
@@ -34,7 +36,7 @@ namespace ConversationEditor
         Dictionary<Output, TransitionNoduleUIInfo> m_cachedNodeUI = new Dictionary<Output, TransitionNoduleUIInfo>();
 
         private INodeFactory m_nodeFactory;
-        private Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> m_generateAudio;
+        private GenerateAudio m_generateAudio;
         private Func<IDynamicEnumParameter, DynamicEnumParameter.Source> m_getDocumentSource;
         private IAudioLibrary m_audioProvider;
 
@@ -44,14 +46,14 @@ namespace ConversationEditor
         }
 
         protected GraphFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, ReadOnlyCollection<LoadError> errors, INodeFactory nodeFactory,
-            Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> generateAudio, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider)
+            GenerateAudio generateAudio, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider)
         {
             Contract.Assert(getDocumentSource != null);
             m_nodeFactory = nodeFactory;
             m_generateAudio = generateAudio;
             m_getDocumentSource = a => getDocumentSource(a, this);
             m_audioProvider = audioProvider;
-            m_nodes = new CallbackList<ConversationNode>(nodes.Select(gnu => MakeNode(gnu.GraphData, gnu.UIData)));
+            m_nodes = new CallbackList<ConversationNode>(nodes.Select(gnu => nodeFactory.MakeNode(gnu.GraphData, gnu.UIData)));
             m_nodesLookup = new O1LookupWrapper<ConversationNode, Id<NodeTemp>>(m_nodes, n => n.Data.NodeId);
             m_nodesOrdered = new SortedWrapper<ConversationNode>(m_nodes);
             m_groups = new CallbackList<NodeGroup>(groups);
@@ -143,6 +145,7 @@ namespace ConversationEditor
                 //Changes to these nodes don't need to be undoable as they're new nodes
                 foreach (var node in nodes)
                 {
+                    //Duplicate the id of any localized string parameters to avoid the new node using the same id(s) as the old one
                     foreach (var p in node.Data.Parameters.OfType<LocalizedStringParameter>())
                     {
                         var result = localization.DuplicateActions(p.Value);
@@ -159,22 +162,22 @@ namespace ConversationEditor
                         redoActions.Add(result.Item2.Redo);
                     }
 
-                    //TODO: Seems like we're updating audioparameters twice here...
-                    foreach (var p in node.Data.Parameters.OfType<IAudioParameter>())
-                    {
-                        //No need to update audio usage as this will occur when the node is added/removed
-                        var audio = m_generateAudio(this, node.Data.Parameters);
-                        var actions = p.SetValueAction(audio); //TODO: Investigate what happens to Audio parameter usage if you duplicate a node and then undo
-                        undoActions.Add(actions.Value.Undo);
-                        redoActions.Add(actions.Value.Redo);
-                    }
-
-                    foreach (var p in node.Data.Parameters.OfType<AudioParameter>())
-                    {
-                        var action = p.SetValueAction(new Audio(Guid.NewGuid().ToString()));
-                        if (action != null)
-                            action.Value.Redo(); //If we undo the whole operation the parameter wont exist so no need to ever undo this value change.
-                    }
+                    //TODO: Do we want to treat audio parameters like strings in that they have a meaningful value
+                    //      or like localized strings in that they are a key into another system?
+                    //foreach (var p in node.Data.Parameters.OfType<IAudioParameter>())
+                    //{
+                    //    //No need to update audio usage as this will occur when the node is added/removed
+                    //    var audio = m_generateAudio(this);
+                    //    var actions = p.SetValueAction(audio); //TODO: Investigate what happens to Audio parameter usage if you duplicate a node and then undo
+                    //    undoActions.Add(actions.Value.Undo);
+                    //    redoActions.Add(actions.Value.Redo);
+                    //}
+                    //foreach (var p in node.Data.Parameters.OfType<IAudioParameter>())
+                    //{
+                    //    var action = p.SetValueAction(new Audio(Guid.NewGuid().ToString()));
+                    //    if (action != null)
+                    //        action.Value.Redo(); //If we undo the whole operation the parameter wont exist so no need to ever undo this value change.
+                    //}
 
                     var oldID = node.Data.NodeId;
                     node.Data.ChangeId(Id<NodeTemp>.New());

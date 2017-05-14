@@ -161,7 +161,7 @@ namespace Tests.ConversationEditor
             ISerializer<TData> serializer = null;
             ReadOnlyCollection<LoadError> errors = new ReadOnlyCollection<LoadError>(new List<LoadError>());
             INodeFactory nodeFactory = null;
-            Func<ISaveableFileProvider, IEnumerable<IParameter>, Audio> generateAudio = null;
+            GenerateAudio generateAudio = null;
             var source = new DynamicEnumParameter.Source();
             Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource = (a, b) => source;
             IAudioLibrary audioProvider = new DummyAudioLibrary();

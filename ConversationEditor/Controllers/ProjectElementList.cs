@@ -69,7 +69,7 @@ namespace ConversationEditor
                                 Console.Out.WriteLine(e.StackTrace);
                                 Console.Out.WriteLine(e.InnerException.Message);
                                 Console.Out.WriteLine(e.InnerException.StackTrace);
-                                MessageBox.Show("File: " + file.Name + " exists but could not be accessed");
+                                MessageBox.Show("File: " + file.Name + " could not be accessed");
                                 var doc = makeMissing(file);
                                 result.Add(doc);
                             }

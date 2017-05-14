@@ -394,7 +394,7 @@ namespace ConversationEditor
                     Console.Out.WriteLine(e.InnerException.Message);
                     Console.Out.WriteLine(e.InnerException.StackTrace);
                     if (path.Exists)
-                        MessageBox.Show("File: " + path.Name + " exists but could not be accessed");
+                        MessageBox.Show("File: " + path.Name + " could not be accessed");
                     else
                         MessageBox.Show("File: " + path.Name + " does not exist");
 
