@@ -81,11 +81,15 @@ namespace Tests
         public static void TestZeroSize()
         {
             QuadTree<object> tree = new QuadTree<object>(new RectangleF(0, 0, 16, 16));
-            object obj = new object();
+            List<object> obj = Enumerable.Repeat(0, 100).Select(x => new object()).ToList();
             var bounds = new RectangleF(10, 9, 0, 0);
-            tree.Add(obj, bounds);
-            bool removed = tree.Remove(obj, bounds);
-            Assert.That(removed, Is.True);
+            for (int i = 0; i < obj.Count; i++)
+                tree.Add(obj[i], bounds);
+            foreach (var o in obj)
+            {
+                bool removed = tree.Remove(o, bounds);
+                Assert.That(removed, Is.True);
+            }
         }
 
         [NUnit.Framework.Test]
@@ -103,7 +107,7 @@ namespace Tests
         {
             QuadTree<object> tree = new QuadTree<object>(RectangleF.FromLTRB(0, 0, 1, 1));
             Random r = new Random(0);
-            for (int i = 0; i < 20000 ; i++)
+            for (int i = 0; i < 20000; i++)
             {
                 float x = (float)(r.NextDouble() * Math.Pow(2, 6 * r.NextDouble()));
                 float y = (float)(r.NextDouble() * Math.Pow(2, 6 * r.NextDouble()));
