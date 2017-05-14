@@ -17,10 +17,6 @@ namespace Utilities
         T Read(Stream stream);
     }
 
-    public interface ISerializerDeserializer<in TIn, out TOut> : ISerializer<TIn>, IDeserializer<TOut>
-    {
-    }
-    
     public interface ISerializerDeserializer<T> : ISerializer<T>, IDeserializer<T>
     {
     }
