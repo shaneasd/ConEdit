@@ -13,7 +13,7 @@ namespace ConversationEditor
         public class MissingLeafItem<T> : LeafItem<T> where T : ISaveableFileProvider
         {
             Bitmap m_icon;
-            public MissingLeafItem(Func<RectangleF> area, T item, IProject project, Bitmap icon, ContainerItem parent, Func<VisibilityFilter, bool> filter, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
+            public MissingLeafItem(Func<RectangleF> area, T item, IProject project, Bitmap icon, ContainerItem parent, ItemFilter filter, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
                 : base(area, project, item, parent, filter, toControlTransform, rename)
             {
                 m_icon = icon;

@@ -10,13 +10,15 @@ namespace ConversationEditor
 {
     partial class ProjectExplorer
     {
+        public delegate bool ItemFilter(VisibilityFilter.TypesSet filterData);
+
         public abstract class LeafItem : Item
         {
             private readonly ISaveableFileProvider m_item;
             public ISaveableFileProvider Item { get { return m_item; } }
-            private Func<VisibilityFilter, bool> m_filter;
-            protected LeafItem(Func<RectangleF> area, IProject project, ISaveableFile file, ContainerItem parent, Func<VisibilityFilter, bool> filter, ISaveableFileProvider item, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
-                : base(new ConstructorParams(area, project, new FileSystemObject( file), parent, toControlTransform, rename))
+            private ItemFilter m_filter;
+            protected LeafItem(Func<RectangleF> area, IProject project, ISaveableFile file, ContainerItem parent, ItemFilter filter, ISaveableFileProvider item, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
+                : base(new ConstructorParams(area, project, new FileSystemObject(file), parent, toControlTransform, rename))
             {
                 m_filter = filter;
                 m_item = item;
@@ -24,7 +26,7 @@ namespace ConversationEditor
 
             public override IEnumerable<Item> AllItems(VisibilityFilter filter)
             {
-                if (m_filter(filter))
+                if (m_filter(filter.Types) && Text.IndexOf(filter.Text.Value,StringComparison.CurrentCultureIgnoreCase) >= 0)
                     yield return this;
             }
 
@@ -55,7 +57,7 @@ namespace ConversationEditor
 
             public new T Item { get { return m_item; } }
 
-            protected LeafItem(Func<RectangleF> area, IProject project, T item, ContainerItem parent, Func<VisibilityFilter, bool> filter, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
+            protected LeafItem(Func<RectangleF> area, IProject project, T item, ContainerItem parent, ItemFilter filter, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
                 : base(area, project, item.File, parent, filter, item, toControlTransform, rename)
             {
                 m_item = item;

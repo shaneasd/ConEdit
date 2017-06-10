@@ -37,6 +37,7 @@ namespace ConversationEditor
                 greyScrollBar1.ColorScheme = value;
                 drawWindow1.ColorScheme = value;
                 drawWindow2.ColorScheme = value;
+                drawWindow3.ColorScheme = value;
                 m_contextMenu.Renderer = value.ContextMenu;
 
                 foreach (var button in m_buttons)
@@ -102,15 +103,28 @@ namespace ConversationEditor
 
             var folderFilterButton = makeButton(FolderIcon);
             folderFilterButton.Highlighted = true;
-            folderFilterButton.ValueChanged += () => { m_visibility.EmptyFolders.Value = folderFilterButton.Highlighted; InvalidateImage(); };
+            folderFilterButton.ValueChanged += () => { m_visibility.Types.EmptyFolders.Value = folderFilterButton.Highlighted; InvalidateImage(); };
             m_buttons.Add(folderFilterButton);
 
-            m_visibility.Audio.Changed.Register(b => m_config.Audio.Value = b.To);
-            m_visibility.Conversations.Changed.Register(b => m_config.Conversations.Value = b.To);
-            m_visibility.Domains.Changed.Register(b => m_config.Domains.Value = b.To);
-            m_visibility.EmptyFolders.Changed.Register(b => m_config.Folders.Value = b.To);
-            m_visibility.Localizations.Changed.Register(b => m_config.Localizations.Value = b.To);
+            m_visibility.Types.Audio.Changed.Register(b => m_config.Audio.Value = b.To);
+            m_visibility.Types.Conversations.Changed.Register(b => m_config.Conversations.Value = b.To);
+            m_visibility.Types.Domains.Changed.Register(b => m_config.Domains.Value = b.To);
+            m_visibility.Types.EmptyFolders.Changed.Register(b => m_config.Folders.Value = b.To);
+            m_visibility.Types.Localizations.Changed.Register(b => m_config.Localizations.Value = b.To);
+
+
+            m_filterTextBox = new MyTextBox(drawWindow3, () => drawWindow3.DisplayRectangle, MyTextBox.InputFormEnum.Text, s => null);
+            MyTextBox.SetupCallbacks(drawWindow3, m_filterTextBox);
+            m_filterTextBox.TextChanged += (oldtext) => filterTextChanged();
         }
+
+        private void filterTextChanged()
+        {
+            m_visibility.Text.Value = m_filterTextBox.Text;
+            InvalidateImage();
+        }
+
+        MyTextBox m_filterTextBox;
 
         private void UnsuppressibleUpdateSelectedLocalizer()
         {
@@ -129,11 +143,11 @@ namespace ConversationEditor
             m_context = context;
             m_context.CurrentLocalization.Changed.Register(this, (a, change) => UpdateSelectedLocalizer.TryExecute());
             m_config = config;
-            m_visibility.Audio.Value = config.Audio.Value;
-            m_visibility.Conversations.Value = config.Conversations.Value;
-            m_visibility.Domains.Value = config.Domains.Value;
-            m_visibility.EmptyFolders.Value = config.Folders.Value;
-            m_visibility.Localizations.Value = config.Localizations.Value;
+            m_visibility.Types.Audio.Value = config.Audio.Value;
+            m_visibility.Types.Conversations.Value = config.Conversations.Value;
+            m_visibility.Types.Domains.Value = config.Domains.Value;
+            m_visibility.Types.EmptyFolders.Value = config.Folders.Value;
+            m_visibility.Types.Localizations.Value = config.Localizations.Value;
         }
 
         public void InvalidateImage()
@@ -151,11 +165,16 @@ namespace ConversationEditor
 
         public class VisibilityFilter
         {
-            public NotifierProperty<bool> Conversations = new NotifierProperty<bool>(true);
-            public NotifierProperty<bool> Domains = new NotifierProperty<bool>(true);
-            public NotifierProperty<bool> Localizations = new NotifierProperty<bool>(true);
-            public NotifierProperty<bool> Audio = new NotifierProperty<bool>(true);
-            public NotifierProperty<bool> EmptyFolders = new NotifierProperty<bool>(true);
+            public class TypesSet
+            {
+                public NotifierProperty<bool> Conversations = new NotifierProperty<bool>(true);
+                public NotifierProperty<bool> Domains = new NotifierProperty<bool>(true);
+                public NotifierProperty<bool> Localizations = new NotifierProperty<bool>(true);
+                public NotifierProperty<bool> Audio = new NotifierProperty<bool>(true);
+                public NotifierProperty<bool> EmptyFolders = new NotifierProperty<bool>(true);
+            }
+            public TypesSet Types = new TypesSet();
+            public NotifierProperty<string> Text = new NotifierProperty<string>("");
 
             private VisibilityFilter() { }
 
@@ -163,11 +182,11 @@ namespace ConversationEditor
             public static VisibilityFilter Just(bool Conversations = false, bool Domains = false, bool Localizations = false, bool Audio = false, bool EmptyFolders = false)
             {
                 VisibilityFilter result = new VisibilityFilter();
-                result.Conversations.Value = Conversations;
-                result.Domains.Value = Domains;
-                result.Localizations.Value = Localizations;
-                result.Audio.Value = Audio;
-                result.EmptyFolders.Value = EmptyFolders;
+                result.Types.Conversations.Value = Conversations;
+                result.Types.Domains.Value = Domains;
+                result.Types.Localizations.Value = Localizations;
+                result.Types.Audio.Value = Audio;
+                result.Types.EmptyFolders.Value = EmptyFolders;
                 return result;
             }
         }

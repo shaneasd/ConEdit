@@ -79,12 +79,12 @@ namespace ConversationEditor
 
         public override void Update(bool visible, ref ProjectExplorer.VisibilityFilter m_visibility)
         {
-            m_visibility.Conversations.Value = visible;
+            m_visibility.Types.Conversations.Value = visible;
         }
 
         public override void RegisterFilterChangedCallback(ProjectExplorer.VisibilityFilter visibility, Action<bool> action)
         {
-            visibility.Conversations.Changed.Register(b => action(b.To));
+            visibility.Types.Conversations.Changed.Register(b => action(b.To));
         }
     }
 
@@ -127,12 +127,12 @@ namespace ConversationEditor
 
         public override void Update(bool visible, ref ProjectExplorer.VisibilityFilter m_visibility)
         {
-            m_visibility.Localizations.Value = visible;
+            m_visibility.Types.Localizations.Value = visible;
         }
 
         public override void RegisterFilterChangedCallback(ProjectExplorer.VisibilityFilter visibility, Action<bool> action)
         {
-            visibility.Localizations.Changed.Register(b => action(b.To));
+            visibility.Types.Localizations.Changed.Register(b => action(b.To));
         }
     }
 
@@ -175,12 +175,12 @@ namespace ConversationEditor
 
         public override void Update(bool visible, ref ProjectExplorer.VisibilityFilter m_visibility)
         {
-            m_visibility.Domains.Value = visible;
+            m_visibility.Types.Domains.Value = visible;
         }
 
         public override void RegisterFilterChangedCallback(ProjectExplorer.VisibilityFilter visibility, Action<bool> action)
         {
-            visibility.Domains.Changed.Register(b => action(b.To));
+            visibility.Types.Domains.Changed.Register(b => action(b.To));
         }
     }
 
@@ -223,12 +223,12 @@ namespace ConversationEditor
 
         public override void Update(bool visible, ref ProjectExplorer.VisibilityFilter m_visibility)
         {
-            m_visibility.Audio.Value = visible;
+            m_visibility.Types.Audio.Value = visible;
         }
 
         public override void RegisterFilterChangedCallback(ProjectExplorer.VisibilityFilter visibility, Action<bool> action)
         {
-            visibility.Audio.Changed.Register(b => action(b.To));
+            visibility.Types.Audio.Changed.Register(b => action(b.To));
         }
     }
 }

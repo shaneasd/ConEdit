@@ -19,7 +19,7 @@ namespace ConversationEditor
             private readonly TConcrete m_item;
             private readonly Bitmap m_icon;
             public new TConcrete Item { get { return m_item; } }
-            public RealLeafItem(Func<RectangleF> area, TConcrete item, Bitmap icon, IProject project, ContainerItem parent, Func<VisibilityFilter, bool> filter, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
+            public RealLeafItem(Func<RectangleF> area, TConcrete item, Bitmap icon, IProject project, ContainerItem parent, ItemFilter filter, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
                 : base(area, project, item, parent, filter, toControlTransform, rename)
             {
                 m_item = item;

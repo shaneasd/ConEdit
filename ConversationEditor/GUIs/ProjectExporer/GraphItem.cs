@@ -43,7 +43,7 @@ namespace ConversationEditor
         {
             private Bitmap m_icon;
             private Bitmap m_missingIcon;
-            protected GraphItem(Func<RectangleF> area, T item, IProject project, ContainerItem parent, Bitmap icon, Bitmap missingIcon, Func<VisibilityFilter, bool> filter, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
+            protected GraphItem(Func<RectangleF> area, T item, IProject project, ContainerItem parent, Bitmap icon, Bitmap missingIcon, ItemFilter filter, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
                 : base(area, item, icon, project, parent, filter, toControlTransform, rename)
             {
                 m_icon = icon;
