@@ -195,11 +195,11 @@ namespace ConversationEditor
                         var p0 = m_lastClientPos;
                         Output x = m_parent.BestConnector(m_parent.UIInfo(LinkingTransition).Area.Value.Center(), p0, a => a.CanConnectTo(LinkingTransition, ConnectionConsiderations.None));
                         if (x != null)
-                            connections.Add(m_parent.UIInfo(x).Area.Value.Center(), m_parent.UIInfo(LinkingTransition).Area.Value.Center(), false);
+                            connections.Add(m_parent.UIInfo(x).Area.Value.Center(), m_parent.UIInfo(LinkingTransition).Area.Value.Center(), true);
                     }
                     else
                     {
-                        connections.Add(m_lastClientPos, m_parent.UIInfo(LinkingTransition).Area.Value.Center(), false);
+                        connections.Add(m_lastClientPos, m_parent.UIInfo(LinkingTransition).Area.Value.Center(), true);
                     }
                 }
             }
