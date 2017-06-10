@@ -82,6 +82,7 @@
     <Compile Include="Algorithm\EnumerableReversible.cs" />
     <Compile Include="Algorithm\ExtraLazyEnumerable.cs" />
     <Compile Include="Algorithm\GenericEqualityComparer.cs" />
+    <Compile Include="UI\Controls.cs" />
     <Compile Include="UI\MySuggestionBox.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            Utilities.UI.GreyScrollBar.DefaultColorScheme defaultColorScheme1 = new Utilities.UI.GreyScrollBar.DefaultColorScheme();
             this.cancelButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
@@ -63,6 +64,7 @@
             this.okButton.Text = "Ok";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
+            this.okButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.keyDown);
             // 
             // tableLayoutPanel3
             // 
@@ -124,6 +126,7 @@
             // 
             // greyScrollBar1
             // 
+            this.greyScrollBar1.ColorScheme = defaultColorScheme1;
             this.greyScrollBar1.Dock = System.Windows.Forms.DockStyle.Right;
             this.greyScrollBar1.Horizontal = false;
             this.greyScrollBar1.LargeChange = 0.1F;

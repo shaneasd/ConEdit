@@ -279,6 +279,9 @@ namespace ConversationEditor
                 label.Height = p.Height;
             };
             p.Controls.Add(editor.AsControl);
+            editor.AsControl.KeyDown += keyDown;
+            foreach (var c in editor.AsControl.AllDescendants())
+                c.KeyDown += keyDown;
 
             m_parameterEditors.Add(Tuple.Create(editor, parameter));
 
@@ -321,6 +324,12 @@ namespace ConversationEditor
         private void okButton_Click(object sender, EventArgs e)
         {
             m_ok();
+        }
+
+        private void keyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+                Cancel();
         }
     }
 
