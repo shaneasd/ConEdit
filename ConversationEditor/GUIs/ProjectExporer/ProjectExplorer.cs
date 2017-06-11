@@ -106,12 +106,11 @@ namespace ConversationEditor
             folderFilterButton.ValueChanged += () => { m_visibility.Types.EmptyFolders.Value = folderFilterButton.Highlighted; InvalidateImage(); };
             m_buttons.Add(folderFilterButton);
 
-            m_visibility.Types.Audio.Changed.Register(b => m_config.Audio.Value = b.To);
-            m_visibility.Types.Conversations.Changed.Register(b => m_config.Conversations.Value = b.To);
-            m_visibility.Types.Domains.Changed.Register(b => m_config.Domains.Value = b.To);
-            m_visibility.Types.EmptyFolders.Changed.Register(b => m_config.Folders.Value = b.To);
-            m_visibility.Types.Localizations.Changed.Register(b => m_config.Localizations.Value = b.To);
-
+            m_visibility.Types.Audio.Changed.Register(b => { m_config.Audio.Value = b.To; m_updateScrollbar.TryExecute(); });
+            m_visibility.Types.Conversations.Changed.Register(b => { m_config.Conversations.Value = b.To; m_updateScrollbar.TryExecute(); });
+            m_visibility.Types.Domains.Changed.Register(b => { m_config.Domains.Value = b.To; m_updateScrollbar.TryExecute(); });
+            m_visibility.Types.EmptyFolders.Changed.Register(b => { m_config.Folders.Value = b.To; m_updateScrollbar.TryExecute(); });
+            m_visibility.Types.Localizations.Changed.Register(b => { m_config.Localizations.Value = b.To; m_updateScrollbar.TryExecute(); });
 
             m_filterTextBox = new MyTextBox(drawWindow3, () => drawWindow3.DisplayRectangle, MyTextBox.InputFormEnum.Text, s => null);
             MyTextBox.SetupCallbacks(drawWindow3, m_filterTextBox);
@@ -121,6 +120,7 @@ namespace ConversationEditor
         private void filterTextChanged()
         {
             m_visibility.Text.Value = m_filterTextBox.Text;
+            m_updateScrollbar.TryExecute();
             InvalidateImage();
         }
 

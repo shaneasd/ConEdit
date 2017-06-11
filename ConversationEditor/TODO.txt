@@ -6,9 +6,6 @@ Manual
 
 Installer builder project
 
-
-Filtering things in project explorer should readjust scroll bar
-
 WORKFLOW:
 
 mousewheel scrollbar for project explorer
