@@ -7,8 +7,6 @@ Manual
 Installer builder project
 
 
-Project explorer doesn't render some (most deep?) vertical lines if their source is scrolled out of view.
-
 Filtering things in project explorer should readjust scroll bar
 
 WORKFLOW:

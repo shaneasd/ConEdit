@@ -352,7 +352,7 @@ namespace ConversationEditor
                 //Make sure all ancestors' vertical lines are drawn
                 if (itemsToDraw.Any())
                 {
-                    var firstDrawn = itemsToDraw.Last();
+                    var firstDrawn = itemsToDraw.First();
                     int indent = firstDrawn.Item1.IndentLevel;
                     for (int j = firstDrawn.Item2; j >= 0; j--)
                     {
