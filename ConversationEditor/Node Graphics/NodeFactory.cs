@@ -43,7 +43,14 @@ namespace ConversationEditor
         public NodeFactory(MapConfig<Id<NodeTypeTemp>, Guid> config, IEnumerable<NodeUI.IFactory> factories, Action<Action> changedCallback, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
             var nodeRenderers = factories.ToDictionary(n => n.Guid, n => n);
-            GetNodeRendererChoice = (id, n, p) => nodeRenderers[config[id]].GetRenderer(n, p, localizer, datasource);
+            GetNodeRendererChoice = (id, n, p) =>
+            {
+                Guid configValue = config[id];
+                NodeUI.IFactory factory;
+                if (!nodeRenderers.TryGetValue(configValue, out factory))
+                    factory = nodeRenderers[EditableUIFactory.Instance.Guid];
+                return factory.GetRenderer(n, p, localizer, datasource);
+            };
             changedCallback(UpdateRenderers);
         }
 
