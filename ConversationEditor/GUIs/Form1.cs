@@ -995,5 +995,10 @@ namespace ConversationEditor
             endpoints = document.Nodes.Where(n => n.Data.Connectors.Where(c => c.Connections.Any()).Count() < 2).Count(); //Nodes that aren't in the middle of a chain
             return connections - nodes + endpoints;
         }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Developed by Shane Tapp. thatguyiknow5@hotmail.com");
+        }
     }
 }
