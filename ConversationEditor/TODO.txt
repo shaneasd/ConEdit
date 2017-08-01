@@ -19,14 +19,6 @@ https://xkcd.com/1806/ : scroll wheel undo/redo
 
 Editor crashes if integer definition used in a conversation does not exist in domain
 
-[1:33:59 AM] Jonas Wæver: One is ghost connections, which is when you delete a connection but it seems to still be there in the graph view - you can click on empty space sometimes and a deleted connection will show up as highlighted
-EDITING A NODE WILL POTENTIALLY RESIZE IT WHICH CAN MOVE THE CONNECTOR POSITIONS POTENTIALLY WITHOUT UPDATING THE QUAD TREE
-
-I may have fixed this. Waiting on feedback:
-[1:34:11 AM] Jonas Wæver: The other, which I suspect is related, is when the editor loses track of where a connector is
-[1:34:39 AM] Jonas Wæver: So you can click on a connector and nothing happens, or you can click and hold on another connector and drag it to the connector and it'll fail to connect
-[1:34:51 AM] Jonas Wæver: In those cases though, strangely, if you hold down Shift it can still snap to the "broken" connector
-
 P3	Scroll bar for node editor is a bit messed up
 
 P4	Handle user specifying a default value for a parameter that is outside the acceptable range
