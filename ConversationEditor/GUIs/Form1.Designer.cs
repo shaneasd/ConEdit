@@ -58,13 +58,14 @@
             this.wordCountToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.nodeCountToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.parameterCountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cyclomaticComplexityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.projectExplorer = new ConversationEditor.ProjectExplorer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.m_conversationEditor = new ConversationEditor.ConversationEditorControl();
             this.errorList1 = new ConversationEditor.ErrorList();
-            this.cyclomaticComplexityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -85,7 +86,8 @@
             this.errorCheckToolStripMenuItem,
             this.exportToolStripMenuItem,
             this.debugToolStripMenuItem,
-            this.wordCountToolStripMenuItem});
+            this.wordCountToolStripMenuItem,
+            this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
@@ -408,6 +410,13 @@
             this.parameterCountToolStripMenuItem.Text = "Parameter Count";
             this.parameterCountToolStripMenuItem.Click += new System.EventHandler(this.parameterCountToolStripMenuItem_Click);
             // 
+            // cyclomaticComplexityToolStripMenuItem
+            // 
+            this.cyclomaticComplexityToolStripMenuItem.Name = "cyclomaticComplexityToolStripMenuItem";
+            this.cyclomaticComplexityToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.cyclomaticComplexityToolStripMenuItem.Text = "Cyclomatic Complexity";
+            this.cyclomaticComplexityToolStripMenuItem.Click += new System.EventHandler(this.cyclomaticComplexityToolStripMenuItem_Click);
+            // 
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
@@ -488,12 +497,12 @@
             this.errorList1.Size = new System.Drawing.Size(804, 138);
             this.errorList1.TabIndex = 3;
             // 
-            // cyclomaticComplexityToolStripMenuItem
+            // aboutToolStripMenuItem
             // 
-            this.cyclomaticComplexityToolStripMenuItem.Name = "cyclomaticComplexityToolStripMenuItem";
-            this.cyclomaticComplexityToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
-            this.cyclomaticComplexityToolStripMenuItem.Text = "Cyclomatic Complexity";
-            this.cyclomaticComplexityToolStripMenuItem.Click += new System.EventHandler(this.cyclomaticComplexityToolStripMenuItem_Click);
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -573,6 +582,7 @@
         private System.Windows.Forms.ToolStripMenuItem nodeCountToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem parameterCountToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cyclomaticComplexityToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
     }
 }
 
