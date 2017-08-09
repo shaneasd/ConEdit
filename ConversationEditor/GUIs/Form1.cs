@@ -615,9 +615,9 @@ namespace ConversationEditor
                             doc.Save(s);
                         }
                     }
-                    catch (MyFileLoadException)
+                    catch (MyFileLoadException ee)
                     {
-                        MessageBox.Show("Failed to save project config");
+                        MessageBox.Show("Failed to save project config" + ee.Message + ee.InnerException.Message);
                     }
                 }
             }
