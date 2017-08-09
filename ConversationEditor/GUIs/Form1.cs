@@ -275,12 +275,12 @@ namespace ConversationEditor
 
         private void InitialiseEditMenu()
         {
-            copyToolStripMenuItem.Click += (a, b) => CurrentEditor.CopySelection();
-            duplicateToolStripMenuItem.Click += (a, b) => CurrentEditor.DuplicateSelection();
-            selectAllToolStripMenuItem.Click += (a, b) => CurrentEditor.SelectAll();
-            pasteToolStripMenuItem.Click += (a, b) => CurrentEditor.Paste(null);
-            ungroupToolStripMenuItem.Click += (a, b) => CurrentEditor.UngroupSelection();
-            groupToolStripMenuItem.Click += (a, b) => CurrentEditor.GroupSelection();
+            copyToolStripMenuItem.Click += (a, b) => { if (CurrentEditor != null) CurrentEditor.CopySelection(); };
+            duplicateToolStripMenuItem.Click += (a, b) => { if (CurrentEditor != null) CurrentEditor.DuplicateSelection(); };
+            selectAllToolStripMenuItem.Click += (a, b) => { if (CurrentEditor != null) CurrentEditor.SelectAll(); };
+            pasteToolStripMenuItem.Click += (a, b) => { if (CurrentEditor != null) CurrentEditor.Paste(null); };
+            ungroupToolStripMenuItem.Click += (a, b) => { if (CurrentEditor != null) CurrentEditor.UngroupSelection(); };
+            groupToolStripMenuItem.Click += (a, b) => { if (CurrentEditor != null) CurrentEditor.GroupSelection(); };
 
             undoToolStripMenuItem.Click += (a, b) => CurrentFile.File.UndoQueue.Undo();
             redoToolStripMenuItem.Click += (a, b) => CurrentFile.File.UndoQueue.Redo();
