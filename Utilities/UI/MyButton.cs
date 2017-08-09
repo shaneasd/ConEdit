@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace Utilities.UI
 {
@@ -140,14 +141,33 @@ namespace Utilities.UI
             Image = image;
         }
 
+        private static ImageAttributes MakeNonHighlightedImageAttributes()
+        {
+            var mat = new ColorMatrix(new[] { new float[] { 1, 0, 0, 0, 0 }, new float[] { 0, 1, 0, 0, 0 }, new float[] { 0, 0, 1, 0, 0 }, new float[] { 0, 0, 0, 0.3f, 0 }, new float[] { 0, 0, 0, 0, 1 } });
+            ImageAttributes attr = new ImageAttributes();
+            attr.SetColorMatrix(mat);
+            return attr;
+        }
+
+        ImageAttributes NonHighlightedImageAttributes = MakeNonHighlightedImageAttributes();
+
         public override void Paint(Graphics g)
         {
             base.Paint(g);
+            //Test for Daniel
+            //if (Highlighted)
+            //    g.FillRectangle(HighlightBackground, Area);
+            //g.DrawImage(Image, (int)Area.X + 2, (int)Area.Y + 2, Image.Width, Image.Height);
+            //if (Highlighted)
+            //    g.DrawRectangle(SelectionPen, Area);
             if (Highlighted)
-                g.FillRectangle(HighlightBackground, Area);
-            g.DrawImage(Image, (int)Area.X + 2, (int)Area.Y + 2, Image.Width, Image.Height);
-            if (Highlighted)
-                g.DrawRectangle(SelectionPen, Area);
+            {
+                g.DrawImage(Image, (int)Area.X + 2, (int)Area.Y + 2, Image.Width, Image.Height);
+            }
+            else
+            {
+                g.DrawImage(Image, new Rectangle((int)Area.X + 2, (int)Area.Y + 2, Image.Width, Image.Height), 0, 0, Image.Width, Image.Height, GraphicsUnit.Pixel, NonHighlightedImageAttributes);
+            }
         }
     }
 
