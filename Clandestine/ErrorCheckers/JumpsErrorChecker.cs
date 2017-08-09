@@ -5,7 +5,7 @@ using System.Text;
 using Utilities;
 using Conversation;
 
-namespace PluginPack
+namespace Clandestine
 {
     public class JumpsErrorChecker<T> : ErrorChecker<T> where T : class, IConversationNode
     {

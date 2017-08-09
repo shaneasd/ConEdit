@@ -15,5 +15,7 @@ namespace Clandestine
         public static Id<NodeTypeTemp> Option { get { return Id<NodeTypeTemp>.Parse("86524441-8da7-4e19-9ff3-c8df67e09f8f"); } }
         public static Id<NodeTypeTemp> Random { get { return Id<NodeTypeTemp>.Parse("03f66e93-bc0c-4713-ae07-dd249d85078d"); } }
         public static Id<NodeTypeTemp> Branch { get { return Id<NodeTypeTemp>.Parse("4a77a85d-306b-44e1-97d2-c23843eaf0b0"); } }
+        public static Id<NodeTypeTemp> JumpTo { get { return Id<NodeTypeTemp>.Parse("dd02c832-4896-4f25-9a49-3884d6146fa3"); } }
+        public static Id<NodeTypeTemp> JumpTarget { get { return Id<NodeTypeTemp>.Parse("17cf0309-8377-4e3e-9d8d-46d0a7cef943"); } }
     }
 }

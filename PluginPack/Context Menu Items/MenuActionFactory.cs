@@ -11,6 +11,16 @@ namespace PluginPack
 {
     public class MenuActionFactory : IMenuActionFactory<ConversationNode>
     {
+        public static string GetId(ConversationNode node)
+        {
+            return (node.Data.Parameters.Single(n => string.Equals(n.Name, "ID", StringComparison.OrdinalIgnoreCase)) as IDynamicEnumParameter).Value;
+        }
+
+        public static string GetTarget(ConversationNode node)
+        {
+            return (node.Data.Parameters.Single(n => string.Equals(n.Name, "Target", StringComparison.OrdinalIgnoreCase)) as IDynamicEnumParameter).Value;
+        }
+
         public IEnumerable<MenuAction<ConversationNode>> GetMenuActions(IGraphEditorControl<ConversationNode> control, IProject2 project, Action<IEnumerable<IErrorListElement>> log, ILocalizationEngine localizer)
         {
             Action<ConversationNode, Point> jump = (n, p) =>
@@ -18,14 +28,14 @@ namespace PluginPack
                     if (n.Data.NodeTypeId == SpecialNodes.JumpTo)
                     {
                         var targetnodes = control.CurrentFile.Nodes.Where(a => a.Data.NodeTypeId == SpecialNodes.JumpTarget);
-                        var target = targetnodes.FirstOrDefault(t => JumpsErrorChecker<ConversationNode>.GetId(t) == JumpsErrorChecker<ConversationNode>.GetTarget(n));
+                        var target = targetnodes.FirstOrDefault(t => GetId(t) == GetTarget(n));
                         if (target != null)
                             control.SelectNode(target);
                     }
                     else if (n.Data.NodeTypeId == SpecialNodes.JumpTarget)
                     {
                         var sourceNodes = control.CurrentFile.Nodes.Where(a => a.Data.NodeTypeId == SpecialNodes.JumpTo);
-                        var source = sourceNodes.FirstOrDefault(t => JumpsErrorChecker<ConversationNode>.GetTarget(t) == JumpsErrorChecker<ConversationNode>.GetId(n));
+                        var source = sourceNodes.FirstOrDefault(t => GetTarget(t) == GetId(n));
                         if (source != null)
                             control.SelectNode(source);
                     }

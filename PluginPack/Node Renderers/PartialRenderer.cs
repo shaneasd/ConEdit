@@ -8,7 +8,7 @@ using System.Drawing;
 using System.IO;
 using Utilities;
 
-namespace Clandestine
+namespace PluginPack
 {
     public class PartialRendererFactory : NodeUI.IFactory
     {

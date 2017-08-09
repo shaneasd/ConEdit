@@ -53,26 +53,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlternateAudioProviderCustomization.cs" />
     <Compile Include="Config\BackgroundColor.cs" />
     <Compile Include="Config\ConfigNodeDefinitions.cs" />
+    <Compile Include="Config\DontRenderConfig.cs" />
     <Compile Include="Config\NameConfig.cs" />
     <Compile Include="Config\ShortcutKey.cs" />
-    <Compile Include="ErrorCheckers\CycleErrorChecker.cs" />
+    <Compile Include="Context Menu Items\FindNodesOfType.cs" />
     <Compile Include="Node Renderers\IconRenderer.cs" />
-    <Compile Include="ErrorCheckers\DisconnectionErrorChecker.cs" />
-    <Compile Include="ErrorCheckers\JumpsErrorChecker.cs" />
     <Compile Include="Context Menu Items\MenuActionFactory.cs" />
     <Compile Include="Config\IconConfig.cs" />
+    <Compile Include="Node Renderers\PartialRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Node Renderers\RedRenderer.cs" />
     <Compile Include="SpecialNodes.cs" />
-    <Compile Include="Context Menu Items\TemplatesMenuActions.cs" />
     <Compile Include="UneditableNodeEditorFactory.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -83,20 +80,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\neil.png" />
     <None Include="ShanesKey.snk" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\tammy.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\jonas.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\shane.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Player.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Conversation2\Conversation2.csproj">
@@ -121,16 +105,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\ali.png" />
-    <EmbeddedResource Include="Resources\daniel.png" />
-    <Content Include="Resources\End Icon.png" />
-    <EmbeddedResource Include="Resources\juan.png" />
-    <Content Include="Resources\Start Icon.png" />
-    <EmbeddedResource Include="Templates\Basic Conversation.xml" />
-  </ItemGroup>
-  <ItemGroup>
+    <Folder Include="ErrorCheckers\" />
     <Folder Include="Parameter Editors\" />
     <Folder Include="Project Exporters\" />
+    <Folder Include="Resources\" />
+    <Folder Include="Templates\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

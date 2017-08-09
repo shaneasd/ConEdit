@@ -6,7 +6,7 @@ using Conversation;
 using ConversationEditor;
 using System.Collections.ObjectModel;
 
-namespace Clandestine
+namespace PluginPack
 {
     public class DoNotRenderConfig : IConfigNodeDefinition
     {

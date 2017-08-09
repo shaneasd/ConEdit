@@ -53,10 +53,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config\ConfigNodeDefinitions.cs" />
-    <Compile Include="Config\DontRenderConfig.cs" />
+    <Compile Include="AlternateAudioProviderCustomization.cs" />
     <Compile Include="Context Menu Items\ExportAsCsv.cs" />
-    <Compile Include="Context Menu Items\FindNodesOfType.cs" />
+    <Compile Include="Context Menu Items\TemplatesMenuActions.cs" />
+    <Compile Include="ErrorCheckers\CycleErrorChecker.cs" />
+    <Compile Include="ErrorCheckers\JumpsErrorChecker.cs" />
     <Compile Include="ErrorCheckers\StartNodeErrorChecker.cs" />
     <Compile Include="Factories\ProjectExplorerContextMenu.cs" />
     <Compile Include="ErrorCheckers\CinematicConnectionErrorChecker.cs" />
@@ -65,7 +66,6 @@
     <Compile Include="ErrorCheckers\TerminatorErrorChecker.cs" />
     <Compile Include="ErrorCheckers\MultipleConnectionsErrorChecker.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Node Renderers\PartialRenderer.cs" />
     <Compile Include="Project Exporters\ConversationsAsSsv.cs" />
     <Compile Include="SpecialNodes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -82,6 +82,10 @@
       <Name>ConversationEditor.PluginBase</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\ConversationSerialization\ConversationSerialization.csproj">
+      <Project>{abef494e-1fdb-427a-ba80-1bd98c82f041}</Project>
+      <Name>ConversationSerialization</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utilities\Utilities.csproj">
       <Project>{BC0871BD-3134-40F0-8E74-0D3AAF3BF65B}</Project>
       <Name>Utilities</Name>
@@ -90,9 +94,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Audio\" />
+    <Folder Include="Config\" />
+    <Folder Include="Node Renderers\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ShanesKey.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\Basic Conversation.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

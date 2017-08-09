@@ -19,6 +19,7 @@ namespace PluginPack
             yield return new ShortcutKey();
             yield return new BackgroundColor();
             yield return new NameConfig();
+            yield return new DoNotRenderConfig();
         }
     }
 

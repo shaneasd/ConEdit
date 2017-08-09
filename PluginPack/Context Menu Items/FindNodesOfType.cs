@@ -8,7 +8,7 @@ using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeG
 using Conversation;
 using Utilities;
 
-namespace Clandestine
+namespace PluginPack
 {
     //TODO: distinguish different types of context menu in folder structure
     public class FindNodesOfType : IMenuActionFactory<ConversationNode>
