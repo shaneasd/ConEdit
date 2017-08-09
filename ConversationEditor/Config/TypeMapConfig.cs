@@ -48,7 +48,10 @@ namespace ConversationEditor
             root.Add(node);
             foreach (var kvp in m_data)
             {
-                node.Add(new XElement("Editor", new XAttribute("parameter", kvp.Key), new XAttribute("assembly", kvp.Value.m_assembly), new XAttribute("editor", kvp.Value.m_typeName)));
+                if (typeof(ConversationEditor.DefaultNodeEditorFactory).FullName != kvp.Value.m_typeName)
+                {
+                    node.Add(new XElement("Editor", new XAttribute("parameter", kvp.Key), new XAttribute("assembly", kvp.Value.m_assembly), new XAttribute("editor", kvp.Value.m_typeName)));
+                }
             }
         }
 
