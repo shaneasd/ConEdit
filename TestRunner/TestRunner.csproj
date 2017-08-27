@@ -45,6 +45,9 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>ShanesKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Distribution|x86'">
+    <OutputPath>bin\x86\Distribution\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit-console-runner">
       <HintPath>C:\utilities\NUnit 2.6.3\bin\lib\nunit-console-runner.dll</HintPath>

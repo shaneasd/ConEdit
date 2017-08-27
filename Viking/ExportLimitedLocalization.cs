@@ -10,10 +10,11 @@ using System.IO;
 using Conversation.Serialization;
 using System.Xml.Linq;
 using System.Globalization;
+using Utilities;
 
 namespace Viking
 {
-    class ExportLimitedLocalization : IFolderContextMenuItem
+    class ExportLimitedLocalization : IFolderContextMenuItem, IConversationContextMenuItem
     {
         private Func<Id<LocalizedText>, Tuple<string, DateTime>> m_localizer;
 
@@ -43,6 +44,29 @@ namespace Viking
                     {
                         stream = sfd.OpenFile();
                         WriteLocalizationFile(stream, conversations);
+                    }
+                    finally
+                    {
+                        if (stream != null)
+                            stream.Dispose();
+                    }
+                }
+            }
+        }
+
+        public void Execute(IConversationFile conversation, IErrorCheckerUtilities<IConversationNode> util)
+        {
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
+                sfd.DefaultExt = "xml";
+                sfd.AddExtension = true;
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    Stream stream = null;
+                    try
+                    {
+                        stream = sfd.OpenFile();
+                        WriteLocalizationFile(stream, conversation.Only());
                     }
                     finally
                     {

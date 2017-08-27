@@ -10,7 +10,8 @@ using System.Windows.Forms;
 
 namespace Viking
 {
-    public class ConversationsAsSsv : IProjectExporter
+    //TODO: Archive this somewhere rather than removing the inheritance
+    public class ConversationsAsSsv //: IProjectExporter
     {
         public string Name
         {

@@ -16,7 +16,8 @@ namespace Viking
 
         public IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<Id<LocalizedText>, Tuple<string, DateTime>> localizer)
         {
-            yield return new ExportLocalizationLines(localizer);
+            yield return new ExportLimitedLocalization(localizer);
+            //yield return new ExportLocalizationLines(localizer); //TODO: Archive this version somewhere
         }
 
         public IEnumerable<ILocalizationContextMenuItem> LocalizationContextMenuItems

@@ -77,6 +77,9 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>ShanesKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Distribution|x86'">
+    <OutputPath>bin\x86\Distribution\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Config\ColorsConfig.cs" />
     <Compile Include="Config\ConfigParameterColor.cs" />
