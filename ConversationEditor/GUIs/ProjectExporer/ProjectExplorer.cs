@@ -81,6 +81,8 @@ namespace ConversationEditor
             greyScrollBar1.Scrolled += () => drawWindow1.Invalidate(true);
             drawWindow1.Resize += (a, b) => m_updateScrollbar.TryExecute();
 
+            drawWindow1.MouseWheel += (a, e) => greyScrollBar1.MouseWheeled(e);
+
             int offset = 0;
             Func<Image, HighlightableImageButton> makeButton = icon =>
                 {

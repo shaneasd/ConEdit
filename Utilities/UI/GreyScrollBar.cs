@@ -398,5 +398,11 @@ namespace Utilities.UI
                 }
             }
         }
+
+        public void MouseWheeled(MouseEventArgs e)
+        {
+            const double WHEEL_SCALE = 0.25;
+            Value -= (int)(e.Delta * WHEEL_SCALE);
+        }
     }
 }

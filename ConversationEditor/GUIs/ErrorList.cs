@@ -62,14 +62,8 @@ namespace ConversationEditor
             drawWindow1.Paint += drawWindow1_Paint;
             greyScrollBar1.Scrolled += () => drawWindow1.Invalidate(true);
             drawWindow1.MouseClick += (a, b) => drawWindow1_MouseClick(b);
-            drawWindow1.MouseWheel += (a, b) => drawWindow1_MouseWheel(b);
+            drawWindow1.MouseWheel += (a, b) => greyScrollBar1.MouseWheeled(b);
             Resize += (a, b) => UpdateScrollbar();
-        }
-
-        void drawWindow1_MouseWheel(MouseEventArgs e)
-        {
-            const double WHEEL_SCALE = 0.25;
-            greyScrollBar1.Value -= (int)(e.Delta * WHEEL_SCALE);
         }
 
         public event Action<ConversationNode, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>, BoolRef> HightlightNode;
