@@ -781,7 +781,7 @@ namespace ConversationEditor
 
         public bool IsTypeDefinition(Id<NodeTypeTemp> id)
         {
-            return TypeDefinitionNodeIds.All.Contains(id);
+            return TypeDefinitionNodeIds.All.Concat(DomainIDs.EnumerationValueDeclaration.Only()).Contains(id);
         }
 
         public bool IsConnectorDefinition(Id<NodeTypeTemp> id)
