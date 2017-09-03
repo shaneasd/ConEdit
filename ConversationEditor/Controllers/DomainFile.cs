@@ -117,7 +117,9 @@ namespace ConversationEditor
                     m.CopyTo(stream);
                 }
 
-                return new DomainFile(new List<GraphAndUI<NodeUIData>>(), new List<NodeGroup>(), m, path, new ReadOnlyCollection<LoadError>(new LoadError[0]), datasource, serializer, nodeFactory, domainUsage, getDocumentSource, new List<IAutoCompletePattern>(), backend);
+                var result = new DomainFile(new List<GraphAndUI<NodeUIData>>(), new List<NodeGroup>(), m, path, new ReadOnlyCollection<LoadError>(new LoadError[0]), datasource, serializer, nodeFactory, domainUsage, getDocumentSource, new List<IAutoCompletePattern>(), backend);
+                result.m_file.Save(); //Make sure the file starts life as a valid xml document
+                return result;
             }
         }
 

@@ -93,7 +93,9 @@ namespace ConversationEditor
                     m.CopyTo(stream);
                 }
 
-                return new ConversationFile(nodes, groups, m, file, project.ConversationSerializer, new ReadOnlyCollection<LoadError>(new LoadError[0]), nodeFactory, generateAudio, getDocumentSource, audioProvider, backend);
+                var result = new ConversationFile(nodes, groups, m, file, project.ConversationSerializer, new ReadOnlyCollection<LoadError>(new LoadError[0]), nodeFactory, generateAudio, getDocumentSource, audioProvider, backend);
+                result.m_file.Save(); //Make sure the file starts life as a valid xml document
+                return result;
             }
         }
 
