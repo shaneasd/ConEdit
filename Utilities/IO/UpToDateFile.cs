@@ -23,6 +23,8 @@ namespace Utilities
             private ManualResetEventSlim m_aborted;
             private AutoResetEvent m_event;
             private Thread m_worker;
+            private volatile bool m_disposed = false;
+            private volatile bool m_threadWaiting = false;
 
             public WaitHandle AbortHandle { get { return m_abort.WaitHandle; } }
 
@@ -38,50 +40,51 @@ namespace Utilities
 
             private void UpdateThread()
             {
-                try
+                while (true)
                 {
-                    while (true)
+                    //Dispose will set the abort handle and wait for a bit but eventually give up.
+                    if (m_disposed)
+                        return;
+                    m_threadWaiting = true;
+                    WaitHandle[] handles = new WaitHandle[2];
+                    handles[0] = m_abort.WaitHandle;
+                    handles[1] = m_event;
+                    m_threadWaiting = false;
+
+                    int index = WaitHandle.WaitAny(handles);
+
+                    if (index == 0) //Abort signal was sent
                     {
-                        WaitHandle[] handles = new WaitHandle[2];
-                        handles[0] = m_abort.WaitHandle;
-                        handles[1] = m_event;
-
-                        int index = WaitHandle.WaitAny(handles);
-
-                        if (index == 0) //Abort signal was sent
+                        return;
+                    }
+                    else if (index == 1) //A file was modified or deleted
+                    {
+                        lock (m_deleted)
                         {
-                            return;
-                        }
-                        else if (index == 1) //A file was modified or deleted
-                        {
-
-                            lock (m_deleted)
+                            if (m_deleted.Any())
                             {
-                                if (m_deleted.Any())
+                                var x = m_deleted.First();
+                                x.NotifyFileDeleted();
+                                lock (m_modified)
                                 {
-                                    var x = m_deleted.First();
-                                    x.NotifyFileDeleted();
-                                    lock (m_modified)
-                                    {
-                                        if (m_modified.Contains(x))
-                                            m_modified.Remove(x);
-                                    }
-                                    m_deleted.Remove(x);
+                                    if (m_modified.Contains(x))
+                                        m_modified.Remove(x);
                                 }
-                                else
+                                m_deleted.Remove(x);
+                            }
+                            else
+                            {
+                                lock (m_modified)
                                 {
-                                    lock (m_modified)
+                                    if (m_modified.Any())
                                     {
-                                        if (m_modified.Any())
+                                        var x = m_modified.First();
+                                        var hasChanged = x.HasChanged();
+                                        if (hasChanged.HasValue)
                                         {
-                                            var x = m_modified.First();
-                                            var hasChanged = x.HasChanged();
-                                            if (hasChanged.HasValue)
-                                            {
-                                                if (hasChanged.Value)
-                                                    x.NotifyFileModified();
-                                                m_modified.Remove(x);
-                                            }
+                                            if (hasChanged.Value)
+                                                x.NotifyFileModified();
+                                            m_modified.Remove(x);
                                         }
                                     }
                                 }
@@ -89,25 +92,20 @@ namespace Utilities
                         }
                     }
                 }
-                finally
-                {
-                    m_aborted.Set();
-                }
+
             }
 
             protected override void Dispose(bool disposing)
             {
+                m_disposed = true;
                 if (disposing)
                 {
                     m_event.Reset();
                     m_abort.Set();
-                    m_aborted.Wait(1000); //Wait a second. If we were unlucky and in the middle of a stream comparison it could take a while.
-                                          //m_watcher.Dispose();
-                                          //m_reopen.Dispose();
-                                          //if (m_onDisk != null)
-                                          //m_onDisk.Dispose();
+                    //Make sure the thread isn't using either of these handles before we dispose them
+                    while (m_threadWaiting)
+                        ;
                     m_abort.Dispose();
-                    m_aborted.Dispose();
                     m_event.Dispose();
                 }
             }

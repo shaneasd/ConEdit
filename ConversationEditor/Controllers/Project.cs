@@ -70,6 +70,7 @@ namespace ConversationEditor
         private DomainDomain m_domainDataSource;
         private ConversationDataSource m_conversationDataSource;
         SaveableFileNotUndoable m_file;
+        UpToDateFile.Backend m_upToDateFileBackend;
 
         public static Project CreateEmpty(ILocalizationContext context, FileInfo path, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializer, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization, UpToDateFile.Backend backend)
         {
@@ -181,6 +182,7 @@ namespace ConversationEditor
         /// <param name="audioCustomization"></param>
         public Project(ILocalizationContext context, TData data, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, MemoryStream initialData, FileInfo projectFile, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializerFactory, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization, UpToDateFile.Backend backend)
         {
+            m_upToDateFileBackend = backend;
             Action<Stream> saveTo = stream => { Write(Conversations.Select(c => c.File.File), LocalizationFiles.Select(l => l.File.File), DomainFiles.Select(d => d.File.File), AudioFiles.Select(a => a.File.File), stream, Origin, m_serializer); };
             m_file = new SaveableFileNotUndoable(initialData, projectFile, saveTo, backend);
             ConversationNodeFactory = conversationNodeFactory;
@@ -469,6 +471,7 @@ namespace ConversationEditor
         {
             if (disposing)
             {
+                m_upToDateFileBackend.Dispose();
                 foreach (var element in ElementsExceptThis)
                     element.Dispose();
                 m_file.Dispose();
