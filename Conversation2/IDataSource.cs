@@ -71,6 +71,9 @@ namespace Conversation
         bool IsLocalDynamicEnum(ParameterType type);
 
         bool IsCategoryDefinition(Id<NodeTypeTemp> id);
+        /// <summary>
+        /// Id is for a node type which forms part of a type definition
+        /// </summary>
         bool IsTypeDefinition(Id<NodeTypeTemp> id);
         bool IsConnectorDefinition(Id<NodeTypeTemp> id);
         bool IsNodeDefinition(Id<NodeTypeTemp> id);
