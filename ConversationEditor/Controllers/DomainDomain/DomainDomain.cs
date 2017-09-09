@@ -220,7 +220,6 @@ namespace ConversationEditor
                 AddNode(BaseType.Audio.ParameterNodeType, "Audio", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter });
                 AddNode(BaseType.DynamicEnumeration.ParameterNodeType, "Dynamic Enumeration", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, dynamicEnumTypeParameter, stringDefaultParameter });
                 AddNode(BaseType.LocalDynamicEnumeration.ParameterNodeType, "Local Dynamic Enumeration", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, localDynamicEnumTypeParameter, stringDefaultParameter });
-                AddNode(BaseType.Set.ParameterNodeType, "Set", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, enumTypeParameter });
                 AddEnumNode(parameterMenu);
             }
             #endregion
@@ -295,179 +294,45 @@ namespace ConversationEditor
 
         private static string ConnectorColor = "ffff00";
 
-        public class EnumDefaultParameter : Parameter, IDynamicEnumParameter
-        {
-            private bool m_corrupted;
-            public override bool Corrupted { get { return m_corrupted; } }
-
-            public new static readonly ParameterType TypeId = ParameterType.Parse("82e83436-f1b0-4f71-8882-51c171d14ff3");
-
-            Func<Dictionary<ParameterType, IEnumerable<EnumerationData.Element>>> m_enumOptions;
-
-            private Dictionary<ParameterType, IEnumerable<EnumerationData.Element>> EnumOptions { get { return m_enumOptions(); } }
-
-            Func<ParameterType> m_currentEnumType;
-
-            Guid m_valueGuid;
-            string m_value;
-
-            public EnumDefaultParameter(Func<Dictionary<ParameterType, IEnumerable<EnumerationData.Element>>> enumOptions, Func<ParameterType> currentEnumType)
-                : base("Default", DomainIDs.ParameterDefault, TypeId, null)
-            {
-                m_value = "";
-                m_valueGuid = Guid.Empty;
-                m_enumOptions = enumOptions;
-                m_currentEnumType = currentEnumType;
-            }
-
-            private void UpdateValueGuid()
-            {
-                m_valueGuid = EnumOptions[m_currentEnumType()].FirstOrDefault(a => a.Name == m_value).Guid;
-            }
-
-            private void UpdateText()
-            {
-                string newText = null;
-                if (m_valueGuid != Guid.Empty && EnumOptions.ContainsKey(m_currentEnumType()))
-                {
-                    var element = EnumOptions[m_currentEnumType()].FirstOrDefault(a => a.Guid == m_valueGuid);
-                    if (element.Guid != Guid.Empty)
-                        newText = element.Name;
-                }
-                m_value = newText ?? m_value;
-            }
-
-            public string Value
-            {
-                get
-                {
-                    UpdateText();
-                    return m_value;
-                }
-            }
-
-            public Either<Guid, string> BetterValue
-            {
-                get
-                {
-                    UpdateText();
-                    if (m_valueGuid != Guid.Empty)
-                        return m_valueGuid;
-                    else
-                        return m_value;
-                }
-            }
-
-            public SimpleUndoPair? SetValueAction(string value)
-            {
-                var oldGuid = m_valueGuid;
-                var oldValue = m_value;
-                var oldCorrupted = Corrupted;
-
-                if (value.Equals(oldValue) && !oldCorrupted)
-                    return null;
-
-                return new SimpleUndoPair
-                {
-                    Redo = () => { m_value = value; m_corrupted = false; UpdateValueGuid(); },
-                    Undo = () => { m_value = oldValue; m_corrupted = oldCorrupted; m_valueGuid = oldGuid; }
-                };
-            }
-
-            public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
-            {
-                UpdateText();
-                return m_value;
-            }
-
-            protected override string InnerValueAsString()
-            {
-                UpdateText();
-                if (m_valueGuid != Guid.Empty)
-                    return m_valueGuid.ToString();
-                else
-                    return m_value;
-            }
-
-            protected override void DeserialiseValue(string value)
-            {
-                if (Guid.TryParse(value, out m_valueGuid))
-                {
-                    m_value = null;
-                }
-                else
-                {
-                    m_valueGuid = Guid.Empty;
-                    m_value = value;
-                }
-                m_corrupted = false;
-            }
-
-            public IEnumerable<string> Options
-            {
-                get
-                {
-                    ParameterType guid = m_currentEnumType();
-                    if (EnumOptions.ContainsKey(guid))
-                        return EnumOptions[guid].Select(a => a.Name);
-                    else
-                        return new string[0];
-                }
-            }
-
-            public bool Local
-            {
-                get
-                {
-                    return false;
-                }
-            }
-
-            public void MergeInto(DynamicEnumParameter.Source newSource)
-            {
-                //TODO: Not really sure what to do about this
-                //Contract.Assert(newSource == null, "source should be null because we're not merging into it");
-                //Do nothing. This object maintains its own source and nothing needs to know about it
-            }
-        }
-
-        private INodeDataGenerator AddEnumNode(NodeCategory parent)
+        private void AddEnumNode(NodeCategory parent)
         {
             Id<NodeTypeTemp> guid = BaseType.Enumeration.ParameterNodeType;
             string name = "Enumeration";
             NodeData.ConnectorData parameterOutput = new NodeData.ConnectorData(parameterDefinitionConnector1, DomainIDs.ParameterOutputDefinition.Id, new List<Parameter>());
             NodeData.ConnectorData parameterConfigConnector = new NodeData.ConnectorData(parameterConfigConnectorID, DomainIDs.ParameterConfigConnectorDefinition.Id, new List<Parameter>());
-            List<NodeData.ConnectorData> parameterConnectors = new List<NodeData.ConnectorData> { parameterOutput, parameterConfigConnector };
+            List<NodeData.ConnectorData> connectors = new List<NodeData.ConnectorData> { parameterOutput, parameterConfigConnector };
             NodeData.ParameterData nameParameter = new NodeData.ParameterData("Name", DomainIDs.ParameterName, BaseTypeString.ParameterType, NO_CONFIG);
             NodeData.ParameterData enumTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, EnumSetGuid, NO_CONFIG);
 
-            NodeData data = new NodeData(name, parent.Guid, guid, parameterConnectors, new List<NodeData.ParameterData> { nameParameter, enumTypeParameter }, MakeConfig('p', "00aaaa"));
-
             Func<Dictionary<ParameterType, IEnumerable<EnumerationData.Element>>> options = () => m_typeSet.VisibleEnums.ToDictionary(e => e.TypeId, e => e.Elements.Select(a => a));
+            Func<IParameter[], List<IParameter>> extraParameters = p => new List<IParameter> { new EnumDefaultParameter(options, () => ParameterType.Basic.FromGuid((p.Single(a => a.Id == enumTypeParameter.Id) as IEnumParameter).EditorSelected)) };
+            var config = MakeConfig('p', "00aaaa");
+            var parameters = new List<NodeData.ParameterData> { nameParameter, enumTypeParameter };
 
-            var generator = new NodeDataGenerator(data, m_typeSet, ConnectorDefinitions, DomainConnectionRules.Instance,
-                p => new List<IParameter> { new EnumDefaultParameter(options, () => ParameterType.Basic.FromGuid((p.Single(a => a.Id == enumTypeParameter.Id) as IEnumParameter).EditorSelected)) });
-            parent.AddNode(generator);
-            m_nodes[guid] = generator;
-            return generator;
+            //NodeData data = new NodeData(name, parent.Guid, guid, connectors, parameters, config);
+            //var generator = new NodeDataGenerator(data, m_typeSet, ConnectorDefinitions, DomainConnectionRules.Instance, extraParameters);
+            //parent.AddNode(generator);
+            //m_nodes[guid] = generator;
+            AddNode(guid, name, parent, config, connectors, parameters, extraParameters);
+
+            Func<IParameter[], List<IParameter>> setExtraParameters = p => new List<IParameter> { new SetDefaultParameter(options, () => ParameterType.Basic.FromGuid((p.Single(a => a.Id == enumTypeParameter.Id) as IEnumParameter).EditorSelected)) };
+            AddNode(BaseType.Set.ParameterNodeType, "Set", parent, MakeConfig('p', "00aaaa"), connectors, new List<NodeData.ParameterData> { nameParameter, enumTypeParameter }, setExtraParameters);
         }
 
-        private INodeDataGenerator AddNode(Id<NodeTypeTemp> guid, string name, NodeCategory parent, List<NodeData.ConfigData> config, List<NodeData.ConnectorData> connectors, List<NodeData.ParameterData> parameters, Func<IParameter[], List<IParameter>> extraParameters)
+        private void AddNode(Id<NodeTypeTemp> guid, string name, NodeCategory parent, List<NodeData.ConfigData> config, List<NodeData.ConnectorData> connectors, List<NodeData.ParameterData> parameters, Func<IParameter[], List<IParameter>> extraParameters)
         {
             NodeData data = new NodeData(name, parent.Guid, guid, connectors, parameters, config);
-            var generator = new NodeDataGenerator(data, m_typeSet, ConnectorDefinitions, DomainConnectionRules.Instance, x => extraParameters(x));
+            var generator = new NodeDataGenerator(data, m_typeSet, ConnectorDefinitions, DomainConnectionRules.Instance, extraParameters);
             parent.AddNode(generator);
             m_nodes[guid] = generator;
-            return generator;
         }
 
-        private INodeDataGenerator AddNode(Id<NodeTypeTemp> guid, string name, NodeCategory parent, List<NodeData.ConfigData> config, List<NodeData.ConnectorData> connectors, List<NodeData.ParameterData> parameters)
+        private void AddNode(Id<NodeTypeTemp> guid, string name, NodeCategory parent, List<NodeData.ConfigData> config, List<NodeData.ConnectorData> connectors, List<NodeData.ParameterData> parameters)
         {
             NodeData data = new NodeData(name, parent.Guid, guid, connectors, parameters, config);
             var generator = new NodeDataGenerator(data, m_typeSet, ConnectorDefinitions, DomainConnectionRules.Instance, null);
             parent.AddNode(generator);
             m_nodes[guid] = generator;
-            return generator;
         }
 
         public IEnumerable<ParameterType> ParameterTypes

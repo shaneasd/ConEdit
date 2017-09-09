@@ -103,6 +103,8 @@
     <Compile Include="Controllers\ContextMenu.cs" />
     <Compile Include="Controllers\ConversationConnectionRules.cs" />
     <Compile Include="Controllers\ConversationFile.cs" />
+    <Compile Include="Controllers\DomainDomain\SetDefaultParameter.cs" />
+    <Compile Include="Controllers\DomainDomain\EnumDefaultParameter.cs" />
     <Compile Include="Controllers\DummyLocalizationFile.cs" />
     <Compile Include="Controllers\DummyProjectElementList.cs" />
     <Compile Include="Controllers\ErrorCheckerUtils.cs" />
@@ -118,7 +120,7 @@
     <Compile Include="Controllers\GraphContextMenuItems.cs" />
     <Compile Include="Controllers\GraphFile.cs" />
     <Compile Include="Controllers\DomainFile.cs" />
-    <Compile Include="Controllers\DomainDomain.cs" />
+    <Compile Include="Controllers\DomainDomain\DomainDomain.cs" />
     <Compile Include="Controllers\DummyConversationEditorControlData.cs" />
     <Compile Include="Controllers\DummyConversationFile.cs" />
     <Compile Include="Controllers\LocalizationEngine.cs" />

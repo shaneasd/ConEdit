@@ -175,7 +175,7 @@ namespace ConversationEditor
             var parameterName = parameterNameParameter.Value;
             var parameterTypeParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_TYPE) as IEnumParameter;
             var parameterType = ParameterType.Basic.FromGuid(parameterTypeParameter.Value);
-            var parameterDefParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.ParameterDefault) as DomainDomain.EnumDefaultParameter;
+            var parameterDefParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.ParameterDefault) as EnumDefaultParameter;
             var parameterDef = parameterDefParameter.BetterValue;
             var data = parameterDef.Transformed(d => new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), parameterType, ReadConfig(parameterNode), d.ToString()),
                                                 d => new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), parameterType, ReadConfig(parameterNode), d));
@@ -202,12 +202,9 @@ namespace ConversationEditor
             var parameterName = parameterNameParameter.Value;
             var parameterTypeParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_TYPE) as IEnumParameter;
             var parameterType = ParameterType.ValueSetType.FromGuid(parameterTypeParameter.Value);
+            var parameterDefParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.ParameterDefault) as SetDefaultParameter;
 
-            //TODO: Defaults for sets are a bit tricky maybe
-            //var parameterDefParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_DEFAULT) as DomainDomain.EnumDefaultParameter;
-            //var parameterDef = parameterDefParameter.BetterValue;
-
-            var data = new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), parameterType, ReadConfig(parameterNode), ""); //Technically "" is a valid Set of zero elements
+            var data = new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), parameterType, ReadConfig(parameterNode), parameterDefParameter.SerializedValue);
             return data;
         }
 

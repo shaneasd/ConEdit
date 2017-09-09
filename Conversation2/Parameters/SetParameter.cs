@@ -11,7 +11,7 @@ namespace Conversation
     {
         IEnumeration m_enumeration;
         public SetParameter(string name, Id<Parameter> id, IEnumeration enumeration, string defaultValue)
-            : base(name, id, ParameterType.ValueSetType.Of(enumeration.TypeId), defaultValue ?? enumeration.DefaultValue.Transformed(a => a, b => b.ToString()), StaticDeserialize(enumeration, defaultValue ?? enumeration.DefaultValue.Transformed(a => a, b => b.ToString())))
+            : base(name, id, ParameterType.ValueSetType.Of(enumeration.TypeId), defaultValue ?? enumeration.DefaultValue.Transformed(a => a, b => b.ToString()), StaticDeserialize(enumeration.Options, defaultValue ?? enumeration.DefaultValue.Transformed(a => a, b => b.ToString())))
         {
             m_enumeration = enumeration;
         }
@@ -21,7 +21,7 @@ namespace Conversation
 
         protected override Tuple<ReadonlySet<Guid>, bool> DeserializeValueInner(string value)
         {
-            var result = StaticDeserialize(m_enumeration, value);
+            var result = StaticDeserialize(m_enumeration.Options, value);
             if ( result.Item2 )
                 m_textOverride = value;
             else
@@ -29,7 +29,7 @@ namespace Conversation
             return result;
         }
 
-        private static Tuple<ReadonlySet<Guid>, bool> StaticDeserialize(IEnumeration enumeration, string value)
+        public static Tuple<ReadonlySet<Guid>, bool> StaticDeserialize(IEnumerable<Guid> options, string value)
         {
             if ( value == null )
                 return Tuple.Create((ReadonlySet<Guid>)null, true);
@@ -52,7 +52,7 @@ namespace Conversation
             else
             {
                 var val = new ReadonlySet<Guid>(guids);
-                return Tuple.Create(val, !StaticValueValid(enumeration, val));
+                return Tuple.Create(val, !StaticValueValid(options, val));
             }
         }
 
@@ -63,19 +63,24 @@ namespace Conversation
 
         protected override bool ValueValid(ReadonlySet<Guid> value)
         {
-            return StaticValueValid(m_enumeration, value);
+            return StaticValueValid(m_enumeration.Options, value);
         }
 
-        private static bool StaticValueValid(IEnumeration enumeration, ReadonlySet<Guid> value)
+        public static bool StaticValueValid(IEnumerable<Guid> options, ReadonlySet<Guid> value)
         {
-            return value.All(v => enumeration.Options.Contains(v));
+            return value.All(v => options.Contains(v));
         }
 
         protected override string InnerValueAsString()
         {
             if (m_textOverride != null)
                 return m_textOverride;
-            return string.Join("+", Value.Select(v => v.ToString()));
+            return SerializeSet(Value);
+        }
+
+        public static string SerializeSet(ReadonlySet<Guid> value)
+        {
+            return string.Join("+", value.Select(v => v.ToString()));
         }
 
         public IEnumerable<Guid> Options
