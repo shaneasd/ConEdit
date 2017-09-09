@@ -17,7 +17,7 @@ namespace PluginPack
         {
             XmlGraphData<NodeUIData, ConversationEditorData> data;
             Assembly assembly = Assembly.GetExecutingAssembly();
-            using (Stream stream = assembly.GetManifestResourceStream("PluginPack.Templates.Basic Conversation.xml"))
+            using (Stream stream = assembly.GetManifestResourceStream("Clandestine.Templates.Basic Conversation.xml"))
             {
                 data = SerializationUtils.ConversationDeserializer(control.DataSource).Read(stream);
             }
