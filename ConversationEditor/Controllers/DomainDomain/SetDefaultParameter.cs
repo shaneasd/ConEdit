@@ -13,7 +13,17 @@ namespace ConversationEditor
         public new static readonly ParameterType TypeId = ParameterType.ValueSetType.Parse("set:452fbad8-976c-47d3-8b6f-06f871e06044");
         private readonly Func<Dictionary<ParameterType, IEnumerable<EnumerationData.Element>>> m_getEnumeration;
         private readonly Func<ParameterType> m_getCurrentEnumType;
-        IEnumerable<EnumerationData.Element> Enumeration { get { return m_getEnumeration()[m_getCurrentEnumType()]; } }
+        IEnumerable<EnumerationData.Element> Enumeration
+        {
+            get
+            {
+                var selectedEnumerationType = m_getCurrentEnumType();
+                if (selectedEnumerationType.Guid != Guid.Empty)
+                    return m_getEnumeration()[selectedEnumerationType];
+                else
+                    return Enumerable.Empty<EnumerationData.Element>();
+            }
+        }
 
         //TODO: Isn't there already a mechanism for this at a higher level? (Copied from SetParameter)
         string m_textOverride = null; //initial string representation of parameter that failed parsing (or null if parsing succeeded or a new value has been specified.
@@ -29,7 +39,7 @@ namespace ConversationEditor
         {
             get
             {
-                return Enumeration.Select(e=>e.Guid);
+                return Enumeration.Select(e => e.Guid);
             }
         }
 
@@ -50,7 +60,7 @@ namespace ConversationEditor
 
         protected override Tuple<ReadonlySet<Guid>, bool> DeserializeValueInner(string value)
         {
-            var result = SetParameter.StaticDeserialize(Enumeration.Select(e=>e.Guid), value);
+            var result = SetParameter.StaticDeserialize(Enumeration.Select(e => e.Guid), value);
             if (result.Item2)
                 m_textOverride = value;
             else
