@@ -74,21 +74,17 @@ namespace ConversationEditor
 
         public static Project CreateEmpty(ILocalizationContext context, FileInfo path, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializer, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization, UpToDateFile.Backend backend)
         {
-            Project result = null;
-            FileInfo conversationFile;
-            LocalizationFile localizationFile;
-
             using (MemoryStream m = new MemoryStream())
             {
                 //Create the new conversation file stream, fill with essential content and close
-                conversationFile = ConversationFile.GetAvailableConversationPath(path.Directory, Enumerable.Empty<ISaveableFileProvider>());
+                FileInfo conversationFile = ConversationFile.GetAvailableConversationPath(path.Directory, Enumerable.Empty<ISaveableFileProvider>());
                 using (FileStream conversationStream = Util.LoadFileStream(conversationFile, FileMode.CreateNew, FileAccess.Write))
                 {
                     conversationSerializer.Write(SerializationUtils.MakeConversationData(Enumerable.Empty<ConversationNode>(), new ConversationEditorData()), conversationStream);
                 }
 
                 LocalizationEngine temp = new LocalizationEngine(context, () => new HashSet<Id<LocalizedText>>(), s => false, s => false, p => !p.Exists, s => true, backend);
-                localizationFile = LocalizationFile.MakeNew(path.Directory, s => temp.MakeSerializer(s), p => !p.Exists, backend);
+                LocalizationFile localizationFile = LocalizationFile.MakeNew(path.Directory, s => temp.MakeSerializer(s), p => !p.Exists, backend);
 
                 //Create the new project
                 Write(conversationFile.Only(), localizationFile.File.File.Only(), Enumerable.Empty<FileInfo>(), Enumerable.Empty<FileInfo>(), m, path.Directory, serializer);
@@ -105,7 +101,7 @@ namespace ConversationEditor
 
                 TData data = new TData(conversationPaths, domainPaths, localizationPaths, Enumerable.Empty<string>());
 
-                result = new Project(context, data, conversationNodeFactory, domainNodeFactory, m, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig, audioCustomization, backend);
+                Project result = new Project(context, data, conversationNodeFactory, domainNodeFactory, m, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig, audioCustomization, backend);
                 return result;
             }
         }
