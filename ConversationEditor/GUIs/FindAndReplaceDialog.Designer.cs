@@ -112,7 +112,7 @@
             this.btnReplaceAll.TabIndex = 12;
             this.btnReplaceAll.Text = "Replace All";
             this.btnReplaceAll.UseVisualStyleBackColor = true;
-            this.btnReplaceAll.Click += new System.EventHandler(this.button1_Click);
+            this.btnReplaceAll.Click += new System.EventHandler(this.ReplaceAllClicked);
             // 
             // btnReplace
             // 
