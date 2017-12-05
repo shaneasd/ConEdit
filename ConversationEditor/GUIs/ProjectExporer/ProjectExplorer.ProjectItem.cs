@@ -124,6 +124,11 @@ namespace ConversationEditor
                 }
                 return false;
             }
+
+            public override IEnumerable<Item> AllItems(VisibilityFilter filter)
+            {
+                return AllItemsWithoutFilteringThis(filter);
+            }
         }
     }
 }

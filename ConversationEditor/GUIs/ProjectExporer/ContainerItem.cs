@@ -71,16 +71,26 @@ namespace ConversationEditor
             }
             #endregion
 
+            /// <summary>
+            /// Applies no filtering to this instance but still filters children
+            /// </summary>
+            protected IEnumerable<Item> AllItemsWithoutFilteringThis(VisibilityFilter filter)
+            {
+                yield return this;
+
+                foreach (var subitem in Children(filter))
+                    foreach (var subitemitem in subitem.AllItems(filter))
+                        yield return subitemitem;
+            }
+
             public override IEnumerable<Item> AllItems(VisibilityFilter filter)
             {
                 if (Children(filter).Any() || (filter.Types.EmptyFolders.Value && Text.IndexOf(filter.Text.Value, StringComparison.CurrentCultureIgnoreCase) >= 0))
                 {
-                    yield return this;
-
-                    foreach (var subitem in Children(filter))
-                        foreach (var subitemitem in subitem.AllItems(filter))
-                            yield return subitemitem;
+                    return AllItemsWithoutFilteringThis(filter);
                 }
+                else
+                    return Enumerable.Empty<Item>();
             }
 
             public override IEnumerable<Item> Children(VisibilityFilter filter)
