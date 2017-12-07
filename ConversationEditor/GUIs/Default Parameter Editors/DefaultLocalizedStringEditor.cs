@@ -18,7 +18,7 @@ namespace ConversationEditor
         public static readonly Guid StaticId = Guid.Parse("df3f30b8-ee05-4972-8b41-fb075d5502a7");
         public bool WillEdit(ParameterType type, WillEdit queries)
         {
-            return type == BaseTypeLocalizedString.ParameterType;
+            return queries.IsLocalizedString(type);
         }
 
         public string Name
@@ -79,10 +79,10 @@ namespace ConversationEditor
             m_parameter = data.Parameter as ILocalizedStringParameter;
             m_localizer = data.Localizer;
             if (!m_parameter.Corrupted)
-                m_textBox.Text = m_localizer.Localize(m_parameter.Value);
+                m_textBox.Text = m_localizer.Localize(Id<LocalizedStringType>.FromGuid(m_parameter.TypeId.Guid), m_parameter.Value);
             else
-                m_textBox.Text = m_localizer.Localize(null);
-            if (!m_localizer.CanLocalize)
+                m_textBox.Text = m_localizer.Localize(null, null);
+            if (!m_localizer.CanLocalize(Id<LocalizedStringType>.ConvertFrom(m_parameter.TypeId)))
                 m_textBox.InputForm = MyTextBox.InputFormEnum.None;
             m_autoCompleteSuggestions = data.AutoCompleteSuggestions;
         }
@@ -94,30 +94,31 @@ namespace ConversationEditor
 
         public UpdateParameterData UpdateParameterAction()
         {
-            var localized = m_parameter.Corrupted ? null : m_localizer.Localize(m_parameter.Value);
-            if (m_textBox.Text != localized)
+            if (m_localizer.CanLocalize(Id<LocalizedStringType>.ConvertFrom(m_parameter.TypeId)))
             {
-                if (m_parameter.Corrupted)
+                var localized = m_parameter.Corrupted ? null : m_localizer.Localize(Id<LocalizedStringType>.FromGuid(m_parameter.TypeId.Guid), m_parameter.Value);
+                if (m_textBox.Text != localized)
                 {
-                    Id<LocalizedText> id = Id<LocalizedText>.New();
-                    var parameterAction = m_parameter.SetValueAction(id);
-                    var localizerAction = m_localizer.SetLocalizationAction(id, m_textBox.Text);
-                    return new SimpleUndoPair
+                    if (m_parameter.Corrupted)
                     {
-                        //m_parameter.Corrupted implies m_parameter.SetValueAction(_)!=null
-                        Undo = () => { parameterAction.Value.Undo(); localizerAction.Undo(); },
-                        Redo = () => { parameterAction.Value.Redo(); localizerAction.Redo(); }
-                    };
-                }
-                else
-                {
-                    return m_localizer.SetLocalizationAction(m_parameter.Value, m_textBox.Text);
+                        Id<LocalizedText> id = Id<LocalizedText>.New();
+                        var parameterAction = m_parameter.SetValueAction(id);
+                        var localizerAction = m_localizer.SetLocalizationAction(Id<LocalizedStringType>.ConvertFrom(m_parameter.TypeId), id, m_textBox.Text);
+                        return new SimpleUndoPair
+                        {
+                            //m_parameter.Corrupted implies m_parameter.SetValueAction(_)!=null
+                            Undo = () => { parameterAction.Value.Undo(); localizerAction.Undo(); },
+                            Redo = () => { parameterAction.Value.Redo(); localizerAction.Redo(); }
+                        };
+                    }
+                    else
+                    {
+                        return m_localizer.SetLocalizationAction(Id<LocalizedStringType>.ConvertFrom(m_parameter.TypeId), m_parameter.Value, m_textBox.Text);
+                    }
                 }
             }
-            else
-            {
-                return new UpdateParameterData();
-            }
+
+            return new UpdateParameterData();
         }
 
         public string IsValid()

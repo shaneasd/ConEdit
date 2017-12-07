@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Conversation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,5 +10,6 @@ namespace ConversationEditor
     {
         bool CanRemove(Func<bool> prompt);
         void Removed();
+        Id<FileInProject> Id { get; }
     }
 }

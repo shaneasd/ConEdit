@@ -3,13 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using Conversation;
 
 namespace ConversationEditor
 {
     public interface IProjectElementList<out TReal, TInterface> : IEnumerable<TInterface>
         where TReal : TInterface
     {
-        IEnumerable<TInterface> Load(IEnumerable<FileInfo> fileInfos);
+        /// <summary>
+        /// Load files unknown to the project, generating new FileIds for each
+        /// </summary>
+        IEnumerable<TInterface> Load(IEnumerable<DocumentPath> paths);
+        /// <summary>
+        /// Load files already known to the project, determining their path from a lookup against their FileId
+        /// </summary>
+        IEnumerable<TInterface> Load(IEnumerable<Id<FileInProject>> fileInfos);
         void Reload();
         TReal New(DirectoryInfo path);
         /// <summary>

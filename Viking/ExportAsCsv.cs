@@ -41,7 +41,7 @@ namespace Viking
         public static Id<Parameter> CONVERSATIONINFO_CONTEXT = Id<Parameter>.FromGuid(Guid.Parse("6940a618-5905-4e81-a59b-281d92a90782"));
         public static Id<Parameter> CONVERSATIONINFO_NOTES = Id<Parameter>.FromGuid(Guid.Parse("cb4a4ac9-a5e9-444f-a7b0-b8f15e31e77a"));
 
-        public static CsvData GetOptionData(ConversationNode<INodeGui> node, ConversationNode<INodeGui> conversationInfo, Func<Id<LocalizedText>, string> localize)
+        public static CsvData GetOptionData(ConversationNode<INodeGui> node, ConversationNode<INodeGui> conversationInfo, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {
             return new CsvData()
             {
@@ -56,7 +56,7 @@ namespace Viking
             };
         }
 
-        public static CsvData GetSpeechData(ConversationNode<INodeGui> node, ConversationNode<INodeGui> conversationInfo, Func<Id<LocalizedText>, string> localize)
+        public static CsvData GetSpeechData(ConversationNode<INodeGui> node, ConversationNode<INodeGui> conversationInfo, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {
             return new CsvData()
             {
@@ -71,7 +71,7 @@ namespace Viking
             };
         }
 
-        public static CsvData GetPlayerSpeechData(ConversationNode<INodeGui> node, ConversationNode<INodeGui> conversationInfo, Func<Id<LocalizedText>, string> localize)
+        public static CsvData GetPlayerSpeechData(ConversationNode<INodeGui> node, ConversationNode<INodeGui> conversationInfo, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {
             return new CsvData()
             {
@@ -105,9 +105,9 @@ namespace Viking
 
     public abstract class ExportAsSeparatedStrings : IConversationContextMenuItem
     {
-        private Func<Id<LocalizedText>, string> m_localize;
+        private Func<Id<LocalizedStringType>, Id<LocalizedText>, string> m_localize;
 
-        protected ExportAsSeparatedStrings(Func<Id<LocalizedText>, string> localize)
+        protected ExportAsSeparatedStrings(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {
             m_localize = localize;
         }
@@ -209,7 +209,7 @@ namespace Viking
 
     public class ExportAsCsv : ExportAsSeparatedStrings
     {
-        public ExportAsCsv(Func<Id<LocalizedText>, string> localize)
+        public ExportAsCsv(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
             : base(localize)
         {
         }
@@ -221,7 +221,7 @@ namespace Viking
 
     public class ExportAsSsv : ExportAsSeparatedStrings
     {
-        public ExportAsSsv(Func<Id<LocalizedText>, string> localize)
+        public ExportAsSsv(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
             : base(localize)
         {
         }

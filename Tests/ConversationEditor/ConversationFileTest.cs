@@ -139,7 +139,7 @@ namespace Tests.ConversationEditor
             }
         }
 
-        private static INodeGui MakeNodeUI(ConversationNode node, Func<Id<LocalizedText>, string> localize)
+        private static INodeGui MakeNodeUI(ConversationNode node, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {
             return new EditableUI(node, new PointF(100, 100), localize);
         }
@@ -148,7 +148,7 @@ namespace Tests.ConversationEditor
         {
             var data = new DummyConversationNodeData("test", Id<NodeTemp>.Parse("d3aa34e9-35e5-4aa5-bd7d-d9b98ab5a54e"), Id<NodeTypeTemp>.Parse("1edf950a-088a-432f-aee9-b67cf9b7f3c0"), Enumerable.Empty<IParameter>());
 
-            return new ConversationNode(data, d => MakeNodeUI(d, a => null), d => null);
+            return new ConversationNode(data, d => MakeNodeUI(d, (a,b) => null), d => null);
         }
 
         [Test]
@@ -157,7 +157,7 @@ namespace Tests.ConversationEditor
             IEnumerable<GraphAndUI<NodeUIData>> nodes = Enumerable.Empty<GraphAndUI<NodeUIData>>();
             List<NodeGroup> groups = new List<NodeGroup>();
             MemoryStream rawData = new MemoryStream();
-            FileInfo file = new FileInfo("DeleteMe.txt");
+            DocumentPath file = DocumentPath.FromPath("DeleteMe.txt", new DirectoryInfo("."));
             ISerializer<TData> serializer = null;
             ReadOnlyCollection<LoadError> errors = new ReadOnlyCollection<LoadError>(new List<LoadError>());
             INodeFactory nodeFactory = null;
@@ -171,7 +171,8 @@ namespace Tests.ConversationEditor
 
             Random r = new Random(0);
             UpToDateFile.Backend backend = new UpToDateFile.Backend();
-            using (ConversationFile conversationFile = new ConversationFile(nodes, groups, rawData, file, serializer, errors, nodeFactory, generateAudio, getDocumentSource, audioProvider, backend))
+            var id = Id<FileInProject>.Parse("6a1bd06a-0028-4099-a375-475f1a5320db");
+            using (ConversationFile conversationFile = new ConversationFile(id, nodes, groups, rawData, file, serializer, errors, nodeFactory, generateAudio, getDocumentSource, audioProvider, backend))
             {
                 for (int i = 0; i < 10; i++)
                 {

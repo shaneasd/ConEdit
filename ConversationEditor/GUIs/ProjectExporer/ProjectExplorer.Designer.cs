@@ -27,8 +27,7 @@
             this.newLocalizationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importLocalizationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importIntoLocalizationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.makeCurrentLocalizationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.separatorBetweenLocalizationAndDomain = new System.Windows.Forms.ToolStripSeparator();
             this.newDomainToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importDomainToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -40,6 +39,8 @@
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.setUpLocalizationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.drawWindow1 = new Utilities.UI.DrawWindow();
             this.greyScrollBar1 = new Utilities.UI.GreyScrollBar();
             this.drawWindow2 = new Utilities.UI.DrawWindow();
@@ -56,8 +57,7 @@
             this.newLocalizationToolStripMenuItem,
             this.importLocalizationToolStripMenuItem,
             this.importIntoLocalizationMenuItem,
-            this.makeCurrentLocalizationMenuItem,
-            this.toolStripSeparator2,
+            this.separatorBetweenLocalizationAndDomain,
             this.newDomainToolStripMenuItem,
             this.importDomainToolStripMenuItem,
             this.toolStripSeparator3,
@@ -68,134 +68,141 @@
             this.removeToolStripMenuItem,
             this.deleteToolStripMenuItem,
             this.showInExplorerToolStripMenuItem,
-            this.newFolderToolStripMenuItem});
+            this.newFolderToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.setUpLocalizationsToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(198, 358);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(188, 386);
             // 
             // newConversationToolStripMenuItem
             // 
             this.newConversationToolStripMenuItem.Name = "newConversationToolStripMenuItem";
-            this.newConversationToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.newConversationToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.newConversationToolStripMenuItem.Text = "New Conversation";
             this.newConversationToolStripMenuItem.Click += new System.EventHandler(this.newConversationToolStripMenuItem_Click);
             // 
             // importConversationToolStripMenuItem
             // 
             this.importConversationToolStripMenuItem.Name = "importConversationToolStripMenuItem";
-            this.importConversationToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.importConversationToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.importConversationToolStripMenuItem.Text = "Import Conversation";
             this.importConversationToolStripMenuItem.Click += new System.EventHandler(this.importConversationToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(194, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(184, 6);
             // 
             // newLocalizationToolStripMenuItem
             // 
             this.newLocalizationToolStripMenuItem.Name = "newLocalizationToolStripMenuItem";
-            this.newLocalizationToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.newLocalizationToolStripMenuItem.Text = "New Localization";
+            this.newLocalizationToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.newLocalizationToolStripMenuItem.Text = "New Localization File";
             this.newLocalizationToolStripMenuItem.Click += new System.EventHandler(this.newLocalizationToolStripMenuItem_Click);
             // 
             // importLocalizationToolStripMenuItem
             // 
             this.importLocalizationToolStripMenuItem.Name = "importLocalizationToolStripMenuItem";
-            this.importLocalizationToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.importLocalizationToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.importLocalizationToolStripMenuItem.Text = "Import Localization";
             this.importLocalizationToolStripMenuItem.Click += new System.EventHandler(this.importLocalizationToolStripMenuItem_Click);
             // 
             // importIntoLocalizationMenuItem
             // 
             this.importIntoLocalizationMenuItem.Name = "importIntoLocalizationMenuItem";
-            this.importIntoLocalizationMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.importIntoLocalizationMenuItem.Size = new System.Drawing.Size(187, 22);
             this.importIntoLocalizationMenuItem.Text = "Import Into Localization";
             this.importIntoLocalizationMenuItem.Click += new System.EventHandler(this.importIntoLocalizationToolStripMenuItem_Click);
             // 
-            // makeCurrentLocalizationMenuItem
+            // separatorBetweenLocalizationAndDomain
             // 
-            this.makeCurrentLocalizationMenuItem.Name = "makeCurrentLocalizationMenuItem";
-            this.makeCurrentLocalizationMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.makeCurrentLocalizationMenuItem.Text = "Make Current Localization";
-            this.makeCurrentLocalizationMenuItem.Click += new System.EventHandler(this.makeCurrentLocalizationMenuItemClicked);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(194, 6);
+            this.separatorBetweenLocalizationAndDomain.Name = "separatorBetweenLocalizationAndDomain";
+            this.separatorBetweenLocalizationAndDomain.Size = new System.Drawing.Size(184, 6);
             // 
             // newDomainToolStripMenuItem
             // 
             this.newDomainToolStripMenuItem.Name = "newDomainToolStripMenuItem";
-            this.newDomainToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.newDomainToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.newDomainToolStripMenuItem.Text = "New Domain";
             this.newDomainToolStripMenuItem.Click += new System.EventHandler(this.newDomainToolStripMenuItem_Click);
             // 
             // importDomainToolStripMenuItem
             // 
             this.importDomainToolStripMenuItem.Name = "importDomainToolStripMenuItem";
-            this.importDomainToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.importDomainToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.importDomainToolStripMenuItem.Text = "Import Domain";
             this.importDomainToolStripMenuItem.Click += new System.EventHandler(this.importDomainToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(194, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(184, 6);
             // 
             // importAudioToolStripMenuItem
             // 
             this.importAudioToolStripMenuItem.Name = "importAudioToolStripMenuItem";
-            this.importAudioToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.importAudioToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.importAudioToolStripMenuItem.Text = "Import Audio";
             this.importAudioToolStripMenuItem.Click += new System.EventHandler(this.importAudioToolStripMenuItem_Click);
             // 
             // playMenuItem
             // 
             this.playMenuItem.Name = "playMenuItem";
-            this.playMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.playMenuItem.Size = new System.Drawing.Size(187, 22);
             this.playMenuItem.Text = "Play";
             this.playMenuItem.Click += new System.EventHandler(this.playMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(194, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(184, 6);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-            this.removeToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.removeToolStripMenuItem.Text = "Remove";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // showInExplorerToolStripMenuItem
             // 
             this.showInExplorerToolStripMenuItem.Name = "showInExplorerToolStripMenuItem";
-            this.showInExplorerToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.showInExplorerToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.showInExplorerToolStripMenuItem.Text = "View in Explorer";
             this.showInExplorerToolStripMenuItem.Click += new System.EventHandler(this.showInExplorerToolStripMenuItem_Click);
             // 
             // newFolderToolStripMenuItem
             // 
             this.newFolderToolStripMenuItem.Name = "newFolderToolStripMenuItem";
-            this.newFolderToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.newFolderToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.newFolderToolStripMenuItem.Text = "New Folder";
             this.newFolderToolStripMenuItem.Click += new System.EventHandler(this.newFolderToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(184, 6);
+            // 
+            // setUpLocalizationsToolStripMenuItem
+            // 
+            this.setUpLocalizationsToolStripMenuItem.Name = "setUpLocalizationsToolStripMenuItem";
+            this.setUpLocalizationsToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.setUpLocalizationsToolStripMenuItem.Text = "Set up localizations";
+            this.setUpLocalizationsToolStripMenuItem.Click += new System.EventHandler(this.setUpLocalizationsToolStripMenuItem_Click);
             // 
             // drawWindow1
             // 
@@ -280,7 +287,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem newLocalizationToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importLocalizationToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator separatorBetweenLocalizationAndDomain;
         private System.Windows.Forms.ToolStripMenuItem newDomainToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importDomainToolStripMenuItem;
         private Utilities.UI.GreyScrollBar greyScrollBar1;
@@ -289,7 +296,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem makeCurrentLocalizationMenuItem;
         private System.Windows.Forms.ToolStripMenuItem playMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showInExplorerToolStripMenuItem;
         private Utilities.UI.DrawWindow drawWindow2;
@@ -297,5 +303,7 @@
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importIntoLocalizationMenuItem;
         private Utilities.UI.DrawWindow drawWindow3;
+        private System.Windows.Forms.ToolStripMenuItem setUpLocalizationsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
     }
 }

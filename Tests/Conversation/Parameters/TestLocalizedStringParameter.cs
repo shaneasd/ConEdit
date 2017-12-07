@@ -16,20 +16,22 @@ namespace Tests.Conversation.Parameters
             {
                 string name = "a";
                 Id<Parameter> id = Id<Parameter>.Parse("92499A0E-12FD-414D-9478-C24D3FB7637C");
-                LocalizedStringParameter p = new LocalizedStringParameter(name, id);
+                ParameterType type = ParameterType.Parse("9ec0f499-39c3-4aaa-bff3-39e95bba16ab");
+                LocalizedStringParameter p = new LocalizedStringParameter(name, id, type);
                 Assert.That(p.Name, Is.EqualTo(name));
                 Assert.That(p.Id, Is.EqualTo(id));
-                Assert.That(p.TypeId, Is.EqualTo(LocalizedStringParameter.ParameterType));
                 Assert.That(p.Corrupted, Is.True);
+                Assert.That(p.TypeId, Is.EqualTo(type));
             }
             {
                 string name = "b";
                 Id<Parameter> id = Id<Parameter>.Parse("2BAFB643-1DD8-42F9-B521-0A50792DB231");
-                LocalizedStringParameter p = new LocalizedStringParameter(name, id);
+                ParameterType type = ParameterType.Parse("04a8cb83-4de7-4e4b-951a-9cf87b14df49");
+                LocalizedStringParameter p = new LocalizedStringParameter(name, id, type);
                 Assert.That(p.Name, Is.EqualTo(name));
                 Assert.That(p.Id, Is.EqualTo(id));
-                Assert.That(p.TypeId, Is.EqualTo(LocalizedStringParameter.ParameterType));
                 Assert.That(p.Corrupted, Is.True);
+                Assert.That(p.TypeId, Is.EqualTo(type));
             }
         }
 
@@ -38,7 +40,8 @@ namespace Tests.Conversation.Parameters
         {
             string name = "a";
             Id<Parameter> id = Id<Parameter>.Parse("92499A0E-12FD-414D-9478-C24D3FB7637C");
-            LocalizedStringParameter p = new LocalizedStringParameter(name, id);
+            ParameterType type = ParameterType.Parse("9ec0f499-39c3-4aaa-bff3-39e95bba16ab");
+            LocalizedStringParameter p = new LocalizedStringParameter(name, id, type);
 
             //Try setting a value
             var value1 = Id<LocalizedText>.Parse("52A20426-339C-4DE2-BEF1-236994EE882A");
@@ -77,7 +80,7 @@ namespace Tests.Conversation.Parameters
             Assert.That(p.Corrupted, Is.False);
             Assert.That(p.SetValueAction(value1), Is.Null);
             Assert.That(p.ValueAsString(), Is.EqualTo(value1.Serialized())); //Tempting to simply verify it will parse as the correct value but we need to be consistent with existing files
-            Assert.That(p.DisplayValue(a => a.Equals(value1) ? "equal" : "not equal"), Is.EqualTo("equal"));
+            Assert.That(p.DisplayValue((a, b) => b.Equals(value1) ? "equal" : "not equal"), Is.EqualTo("equal"));
         }
     }
 }

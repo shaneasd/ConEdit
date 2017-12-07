@@ -14,11 +14,14 @@ namespace ConversationEditor
         private AudioProvider m_provider;
         private Audio m_audio;
 
-        public AudioFile(System.IO.FileInfo file, AudioProvider provider)
+        public Id<FileInProject> Id { get; }
+
+        public AudioFile(Id<FileInProject> file, DocumentPath path, AudioProvider provider)
         {
             m_provider = provider;
-            m_file = new ReadonlyFileUnmonitored(file);
-            m_audio = new Audio(file.Name);
+            m_file = new ReadonlyFileUnmonitored(path.FileInfo);
+            Id = file;
+            m_audio = new Audio(path.RelativePath);
         }
 
         public ISaveableFile File
@@ -70,12 +73,14 @@ namespace ConversationEditor
         private MissingFile m_file;
         private AudioProvider m_provider;
         private Audio m_audio;
+        public Id<FileInProject> Id { get; }
 
-        public MissingAudioFile(FileInfo file, AudioProvider provider)
+        public MissingAudioFile(Id<FileInProject> file, DocumentPath path, AudioProvider provider)
         {
-            m_file = new MissingFile(file);
+            m_file = new MissingFile(file, path);
+            Id = file;
             m_provider = provider;
-            m_audio = new Audio(file.Name);
+            m_audio = new Audio(path.RelativePath);
         }
 
         bool IInProject.CanRemove(Func<bool> prompt)

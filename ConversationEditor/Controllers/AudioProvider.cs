@@ -79,21 +79,21 @@ namespace ConversationEditor
         private IProject m_project;
         private DirectoryInfo m_projectPath;
         private IAudioProviderCustomization m_customization;
-        public AudioProvider(FileInfo projectPath, Func<string, bool> fileLocationOk, IProject project, IAudioProviderCustomization customization)
+        public AudioProvider(FileInfo projectPath, GetFilePath getFilePath, Func<string, bool> fileLocationOk, IProject project, IAudioProviderCustomization customization)
         {
             m_projectPath = projectPath.Directory;
             m_project = project;
             m_customization = customization;
 
-            Func<IEnumerable<FileInfo>, IEnumerable<AudioFile>> load = files => files.Select(file => new AudioFile(file, this));
+            Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<AudioFile>> load = files => files.Select(file => new AudioFile(file.Item1, file.Item2, this));
             Func<DirectoryInfo, AudioFile> makeEmpty = path => { throw new NotSupportedException("Can't create new audio files within the editor"); };
-            Func<FileInfo, MissingAudioFile> makeMissing = file => new MissingAudioFile(file, this);
-            m_audioFiles = new ProjectElementList<AudioFile, MissingAudioFile, IAudioFile>(fileLocationOk, load, makeEmpty, makeMissing);
+            Func<Id<FileInProject>, MissingAudioFile> makeMissing = file => new MissingAudioFile(file, getFilePath(file), this);
+            m_audioFiles = new ProjectElementList<AudioFile, MissingAudioFile, IAudioFile>(getFilePath, fileLocationOk, load, makeEmpty, makeMissing);
             UpdateQueued = new SuppressibleAction(() => { ReallyUpdateUsage(); }); //For now just update everything
         }
 
         HashSet<FileInfo> m_toUpdate = new HashSet<FileInfo>();
-        bool m_updateAll = false;
+        bool m_updateAll = false; //TODO: LOC: it's used by commented out code which needs to be revived
         public IDisposable SuppressUpdates()
         {
             return UpdateQueued.SuppressCallback();
@@ -168,48 +168,43 @@ namespace ConversationEditor
 
         private void ReallyUpdateUsage()
         {
-            if (m_updateAll)
-            {
-                var fileInfoComparer = new GenericEqualityComparer<FileInfo>((a, b) => a.FullName == b.FullName, a => a.FullName.GetHashCode());
-                HashSet<FileInfo> usedAudioPaths = new HashSet<FileInfo>(fileInfoComparer);
-                HashSet<FileInfo> existing = new HashSet<FileInfo>(AudioFiles.Select(a => a.File.File), fileInfoComparer);
+            //TODO: LOC: uncomment this
+            //if (m_updateAll)
+            //{
+            //    HashSet<FileInfo> usedAudioPaths = new HashSet<FileInfo>();
+            //    HashSet<FileInfo> existing = new HashSet<FileInfo>(AudioFiles.Select(a => a.File.File));
 
-                List<FileInfo> toLoad = new List<FileInfo>();
-                foreach (var path in UsedAudio().Select(GetPath))
-                {
-                    if (!usedAudioPaths.Add(path))
-                    {
-                        MessageBox.Show("The path " + path + " is refered to by more than one audio parameter!", "Duplicate audio field", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
-                    }
-                    else
-                    {
-                        if (!existing.Contains(path))
-                            toLoad.Add(path);
-                    }
-                }
+            //    List<Id<FileInProject>> toLoad = new List<Id<FileInProject>>();
+            //    foreach (FileInfo path in UsedAudio().Select(GetPath))
+            //    {
+            //        if (!usedAudioPaths.Add(path))
+            //        {
+            //            MessageBox.Show("The path " + path + " is refered to by more than one audio parameter!", "Duplicate audio field", MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK);
+            //        }
+            //        else
+            //        {
+            //            if (!existing.Contains(path))
+            //                toLoad.Add(path);
+            //        }
+            //    }
 
-                if (toLoad.Any())
-                {
-                    m_project.AudioFiles.Load(toLoad);
-                }
-            }
-            else if (m_toUpdate.Any())
-            {
-                m_project.AudioFiles.Load(m_toUpdate);
-            }
+            //    if (toLoad.Any())
+            //    {
+            //        m_project.AudioFiles.Load(toLoad);
+            //    }
+            //}
+            //else if (m_toUpdate.Any())
+            //{
+            //    m_project.AudioFiles.Load(m_toUpdate);
+            //}
 
-            m_updateAll = false;
-            m_toUpdate.Clear();
+            //m_updateAll = false;
+            //m_toUpdate.Clear();
         }
 
         public Audio Generate(AudioGenerationParameters parameters)
         {
             return m_customization.Generate(parameters);
-        }
-
-        public void Rename(string from, string to)
-        {
-            m_audioFiles.Rename(from, to);
         }
     }
 }

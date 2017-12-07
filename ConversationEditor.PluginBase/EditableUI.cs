@@ -25,7 +25,7 @@ namespace ConversationEditor
             get { return "Default Conversation Node Renderer"; }
         }
 
-        public INodeGui GetRenderer(ConversationNode n, PointF p, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        public INodeGui GetRenderer(ConversationNode n, PointF p, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
             return new EditableUI(n, p, localizer);
         }
@@ -45,7 +45,7 @@ namespace ConversationEditor
             return true;
         }
 
-        public EditableUI(ConversationNode node, PointF p, Func<Id<LocalizedText>, string> localizer)
+        public EditableUI(ConversationNode node, PointF p, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer)
             : base(node, p)
         {
             m_titleSection = new TitleSection(node);
@@ -212,11 +212,11 @@ namespace ConversationEditor
 
         protected class ParametersSection : Section
         {
-            Func<Id<LocalizedText>, string> m_localizer;
+            Func<Id<LocalizedStringType>, Id<LocalizedText>, string> m_localizer;
             Func<IParameter, bool> ShouldRender;
             private float m_maxWidth;
 
-            public ParametersSection(ConversationNode node, Func<Id<LocalizedText>, string> localizer, Func<IParameter, bool> shouldRender)
+            public ParametersSection(ConversationNode node, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer, Func<IParameter, bool> shouldRender)
                 : base(node)
             {
                 m_localizer = localizer;

@@ -82,7 +82,7 @@ namespace Conversation
             get { return m_definition().Min ?? int.MinValue; }
         }
 
-        public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
+        public override string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {
             return Value.ToString(CultureInfo.CurrentCulture);
         }

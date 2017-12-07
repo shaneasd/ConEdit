@@ -173,8 +173,17 @@ namespace ConversationEditor
                     projectFile.Dispose();
                 }
 
-                var deserializer = new XMLProject.Deserializer();
-                var projectData = deserializer.Read(m);
+                var deserializer = new XMLProject.Deserializer((new FileInfo(path)).Directory);
+                Project.TData projectData;
+                try
+                {
+                    projectData = deserializer.Read(m);
+                }
+                catch (DeserializerVersionMismatchException e)
+                {
+                    MessageBox.Show("Failed to open project. " + e.Message);
+                    return;
+                }
                 var project = new Project(m_context, projectData, m_conversationNodeFactory, m_domainNodeFactory, m, new FileInfo(path),
                     new XMLProject.Serializer(),
                     SerializationUtils.ConversationSerializer,

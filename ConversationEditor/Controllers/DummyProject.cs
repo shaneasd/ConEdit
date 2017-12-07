@@ -17,7 +17,7 @@ namespace ConversationEditor
 
         private DummyProject() { }
 
-        public ISaveableFile File { get { return new MissingFile(null); } }
+        public ISaveableFile File { get { return new MissingFile( Id<FileInProject>.FromGuid(Guid.Empty) , DocumentPath.FromPath("", new DirectoryInfo("."))); } }
 
         IAudioLibrary IProject.AudioProvider { get { return null; } }
 
@@ -73,7 +73,7 @@ namespace ConversationEditor
 
         LocalizationEngine IProject.Localizer
         {
-            get { return new LocalizationEngine(null, () => new HashSet<Id<LocalizedText>>(), s => false, s => false, p => true, s => true, m_backend); }
+            get { return new LocalizationEngine(null, Enumerable.Empty<Project.TData.LocalizerSetData>(), null, () => new HashSet<Id<LocalizedText>>(), s => false, p => true, s => true, m_backend, null); }
         }
 
         IProjectElementList<AudioFile, IAudioFile> IProject.AudioFiles
@@ -112,16 +112,6 @@ namespace ConversationEditor
 
         public void Dispose()
         {
-        }
-
-        IEnumerable<FileInfo> IProject.Rerout(IEnumerable<string> paths)
-        {
-            throw new NotImplementedException();
-        }
-
-        void IProject.Renamed(ProjectExplorer.FileSystemObject item, string from, string to)
-        {
-            throw new NotImplementedException();
         }
 
         Func<IParameter, string, Func<ParameterType, DynamicEnumParameter.Source>, IEnumerable<string>> IProject.AutoCompleteSuggestions { get { return null; } }

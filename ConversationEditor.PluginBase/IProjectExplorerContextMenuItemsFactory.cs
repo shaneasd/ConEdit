@@ -40,9 +40,9 @@ namespace ConversationEditor
     public interface IProjectExplorerContextMenuItemsFactory
     {
         IEnumerable<IDomainContextMenuItem> DomainContextMenuItems { get; }
-        IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<Id<LocalizedText>, Tuple<string, DateTime>> localizer);
+        IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localizer);
         IEnumerable<ILocalizationContextMenuItem> LocalizationContextMenuItems { get; }
         IEnumerable<IAudioContextMenuItem> AudioContextMenuItems { get; }
-        IEnumerable<IFolderContextMenuItem> FolderContextMenuItems(Func<Id<LocalizedText>, Tuple<string, DateTime>> localizer);
+        IEnumerable<IFolderContextMenuItem> FolderContextMenuItems(Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localizer);
     }
 }

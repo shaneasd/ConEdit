@@ -96,22 +96,29 @@ namespace ConversationEditor
     public class BaseTypeLocalizedString : BaseType
     {
         public BaseTypeLocalizedString()
-            : base(parameterNodeType: Id<NodeTypeTemp>.Parse("3114c980-6729-4a17-bc2c-0e4781ee1e7c"))
+            : base(parameterNodeType: Id<NodeTypeTemp>.Parse("3114c980-6729-4a17-bc2c-0e4781ee1e7c"),
+                   nodeType: TypeDefinitionNodeIds.LocalizedString)
         {
         }
 
-        public static readonly ParameterType ParameterType = LocalizedStringParameter.ParameterType;
+        public static ParameterType ParameterType { get; } = ParameterType.Parse("c72e8222-3e10-4995-b32b-5b3ebd8e0f20");
+
+        public static LocalizedStringData Data { get { return new LocalizedStringData(NAME, ParameterType); } }
 
         public override NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode)
         {
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.ParameterName) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
-            return new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), ParameterType, ReadConfig(parameterNode));
+            var parameterTypeParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_TYPE) as IEnumParameter;
+            var parameterType = parameterTypeParameter.Value;
+            return new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), ParameterType.Basic.FromGuid(parameterType), ReadConfig(parameterNode));
         }
+
+        private static string NAME = "Localized String";
 
         public override string Name
         {
-            get { return "Localized String"; }
+            get { return NAME; }
         }
     }
 

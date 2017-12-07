@@ -15,10 +15,12 @@ namespace ConversationEditor
     public sealed class MissingConversationFile : IConversationFile
     {
         private MissingFile m_file;
+        public Id<FileInProject> Id { get; }
 
-        public MissingConversationFile(FileInfo file)
+        public MissingConversationFile(Id<FileInProject> file, DocumentPath path)
         {
-            m_file = new MissingFile(file);
+            m_file = new MissingFile(file, path);
+            Id = file;
         }
 
         public IEnumerableReversible<ConversationNode> Nodes

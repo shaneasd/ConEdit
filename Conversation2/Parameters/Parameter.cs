@@ -42,7 +42,7 @@ namespace Conversation
         /// String representation of the parameter suitable for display in the UI
         /// </summary>
         /// <param name="localize">Lookup of localized text Ids to strings</param>
-        string DisplayValue(Func<Id<LocalizedText>, string> localize);
+        string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize);
 
         /// <summary>
         /// Attempt to update current value by parsing the input string. Value and Corrupted may both change as a result of this.
@@ -123,6 +123,10 @@ namespace Conversation
     {
     }
 
+    public class LocalizedStringType
+    {
+    }
+
     public abstract class Parameter : IParameter
     {
         public abstract bool Corrupted { get; }
@@ -141,7 +145,7 @@ namespace Conversation
             m_lastValueString = stringValue;
         }
 
-        public abstract string DisplayValue(Func<Id<LocalizedText>, string> localize);
+        public abstract string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize);
         protected abstract string InnerValueAsString();
         public string ValueAsString()
         {

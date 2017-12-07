@@ -8,19 +8,6 @@ using System.Windows.Forms;
 
 namespace ConversationEditor
 {
-    public interface ILocalizationEngine
-    {
-        Tuple<Id<LocalizedText>, SimpleUndoPair> DuplicateActions(Id<LocalizedText> iD);
-
-        bool CanLocalize { get; }
-
-        string Localize(Id<LocalizedText> id);
-
-        SimpleUndoPair SetLocalizationAction(Id<LocalizedText> id, string p);
-
-        SimpleUndoPair ClearLocalizationAction(Id<LocalizedText> id);
-    }
-
     public struct ParameterEditorSetupData
     {
         public ParameterEditorSetupData(IParameter parameter, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, AudioGenerationParameters audioGenerationParameters, Func<string, IEnumerable<string>> autoCompleteSuggestions)

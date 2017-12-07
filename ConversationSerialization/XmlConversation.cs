@@ -125,8 +125,9 @@ namespace Conversation.Serialization
                 var root = d.Element(Root);
 
                 //TODO: Should possibly treat this as a missing file rather than crashing the editor
-                if (root.Attribute("xmlversion") == null || !XmlVersionRead.Contains(root.Attribute("xmlversion").Value))
-                    throw new UnknownXmlVersionException("unrecognised conversation xml version");
+                string encounteredVersion = root.Attribute("xmlversion")?.Value ?? "";
+                if ( !XmlVersionRead.Contains(encounteredVersion))
+                    throw new DeserializerVersionMismatchException(string.Join(", ", XmlVersionRead), encounteredVersion);
 
                 var nodeElements = root.Elements("Node");
                 var filteredNodes = m_filter != null ? nodeElements.Where(n => m_filter(ReadType(n))) : nodeElements;

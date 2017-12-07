@@ -4,16 +4,19 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using Utilities;
+using Conversation;
 
 namespace ConversationEditor
 {
     internal class MissingFile : Disposable, ISaveableFile
     {
         private FileInfo m_file;
+        Id<FileInProject> Id { get; }
 
-        public MissingFile(FileInfo file)
+        public MissingFile(Id<FileInProject> file, DocumentPath path)
         {
-            m_file = file;
+            m_file = path.FileInfo;
+            Id = file;
         }
 
         public FileInfo File

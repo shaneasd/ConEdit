@@ -59,7 +59,7 @@ namespace Tests.Conversation.Parameters
             Assert.That(p.Corrupted, Is.False);
             Assert.That(p.Value, Is.EqualTo(value));
             Assert.That(p.ValueAsString(), Is.EqualTo(string.Join("+", value.Select(a => a.ToString()))));
-            Assert.That(p.DisplayValue(a => null), Is.EqualTo(string.Join(" + ", value.Select(a => p.GetName(a)).OrderBy(a => a)))); //Names are displayed in alphabetical order
+            Assert.That(p.DisplayValue((a, b) => null), Is.EqualTo(string.Join(" + ", value.Select(a => p.GetName(a)).OrderBy(a => a)))); //Names are displayed in alphabetical order
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace Tests.Conversation.Parameters
             SetParameter p = new SetParameter(name, id, enumeration, null);
             CheckConstruction(enumeration, name, id, p);
 
-            CheckValue(p, new ReadonlySet<Guid>(enumeration.DefaultValue.Transformed(a=> { throw new NotImplementedException(); }, a=> a)));
+            CheckValue(p, new ReadonlySet<Guid>(enumeration.DefaultValue.Transformed(a => { throw new NotImplementedException(); }, a => a)));
 
             CheckUsage(p);
         }

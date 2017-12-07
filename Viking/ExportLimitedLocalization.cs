@@ -16,9 +16,9 @@ namespace Viking
 {
     class ExportLimitedLocalization : IFolderContextMenuItem, IConversationContextMenuItem
     {
-        private Func<Id<LocalizedText>, Tuple<string, DateTime>> m_localizer;
+        private Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> m_localizer;
 
-        public ExportLimitedLocalization(Func<Id<LocalizedText>, Tuple<string, DateTime>> localizer)
+        public ExportLimitedLocalization(Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localizer)
         {
             m_localizer = localizer;
         }
@@ -112,15 +112,17 @@ namespace Viking
                     if (!added.Contains(node))
                     {
                         added.Add(node);
-                        string speaker = node.Parameters.Where(p => p.Id == Id<Parameter>.Parse("08da4734-e5a3-4dec-807e-29628ef4ba3e") || p.Id == Id<Parameter>.Parse("d6a6b382-43d0-44d3-b4e7-b9c9362a509b")).OfType<IDynamicEnumParameter>().Select(e => e.DisplayValue(a => null)).SingleOrDefault() ?? "";
+                        string speaker = node.Parameters.Where(p => p.Id == Id<Parameter>.Parse("08da4734-e5a3-4dec-807e-29628ef4ba3e") || p.Id == Id<Parameter>.Parse("d6a6b382-43d0-44d3-b4e7-b9c9362a509b")).OfType<IDynamicEnumParameter>().Select(e => e.DisplayValue((a, b) => null)).SingleOrDefault() ?? "";
 
                         foreach (var localized in node.Parameters.OfType<ILocalizedStringParameter>())
                         {
                             var key = localized.Value;
-                            var data = m_localizer(key);
+                            var type = Id<LocalizedStringType>.FromGuid(localized.TypeId.Guid);
+                            var data = m_localizer(type, key);
                             var value = data.Item1;
                             var date = data.Item2;
                             var element = new XElement("Localize", new XAttribute("id", key.Serialized()),
+                                                                   new XAttribute("type", type.Serialized()),
                                                                    new XAttribute("localized", date.Ticks.ToString(CultureInfo.InvariantCulture)),
                                                                    new XAttribute("speaker", speaker),
                                                                    new XAttribute("type", node.Name),

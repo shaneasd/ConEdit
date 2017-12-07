@@ -234,12 +234,10 @@ namespace Utilities
             }
         }
 
-        public static T LookupOrDefault<U, T>(this IDictionary<U, T> data, U key, T def)
+        public static T LookupOrDefault<U, T>(this IReadOnlyDictionary<U, T> data, U key, T def)
         {
-            if (data.ContainsKey(key))
-                return data[key];
-            else
-                return def;
+            data.TryGetValue(key, out def);
+            return def;
         }
 
         public static bool CountEquals<T>(this IEnumerable<T> data, int value)

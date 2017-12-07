@@ -26,7 +26,7 @@ namespace PluginPack
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "IL might look different to the code but there's nothing you can do to fix the warning")]
-        public INodeGui GetRenderer(ConversationNode<INodeGui> n, PointF p, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        public INodeGui GetRenderer(ConversationNode<INodeGui> n, PointF p, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
             return new PartialRenderer(n, p, localizer, datasource);
         }
@@ -41,7 +41,7 @@ namespace PluginPack
     {
         private Func<IDataSource> m_datasource;
 
-        public PartialRenderer(ConversationNode<ConversationEditor.INodeGui> node, PointF p, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource) :
+        public PartialRenderer(ConversationNode<ConversationEditor.INodeGui> node, PointF p, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer, Func<IDataSource> datasource) :
             base(node, p, localizer)
         {
             m_datasource = datasource;

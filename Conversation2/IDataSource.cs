@@ -69,6 +69,7 @@ namespace Conversation
         bool IsEnum(ParameterType type);
         bool IsDynamicEnum(ParameterType type);
         bool IsLocalDynamicEnum(ParameterType type);
+        bool IsLocalizedString(ParameterType type);
 
         bool IsCategoryDefinition(Id<NodeTypeTemp> id);
         /// <summary>
@@ -140,6 +141,11 @@ namespace Conversation
         }
 
         bool IDataSource.IsLocalDynamicEnum(ParameterType type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsLocalizedString(ParameterType type)
         {
             throw new NotImplementedException();
         }

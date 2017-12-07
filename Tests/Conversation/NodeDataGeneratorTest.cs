@@ -52,7 +52,7 @@ namespace Tests.Conversation
 
             private string m_value;
 
-            public string DisplayValue(Func<Id<LocalizedText>, string> localize)
+            public string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
             {
                 return m_value;
             }

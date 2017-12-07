@@ -12,6 +12,7 @@ namespace Conversation
         IReadOnlyList<LocalDynamicEnumerationData> LocalDynamicEnumerations { get; }
         IReadOnlyList<EnumerationData> Enumerations { get; }
         IReadOnlyList<DecimalData> Decimals { get; }
+        IReadOnlyList<LocalizedStringData> LocalizedStrings { get; }
         IReadOnlyList<IntegerData> Integers { get; }
         IReadOnlyList<NodeData> Nodes { get; }
         IReadOnlyList<ConnectorDefinitionData> Connectors { get; }
@@ -25,6 +26,7 @@ namespace Conversation
         IReadOnlyList<LocalDynamicEnumerationData> IDomainData.LocalDynamicEnumerations { get { return m_localDynamicEnumerations; } }
         IReadOnlyList<EnumerationData> IDomainData.Enumerations { get { return m_enumerations; } }
         IReadOnlyList<DecimalData> IDomainData.Decimals { get { return m_decimals; } }
+        IReadOnlyList<LocalizedStringData> IDomainData.LocalizedStrings { get { return m_localizedStrings; } }
         IReadOnlyList<IntegerData> IDomainData.Integers { get { return m_integers; } }
         IReadOnlyList<NodeData> IDomainData.Nodes { get { return m_nodes; } }
         IReadOnlyList<ConnectorDefinitionData> IDomainData.Connectors { get { return m_connectors; } }
@@ -35,6 +37,7 @@ namespace Conversation
         private readonly List<LocalDynamicEnumerationData> m_localDynamicEnumerations = new List<LocalDynamicEnumerationData>();
         private readonly List<EnumerationData> m_enumerations = new List<EnumerationData>();
         private readonly List<DecimalData> m_decimals = new List<DecimalData>();
+        private readonly List<LocalizedStringData> m_localizedStrings = new List<LocalizedStringData>();
         private readonly List<IntegerData> m_integers = new List<IntegerData>();
         private readonly List<NodeData> m_nodes = new List<NodeData>();
         private readonly List<ConnectorDefinitionData> m_connectors = new List<ConnectorDefinitionData>();
@@ -45,6 +48,7 @@ namespace Conversation
         public ICollection<LocalDynamicEnumerationData> LocalDynamicEnumerations { get { return m_localDynamicEnumerations; } }
         public ICollection<EnumerationData> Enumerations { get { return m_enumerations; } }
         public ICollection<DecimalData> Decimals { get { return m_decimals; } }
+        public ICollection<LocalizedStringData> LocalizedStrings { get { return m_localizedStrings; } }
         public ICollection<IntegerData> Integers { get { return m_integers; } }
         public ICollection<NodeData> Nodes { get { return m_nodes; } }
         public ICollection<ConnectorDefinitionData> Connectors { get { return m_connectors; } }

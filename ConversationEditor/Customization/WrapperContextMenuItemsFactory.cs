@@ -39,7 +39,7 @@ namespace ConversationEditor
             get { return PluginContextMenuFactories().SelectMany(p => p.DomainContextMenuItems); }
         }
 
-        public IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<Id<LocalizedText>, Tuple<string, DateTime>> localizer)
+        public IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localizer)
         {
             return PluginContextMenuFactories().SelectMany(p => p.ConversationContextMenuItems(localizer));
         }
@@ -54,7 +54,7 @@ namespace ConversationEditor
             get { return PluginContextMenuFactories().SelectMany(p => p.AudioContextMenuItems); }
         }
 
-        public IEnumerable<IFolderContextMenuItem> FolderContextMenuItems(Func<Id<LocalizedText>, Tuple<string, DateTime>> localizer)
+        public IEnumerable<IFolderContextMenuItem> FolderContextMenuItems(Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localizer)
         {
             return PluginContextMenuFactories().SelectMany(p => p.FolderContextMenuItems(localizer));
         }

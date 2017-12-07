@@ -257,7 +257,7 @@ namespace ConversationEditor
                 {
                     if (parameter.Value != null)
                     {
-                        SimpleUndoPair clearLocalization = localization.ClearLocalizationAction(parameter.Value);
+                        SimpleUndoPair clearLocalization = localization.ClearLocalizationAction(Id<LocalizedStringType>.ConvertFrom(parameter.TypeId), parameter.Value);
                         undoActions.Add(clearLocalization.Redo);
                         redoActions.Add(clearLocalization.Undo);
                     }
@@ -353,7 +353,7 @@ namespace ConversationEditor
                     //Ensure that the localization engine is up to date in terms of usage of localized data
                     foreach (var parameter in n.Data.Parameters.OfType<ILocalizedStringParameter>())
                     {
-                        SimpleUndoPair clearLocalization = localization.ClearLocalizationAction(parameter.Value);
+                        SimpleUndoPair clearLocalization = localization.ClearLocalizationAction(Id<LocalizedStringType>.ConvertFrom(parameter.TypeId), parameter.Value);
                         undoActions.Add(clearLocalization.Undo);
                         redoActions.Add(clearLocalization.Redo);
                     }

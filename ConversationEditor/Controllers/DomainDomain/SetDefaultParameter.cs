@@ -80,7 +80,7 @@ namespace ConversationEditor
             return SetParameter.SerializeSet(Value);
         }
 
-        public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
+        public override string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {
             if (m_textOverride != null)
                 return m_textOverride;

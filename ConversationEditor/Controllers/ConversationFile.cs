@@ -21,6 +21,8 @@ namespace ConversationEditor
         SaveableFileUndoable m_file;
         public override ISaveableFileUndoable UndoableFile { get { return m_file; } }
 
+        public Id<FileInProject> Id { get; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -34,12 +36,13 @@ namespace ConversationEditor
         /// <param name="generateAudio"></param>
         /// <param name="getDocumentSource"></param>
         /// <param name="audioProvider"></param>
-        public ConversationFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ISerializer<TData> serializer,
+        public ConversationFile(Id<FileInProject> id, IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, DocumentPath file, ISerializer<TData> serializer,
             ReadOnlyCollection<LoadError> errors, INodeFactory nodeFactory, GenerateAudio generateAudio,
             Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.Backend backend)
             : base(nodes, groups, errors, nodeFactory, generateAudio, getDocumentSource, audioProvider)
         {
-            m_file = new SaveableFileUndoable(rawData, file, SaveTo, backend);
+            Id = id;
+            m_file = new SaveableFileUndoable(rawData, file.FileInfo, SaveTo, backend);
             m_serializer = serializer;
 
             foreach (var node in m_nodes)
@@ -76,7 +79,7 @@ namespace ConversationEditor
         }
 
         public static ConversationFile CreateEmpty(DirectoryInfo directory, Project project, INodeFactory nodeFactory,
-            GenerateAudio generateAudio, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.Backend backend)
+            GenerateAudio generateAudio, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.Backend backend, DirectoryInfo origin)
         {
             var file = GetAvailableConversationPath(directory, project.Elements);
 
@@ -93,18 +96,18 @@ namespace ConversationEditor
                     m.CopyTo(stream);
                 }
 
-                var result = new ConversationFile(nodes, groups, m, file, project.ConversationSerializer, new ReadOnlyCollection<LoadError>(new LoadError[0]), nodeFactory, generateAudio, getDocumentSource, audioProvider, backend);
+                var result = new ConversationFile(Id<FileInProject>.New(), nodes, groups, m, DocumentPath.FromPath(file, origin), project.ConversationSerializer, new ReadOnlyCollection<LoadError>(new LoadError[0]), nodeFactory, generateAudio, getDocumentSource, audioProvider, backend);
                 result.m_file.Save(); //Make sure the file starts life as a valid xml document
                 return result;
             }
         }
 
-        public static Either<ConversationFile, MissingConversationFile> Load(FileInfo file, INodeFactory nodeFactory, ISerializerDeserializer<TData> serializer, GenerateAudio generateAudio,
+        public static Either<ConversationFile, MissingConversationFile> Load(Id<FileInProject> file, DocumentPath path, INodeFactory nodeFactory, ISerializerDeserializer<TData> serializer, GenerateAudio generateAudio,
             Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.Backend backend)
         {
             try
             {
-                using (var stream = Util.LoadFileStream(file, FileMode.Open, FileAccess.Read))
+                using (var stream = Util.LoadFileStream(path.FileInfo, FileMode.Open, FileAccess.Read))
                 {
                     using (MemoryStream m = new MemoryStream((int)stream.Length))
                     {
@@ -112,7 +115,7 @@ namespace ConversationEditor
                         stream.Dispose();
                         m.Position = 0;
                         TData data = serializer.Read(m);
-                        return new ConversationFile(data.Nodes.ToList(), data.EditorData.Groups.ToList(), m, file, serializer, data.Errors, nodeFactory, generateAudio, getDocumentSource, audioProvider, backend);
+                        return new ConversationFile(file, data.Nodes.ToList(), data.EditorData.Groups.ToList(), m, path, serializer, data.Errors, nodeFactory, generateAudio, getDocumentSource, audioProvider, backend);
                     }
                 }
             }
@@ -123,8 +126,13 @@ namespace ConversationEditor
                 Console.Out.WriteLine(e.InnerException.Message);
                 Console.Out.WriteLine(e.InnerException.StackTrace);
 
-                MessageBox.Show("File: " + file.Name + " could not be accessed");
-                return new MissingConversationFile(file);
+                MessageBox.Show("File: " + path.AbsolutePath + " could not be accessed");
+                return new MissingConversationFile(file, path);
+            }
+            catch (DeserializerVersionMismatchException e)
+            {
+                MessageBox.Show("File: " + path.AbsolutePath + " could not be processed. " + e.Message);
+                return new MissingConversationFile(file, path);
             }
         }
 

@@ -25,7 +25,7 @@ namespace ConversationEditor
             get { return "Default Domain Node Renderer"; }
         }
 
-        public INodeGui GetRenderer(ConversationNode n, PointF p, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        public INodeGui GetRenderer(ConversationNode n, PointF p, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
             return new DomainNodeRenderer(n, p, localizer);
         }
@@ -40,7 +40,7 @@ namespace ConversationEditor
         private readonly static Pen Thin = new Pen(Brushes.Black, 1);
         private readonly static Pen Thick = new Pen(Brushes.White, 3);
 
-        public DomainNodeRenderer(ConversationNode node, PointF p, Func<Id<LocalizedText>, string> localizer)
+        public DomainNodeRenderer(ConversationNode node, PointF p, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer)
             : base(node, p)
         {
             m_titleSection = new TitleSection(node);
@@ -201,9 +201,9 @@ namespace ConversationEditor
 
         class ParametersSection : Section
         {
-            Func<Id<LocalizedText>, string> m_localizer;
+            Func<Id<LocalizedStringType>, Id<LocalizedText>, string> m_localizer;
 
-            public ParametersSection(ConversationNode node, Func<Id<LocalizedText>, string> localizer)
+            public ParametersSection(ConversationNode node, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer)
                 : base(node)
             {
                 m_localizer = localizer;

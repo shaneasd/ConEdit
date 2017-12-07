@@ -59,13 +59,16 @@
             this.nodeCountToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.parameterCountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cyclomaticComplexityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.projectExplorer = new ConversationEditor.ProjectExplorer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.m_conversationEditor = new ConversationEditor.ConversationEditorControl();
             this.errorList1 = new ConversationEditor.ErrorList();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.localizationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.setUpLocalizationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -83,6 +86,7 @@
             this.projectToolStripMenuItem,
             this.editToolStripMenuItem,
             this.toolsToolStripMenuItem,
+            this.localizationToolStripMenuItem,
             this.errorCheckToolStripMenuItem,
             this.exportToolStripMenuItem,
             this.debugToolStripMenuItem,
@@ -417,6 +421,13 @@
             this.cyclomaticComplexityToolStripMenuItem.Text = "Cyclomatic Complexity";
             this.cyclomaticComplexityToolStripMenuItem.Click += new System.EventHandler(this.cyclomaticComplexityToolStripMenuItem_Click);
             // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
@@ -497,12 +508,26 @@
             this.errorList1.Size = new System.Drawing.Size(804, 138);
             this.errorList1.TabIndex = 3;
             // 
-            // aboutToolStripMenuItem
+            // localizationToolStripMenuItem
             // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
-            this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.localizationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripSeparator1,
+            this.setUpLocalizationsToolStripMenuItem});
+            this.localizationToolStripMenuItem.Name = "localizationToolStripMenuItem";
+            this.localizationToolStripMenuItem.Size = new System.Drawing.Size(74, 20);
+            this.localizationToolStripMenuItem.Text = "Localization";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            // 
+            // setUpLocalizationsToolStripMenuItem
+            // 
+            this.setUpLocalizationsToolStripMenuItem.Name = "setUpLocalizationsToolStripMenuItem";
+            this.setUpLocalizationsToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.setUpLocalizationsToolStripMenuItem.Text = "Set up localizations";
+            this.setUpLocalizationsToolStripMenuItem.Click += new System.EventHandler(this.setUpLocalizationsToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -583,6 +608,9 @@
         private System.Windows.Forms.ToolStripMenuItem parameterCountToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cyclomaticComplexityToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem localizationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem setUpLocalizationsToolStripMenuItem;
     }
 }
 

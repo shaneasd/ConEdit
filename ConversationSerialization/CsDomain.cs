@@ -184,6 +184,7 @@ namespace Conversation.Serialization
                 }
                 foreach (var b in a.Decimals)
                     data.Decimals.Add(new DecimalData(BestName(b.Name, usedNames), b.TypeId, b.Max, b.Min));
+                //TODO: Handle LocalizedStrings
                 foreach (var b in a.DynamicEnumerations)
                     data.DynamicEnumerations.Add(new DynamicEnumerationData(BestName(b.Name, usedNames), b.TypeId));
                 foreach (var b in a.LocalDynamicEnumerations)

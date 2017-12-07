@@ -13,6 +13,7 @@ namespace Conversation
         public static Id<NodeTypeTemp> Decimal { get; } = Id<NodeTypeTemp>.Parse("eb6c7951-c165-4a1d-bbe9-306a9c397482");
         public static Id<NodeTypeTemp> DynamicEnumeration { get; } = Id<NodeTypeTemp>.Parse("100ea79f-7a12-494a-a816-790d054cabd1");
         public static Id<NodeTypeTemp> LocalDynamicEnumeration { get; } = Id<NodeTypeTemp>.Parse("22751578-3c89-4199-8a29-018c2a67e1aa");
+        public static Id<NodeTypeTemp> LocalizedString { get; } = Id<NodeTypeTemp>.Parse("0c8e49d4-6384-417b-abcd-01ad3b79249e");
 
         public static IEnumerable<Id<NodeTypeTemp>> All
         {
@@ -24,6 +25,7 @@ namespace Conversation
                 yield return Decimal;
                 yield return DynamicEnumeration;
                 yield return LocalDynamicEnumeration;
+                yield return LocalizedString;
             }
         }
     }

@@ -27,8 +27,9 @@ namespace Conversation.Serialization
                 Dictionary<Id<LocalizedText>, string> result = new Dictionary<Id<LocalizedText>, string>();
                 XDocument doc = XDocument.Load(stream);
                 XElement root = doc.Root;
-                if (root.Attribute("xmlversion").Value != XML_VERSION)
-                    throw new XmlVersionException("Unknown xml version in " + stream.ToString());
+                string encounteredVersion = root.Attribute("xmlversion")?.Value ?? "";
+                if (encounteredVersion != XML_VERSION)
+                    throw new DeserializerVersionMismatchException(XML_VERSION, encounteredVersion);
                 var nodes = root.Elements("Localize");
                 foreach (var node in nodes)
                 {
@@ -47,8 +48,11 @@ namespace Conversation.Serialization
                 LocalizerData result = new LocalizerData();
                 XDocument doc = XDocument.Load(stream);
                 XElement root = doc.Root;
-                if (root.Attribute("xmlversion").Value != XML_VERSION)
-                    throw new UnknownXmlVersionException("Unknown xml version in " + stream.ToString());
+
+                string encounteredVersion = root.Attribute("xmlversion")?.Value ?? "";
+                if (encounteredVersion != XML_VERSION)
+                    throw new DeserializerVersionMismatchException(XML_VERSION, encounteredVersion);
+
                 var nodes = root.Elements("Localize");
                 foreach (var node in nodes)
                 {
@@ -84,15 +88,13 @@ namespace Conversation.Serialization
         {
             private Func<Context> m_context;
             private Func<string, bool> m_shouldClean;
-            private Func<string, bool> m_shouldExpand;
             private Func<Id<LocalizedText>, string> m_bestLocalization;
             private string m_file;
 
-            public Serializer(Func<Context> context, Func<string, bool> shouldClean, Func<string, bool> shouldExpand, Func<Id<LocalizedText>, string> bestLocalization, string file)
+            public Serializer(Func<Context> context, Func<string, bool> shouldClean, Func<Id<LocalizedText>, string> bestLocalization, string file)
             {
                 m_context = context;
                 m_shouldClean = shouldClean;
-                m_shouldExpand = shouldExpand;
                 m_bestLocalization = bestLocalization;
                 m_file = file;
             }
@@ -103,7 +105,6 @@ namespace Conversation.Serialization
 
                 var unused = data.AllLocalizations.Where(kvp => !context.IdUsed(kvp.Key)).ToList();
                 var used = data.AllLocalizations.Where(kvp => context.IdUsed(kvp.Key)).ToList();
-                var missing = context.UsedGuids.Except(used.Select(kvp => kvp.Key)).ToList();
 
                 XElement root = new XElement(ROOT, new XAttribute("xmlversion", XML_VERSION));
                 XDocument doc = new XDocument(root);
@@ -126,19 +127,6 @@ namespace Conversation.Serialization
                     }
                 }
 
-                if (missing.Any())
-                {
-                    if (m_shouldExpand(m_file))
-                    {
-                        foreach (var guid in missing)
-                        {
-                            var bestLocalization = m_bestLocalization(guid);
-                            if (bestLocalization != null)
-                                elements.Add(guid, new XElement("Localize", new XAttribute("id", guid.Serialized()), new XAttribute("localized", "0"), bestLocalization));
-                        }
-                    }
-                }
-
                 foreach (var element in elements.Values)
                     root.Add(element);
 
@@ -154,7 +142,7 @@ namespace Conversation.Serialization
     {
         private Dictionary<Id<LocalizedText>, LocalizationElement> m_data = new Dictionary<Id<LocalizedText>, LocalizationElement>();
 
-        public bool CanLocalize(Id<LocalizedText> id)
+        public bool LocalizationExists(Id<LocalizedText> id)
         {
             return m_data.ContainsKey(id);
         }

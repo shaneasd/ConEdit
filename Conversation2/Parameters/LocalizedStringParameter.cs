@@ -7,9 +7,9 @@ namespace Conversation
 {
     public class LocalizedStringParameter : Parameter<Id<LocalizedText>>, ILocalizedStringParameter
     {
-        public static ParameterType ParameterType { get; } = ParameterType.Parse("c72e8222-3e10-4995-b32b-5b3ebd8e0f20");
-
-        public LocalizedStringParameter(string name, Id<Parameter> id) : base(name, id, ParameterType, null, new Tuple<Id<LocalizedText>, bool>(null, true)) { }
+        public LocalizedStringParameter(string name, Id<Parameter> id, ParameterType typeId) : base(name, id, typeId, "", new Tuple<Id<LocalizedText>, bool>(null, true))
+        {
+        }
 
         protected override Tuple<Id<LocalizedText>, bool> DeserializeValueInner(string value)
         {
@@ -28,9 +28,9 @@ namespace Conversation
             return Value.Serialized();
         }
 
-        public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
+        public override string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {
-            return localize(Value);
+            return localize(Id<LocalizedStringType>.FromGuid(TypeId.Guid), Value);
         }
 
         protected override bool ValueValid(Id<LocalizedText> value)

@@ -99,7 +99,7 @@ namespace Conversation
                 return m_enumeration.GetName(value);
         }
 
-        public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
+        public override string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {
             if (m_textOverride != null)
                 return m_textOverride;

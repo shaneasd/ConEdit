@@ -21,6 +21,8 @@ namespace ConversationEditor
         HashSet<object> m_currentChanges = new HashSet<object>();
         private UpToDateFile.Backend m_backend;
 
+        public Id<FileInProject> Id { get; }
+
         private bool Changed()
         {
             return !m_changesLastSave.SetEquals(m_currentChanges);
@@ -39,16 +41,17 @@ namespace ConversationEditor
         /// <param name="path"></param>
         /// <param name="data"></param>
         /// <param name="serializer"></param>
-        private LocalizationFile(MemoryStream initialData, FileInfo path, LocalizerData data, ISerializer<LocalizerData> serializer, UpToDateFile.Backend backend)
+        private LocalizationFile(Id<FileInProject> id, MemoryStream initialData, DocumentPath path, LocalizerData data, ISerializer<LocalizerData> serializer, UpToDateFile.Backend backend)
         {
+            Id = id;
             m_backend = backend;
-            m_file = new SaveableFileExternalChangedSource(initialData, path, s => { serializer.Write(m_data, s); }, Changed, Saved, backend);
+            m_file = new SaveableFileExternalChangedSource(initialData, path.FileInfo, s => { serializer.Write(m_data, s); }, Changed, Saved, backend);
             m_data = data;
         }
 
         public ISaveableFile File { get { return m_file; } }
 
-        internal static LocalizationFile MakeNew(DirectoryInfo directory, Func<string, ISerializer<LocalizerData>> serializer, Func<FileInfo, bool> pathOk, UpToDateFile.Backend backend)
+        internal static LocalizationFile MakeNew(DirectoryInfo directory, Func<string, Id<FileInProject>, ISerializer<LocalizerData>> serializer, Func<FileInfo, bool> pathOk, UpToDateFile.Backend backend, DirectoryInfo origin)
         {
             //Create a stream under an available filename
             FileInfo path = null;
@@ -65,20 +68,21 @@ namespace ConversationEditor
             }
             using (var mem = new MemoryStream())
             {
-                LocalizationFile result = new LocalizationFile(mem, path, data, serializer(path.FullName), backend); //Make a new localization file for an existing project
+                var id = Id<FileInProject>.New();
+                LocalizationFile result = new LocalizationFile(id, mem, DocumentPath.FromPath(path, origin), data, serializer(path.FullName, id), backend); //Make a new localization file for an existing project
                 result.File.Writable.Save();
                 return result;
             }
         }
 
-        internal static Either<LocalizationFile, MissingLocalizationFile, ILocalizationFile> Load(FileInfo path, ISerializer<LocalizerData> serializer, UpToDateFile.Backend backend)
+        internal static Either<LocalizationFile, MissingLocalizationFile> Load(DocumentPath path, Id<FileInProject> id, ISerializer<LocalizerData> serializer, UpToDateFile.Backend backend)
         {
             if (path.Exists)
             {
                 try
                 {
                     LocalizerData data;
-                    using (FileStream file = Util.LoadFileStream(path, FileMode.Open, FileAccess.Read))
+                    using (FileStream file = Util.LoadFileStream(path.AbsolutePath, FileMode.Open, FileAccess.Read))
                     {
                         using (MemoryStream m = new MemoryStream((int)file.Length))
                         {
@@ -87,7 +91,7 @@ namespace ConversationEditor
                             XmlLocalization.Deserializer d = new XmlLocalization.Deserializer();
                             data = d.Read(m);
                             m.Position = 0;
-                            LocalizationFile result = new LocalizationFile(m, path, data, serializer, backend);
+                            LocalizationFile result = new LocalizationFile(id, m, path, data, serializer, backend);
                             return result;
                         }
                     }
@@ -98,19 +102,14 @@ namespace ConversationEditor
                     Console.Out.WriteLine(e.StackTrace);
                     Console.Out.WriteLine(e.InnerException.Message);
                     Console.Out.WriteLine(e.InnerException.StackTrace);
-                    MessageBox.Show("File: " + path.Name + " could not be accessed");
-                    return new MissingLocalizationFile(path);
+                    MessageBox.Show("File: " + path.AbsolutePath + " could not be accessed");
+                    return new MissingLocalizationFile(id, path);
                 }
             }
             else
             {
-                return new MissingLocalizationFile(path);
+                return new MissingLocalizationFile(id, path);
             }
-        }
-
-        public bool Contains(Id<LocalizedText> guid)
-        {
-            return m_data.CanLocalize(guid);
         }
 
         public bool CanRemove(Func<bool> prompt)
@@ -126,7 +125,7 @@ namespace ConversationEditor
 
         public string Localize(Id<LocalizedText> guid)
         {
-            if (m_data.CanLocalize(guid))
+            if (m_data.LocalizationExists(guid))
                 return m_data.GetLocalized(guid).Text;
             else
                 return null;
@@ -134,7 +133,7 @@ namespace ConversationEditor
 
         public DateTime LocalizationTime(Id<LocalizedText> guid)
         {
-            if (m_data.CanLocalize(guid))
+            if (m_data.LocalizationExists(guid))
                 return m_data.GetLocalized(guid).Localized;
             else
                 return DateTime.MinValue;
@@ -142,7 +141,7 @@ namespace ConversationEditor
 
         public SimpleUndoPair SetLocalizationAction(Id<LocalizedText> guid, string p)
         {
-            Either<LocalizationElement, Null> oldValue = Either.Create(m_data.CanLocalize(guid), () => m_data.GetLocalized(guid), Null.Func);
+            Either<LocalizationElement, Null> oldValue = Either.Create(m_data.LocalizationExists(guid), () => m_data.GetLocalized(guid), Null.Func);
             return InnerSetLocalizationAction(guid, new LocalizationElement(DateTime.Now, p), oldValue);
         }
 
@@ -168,7 +167,7 @@ namespace ConversationEditor
 
         public SimpleUndoPair ClearLocalizationAction(Id<LocalizedText> guid)
         {
-            Either<LocalizationElement, Null> oldValue = Either.Create(m_data.CanLocalize(guid), () => m_data.GetLocalized(guid), Null.Func);
+            Either<LocalizationElement, Null> oldValue = Either.Create(m_data.LocalizationExists(guid), () => m_data.GetLocalized(guid), Null.Func);
             return InnerSetLocalizationAction(guid, Null.Func(), oldValue);
         }
 
@@ -177,7 +176,7 @@ namespace ConversationEditor
         public SimpleUndoPair DuplicateAction(Id<LocalizedText> guid, Id<LocalizedText> result)
         {
             object change = new object();
-            LocalizationElement? value = m_data.CanLocalize(guid) ? m_data.GetLocalized(guid) : (LocalizationElement?)null;
+            LocalizationElement? value = m_data.LocalizationExists(guid) ? m_data.GetLocalized(guid) : (LocalizationElement?)null;
 
             return new SimpleUndoPair
             {
@@ -219,16 +218,16 @@ namespace ConversationEditor
             }
         }
 
-        public void ImportInto(string[] fileNames)
+        public void ImportInto(string[] fileNames, DirectoryInfo origin)
         {
-            var localizations = fileNames.Select(path => new { Path = path, Localization = Load(new FileInfo(path), null, m_backend) });
+            var localizations = fileNames.Select(path => new { Path = path, Localization = Either.UpCast<ILocalizationFile>().Cast(Load(DocumentPath.FromPath(path, origin), Id<FileInProject>.New(), null, m_backend)) });
 
             string message = "";
 
             var keys = m_data.AllLocalizations.Select(kvp => kvp.Key);
             foreach (var localization in localizations)
             {
-                foreach (var key in localization.Localization.UpCast().ExistingLocalizations)
+                foreach (var key in localization.Localization.ExistingLocalizations)
                 {
                     if (keys.Contains(key))
                         message += "Trying to import localization for " + key.Serialized() + " from " + localization.Path + " which already exists in the destination\n";
@@ -238,7 +237,7 @@ namespace ConversationEditor
             Dictionary<Id<LocalizedText>, string> paths = new Dictionary<Id<LocalizedText>, string>();
             foreach (var loc in localizations)
             {
-                foreach (var key in loc.Localization.UpCast().ExistingLocalizations)
+                foreach (var key in loc.Localization.ExistingLocalizations)
                 {
                     if (paths.ContainsKey(key))
                         message += "Trying to import localization for " + key.Serialized() + " from " + loc.Path + " and from " + paths[key] + "\n";
@@ -255,9 +254,9 @@ namespace ConversationEditor
             {
                 foreach (var loc in localizations)
                 {
-                    foreach (var key in loc.Localization.UpCast().ExistingLocalizations)
+                    foreach (var key in loc.Localization.ExistingLocalizations)
                     {
-                        SetLocalizationAction(key, loc.Localization.UpCast().Localize(key)).Redo();
+                        SetLocalizationAction(key, loc.Localization.Localize(key)).Redo();
                     }
                 }
             }

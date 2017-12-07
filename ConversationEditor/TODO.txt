@@ -8,6 +8,7 @@ Installer builder project
 
 WORKFLOW:
 
+localized string that is missing localization saves as "Missing Localization"
 mousewheel scrollbar for project explorer
 minimise all button for project explorer
 read all conversation files in parallel assuming load time is bound by cpu and not disk

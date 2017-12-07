@@ -41,7 +41,7 @@ namespace Clandestine
         public static Id<Parameter> CONVERSATIONINFO_CONTEXT = Id<Parameter>.FromGuid(Guid.Parse("6940a618-5905-4e81-a59b-281d92a90782"));
         public static Id<Parameter> CONVERSATIONINFO_NOTES = Id<Parameter>.FromGuid(Guid.Parse("cb4a4ac9-a5e9-444f-a7b0-b8f15e31e77a"));
 
-        public static CsvData GetOptionData(ConversationNode<INodeGui> node, ConversationNode<INodeGui> conversationInfo, Func<Id<LocalizedText>, string> localize)
+        public static CsvData GetOptionData(ConversationNode<INodeGui> node, ConversationNode<INodeGui> conversationInfo, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {
             return new CsvData()
             {
@@ -56,7 +56,7 @@ namespace Clandestine
             };
         }
 
-        public static CsvData GetSpeechData(ConversationNode<INodeGui> node, ConversationNode<INodeGui> conversationInfo, Func<Id<LocalizedText>, string> localize)
+        public static CsvData GetSpeechData(ConversationNode<INodeGui> node, ConversationNode<INodeGui> conversationInfo, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {
             return new CsvData()
             {
@@ -71,7 +71,7 @@ namespace Clandestine
             };
         }
 
-        public static CsvData GetPlayerSpeechData(ConversationNode<INodeGui> node, ConversationNode<INodeGui> conversationInfo, Func<Id<LocalizedText>, string> localize)
+        public static CsvData GetPlayerSpeechData(ConversationNode<INodeGui> node, ConversationNode<INodeGui> conversationInfo, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {
             return new CsvData()
             {
@@ -105,11 +105,11 @@ namespace Clandestine
 
     public abstract class ExportAsSeparatedStrings : IConversationContextMenuItem
     {
-        private Func<Id<LocalizedText>, string> m_localize;
+        private Func<Id<LocalizedStringType>, Id<LocalizedText>, string> m_localize;
 
-        protected ExportAsSeparatedStrings(Func<Id<LocalizedText>, Tuple<string, DateTime>> localize)
+        protected ExportAsSeparatedStrings(Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localize)
         {
-            m_localize = id => localize(id).Item1;
+            m_localize = (type, textId) => localize(type, textId).Item1;
         }
 
         public abstract string Name { get; }
@@ -209,7 +209,7 @@ namespace Clandestine
 
     public class ExportAsCsv : ExportAsSeparatedStrings
     {
-        public ExportAsCsv(Func<Id<LocalizedText>, Tuple<string, DateTime>> localize)
+        public ExportAsCsv(Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localize)
             : base(localize)
         {
         }
@@ -221,7 +221,7 @@ namespace Clandestine
 
     public class ExportAsSsv : ExportAsSeparatedStrings
     {
-        public ExportAsSsv(Func<Id<LocalizedText>, Tuple<string, DateTime>> localize)
+        public ExportAsSsv(Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localize)
             : base(localize)
         {
         }

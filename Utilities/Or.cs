@@ -31,6 +31,19 @@ namespace Utilities
             }
             return new Tuple<IEnumerable<T>, IEnumerable<U>>(l1, l2);
         }
+
+        public class UpCaster<I>
+        {
+            public I Cast<T, U>(Either<T, U> either) where T : I where U : I
+            {
+                return either.Transformed<I>(a => a, a => a);
+            }
+        }
+
+        public static UpCaster<I> UpCast<I>()
+        {
+            return new UpCaster<I>();
+        }
     }
 
     public class Either<T, U>
@@ -157,42 +170,6 @@ namespace Utilities
                 a.Execute(A);
             else
                 b.Execute(B);
-        }
-    }
-
-    //TODO: Pretty much any usage of this class is me being lazy and probably deserves its own class
-    public class Either<T, U, I> : Either<T, U> where T : I where U : I
-    {
-        public Either(T a) : base(true, () => a, null)
-        {
-        }
-
-        public Either(U b) : base(false, null, () => b)
-        {
-        }
-
-        public Either(bool useA, Func<T> aGenerator, Func<U> bGenerator) : base(useA, aGenerator, bGenerator)
-        {
-        }
-
-        public static implicit operator Either<T, U, I>(T a)
-        {
-            return new Either<T, U, I>(a);
-        }
-
-        public static implicit operator Either<T, U, I>(U b)
-        {
-            return new Either<T, U, I>(b);
-        }
-
-        public static implicit operator I (Either<T, U, I> either)
-        {
-            return either.Transformed<I>(a => a, b => b);
-        }
-
-        public I UpCast()
-        {
-            return this;
         }
     }
 }

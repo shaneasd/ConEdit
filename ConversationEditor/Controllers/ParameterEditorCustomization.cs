@@ -25,7 +25,7 @@ namespace ConversationEditor
                 return DefaultBooleanEditorFactory.StaticId;
             else if (type == BaseTypeString.ParameterType)
                 return DefaultStringEditorFactory.StaticId;
-            else if (type == BaseTypeLocalizedString.ParameterType)
+            else if (willEdit.IsLocalizedString(type))
                 return DefaultLocalizedStringEditorFactory.StaticId;
             else if (type == BaseTypeAudio.PARAMETER_TYPE)
                 return DefaultAudioEditorFactory.StaticId;

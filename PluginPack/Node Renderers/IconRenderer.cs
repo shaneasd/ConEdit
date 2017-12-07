@@ -25,7 +25,7 @@ namespace PluginPack
             get { return "Icon Renderer"; }
         }
 
-        public INodeGui GetRenderer(ConversationNode<INodeGui> n, PointF p, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        public INodeGui GetRenderer(ConversationNode<INodeGui> n, PointF p, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
             return new IconRenderer(n, p, localizer);
         }
@@ -38,7 +38,7 @@ namespace PluginPack
         string m_name;
         Bitmap m_image;
 
-        public IconRenderer(ConversationNode<ConversationEditor.INodeGui> node, PointF p, Func<Id<LocalizedText>, string> localizer) :
+        public IconRenderer(ConversationNode<ConversationEditor.INodeGui> node, PointF p, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer) :
             base(node, p)
         {
             m_localizer = localizer;
@@ -61,7 +61,8 @@ namespace PluginPack
                     var localizedStringParameters = Node.Data.Parameters.OfType<ILocalizedStringParameter>().Where(p => p.Name == parameterName);
                     if (localizedStringParameters.Any())
                     {
-                        m_name = m_localizer(localizedStringParameters.First().Value);
+                        var p = localizedStringParameters.First();
+                        m_name = m_localizer(Id<LocalizedStringType>.FromGuid(p.TypeId.Guid), p.Value);
                     }
                 }
             }
@@ -108,7 +109,7 @@ namespace PluginPack
 
         static readonly Font Font = SystemFonts.DefaultFont;
         const float NAME_ICON_SPACING = 2;
-        private Func<Id<LocalizedText>, string> m_localizer;
+        private Func<Id<LocalizedStringType>, Id<LocalizedText>, string> m_localizer;
 
         protected override void Dispose(bool disposing)
         {

@@ -52,11 +52,12 @@ namespace Conversation
         private Dictionary<ParameterType, Tuple<string, ImmutableEnumeration>> m_enums = new Dictionary<ParameterType, Tuple<string, ImmutableEnumeration>>();
         private Dictionary<ParameterType, IntegerData> m_integers = new Dictionary<ParameterType, IntegerData>();
         private Dictionary<ParameterType, DecimalData> m_decimals = new Dictionary<ParameterType, DecimalData>();
+        private Dictionary<ParameterType, LocalizedStringData> m_localizedStrings = new Dictionary<ParameterType, LocalizedStringData>();
 
         //The contents of this collection can change as the enum source is a transient property of the types
         ConcurrentDictionary<Tuple<ParameterType, TDocument>, DynamicEnumParameter.Source> m_localDynamicEnumSources = new ConcurrentDictionary<Tuple<ParameterType, TDocument>, DynamicEnumParameter.Source>();
 
-        public ConstantTypeSet(IEnumerable<DynamicEnumerationData> dynamicEnumerations, IEnumerable<LocalDynamicEnumerationData> localDynamicEnumerations, IEnumerable<EnumerationData> enumerations, IEnumerable<DecimalData> decimals, IEnumerable<IntegerData> integers, IEnumerable<Tuple<ParameterType, string, ParameterGenerator>> others)
+        public ConstantTypeSet(IEnumerable<DynamicEnumerationData> dynamicEnumerations, IEnumerable<LocalDynamicEnumerationData> localDynamicEnumerations, IEnumerable<EnumerationData> enumerations, IEnumerable<DecimalData> decimals, IEnumerable<IntegerData> integers, IEnumerable<LocalizedStringData> localizedStrings, IEnumerable<Tuple<ParameterType, string, ParameterGenerator>> others)
         {
             foreach (var other in others)
             {
@@ -64,20 +65,23 @@ namespace Conversation
             }
 
             //Types must be generated before Nodes and can be generated before NodeTypes
-            foreach (var typeData in dynamicEnumerations)
+            foreach (var td in dynamicEnumerations)
             {
+                var typeData = td;
                 m_dynamicEnums.Add(typeData.TypeId, typeData);
                 m_types.Add(typeData.TypeId, new TypeData((a, b, c, document) => typeData.Make(a, b, c, GetDynamicEnumSource(typeData.TypeId)), typeData.Name));
             }
 
-            foreach (var typeData in localDynamicEnumerations)
+            foreach (var td in localDynamicEnumerations)
             {
+                var typeData = td;
                 m_localDynamicEnums.Add(typeData.TypeId, typeData);
                 m_types.Add(typeData.TypeId, new TypeData((name, id, defaultValue, document) => typeData.Make(name, id, defaultValue, GetLocalDynamicEnumSource(typeData.TypeId, document)), typeData.Name));
             }
 
-            foreach (var typeData in enumerations)
+            foreach (var td in enumerations)
             {
+                var typeData = td;
                 var enumType = typeData.TypeId;
                 var setType = ParameterType.ValueSetType.Of(enumType);
 
@@ -88,16 +92,25 @@ namespace Conversation
                 m_types.Add(setType, new TypeData((a, b, c, d) => m_enums[enumType].Item2.ParameterSet(a, b, c), "Set of " + typeData.Name));
             }
 
-            foreach (var typeData in decimals)
+            foreach (var td in decimals)
             {
+                var typeData = td;
                 m_decimals.Add(typeData.TypeId, typeData);
                 m_types.Add(typeData.TypeId, new TypeData((name, id, defaultValue, document) => new DecimalParameter(name, id, typeData.TypeId, typeData.Definition(), defaultValue), typeData.Name));
             }
 
-            foreach (var typeData in integers)
+            foreach (var td in integers)
             {
+                var typeData = td;
                 m_integers.Add(typeData.TypeId, typeData);
                 m_types.Add(typeData.TypeId, new TypeData((name, id, defaultValue, document) => new IntegerParameter(name, id, typeData.TypeId, m_integers[typeData.TypeId].Definition(), defaultValue), typeData.Name));
+            }
+
+            foreach (var td in localizedStrings)
+            {
+                var typeData = td;
+                m_localizedStrings.Add(typeData.TypeId, typeData);
+                m_types.Add(typeData.TypeId, new TypeData((name, id, defaultValue, document) => new LocalizedStringParameter(name, id, typeData.TypeId), typeData.Name));
             }
         }
 
@@ -126,6 +139,11 @@ namespace Conversation
         public bool IsDecimal(ParameterType type)
         {
             return m_decimals.ContainsKey(type);
+        }
+
+        public bool IsLocalizedString(ParameterType type)
+        {
+            return m_localizedStrings.ContainsKey(type);
         }
 
         public bool IsDynamicEnum(ParameterType type)
@@ -179,6 +197,7 @@ namespace Conversation
         private Dictionary<ParameterType, Tuple<string, MutableEnumeration>> m_enums = new Dictionary<ParameterType, Tuple<string, MutableEnumeration>>();
         private Dictionary<ParameterType, IntegerData> m_integers = new Dictionary<ParameterType, IntegerData>();
         private Dictionary<ParameterType, DecimalData> m_decimals = new Dictionary<ParameterType, DecimalData>();
+        private Dictionary<ParameterType, LocalizedStringData> m_localizedStrings = new Dictionary<ParameterType, LocalizedStringData>();
 
         public IEnumerable<ParameterType> AllTypes { get { return m_types.Keys; } }
         public event Action<ParameterType> Modified;
@@ -188,6 +207,7 @@ namespace Conversation
         public IEnumerable<LocalDynamicEnumerationData> VisibleLocalDynamicEnums { get { return m_localDynamicEnums.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
         public IEnumerable<IntegerData> VisibleIntegers { get { return m_integers.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
         public IEnumerable<DecimalData> VisibleDecimals { get { return m_decimals.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
+        public IEnumerable<LocalizedStringData> VisibleLocalizedStrings { get { return m_localizedStrings.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
 
         public Tuple<int?, int?> GetIntegerRange(ParameterType type)
         {
@@ -227,6 +247,21 @@ namespace Conversation
         {
             m_types[typeData.TypeId] = new TypeData((name, id, defaultValue, document) => new DecimalParameter(name, id, typeData.TypeId, m_decimals[typeData.TypeId].Definition(), defaultValue), typeData.Name);
             m_decimals[typeData.TypeId] = typeData;
+            Modified.Execute(typeData.TypeId);
+        }
+
+        public void AddLocalizedString(LocalizedStringData typeData)
+        {
+            m_hidden[typeData.TypeId] = false;
+            m_localizedStrings.Add(typeData.TypeId, typeData);
+            m_types.Add(typeData.TypeId, new TypeData((name, id, defaultValue, document) => new LocalizedStringParameter(name, id, typeData.TypeId), typeData.Name));
+            Modified.Execute(typeData.TypeId);
+        }
+
+        public void ModifyLocalizedString(LocalizedStringData typeData)
+        {
+            m_types[typeData.TypeId] = new TypeData((name, id, defaultValue, document) => new LocalizedStringParameter(name, id, typeData.TypeId), typeData.Name);
+            m_localizedStrings[typeData.TypeId] = typeData;
             Modified.Execute(typeData.TypeId);
         }
 
@@ -304,6 +339,7 @@ namespace Conversation
             m_enums.Remove(id);
             m_dynamicEnums.Remove(id);
             m_localDynamicEnums.Remove(id);
+            m_localizedStrings.Remove(id);
             Modified.Execute(id);
         }
 
@@ -321,6 +357,11 @@ namespace Conversation
         public bool IsDecimal(ParameterType type)
         {
             return m_decimals.ContainsKey(type);
+        }
+
+        public bool IsLocalizedString(ParameterType type)
+        {
+            return m_localizedStrings.ContainsKey(type);
         }
 
         public bool IsEnum(ParameterType type)
@@ -357,6 +398,12 @@ namespace Conversation
                 DecimalData data = m_decimals[guid];
                 data = new DecimalData(name, data.TypeId, data.Max, data.Min);
                 m_decimals[guid] = data;
+            }
+            else if (IsLocalizedString(guid))
+            {
+                LocalizedStringData data = m_localizedStrings[guid];
+                data = new LocalizedStringData(name , data.TypeId/*, data.File*/);
+                m_localizedStrings[guid] = data;
             }
             else if (IsEnum(guid))
             {

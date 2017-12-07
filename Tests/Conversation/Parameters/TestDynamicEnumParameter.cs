@@ -102,7 +102,7 @@ namespace Tests.Conversation.Parameters
             Assert.That(p.Corrupted, Is.False);
             Assert.That(p.Value, Is.EqualTo(value));
             Assert.That(p.ValueAsString(), Is.EqualTo(value));
-            Assert.That(p.DisplayValue(a => ""), Is.EqualTo(value));
+            Assert.That(p.DisplayValue((a, b) => ""), Is.EqualTo(value));
         }
     }
 }

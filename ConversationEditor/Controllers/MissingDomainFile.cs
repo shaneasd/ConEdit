@@ -14,10 +14,12 @@ namespace ConversationEditor
     internal sealed class MissingDomainFile : IDomainFile
     {
         private MissingFile m_file;
+        public Id<FileInProject> Id { get; }
 
-        public MissingDomainFile(FileInfo file)
+        public MissingDomainFile(Id<FileInProject> file, DocumentPath path)
         {
-            m_file = new MissingFile(file);
+            m_file = new MissingFile(file, path);
+            Id = file;
         }
 
         ISaveableFile ISaveableFileProvider.File

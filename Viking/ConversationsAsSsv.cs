@@ -18,7 +18,7 @@ namespace Viking
             get { return "Conversations as Semicolon Separated Values (Viking)"; }
         }
 
-        public void Export(IProject2 project, ConfigParameterString exportPath, Func<Id<LocalizedText>, Tuple<string, DateTime>> localize, IErrorCheckerUtilities<IConversationNode> util)
+        public void Export(IProject2 project, ConfigParameterString exportPath, Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localize, IErrorCheckerUtilities<IConversationNode> util)
         {
             if (project == null)
                 throw new ArgumentNullException(nameof(project));
@@ -46,7 +46,7 @@ namespace Viking
                         using (var sw = new StreamWriter(stream))
                         {
                             stream = null;
-                            ExportAsSsv ssv = new ExportAsSsv(id=>localize(id).Item1);
+                            ExportAsSsv ssv = new ExportAsSsv((type, textId) => localize(type, textId).Item1);
                             CsvData.WriteTitle(";", sw, true);
                             foreach (var con in project.ConversationFilesCollection)
                                 ssv.WriteConversation(con, sw, true, util);

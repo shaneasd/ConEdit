@@ -16,7 +16,7 @@ namespace PluginPack
         private class LogElement : IErrorListElement
         {
             private ConversationNode<INodeGui> m_node;
-            private Func<Id<LocalizedText>, string> m_localize;
+            private Func<Id<LocalizedStringType>, Id<LocalizedText>, string> m_localize;
 
             public LogElement(IConversationEditorControlData<ConversationNode<INodeGui>, TransitionNoduleUIInfo> file, ConversationNode<INodeGui> node, ILocalizationEngine localizer)
             {

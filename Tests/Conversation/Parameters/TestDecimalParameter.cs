@@ -125,14 +125,14 @@ namespace Tests.Conversation.Parameters
             Assert.That(p.ValueAsString(), Is.EqualTo(val.ToString(CultureInfo.InvariantCulture))); //Tempting to simply verify it will parse as the correct value but we need to be consistent with existing files
             using (TemporaryCulture.English())
             {
-                isInt = decimal.TryParse(p.DisplayValue(a => ""), NumberStyles.Any, CultureInfo.InvariantCulture, out result);
+                isInt = decimal.TryParse(p.DisplayValue((a, b) => ""), NumberStyles.Any, CultureInfo.InvariantCulture, out result);
                 Assert.That(isInt);
                 if (isInt)
                     Assert.That(result, Is.EqualTo(val));
             }
             using (TemporaryCulture.European())
             {
-                isInt = decimal.TryParse(p.DisplayValue(a => ""), NumberStyles.Any, CultureInfo.CurrentCulture, out result);
+                isInt = decimal.TryParse(p.DisplayValue((a, b) => ""), NumberStyles.Any, CultureInfo.CurrentCulture, out result);
                 Assert.That(isInt);
                 if (isInt)
                     Assert.That(result, Is.EqualTo(val));

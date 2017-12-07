@@ -133,7 +133,7 @@ namespace ConversationEditor
             var localizationItems = m_root.AllItems(VisibilityFilter.Just(Localizations: true)).OfType<RealLeafItem<ILocalizationFile, ILocalizationFile>>();
             if (localizationItems.Any())
             {
-                m_selectedLocalizer = localizationItems.FirstOrDefault(f => f.Item.Equals(m_context.CurrentLocalization.Value));
+                m_selectedLocalizers = localizationItems.Where(f => m_context.CurrentLocalization.Value?.Sources?.Values?.Contains(f.Item.Id) ?? false).ToList();
                 InvalidateImage();
             }
         }
@@ -205,7 +205,7 @@ namespace ConversationEditor
 
         Item m_selectedItem = Item.Null; //The most highlighted thing. Clicking again will rename.
         Item m_selectedEditable = null; //The thing that's being viewed in the main editor
-        RealLeafItem<ILocalizationFile, ILocalizationFile> m_selectedLocalizer; //Localization file to render as the currently active source of localization
+        IList<RealLeafItem<ILocalizationFile, ILocalizationFile>> m_selectedLocalizers = new List<RealLeafItem<ILocalizationFile, ILocalizationFile>>(); //Localization files to render as the files comprising the currently active localization set
 
         /// <summary>
         /// The item being dragged within the list
@@ -344,11 +344,13 @@ namespace ConversationEditor
                 {
                     item.Item1.DrawBackground(g, Visibility, item.Item3);
                 }
-                var selected = new[] { m_selectedItem, m_selectedLocalizer, m_selectedEditable };
                 foreach (var item in itemsToDraw)
                 {
-                    if (selected.Any(s => object.ReferenceEquals(s, item.Item1)))
-                        item.Item1.DrawSelection(g, item.Item3, m_selectedItem == item.Item1, m_selectedLocalizer == item.Item1 || m_selectedEditable == item.Item1, m_scheme);
+                    bool isSelectedItem = object.ReferenceEquals(m_selectedItem, item.Item1);
+                    bool isSelectedEditable = object.ReferenceEquals(m_selectedEditable, item.Item1);
+                    bool isSelectedLocalizer = m_selectedLocalizers.Contains(item.Item1);
+                    if (isSelectedItem || isSelectedEditable || isSelectedLocalizer)
+                        item.Item1.DrawSelection(g, item.Item3, isSelectedItem, isSelectedLocalizer || isSelectedEditable, m_scheme);
                 }
 
                 //Make sure all ancestors' vertical lines are drawn
@@ -470,15 +472,15 @@ namespace ConversationEditor
                 saveToolStripMenuItem.Visible = m_selectedItem != null && m_selectedItem.CanSave;
                 removeToolStripMenuItem.Visible = m_selectedItem != null && m_selectedItem.CanRemove;
                 deleteToolStripMenuItem.Visible = m_selectedItem != null && m_selectedItem.CanDelete;
-                makeCurrentLocalizationMenuItem.Visible = m_contextItem is RealLeafItem<ILocalizationFile, ILocalizationFile>;
                 playMenuItem.Visible = m_contextItem is RealLeafItem<AudioFile, IAudioFile>;
+                setUpLocalizationsToolStripMenuItem.Visible = m_contextItem is ProjectItem;
                 m_contextMenu.Show(PointToScreen(e.Location));
 
                 {
                     var con = m_contextItem as ConversationItem;
                     if (con != null)
                     {
-                        foreach (var aa in m_contextMenuItemsFactory.ConversationContextMenuItems(a => Tuple.Create(m_context.CurrentLocalization.Value.Localize(a), m_context.CurrentLocalization.Value.LocalizationTime(a))))
+                        foreach (var aa in m_contextMenuItemsFactory.ConversationContextMenuItems((type, textId) => Tuple.Create(m_context.CurrentProject.Value.Localizer.Localize(type, textId), m_context.CurrentProject.Value.Localizer.LocalizationTime(type, textId))))
                         {
                             var a = aa;
                             var i = new ToolStripMenuItem(a.Name);
@@ -515,7 +517,7 @@ namespace ConversationEditor
                             var a = aa;
                             var i = new ToolStripMenuItem(a.Name);
                             i.Click += (x, y) => a.Execute(loc.Item);
-                            m_contextMenu.Items.Insert(m_contextMenu.Items.IndexOf(makeCurrentLocalizationMenuItem), i);
+                            m_contextMenu.Items.Insert(m_contextMenu.Items.IndexOf(separatorBetweenLocalizationAndDomain), i);
                             var temp = m_cleanContextMenu;
                             m_cleanContextMenu = () => { temp(); m_contextMenu.Items.Remove(i); };
                         }
@@ -526,7 +528,7 @@ namespace ConversationEditor
                     var folder = m_contextItem as FolderItem;
                     if (folder != null)
                     {
-                        foreach (var aa in m_contextMenuItemsFactory.FolderContextMenuItems(a => Tuple.Create(m_context.CurrentLocalization.Value.Localize(a), m_context.CurrentLocalization.Value.LocalizationTime(a))))
+                        foreach (var aa in m_contextMenuItemsFactory.FolderContextMenuItems((type, textId) => Tuple.Create(m_context.CurrentProject.Value.Localizer.Localize(type, textId), m_context.CurrentProject.Value.Localizer.LocalizationTime(type, textId))))
                         {
                             var a = aa;
                             var i = new ToolStripMenuItem(a.Name);
@@ -536,7 +538,7 @@ namespace ConversationEditor
                                 var conversations = conversationItems.Select(z => z.Item);
                                 a.Execute(conversations);
                             };
-                            m_contextMenu.Items.Insert(m_contextMenu.Items.IndexOf(makeCurrentLocalizationMenuItem), i);
+                            m_contextMenu.Items.Insert(m_contextMenu.Items.IndexOf(separatorBetweenLocalizationAndDomain), i);
                             var temp = m_cleanContextMenu;
                             m_cleanContextMenu = () => { temp(); m_contextMenu.Items.Remove(i); };
                         }
@@ -588,7 +590,6 @@ namespace ConversationEditor
             string from = item.FullName;
             if (m_root.RenameElement(item, to, ShouldReplaceFile))
             {
-                m_root.Project.Renamed(item, from, to);
                 InvalidateImage();
                 return true;
             }
@@ -671,12 +672,12 @@ namespace ConversationEditor
                     Add(domainFile);
                 }
 
-                var lastCon = config.LastEdited != null ? m_root.Project.Conversations.FirstOrDefault(c => c.File.File.FullName == m_root.Project.Rerout(config.LastEdited.Only()).Single().FullName) : null;
+                var lastCon = config.LastEdited != null ? m_root.Project.Conversations.FirstOrDefault(c => c.Id == config.LastEdited) : null;
                 if (lastCon != null)
                     Select(lastCon);
                 else
                 {
-                    var lastDom = config.LastEdited != null ? m_root.Project.DomainFiles.FirstOrDefault(c => c.File.File.FullName == m_root.Project.Rerout(config.LastEdited.Only()).Single().FullName) : null;
+                    var lastDom = config.LastEdited != null ? m_root.Project.DomainFiles.FirstOrDefault(c => c.Id == config.LastEdited) : null;
                     if (lastDom != null)
                         Select(lastCon);
                 }
@@ -943,12 +944,12 @@ namespace ConversationEditor
             }
         }
 
-        private static IEnumerable<TInterface> LoadValidImportFiles<TConcrete, TInterface>(OpenFileDialog ofd, IProjectElementList<TConcrete, TInterface> list) where TConcrete : TInterface
+        private IEnumerable<TInterface> LoadValidImportFiles<TConcrete, TInterface>(OpenFileDialog ofd, IProjectElementList<TConcrete, TInterface> list) where TConcrete : TInterface
         {
             var badpaths = ofd.FileNames.Where(p => !list.FileLocationOk(p)).ToArray();
             if (badpaths.Any())
                 MessageBox.Show("The following files could not be imported as they are not as they do not exist within the same folder structure as the project: \n" + string.Join("\n", badpaths));
-            var goodpaths = ofd.FileNames.Where(p => list.FileLocationOk(p)).Select(path => new FileInfo(path));
+            IEnumerable<DocumentPath> goodpaths = ofd.FileNames.Where(p => list.FileLocationOk(p)).Select(path => DocumentPath.FromPath(path, m_context.CurrentProject.Value.Origin));
             var loaded = list.Load(goodpaths);
             return loaded;
         }
@@ -1085,13 +1086,6 @@ namespace ConversationEditor
                 ExploreBestFolder(folder.Path);
         }
 
-
-        private void makeCurrentLocalizationMenuItemClicked(object sender, EventArgs e)
-        {
-            var item = m_contextItem as RealLeafItem<ILocalizationFile, ILocalizationFile>;
-            m_context.CurrentLocalization.Value = item.Item;
-        }
-
         private void drawWindow2_Paint(object sender, PaintEventArgs e)
         {
             drawWindow2.Height = ProjectElementDefinition.Definitions.Select(d => d.Icon.Height).Max() + 4 + 4;
@@ -1204,8 +1198,13 @@ namespace ConversationEditor
 
             if (m_ofdLocalization.ShowDialog() == DialogResult.OK)
             {
-                item.Item.ImportInto(m_ofdLocalization.FileNames);
+                item.Item.ImportInto(m_ofdLocalization.FileNames, m_context.CurrentProject.Value.Origin);
             }
+        }
+
+        private void setUpLocalizationsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetUpLocalizationsForm.SetupLocalizations(m_context.CurrentProject.Value);
         }
     }
 }

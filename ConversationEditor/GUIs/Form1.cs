@@ -104,6 +104,8 @@ namespace ConversationEditor
 
             m_context = new SharedContext();
 
+            m_context.CurrentProject.Changed.Register(c => UpdateLocalizationMenu());
+
             Assembly assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.GenericSystemHover.ico"))
                 this.Icon = new Icon(stream);
@@ -124,11 +126,13 @@ namespace ConversationEditor
                     {
                         var willEdit = new WillEdit
                         (
+                            //We need the guid=> indirection because we want to evaluate m_context.CurrentProject.Value.ConversationDataSource at execution time
                             isDecimal: guid => m_context.CurrentProject.Value.ConversationDataSource.IsDecimal(guid) || m_context.CurrentProject.Value.DomainDataSource.IsDecimal(guid),
                             isDynamicEnum: guid => m_context.CurrentProject.Value.ConversationDataSource.IsDynamicEnum(guid) || m_context.CurrentProject.Value.DomainDataSource.IsDynamicEnum(guid),
                             isLocalDynamicEnum: guid => m_context.CurrentProject.Value.ConversationDataSource.IsLocalDynamicEnum(guid) || m_context.CurrentProject.Value.DomainDataSource.IsLocalDynamicEnum(guid),
                             isEnum: guid => m_context.CurrentProject.Value.ConversationDataSource.IsEnum(guid) || m_context.CurrentProject.Value.DomainDataSource.IsEnum(guid),
-                            isInteger: guid => m_context.CurrentProject.Value.ConversationDataSource.IsInteger(guid) || m_context.CurrentProject.Value.DomainDataSource.IsInteger(guid)
+                            isInteger: guid => m_context.CurrentProject.Value.ConversationDataSource.IsInteger(guid) || m_context.CurrentProject.Value.DomainDataSource.IsInteger(guid),
+                            isLocalizedString: guid => m_context.CurrentProject.Value.ConversationDataSource.IsLocalizedString(guid)
                         );
                         m_config = new Config("config.xml", willEdit);
                     }
@@ -174,12 +178,39 @@ namespace ConversationEditor
                 m_domainEditor.Dispose();
                 throw;
             }
+
+        }
+
+        List<ToolStripMenuItem> localizationMenuItems = new List<ToolStripMenuItem>();
+        private void UpdateLocalizationMenu()
+        {
+            Action update = () =>
+            {
+                foreach (var item in localizationMenuItems)
+                {
+                    localizationToolStripMenuItem.DropDownItems.Remove(item);
+                }
+                localizationMenuItems.Clear();
+
+                int insertIndex = 0;
+                foreach (var s in m_context.CurrentProject.Value.Localizer.LocalizationSets)
+                {
+                    var set = s;
+                    ToolStripMenuItem item = new ToolStripMenuItem(set.Name);
+                    item.Click += (object sender, EventArgs e) => { m_context.CurrentLocalization.Value = set; };
+                    localizationToolStripMenuItem.DropDownItems.Insert(insertIndex, item);
+                    localizationMenuItems.Add(item);
+                    insertIndex++;
+                }
+            };
+            update();
+            m_context.CurrentProject.Value.Localizer.LocalizationSetsChanged += update;
         }
 
         private void InitialiseNodeFactory()
         {
-            m_conversationNodeFactory = new NodeFactory(m_config.ConversationNodeRenderers, GetAllOfType<NodeUI.IFactory>(), a => m_config.ConversationNodeRenderers.ValueChanged += a, guid => m_context.CurrentProject.Value.Localizer.Localize(guid), () => m_context.CurrentProject.Value.ConversationDataSource);
-            m_domainNodeFactory = new NodeFactory(m_config.DomainNodeRenderers, guid => m_context.CurrentProject.Value.Localizer.Localize(guid), () => m_context.CurrentProject.Value.DomainDataSource);
+            m_conversationNodeFactory = new NodeFactory(m_config.ConversationNodeRenderers, GetAllOfType<NodeUI.IFactory>(), a => m_config.ConversationNodeRenderers.ValueChanged += a, (type, textId) => m_context.CurrentProject.Value.Localizer.Localize(type, textId), () => m_context.CurrentProject.Value.ConversationDataSource);
+            m_domainNodeFactory = new NodeFactory(m_config.DomainNodeRenderers, (type, textId) => m_context.CurrentProject.Value.Localizer.Localize(type, textId), () => m_context.CurrentProject.Value.DomainDataSource);
         }
 
         private void InitialiseOptionsMenu()
@@ -377,8 +408,8 @@ namespace ConversationEditor
             var p = project as Project;
             if (p != null)
             {
-                var con = projectConfig.LastEdited != null ? project.Conversations.FirstOrDefault(c => c.File.File.FullName == p.Rerout(projectConfig.LastEdited.Only()).Single().FullName) : null;
-                var dom = projectConfig.LastEdited != null ? project.DomainFiles.FirstOrDefault(c => c.File.File.FullName == p.Rerout(projectConfig.LastEdited.Only()).Single().FullName) : null;
+                var con = projectConfig.LastEdited != null ? project.Conversations.FirstOrDefault(c => c.Id == projectConfig.LastEdited) : null;
+                var dom = projectConfig.LastEdited != null ? project.DomainFiles.FirstOrDefault(c => c.Id == projectConfig.LastEdited) : null;
                 m_conversationEditor.CurrentFile = con;
                 m_domainEditor.CurrentFile = dom;
                 if (con != null)
@@ -393,18 +424,23 @@ namespace ConversationEditor
                 }
                 else
                     CurrentEditor = null;
-                Func<ILocalizationFile, bool> matchesLastLocalization = c => c.File.File.FullName == (p.Rerout(projectConfig.LastLocalization.Only()).Single()).FullName;
+                Func<Project.TData.LocalizerSetData, bool> matchesLastLocalization = c => c.Id == projectConfig.LastLocalization;
                 if (projectConfig.LastLocalization != null)
                 {
-                    var match = project.LocalizationFiles.FirstOrDefault(matchesLastLocalization);
+                    var match = project.Localizer.LocalizationSets.FirstOrDefault(matchesLastLocalization);
                     if (match != null)
                         m_context.CurrentLocalization.Value = match;
                 }
             }
 
-            Text = project.File.Exists ? project.File.File.Name : "No Project Open";
+            Action updateText = () =>
+            {
+                Text = project.File.Exists ? (project.File.File.Name + " - " + m_context.CurrentLocalization.Value?.Name ?? "No Localization") : "No Project Open";
+            };
+            updateText();
+            m_context.CurrentLocalization.Changed.Register(c => updateText());
 
-            project.File.Moved += (change) => Text = project.File.File.Name;
+            project.File.Moved += (change) => updateText();
         }
 
         public void InitialiseProjectMenu()
@@ -571,54 +607,59 @@ namespace ConversationEditor
                     //Ignore any problems with the file
                     return new Project.TConfig(null, null);
                 }
-                return new Project.TConfig(lastDocument != null ? lastDocument.Value : null,
-                                           lastLocalization != null ? lastLocalization.Value : null);
+                return new Project.TConfig(lastDocument != null ? Id<FileInProject>.Parse(lastDocument.Value) : null,
+                                           lastLocalization != null ? Id<Project.TData.LocalizerSetData>.Parse(lastLocalization.Value) : Id<Project.TData.LocalizerSetData>.FromGuid(Guid.Empty));
             }
             return new Project.TConfig(null, null);
+        }
+
+        static void WriteProjectConfig(string configPath, Project.TConfig projectConfig)
+        {
+            var config = new XElement("Config");
+            if (projectConfig.LastEdited != null)
+                config.Add(new XElement("LastDocument", projectConfig.LastEdited.Serialized()));
+            if (projectConfig.LastLocalization != null)
+                config.Add(new XElement("LastLocalization", projectConfig.LastLocalization.Serialized()));
+            XDocument doc = new XDocument(config);
+
+            try
+            {
+                using (var s = Util.LoadFileStream(configPath, FileMode.OpenOrCreate, FileAccess.Write, 0))
+                {
+                    s.SetLength(0);
+                    doc.Save(s);
+                }
+            }
+            catch (MyFileLoadException ee)
+            {
+                MessageBox.Show("Failed to save project config" + ee.Message + ee.InnerException.Message);
+            }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             var projectFile = m_context.CurrentProject.Value.File;
             string configPath = null;
-            string lastDocument = null;
-            string lastLocalization = null;
+            Id<FileInProject> lastDocument = null;
+            Id<Project.TData.LocalizerSetData> lastLocalization = null;
             if (projectFile.Exists)
             {
                 configPath = m_context.CurrentProject.Value.File.File.FullName + ".config";
-                lastDocument = projectExplorer.SelectedConversation != null ? FileSystem.RelativePath(projectExplorer.SelectedConversation.File.File, m_context.CurrentProject.Value.Origin) :
-                               projectExplorer.CurrentDomainFile != null ? FileSystem.RelativePath(projectExplorer.CurrentDomainFile.File.File, m_context.CurrentProject.Value.Origin) :
+                lastDocument = projectExplorer.SelectedConversation != null ? projectExplorer.SelectedConversation.Id :
+                               projectExplorer.CurrentDomainFile != null ? projectExplorer.CurrentDomainFile.Id :
                                null;
-                if (m_context.CurrentLocalization.Value.File != null)
-                    lastLocalization = FileSystem.RelativePath(m_context.CurrentLocalization.Value.File.File, m_context.CurrentProject.Value.Origin);
+                lastLocalization = m_context.CurrentLocalization.Value?.Id;
             }
+            Project.TConfig projectConfig = new Project.TConfig(lastDocument, lastLocalization);
             if (!m_projectMenuController.Exit())
                 e.Cancel = true;
             else
             {
-                if (m_currentEditor != null)
-                    m_currentEditor.CurrentFile = DummyConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>.Instance;
+                if (CurrentEditor != null)
+                    CurrentEditor.CurrentFile = DummyConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo>.Instance;
                 if (configPath != null)
                 {
-                    var config = new XElement("Config");
-                    if (lastDocument != null)
-                        config.Add(new XElement("LastDocument", lastDocument));
-                    if (lastLocalization != null)
-                        config.Add(new XElement("LastLocalization", lastLocalization));
-                    XDocument doc = new XDocument(config);
-
-                    try
-                    {
-                        using (var s = Util.LoadFileStream(configPath, FileMode.OpenOrCreate, FileAccess.Write, 0))
-                        {
-                            s.SetLength(0);
-                            doc.Save(s);
-                        }
-                    }
-                    catch (MyFileLoadException ee)
-                    {
-                        MessageBox.Show("Failed to save project config" + ee.Message + ee.InnerException.Message);
-                    }
+                    WriteProjectConfig(configPath, projectConfig);
                 }
             }
 
@@ -890,8 +931,8 @@ namespace ConversationEditor
                 var item = exportToolStripMenuItem.DropDownItems.Add(e.Name);
                 item.Click += (a, b) =>
                 {
-                    if (m_context.CurrentLocalization.Value.IsValid)
-                        e.Export(m_context.CurrentProject.Value, m_config.ExportPath, l => Tuple.Create(m_context.CurrentLocalization.Value.Localize(l), m_context.CurrentLocalization.Value.LocalizationTime(l)), m_context.ErrorCheckerUtils());
+                    if (m_context.CurrentProject.Value.Localizer.IsValid)
+                        e.Export(m_context.CurrentProject.Value, m_config.ExportPath, (type, textId) => Tuple.Create(m_context.CurrentProject.Value.Localizer.Localize(type, textId), m_context.CurrentProject.Value.Localizer.LocalizationTime(type, textId)), m_context.ErrorCheckerUtils());
                     else
                         MessageBox.Show("Cannot export as there is no currently selected localizer");
                 };
@@ -925,12 +966,12 @@ namespace ConversationEditor
 
         private void wordCountToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var localization = m_context.CurrentLocalization.Value;
-            var totalWordCount = localization.ExistingLocalizations.Select(id => StringUtil.WordCount(localization.Localize(id))).Sum();
+            var localizer = m_context.CurrentProject.Value.Localizer;
+            var totalWordCount = localizer.ExistingLocalizations.Select((textId) => StringUtil.WordCount(localizer.Localize(textId.Item1, textId.Item2))).Sum();
             StringBuilder builder = new StringBuilder("Total word count: " + totalWordCount + "\n");
-            if (m_currentEditor == m_conversationEditor)
+            if (CurrentEditor == m_conversationEditor)
             {
-                var conversationWordCount = m_currentEditor.CurrentFile.Nodes.SelectMany(n => n.Data.Parameters.OfType<ILocalizedStringParameter>()).Select(p => StringUtil.WordCount(localization.Localize(p.Value))).Sum();
+                var conversationWordCount = CurrentEditor.CurrentFile.Nodes.SelectMany(n => n.Data.Parameters.OfType<ILocalizedStringParameter>()).Select(p => StringUtil.WordCount(localizer.Localize(Id<LocalizedStringType>.FromGuid(p.TypeId.Guid), p.Value))).Sum();
                 builder.AppendLine("Current conversation word count: " + conversationWordCount);
             }
             MessageBox.Show(builder.ToString());
@@ -999,6 +1040,11 @@ namespace ConversationEditor
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Developed by Shane Tapp. thatguyiknow5@hotmail.com");
+        }
+
+        private void setUpLocalizationsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetUpLocalizationsForm.SetupLocalizations(m_context.CurrentProject.Value);
         }
     }
 }

@@ -12,9 +12,12 @@ namespace ConversationEditor
     {
         private MissingFile m_file;
 
-        public MissingLocalizationFile(FileInfo file)
+        public Id<FileInProject> Id { get ; }
+
+        public MissingLocalizationFile(Id<FileInProject> file, DocumentPath path)
         {
-            m_file = new MissingFile(file);
+            m_file = new MissingFile(file, path);
+            Id = file;
         }
 
         ISaveableFile ISaveableFileProvider.File
@@ -38,7 +41,7 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        void ILocalizationFile.ImportInto(string[] fileNames)
+        void ILocalizationFile.ImportInto(string[] fileNames, DirectoryInfo origin)
         {
             throw new NotImplementedException();
         }

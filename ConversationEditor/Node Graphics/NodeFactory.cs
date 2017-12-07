@@ -34,13 +34,13 @@ namespace ConversationEditor
     {
         private Func<Id<NodeTypeTemp>, ConversationNode, PointF, INodeGui> GetNodeRendererChoice;
 
-        public NodeFactory(TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice> config, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        public NodeFactory(TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice> config, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
             GetNodeRendererChoice = (id, n, p) => config[id].GetRenderer(n, p, localizer, datasource);
             config.ValueChanged += () => UpdateRenderers();
         }
 
-        public NodeFactory(MapConfig<Id<NodeTypeTemp>, Guid> config, IEnumerable<NodeUI.IFactory> factories, Action<Action> changedCallback, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        public NodeFactory(MapConfig<Id<NodeTypeTemp>, Guid> config, IEnumerable<NodeUI.IFactory> factories, Action<Action> changedCallback, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
             var nodeRenderers = factories.ToDictionary(n => n.Guid, n => n);
             GetNodeRendererChoice = (id, n, p) =>

@@ -47,8 +47,9 @@ namespace ConversationEditor
             IEnumerable<EnumerationData> enumerations = domains.SelectMany(d => d.Enumerations);
             IEnumerable<DecimalData> decimals = domains.SelectMany(d => d.Decimals);
             IEnumerable<IntegerData> integers = domains.SelectMany(d => d.Integers);
+            IEnumerable<LocalizedStringData> localizedStrings = domains.SelectMany(d => d.LocalizedStrings);
 
-            m_types = BaseTypeSet.MakeConstant(dynamicEnumerations, localDynamicEnumerations, enumerations, decimals, integers);
+            m_types = BaseTypeSet.MakeConstant(dynamicEnumerations, localDynamicEnumerations, enumerations, decimals, integers, localizedStrings);
 
             m_nodes.Removing += m_nodes_Removing;
 
@@ -207,6 +208,11 @@ namespace ConversationEditor
         public bool IsLocalDynamicEnum(ParameterType type)
         {
             return m_types.IsLocalDynamicEnum(type);
+        }
+
+        public bool IsLocalizedString(ParameterType type)
+        {
+            return m_types.IsLocalizedString(type);
         }
 
         public bool IsCategoryDefinition(Id<NodeTypeTemp> id)

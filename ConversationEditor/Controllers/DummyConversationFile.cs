@@ -124,5 +124,13 @@ namespace ConversationEditor
         {
             throw new NotImplementedException();
         }
+
+        Id<FileInProject> IInProject.Id
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

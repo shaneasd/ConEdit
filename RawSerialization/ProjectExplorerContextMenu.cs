@@ -21,7 +21,7 @@ namespace RawSerialization
             get { return Enumerable.Empty<IDomainContextMenuItem>(); }
         }
 
-        public IEnumerable<IFolderContextMenuItem> FolderContextMenuItems(Func<Id<LocalizedText>, Tuple<string, DateTime>> localizer)
+        public IEnumerable<IFolderContextMenuItem> FolderContextMenuItems(Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localizer)
         {
             return Enumerable.Empty<IFolderContextMenuItem>();
         }
@@ -34,7 +34,7 @@ namespace RawSerialization
             }
         }
 
-        public IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<Id<LocalizedText>, Tuple<string, DateTime>> localizer)
+        public IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localizer)
         {
             return Enumerable.Empty<IConversationContextMenuItem>();
         }

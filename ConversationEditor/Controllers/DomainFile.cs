@@ -26,6 +26,8 @@ namespace ConversationEditor
         private SaveableFileUndoable m_file;
         public override ISaveableFileUndoable UndoableFile { get { return m_file; } }
 
+        public Id<FileInProject> Id { get; }
+
         /// <summary>
         /// Attempt to update datasources to reflect removal of this file from the project.
         /// Attempt will fail if file contains data that is used within domain or conversation files in the project and the user does not accept this.
@@ -72,10 +74,11 @@ namespace ConversationEditor
         /// <param name="domainUsage"></param>
         /// <param name="getDocumentSource"></param>
         /// <param name="autoCompletePatterns"></param>
-        public DomainFile(List<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, FileInfo file, ReadOnlyCollection<LoadError> errors, DomainDomain datasource, ISerializer<TData> serializer, INodeFactory nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, List<IAutoCompletePattern> autoCompletePatterns, UpToDateFile.Backend backend)
+        public DomainFile(List<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, Id<FileInProject> file, DocumentPath path, ReadOnlyCollection<LoadError> errors, DomainDomain datasource, ISerializer<TData> serializer, INodeFactory nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, List<IAutoCompletePattern> autoCompletePatterns, UpToDateFile.Backend backend)
             : base(nodes, groups, errors, nodeFactory, null, getDocumentSource, NoAudio.Instance)
         {
-            m_file = new SaveableFileUndoable(rawData, file, SaveTo, backend);
+            Id = file;
+            m_file = new SaveableFileUndoable(rawData, path.FileInfo, SaveTo, backend);
             m_domainUsage = domainUsage;
             foreach (var node in m_nodes)
             {
@@ -98,7 +101,7 @@ namespace ConversationEditor
             m_autoCompletePatterns = autoCompletePatterns;
         }
 
-        public static DomainFile CreateEmpty(DirectoryInfo directory, DomainDomain datasource, ISerializer<TData> serializer, Func<FileInfo, bool> pathOk, INodeFactory nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, UpToDateFile.Backend backend)
+        public static DomainFile CreateEmpty(DirectoryInfo directory, DomainDomain datasource, ISerializer<TData> serializer, Func<FileInfo, bool> pathOk, INodeFactory nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, UpToDateFile.Backend backend, DirectoryInfo origin)
         {
             //Create a stream under an available filename
             FileInfo path = null;
@@ -117,7 +120,7 @@ namespace ConversationEditor
                     m.CopyTo(stream);
                 }
 
-                var result = new DomainFile(new List<GraphAndUI<NodeUIData>>(), new List<NodeGroup>(), m, path, new ReadOnlyCollection<LoadError>(new LoadError[0]), datasource, serializer, nodeFactory, domainUsage, getDocumentSource, new List<IAutoCompletePattern>(), backend);
+                var result = new DomainFile(new List<GraphAndUI<NodeUIData>>(), new List<NodeGroup>(), m, Id<FileInProject>.New(), DocumentPath.FromPath(path, origin), new ReadOnlyCollection<LoadError>(new LoadError[0]), datasource, serializer, nodeFactory, domainUsage, getDocumentSource, new List<IAutoCompletePattern>(), backend);
                 result.m_file.Save(); //Make sure the file starts life as a valid xml document
                 return result;
             }
@@ -139,6 +142,10 @@ namespace ConversationEditor
             {
                 //m_conversationDatasource.ModifyDecimalType(data);
                 m_datasource.RenameType(BaseType.Decimal, data.Name, data.TypeId);
+            };
+            Action<LocalizedStringData> localizedStringAction = data =>
+            {
+                m_datasource.RenameType(BaseType.LocalizedString, data.Name, data.TypeId);
             };
             Action<DynamicEnumerationData> dynamicEnumAction = data =>
             {
@@ -179,13 +186,13 @@ namespace ConversationEditor
             {
                 var nodeConnector = node.Data.Connectors.Single(c => c.Definition.Id == DomainIDs.ConnectorOutputDefinition.Id);
                 var nodes = nodeConnector.Connections.Select(c => c.Parent).Where(n => n.NodeTypeId == DomainIDs.NodeGuid);
-                DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
+                DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, localizedStringAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             }
             else if (m_datasource.IsParameter(node.Data.NodeTypeId))
             {
                 var nodeConnector = node.Data.Connectors.Single(c => c.Definition.Id == DomainIDs.ParameterOutputDefinition.Id);
                 var nodes = nodeConnector.Connections.Select(c => c.Parent).Where(n => n.NodeTypeId == DomainIDs.NodeGuid);
-                DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
+                DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, localizedStringAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             }
             else if (m_datasource.IsConfig(node.Data.NodeTypeId))
             {
@@ -193,7 +200,7 @@ namespace ConversationEditor
                 var connected = nodeConnector.Connections.Select(c => c.Parent);
 
                 var nodes = connected.Where(n => n.NodeTypeId == DomainIDs.NodeGuid);
-                DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
+                DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, localizedStringAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
 
                 //Don't currently need to handle parameter config affecting nodes
                 //var parameters = connected.Where(n => m_datasource.IsParameter(n.NodeTypeID));
@@ -202,7 +209,7 @@ namespace ConversationEditor
             }
             else
             {
-                DomainDomain.ForEachNode(node.Only(), categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
+                DomainDomain.ForEachNode(node.Only(), categoryAction, integerAction, decimalAction, localizedStringAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             }
             ConversationDomainModified.Execute(); //No need to be picky about false positives
         }
@@ -215,6 +222,7 @@ namespace ConversationEditor
             Action<NodeTypeData> categoryAction = category => { }; //Can't link categories to anything
             Action<IntegerData> integerAction = data => { }; //Can't link integer definitions to anything
             Action<DecimalData> decimalAction = data => { }; //Can't link decimal definitions to anything
+            Action<LocalizedStringData> localizedStringAction = data => { }; //Can't link localized string definitions to anything
             Action<DynamicEnumerationData> dynamicEnumAction = data => { }; //Can't link dynamic enum definitions to anything
             Action<LocalDynamicEnumerationData> localDynamicEnumAction = data => { }; //Can't link local dynamic enum definitions to anything
             Action<EnumerationData> enumAction = data =>
@@ -234,7 +242,7 @@ namespace ConversationEditor
                 //update conversation datasource when connector definition is linked to a parameter
             };
             Action<ConnectionDefinitionData> connectionAction = data => { }; //Can't line connection definitions to anything
-            DomainDomain.ForEachNode(node.Only(), categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
+            DomainDomain.ForEachNode(node.Only(), categoryAction, integerAction, decimalAction, localizedStringAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             ConversationDomainModified.Execute(); //No need to be picky about false positives
         }
 
@@ -254,6 +262,10 @@ namespace ConversationEditor
             {
                 datasource.AddDecimalType(data);
                 //conversationDatasource.AddDecimalType(data);
+            };
+            Action<LocalizedStringData> localizedStringAction = data =>
+            {
+                datasource.AddLocalizedStringType(data);
             };
             Action<DynamicEnumerationData> dynamicEnumAction = data =>
             {
@@ -284,7 +296,7 @@ namespace ConversationEditor
             {
                 //No action required as it doesn't affect the domain domain
             };
-            DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
+            DomainDomain.ForEachNode(nodes, categoryAction, integerAction, decimalAction, localizedStringAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
         }
 
         /// <summary>
@@ -306,6 +318,10 @@ namespace ConversationEditor
             {
                 m_datasource.RemoveType(BaseType.Decimal, data.TypeId);
                 //m_conversationDatasource.RemoveType(data.TypeID);
+            };
+            Action<LocalizedStringData> localizedStringAction = data =>
+            {
+                m_datasource.RemoveType(BaseType.LocalizedString, data.TypeId);
             };
             Action<DynamicEnumerationData> dynamicEnumAction = data =>
             {
@@ -341,7 +357,7 @@ namespace ConversationEditor
             {
                 //Doesn't affect domain domain
             };
-            DomainDomain.ForEachNode(node.Only(), categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
+            DomainDomain.ForEachNode(node.Only(), categoryAction, integerAction, decimalAction, localizedStringAction, dynamicEnumAction, localDynamicEnumAction, enumAction, enumValueAction, nodeAction, connectorAction, connectionAction);
             ConversationDomainModified.Execute(); //No need to be picky about false positives
         }
 
@@ -371,22 +387,22 @@ namespace ConversationEditor
             get
             {
                 DomainData data = new DomainData();
-                DomainDomain.ForEachNode(m_nodes, data.NodeTypes.Add, data.Integers.Add, data.Decimals.Add, data.DynamicEnumerations.Add, data.LocalDynamicEnumerations.Add, data.Enumerations.Add, a => { }, data.Nodes.Add, data.Connectors.Add, data.Connections.Add);
+                DomainDomain.ForEachNode(m_nodes, data.NodeTypes.Add, data.Integers.Add, data.Decimals.Add, data.LocalizedStrings.Add, data.DynamicEnumerations.Add, data.LocalDynamicEnumerations.Add, data.Enumerations.Add, a => { }, data.Nodes.Add, data.Connectors.Add, data.Connections.Add);
                 return data;
             }
         }
 
-        internal static IEnumerable<Either<DomainFile, MissingDomainFile>> Load(IEnumerable<FileInfo> paths, DomainDomain source, Func<FileInfo, DomainSerializerDeserializer> serializerdeserializer, INodeFactory nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, UpToDateFile.Backend backend)
+        internal static IEnumerable<Either<DomainFile, MissingDomainFile>> Load(IEnumerable<Tuple<Id<FileInProject>, DocumentPath>> paths, DomainDomain source, Func<DocumentPath, DomainSerializerDeserializer> serializerdeserializer, INodeFactory nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, UpToDateFile.Backend backend)
         {
-            //List<FileStream> streams = new List<FileStream>();
-
-            var streamsAndPaths = paths.Select(path =>
+            var streamsAndPaths = paths.Select((x) =>
             {
+                var fileId = x.Item1;
+                DocumentPath path = x.Item2;
                 try
                 {
-                    using (var stream = Util.LoadFileStream(path, FileMode.Open, FileAccess.Read))
+                    using (var stream = Util.LoadFileStream(path.FileInfo, FileMode.Open, FileAccess.Read))
                     {
-                        return (Either<Tuple<MemoryStream, FileInfo>, MissingDomainFile>)Tuple.Create(StreamUtil.Copy(stream), path);
+                        return (Either<Tuple<MemoryStream, Id<FileInProject>, DocumentPath>, MissingDomainFile>)Tuple.Create(StreamUtil.Copy(stream), fileId, path);
                     }
                 }
                 catch (MyFileLoadException e)
@@ -396,15 +412,15 @@ namespace ConversationEditor
                     Console.Out.WriteLine(e.InnerException.Message);
                     Console.Out.WriteLine(e.InnerException.StackTrace);
                     if (path.Exists)
-                        MessageBox.Show("File: " + path.Name + " could not be accessed");
+                        MessageBox.Show("File: " + path.AbsolutePath + " could not be accessed");
                     else
-                        MessageBox.Show("File: " + path.Name + " does not exist");
+                        MessageBox.Show("File: " + path.AbsolutePath + " does not exist");
 
                     MissingDomainFile temp = null;
                     try
                     {
-                        temp = new MissingDomainFile(path);
-                        Either<Tuple<MemoryStream, FileInfo>, MissingDomainFile> result = temp;
+                        temp = new MissingDomainFile(fileId, path);
+                        Either<Tuple<MemoryStream, Id<FileInProject>, DocumentPath>, MissingDomainFile> result = temp;
                         temp = null;
                         return result;
                     }
@@ -416,62 +432,107 @@ namespace ConversationEditor
                 }
             }).Evaluate();
 
+            //We make the, hopefully, valid assumption here that the deserializers for the various concepts within a domain file have the same version requirements.
+            Dictionary<DocumentPath, DeserializerVersionMismatchException> failedToParseFiles = new Dictionary<DocumentPath, DeserializerVersionMismatchException>();
+
             foreach (var sp in streamsAndPaths)
             {
                 sp.Do(stream =>
                 {
-                    var categoryData = serializerdeserializer(stream.Item2).CategoriesDeserializer.Read(stream.Item1);
-                    DomainFile.AddToData(categoryData.Nodes.Select(n => n.GraphData), source);
+                    try
+                    {
+                        var categoryData = serializerdeserializer(stream.Item3).CategoriesDeserializer.Read(stream.Item1);
+                        DomainFile.AddToData(categoryData.Nodes.Select(n => n.GraphData), source);
+                    }
+                    catch (DeserializerVersionMismatchException e)
+                    {
+                        failedToParseFiles[stream.Item3] = e;
+                    }
                 }, a => { });
             }
             foreach (var sp in streamsAndPaths)
             {
                 sp.Do(stream =>
                 {
-                    var typeData = serializerdeserializer(stream.Item2).TypesDeserializer.Read(stream.Item1);
-                    DomainFile.AddToData(typeData.Nodes.Select(n => n.GraphData), source);
+                    try
+                    {
+                        var typeData = serializerdeserializer(stream.Item3).TypesDeserializer.Read(stream.Item1);
+                        DomainFile.AddToData(typeData.Nodes.Select(n => n.GraphData), source);
+                    }
+                    catch (DeserializerVersionMismatchException e)
+                    {
+                        failedToParseFiles[stream.Item3] = e;
+                    }
                 }, a => { });
             }
             foreach (var sp in streamsAndPaths)
             {
                 sp.Do(stream =>
                 {
-                    var connectorData = serializerdeserializer(stream.Item2).ConnectorsDeserializer.Read(stream.Item1);
-                    DomainFile.AddToData(connectorData.Nodes.Select(n => n.GraphData), source);
+                    try
+                    {
+                        var connectorData = serializerdeserializer(stream.Item3).ConnectorsDeserializer.Read(stream.Item1);
+                        DomainFile.AddToData(connectorData.Nodes.Select(n => n.GraphData), source);
+                    }
+                    catch (DeserializerVersionMismatchException e)
+                    {
+                        failedToParseFiles[stream.Item3] = e;
+                    }
                 }, a => { });
             }
             foreach (var sp in streamsAndPaths)
             {
                 sp.Do(stream =>
                 {
-                    var nodeData = serializerdeserializer(stream.Item2).NodesDeserializer.Read(stream.Item1);
-                    DomainFile.AddToData(nodeData.Nodes.Select(n => n.GraphData), source);
+                    try
+                    {
+                        var nodeData = serializerdeserializer(stream.Item3).NodesDeserializer.Read(stream.Item1);
+                        DomainFile.AddToData(nodeData.Nodes.Select(n => n.GraphData), source);
+                    }
+                    catch (DeserializerVersionMismatchException e)
+                    {
+                        failedToParseFiles[stream.Item3] = e;
+                    }
                 }, a => { });
             }
 
-            return streamsAndPaths.Select(a => a.TransformedEither(stream =>
+            {
+                var result = streamsAndPaths.Select(a => a.Transformed<Either<DomainFile, MissingDomainFile>>(stream =>
+                    {
+                        try
+                        {
+                            var editorData = serializerdeserializer(stream.Item3).EditorDataDeserializer.Read(stream.Item1);
+                            DomainFile.AddToData(editorData.Nodes.Select(n => n.GraphData), source);
+                            var allData = serializerdeserializer(stream.Item3).EverythingDeserializer.Read(stream.Item1);
+
+                            List<IAutoCompletePattern> autoCompletePatterns = new List<IAutoCompletePattern>();
+                            var nodeData = serializerdeserializer(stream.Item3).AutoCompleteSuggestionsDeserializer.Read(stream.Item1);
+                            autoCompletePatterns.AddRange(AutoCompletePattern.Generate(nodeData, source));
+
+                            return new DomainFile(allData.Nodes.ToList(), editorData.EditorData.Groups.ToList(), stream.Item1, stream.Item2, stream.Item3, allData.Errors, source, serializerdeserializer(stream.Item3).Serializer, nodeFactory, domainUsage, getDocumentSource, autoCompletePatterns, backend);
+                        }
+                        catch (DeserializerVersionMismatchException e)
+                        {
+                            failedToParseFiles[stream.Item3] = e;
+                            return new MissingDomainFile(stream.Item2, stream.Item3);
+                        }
+                    }, b => b));
+
+                if (failedToParseFiles.Any())
                 {
-                    var editorData = serializerdeserializer(stream.Item2).EditorDataDeserializer.Read(stream.Item1);
-                    DomainFile.AddToData(editorData.Nodes.Select(n => n.GraphData), source);
-                    var allData = serializerdeserializer(stream.Item2).EverythingDeserializer.Read(stream.Item1);
+                    StringBuilder message = new StringBuilder("Failed to parse files:\n");
+                    foreach (var kvp in failedToParseFiles)
+                    {
+                        message.Append("\n");
+                        message.Append(kvp.Key.RelativePath);
+                        message.Append(": ");
+                        message.Append(kvp.Value.Message);
+                    }
+                    MessageBox.Show(message.ToString());
+                }
 
-                    List<IAutoCompletePattern> autoCompletePatterns = new List<IAutoCompletePattern>();
-                    var nodeData = serializerdeserializer(stream.Item2).AutoCompleteSuggestionsDeserializer.Read(stream.Item1);
-                    autoCompletePatterns.AddRange(AutoCompletePattern.Generate(nodeData, source));
-
-                    return new DomainFile(allData.Nodes.ToList(), editorData.EditorData.Groups.ToList(), stream.Item1, stream.Item2, allData.Errors, source, serializerdeserializer(stream.Item2).Serializer, nodeFactory, domainUsage, getDocumentSource, autoCompletePatterns, backend);
-                }, b => b));
-            //var data = streams.Select(stream =>
-            //{
-            //    return new
-            //    {
-            //        editorData = editorData,
-            //        errors = allData.Errors,
-            //        allNodes = allData.Nodes,
-            //        path = stream.FileInfo(),
-            //        memory = 
-            //    };
-            //}).Evaluate();
+                return result;
+            }
         }
 
         List<IAutoCompletePattern> m_autoCompletePatterns;

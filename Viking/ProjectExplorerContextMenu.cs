@@ -14,7 +14,7 @@ namespace Viking
             get { return Enumerable.Empty<IDomainContextMenuItem>(); }
         }
 
-        public IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<Id<LocalizedText>, Tuple<string, DateTime>> localizer)
+        public IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localizer)
         {
             yield return new ExportLimitedLocalization(localizer);
             //yield return new ExportLocalizationLines(localizer); //TODO: Archive this version somewhere
@@ -30,7 +30,7 @@ namespace Viking
             get { return Enumerable.Empty<IAudioContextMenuItem>(); }
         }
 
-        public IEnumerable<IFolderContextMenuItem> FolderContextMenuItems(Func<Id<LocalizedText>, Tuple<string, DateTime>> localizer)
+        public IEnumerable<IFolderContextMenuItem> FolderContextMenuItems(Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localizer)
         {
             yield return new ExportLimitedLocalization(localizer);
         }

@@ -25,7 +25,7 @@ namespace Tests.ConversationSerialization
             public string Value;
         }
 
-        class UIRawDataSerializer : Utilities.ISerializerDeserializerXml<UIRawData, UIRawData>
+        class UIRawDataSerializer : ISerializerDeserializerXml<UIRawData, UIRawData>
         {
             public UIRawData Read(XElement node)
             {
@@ -38,7 +38,7 @@ namespace Tests.ConversationSerialization
             }
         }
 
-        class EditorDataSerializer : Utilities.ISerializerDeserializerXml<EditorData, EditorData>
+        class EditorDataSerializer : ISerializerDeserializerXml<EditorData, EditorData>
         {
             public EditorData Read(XElement node)
             {
@@ -184,7 +184,7 @@ namespace Tests.ConversationSerialization
                 DynamicEnumParameter = new DynamicEnumParameter("DynamicEnum", Id<Parameter>.Parse("7c5b019c-79d0-4ef0-b848-0a2c68908f34"), source, dynamicEnumType, "shnae", false);
                 EnumParameter = new EnumParameter("Enum", Id<Parameter>.Parse("e576713b-5d45-48d0-8a4e-661f1fedcafd"), enumeration, enumeration.DefaultValue.ToString());
                 IntegerParameter = new IntegerParameter("Int", Id<Parameter>.Parse("275d75f3-fe4e-42b1-bfaf-e841ba591999"), integerEnumType, i, "1");
-                LocalizedStringParameter = new LocalizedStringParameter("Localized stirng", Id<Parameter>.Parse("f332e619-e9a3-421f-9851-d95a00b62da9"));
+                LocalizedStringParameter = new LocalizedStringParameter("Localized stirng", Id<Parameter>.Parse("f332e619-e9a3-421f-9851-d95a00b62da9"), ParameterType.Basic.Parse("4547dbf2-46cc-4c84-ac6e-81ab185575dc"));
                 SetParameter = new SetParameter("Set", Id<Parameter>.Parse("2d6235ea-c8a1-447a-b9d8-692f6329be33"), enumeration, null);
                 StringParameter = new StringParameter("string", Id<Parameter>.Parse("4752d30e-e1ab-47ba-bc15-b2e6ecfa5416"));
                 StringParameter2 = new StringParameter("string2", Id<Parameter>.Parse("dcd4a349-b0a8-4fa3-8989-2d10469b1a17"));
@@ -382,6 +382,11 @@ namespace Tests.ConversationSerialization
             }
 
             public bool IsLocalDynamicEnum(ParameterType type)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool IsLocalizedString(ParameterType type)
             {
                 throw new NotImplementedException();
             }

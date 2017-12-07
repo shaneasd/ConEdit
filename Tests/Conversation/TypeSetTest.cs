@@ -33,7 +33,7 @@ namespace Tests.Conversation
 
                 public ParameterType TypeId { get; }
 
-                public string DisplayValue(Func<Id<LocalizedText>, string> localize)
+                public string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
                 {
                     throw new NotImplementedException();
                 }
@@ -83,13 +83,14 @@ namespace Tests.Conversation
             public LastGeneratorParametersType LastGeneratorParameters = null;
         }
 
-        static void CheckIs(TypeSet typeSet, ParameterType type, bool dec = false, bool integer = false, bool enumeration = false, bool dynamicEnum = false, bool localDynamicEnum = false)
+        static void CheckIs(TypeSet typeSet, ParameterType type, bool dec = false, bool integer = false, bool enumeration = false, bool dynamicEnum = false, bool localDynamicEnum = false, bool localizedString = false)
         {
             Assert.That(typeSet.IsDecimal(type), Is.EqualTo(dec));
             Assert.That(typeSet.IsDynamicEnum(type), Is.EqualTo(dynamicEnum));
             Assert.That(typeSet.IsEnum(type), Is.EqualTo(enumeration));
             Assert.That(typeSet.IsInteger(type), Is.EqualTo(integer));
             Assert.That(typeSet.IsLocalDynamicEnum(type), Is.EqualTo(localDynamicEnum));
+            Assert.That(typeSet.IsLocalizedString(type), Is.EqualTo(localizedString));
         }
 
         /// <summary>
@@ -162,6 +163,7 @@ namespace Tests.Conversation
             List<EnumerationData> hiddenEnums = new List<EnumerationData>();
             List<DynamicEnumerationData> dynamicEnums = new List<DynamicEnumerationData>();
             List<LocalDynamicEnumerationData> localDynamicEnums = new List<LocalDynamicEnumerationData>();
+            List<LocalizedStringData> localizedStrings = new List<LocalizedStringData>();
             List<OtherData> others = new List<OtherData>();
 
             TypeSet t = new TypeSet();
@@ -229,6 +231,13 @@ namespace Tests.Conversation
                     IDynamicEnumParameter p = parameter as IDynamicEnumParameter;
                     Assert.That(p.Local, Is.True);
                 }
+                foreach (var x in localizedStrings)
+                {
+                    CheckIs(t, x.TypeId, localizedString: true);
+                    Assert.That(t.GetTypeName(x.TypeId), Is.EqualTo(x.Name));
+                    object document = new object();
+                    IParameter parameter = CheckBasicMake(randomString(), randomParameterId(), randomString(), t, x.TypeId, document);
+                }
                 foreach (var x in others)
                 {
                     CheckIs(t, x.TypeId);
@@ -252,12 +261,14 @@ namespace Tests.Conversation
                 CheckEnumsMatch(t.VisibleEnums, enums);
                 Assert.That(t.VisibleIntegers, Is.EquivalentTo(integers));
                 Assert.That(t.VisibleLocalDynamicEnums, Is.EquivalentTo(localDynamicEnums));
+                Assert.That(t.VisibleLocalizedStrings, Is.EquivalentTo(localizedStrings));
 
                 var expected = decimals.Select(x => x.TypeId).
                                         Concat(integers.Select(x => x.TypeId)).
                                         Concat(enums.Select(x => x.TypeId)).
                                         Concat(dynamicEnums.Select(x => x.TypeId)).
                                         Concat(localDynamicEnums.Select(x => x.TypeId)).
+                                        Concat(localizedStrings.Select(x => x.TypeId)).
                                         Concat(others.Select(x => x.TypeId)).
                                         Concat(enums.Select(x => ParameterType.ValueSetType.Of(x.TypeId))).
                                         Concat(hiddenEnums.Select(x => x.TypeId)). //AllTypes includes hidden types
@@ -282,6 +293,8 @@ namespace Tests.Conversation
             CheckDynamicEnums(dynamicEnums, t, CheckContents, ref modifiedType);
 
             CheckLocalDynamicEnums(localDynamicEnums, t, CheckContents, ref modifiedType);
+
+            CheckLocalizedStrings(localizedStrings, t, CheckContents, ref modifiedType);
 
             CheckOthers(others, t, CheckContents, ref modifiedType);
         }
@@ -331,6 +344,55 @@ namespace Tests.Conversation
             t.RenameType(Integer3.TypeId, Integer3Replacement.Name);
             integers[integers.IndexOf(Integer3)] = Integer3Replacement;
             Assert.That(modifiedType, Is.EqualTo(Integer3Replacement.TypeId));
+            modifiedType = null;
+            CheckContents();
+        }
+
+        private static void CheckLocalizedStrings(List<LocalizedStringData> localizedStrings, TypeSet t, Action CheckContents, ref ParameterType modifiedType)
+        {
+            LocalizedStringData string1 = new LocalizedStringData("string1", ParameterType.Parse("03d7b9f3-cc7e-4639-b809-20f92860c041"));
+            LocalizedStringData string2 = new LocalizedStringData("repeat", ParameterType.Parse("3f0af919-8c61-4863-9039-9d4b59a2b2e6"));
+            LocalizedStringData string3 = new LocalizedStringData("repeat", ParameterType.Parse("3771aec9-a2ea-4f06-a426-fb245de56199"));
+
+            var a = string1;
+            t.AddLocalizedString(a);
+            localizedStrings.Add(a);
+            Assert.That(modifiedType, Is.EqualTo(a.TypeId));
+            modifiedType = null;
+            CheckContents();
+
+            a = string2;
+            t.AddLocalizedString(a);
+            localizedStrings.Add(a);
+            Assert.That(modifiedType, Is.EqualTo(a.TypeId));
+            modifiedType = null;
+            CheckContents();
+
+            a = string1;
+            t.Remove(a.TypeId);
+            localizedStrings.Remove(a);
+            Assert.That(modifiedType, Is.EqualTo(a.TypeId));
+            modifiedType = null;
+            CheckContents();
+
+            a = string3;
+            t.AddLocalizedString(a);
+            localizedStrings.Add(a);
+            Assert.That(modifiedType, Is.EqualTo(a.TypeId));
+            modifiedType = null;
+            CheckContents();
+
+            LocalizedStringData string2Replacement = new LocalizedStringData("string2 replacement", string2.TypeId);
+            t.ModifyLocalizedString(string2Replacement);
+            localizedStrings[localizedStrings.IndexOf(string2)] = string2Replacement;
+            Assert.That(modifiedType, Is.EqualTo(string2Replacement.TypeId));
+            modifiedType = null;
+            CheckContents();
+
+            LocalizedStringData string3Replacement = new LocalizedStringData("replacement string 3", string3.TypeId);
+            t.RenameType(string3.TypeId, string3Replacement.Name);
+            localizedStrings[localizedStrings.IndexOf(string3)] = string3Replacement;
+            Assert.That(modifiedType, Is.EqualTo(string3Replacement.TypeId));
             modifiedType = null;
             CheckContents();
         }

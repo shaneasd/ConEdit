@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using Conversation;
 
 namespace ConversationEditor
 {
@@ -10,7 +11,12 @@ namespace ConversationEditor
     {
         public static readonly DummyProjectElementList<TReal, TInterface> Instance = new DummyProjectElementList<TReal, TInterface>();
 
-        public IEnumerable<TInterface> Load(IEnumerable<FileInfo> fileInfos)
+        public IEnumerable<TInterface> Load(IEnumerable<DocumentPath> fileInfos)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<TInterface> Load(IEnumerable<Id<FileInProject>> fileInfos)
         {
             throw new NotImplementedException();
         }

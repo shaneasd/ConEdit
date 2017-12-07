@@ -217,6 +217,7 @@ namespace ConversationEditor
              * Decimal
              * Dynamic Enumeration
              * Enumeration
+             * Localized String
              * 
              * Enumeration Value
              * 

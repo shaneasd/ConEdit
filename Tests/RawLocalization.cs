@@ -77,9 +77,17 @@ namespace Tests
             throw new NotImplementedException();
         }
 
-        void ILocalizationFile.ImportInto(string[] fileNames)
+        void ILocalizationFile.ImportInto(string[] fileNames, DirectoryInfo origin)
         {
             throw new NotImplementedException();
+        }
+
+        Id<FileInProject> IInProject.Id
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 

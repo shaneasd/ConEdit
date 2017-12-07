@@ -5,6 +5,7 @@ using System.Text;
 using Conversation;
 using Utilities;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace ConversationEditor
 {
@@ -38,8 +39,7 @@ namespace ConversationEditor
             get { throw new NotImplementedException(); }
         }
 
-        ISaveableFile ISaveableFileProvider.File { get { return new MissingFile(null); } }
-
+        ISaveableFile ISaveableFileProvider.File { get { return new MissingFile( Id<FileInProject>.FromGuid(Guid.Empty) , DocumentPath.FromPath("", new DirectoryInfo("."))); } }
 
         public ReadOnlyCollection<Conversation.Serialization.LoadError> Errors
         {

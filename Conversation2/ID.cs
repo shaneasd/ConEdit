@@ -189,6 +189,8 @@ namespace Conversation
     //TODO: This needs a rename
     public sealed class NodeTemp { }
 
+    public sealed class FileInProject { }
+
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
     public class Id<T> : IComparable<Id<T>>, IComparable
     {

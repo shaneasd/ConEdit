@@ -17,7 +17,7 @@ namespace Clandestine
             get { return "Conversations as Semicolon Separated Values (Clandestine)"; }
         }
 
-        public void Export(IProject2 project, ConfigParameterString exportPath, Func<Id<LocalizedText>, Tuple<string, DateTime>> localize, IErrorCheckerUtilities<IConversationNode> util)
+        public void Export(IProject2 project, ConfigParameterString exportPath, Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localize, IErrorCheckerUtilities<IConversationNode> util)
         {
             if (project == null)
                 throw new ArgumentNullException(nameof(project));

@@ -34,14 +34,15 @@ namespace RuntimeConversation
             m_datasource = datasource;
         }
 
-        public RuntimeConversation.Conversation Read(Stream stream)
+        public Conversation Read(Stream stream)
         {
             stream.Position = 0;
             var d = XDocument.Load(stream);
             var root = d.Element(XmlConversation<object, object>.Root);
 
-            if (root.Attribute("xmlversion") == null || !XML_VERSION_READ.Contains(root.Attribute("xmlversion").Value))
-                throw new UnknownXmlVersionException("unrecognised conversation xml version");
+            string encounteredVersion = root.Attribute("xmlversion")?.Value ?? "";
+            if (!XML_VERSION_READ.Contains(encounteredVersion))
+                throw new DeserializerVersionMismatchException( string.Join(", ", XML_VERSION_READ), encounteredVersion);
 
             IEnumerable<Either<RuntimeConversation.NodeBase, LoadError>> editables = root.Elements("Node").Select(n => ReadEditable(n, m_datasource)).Evaluate();
             var allnodes = new Dictionary<Id<NodeTemp>, RuntimeConversation.NodeBase>();

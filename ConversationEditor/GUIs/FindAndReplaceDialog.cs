@@ -178,13 +178,13 @@ namespace ConversationEditor
                     {
                         foreach (var parameter in node.Data.Parameters.OfType<ILocalizedStringParameter>())
                         {
-                            var original = m_localizer.Localize(parameter.Value);
+                            var original = m_localizer.Localize(Id<LocalizedStringType>.FromGuid(parameter.TypeId.Guid), parameter.Value);
                             if (original != null)
                             {
                                 string output;
                                 if (Replace(original, find, txtReplace.Text, out output))
                                 {
-                                    SimpleUndoPair redoUndo = m_localizer.SetLocalizationAction(parameter.Value, output);
+                                    SimpleUndoPair redoUndo = m_localizer.SetLocalizationAction(Id<LocalizedStringType>.ConvertFrom(parameter.TypeId), parameter.Value, output);
                                     Action redo = () => { redoUndo.Redo(); UpdateDisplay.Execute(); };
                                     Action undo = () => { redoUndo.Undo(); UpdateDisplay.Execute(); };
                                     yield return new ReplaceAction(undo, redo, file, node, parameter);

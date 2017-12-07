@@ -55,7 +55,7 @@ namespace Tests.Conversation
                 }
             }
 
-            public string DisplayValue(Func<Id<LocalizedText>, string> localize)
+            public string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
             {
                 throw new NotImplementedException();
             }

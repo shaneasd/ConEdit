@@ -31,7 +31,7 @@ namespace Conversation
             return Value.ToString();
         }
 
-        public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
+        public override string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {
             return Value.ToString();
         }

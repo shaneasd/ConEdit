@@ -20,6 +20,8 @@ namespace ConversationEditor
         public static readonly Id<Parameter> DecimalMax = Id<Parameter>.Parse("3ac38058-ebd9-4730-911f-1229c9b5e5c5");
         public static readonly Id<Parameter> DecimalMin = Id<Parameter>.Parse("d39f103d-1f6f-4ed3-bdf8-e76923da5d96");
 
+        public static readonly Id<Parameter> LocalizedStringName = Id<Parameter>.Parse("41381d61-8436-49e9-b33e-504fb9535331");
+
         public static readonly Id<Parameter> DynamicEnumName = Id<Parameter>.Parse("a3e258c8-5446-4272-80ba-a5b9417a46f6");
         public static readonly Id<Parameter> LocalDynamicEnumName = Id<Parameter>.Parse("fcbd0154-7865-4e24-ba50-cd06e65cc543");
 

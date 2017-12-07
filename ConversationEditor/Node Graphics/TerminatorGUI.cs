@@ -25,7 +25,7 @@ namespace ConversationEditor
             get { return "Terminator Node Renderer"; }
         }
 
-        public INodeGui GetRenderer(ConversationNode<INodeGui> n, PointF p, Func<Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
+        public INodeGui GetRenderer(ConversationNode<INodeGui> n, PointF p, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
             return new TerminatorGui(n, p);
         }

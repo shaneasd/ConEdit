@@ -22,6 +22,7 @@ namespace ConversationEditor
         public static readonly ParameterType EnumSetGuid = ParameterType.Parse("e7526632-95ca-4981-8b45-56cea272ddd0");
         public static readonly ParameterType DynamicEnumSetGuid = ParameterType.Parse("b3278dc3-6c2b-471a-a1c9-de39691af302");
         public static readonly ParameterType LocalDynamicEnumSetGuid = ParameterType.Parse("15fb7660-0c2e-45b3-979f-3bdf17f60fc9");
+        public static readonly ParameterType LocalizedStringSetGuid = ParameterType.Parse("6df91111-53e0-4ae1-976f-9aae951a30bb");
 
         Id<TConnector> parameterDefinitionConnector1 = Id<TConnector>.Parse("1fd8a64d-271e-42b8-bfd8-85e5174bbf9d");
         Id<TConnector> parameterConfigConnectorID = Id<TConnector>.Parse("3e914fe1-c59c-4494-b53a-da135426ff72");
@@ -56,17 +57,19 @@ namespace ConversationEditor
             EnumerationData allLocalDynamicEnums = new EnumerationData("Local Dynamic Enumerations", LocalDynamicEnumSetGuid, new List<EnumerationData.Element>());
             EnumerationData allIntegers = new EnumerationData("Integers", IntegerSetGuid, new List<EnumerationData.Element> { new EnumerationData.Element("Base", BaseTypeInteger.Data.TypeId.Guid) });
             EnumerationData allDecimals = new EnumerationData("Decimals", DecimalSetGuid, new List<EnumerationData.Element> { new EnumerationData.Element("Base", BaseTypeDecimal.Data.TypeId.Guid) });
+            EnumerationData allLocalizedStrings = new EnumerationData("Localized Strings", LocalizedStringSetGuid, new List<EnumerationData.Element> { new EnumerationData.Element("Base", BaseTypeLocalizedString.Data.TypeId.Guid) });
             m_typeSet.AddEnum(allEnums, true);
             m_typeSet.AddEnum(allDynamicEnums, true);
             m_typeSet.AddEnum(allLocalDynamicEnums, true);
             m_typeSet.AddEnum(allIntegers, true);
             m_typeSet.AddEnum(allDecimals, true);
+            m_typeSet.AddEnum(allLocalizedStrings, true);
             //m_types.Enumerations.Add(ConnectorPosition.PositionConnectorDefinition.Guid, ConnectorPosition.PositionConnectorDefinition.Name, ConnectorPosition.PositionConnectorDefinition);
 
 
             m_typeSet.Modified += id =>
             {
-                if (!(new[] { allEnums, allDynamicEnums, allLocalDynamicEnums, allIntegers, allDecimals }).Any(e => e.TypeId == id))
+                if (!(new[] { allEnums, allDynamicEnums, allLocalDynamicEnums, allIntegers, allDecimals, allLocalizedStrings }).Any(e => e.TypeId == id))
                 {
                     allEnums = new EnumerationData(allEnums.Name, allEnums.TypeId, m_typeSet.VisibleEnums.Select(e => new EnumerationData.Element(e.Name, e.TypeId.Guid)).ToList());
                     m_typeSet.ModifyEnum(allEnums);
@@ -82,6 +85,9 @@ namespace ConversationEditor
 
                     allDecimals = new EnumerationData(allDecimals.Name, allDecimals.TypeId, m_typeSet.VisibleDecimals.Select(e => new EnumerationData.Element(e.Name, e.TypeId.Guid)).ToList());
                     m_typeSet.ModifyEnum(allDecimals);
+
+                    allLocalizedStrings = new EnumerationData(allLocalizedStrings.Name, allLocalizedStrings.TypeId, m_typeSet.VisibleLocalizedStrings.Select(e => new EnumerationData.Element(e.Name, e.TypeId.Guid)).ToList());
+                    m_typeSet.ModifyEnum(allLocalizedStrings);
                 }
             };
 
@@ -116,6 +122,12 @@ namespace ConversationEditor
                 new NodeData.ParameterData("Min", DomainIDs.DecimalMin, BaseTypeDecimal.PARAMETER_TYPE, NO_CONFIG),
             };
             AddNode(BaseType.Decimal.NodeType, "Decimal", m_nodeHeirarchy, MakeConfig('d', "808080"), NO_CONNECTORS, decimalParameters);
+
+            List<NodeData.ParameterData> localizedStringParameters = new List<NodeData.ParameterData>()
+            {
+                new NodeData.ParameterData("Name", DomainIDs.LocalizedStringName, BaseTypeString.ParameterType, NO_CONFIG),
+            };
+            AddNode(BaseType.LocalizedString.NodeType, "Localized String", m_nodeHeirarchy, MakeConfig('l', "808080"), NO_CONNECTORS, localizedStringParameters);
 
             List<NodeData.ParameterData> dynamicEnumParameters = new List<NodeData.ParameterData>()
             {
@@ -191,6 +203,7 @@ namespace ConversationEditor
                 NodeData.ParameterData nameParameter = new NodeData.ParameterData("Name", DomainIDs.ParameterName, BaseTypeString.ParameterType, NO_CONFIG);
                 NodeData.ParameterData integerTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, IntegerSetGuid, NO_CONFIG, BaseTypeInteger.PARAMETER_TYPE.Guid.ToString());
                 NodeData.ParameterData decimalTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, DecimalSetGuid, NO_CONFIG, BaseTypeDecimal.PARAMETER_TYPE.Guid.ToString());
+                NodeData.ParameterData localizedStringTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, LocalizedStringSetGuid, NO_CONFIG, BaseTypeLocalizedString.ParameterType.Guid.ToString());
                 NodeData.ParameterData dynamicEnumTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, DynamicEnumSetGuid, NO_CONFIG);
                 NodeData.ParameterData localDynamicEnumTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, LocalDynamicEnumSetGuid, NO_CONFIG);
                 NodeData.ParameterData decimalDefaultParameter = new NodeData.ParameterData("Default", DomainIDs.ParameterDefault, BaseTypeDecimal.PARAMETER_TYPE, NO_CONFIG);
@@ -215,7 +228,7 @@ namespace ConversationEditor
                 }, "0") });
                 AddNode(BaseType.Decimal.ParameterNodeType, "Decimal", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, decimalTypeParameter, decimalDefaultParameter });
                 AddNode(BaseType.String.ParameterNodeType, "String", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, stringDefaultParameter });
-                AddNode(BaseType.LocalizedString.ParameterNodeType, "Localized String", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter });
+                AddNode(BaseType.LocalizedString.ParameterNodeType, "Localized String", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, localizedStringTypeParameter });
                 AddNode(BaseType.Boolean.ParameterNodeType, "Boolean", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, booleanDefaultParameter });
                 AddNode(BaseType.Audio.ParameterNodeType, "Audio", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter });
                 AddNode(BaseType.DynamicEnumeration.ParameterNodeType, "Dynamic Enumeration", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, dynamicEnumTypeParameter, stringDefaultParameter });
@@ -337,7 +350,7 @@ namespace ConversationEditor
 
         public IEnumerable<ParameterType> ParameterTypes
         {
-            get { throw new NotImplementedException(); }
+            get { return m_typeSet.AllTypes; }
         }
 
         public INodeType Nodes
@@ -395,6 +408,11 @@ namespace ConversationEditor
             //m_types.Integers.Add(data.TypeID, data.Name, data);
         }
 
+        public void AddLocalizedStringType(LocalizedStringData data)
+        {
+            m_typeSet.AddLocalizedString(data);
+        }
+
         public void AddEnumType(EnumerationData data)
         {
             m_typeSet.AddEnum(data, false);
@@ -419,11 +437,11 @@ namespace ConversationEditor
             //m_types.RemoveType(baseType, guid);
         }
 
-        public static void ForEachNode(IEnumerable<ConversationNode> nodes, Action<NodeTypeData> categoryAction, Action<IntegerData> integerAction, Action<DecimalData> decimalAction, Action<DynamicEnumerationData> dynamicEnumAction, Action<LocalDynamicEnumerationData> localDynamicEnumAction, Action<EnumerationData> enumerationAction, Action<EnumerationData> enumerationValueAction, Action<NodeData> nodeAction, Action<ConnectorDefinitionData> connectorAction, Action<ConnectionDefinitionData> connectionAction)
+        public static void ForEachNode(IEnumerable<ConversationNode> nodes, Action<NodeTypeData> categoryAction, Action<IntegerData> integerAction, Action<DecimalData> decimalAction, Action<LocalizedStringData> localizedStringAction, Action<DynamicEnumerationData> dynamicEnumAction, Action<LocalDynamicEnumerationData> localDynamicEnumAction, Action<EnumerationData> enumerationAction, Action<EnumerationData> enumerationValueAction, Action<NodeData> nodeAction, Action<ConnectorDefinitionData> connectorAction, Action<ConnectionDefinitionData> connectionAction)
         {
-            ForEachNode(nodes.Select(n => n.Data), categoryAction, integerAction, decimalAction, dynamicEnumAction, localDynamicEnumAction, enumerationAction, enumerationValueAction, nodeAction, connectorAction, connectionAction);
+            ForEachNode(nodes.Select(n => n.Data), categoryAction, integerAction, decimalAction, localizedStringAction, dynamicEnumAction, localDynamicEnumAction, enumerationAction, enumerationValueAction, nodeAction, connectorAction, connectionAction);
         }
-        public static void ForEachNode(IEnumerable<IConversationNodeData> nodes, Action<NodeTypeData> categoryAction, Action<IntegerData> integerAction, Action<DecimalData> decimalAction, Action<DynamicEnumerationData> dynamicEnumAction, Action<LocalDynamicEnumerationData> localDynamicEnumAction, Action<EnumerationData> enumerationAction, Action<EnumerationData> enumerationValueAction, Action<NodeData> nodeAction, Action<ConnectorDefinitionData> connectorAction, Action<ConnectionDefinitionData> connectionAction)
+        public static void ForEachNode(IEnumerable<IConversationNodeData> nodes, Action<NodeTypeData> categoryAction, Action<IntegerData> integerAction, Action<DecimalData> decimalAction, Action<LocalizedStringData> localizedStringAction, Action<DynamicEnumerationData> dynamicEnumAction, Action<LocalDynamicEnumerationData> localDynamicEnumAction, Action<EnumerationData> enumerationAction, Action<EnumerationData> enumerationValueAction, Action<NodeData> nodeAction, Action<ConnectorDefinitionData> connectorAction, Action<ConnectionDefinitionData> connectionAction)
         {
             foreach (var node in nodes.OrderBy(n => n.NodeTypeId == DomainIDs.NodeGuid ? 2 : 1))
             {
@@ -458,6 +476,12 @@ namespace ConversationEditor
                     //var defParameter = node.Parameters.Single(p => p.Guid == DomainIDs.DECIMAL_DEFAULT) as IDecimalParameter;
                     //var def = defParameter.Value;
                     decimalAction(new DecimalData(name, ParameterType.Basic.FromGuid(node.NodeId.Guid), max, min/*, def*/));
+                }
+                else if (node.NodeTypeId == BaseType.LocalizedString.NodeType)
+                {
+                    var nameParameter = node.Parameters.Single(p => p.Id == DomainIDs.LocalizedStringName) as IStringParameter;
+                    var name = nameParameter.Value;
+                    localizedStringAction(new LocalizedStringData(name, ParameterType.Basic.FromGuid(node.NodeId.Guid)/*, file*/));
                 }
                 else if (node.NodeTypeId == BaseType.DynamicEnumeration.NodeType)
                 {
@@ -568,6 +592,11 @@ namespace ConversationEditor
         public bool IsDecimal(ParameterType type)
         {
             return m_typeSet.IsDecimal(type);
+        }
+
+        public bool IsLocalizedString(ParameterType type)
+        {
+            return m_typeSet.IsLocalizedString(type);
         }
 
         public bool IsEnum(ParameterType type)
@@ -726,11 +755,10 @@ namespace ConversationEditor
         };
         private PluginsConfig m_pluginsConfig;
 
-        public string GetTypeName(ParameterType type)
+        public string GetTypeName(ParameterType id)
         {
-            throw new NotImplementedException(); // Don't need an implementation for this because we won't be modifying editors for types in the domain domain
+            return m_typeSet.GetTypeName(id);
         }
-
 
         public Guid GetCategory(Id<NodeTypeTemp> type)
         {

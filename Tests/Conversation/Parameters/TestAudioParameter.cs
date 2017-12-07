@@ -65,7 +65,7 @@ namespace Tests.Conversation.Parameters
         {
             Assert.That(p.Corrupted, Is.False);
             Assert.That(p.Value, Is.EqualTo(value));
-            Assert.That(p.DisplayValue(a => "a"), Is.EqualTo(value.DisplayValue()));
+            Assert.That(p.DisplayValue((a, b) => "a"), Is.EqualTo(value.DisplayValue()));
             Assert.That(p.SetValueAction(value), Is.Null);
             Assert.That(p.ValueAsString(), Is.EqualTo(value.Serialize()));
         }

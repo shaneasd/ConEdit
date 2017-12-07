@@ -165,14 +165,14 @@ namespace Tests.Conversation.Parameters
         private static void CheckCorrupt(EnumParameter p, string value)
         {
             Assert.That(p.Corrupted, Is.True);
-            Assert.That(p.DisplayValue(a => ""), Is.EqualTo(value));
+            Assert.That(p.DisplayValue((a, b) => ""), Is.EqualTo(value));
             Assert.That(p.ValueAsString(), Is.EqualTo(value));
         }
 
         private static void CheckNotCorrupt(EnumParameter p, Guid value, IEnumeration enumeration)
         {
             Assert.That(p.Corrupted, Is.False);
-            Assert.That(p.DisplayValue(a => ""), Is.EqualTo(enumeration.GetName(value)));
+            Assert.That(p.DisplayValue((a, b) => ""), Is.EqualTo(enumeration.GetName(value)));
             Assert.That(p.Value, Is.EqualTo(value));
             Guid guid;
             Assert.That(Guid.TryParse(p.ValueAsString(), out guid), Is.True);

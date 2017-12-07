@@ -528,10 +528,10 @@ namespace ConversationEditor
             }
             else if (e.KeyCode == Keys.Tab && e.Control)
             {
-                int index = m_context.CurrentProject.Value.LocalizationFiles.IndexOf(m_context.CurrentLocalization.Value);
+                int index = m_context.CurrentProject.Value.Localizer.LocalizationSets.IndexOf(m_context.CurrentLocalization.Value);
                 if (index >= 0)
                 {
-                    m_context.CurrentLocalization.Value = m_context.CurrentProject.Value.LocalizationFiles.InfiniteRepeat().ElementAt(index + 1);
+                    m_context.CurrentLocalization.Value = m_context.CurrentProject.Value.Localizer.LocalizationSets.InfiniteRepeat().ElementAt(index + 1);
                     Redraw();
                 }
             }

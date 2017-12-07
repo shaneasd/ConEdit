@@ -93,14 +93,14 @@ namespace Tests.Conversation.Parameters
             }
             using (TemporaryCulture.English())
             {
-                isBool = bool.TryParse(p.DisplayValue(a => ""), out result);
+                isBool = bool.TryParse(p.DisplayValue((a, b) => ""), out result);
                 Assert.That(isBool);
                 if (isBool)
                     Assert.That(result, Is.EqualTo(val));
             }
             using (TemporaryCulture.European())
             {
-                isBool = bool.TryParse(p.DisplayValue(a => ""), out result);
+                isBool = bool.TryParse(p.DisplayValue((a, b) => ""), out result);
                 Assert.That(isBool);
                 if (isBool)
                     Assert.That(result, Is.EqualTo(val));

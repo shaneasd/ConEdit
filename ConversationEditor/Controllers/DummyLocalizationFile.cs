@@ -1,6 +1,7 @@
 ﻿using Conversation;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -28,7 +29,7 @@ namespace ConversationEditor
 
         IEnumerable<Id<LocalizedText>> ILocalizationFile.ExistingLocalizations { get { throw new NotImplementedException("ExistingLocalizations"); } }
 
-        void ILocalizationFile.ImportInto(string[] fileNames)
+        void ILocalizationFile.ImportInto(string[] fileNames, DirectoryInfo origin)
         {
             throw new NotImplementedException("ExistingLocalizations");
         }
@@ -56,12 +57,21 @@ namespace ConversationEditor
 
         public DateTime LocalizationTime(Id<LocalizedText> id)
         {
-            return Instance.LocalizationTime(id);
+            throw new NotImplementedException();
         }
 
         public bool IsValid
         {
             get { return false; }
+        }
+
+        Id<FileInProject> IInProject.Id
+        {
+            get
+            {
+                throw new NotImplementedException();
+                //return Id<FileInProject>.FromGuid(Guid.Empty);
+            }
         }
     }
 }

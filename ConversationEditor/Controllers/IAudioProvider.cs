@@ -40,7 +40,6 @@ namespace ConversationEditor
         void UpdateUsage(Audio audio);
 
         IDisposable SuppressUpdates();
-        void Rename(string from, string to);
     }
 
     internal class DummyAudioLibrary : IAudioLibrary

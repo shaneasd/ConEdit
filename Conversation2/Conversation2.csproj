@@ -68,10 +68,12 @@
     <Compile Include="Domain\DynamicEnumerationData.cs" />
     <Compile Include="Domain\EnumerationData.cs" />
     <Compile Include="Domain\IntegerData.cs" />
+    <Compile Include="Domain\LocalizedStringData.cs" />
     <Compile Include="Domain\NodeCategoryData.cs" />
     <Compile Include="Domain\NodeData.cs" />
     <Compile Include="Domain\TypeSet.cs" />
     <Compile Include="ErrorChecker.cs" />
+    <Compile Include="ILocalizationEngine.cs" />
     <Compile Include="Nodes\IConversationNode.cs" />
     <Compile Include="Id.cs" />
     <Compile Include="ILocalizer.cs" />

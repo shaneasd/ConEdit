@@ -11,7 +11,7 @@ namespace ConversationEditor
 {
     public interface ILocalizationContext
     {
-        NotifierProperty<ILocalizationFile> CurrentLocalization { get; }
+        NotifierProperty<Project.TData.LocalizerSetData> CurrentLocalization { get; }
     }
 
     /// <summary>
@@ -21,8 +21,7 @@ namespace ConversationEditor
     {
         public NotifierProperty<IProject> CurrentProject = new NotifierProperty<IProject>(DummyProject.Instance);
         public event Action<Changed<FileInfo>> ProjectMoved;
-        public NotifierProperty<ILocalizationFile> CurrentLocalization { get { return m_currentLocalization; } }
-        private readonly NotifierProperty<ILocalizationFile> m_currentLocalization = new NotifierProperty<ILocalizationFile>(DummyLocalizationFile.Instance);
+        public NotifierProperty<Project.TData.LocalizerSetData> CurrentLocalization { get; } = new NotifierProperty<Project.TData.LocalizerSetData>(Project.TData.LocalizerSetData.Empty);
 
         public ErrorCheckerUtils<ConversationNode> ErrorCheckerUtils()
         {

@@ -50,6 +50,11 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
+        public bool IsLocalizedString(ParameterType type)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool IsCategoryDefinition(Id<NodeTypeTemp> id)
         {
             throw new NotImplementedException();

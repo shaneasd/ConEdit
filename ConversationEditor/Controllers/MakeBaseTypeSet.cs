@@ -19,8 +19,8 @@ namespace ConversationEditor
             //result.AddInteger(BaseTypeInteger.PARAMETER_TYPE, (name, id) => new IntegerParameter(name, id, BaseTypeInteger.PARAMETER_TYPE));
             result.AddDecimal(BaseTypeDecimal.Data);
             //result.AddDecimal(BaseTypeDecimal.PARAMETER_TYPE, (name, id) => new DecimalParameter(name, id, BaseTypeDecimal.PARAMETER_TYPE));
+            result.AddLocalizedString(BaseTypeLocalizedString.Data);
             result.AddOther(StringParameter.ParameterType, "String", (name, id, def, document) => new StringParameter(name, id, def));
-            result.AddOther(LocalizedStringParameter.ParameterType, "Localized String", (name, id, def, document) => new LocalizedStringParameter(name, id));
             result.AddOther(BooleanParameter.ParameterType, "Boolean", (name, id, def, document) => new BooleanParameter(name, id, def));
             result.AddOther(AudioParameter.ParameterType, "Audio", (name, id, def, document) => new AudioParameter(name, id));
             return result;
@@ -32,23 +32,22 @@ namespace ConversationEditor
             typeMap[BaseTypeInteger.PARAMETER_TYPE] = "Int32";
             typeMap[BaseTypeDecimal.PARAMETER_TYPE] = "Decimal";
             typeMap[StringParameter.ParameterType] = "String";
-            typeMap[LocalizedStringParameter.ParameterType] = "RuntimeConversation.LocalizedString";
+            typeMap[BaseTypeLocalizedString.ParameterType] = "RuntimeConversation.LocalizedString"; //TODO: LOC: Doesn't properly deal with user defined localized strings
             typeMap[BooleanParameter.ParameterType] = "Boolean";
             typeMap[AudioParameter.ParameterType] = "RuntimeConversation.Audio";
             return typeMap;
         }
 
-        internal static ConstantTypeSet MakeConstant(IEnumerable<DynamicEnumerationData> dynamicEnumerations, IEnumerable<LocalDynamicEnumerationData> localDynamicEnumerations, IEnumerable<EnumerationData> enumerations, IEnumerable<DecimalData> decimals, IEnumerable<IntegerData> integers)
+        internal static ConstantTypeSet MakeConstant(IEnumerable<DynamicEnumerationData> dynamicEnumerations, IEnumerable<LocalDynamicEnumerationData> localDynamicEnumerations, IEnumerable<EnumerationData> enumerations, IEnumerable<DecimalData> decimals, IEnumerable<IntegerData> integers, IEnumerable<LocalizedStringData> localizedStrings)
         {
             IEnumerable<Tuple<ParameterType, string, ParameterGenerator>> others = new List<Tuple<ParameterType, string, ParameterGenerator>>()
             {
                 Tuple.Create<ParameterType, string, ParameterGenerator>(StringParameter.ParameterType, "String", (name, id, def, document) => new StringParameter(name, id, def)),
-                Tuple.Create<ParameterType, string, ParameterGenerator>(LocalizedStringParameter.ParameterType, "Localized String", (name, id, def, document) => new LocalizedStringParameter(name, id)),
                 Tuple.Create<ParameterType, string, ParameterGenerator>(BooleanParameter.ParameterType, "Boolean", (name, id, def, document) => new BooleanParameter(name, id, def)),
                 Tuple.Create<ParameterType, string, ParameterGenerator>(AudioParameter.ParameterType, "Audio", (name, id, def, document) => new AudioParameter(name, id)),
             };
 
-            var result = new ConstantTypeSet(dynamicEnumerations, localDynamicEnumerations, enumerations, decimals.Concat(BaseTypeDecimal.Data.Only()), integers.Concat(BaseTypeInteger.Data.Only()), others);
+            var result = new ConstantTypeSet(dynamicEnumerations, localDynamicEnumerations, enumerations, decimals.Concat(BaseTypeDecimal.Data.Only()), integers.Concat(BaseTypeInteger.Data.Only()), localizedStrings.Concat(BaseTypeLocalizedString.Data.Only()), others);
 
 
             return result;

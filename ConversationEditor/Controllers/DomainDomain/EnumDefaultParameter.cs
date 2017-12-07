@@ -87,7 +87,7 @@ namespace ConversationEditor
             };
         }
 
-        public override string DisplayValue(Func<Id<LocalizedText>, string> localize)
+        public override string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {
             UpdateText();
             return m_value;
