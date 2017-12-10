@@ -60,7 +60,6 @@
     <Compile Include="Config\ConfigNodeDefinitions.cs" />
     <Compile Include="Config\DontRenderConfig.cs" />
     <Compile Include="Config\NameConfig.cs" />
-    <Compile Include="Config\ShortcutKey.cs" />
     <Compile Include="Context Menu Items\FindNodesOfType.cs" />
     <Compile Include="Node Renderers\IconRenderer.cs" />
     <Compile Include="Context Menu Items\MenuActionFactory.cs" />
