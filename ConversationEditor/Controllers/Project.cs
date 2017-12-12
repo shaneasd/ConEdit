@@ -412,7 +412,8 @@ namespace ConversationEditor
                 {
                     var path = GetFilePath(element.Id);
                     list.Remove(element, true);
-                    list.Load(path.Only());
+                    m_filePaths[element.Id] = path; //Readd the file mapping for the id we're about to load
+                    list.Load(element.Id.Only());
                 });
         }
 
