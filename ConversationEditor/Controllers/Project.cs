@@ -410,8 +410,9 @@ namespace ConversationEditor
         {
             ElementModifiedExternally.Execute(element, () =>
                 {
+                    var path = GetFilePath(element.Id);
                     list.Remove(element, true);
-                    list.Load(element.Id.Only());
+                    list.Load(path.Only());
                 });
         }
 
