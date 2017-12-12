@@ -5,11 +5,24 @@ using System.Windows.Forms;
 using Conversation;
 using Conversation.Serialization;
 using Utilities;
+using System.Collections.Generic;
 
 namespace ConversationEditor
 {
     internal class DomainAsCSharp : IProjectExporter
     {
+        public static Dictionary<ParameterType, string> BasicTypeMap()
+        {
+            var typeMap = new Dictionary<ParameterType, string>();
+            typeMap[BaseTypeInteger.PARAMETER_TYPE] = "Int32";
+            typeMap[BaseTypeDecimal.PARAMETER_TYPE] = "Decimal";
+            typeMap[StringParameter.ParameterType] = "String";
+            typeMap[BaseTypeLocalizedString.ParameterType] = "RuntimeConversation.LocalizedString"; //TODO: LOC: Doesn't properly deal with user defined localized strings
+            typeMap[BooleanParameter.ParameterType] = "Boolean";
+            typeMap[AudioParameter.ParameterType] = "RuntimeConversation.Audio";
+            return typeMap;
+        }
+
         public void Export(IProject2 project, ConfigParameterString exportPath, Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localize, IErrorCheckerUtilities<IConversationNode> util)
         {
             DomainData builtIn = new DomainData();
@@ -39,7 +52,7 @@ namespace ConversationEditor
                         if (@namespace.Length == 0)
                             @namespace = "MyNamespace";
                     }
-                    CSDomainSerializer<INodeGui, NodeUIData, ConversationEditorData> s = new CSDomainSerializer<INodeGui, NodeUIData, ConversationEditorData>(BaseTypeSet.BasicTypeMap(), @namespace);
+                    CSDomainSerializer<INodeGui, NodeUIData, ConversationEditorData> s = new CSDomainSerializer<INodeGui, NodeUIData, ConversationEditorData>(BasicTypeMap(), @namespace);
                     using (var stream = new FileStream(sfd.FileName, FileMode.OpenOrCreate, FileAccess.Write))
                     {
                         stream.SetLength(0);
