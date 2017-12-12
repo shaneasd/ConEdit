@@ -126,7 +126,7 @@
     <Compile Include="Controllers\DummyConversationFile.cs" />
     <Compile Include="Controllers\LocalizationEngine.cs" />
     <Compile Include="Controllers\LocalizationFile.cs" />
-    <Compile Include="Controllers\MakeBaseTypeSet.cs" />
+    <Compile Include="Controllers\ConversationTypeSetFactory.cs" />
     <Compile Include="Controllers\MissingConversationFile.cs" />
     <Compile Include="Controllers\DummyProject.cs" />
     <Compile Include="Controllers\MissingDomainFile.cs" />

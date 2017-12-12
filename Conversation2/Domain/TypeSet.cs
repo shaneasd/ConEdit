@@ -179,6 +179,39 @@ namespace Conversation
     /// </summary>
     public class TypeSet : ITypeSetFixedTypes
     {
+        private class TypeProvider<T>
+        {
+            private Dictionary<ParameterType, T> m_data = new Dictionary<ParameterType, T>();
+            private Dictionary<ParameterType, bool> m_hidden { get; } //Shared with the other TypeProviders
+            public IEnumerable<T> Visible => m_data.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value);
+
+            public TypeProvider(Dictionary<ParameterType, bool> hidden)
+            {
+                m_hidden = hidden;
+            }
+
+            public void Add(ParameterType typeId, T value)
+            {
+                m_data.Add(typeId, value);
+            }
+
+            public void Remove(ParameterType typeId)
+            {
+                m_data.Remove(typeId);
+            }
+
+            public bool Contains(ParameterType typeId)
+            {
+                return m_data.ContainsKey(typeId);
+            }
+
+            public T this[ParameterType typeId]
+            {
+                get { return m_data[typeId]; }
+                set { m_data[typeId] = value; }
+            }
+        }
+
         private class TypeData
         {
             public ParameterGenerator Generator;
@@ -190,24 +223,37 @@ namespace Conversation
             }
         }
 
-        private Dictionary<ParameterType, bool> m_hidden = new Dictionary<ParameterType, bool>();
-        private Dictionary<ParameterType, TypeData> m_types = new Dictionary<ParameterType, TypeData>();
-        private Dictionary<ParameterType, DynamicEnumerationData> m_dynamicEnums = new Dictionary<ParameterType, DynamicEnumerationData>();
-        private Dictionary<ParameterType, LocalDynamicEnumerationData> m_localDynamicEnums = new Dictionary<ParameterType, LocalDynamicEnumerationData>();
-        private Dictionary<ParameterType, Tuple<string, MutableEnumeration>> m_enums = new Dictionary<ParameterType, Tuple<string, MutableEnumeration>>();
-        private Dictionary<ParameterType, IntegerData> m_integers = new Dictionary<ParameterType, IntegerData>();
-        private Dictionary<ParameterType, DecimalData> m_decimals = new Dictionary<ParameterType, DecimalData>();
-        private Dictionary<ParameterType, LocalizedStringData> m_localizedStrings = new Dictionary<ParameterType, LocalizedStringData>();
+        private Dictionary<ParameterType, bool> m_hidden { get; } = new Dictionary<ParameterType, bool>();
+        private Dictionary<ParameterType, TypeData> m_types { get; } = new Dictionary<ParameterType, TypeData>();
+        private Dictionary<ParameterType, Tuple<string, MutableEnumeration>> m_enums { get; } = new Dictionary<ParameterType, Tuple<string, MutableEnumeration>>();
+        private TypeProvider<DynamicEnumerationData> m_dynamicEnums { get; }
+        private TypeProvider<LocalDynamicEnumerationData> m_localDynamicEnums { get; }
+        private TypeProvider<LocalizedStringData> m_localizedStrings { get; }
+        private TypeProvider<IntegerData> m_integers { get; }
+        private TypeProvider<DecimalData> m_decimals { get; }
+
+        public TypeSet()
+        {
+            m_dynamicEnums = new TypeProvider<DynamicEnumerationData>(m_hidden);
+            m_localDynamicEnums = new TypeProvider<LocalDynamicEnumerationData>(m_hidden);
+            m_localizedStrings = new TypeProvider<LocalizedStringData>(m_hidden);
+            m_integers = new TypeProvider<IntegerData>(m_hidden);
+            m_decimals = new TypeProvider<DecimalData>(m_hidden);
+        }
 
         public IEnumerable<ParameterType> AllTypes { get { return m_types.Keys; } }
+
+        /// <summary>
+        /// Triggered whenever a new type is added or an existing type is modified or removed
+        /// </summary>
         public event Action<ParameterType> Modified;
 
         public IEnumerable<EnumerationData> VisibleEnums { get { return m_enums.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => GetEnumData(kvp.Key)); } }
-        public IEnumerable<DynamicEnumerationData> VisibleDynamicEnums { get { return m_dynamicEnums.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
-        public IEnumerable<LocalDynamicEnumerationData> VisibleLocalDynamicEnums { get { return m_localDynamicEnums.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
-        public IEnumerable<IntegerData> VisibleIntegers { get { return m_integers.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
-        public IEnumerable<DecimalData> VisibleDecimals { get { return m_decimals.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
-        public IEnumerable<LocalizedStringData> VisibleLocalizedStrings { get { return m_localizedStrings.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => kvp.Value); } }
+        public IEnumerable<DynamicEnumerationData> VisibleDynamicEnums { get { return m_dynamicEnums.Visible; } }
+        public IEnumerable<LocalDynamicEnumerationData> VisibleLocalDynamicEnums { get { return m_localDynamicEnums.Visible; } }
+        public IEnumerable<IntegerData> VisibleIntegers { get { return m_integers.Visible; } }
+        public IEnumerable<DecimalData> VisibleDecimals { get { return m_decimals.Visible; } }
+        public IEnumerable<LocalizedStringData> VisibleLocalizedStrings { get { return m_localizedStrings.Visible; } }
 
         public Tuple<int?, int?> GetIntegerRange(ParameterType type)
         {
@@ -351,17 +397,17 @@ namespace Conversation
 
         public bool IsInteger(ParameterType type)
         {
-            return m_integers.ContainsKey(type);
+            return m_integers.Contains(type);
         }
 
         public bool IsDecimal(ParameterType type)
         {
-            return m_decimals.ContainsKey(type);
+            return m_decimals.Contains(type);
         }
 
         public bool IsLocalizedString(ParameterType type)
         {
-            return m_localizedStrings.ContainsKey(type);
+            return m_localizedStrings.Contains(type);
         }
 
         public bool IsEnum(ParameterType type)
@@ -371,12 +417,12 @@ namespace Conversation
 
         public bool IsDynamicEnum(ParameterType type)
         {
-            return m_dynamicEnums.ContainsKey(type);
+            return m_dynamicEnums.Contains(type);
         }
 
         public bool IsLocalDynamicEnum(ParameterType type)
         {
-            return m_localDynamicEnums.ContainsKey(type);
+            return m_localDynamicEnums.Contains(type);
         }
 
         public string GetTypeName(ParameterType guid)
@@ -402,7 +448,7 @@ namespace Conversation
             else if (IsLocalizedString(guid))
             {
                 LocalizedStringData data = m_localizedStrings[guid];
-                data = new LocalizedStringData(name , data.TypeId/*, data.File*/);
+                data = new LocalizedStringData(name, data.TypeId/*, data.File*/);
                 m_localizedStrings[guid] = data;
             }
             else if (IsEnum(guid))

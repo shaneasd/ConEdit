@@ -49,7 +49,7 @@ namespace ConversationEditor
             IEnumerable<IntegerData> integers = domains.SelectMany(d => d.Integers);
             IEnumerable<LocalizedStringData> localizedStrings = domains.SelectMany(d => d.LocalizedStrings);
 
-            m_types = BaseTypeSet.MakeConstant(dynamicEnumerations, localDynamicEnumerations, enumerations, decimals, integers, localizedStrings);
+            m_types = ConversationTypeSetFactory.MakeConstant(dynamicEnumerations, localDynamicEnumerations, enumerations, decimals, integers, localizedStrings);
 
             m_nodes.Removing += m_nodes_Removing;
 

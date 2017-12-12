@@ -39,7 +39,7 @@ namespace ConversationEditor
 
         public DomainDomain(PluginsConfig pluginsConfig)
         {
-            m_typeSet = BaseTypeSet.Make();
+            m_typeSet = ConversationTypeSetFactory.Make();
             m_pluginsConfig = pluginsConfig;
 
             EnumerationData categoryData = new EnumerationData("Categories", DomainIDs.CategoryType, new[] { new EnumerationData.Element("None", DomainIDs.CategoryNone) });
