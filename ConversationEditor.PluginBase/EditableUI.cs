@@ -286,7 +286,7 @@ namespace ConversationEditor
                     IEnumerable<SizeF> titleSizes = ParametersToRender.Select(p => g.MeasureString(p.Name + " ", BoldFont, MaxTitleWidth));
                     float headingWidth = titleSizes.Max(s => s.Width + 2);
 
-                    foreach (var parameter in ParametersToRender)
+                    foreach (var parameter in ParametersToRender.OrderBy(p => p.Name))
                     {
                         var name = parameter.Name;
                         var data = parameter.DisplayValue(m_localizer);
