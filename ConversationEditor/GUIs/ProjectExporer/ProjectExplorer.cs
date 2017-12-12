@@ -236,10 +236,10 @@ namespace ConversationEditor
             var result = new OpenFileDialog();
             try
             {
-                result.DefaultExt = "xml";
-                result.Filter = "Conversations|*.xml";
-                result.Multiselect = true;
-                result.ValidateNames = false;
+                result.DefaultExt = DefaultExt;
+                result.Filter = Filter;
+                result.Multiselect = Multiselect;
+                result.ValidateNames = ValidateNames;
             }
             catch
             {
