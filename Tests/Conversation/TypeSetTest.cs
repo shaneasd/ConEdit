@@ -175,7 +175,7 @@ namespace Tests.Conversation
                     CheckIs(t, x.TypeId, dec: true);
                     Assert.That(t.GetTypeName(x.TypeId), Is.EqualTo(x.Name));
 
-                    IParameter parameter = CheckBasicMake(randomString(), randomParameterId(), randomString(), t, x.TypeId, null); //This type shouldn't care about document
+                    IParameter parameter = CheckBasicMake(randomString(), randomParameterId(), randomString(), t, x.TypeId, null, true); //This type shouldn't care about document
                     Assert.That(parameter, Is.InstanceOf<IDecimalParameter>());
                     IDecimalParameter p = parameter as IDecimalParameter;
                     Assert.That(p.Min, Is.EqualTo(x.Min));
@@ -186,7 +186,7 @@ namespace Tests.Conversation
                     CheckIs(t, x.TypeId, integer: true);
                     Assert.That(t.GetTypeName(x.TypeId), Is.EqualTo(x.Name));
 
-                    IParameter parameter = CheckBasicMake(randomString(), randomParameterId(), randomString(), t, x.TypeId, null); //This type shouldn't care about document
+                    IParameter parameter = CheckBasicMake(randomString(), randomParameterId(), randomString(), t, x.TypeId, null, true); //This type shouldn't care about document
                     Assert.That(parameter, Is.InstanceOf<IIntegerParameter>());
                     IIntegerParameter p = parameter as IIntegerParameter;
                     Assert.That(p.Min, Is.EqualTo(x.Min));
@@ -198,7 +198,7 @@ namespace Tests.Conversation
                     Assert.That(t.GetTypeName(x.TypeId), Is.EqualTo(x.Name));
 
                     {
-                        IParameter parameter = CheckBasicMake(randomString(), randomParameterId(), randomString(), t, x.TypeId, null); //This type shouldn't care about document
+                        IParameter parameter = CheckBasicMake(randomString(), randomParameterId(), randomString(), t, x.TypeId, null, true); //This type shouldn't care about document
                         Assert.That(parameter, Is.InstanceOf<IEnumParameter>());
                         IEnumParameter p = parameter as IEnumParameter;
                         Assert.That(p.Options, Is.EquivalentTo(x.Elements.Select(a => a.Guid)));
@@ -206,7 +206,7 @@ namespace Tests.Conversation
 
                     //Check set parameter creation
                     {
-                        IParameter parameter = CheckBasicMake(randomString(), randomParameterId(), randomString(), t, ParameterType.ValueSetType.Of(x.TypeId), null); //This type shouldn't care about document
+                        IParameter parameter = CheckBasicMake(randomString(), randomParameterId(), randomString(), t, ParameterType.ValueSetType.Of(x.TypeId), null, true); //This type shouldn't care about document
                         Assert.That(parameter, Is.InstanceOf<ISetParameter>());
                         ISetParameter p = parameter as ISetParameter;
                         Assert.That(p.Options, Is.EquivalentTo(x.Elements.Select(a => a.Guid)));
@@ -216,7 +216,7 @@ namespace Tests.Conversation
                 {
                     CheckIs(t, x.TypeId, dynamicEnum: true);
                     Assert.That(t.GetTypeName(x.TypeId), Is.EqualTo(x.Name));
-                    IParameter parameter = CheckBasicMake(randomString(), randomParameterId(), randomString(), t, x.TypeId, null); //This type shouldn't care about document
+                    IParameter parameter = CheckBasicMake(randomString(), randomParameterId(), randomString(), t, x.TypeId, null, true); //This type shouldn't care about document
                     Assert.That(parameter, Is.InstanceOf<IDynamicEnumParameter>());
                     IDynamicEnumParameter p = parameter as IDynamicEnumParameter;
                     Assert.That(p.Local, Is.False);
@@ -226,7 +226,7 @@ namespace Tests.Conversation
                     CheckIs(t, x.TypeId, localDynamicEnum: true);
                     Assert.That(t.GetTypeName(x.TypeId), Is.EqualTo(x.Name));
                     object document = new object();
-                    IParameter parameter = CheckBasicMake(randomString(), randomParameterId(), randomString(), t, x.TypeId, document);
+                    IParameter parameter = CheckBasicMake(randomString(), randomParameterId(), randomString(), t, x.TypeId, document, true);
                     Assert.That(parameter, Is.InstanceOf<IDynamicEnumParameter>());
                     IDynamicEnumParameter p = parameter as IDynamicEnumParameter;
                     Assert.That(p.Local, Is.True);
@@ -236,7 +236,7 @@ namespace Tests.Conversation
                     CheckIs(t, x.TypeId, localizedString: true);
                     Assert.That(t.GetTypeName(x.TypeId), Is.EqualTo(x.Name));
                     object document = new object();
-                    IParameter parameter = CheckBasicMake(randomString(), randomParameterId(), randomString(), t, x.TypeId, document);
+                    IParameter parameter = CheckBasicMake(randomString(), randomParameterId(), randomString(), t, x.TypeId, document, false);
                 }
                 foreach (var x in others)
                 {
@@ -246,7 +246,7 @@ namespace Tests.Conversation
                     var id = randomParameterId();
                     var def = randomString();
                     object document = new object();
-                    IParameter parameter = CheckBasicMake(name, id, def, t, x.TypeId, document);
+                    IParameter parameter = CheckBasicMake(name, id, def, t, x.TypeId, document, true);
                     Assert.That(x.LastGeneratorParameters, Is.Not.Null);
                     Assert.That(x.LastGeneratorParameters.name, Is.EqualTo(name));
                     Assert.That(x.LastGeneratorParameters.id, Is.EqualTo(id));
@@ -601,13 +601,16 @@ namespace Tests.Conversation
             }
         }
 
-        private static IParameter CheckBasicMake(string name, Id<Parameter> id, string def, TypeSet t, ParameterType typeId, object document)
+        private static IParameter CheckBasicMake(string name, Id<Parameter> id, string def, TypeSet t, ParameterType typeId, object document, bool useDefault)
         {
             IParameter parameter = t.Make(typeId, name, id, def, document);
             Assert.That(parameter.TypeId, Is.EqualTo(typeId));
             Assert.That(parameter.Name, Is.EqualTo(name));
             Assert.That(parameter.Id, Is.EqualTo(id));
-            Assert.That(parameter.ValueAsString(), Is.EqualTo(def));
+            if (useDefault)
+                Assert.That(parameter.ValueAsString(), Is.EqualTo(def));
+            else
+                Assert.That(parameter.ValueAsString(), Is.EqualTo(""));
             return parameter;
         }
     }
