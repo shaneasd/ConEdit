@@ -188,6 +188,19 @@ namespace ConversationEditor
             return NodeDefinitionsUsages(nodeIds);
         }
 
+        private string NodeToString(IConversationNodeData data)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (var parameter in data.Parameters)
+            {
+                builder.Append(" │ ");
+                builder.Append(parameter.Name);
+                builder.Append(": ");
+                builder.Append(parameter.DisplayValue(m_project.Localizer.Localize));
+            }
+            return builder.ToString();
+        }
+
         /// <summary>
         /// All usages in all conversation files of nodes with the specified types
         /// </summary>
@@ -200,9 +213,7 @@ namespace ConversationEditor
                 foreach (var n in conversationFile.Nodes)
                 {
                     if (typeIDs.Contains(n.Data.NodeTypeId))
-                        result.Add(new Usage(n, conversationFile, "Node " + n.Data.NodeId.Serialized()));
-
-                    //TODO: When finding references to node definitions, list the parameter data of the result nodes rather than their guids
+                        result.Add(new Usage(n, conversationFile, "Node " + n.Data.NodeId.Serialized() + NodeToString(n.Data)));
                 }
             }
             return result;
