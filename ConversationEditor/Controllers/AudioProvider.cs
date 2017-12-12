@@ -93,7 +93,7 @@ namespace ConversationEditor
         }
 
         HashSet<FileInfo> m_toUpdate = new HashSet<FileInfo>();
-        bool m_updateAll = false; //TODO: LOC: it's used by commented out code which needs to be revived
+        bool m_updateAll = false; //TODO: LOC: AUDIO: it's used by commented out code which needs to be revived
         public IDisposable SuppressUpdates()
         {
             return UpdateQueued.SuppressCallback();
@@ -168,7 +168,7 @@ namespace ConversationEditor
 
         private void ReallyUpdateUsage()
         {
-            //TODO: LOC: uncomment this
+            //TODO: LOC: AUDIO: uncomment this
             //if (m_updateAll)
             //{
             //    HashSet<FileInfo> usedAudioPaths = new HashSet<FileInfo>();

@@ -8,6 +8,9 @@ Installer builder project
 
 WORKFLOW:
 
+Textbox: Use mouse to select text then mouse up while not on box. Selection does not stop.
+Figure out a way to allow the user to specify the order of parameters when defining a node type (jonas wants an integer id)
+fix alphabetical sorting of parameters (Apparently it works for the node editor but not the node renderer)
 localized string that is missing localization saves as "Missing Localization"
 mousewheel scrollbar for project explorer
 minimise all button for project explorer

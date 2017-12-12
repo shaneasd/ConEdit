@@ -162,13 +162,13 @@ namespace ConversationEditor
                         redoActions.Add(result.Item2.Redo);
                     }
 
-                    //TODO: Do we want to treat audio parameters like strings in that they have a meaningful value
+                    //TODO: AUDIO: Do we want to treat audio parameters like strings in that they have a meaningful value
                     //      or like localized strings in that they are a key into another system?
                     //foreach (var p in node.Data.Parameters.OfType<IAudioParameter>())
                     //{
                     //    //No need to update audio usage as this will occur when the node is added/removed
                     //    var audio = m_generateAudio(this);
-                    //    var actions = p.SetValueAction(audio); //TODO: Investigate what happens to Audio parameter usage if you duplicate a node and then undo
+                    //    var actions = p.SetValueAction(audio); //TODO: AUDIO: Investigate what happens to Audio parameter usage if you duplicate a node and then undo
                     //    undoActions.Add(actions.Value.Undo);
                     //    redoActions.Add(actions.Value.Redo);
                     //}

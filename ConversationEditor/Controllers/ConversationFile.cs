@@ -47,7 +47,7 @@ namespace ConversationEditor
 
             foreach (var node in m_nodes)
             {
-                //TODO: Why are we automatically decorrupting specifically audio parameters?
+                //TODO: AUDIO: Why are we automatically decorrupting specifically audio parameters?
                 var audios = node.Data.Parameters.OfType<IAudioParameter>();
                 foreach (var aud in audios)
                     if (aud.Corrupted)
