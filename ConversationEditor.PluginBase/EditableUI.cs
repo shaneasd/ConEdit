@@ -244,38 +244,6 @@ namespace ConversationEditor
                 }
             }
 
-            #region Don't render parameters with default values
-            //private bool ShouldntRender<T>(Parameter p, Func<string, bool> shouldnt) where T : Parameter
-            //{
-            //    var t = p as T;
-            //    if (t != null)
-            //        return shouldnt(t.ValueAsString());
-            //    return false;
-            //}
-
-            //private bool ShouldntRender(EnumParameter p)
-            //{
-            //    if (p == null)
-            //        return false;
-            //    //return p.Value == p.Value
-            //    return false;
-            //}
-
-            //private bool ShouldRender(Parameter p)
-            //{
-            //    bool shouldntRender = ShouldntRender<AudioParameter>(p, s => true) ||
-            //                          ShouldntRender<BooleanParameter>(p, s => s == false.ToString()) ||
-            //                          ShouldntRender<DecimalParameter>(p, s => s == 0m.ToString()) ||
-            //                          ShouldntRender<DynamicEnumParameter>(p, s => s == "") ||
-            //                          ShouldntRender<LocalDynamicEnumParameter>(p, s => s == "") ||
-            //                          ShouldntRender(p as EnumParameter) ||
-            //                          ShouldntRender<IntegerParameter>(p, s => s == 0.ToString()) ||
-            //                          ShouldntRender<LocalizedStringParameter>(p, s => s == "") ||
-            //                          ShouldntRender<StringParameter>(p, s => s == "");
-            //    return !shouldntRender;
-            //}
-            #endregion
-
             private IEnumerable<IParameter> ParametersToRender
             {
                 get
