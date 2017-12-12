@@ -60,7 +60,8 @@ namespace ConversationEditor
 
         private void ReplaceAllClicked(object sender, EventArgs e)
         {
-            FindAndReplace();
+            foreach (var replaceAction in FindAll())
+                replaceAction.Execute();
             Close();
         }
 
@@ -101,15 +102,6 @@ namespace ConversationEditor
                 };
             output = r.Replace(input, m => cleverCase ? casedReplace(m.Value) : with);
             return output != input;
-        }
-
-        private void FindAndReplace()
-        {
-            do
-            {
-                m_currentItem.Current.Execute();
-            }
-            while (m_currentItem.MoveNext());
         }
 
         struct ReplaceAction
@@ -235,7 +227,6 @@ namespace ConversationEditor
             }
             else
             {
-                //TODO: if any search parameter changes reset m_currentItem so we don't get this message
                 MessageBox.Show("Find reached the starting point of the search");
                 m_currentItem = null;
             }
