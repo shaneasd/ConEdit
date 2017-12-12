@@ -231,7 +231,7 @@ namespace ConversationEditor
         }
         #endregion
 
-        private static OpenFileDialog MakeOpenFileDiaglog(string DefaultExt, string Filter, bool Multiselect, bool ValidateNames)
+        private static OpenFileDialog MakeOpenFileDialog(string DefaultExt, string Filter, bool Multiselect, bool ValidateNames)
         {
             var result = new OpenFileDialog();
             try
@@ -249,10 +249,10 @@ namespace ConversationEditor
             return result;
         }
 
-        OpenFileDialog m_ofdConversation = MakeOpenFileDiaglog(DefaultExt: "xml", Filter: "Conversations|*.xml", Multiselect: true, ValidateNames: false);
-        OpenFileDialog m_ofdDomain = MakeOpenFileDiaglog(DefaultExt: "dom", Filter: "Domains|*.dom|xml|*.xml", Multiselect: true, ValidateNames: false);
-        OpenFileDialog m_ofdLocalization = MakeOpenFileDiaglog(DefaultExt: "loc", Filter: "Localizations|*.loc|xml|*.xml", Multiselect: true, ValidateNames: false);
-        OpenFileDialog m_ofdAudio = MakeOpenFileDiaglog(DefaultExt: "ogg", Filter: "Ogg Vorbis|*.ogg|All files (*.*)|*.*", Multiselect: true, ValidateNames: false);
+        OpenFileDialog m_ofdConversation = MakeOpenFileDialog(DefaultExt: "xml", Filter: "Conversations|*.xml", Multiselect: true, ValidateNames: false);
+        OpenFileDialog m_ofdDomain = MakeOpenFileDialog(DefaultExt: "dom", Filter: "Domains|*.dom|xml|*.xml", Multiselect: true, ValidateNames: false);
+        OpenFileDialog m_ofdLocalization = MakeOpenFileDialog(DefaultExt: "loc", Filter: "Localizations|*.loc|xml|*.xml", Multiselect: true, ValidateNames: false);
+        OpenFileDialog m_ofdAudio = MakeOpenFileDialog(DefaultExt: "ogg", Filter: "Ogg Vorbis|*.ogg|All files (*.*)|*.*", Multiselect: true, ValidateNames: false);
 
         public SuppressibleAction m_suppressibleItemSelected;
         public event Action ItemSelected;
