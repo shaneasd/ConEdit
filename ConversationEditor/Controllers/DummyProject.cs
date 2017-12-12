@@ -112,6 +112,7 @@ namespace ConversationEditor
 
         public void Dispose()
         {
+            m_backend.Dispose();
         }
 
         Func<IParameter, string, Func<ParameterType, DynamicEnumParameter.Source>, IEnumerable<string>> IProject.AutoCompleteSuggestions { get { return null; } }
