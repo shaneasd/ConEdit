@@ -15,16 +15,9 @@ namespace ConversationEditor
     /// Implementers of this interface must be threadsafe.
     /// i.e. calls to MakeNode must be able to be safely made from worker threads potentially in parallel
     /// </summary>
-    public interface INodeFactory<TNode, in TNodeUI> where TNode : IConversationNode, IConfigurable
+    public interface INodeFactory
     {
-        TNode MakeNode(IConversationNodeData e, TNodeUI uiData);
-    }
-
-    /// <summary>
-    /// See threadsafety note on INodeFactory<TNode, in TNodeUI>
-    /// </summary>
-    public interface INodeFactory : INodeFactory<ConversationNode, NodeUIData>
-    {
+        ConversationNode MakeNode(IConversationNodeData e, NodeUIData uiData);
     }
 
     /// <summary>
