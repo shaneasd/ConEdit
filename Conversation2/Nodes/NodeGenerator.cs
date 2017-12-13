@@ -37,7 +37,7 @@ namespace Conversation
         /// <summary>
         /// Get all config on the parameter definition of the input parameter
         /// </summary>
-        ReadOnlyCollection<NodeData.ConfigData> GetParameterConfig(Id<Parameter> parameterId);
+        IReadOnlyList<NodeData.ConfigData> GetParameterConfig(Id<Parameter> parameterId);
         IConversationNodeData Generate(Id<NodeTemp> id, IEnumerable<NodeDataGeneratorParameterData> parameters, TDocument document);
     }
 
@@ -121,7 +121,7 @@ namespace Conversation
             return result.Values;
         }
 
-        public ReadOnlyCollection<NodeData.ConfigData> GetParameterConfig(Id<Parameter> parameterId)
+        public IReadOnlyList<NodeData.ConfigData> GetParameterConfig(Id<Parameter> parameterId)
         {
             var parameterDefinition = m_data.Parameters.Single(p => p.Id == parameterId);
             return parameterDefinition.Config;

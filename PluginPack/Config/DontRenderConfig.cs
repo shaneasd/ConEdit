@@ -26,7 +26,7 @@ namespace PluginPack
             return Enumerable.Empty<IParameter>();
         }
 
-        public static bool TryGet(ReadOnlyCollection<NodeData.ConfigData> config)
+        public static bool TryGet(IReadOnlyList<NodeData.ConfigData> config)
         {
             return config.Where(c => c.Type == ID).Any();
         }

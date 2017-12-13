@@ -47,11 +47,11 @@ namespace Conversation
 
         public struct ParameterData
         {
-            public ParameterData(string name, Id<Parameter> id, ParameterType type, ReadOnlyCollection<ConfigData> config) : this(name, id, type, config, null)
+            public ParameterData(string name, Id<Parameter> id, ParameterType type, IReadOnlyList<ConfigData> config) : this(name, id, type, config, null)
             {
             }
 
-            public ParameterData(string name, Id<Parameter> id, ParameterType type, ReadOnlyCollection<ConfigData> config, string def)
+            public ParameterData(string name, Id<Parameter> id, ParameterType type, IReadOnlyList<ConfigData> config, string def)
             {
                 if (config == null)
                     throw new ArgumentNullException(nameof(config));
@@ -71,7 +71,7 @@ namespace Conversation
             public string Name { get; }
             public Id<Parameter> Id { get; }
             public string Default { get; } //Can be null, string form of the default value
-            public ReadOnlyCollection<ConfigData> Config { get; }
+            public IReadOnlyList<ConfigData> Config { get; }
 
             public IParameter Make(Func<ParameterType, string, Id<Parameter>, string, IParameter> parameterFactory)
             {

@@ -325,7 +325,7 @@ namespace Tests.ConversationSerialization
                     return new GraphData(id, Guid, parameters);
                 }
 
-                public ReadOnlyCollection<NodeData.ConfigData> GetParameterConfig(Id<Parameter> parameterId)
+                public IReadOnlyList<NodeData.ConfigData> GetParameterConfig(Id<Parameter> parameterId)
                 {
                     throw new NotImplementedException();
                 }
