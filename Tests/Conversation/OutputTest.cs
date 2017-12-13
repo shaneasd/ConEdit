@@ -42,6 +42,14 @@ namespace Tests.Conversation
                 }
             }
 
+            public string Description
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
             public Id<NodeTemp> NodeId { get; }
 
             public Id<NodeTypeTemp> NodeTypeId

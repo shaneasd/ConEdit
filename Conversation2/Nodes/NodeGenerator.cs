@@ -32,6 +32,7 @@ namespace Conversation
     {
         string Name { get; }
         Id<NodeTypeTemp> Guid { get; }
+        string Description { get; }
         IReadOnlyList<NodeData.ConfigData> Config { get; }
 
         /// <summary>
@@ -142,6 +143,11 @@ namespace Conversation
         public Id<NodeTypeTemp> Guid
         {
             get { return m_data.Guid; }
+        }
+
+        public string Description
+        {
+            get { return m_data.Description; }
         }
 
         public IReadOnlyList<NodeData.ConfigData> Config

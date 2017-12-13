@@ -26,6 +26,11 @@ namespace Conversation
         string Name { get; }
 
         /// <summary>
+        /// Information provided in the definition of the node that explains its use
+        /// </summary>
+        string Description { get; }
+
+        /// <summary>
         /// Any configuration applied to this node as a consequence of configuration linked to the node declaration in the domain file
         /// </summary>
         IReadOnlyList<NodeData.ConfigData> Config { get; }

@@ -42,10 +42,11 @@ namespace Tests.ConversationEditor
 
         class DummyConversationNodeData : IConversationNodeData
         {
-            public DummyConversationNodeData(string name, Id<NodeTemp> nodeId, Id<NodeTypeTemp> nodeTypeId, IEnumerable<IParameter> parameters)
+            public DummyConversationNodeData(string name, Id<NodeTemp> nodeId, string description, Id<NodeTypeTemp> nodeTypeId, IEnumerable<IParameter> parameters)
             {
                 Name = name;
                 NodeId = nodeId;
+                Description = description;
                 NodeTypeId = nodeTypeId;
                 Parameters = parameters;
 
@@ -66,6 +67,8 @@ namespace Tests.ConversationEditor
             }
 
             public string Name { get; }
+
+            public string Description { get; }
 
             public Id<NodeTemp> NodeId { get; }
 
@@ -146,9 +149,9 @@ namespace Tests.ConversationEditor
 
         private static ConversationNode MakeNode()
         {
-            var data = new DummyConversationNodeData("test", Id<NodeTemp>.Parse("d3aa34e9-35e5-4aa5-bd7d-d9b98ab5a54e"), Id<NodeTypeTemp>.Parse("1edf950a-088a-432f-aee9-b67cf9b7f3c0"), Enumerable.Empty<IParameter>());
+            var data = new DummyConversationNodeData("test", Id<NodeTemp>.Parse("d3aa34e9-35e5-4aa5-bd7d-d9b98ab5a54e"), "description", Id<NodeTypeTemp>.Parse("1edf950a-088a-432f-aee9-b67cf9b7f3c0"), Enumerable.Empty<IParameter>());
 
-            return new ConversationNode(data, d => MakeNodeUI(d, (a,b) => null), d => null);
+            return new ConversationNode(data, d => MakeNodeUI(d, (a, b) => null), d => null);
         }
 
         [Test]

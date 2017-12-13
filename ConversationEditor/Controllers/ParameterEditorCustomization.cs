@@ -77,6 +77,8 @@ namespace ConversationEditor
             get { return "Customize parameter editors"; }
         }
 
+        public string Description => "";
+
         public IReadOnlyList<NodeData.ConfigData> Config
         {
             get { throw new NotImplementedException(); }

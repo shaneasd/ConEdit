@@ -109,11 +109,12 @@ namespace Conversation
             }
         }
 
-        public NodeData(string name, Guid? category, Id<NodeTypeTemp> guid, IReadOnlyList<ConnectorData> connectors, IReadOnlyList<ParameterData> parameters, IReadOnlyList<ConfigData> config)
+        public NodeData(string name, Guid? category, string description, Id<NodeTypeTemp> guid, IReadOnlyList<ConnectorData> connectors, IReadOnlyList<ParameterData> parameters, IReadOnlyList<ConfigData> config)
         {
             Name = name;
             Category = category;
             Guid = guid;
+            Description = description;
             Connectors = connectors;
             Parameters = parameters;
             Config = config;
@@ -122,6 +123,7 @@ namespace Conversation
         public string Name { get; }
         public Guid? Category { get; }
         public Id<NodeTypeTemp> Guid { get; }
+        public string Description { get; }
         public IReadOnlyList<ConnectorData> Connectors { get; }
         public IReadOnlyList<ParameterData> Parameters { get; }
         public IReadOnlyList<ConfigData> Config { get; }

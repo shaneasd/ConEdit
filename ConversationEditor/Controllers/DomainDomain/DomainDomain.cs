@@ -260,7 +260,8 @@ namespace ConversationEditor
 
             var category = new NodeData.ParameterData("Category", DomainIDs.NodeCategory, DomainIDs.CategoryType, NO_CONFIG, DomainIDs.CategoryNone.ToString());
             var nodeName = new NodeData.ParameterData("Name", DomainIDs.NodeName, BaseTypeString.ParameterType, NO_CONFIG);
-            AddNode(DomainIDs.NodeGuid, "Node", m_nodeMenu, MakeConfig('n', "808080"), NodeConnectors, new List<NodeData.ParameterData> { nodeName, category });
+            var nodeDescription = new NodeData.ParameterData("Description", DomainIDs.NodeDescription, BaseTypeString.ParameterType, NO_CONFIG);
+            AddNode(DomainIDs.NodeGuid, "Node", m_nodeMenu, MakeConfig('n', "808080"), NodeConnectors, new List<NodeData.ParameterData> { nodeName, category, nodeDescription });
 
             AddAutoCompleteNodes();
 
@@ -334,7 +335,9 @@ namespace ConversationEditor
 
         private void AddNode(Id<NodeTypeTemp> guid, string name, NodeCategory parent, List<NodeData.ConfigData> config, List<NodeData.ConnectorData> connectors, List<NodeData.ParameterData> parameters, Func<IParameter[], List<IParameter>> extraParameters)
         {
-            NodeData data = new NodeData(name, parent.Guid, guid, connectors, parameters, config);
+            //TODO: Add descriptions to nodes explaining how to use them
+            string description = "";
+            NodeData data = new NodeData(name, parent.Guid, description, guid, connectors, parameters, config);
             var generator = new NodeDataGenerator(data, m_typeSet, ConnectorDefinitions, DomainConnectionRules.Instance, extraParameters);
             parent.AddNode(generator);
             m_nodes[guid] = generator;
@@ -342,7 +345,9 @@ namespace ConversationEditor
 
         private void AddNode(Id<NodeTypeTemp> guid, string name, NodeCategory parent, List<NodeData.ConfigData> config, List<NodeData.ConnectorData> connectors, List<NodeData.ParameterData> parameters)
         {
-            NodeData data = new NodeData(name, parent.Guid, guid, connectors, parameters, config);
+            //TODO: Add descriptions to nodes explaining how to use them
+            string description = "";
+            NodeData data = new NodeData(name, parent.Guid, description, guid, connectors, parameters, config);
             var generator = new NodeDataGenerator(data, m_typeSet, ConnectorDefinitions, DomainConnectionRules.Instance, null);
             parent.AddNode(generator);
             m_nodes[guid] = generator;
@@ -509,9 +514,11 @@ namespace ConversationEditor
                 else if (node.NodeTypeId == DomainIDs.NodeGuid)
                 {
                     var nameParameter = node.Parameters.Single(p => p.Id == DomainIDs.NodeName) as IStringParameter;
-                    var name = nameParameter.Value;
+                    string name = nameParameter.Value;
                     var categoryParameter = node.Parameters.Single(p => p.Id == DomainIDs.NodeCategory) as IEnumParameter;
-                    var category = categoryParameter.Value;
+                    Guid category = categoryParameter.Value;
+                    var descriptionParameter = node.Parameters.Single(p => p.Id == DomainIDs.NodeDescription) as IStringParameter;
+                    string description = descriptionParameter.Value;
 
                     List<NodeData.ConnectorData> connectors = new List<NodeData.ConnectorData>();
                     foreach (var connectorNode in node.Connectors.Single(c => c.Definition.Id == DomainIDs.NodeOutputConnectorsDefinition.Id).Connections)
@@ -534,7 +541,7 @@ namespace ConversationEditor
                         config.Add(new NodeData.ConfigData(configNode.NodeTypeId, configNode.Parameters));
                     }
 
-                    nodeAction(new NodeData(name, category, Id<NodeTypeTemp>.FromGuid(node.NodeId.Guid), connectors, parameters, config));
+                    nodeAction(new NodeData(name, category, description, Id<NodeTypeTemp>.FromGuid(node.NodeId.Guid), connectors, parameters, config));
                 }
                 else if (node.NodeTypeId == DomainIDs.ConnectorDefinitionGuid)
                 {

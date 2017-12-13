@@ -130,7 +130,7 @@ namespace Tests.Conversation
                 new NodeData.ConfigData(Id<NodeTypeTemp>.Parse("6b0c0410-48cd-4807-9cbf-00d9b6d823ed"), new IParameter[0]),
             };
 
-            NodeData nodeData = new NodeData("node name", Guid.Parse("9c9fea17-13fb-4eb0-be9b-7ad44a580601"), Id<NodeTypeTemp>.Parse("7ddb7ef4-4ba5-49b5-96bc-e540851ddbf0"), connectors, parameters, config);
+            NodeData nodeData = new NodeData("node name", Guid.Parse("9c9fea17-13fb-4eb0-be9b-7ad44a580601"), "node decsription", Id<NodeTypeTemp>.Parse("7ddb7ef4-4ba5-49b5-96bc-e540851ddbf0"), connectors, parameters, config);
 
             TypeSet types = new TypeSet();
             types.AddOther(parameters[0].Type, "Parameter Type 1", (name, id, defaultValue, d) => new DummyParameter(name, id, defaultValue, parameters[0].Type));
@@ -141,6 +141,7 @@ namespace Tests.Conversation
             Assert.That(g.Config, Is.EquivalentTo(config));
             Assert.That(g.Name, Is.EqualTo(nodeData.Name));
             Assert.That(g.Guid, Is.EqualTo(nodeData.Guid));
+            //TODO: Should I test the description here
             Assert.That(g.GetParameterConfig(parameters[0].Id), Is.EqualTo(parameter0Config));
             Assert.That(g.GetParameterConfig(parameters[1].Id), Is.EqualTo(new List<NodeData.ConfigData>()));
 

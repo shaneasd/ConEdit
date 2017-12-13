@@ -248,6 +248,8 @@ namespace Tests.ConversationSerialization
                 }
             }
 
+            public string Description => "Description";
+
             public Id<NodeTemp> NodeId { get; }
 
             public Id<NodeTypeTemp> NodeTypeId { get; }
@@ -313,6 +315,14 @@ namespace Tests.ConversationSerialization
                 public Id<NodeTypeTemp> Guid { get; }
 
                 public string Name
+                {
+                    get
+                    {
+                        throw new NotImplementedException();
+                    }
+                }
+
+                public string Description
                 {
                     get
                     {

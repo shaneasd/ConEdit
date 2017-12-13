@@ -55,6 +55,8 @@ namespace ConversationEditor
             get { return "Customize node renderers"; }
         }
 
+        public string Description => "";
+
         public IReadOnlyList<NodeData.ConfigData> Config
         {
             get { throw new NotImplementedException(); }

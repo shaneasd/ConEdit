@@ -25,6 +25,8 @@ namespace Conversation
             get { return m_generator.Name; }
         }
 
+        public string Description => m_generator.Description;
+
         public IReadOnlyList<NodeData.ConfigData> Config
         {
             get { return m_generator.Config; }

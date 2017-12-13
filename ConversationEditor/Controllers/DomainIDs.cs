@@ -39,6 +39,7 @@ namespace ConversationEditor
         public static readonly Id<NodeTypeTemp> NodeGuid = Id<NodeTypeTemp>.Parse("36607dcf-bbd7-4563-851a-6473d2b408e1"); //Type id of node definition node
         public static readonly Id<Parameter> NodeName = Id<Parameter>.Parse("bb08a9ae-dc69-44e7-bef9-6c2fc8a615b2");
         public static readonly Id<Parameter> NodeCategory = Id<Parameter>.Parse("a4078e53-072c-4889-81bd-268f3a6a04f1"); //Parameter id of category parameter of node definition node
+        public static readonly Id<Parameter> NodeDescription = Id<Parameter>.Parse("1a9913b1-7a9b-4581-9f92-63698a593f02"); //Parameter id of description parameter of node definition node
 
         public static readonly Id<NodeTypeTemp> ConnectorDefinitionGuid = Id<NodeTypeTemp>.Parse("844bbe9e-726f-4020-bd8c-c252a34103a0");
         public static readonly Id<Parameter> ConnectorDefinitionName = Id<Parameter>.Parse("9b33ce7c-40c3-4000-a0cc-a65f5186c17c");

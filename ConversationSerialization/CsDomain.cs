@@ -201,7 +201,7 @@ namespace Conversation.Serialization
                     string name = BestName(b.Name, usedNames);
                     var parameterNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { name, "Node", "ID", "Process", "Connector", "GetConnector", "Connect", "Position", "GetParameter" };
                     List<NodeData.ParameterData> parameters = b.Parameters.Select(p => new NodeData.ParameterData(BestName(p.Name, parameterNames), p.Id, p.Type, ParameterConfig.AsReadOnly(), p.Default)).ToList();
-                    data.Nodes.Add(new NodeData(name, b.Category, b.Guid, b.Connectors, parameters, b.Config));
+                    data.Nodes.Add(new NodeData(name, b.Category, b.Description, b.Guid, b.Connectors, parameters, b.Config));
                 }
                 foreach (var b in a.NodeTypes)
                     data.NodeTypes.Add(new NodeTypeData(BestName(b.Name, usedNames), b.Guid, b.Parent));

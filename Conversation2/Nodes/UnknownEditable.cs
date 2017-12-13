@@ -36,6 +36,8 @@ namespace Conversation
             get { return "Unknown Node"; }
         }
 
+        public string Description => "This node is of a type unknown in the domain. Is a file missing from the domain or has a node definition been deleted?";
+
         public IReadOnlyList<NodeData.ConfigData> Config
         {
             get { return new ReadOnlyCollection<NodeData.ConfigData>(new NodeData.ConfigData[0]); }

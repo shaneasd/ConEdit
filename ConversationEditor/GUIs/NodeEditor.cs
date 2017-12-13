@@ -11,6 +11,7 @@ using System.IO;
 using System.Reflection;
 using Utilities;
 using System.Diagnostics;
+using Utilities.UI;
 
 namespace ConversationEditor
 {
@@ -31,6 +32,7 @@ namespace ConversationEditor
                 okButton.ForeColor = value.Foreground;
                 cancelButton.ForeColor = value.Foreground;
 
+                panel1.ColorScheme = value;
                 greyScrollBar1.ColorScheme = value;
             }
         }
@@ -78,22 +80,26 @@ namespace ConversationEditor
                 editor.Cancel += () => { oked = false; f.Close(); };
                 editor.Dock = DockStyle.Fill;
                 int maxHeight = editor.MaximumHeight + f.Height - f.ClientSize.Height;
+                int minHeight = editor.MinimumHeight + f.Height - f.ClientSize.Height;
                 f.MaximumSize = new Size(999999, maxHeight);
+                f.MinimumSize = new Size(0, minHeight);
                 editor.NeedsResize += () =>
                 {
                     bool resize = false;
-                    if (f.Size.Height == f.MaximumSize.Height)
+                    if (f.Size.Height == f.MaximumSize.Height || f.Size.Height == f.MinimumSize.Height)
                     {
                         resize = true;
                     }
-                    int m = editor.MaximumHeight + f.Height - f.ClientSize.Height;
-                    f.MaximumSize = new Size(999999, m);
+                    int max = editor.MaximumHeight + f.Height - f.ClientSize.Height;
+                    int min = editor.MinimumHeight + f.Height - f.ClientSize.Height;
+                    f.MaximumSize = new Size(999999, max);
+                    f.MinimumSize = new Size(0, min);
                     if (resize)
                     {
-                        f.Size = new Size(f.Size.Width, m);
+                        f.Size = new Size(f.Size.Width, max);
                     }
                 };
-                f.Size = new System.Drawing.Size(500, 478);
+                f.Size = new Size(500, 478);
                 f.Controls.Add(editor);
                 f.ShowDialog();
 
@@ -111,6 +117,7 @@ namespace ConversationEditor
 
         public string Title { get; private set; }
 
+        private MyTextBox m_descriptionBox;
 
         protected override void WndProc(ref Message m)
         {
@@ -135,6 +142,22 @@ namespace ConversationEditor
             this.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             flowLayoutPanel2.SuspendLayout();
+
+            if (!string.IsNullOrEmpty(data.Description))
+            {
+                m_descriptionBox = new MyTextBox(this.panel1, () => new RectangleF(panel1.Location, panel1.Size), MyTextBox.InputFormEnum.None, null);
+                m_descriptionBox.Text = data.Description;
+                MyTextBox.SetupCallbacks(panel1, m_descriptionBox);
+                panel1.Size = m_descriptionBox.RequestedArea.ToSize();
+                panel1.SizeChanged += (object sender, EventArgs e) =>
+                {
+                    panel1.Size = m_descriptionBox.RequestedArea.ToSize();
+                };
+            }
+            else
+            {
+                panel1.Height = 0;
+            }
 
             //Make the panels really tall so they can visibly contain all the parameter editors.
             //Note the whole control won't be visible as we'll scroll them by shifting them in Y.
@@ -173,16 +196,14 @@ namespace ConversationEditor
 
             if (flowLayoutPanel1.Controls.Count > 0)
             {
-                flowLayoutPanel2.Controls[0].LocationChanged += (a, b) =>
+                EventHandler SizeChanged = (a, b) =>
                 {
                     NeedsResize.Execute();
                     DoResize();
                 };
-                flowLayoutPanel2.Controls[0].SizeChanged += (a, b) =>
-                {
-                    NeedsResize.Execute();
-                    DoResize();
-                };
+                flowLayoutPanel2.Controls[0].LocationChanged += SizeChanged;
+                flowLayoutPanel2.Controls[0].SizeChanged += SizeChanged;
+                panel1.SizeChanged += SizeChanged;
             };
 
             this.ResumeLayout();
@@ -210,9 +231,9 @@ namespace ConversationEditor
         {
             if (flowLayoutPanel1.Controls.Count > 0)
             {
-                greyScrollBar1.PercentageCovered = Util.Clamp((float)WindowSize / TotalSize, 0.0f, 1.0f);
+                greyScrollBar1.PercentageCovered = Util.Clamp((float)WindowSize / TotalParametersSize, 0.0f, 1.0f);
                 greyScrollBar1.Minimum = 0;
-                greyScrollBar1.Maximum = Math.Max(0, TotalSize - WindowSize);
+                greyScrollBar1.Maximum = Math.Max(0, TotalParametersSize - WindowSize);
                 greyScrollBar1.Scrolled += GreyScrollBar1_Scrolled;
             }
             else
@@ -229,14 +250,24 @@ namespace ConversationEditor
 
         private void UpdateScrollbarVisibility()
         {
-            greyScrollBar1.Visible = greyScrollBar1.MinRenderHeight <= greyScrollBar1.Height;
+            //greyScrollBar1.Visible = greyScrollBar1.MinRenderHeight <= greyScrollBar1.Height;
+            //greyScrollBar1.Visible = true;
         }
 
         private int MaximumHeight
         {
             get
             {
-                return TotalSize + 47;
+                return TotalSize + 32;
+            }
+        }
+
+        private int MinimumHeight
+        {
+            get
+            {
+                int bottomBuffer = 33;
+                return panel1.Height + greyScrollBar1.MinRenderHeight + bottomBuffer;
             }
         }
 
@@ -252,7 +283,15 @@ namespace ConversationEditor
             flowLayoutPanel2.Top = pos + 3;
         }
 
-        int TotalSize { get { return flowLayoutPanel2.Controls[0]?.Bottom ?? 0; } }
+        int TotalSize
+        {
+            get
+            {
+                Point location = PointToClient(flowLayoutPanel2.PointToScreen(Point.Empty));
+                return location.Y + TotalParametersSize;
+            }
+        }
+        int TotalParametersSize => flowLayoutPanel2.Controls[0]?.Bottom ?? 0;
         int WindowSize { get { return splitContainer1.Panel2.Height; } }
 
         public Label AddParameter(IParameter parameter, IParameterEditor editor)
@@ -296,6 +335,7 @@ namespace ConversationEditor
             return label;
         }
 
+        //TODO: Should this be public?
         List<Tuple<IParameterEditor, IParameter>> m_parameterEditors = new List<Tuple<IParameterEditor, IParameter>>();
 
         public event Action Cancel;
