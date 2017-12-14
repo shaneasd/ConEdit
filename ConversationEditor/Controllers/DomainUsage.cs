@@ -15,9 +15,9 @@ namespace ConversationEditor
 
         public class Usage
         {
-            public readonly TNode Node;
-            public readonly IConversationEditorControlData<TNode, TTransition> File;
-            public readonly string Description;
+            public TNode Node { get; }
+            public IConversationEditorControlData<TNode, TTransition> File { get; }
+            public string Description { get; }
             public Usage(TNode node, IConversationEditorControlData<TNode, TTransition> file, string description)
             {
                 Node = node;

@@ -85,9 +85,9 @@ namespace ConversationEditor
             public readonly Id<Project.TData.LocalizerSetData> LastLocalization;
         }
 
-        public readonly ISerializer<TConversationData> ConversationSerializer;
-        public readonly INodeFactory ConversationNodeFactory;
-        public readonly INodeFactory DomainNodeFactory;
+        public ISerializer<TConversationData> ConversationSerializer { get; }
+        public INodeFactory ConversationNodeFactory { get; }
+        public INodeFactory DomainNodeFactory { get; }
 
         ISerializer<TData> m_serializer;
         ConversationSerializerDeserializerFactory m_conversationSerializerFactory;

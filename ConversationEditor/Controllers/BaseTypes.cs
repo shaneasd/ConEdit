@@ -294,8 +294,8 @@ namespace ConversationEditor
 
     public abstract class BaseType
     {
-        public readonly Id<NodeTypeTemp> NodeType;           //Type ID of the node which defines a new subtype of this type
-        public readonly Id<NodeTypeTemp> ParameterNodeType;  //Type ID of the node which defines a new parameter of this type
+        public Id<NodeTypeTemp> NodeType { get; }           //Type ID of the node which defines a new subtype of this type
+        public Id<NodeTypeTemp> ParameterNodeType { get; }  //Type ID of the node which defines a new parameter of this type
 
         protected BaseType(Id<NodeTypeTemp> parameterNodeType, Id<NodeTypeTemp> nodeType = null)
         {

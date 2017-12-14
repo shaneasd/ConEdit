@@ -277,7 +277,7 @@ namespace ConversationEditor
                     ResizeState = resizeState;
                     m_selectedTransition = selectedTransition;
                 }
-                public readonly ResizeState? ResizeState;
+                public ResizeState? ResizeState { get; }
 
                 public override bool If(Action<Nothing> n)
                 {
@@ -348,10 +348,10 @@ namespace ConversationEditor
                     m_group = group;
                     UpdateNodesInGroup = () => updateNodesInGroup(group);
                 }
-                public readonly ResizeState ResizeState;
+                public ResizeState ResizeState { get; }
                 public readonly RectangleF m_resizeOriginalArea;
                 public readonly NodeGroup m_group;
-                public readonly Action UpdateNodesInGroup;
+                public Action UpdateNodesInGroup { get; }
 
                 public override void LeftMouseUp(Point client, Point screen)
                 {

@@ -20,8 +20,8 @@ namespace ConversationEditor
 {
     public partial class ProjectExplorer : UserControl
     {
-        public static Bitmap ProjectIcon;
-        public static Bitmap FolderIcon;
+        public static Bitmap ProjectIcon { get; }
+        public static Bitmap FolderIcon { get; }
 
         Dictionary<DirectoryInfoHashed, ContainerItem> m_mapping = new Dictionary<DirectoryInfoHashed, ContainerItem>(10000);
         private ContextMenuStrip m_contextMenu;

@@ -7,11 +7,11 @@ namespace ConversationEditor
 {
     public class FileFilterConfig : IConfigParameter
     {
-        public ConfigParameterBool Folders = new ConfigParameterBool("Folders", true);
-        public ConfigParameterBool Domains = new ConfigParameterBool("Domains", true);
-        public ConfigParameterBool Audio = new ConfigParameterBool("Audio", true);
-        public ConfigParameterBool Conversations = new ConfigParameterBool("Conversations", true);
-        public ConfigParameterBool Localizations = new ConfigParameterBool("Localizations", true);
+        public ConfigParameterBool Folders { get; } = new ConfigParameterBool("Folders", true);
+        public ConfigParameterBool Domains { get; } = new ConfigParameterBool("Domains", true);
+        public ConfigParameterBool Audio { get; } = new ConfigParameterBool("Audio", true);
+        public ConfigParameterBool Conversations { get; } = new ConfigParameterBool("Conversations", true);
+        public ConfigParameterBool Localizations { get; } = new ConfigParameterBool("Localizations", true);
 
         public FileFilterConfig()
         {
