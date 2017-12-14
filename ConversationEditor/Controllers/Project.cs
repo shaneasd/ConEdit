@@ -362,7 +362,7 @@ namespace ConversationEditor
             }
         }
 
-        public void RefreshCallbacks<TReal, TInterface>(IProjectElementList<TReal, TInterface> elements, List<Action> actionsOnRefreshCallbacks)
+        private void RefreshCallbacks<TReal, TInterface>(IProjectElementList<TReal, TInterface> elements, List<Action> actionsOnRefreshCallbacks)
             where TReal : TInterface
             where TInterface : ISaveableFileProvider, IInProject
         {
