@@ -1181,6 +1181,7 @@ namespace ConversationEditor
                 UpdateSelectedLocalizer.Dispose();
                 m_updateScrollbar.Dispose();
                 m_suppressibleItemSelected.Dispose();
+                m_filterTextBox.Dispose();
             }
 
             if (disposing && (components != null))
