@@ -270,7 +270,6 @@ namespace ConversationEditor
                         return ParallelEnumerable.Select(files.AsParallel(), file => ConversationFile.Load(file.Item1, file.Item2, ConversationNodeFactory, m_conversationSerializerFactory(m_conversationDataSource), audio, getSource, m_audioProvider, backend));
                     };
                     Func<DirectoryInfo, ConversationFile> makeEmpty = path => ConversationFile.CreateEmpty(path, this, ConversationNodeFactory, audio, getSource, m_audioProvider, backend, Origin);
-                    Func<Id<FileInProject>, MissingConversationFile> makeMissing = file => new MissingConversationFile(file, GetFilePath(file));
                     m_conversations = new ProjectElementList<ConversationFile, MissingConversationFile, IConversationFile>(GetFilePath, s => CheckFolder(s, Origin), loadConversations, makeEmpty);
                     m_conversations.Load(conversationIds);
                 }

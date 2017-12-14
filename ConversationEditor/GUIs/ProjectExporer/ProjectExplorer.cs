@@ -587,7 +587,6 @@ namespace ConversationEditor
 
         private bool RenameItem(FileSystemObject item, string to)
         {
-            string from = item.FullName;
             if (m_root.RenameElement(item, to, ShouldReplaceFile))
             {
                 InvalidateImage();
