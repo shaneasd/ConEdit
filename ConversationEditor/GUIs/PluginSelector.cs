@@ -177,20 +177,20 @@ namespace ConversationEditor
             g.DrawString(m_stringSelector(item.Element), Font, scheme.ForegroundBrush, SPACING + BOX_SIZE + SPACING, itemBox.Y + (BOX_SIZE - textSize.Height) / 2);
         }
 
-        public void UpdateScrollBar(GreyScrollBar scrollbar, int height)
+        public void UpdateScrollBar(GreyScrollBar scrollBar, int height)
         {
             if (m_items.Any())
             {
                 float totalHeight = ItemBox(m_items.Count - 1, 0).Bottom;
-                scrollbar.PercentageCovered = (height / totalHeight).Clamp(0, 1);
-                scrollbar.Maximum = (int)Math.Ceiling((totalHeight - height) / PerItemHeight).Clamp(0, int.MaxValue);
-                scrollbar.LargeChange = 1 / scrollbar.Maximum;
-                scrollbar.SmallChange = 1 / scrollbar.Maximum;
+                scrollBar.PercentageCovered = (height / totalHeight).Clamp(0, 1);
+                scrollBar.Maximum = (int)Math.Ceiling((totalHeight - height) / PerItemHeight).Clamp(0, int.MaxValue);
+                scrollBar.LargeChange = 1 / scrollBar.Maximum;
+                scrollBar.SmallChange = 1 / scrollBar.Maximum;
             }
             else
             {
-                scrollbar.Maximum = 0;
-                scrollbar.PercentageCovered = 1;
+                scrollBar.Maximum = 0;
+                scrollBar.PercentageCovered = 1;
             }
         }
 

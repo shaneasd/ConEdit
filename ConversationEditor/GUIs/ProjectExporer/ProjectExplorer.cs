@@ -169,18 +169,18 @@ namespace ConversationEditor
         {
             public class TypesSet
             {
-                public NotifierProperty<bool> Conversations = new NotifierProperty<bool>(true);
-                public NotifierProperty<bool> Domains = new NotifierProperty<bool>(true);
-                public NotifierProperty<bool> Localizations = new NotifierProperty<bool>(true);
-                public NotifierProperty<bool> Audio = new NotifierProperty<bool>(true);
-                public NotifierProperty<bool> EmptyFolders = new NotifierProperty<bool>(true);
+                public NotifierProperty<bool> Conversations { get; } = new NotifierProperty<bool>(true);
+                public NotifierProperty<bool> Domains { get; } = new NotifierProperty<bool>(true);
+                public NotifierProperty<bool> Localizations { get; } = new NotifierProperty<bool>(true);
+                public NotifierProperty<bool> Audio { get; } = new NotifierProperty<bool>(true);
+                public NotifierProperty<bool> EmptyFolders { get; } = new NotifierProperty<bool>(true);
             }
             public TypesSet Types = new TypesSet();
-            public NotifierProperty<string> Text = new NotifierProperty<string>("");
+            public NotifierProperty<string> Text { get; } = new NotifierProperty<string>("");
 
             private VisibilityFilter() { }
 
-            public static VisibilityFilter Everything = new VisibilityFilter();
+            public static VisibilityFilter Everything { get; } = new VisibilityFilter();
             public static VisibilityFilter Just(bool Conversations = false, bool Domains = false, bool Localizations = false, bool Audio = false, bool EmptyFolders = false)
             {
                 VisibilityFilter result = new VisibilityFilter();

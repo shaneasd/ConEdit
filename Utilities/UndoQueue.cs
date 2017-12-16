@@ -70,8 +70,7 @@ namespace Utilities
             m_name = name;
         }
 
-
-        public static PassiveLogger m_logger = new PassiveLogger();
+        public static PassiveLogger m_logger { get; } = new PassiveLogger();
 
         /// <summary>
         /// This should be on the top of the undo queue for the file to be considered unmodified

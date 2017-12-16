@@ -14,8 +14,8 @@ namespace ConversationEditor
         public static Dictionary<ParameterType, string> BasicTypeMap()
         {
             var typeMap = new Dictionary<ParameterType, string>();
-            typeMap[BaseTypeInteger.PARAMETER_TYPE] = "Int32";
-            typeMap[BaseTypeDecimal.PARAMETER_TYPE] = "Decimal";
+            typeMap[BaseTypeInteger.ParameterType] = "Int32";
+            typeMap[BaseTypeDecimal.ParameterType] = "Decimal";
             typeMap[StringParameter.ParameterType] = "String";
             typeMap[BaseTypeLocalizedString.ParameterType] = "RuntimeConversation.LocalizedString"; //TODO: LOC: Doesn't properly deal with user defined localized strings
             typeMap[BooleanParameter.ParameterType] = "Boolean";

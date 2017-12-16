@@ -38,7 +38,7 @@ namespace ConversationEditor
         /// <param name="audioProvider"></param>
         public ConversationFile(Id<FileInProject> id, IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, DocumentPath file, ISerializer<TData> serializer,
             ReadOnlyCollection<LoadError> errors, INodeFactory nodeFactory, GenerateAudio generateAudio,
-            Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.Backend backend)
+            Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.BackEnd backend)
             : base(nodes, groups, errors, nodeFactory, generateAudio, getDocumentSource, audioProvider)
         {
             Id = id;
@@ -79,7 +79,7 @@ namespace ConversationEditor
         }
 
         public static ConversationFile CreateEmpty(DirectoryInfo directory, Project project, INodeFactory nodeFactory,
-            GenerateAudio generateAudio, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.Backend backend, DirectoryInfo origin)
+            GenerateAudio generateAudio, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.BackEnd backend, DirectoryInfo origin)
         {
             var file = GetAvailableConversationPath(directory, project.Elements);
 
@@ -103,7 +103,7 @@ namespace ConversationEditor
         }
 
         public static Either<ConversationFile, MissingConversationFile> Load(Id<FileInProject> file, DocumentPath path, INodeFactory nodeFactory, ISerializerDeserializer<TData> serializer, GenerateAudio generateAudio,
-            Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.Backend backend)
+            Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.BackEnd backend)
         {
             try
             {
@@ -127,12 +127,12 @@ namespace ConversationEditor
                 Console.Out.WriteLine(e.InnerException.StackTrace);
 
                 MessageBox.Show("File: " + path.AbsolutePath + " could not be accessed");
-                return new MissingConversationFile(file, path);
+                return new MissingConversationFile(file, path); //TODO: Generates CA2000 because of the implicit conversion to Either<,>
             }
             catch (DeserializerVersionMismatchException e)
             {
                 MessageBox.Show("File: " + path.AbsolutePath + " could not be processed. " + e.Message);
-                return new MissingConversationFile(file, path);
+                return new MissingConversationFile(file, path); //TODO: Generates CA2000 because of the implicit conversion to Either<,>
             }
         }
 

@@ -14,7 +14,7 @@ namespace ConversationEditor
 
         public string Localize(Id<LocalizedText> id)
         {
-            return LocalizationEngine.MISSING_LOCALIZATION;
+            return LocalizationEngine.MissingLocalizationString;
         }
 
         public Utilities.SimpleUndoPair SetLocalizationAction(Id<LocalizedText> guid, string p)

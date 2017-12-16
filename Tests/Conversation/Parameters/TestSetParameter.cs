@@ -31,14 +31,14 @@ namespace Tests.Conversation.Parameters
             Assert.That(p.Corrupted, Is.True);
             Assert.That(p.ValueAsString(), Is.EqualTo(string1));
 
-            var value1 = new ReadonlySet<Guid>(p.Options.First());
+            var value1 = new ReadOnlySet<Guid>(p.Options.First());
             var action1 = p.SetValueAction(value1);
             Assert.That(action1, Is.Not.Null);
             action1.Value.Redo();
             Assert.That(p.SetValueAction(value1), Is.Null);
             CheckValue(p, value1);
 
-            var value2 = new ReadonlySet<Guid>(p.Options.First(), p.Options.ElementAt(1));
+            var value2 = new ReadOnlySet<Guid>(p.Options.First(), p.Options.ElementAt(1));
             var action2 = p.SetValueAction(value2);
             Assert.That(action2, Is.Not.Null);
             action2.Value.Redo();
@@ -51,10 +51,10 @@ namespace Tests.Conversation.Parameters
 
             var string2 = p.Options.ElementAt(0) + "+" + p.Options.ElementAt(1);
             p.TryDeserialiseValue(string2);
-            CheckValue(p, new ReadonlySet<Guid>(p.Options.ElementAt(0), p.Options.ElementAt(1)));
+            CheckValue(p, new ReadOnlySet<Guid>(p.Options.ElementAt(0), p.Options.ElementAt(1)));
         }
 
-        private static void CheckValue(SetParameter p, ReadonlySet<Guid> value)
+        private static void CheckValue(SetParameter p, ReadOnlySet<Guid> value)
         {
             Assert.That(p.Corrupted, Is.False);
             Assert.That(p.Value, Is.EqualTo(value));
@@ -71,7 +71,7 @@ namespace Tests.Conversation.Parameters
             SetParameter p = new SetParameter(name, id, enumeration, null);
             CheckConstruction(enumeration, name, id, p);
 
-            CheckValue(p, new ReadonlySet<Guid>(enumeration.DefaultValue.Transformed(a => { throw new NotImplementedException(); }, a => a)));
+            CheckValue(p, new ReadOnlySet<Guid>(enumeration.DefaultValue.Transformed(a => { throw new NotImplementedException(); }, a => a)));
 
             CheckUsage(p);
         }
@@ -116,7 +116,7 @@ namespace Tests.Conversation.Parameters
             CheckConstruction(enumeration, name, id, p);
 
             Assert.That(p.Corrupted, Is.False);
-            CheckValue(p, new ReadonlySet<Guid>());
+            CheckValue(p, new ReadOnlySet<Guid>());
             CheckUsage(p);
         }
 
@@ -126,7 +126,7 @@ namespace Tests.Conversation.Parameters
             var enumeration = TestEnumParameter.MockEnumeration1.Instance;
             string name = "a";
             Id<Parameter> id = Id<Parameter>.Parse("0F10DB06-12E8-4FAC-9F76-53BE72D87EC5");
-            ReadonlySet<Guid> def = new ReadonlySet<Guid>(enumeration.Options.ElementAt(0));
+            ReadOnlySet<Guid> def = new ReadOnlySet<Guid>(enumeration.Options.ElementAt(0));
             SetParameter p = new SetParameter(name, id, enumeration, string.Join("+", def.Select(a => a.ToString())));
             CheckConstruction(enumeration, name, id, p);
 
@@ -141,7 +141,7 @@ namespace Tests.Conversation.Parameters
             var enumeration = TestEnumParameter.MockEnumeration1.Instance;
             string name = "a";
             Id<Parameter> id = Id<Parameter>.Parse("0F10DB06-12E8-4FAC-9F76-53BE72D87EC5");
-            ReadonlySet<Guid> def = new ReadonlySet<Guid>(enumeration.Options.ElementAt(0), enumeration.Options.ElementAt(3), enumeration.Options.ElementAt(1));
+            ReadOnlySet<Guid> def = new ReadOnlySet<Guid>(enumeration.Options.ElementAt(0), enumeration.Options.ElementAt(3), enumeration.Options.ElementAt(1));
             SetParameter p = new SetParameter(name, id, enumeration, string.Join("+", def.Select(a => a.ToString())));
             CheckConstruction(enumeration, name, id, p);
 

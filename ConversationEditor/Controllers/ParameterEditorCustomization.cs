@@ -21,7 +21,7 @@ namespace ConversationEditor
                 return DefaultEnumEditorFactory.StaticId;
             else if (willEdit.IsInteger(type))
                 return DefaultIntegerEditorFactory.StaticId;
-            else if (type == BaseTypeBoolean.PARAMETER_TYPE)
+            else if (type == BaseTypeBoolean.ParameterType)
                 return DefaultBooleanEditorFactory.StaticId;
             else if (type == BaseTypeString.ParameterType)
                 return DefaultStringEditorFactory.StaticId;

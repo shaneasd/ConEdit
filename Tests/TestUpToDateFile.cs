@@ -33,7 +33,7 @@ namespace Tests
                 saveto(file);
             }
 
-            UpToDateFile.Backend backend = new UpToDateFile.Backend();
+            UpToDateFile.BackEnd backend = new UpToDateFile.BackEnd();
 
             using (UpToDateFile f = new UpToDateFile(data, new FileInfo("test.txt"), saveto, backend))
             {

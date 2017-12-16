@@ -173,7 +173,7 @@ namespace Tests.ConversationEditor
             states.Add(new List<ConversationNode>());
 
             Random r = new Random(0);
-            UpToDateFile.Backend backend = new UpToDateFile.Backend();
+            UpToDateFile.BackEnd backend = new UpToDateFile.BackEnd();
             var id = Id<FileInProject>.Parse("6a1bd06a-0028-4099-a375-475f1a5320db");
             using (ConversationFile conversationFile = new ConversationFile(id, nodes, groups, rawData, file, serializer, errors, nodeFactory, generateAudio, getDocumentSource, audioProvider, backend))
             {

@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 
 namespace Conversation
 {
-    public interface IConversationNodeDataReadonly
+    public interface IConversationNodeDataReadOnly
     {
         /// <summary>
         /// ID of the actual node instance in the graph
@@ -36,7 +36,7 @@ namespace Conversation
         IReadOnlyList<NodeData.ConfigData> Config { get; }
     }
 
-    public interface IConversationNodeData : IConversationNodeDataReadonly
+    public interface IConversationNodeData : IConversationNodeDataReadOnly
     {
         /// <summary>
         /// Parameters of the node that define the data it contains

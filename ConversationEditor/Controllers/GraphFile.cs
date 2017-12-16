@@ -424,7 +424,7 @@ namespace ConversationEditor
             UndoableFile.Change(action);
         }
 
-        public void BringToFront(IReadonlyNodeSet Selected)
+        public void BringToFront(IReadOnlyNodeSet Selected)
         {
             m_nodesOrdered.BringToFront(Selected.Nodes.Select(GetNode));
             m_groupsOrdered.BringToFront(Selected.Groups);

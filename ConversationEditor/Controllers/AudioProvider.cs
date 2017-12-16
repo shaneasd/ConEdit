@@ -34,11 +34,6 @@ namespace ConversationEditor
         {
             return new Disposable();
         }
-
-        public void Rename(string from, string to)
-        {
-            throw new NotImplementedException();
-        }
     }
 
     public class AudioProvider : IAudioLibrary
@@ -73,7 +68,7 @@ namespace ConversationEditor
                 get { return "Default"; }
             }
         }
-        public static IAudioProviderCustomization DefaultCustomization = new TDefaultCustomization();
+        public static IAudioProviderCustomization DefaultCustomization { get; } = new TDefaultCustomization();
 
         ProjectElementList<AudioFile, MissingAudioFile, IAudioFile> m_audioFiles;
         private IProject m_project;

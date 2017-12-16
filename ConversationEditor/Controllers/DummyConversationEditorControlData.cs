@@ -51,7 +51,7 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public void BringToFront(IReadonlyNodeSet Selected)
+        public void BringToFront(IReadOnlyNodeSet Selected)
         {
         }
 

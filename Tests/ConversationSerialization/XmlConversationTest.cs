@@ -279,7 +279,7 @@ namespace Tests.ConversationSerialization
             {
                 get
                 {
-                    throw new NotImplementedException();
+                    throw new NotSupportedException();
                 }
             }
 
@@ -287,7 +287,7 @@ namespace Tests.ConversationSerialization
             {
                 get
                 {
-                    throw new NotImplementedException();
+                    throw new NotSupportedException();
                 }
             }
 
@@ -456,7 +456,7 @@ namespace Tests.ConversationSerialization
             nodes[1].EnumParameter.SetValueAction(referenceEnumeration.Options.ElementAt(0)).Value.Redo();
             nodes[2].IntegerParameter.SetValueAction(354).Value.Redo();
             nodes[2].LocalizedStringParameter.SetValueAction(Id<LocalizedText>.Parse("fd9b5426-a296-43bc-84a8-c633b9e88d3c")).Value.Redo();
-            nodes[2].SetParameter.SetValueAction(new ReadonlySet<Guid>(referenceEnumeration.Options)).Value.Redo();
+            nodes[2].SetParameter.SetValueAction(new ReadOnlySet<Guid>(referenceEnumeration.Options)).Value.Redo();
             nodes[2].StringParameter.SetValueAction("lhgalkhalsd").Value.Redo();
             nodes[3].StringParameter.SetValueAction("ljlkdskd").Value.Redo();
             nodes[3].StringParameter2.SetValueAction("lkjgaslvgokvagaviua").Value.Redo();

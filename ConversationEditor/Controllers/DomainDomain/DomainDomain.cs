@@ -17,12 +17,12 @@ namespace ConversationEditor
     {
         TypeSet m_typeSet;
 
-        public static readonly ParameterType IntegerSetGuid = ParameterType.Parse("07ca7287-20c0-4ba5-ae28-e17ea97554d6");
-        public static readonly ParameterType DecimalSetGuid = ParameterType.Parse("0c1e5fa8-97ff-450b-a01c-5d09ea6dbd78");
-        public static readonly ParameterType EnumSetGuid = ParameterType.Parse("e7526632-95ca-4981-8b45-56cea272ddd0");
-        public static readonly ParameterType DynamicEnumSetGuid = ParameterType.Parse("b3278dc3-6c2b-471a-a1c9-de39691af302");
-        public static readonly ParameterType LocalDynamicEnumSetGuid = ParameterType.Parse("15fb7660-0c2e-45b3-979f-3bdf17f60fc9");
-        public static readonly ParameterType LocalizedStringSetGuid = ParameterType.Parse("6df91111-53e0-4ae1-976f-9aae951a30bb");
+        public static ParameterType IntegerSetGuid { get; } = ParameterType.Parse("07ca7287-20c0-4ba5-ae28-e17ea97554d6");
+        public static ParameterType DecimalSetGuid { get; } = ParameterType.Parse("0c1e5fa8-97ff-450b-a01c-5d09ea6dbd78");
+        public static ParameterType EnumSetGuid { get; } = ParameterType.Parse("e7526632-95ca-4981-8b45-56cea272ddd0");
+        public static ParameterType DynamicEnumSetGuid { get; } = ParameterType.Parse("b3278dc3-6c2b-471a-a1c9-de39691af302");
+        public static ParameterType LocalDynamicEnumSetGuid { get; } = ParameterType.Parse("15fb7660-0c2e-45b3-979f-3bdf17f60fc9");
+        public static ParameterType LocalizedStringSetGuid { get; } = ParameterType.Parse("6df91111-53e0-4ae1-976f-9aae951a30bb");
 
         Id<TConnector> parameterDefinitionConnector1 = Id<TConnector>.Parse("1fd8a64d-271e-42b8-bfd8-85e5174bbf9d");
         Id<TConnector> parameterConfigConnectorID = Id<TConnector>.Parse("3e914fe1-c59c-4494-b53a-da135426ff72");
@@ -110,16 +110,16 @@ namespace ConversationEditor
             List<NodeData.ParameterData> integerParameters = new List<NodeData.ParameterData>()
             {
                 new NodeData.ParameterData("Name", DomainIDs.IntegerName, BaseTypeString.ParameterType, NO_CONFIG),
-                new NodeData.ParameterData("Max", DomainIDs.IntegerMax, BaseTypeInteger.PARAMETER_TYPE, NO_CONFIG),
-                new NodeData.ParameterData("Min", DomainIDs.IntegerMin, BaseTypeInteger.PARAMETER_TYPE, NO_CONFIG),
+                new NodeData.ParameterData("Max", DomainIDs.IntegerMax, BaseTypeInteger.ParameterType, NO_CONFIG),
+                new NodeData.ParameterData("Min", DomainIDs.IntegerMin, BaseTypeInteger.ParameterType, NO_CONFIG),
             };
             AddNode(BaseType.Integer.NodeType, "Integer", m_nodeHeirarchy, MakeConfig('t', "808080"), NO_CONNECTORS, integerParameters);
 
             List<NodeData.ParameterData> decimalParameters = new List<NodeData.ParameterData>()
             {
                 new NodeData.ParameterData("Name", DomainIDs.DecimalName, BaseTypeString.ParameterType, NO_CONFIG),
-                new NodeData.ParameterData("Max", DomainIDs.DecimalMax, BaseTypeDecimal.PARAMETER_TYPE, NO_CONFIG),
-                new NodeData.ParameterData("Min", DomainIDs.DecimalMin, BaseTypeDecimal.PARAMETER_TYPE, NO_CONFIG),
+                new NodeData.ParameterData("Max", DomainIDs.DecimalMax, BaseTypeDecimal.ParameterType, NO_CONFIG),
+                new NodeData.ParameterData("Min", DomainIDs.DecimalMin, BaseTypeDecimal.ParameterType, NO_CONFIG),
             };
             AddNode(BaseType.Decimal.NodeType, "Decimal", m_nodeHeirarchy, MakeConfig('d', "808080"), NO_CONNECTORS, decimalParameters);
 
@@ -201,20 +201,20 @@ namespace ConversationEditor
                 NodeData.ConnectorData parameterConfigConnector = new NodeData.ConnectorData(parameterConfigConnectorID, DomainIDs.ParameterConfigConnectorDefinition.Id, new List<Parameter>());
 
                 NodeData.ParameterData nameParameter = new NodeData.ParameterData("Name", DomainIDs.ParameterName, BaseTypeString.ParameterType, NO_CONFIG);
-                NodeData.ParameterData integerTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, IntegerSetGuid, NO_CONFIG, BaseTypeInteger.PARAMETER_TYPE.Guid.ToString());
-                NodeData.ParameterData decimalTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, DecimalSetGuid, NO_CONFIG, BaseTypeDecimal.PARAMETER_TYPE.Guid.ToString());
+                NodeData.ParameterData integerTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, IntegerSetGuid, NO_CONFIG, BaseTypeInteger.ParameterType.Guid.ToString());
+                NodeData.ParameterData decimalTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, DecimalSetGuid, NO_CONFIG, BaseTypeDecimal.ParameterType.Guid.ToString());
                 NodeData.ParameterData localizedStringTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, LocalizedStringSetGuid, NO_CONFIG, BaseTypeLocalizedString.ParameterType.Guid.ToString());
                 NodeData.ParameterData dynamicEnumTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, DynamicEnumSetGuid, NO_CONFIG);
                 NodeData.ParameterData localDynamicEnumTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, LocalDynamicEnumSetGuid, NO_CONFIG);
-                NodeData.ParameterData decimalDefaultParameter = new NodeData.ParameterData("Default", DomainIDs.ParameterDefault, BaseTypeDecimal.PARAMETER_TYPE, NO_CONFIG);
+                NodeData.ParameterData decimalDefaultParameter = new NodeData.ParameterData("Default", DomainIDs.ParameterDefault, BaseTypeDecimal.ParameterType, NO_CONFIG);
                 NodeData.ParameterData stringDefaultParameter = new NodeData.ParameterData("Default", DomainIDs.ParameterDefault, BaseTypeString.ParameterType, NO_CONFIG);
-                NodeData.ParameterData booleanDefaultParameter = new NodeData.ParameterData("Default", DomainIDs.ParameterDefault, BaseTypeBoolean.PARAMETER_TYPE, NO_CONFIG);
+                NodeData.ParameterData booleanDefaultParameter = new NodeData.ParameterData("Default", DomainIDs.ParameterDefault, BaseTypeBoolean.ParameterType, NO_CONFIG);
                 NodeData.ParameterData enumTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, EnumSetGuid, NO_CONFIG);
 
                 List<NodeData.ConnectorData> parameterConnectors = new List<NodeData.ConnectorData> { parameterOutput, parameterConfigConnector };
 
                 AddNode(BaseType.Integer.ParameterNodeType, "Integer", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, integerTypeParameter }, p => new List<IParameter>()
-                { new IntegerParameter("Default", DomainIDs.ParameterDefault, BaseTypeInteger.PARAMETER_TYPE,
+                { new IntegerParameter("Default", DomainIDs.ParameterDefault, BaseTypeInteger.ParameterType,
                 ()=>
                 {
                     var selection = p.Where(x=>x.Id == DomainIDs.PARAMETER_TYPE).OfType<IEnumParameter>().Single();
@@ -738,7 +738,7 @@ namespace ConversationEditor
             return false;
         }
 
-        public CallbackDictionary<Id<TConnectorDefinition>, ConnectorDefinitionData> ConnectorDefinitions = new CallbackDictionary<Id<TConnectorDefinition>, ConnectorDefinitionData>()
+        public CallbackDictionary<Id<TConnectorDefinition>, ConnectorDefinitionData> ConnectorDefinitions { get; } = new CallbackDictionary<Id<TConnectorDefinition>, ConnectorDefinitionData>()
         {
             { SpecialConnectors.Input.Id, SpecialConnectors.Input },
             { SpecialConnectors.Output.Id, SpecialConnectors.Output },

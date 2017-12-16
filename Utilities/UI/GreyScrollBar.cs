@@ -35,40 +35,40 @@ namespace Utilities.UI
             }
         }
 
-        public static Bitmap ScrollbarUpIcon { get; }
-        public static Bitmap ScrollbarUpPressedIcon { get; }
-        public static Bitmap ScrollbarBackgroundVerticalIcon { get; }
+        public static Bitmap ScrollBarUpIcon { get; }
+        public static Bitmap ScrollBarUpPressedIcon { get; }
+        public static Bitmap ScrollBarBackgroundVerticalIcon { get; }
         public static Bitmap FolderIcon { get; }
 
-        public static Bitmap ScrollbarMiddleIcon { get; }
-        public static Bitmap ScrollbarMiddlePressedIcon { get; }
-        public static Bitmap ScrollbarTopIcon { get; }
-        public static Bitmap ScrollbarTopPressedIcon { get; }
-        public static Bitmap ScrollbarBottomIcon { get; }
-        public static Bitmap ScrollbarBottomPressedIcon { get; }
+        public static Bitmap ScrollBarMiddleIcon { get; }
+        public static Bitmap ScrollBarMiddlePressedIcon { get; }
+        public static Bitmap ScrollBarTopIcon { get; }
+        public static Bitmap ScrollBarTopPressedIcon { get; }
+        public static Bitmap ScrollBarBottomIcon { get; }
+        public static Bitmap ScrollBarBottomPressedIcon { get; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = "I believe this would actually be slower due to the inability to cache Assembly.GetExecutingAssembly()")]
         static GreyScrollBar()
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.ScrollbarUp.png"))
-                ScrollbarUpIcon = new Bitmap(stream);
+                ScrollBarUpIcon = new Bitmap(stream);
             using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.ScrollbarUpPressed.png"))
-                ScrollbarUpPressedIcon = new Bitmap(stream);
+                ScrollBarUpPressedIcon = new Bitmap(stream);
             using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.ScrollbarBackgroundVertical.png"))
-                ScrollbarBackgroundVerticalIcon = new Bitmap(stream);
+                ScrollBarBackgroundVerticalIcon = new Bitmap(stream);
             using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.ScrollbarMiddle.png"))
-                ScrollbarMiddleIcon = new Bitmap(stream);
+                ScrollBarMiddleIcon = new Bitmap(stream);
             using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.ScrollbarMiddlePressed.png"))
-                ScrollbarMiddlePressedIcon = new Bitmap(stream);
+                ScrollBarMiddlePressedIcon = new Bitmap(stream);
             using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.ScrollbarTop.png"))
-                ScrollbarTopIcon = new Bitmap(stream);
+                ScrollBarTopIcon = new Bitmap(stream);
             using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.ScrollbarTopPressed.png"))
-                ScrollbarTopPressedIcon = new Bitmap(stream);
+                ScrollBarTopPressedIcon = new Bitmap(stream);
             using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.ScrollbarBottom.png"))
-                ScrollbarBottomIcon = new Bitmap(stream);
+                ScrollBarBottomIcon = new Bitmap(stream);
             using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.ScrollbarBottomPressed.png"))
-                ScrollbarBottomPressedIcon = new Bitmap(stream);
+                ScrollBarBottomPressedIcon = new Bitmap(stream);
         }
 
         const int BUTTON_SIZE = 15;
@@ -302,7 +302,7 @@ namespace Utilities.UI
                 g.Transform = m;
                 using (var brush = new SolidBrush(m_backColor()))
                     g.FillRectangle(brush, Area);
-                g.DrawImage(pushed ? GreyScrollBar.ScrollbarUpPressedIcon : GreyScrollBar.ScrollbarUpIcon, Area);
+                g.DrawImage(pushed ? GreyScrollBar.ScrollBarUpPressedIcon : GreyScrollBar.ScrollBarUpIcon, Area);
                 g.Restore(state);
             }
         }
@@ -364,24 +364,24 @@ namespace Utilities.UI
             {
                 var state = e.Graphics.Save();
                 e.Graphics.RotateTransform(90);
-                e.Graphics.DrawImage(ScrollbarBackgroundVerticalIcon, Rectangle.FromLTRB(0, -Width + BUTTON_SIZE, BUTTON_SIZE, -BUTTON_SIZE));
-                e.Graphics.DrawImage(ScrollbarBackgroundVerticalIcon, Rectangle.FromLTRB(0, BUTTON_SIZE, Width, Height - BUTTON_SIZE));
+                e.Graphics.DrawImage(ScrollBarBackgroundVerticalIcon, Rectangle.FromLTRB(0, -Width + BUTTON_SIZE, BUTTON_SIZE, -BUTTON_SIZE));
+                e.Graphics.DrawImage(ScrollBarBackgroundVerticalIcon, Rectangle.FromLTRB(0, BUTTON_SIZE, Width, Height - BUTTON_SIZE));
                 e.Graphics.Restore(state);
             }
             else
             {
-                e.Graphics.DrawImage(ScrollbarBackgroundVerticalIcon, Rectangle.FromLTRB(0, BUTTON_SIZE, Width, Height - BUTTON_SIZE));
+                e.Graphics.DrawImage(ScrollBarBackgroundVerticalIcon, Rectangle.FromLTRB(0, BUTTON_SIZE, Width, Height - BUTTON_SIZE));
             }
 
-            using (Bitmap scrollbar = new Bitmap(ScrollbarTopIcon.Width, (int)(HighHeight - LowHeight)))
+            using (Bitmap scrollbar = new Bitmap(ScrollBarTopIcon.Width, (int)(HighHeight - LowHeight)))
             {
                 using (Graphics g = Graphics.FromImage(scrollbar))
                 {
                     g.InterpolationMode = InterpolationMode.NearestNeighbor;
                     g.PixelOffsetMode = PixelOffsetMode.Half;
-                    g.DrawImage(m_state == StateEnum.Dragging ? ScrollbarTopPressedIcon : ScrollbarTopIcon, new RectangleF(new PointF(0, 0), ScrollbarTopIcon.Size));
-                    g.DrawImage(m_state == StateEnum.Dragging ? ScrollbarMiddlePressedIcon : ScrollbarMiddleIcon, new RectangleF(new PointF(0, 0 + ScrollbarTopIcon.Height), new SizeF(ScrollbarMiddleIcon.Width, HighHeight - ScrollbarBottomIcon.Height - LowHeight - ScrollbarTopIcon.Height)));
-                    g.DrawImage(m_state == StateEnum.Dragging ? ScrollbarBottomPressedIcon : ScrollbarBottomIcon, new RectangleF(new PointF(0, scrollbar.Height - ScrollbarBottomIcon.Height), ScrollbarBottomIcon.Size));
+                    g.DrawImage(m_state == StateEnum.Dragging ? ScrollBarTopPressedIcon : ScrollBarTopIcon, new RectangleF(new PointF(0, 0), ScrollBarTopIcon.Size));
+                    g.DrawImage(m_state == StateEnum.Dragging ? ScrollBarMiddlePressedIcon : ScrollBarMiddleIcon, new RectangleF(new PointF(0, 0 + ScrollBarTopIcon.Height), new SizeF(ScrollBarMiddleIcon.Width, HighHeight - ScrollBarBottomIcon.Height - LowHeight - ScrollBarTopIcon.Height)));
+                    g.DrawImage(m_state == StateEnum.Dragging ? ScrollBarBottomPressedIcon : ScrollBarBottomIcon, new RectangleF(new PointF(0, scrollbar.Height - ScrollBarBottomIcon.Height), ScrollBarBottomIcon.Size));
                 }
                 if (Horizontal)
                 {

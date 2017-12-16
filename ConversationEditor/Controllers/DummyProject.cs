@@ -12,7 +12,7 @@ namespace ConversationEditor
 
     internal sealed class DummyProject : IProject
     {
-        UpToDateFile.Backend m_backend = new UpToDateFile.Backend();
+        UpToDateFile.BackEnd m_backend = new UpToDateFile.BackEnd();
         public static readonly IProject Instance = new DummyProject();
 
         private DummyProject() { }

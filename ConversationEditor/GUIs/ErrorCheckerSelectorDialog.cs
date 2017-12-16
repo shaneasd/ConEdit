@@ -48,7 +48,7 @@ namespace ConversationEditor
 
         private void PopulateListBox()
         {
-            foreach (var pluginAssembly in m_pluginsConfig.UnfilteredAssemblies(MainAssemblies.Include))
+            foreach (var pluginAssembly in m_pluginsConfig.UnfilteredAssemblies(MainAssembly.Include))
             {
                 ErrorCheckerAssembly configECA = m_config.GetAssembly(pluginAssembly);
                 ErrorCheckerAssembly eca = new ErrorCheckerAssembly(pluginAssembly);
@@ -77,7 +77,7 @@ namespace ConversationEditor
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            foreach (var pluginAssembly in m_pluginsConfig.UnfilteredAssemblies(MainAssemblies.Include))
+            foreach (var pluginAssembly in m_pluginsConfig.UnfilteredAssemblies(MainAssembly.Include))
             {
                 ErrorCheckerAssembly configECA = m_config.GetAssembly(pluginAssembly);
                 if (configECA == null)

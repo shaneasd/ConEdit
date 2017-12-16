@@ -74,7 +74,7 @@ namespace ConversationEditor
             get { throw new NotSupportedException("Shouldn't be queuing up modifications to a file that isn't there"); }
         }
 
-        public void BringToFront(IReadonlyNodeSet Selected)
+        public void BringToFront(IReadOnlyNodeSet selected)
         {
             throw new NotImplementedException();
         }

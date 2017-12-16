@@ -453,7 +453,7 @@ namespace Conversation.Serialization
 
         private static string ReadonlySetOf(string type)
         {
-            CodeTypeReference c = new CodeTypeReference(typeof(ReadonlySet<>));
+            CodeTypeReference c = new CodeTypeReference(typeof(ReadOnlySet<>));
             c.TypeArguments.Add(type);
             var name = generator.GetTypeOutput(c);
             return name;

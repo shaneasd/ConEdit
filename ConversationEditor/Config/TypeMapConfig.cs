@@ -11,23 +11,23 @@ namespace ConversationEditor
     public class TypeMapConfig<TKey, TData> : IConfigParameter where TData : TypeChoice
     {
         protected Dictionary<string, TData> m_data = new Dictionary<string, TData>();
-        protected readonly string m_nodeName;
-        protected readonly Func<TKey, string> m_serializeKey;
-        protected readonly Func<string, string, TData> m_makeChoice;
-        protected readonly Func<TKey, TData> m_defaults;
+        protected string NodeName { get; }
+        protected Func<TKey, string> SerializeKey { get; }
+        protected Func<string, string, TData> MakeChoice { get; }
+        protected Func<TKey, TData> Defaults { get; }
 
         public TypeMapConfig(string nodeName, Func<TKey, string> serializeKey, Func<string, string, TData> makeChoice, Func<TKey, TData> defaults)
         {
-            m_nodeName = nodeName;
-            m_serializeKey = serializeKey;
-            m_makeChoice = makeChoice;
-            m_defaults = defaults;
+            NodeName = nodeName;
+            SerializeKey = serializeKey;
+            MakeChoice = makeChoice;
+            Defaults = defaults;
         }
 
         public void Load(XElement root)
         {
             m_data = new Dictionary<string, TData>();
-            var node = root.Element(m_nodeName);
+            var node = root.Element(NodeName);
             if (node != null)
             {
                 foreach (var n in node.Elements("Editor"))
@@ -37,14 +37,14 @@ namespace ConversationEditor
                     var editor = n.Attribute("editor");
 
                     if (parameter != null && assembly != null && editor != null)
-                        m_data[parameter.Value] = m_makeChoice(assembly.Value, editor.Value);
+                        m_data[parameter.Value] = MakeChoice(assembly.Value, editor.Value);
                 }
             }
         }
 
         public void Write(XElement root)
         {
-            var node = new XElement(m_nodeName);
+            var node = new XElement(NodeName);
             root.Add(node);
             foreach (var kvp in m_data)
             {
@@ -61,24 +61,24 @@ namespace ConversationEditor
         {
             get
             {
-                if (m_data.ContainsKey(m_serializeKey(key)))
-                    return m_data[m_serializeKey(key)];
+                if (m_data.ContainsKey(SerializeKey(key)))
+                    return m_data[SerializeKey(key)];
                 else
-                    return m_defaults(key);
+                    return Defaults(key);
             }
             set
             {
                 if (value == null)
-                    m_data.Remove(m_serializeKey(key));
+                    m_data.Remove(SerializeKey(key));
                 else
-                    m_data[m_serializeKey(key)] = value;
+                    m_data[SerializeKey(key)] = value;
                 ValueChanged.Execute();
             }
         }
 
         public bool ContainsKey(TKey key)
         {
-            return m_data.ContainsKey(m_serializeKey(key));
+            return m_data.ContainsKey(SerializeKey(key));
         }
     }
 

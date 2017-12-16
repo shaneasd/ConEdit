@@ -10,7 +10,7 @@ namespace ConversationEditor
 {
     public class AudioFile : Disposable, IAudioFile
     {
-        ReadonlyFileUnmonitored m_file;
+        ReadOnlyFileUnmonitored m_file;
         private AudioProvider m_provider;
         private Audio m_audio;
 
@@ -19,7 +19,7 @@ namespace ConversationEditor
         public AudioFile(Id<FileInProject> file, DocumentPath path, AudioProvider provider)
         {
             m_provider = provider;
-            m_file = new ReadonlyFileUnmonitored(path.FileInfo);
+            m_file = new ReadOnlyFileUnmonitored(path.FileInfo);
             Id = file;
             m_audio = new Audio(path.RelativePath);
         }

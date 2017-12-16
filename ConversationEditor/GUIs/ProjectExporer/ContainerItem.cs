@@ -104,7 +104,7 @@ namespace ConversationEditor
             public abstract DirectoryInfo Path { get; }
             public override ContainerItem SpawnLocation { get { return this; } }
 
-            public readonly NotifierProperty<bool> Minimized = new NotifierProperty<bool>(false);
+            public NotifierProperty<bool> Minimized { get; } = new NotifierProperty<bool>(false);
 
             #region Drawing
             public override void DrawTree(Graphics g, RectangleF iconRectangle, VisibilityFilter filter, IColorScheme scheme)

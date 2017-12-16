@@ -349,8 +349,8 @@ namespace ConversationEditor
                     UpdateNodesInGroup = () => updateNodesInGroup(group);
                 }
                 public ResizeState ResizeState { get; }
-                public readonly RectangleF m_resizeOriginalArea;
-                public readonly NodeGroup m_group;
+                public RectangleF m_resizeOriginalArea { get; }
+                public NodeGroup m_group { get; }
                 public Action UpdateNodesInGroup { get; }
 
                 public override void LeftMouseUp(Point client, Point screen)
@@ -432,13 +432,12 @@ namespace ConversationEditor
             }
             public class DraggingLinks : State
             {
-                public readonly Output m_selectedTransition;
                 PointF m_lastClientPos;
 
                 public DraggingLinks(MouseController<TNode> parent, Output selectedTransition, PointF client)
                     : base(parent)
                 {
-                    m_selectedTransition = selectedTransition;
+                    SelectedTransition = selectedTransition;
                     m_lastClientPos = client;
                 }
 
@@ -525,11 +524,11 @@ namespace ConversationEditor
                         return null;
                 }
 
-                public override Output SelectedTransition { get { return m_selectedTransition; } }
+                public override Output SelectedTransition { get; }
             }
             public class ConnectionSelected : State
             {
-                public readonly UnorderedTuple2<Output> SelectedConnection;
+                public UnorderedTuple2<Output> SelectedConnection { get; }
                 public ConnectionSelected(MouseController<TNode> parent, UnorderedTuple2<Output> selectedConnection)
                     : base(parent)
                 {
@@ -725,7 +724,7 @@ namespace ConversationEditor
         public event Action StateChanged;
         NodeSet m_selection = new NodeSet();
 
-        public IReadonlyNodeSet Selected { get { return m_selection; } }
+        public IReadOnlyNodeSet Selected { get { return m_selection; } }
         public event Action SelectionChanged { add { m_selection.Changed += value; } remove { m_selection.Changed -= value; } }
 
         private TNode m_hoverNode = default(TNode);
@@ -819,8 +818,8 @@ namespace ConversationEditor
         Action<Point> Shift;
         Action<PointF?> ScrollIfRequired;
         Action<Point, float> Scale;
-        Func<IReadonlyQuadTree<TNode>> m_nodes; //Accessor to the set of nodes associated with the current file
-        Func<IReadonlyQuadTree<UnorderedTuple2<Output>>> m_connections;
+        Func<IReadOnlyQuadTree<TNode>> m_nodes; //Accessor to the set of nodes associated with the current file
+        Func<IReadOnlyQuadTree<UnorderedTuple2<Output>>> m_connections;
         Func<IEnumerable<NodeGroup>> m_groups; //Accessor to the set of groups associated with the current file
         public event Action<UndoAction> Changed;
         private readonly Func<PointF, PointF> Snap;
@@ -863,7 +862,7 @@ namespace ConversationEditor
         private TransitionNoduleUIInfo UIInfo(Output output) { return m_UIInfo(output, false); }
         IColorScheme m_scheme;
 
-        public MouseController(IColorScheme scheme, Action refreshDisplay, Action<Point> shift, Action<PointF?> scrollIfRequired, Action<Point, float> scale, Func<IReadonlyQuadTree<TNode>> nodes, Func<IReadonlyQuadTree<UnorderedTuple2<Output>>> connections, Func<IEnumerable<NodeGroup>> groups, NodeEditOperation edit, Func<TNode, bool> removeNode, Func<PointF, PointF> snap, Func<PointF, PointF> snapGroup, Func<Output, bool, TransitionNoduleUIInfo> uiInfo, Func<Id<NodeTemp>, TNode> getNode)
+        public MouseController(IColorScheme scheme, Action refreshDisplay, Action<Point> shift, Action<PointF?> scrollIfRequired, Action<Point, float> scale, Func<IReadOnlyQuadTree<TNode>> nodes, Func<IReadOnlyQuadTree<UnorderedTuple2<Output>>> connections, Func<IEnumerable<NodeGroup>> groups, NodeEditOperation edit, Func<TNode, bool> removeNode, Func<PointF, PointF> snap, Func<PointF, PointF> snapGroup, Func<Output, bool, TransitionNoduleUIInfo> uiInfo, Func<Id<NodeTemp>, TNode> getNode)
         {
             m_scheme = scheme;
             m_innerState = new State.Nothing(this, null, null);

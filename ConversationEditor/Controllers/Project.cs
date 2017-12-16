@@ -67,11 +67,11 @@ namespace ConversationEditor
                 Audios = audios;
             }
 
-            public readonly IEnumerable<FileIdAndPath> Conversations;
-            public readonly IEnumerable<FileIdAndPath> Domains;
-            public readonly IEnumerable<FileIdAndPath> Localizations;
-            public readonly IEnumerable<LocalizerSetData> LocalizationSets;
-            public readonly IEnumerable<FileIdAndPath> Audios;
+            public IEnumerable<FileIdAndPath> Conversations { get; }
+            public IEnumerable<FileIdAndPath> Domains { get; }
+            public IEnumerable<FileIdAndPath> Localizations { get; }
+            public IEnumerable<LocalizerSetData> LocalizationSets { get; }
+            public IEnumerable<FileIdAndPath> Audios { get; }
         }
 
         public class TConfig
@@ -81,8 +81,8 @@ namespace ConversationEditor
                 LastEdited = lastEdited;
                 LastLocalization = lastLocalization;
             }
-            public readonly Id<FileInProject> LastEdited;
-            public readonly Id<Project.TData.LocalizerSetData> LastLocalization;
+            public Id<FileInProject> LastEdited { get; }
+            public Id<Project.TData.LocalizerSetData> LastLocalization { get; }
         }
 
         public ISerializer<TConversationData> ConversationSerializer { get; }
@@ -97,9 +97,9 @@ namespace ConversationEditor
         private DomainDomain m_domainDataSource;
         private ConversationDataSource m_conversationDataSource;
         SaveableFileNotUndoable m_file;
-        UpToDateFile.Backend m_upToDateFileBackend;
+        UpToDateFile.BackEnd m_upToDateFileBackend;
 
-        public static Project CreateEmpty(ILocalizationContext context, FileInfo path, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializer, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization, UpToDateFile.Backend backend)
+        public static Project CreateEmpty(ILocalizationContext context, FileInfo path, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializer, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization, UpToDateFile.BackEnd backend)
         {
             using (MemoryStream m = new MemoryStream())
             {
@@ -183,7 +183,7 @@ namespace ConversationEditor
         /// <param name="domainSerializer"></param>
         /// <param name="pluginsConfig"></param>
         /// <param name="audioCustomization"></param>
-        public Project(ILocalizationContext context, TData data, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, MemoryStream initialData, FileInfo projectFile, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializerFactory, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization, UpToDateFile.Backend backend)
+        public Project(ILocalizationContext context, TData data, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, MemoryStream initialData, FileInfo projectFile, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializerFactory, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization, UpToDateFile.BackEnd backend)
         {
             AssertUniqueFileIds(data);
             AssertUniqueLocalizationSetNames(data);
@@ -263,6 +263,7 @@ namespace ConversationEditor
 
                     Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<Either<ConversationFile, MissingConversationFile>>> loadConversations = files =>
                     {
+                        //TODO: Can we just construct this serializer once before the parallel loop? If so we should be using it (it's currently unused), if not we should delete this line.
                         ISerializerDeserializer<XmlGraphData<NodeUIData, ConversationEditorData>> conversationSerializerDeserializer = m_conversationSerializerFactory(m_conversationDataSource);
                         //                                                 _/          _/                           _/                         X        _/             X            _/
                         //return files.Select(file => ConversationFile.Load(file, ConversationNodeFactory, conversationSerializerDeserializer, audio, getSource, m_audioProvider, backend));

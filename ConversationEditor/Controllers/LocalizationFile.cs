@@ -19,7 +19,7 @@ namespace ConversationEditor
         SaveableFileExternalChangedSource m_file;
         HashSet<object> m_changesLastSave = new HashSet<object>();
         HashSet<object> m_currentChanges = new HashSet<object>();
-        private UpToDateFile.Backend m_backend;
+        private UpToDateFile.BackEnd m_backend;
 
         public Id<FileInProject> Id { get; }
 
@@ -41,7 +41,7 @@ namespace ConversationEditor
         /// <param name="path"></param>
         /// <param name="data"></param>
         /// <param name="serializer"></param>
-        private LocalizationFile(Id<FileInProject> id, MemoryStream initialData, DocumentPath path, LocalizerData data, ISerializer<LocalizerData> serializer, UpToDateFile.Backend backend)
+        private LocalizationFile(Id<FileInProject> id, MemoryStream initialData, DocumentPath path, LocalizerData data, ISerializer<LocalizerData> serializer, UpToDateFile.BackEnd backend)
         {
             Id = id;
             m_backend = backend;
@@ -51,7 +51,7 @@ namespace ConversationEditor
 
         public ISaveableFile File { get { return m_file; } }
 
-        internal static LocalizationFile MakeNew(DirectoryInfo directory, Func<string, Id<FileInProject>, ISerializer<LocalizerData>> serializer, Func<FileInfo, bool> pathOk, UpToDateFile.Backend backend, DirectoryInfo origin)
+        internal static LocalizationFile MakeNew(DirectoryInfo directory, Func<string, Id<FileInProject>, ISerializer<LocalizerData>> serializer, Func<FileInfo, bool> pathOk, UpToDateFile.BackEnd backend, DirectoryInfo origin)
         {
             //Create a stream under an available filename
             FileInfo path = null;
@@ -75,7 +75,7 @@ namespace ConversationEditor
             }
         }
 
-        internal static Either<LocalizationFile, MissingLocalizationFile> Load(DocumentPath path, Id<FileInProject> id, ISerializer<LocalizerData> serializer, UpToDateFile.Backend backend)
+        internal static Either<LocalizationFile, MissingLocalizationFile> Load(DocumentPath path, Id<FileInProject> id, ISerializer<LocalizerData> serializer, UpToDateFile.BackEnd backend)
         {
             if (path.Exists)
             {

@@ -7,7 +7,7 @@ using Utilities;
 
 namespace Conversation
 {
-    public class SetParameter : Parameter<ReadonlySet<Guid>>, ISetParameter
+    public class SetParameter : Parameter<ReadOnlySet<Guid>>, ISetParameter
     {
         IEnumeration m_enumeration;
         public SetParameter(string name, Id<Parameter> id, IEnumeration enumeration, string defaultValue)
@@ -19,7 +19,7 @@ namespace Conversation
         //TODO: Isn't there already a mechanism for this at a higher level?
         string m_textOverride = null; //initial string representation of parameter that failed parsing (or null if parsing succeeded or a new value has been specified.
 
-        protected override Tuple<ReadonlySet<Guid>, bool> DeserializeValueInner(string value)
+        protected override Tuple<ReadOnlySet<Guid>, bool> DeserializeValueInner(string value)
         {
             var result = StaticDeserialize(m_enumeration.Options, value);
             if ( result.Item2 )
@@ -29,10 +29,10 @@ namespace Conversation
             return result;
         }
 
-        public static Tuple<ReadonlySet<Guid>, bool> StaticDeserialize(IEnumerable<Guid> options, string value)
+        public static Tuple<ReadOnlySet<Guid>, bool> StaticDeserialize(IEnumerable<Guid> options, string value)
         {
             if ( value == null )
-                return Tuple.Create((ReadonlySet<Guid>)null, true);
+                return Tuple.Create((ReadOnlySet<Guid>)null, true);
 
             string[] values = value.Split('+').Select(s => s.Trim()).Where(s => s.Length > 0).ToArray();
             Guid[] guids = new Guid[values.Length];
@@ -47,26 +47,26 @@ namespace Conversation
 
             if (!valid)
             {
-                return Tuple.Create((ReadonlySet<Guid>)null, true);
+                return Tuple.Create((ReadOnlySet<Guid>)null, true);
             }
             else
             {
-                var val = new ReadonlySet<Guid>(guids);
+                var val = new ReadOnlySet<Guid>(guids);
                 return Tuple.Create(val, !StaticValueValid(options, val));
             }
         }
 
-        protected override void OnSetValue(ReadonlySet<Guid> value)
+        protected override void OnSetValue(ReadOnlySet<Guid> value)
         {
             m_textOverride = null;
         }
 
-        protected override bool ValueValid(ReadonlySet<Guid> value)
+        protected override bool ValueValid(ReadOnlySet<Guid> value)
         {
             return StaticValueValid(m_enumeration.Options, value);
         }
 
-        public static bool StaticValueValid(IEnumerable<Guid> options, ReadonlySet<Guid> value)
+        public static bool StaticValueValid(IEnumerable<Guid> options, ReadOnlySet<Guid> value)
         {
             return value.All(v => options.Contains(v));
         }
@@ -78,7 +78,7 @@ namespace Conversation
             return SerializeSet(Value);
         }
 
-        public static string SerializeSet(ReadonlySet<Guid> value)
+        public static string SerializeSet(ReadOnlySet<Guid> value)
         {
             return string.Join("+", value.Select(v => v.ToString()));
         }

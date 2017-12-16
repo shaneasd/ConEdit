@@ -8,7 +8,7 @@ using Utilities;
 
 namespace ConversationEditor
 {
-    public class SetDefaultParameter : Parameter<ReadonlySet<Guid>>, ISetParameter
+    public class SetDefaultParameter : Parameter<ReadOnlySet<Guid>>, ISetParameter
     {
         public new static readonly ParameterType TypeId = ParameterType.ValueSetType.Parse("set:452fbad8-976c-47d3-8b6f-06f871e06044");
         private readonly Func<Dictionary<ParameterType, IEnumerable<EnumerationData.Element>>> m_getEnumeration;
@@ -29,7 +29,7 @@ namespace ConversationEditor
         string m_textOverride = null; //initial string representation of parameter that failed parsing (or null if parsing succeeded or a new value has been specified.
 
         public SetDefaultParameter(Func<Dictionary<ParameterType, IEnumerable<EnumerationData.Element>>> getEnumeration, Func<ParameterType> getCurrentEnumType)
-            : base("Default", DomainIDs.ParameterDefault, TypeId, "", Tuple.Create(new ReadonlySet<Guid>(), false))
+            : base("Default", DomainIDs.ParameterDefault, TypeId, "", Tuple.Create(new ReadOnlySet<Guid>(), false))
         {
             m_getEnumeration = getEnumeration;
             m_getCurrentEnumType = getCurrentEnumType;
@@ -53,12 +53,12 @@ namespace ConversationEditor
             return null;
         }
 
-        protected override bool ValueValid(ReadonlySet<Guid> value)
+        protected override bool ValueValid(ReadOnlySet<Guid> value)
         {
             return SetParameter.StaticValueValid(Enumeration.Select(e => e.Guid), value);
         }
 
-        protected override Tuple<ReadonlySet<Guid>, bool> DeserializeValueInner(string value)
+        protected override Tuple<ReadOnlySet<Guid>, bool> DeserializeValueInner(string value)
         {
             var result = SetParameter.StaticDeserialize(Enumeration.Select(e => e.Guid), value);
             if (result.Item2)
@@ -68,7 +68,7 @@ namespace ConversationEditor
             return result;
         }
 
-        protected override void OnSetValue(ReadonlySet<Guid> value)
+        protected override void OnSetValue(ReadOnlySet<Guid> value)
         {
             m_textOverride = null;
         }

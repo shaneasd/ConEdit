@@ -78,7 +78,7 @@ namespace ConversationEditor
 
         public void RefreshConfig(PluginsConfig pluginsConfig)
         {
-            foreach (var pluginAssembly in pluginsConfig.UnfilteredAssemblies(MainAssemblies.Include))
+            foreach (var pluginAssembly in pluginsConfig.UnfilteredAssemblies(MainAssembly.Include))
             {
                 ErrorCheckerAssembly configECA = GetAssembly(pluginAssembly);
 

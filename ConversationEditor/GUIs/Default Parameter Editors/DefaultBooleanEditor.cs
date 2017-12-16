@@ -20,7 +20,7 @@ namespace ConversationEditor
 
         public bool WillEdit(ParameterType type, WillEdit queries)
         {
-            return type == BaseTypeBoolean.PARAMETER_TYPE;
+            return type == BaseTypeBoolean.ParameterType;
         }
 
         public string Name

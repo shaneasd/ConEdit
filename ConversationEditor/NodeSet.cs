@@ -11,7 +11,7 @@ namespace ConversationEditor
     using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
     //using ConversationNode = IRenderable<ConversationEditor.INodeGui>;
 
-    internal class NodeSet : IReadonlyNodeSet
+    internal class NodeSet : IReadOnlyNodeSet
     {
         public static RectangleF GetArea(IEnumerable<IRenderable<IGui>> data)
         {

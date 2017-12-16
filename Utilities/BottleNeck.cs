@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Utilities
 {
-    public static class BottleNeckUtil
+    public static class BottleneckUtil
     {
-        public static Func<T, Result> BottleNeck<T, Result>(this Func<T, Result> function)
+        public static Func<T, Result> Bottleneck<T, Result>(this Func<T, Result> function)
         {
             object sync = new object();
             return x =>

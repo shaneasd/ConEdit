@@ -67,8 +67,8 @@ namespace RuntimeConversation
         public Action EnteringDialog { get; set; }
         public Action ExitingDialog { get; set; }
         public Action<string, string> PlaySpeech { get; set; }
-        public Action<Utilities.ReadonlySet<Viking.Types.Personality_Trait>> Approve { get; set; }
-        public Action<Utilities.ReadonlySet<Viking.Types.Personality_Trait>> Disapprove { get; set; }
+        public Action<Utilities.ReadOnlySet<Viking.Types.Personality_Trait>> Approve { get; set; }
+        public Action<Utilities.ReadOnlySet<Viking.Types.Personality_Trait>> Disapprove { get; set; }
 
         public IEnumerable<NextNodeOption> ProcessNode(Viking.Nodes.NPC_Speech node)
         {

@@ -71,7 +71,7 @@ namespace Utilities
     {
         private UpToDateFile m_upToDateFile;
         private Action<Stream> m_saveTo;
-        private UpToDateFile.Backend m_backend;
+        private UpToDateFile.BackEnd m_backEnd;
 
         /// <summary>
         /// 
@@ -79,13 +79,13 @@ namespace Utilities
         /// <param name="initialContent">Represents the current contents of the file. Reference is not held. A copy is made.</param>
         /// <param name="path"></param>
         /// <param name="saveTo"></param>
-        protected SaveableFile(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo, UpToDateFile.Backend backend)
+        protected SaveableFile(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo, UpToDateFile.BackEnd backEnd)
         {
-            m_upToDateFile = new UpToDateFile(initialContent, path, saveTo, backend);
+            m_upToDateFile = new UpToDateFile(initialContent, path, saveTo, backEnd);
             m_upToDateFile.FileChanged += () => FileModifiedExternally.Execute();
             m_upToDateFile.FileDeleted += () => FileDeletedExternally.Execute();
             m_saveTo = saveTo;
-            m_backend = backend;
+            m_backEnd = backEnd;
         }
 
         public FileInfo File
@@ -132,7 +132,7 @@ namespace Utilities
             m_upToDateFile.Dispose();
             using (MemoryStream m = new MemoryStream())
             {
-                m_upToDateFile = new UpToDateFile(m, path, m_saveTo, m_backend);
+                m_upToDateFile = new UpToDateFile(m, path, m_saveTo, m_backEnd);
             }
             m_upToDateFile.FileChanged += () => FileModifiedExternally.Execute();
             m_upToDateFile.FileDeleted += () => FileDeletedExternally.Execute();
@@ -165,7 +165,7 @@ namespace Utilities
             var stream = m_upToDateFile.Migrate();
             newPath.Directory.EnsureExists(); //This can fail (returning false) if it does then we subsequently get a (hopefully) useful exception from File.Move
             System.IO.File.Move(File.FullName, newPath.FullName);
-            m_upToDateFile = new UpToDateFile(stream, newPath, m_saveTo, m_backend);
+            m_upToDateFile = new UpToDateFile(stream, newPath, m_saveTo, m_backEnd);
             m_upToDateFile.FileChanged += () => FileModifiedExternally.Execute();
             m_upToDateFile.FileDeleted += () => FileDeletedExternally.Execute();
             Moved.Execute(new Changed<FileInfo>(oldFile, File));
@@ -175,7 +175,7 @@ namespace Utilities
         public void GotMoved(FileInfo newPath)
         {
             var oldFile = File;
-            m_upToDateFile = new UpToDateFile(m_upToDateFile.Migrate(), newPath, m_saveTo, m_backend);
+            m_upToDateFile = new UpToDateFile(m_upToDateFile.Migrate(), newPath, m_saveTo, m_backEnd);
             m_upToDateFile.FileChanged += () => FileModifiedExternally.Execute();
             m_upToDateFile.FileDeleted += () => FileDeletedExternally.Execute();
             Moved.Execute(new Changed<FileInfo>(oldFile, File));
@@ -208,8 +208,8 @@ namespace Utilities
         /// <param name="initialContent">Represents the current contents of the file. Reference is not held. A copy is made.</param>
         /// <param name="path"></param>
         /// <param name="saveTo"></param>
-        public SaveableFileUndoable(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo, UpToDateFile.Backend backend)
-            : base(initialContent, path, saveTo, backend)
+        public SaveableFileUndoable(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo, UpToDateFile.BackEnd backEnd)
+            : base(initialContent, path, saveTo, backEnd)
         {
             FileModifiedExternally += () => m_undoQueue.NeverSaved();
             FileDeletedExternally += () => m_undoQueue.NeverSaved();
@@ -262,8 +262,8 @@ namespace Utilities
         /// <param name="saveTo"></param>
         /// <param name="changed"></param>
         /// <param name="saved"></param>
-        public SaveableFileExternalChangedSource(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo, Func<bool> changed, Action saved, UpToDateFile.Backend backend)
-            : base(initialContent, path, saveTo, backend)
+        public SaveableFileExternalChangedSource(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo, Func<bool> changed, Action saved, UpToDateFile.BackEnd backEnd)
+            : base(initialContent, path, saveTo, backEnd)
         {
             m_changed = changed;
             m_saved = saved;
@@ -311,7 +311,7 @@ namespace Utilities
         /// <param name="initialContent">Represents the current contents of the file. Reference is not held. A copy is made.</param>
         /// <param name="path"></param>
         /// <param name="saveTo"></param>
-        public SaveableFileNotUndoable(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo, UpToDateFile.Backend backend)
+        public SaveableFileNotUndoable(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo, UpToDateFile.BackEnd backend)
             : base(initialContent, path, saveTo, backend)
         {
         }
@@ -345,9 +345,9 @@ namespace Utilities
         public event Action Modified;
     }
 
-    public class ReadonlyFileUnmonitored : Disposable, ISaveableFile
+    public class ReadOnlyFileUnmonitored : Disposable, ISaveableFile
     {
-        public ReadonlyFileUnmonitored(FileInfo path)
+        public ReadOnlyFileUnmonitored(FileInfo path)
         {
             File = path;
         }
@@ -415,15 +415,15 @@ namespace Utilities
         }
     }
 
-    public class ReadonlyFile : Disposable, ISaveableFile
+    public class ReadOnlyFile : Disposable, ISaveableFile
     {
         private UpToDateFile m_upToDateFile;
-        private UpToDateFile.Backend m_backend;
+        private UpToDateFile.BackEnd m_backEnd;
 
-        public ReadonlyFile(MemoryStream initialContent, FileInfo path, UpToDateFile.Backend backend)
+        public ReadOnlyFile(MemoryStream initialContent, FileInfo path, UpToDateFile.BackEnd backEnd)
         {
-            m_upToDateFile = new UpToDateFile(initialContent, path, s => { }, backend);
-            m_backend = backend;
+            m_upToDateFile = new UpToDateFile(initialContent, path, s => { }, backEnd);
+            m_backEnd = backEnd;
             m_upToDateFile.FileChanged += () => FileModifiedExternally.Execute();
             m_upToDateFile.FileDeleted += () => FileDeletedExternally.Execute();
         }
@@ -445,7 +445,7 @@ namespace Utilities
             var stream = m_upToDateFile.Migrate();
             m_upToDateFile.Dispose();
             System.IO.File.Move(oldFile.FullName, newPath.FullName);
-            m_upToDateFile = new UpToDateFile(stream, newPath, s => { }, m_backend);
+            m_upToDateFile = new UpToDateFile(stream, newPath, s => { }, m_backEnd);
             m_upToDateFile.FileChanged += () => FileModifiedExternally.Execute();
             m_upToDateFile.FileDeleted += () => FileDeletedExternally.Execute();
             Moved.Execute(new Changed<FileInfo>(oldFile, File));
@@ -455,7 +455,7 @@ namespace Utilities
         public void GotMoved(FileInfo newPath)
         {
             var oldFile = File;
-            m_upToDateFile = new UpToDateFile(m_upToDateFile.Migrate(), newPath, s => { }, m_backend);
+            m_upToDateFile = new UpToDateFile(m_upToDateFile.Migrate(), newPath, s => { }, m_backEnd);
             m_upToDateFile.FileChanged += () => FileModifiedExternally.Execute();
             m_upToDateFile.FileDeleted += () => FileDeletedExternally.Execute();
             Moved.Execute(new Changed<FileInfo>(oldFile, File));

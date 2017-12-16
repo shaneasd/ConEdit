@@ -17,6 +17,7 @@ using Utilities;
 using ConversationNode = Conversation.ConversationNode<ConversationEditor.INodeGui>;
 using Conversation.Serialization;
 using System.Xml.Linq;
+using System.Globalization;
 
 namespace ConversationEditor
 {
@@ -253,7 +254,7 @@ namespace ConversationEditor
         /// </summary>
         /// <typeparam name="T">The interface that must be implemented</typeparam>
         /// <returns>All classes that implement T</returns>
-        private IEnumerable<T> GetAllOfType<T>(MainAssemblies mainAssemblies = MainAssemblies.Include) where T : class
+        private IEnumerable<T> GetAllOfType<T>(MainAssembly mainAssemblies = MainAssembly.Include) where T : class
         {
             List<T> result = new List<T>();
             var assemblies = m_config.Plugins.UnfilteredAssemblies(mainAssemblies).Select(a => a.Assembly);
@@ -288,7 +289,7 @@ namespace ConversationEditor
         {
             editor.Initialise(Edit, copyPasteController, errorList1.SetErrors);
             editor.SetContext(datasource, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value, m_context);
-            editor.m_contextMenu.Opening += () => editor.RefreshContextMenu(basicItems.Only().Concat(GetAllOfType<IMenuActionFactory<ConversationNode>>(MainAssemblies.Ignore)));
+            editor.m_contextMenu.Opening += () => editor.RefreshContextMenu(basicItems.Only().Concat(GetAllOfType<IMenuActionFactory<ConversationNode>>(MainAssembly.Ignore)));
 
             Action updateGraphViewFromConfig = () =>
             {
@@ -452,7 +453,7 @@ namespace ConversationEditor
             //};
 
             m_context.CurrentProject.Changed.Register(this, (a, b) => a.ProjectChanged(b.To));
-            m_projectMenuController = new ProjectMenuController(m_context, m_config.ProjectHistory, m_conversationNodeFactory, m_domainNodeFactory, a => Invoke(a), m_config.Plugins, GetAudioCustomizer, new UpToDateFile.Backend());
+            m_projectMenuController = new ProjectMenuController(m_context, m_config.ProjectHistory, m_conversationNodeFactory, m_domainNodeFactory, a => Invoke(a), m_config.Plugins, GetAudioCustomizer, new UpToDateFile.BackEnd());
 
             this.projectSaveMenuItem.Click += (a, b) => m_projectMenuController.Save();
             this.projectNewMenuItem.Click += (a, b) => m_projectMenuController.New();
@@ -910,7 +911,7 @@ namespace ConversationEditor
         private List<T> GetAllFactories<T>() where T : class
         {
             List<T> result = new List<T>();
-            foreach (var pa in m_config.Plugins.UnfilteredAssemblies(MainAssemblies.Include).Select(a => a.Assembly))
+            foreach (var pa in m_config.Plugins.UnfilteredAssemblies(MainAssembly.Include).Select(a => a.Assembly))
             {
                 var factories = pa.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(T)));
                 foreach (var factory in factories)
@@ -985,7 +986,7 @@ namespace ConversationEditor
             foreach (var doc in m_context.CurrentProject.Value.Conversations)
                 nodeCount += doc.Nodes.Count();
 
-            string message = "Total Nodes: " + nodeCount.ToString();
+            string message = "Total Nodes: " + nodeCount.ToString(CultureInfo.CurrentCulture);
             message += "\n";
             message += "Current document nodes: " + CurrentFile.Nodes.Count();
 
@@ -1001,7 +1002,7 @@ namespace ConversationEditor
             foreach (var doc in m_context.CurrentProject.Value.Conversations)
                 foreach (var node in doc.Nodes)
                     count += node.Data.Parameters.Count();
-            string message = "Total Parameters: " + count.ToString();
+            string message = "Total Parameters: " + count.ToString(CultureInfo.CurrentCulture);
             message += "\n";
             message += "Current document parameters: " + CurrentFile.Nodes.SelectMany(n => n.Data.Parameters).Count();
 

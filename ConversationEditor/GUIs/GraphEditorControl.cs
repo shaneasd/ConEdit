@@ -441,7 +441,7 @@ namespace ConversationEditor
             m_mouseController.SetSelection(nodes, groups);
         }
 
-        public IReadonlyNodeSet Selected
+        public IReadOnlyNodeSet Selected
         {
             get
             {

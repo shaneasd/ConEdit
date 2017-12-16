@@ -11,12 +11,12 @@ namespace Utilities
 {
     //TODO: Introduce a tolerance to account for floating point precision
 
-    public interface IReadonlyQuadTree<T> : IEnumerable<T>
+    public interface IReadOnlyQuadTree<T> : IEnumerable<T>
     {
         IEnumerable<T> FindTouchingRegion(RectangleF bounds);
     }
 
-    public class ZOrderedQuadTree<T> : IReadonlyQuadTree<T>
+    public class ZOrderedQuadTree<T> : IReadOnlyQuadTree<T>
     {
         private Comparison<T> m_relativePosition;
         private QuadTree<T> m_tree;
@@ -55,7 +55,7 @@ namespace Utilities
     }
 
     //TODO: Kinda defeats the purpose of maintaining the spatial information if we're just going to ignore it.
-    public class Fake<T> : IReadonlyQuadTree<T>
+    public class Fake<T> : IReadOnlyQuadTree<T>
     {
         IEnumerable<T> wrapped;
         public Fake(IEnumerable<T> w)
@@ -79,7 +79,7 @@ namespace Utilities
         }
     }
 
-    public class QuadTree<T> : IReadonlyQuadTree<T>
+    public class QuadTree<T> : IReadOnlyQuadTree<T>
     {
         private static class Debugging
         {
@@ -168,11 +168,6 @@ namespace Utilities
                 if (Debugging.Enabled)
                     Debugging.WriteLine("Count: {0}", this.Count());
             }
-        }
-
-        public bool FindAndRemove()
-        {
-            throw new NotImplementedException();
         }
 
         public IEnumerable<T> FindTouchingRegion(RectangleF bounds)

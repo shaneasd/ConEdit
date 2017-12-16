@@ -90,7 +90,7 @@ namespace Conversation
     {
     }
 
-    public interface ISetParameter : IParameter<ReadonlySet<Guid>>
+    public interface ISetParameter : IParameter<ReadOnlySet<Guid>>
     {
         IEnumerable<Guid> Options { get; }
 

@@ -29,7 +29,7 @@ namespace ConversationEditor
         ReadOnlyCollection<LoadError> Errors { get; } //TODO: This could possibly be implemented using an Error : IConversationEditorControlData class.
         void ClearErrors();
 
-        void BringToFront(IReadonlyNodeSet selected);
+        void BringToFront(IReadOnlyNodeSet selected);
 
         TTransitionUI UIInfo(Output connection, bool canFail);
 

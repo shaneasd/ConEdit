@@ -14,13 +14,12 @@ namespace Utilities
         /// <summary>
         /// Access to this class is threadsafe (other than constructor and disposer)
         /// </summary>
-        public class Backend : Disposable
+        public class BackEnd : Disposable
         {
             HashSet<UpToDateFile> m_deleted = new HashSet<UpToDateFile>();
             HashSet<UpToDateFile> m_modified = new HashSet<UpToDateFile>();
 
             private ManualResetEventSlim m_abort;
-            private ManualResetEventSlim m_aborted;
             private AutoResetEvent m_event;
             private Thread m_worker;
             private volatile bool m_disposed = false;
@@ -28,10 +27,9 @@ namespace Utilities
 
             public WaitHandle AbortHandle { get { return m_abort.WaitHandle; } }
 
-            public Backend()
+            public BackEnd()
             {
                 m_abort = new ManualResetEventSlim(false);
-                m_aborted = new ManualResetEventSlim(false);
                 m_event = new AutoResetEvent(false);
                 m_worker = new Thread(UpdateThread);
                 m_worker.IsBackground = true;
@@ -151,7 +149,7 @@ namespace Utilities
         private Action<Stream> m_saveTo;
         public event Action FileChanged; //A change was made to the file externally
         public event Action FileDeleted; //The file was deleted
-        private Backend m_backend;
+        private BackEnd m_backEnd;
 
         /// <summary>
         /// 
@@ -159,11 +157,11 @@ namespace Utilities
         /// <param name="lastSavedOrLoaded">Represents the current contents of the file. Reference is not held. A copy is made.</param>
         /// <param name="file"></param>
         /// <param name="saveTo"></param>
-        public UpToDateFile(MemoryStream lastSavedOrLoaded, FileInfo file, Action<Stream> saveTo, Backend backend)
+        public UpToDateFile(MemoryStream lastSavedOrLoaded, FileInfo file, Action<Stream> saveTo, BackEnd backEnd)
         {
             m_file = file;
             m_saveTo = saveTo;
-            m_backend = backend;
+            m_backEnd = backEnd;
 
             //Make a copy of the input data to make sure we're the only ones that can access it.
             m_onDisk = new MemoryStream((int)lastSavedOrLoaded.Length);
@@ -182,9 +180,9 @@ namespace Utilities
         void m_watcher_Changed(object sender, FileSystemEventArgs e)
         {
             if (e.ChangeType == WatcherChangeTypes.Changed)
-                m_backend.FileChanged(this);
+                m_backEnd.FileChanged(this);
             else if (e.ChangeType == WatcherChangeTypes.Deleted)
-                m_backend.FileDeleted(this);
+                m_backEnd.FileDeleted(this);
         }
 
         void NotifyFileDeleted()
@@ -208,7 +206,7 @@ namespace Utilities
                         MessageBox.Show("Attempting to load more than 100MB from a file. This is probably why we get the out of memory exception");
                     lock (m_onDiskAccess)
                     {
-                        return FileSystem.ChangeIfDifferent(ref m_onDisk, stream, m_backend.AbortHandle);
+                        return FileSystem.ChangeIfDifferent(ref m_onDisk, stream, m_backEnd.AbortHandle);
                     }
                 }
             }
@@ -248,7 +246,7 @@ namespace Utilities
         public MemoryStream Migrate()
         {
             m_watcher.Dispose();
-            m_backend.Abort(this);
+            m_backEnd.Abort(this);
             MemoryStream temp = m_onDisk;
             m_onDisk = null;
             this.Dispose();

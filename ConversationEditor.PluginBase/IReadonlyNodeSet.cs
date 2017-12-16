@@ -6,7 +6,7 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    public interface IReadonlyNodeSet
+    public interface IReadOnlyNodeSet
     {
         IEnumerable<Id<NodeTemp>> Nodes { get; }
         IEnumerable<NodeGroup> Groups { get; }

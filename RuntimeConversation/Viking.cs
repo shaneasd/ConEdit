@@ -2469,7 +2469,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Terrain_Type> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Terrain_Type> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -2484,7 +2484,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Terrain_Type>(result);
+            a = new Utilities.ReadOnlySet<Terrain_Type>(result);
         }
         
         public static void Deserialize(out Homestead_Upgrades a, string value)
@@ -2557,7 +2557,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Homestead_Upgrades> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Homestead_Upgrades> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -2572,7 +2572,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Homestead_Upgrades>(result);
+            a = new Utilities.ReadOnlySet<Homestead_Upgrades>(result);
         }
         
         public static void Deserialize(out Scene a, string value)
@@ -2625,7 +2625,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Scene> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Scene> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -2640,7 +2640,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Scene>(result);
+            a = new Utilities.ReadOnlySet<Scene>(result);
         }
         
         public static void Deserialize(out Status_Effect a, string value)
@@ -2863,7 +2863,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Status_Effect> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Status_Effect> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -2878,7 +2878,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Status_Effect>(result);
+            a = new Utilities.ReadOnlySet<Status_Effect>(result);
         }
         
         public static void Deserialize(out Fraction a, string value)
@@ -2906,7 +2906,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Fraction> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Fraction> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -2921,7 +2921,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Fraction>(result);
+            a = new Utilities.ReadOnlySet<Fraction>(result);
         }
         
         public static void Deserialize(out Takedown a, string value)
@@ -2949,7 +2949,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Takedown> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Takedown> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -2964,7 +2964,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Takedown>(result);
+            a = new Utilities.ReadOnlySet<Takedown>(result);
         }
         
         public static void Deserialize(out Weather_Type a, string value)
@@ -2997,7 +2997,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Weather_Type> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Weather_Type> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -3012,7 +3012,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Weather_Type>(result);
+            a = new Utilities.ReadOnlySet<Weather_Type>(result);
         }
         
         public static void Deserialize(out Phenotype a, string value)
@@ -3035,7 +3035,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Phenotype> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Phenotype> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -3050,7 +3050,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Phenotype>(result);
+            a = new Utilities.ReadOnlySet<Phenotype>(result);
         }
         
         public static void Deserialize(out Nationality a, string value)
@@ -3078,7 +3078,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Nationality> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Nationality> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -3093,7 +3093,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Nationality>(result);
+            a = new Utilities.ReadOnlySet<Nationality>(result);
         }
         
         public static void Deserialize(out Character_Type a, string value)
@@ -3116,7 +3116,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Character_Type> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Character_Type> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -3131,7 +3131,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Character_Type>(result);
+            a = new Utilities.ReadOnlySet<Character_Type>(result);
         }
         
         public static void Deserialize(out Faction a, string value)
@@ -3189,7 +3189,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Faction> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Faction> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -3204,7 +3204,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Faction>(result);
+            a = new Utilities.ReadOnlySet<Faction>(result);
         }
         
         public static void Deserialize(out Inventory_Icon a, string value)
@@ -3277,7 +3277,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Inventory_Icon> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Inventory_Icon> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -3292,7 +3292,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Inventory_Icon>(result);
+            a = new Utilities.ReadOnlySet<Inventory_Icon>(result);
         }
         
         public static void Deserialize(out Talisman_Property a, string value)
@@ -3300,7 +3300,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Talisman_Property> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Talisman_Property> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -3315,7 +3315,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Talisman_Property>(result);
+            a = new Utilities.ReadOnlySet<Talisman_Property>(result);
         }
         
         public static void Deserialize(out Special_Armour_Property a, string value)
@@ -3383,7 +3383,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Special_Armour_Property> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Special_Armour_Property> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -3398,7 +3398,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Special_Armour_Property>(result);
+            a = new Utilities.ReadOnlySet<Special_Armour_Property>(result);
         }
         
         public static void Deserialize(out Special_Weapon_Property a, string value)
@@ -3506,7 +3506,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Special_Weapon_Property> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Special_Weapon_Property> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -3521,7 +3521,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Special_Weapon_Property>(result);
+            a = new Utilities.ReadOnlySet<Special_Weapon_Property>(result);
         }
         
         public static void Deserialize(out Trade_Fairness a, string value)
@@ -3554,7 +3554,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Trade_Fairness> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Trade_Fairness> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -3569,7 +3569,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Trade_Fairness>(result);
+            a = new Utilities.ReadOnlySet<Trade_Fairness>(result);
         }
         
         public static void Deserialize(out Item_Type a, string value)
@@ -3637,7 +3637,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Item_Type> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Item_Type> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -3652,7 +3652,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Item_Type>(result);
+            a = new Utilities.ReadOnlySet<Item_Type>(result);
         }
         
         public static void Deserialize(out Morale_Change a, string value)
@@ -3675,7 +3675,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Morale_Change> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Morale_Change> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -3690,7 +3690,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Morale_Change>(result);
+            a = new Utilities.ReadOnlySet<Morale_Change>(result);
         }
         
         public static void Deserialize(out Option_Icon a, string value)
@@ -3738,7 +3738,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Option_Icon> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Option_Icon> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -3753,7 +3753,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Option_Icon>(result);
+            a = new Utilities.ReadOnlySet<Option_Icon>(result);
         }
         
         public static void Deserialize(out Injury_Location a, string value)
@@ -3791,7 +3791,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Injury_Location> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Injury_Location> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -3806,7 +3806,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Injury_Location>(result);
+            a = new Utilities.ReadOnlySet<Injury_Location>(result);
         }
         
         public static void Deserialize(out Injury_Type a, string value)
@@ -3844,7 +3844,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Injury_Type> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Injury_Type> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -3859,7 +3859,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Injury_Type>(result);
+            a = new Utilities.ReadOnlySet<Injury_Type>(result);
         }
         
         public static void Deserialize(out Operator a, string value)
@@ -3882,7 +3882,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Operator> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Operator> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -3897,7 +3897,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Operator>(result);
+            a = new Utilities.ReadOnlySet<Operator>(result);
         }
         
         public static void Deserialize(out Injury_Severity a, string value)
@@ -3930,7 +3930,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Injury_Severity> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Injury_Severity> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -3945,7 +3945,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Injury_Severity>(result);
+            a = new Utilities.ReadOnlySet<Injury_Severity>(result);
         }
         
         public static void Deserialize(out Health a, string value)
@@ -3963,7 +3963,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Health> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Health> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -3978,7 +3978,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Health>(result);
+            a = new Utilities.ReadOnlySet<Health>(result);
         }
         
         public static void Deserialize(out Battle_Behaviour a, string value)
@@ -4021,7 +4021,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Battle_Behaviour> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Battle_Behaviour> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -4036,7 +4036,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Battle_Behaviour>(result);
+            a = new Utilities.ReadOnlySet<Battle_Behaviour>(result);
         }
         
         public static void Deserialize(out Victory_Condition a, string value)
@@ -4084,7 +4084,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Victory_Condition> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Victory_Condition> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -4099,7 +4099,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Victory_Condition>(result);
+            a = new Utilities.ReadOnlySet<Victory_Condition>(result);
         }
         
         public static void Deserialize(out Difficulty a, string value)
@@ -4122,7 +4122,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Difficulty> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Difficulty> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -4137,7 +4137,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Difficulty>(result);
+            a = new Utilities.ReadOnlySet<Difficulty>(result);
         }
         
         public static void Deserialize(out ConversationMode a, string value)
@@ -4155,7 +4155,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<ConversationMode> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<ConversationMode> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -4170,7 +4170,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<ConversationMode>(result);
+            a = new Utilities.ReadOnlySet<ConversationMode>(result);
         }
         
         public static void Deserialize(out BoolValue a, string value)
@@ -4188,7 +4188,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<BoolValue> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<BoolValue> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -4203,7 +4203,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<BoolValue>(result);
+            a = new Utilities.ReadOnlySet<BoolValue>(result);
         }
         
         public static void Deserialize(out Skill a, string value)
@@ -4396,7 +4396,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Skill> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Skill> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -4411,7 +4411,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Skill>(result);
+            a = new Utilities.ReadOnlySet<Skill>(result);
         }
         
         public static void Deserialize(out Primary_Stat a, string value)
@@ -4444,7 +4444,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Primary_Stat> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Primary_Stat> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -4459,7 +4459,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Primary_Stat>(result);
+            a = new Utilities.ReadOnlySet<Primary_Stat>(result);
         }
         
         public static void Deserialize(out Resource a, string value)
@@ -4512,7 +4512,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Resource> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Resource> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -4527,7 +4527,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Resource>(result);
+            a = new Utilities.ReadOnlySet<Resource>(result);
         }
         
         public static void Deserialize(out Gender a, string value)
@@ -4545,7 +4545,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Gender> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Gender> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -4560,7 +4560,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Gender>(result);
+            a = new Utilities.ReadOnlySet<Gender>(result);
         }
         
         public static void Deserialize(out Status a, string value)
@@ -4583,7 +4583,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Status> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Status> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -4598,7 +4598,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Status>(result);
+            a = new Utilities.ReadOnlySet<Status>(result);
         }
         
         public static void Deserialize(out Alliance a, string value)
@@ -4621,7 +4621,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Alliance> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Alliance> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -4636,7 +4636,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Alliance>(result);
+            a = new Utilities.ReadOnlySet<Alliance>(result);
         }
         
         public static void Deserialize(out GoalStatus a, string value)
@@ -4664,7 +4664,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<GoalStatus> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<GoalStatus> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -4679,7 +4679,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<GoalStatus>(result);
+            a = new Utilities.ReadOnlySet<GoalStatus>(result);
         }
         
         public static void Deserialize(out Personality_Trait a, string value)
@@ -4762,7 +4762,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Personality_Trait> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Personality_Trait> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -4777,7 +4777,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Personality_Trait>(result);
+            a = new Utilities.ReadOnlySet<Personality_Trait>(result);
         }
         
         public static void Deserialize(out Emotion a, string value)
@@ -4815,7 +4815,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
             a = 0;
         }
         
-        public static void Deserialize(out Utilities.ReadonlySet<Emotion> a, string value)
+        public static void Deserialize(out Utilities.ReadOnlySet<Emotion> a, string value)
         {
             string[] values;
             values = value.Split('+');
@@ -4830,7 +4830,7 @@ public static implicit operator System.Decimal(Angle value) { return value.m_val
                     result.Add(v);
                 }
             }
-            a = new Utilities.ReadonlySet<Emotion>(result);
+            a = new Utilities.ReadOnlySet<Emotion>(result);
         }
         
         public static void Deserialize(out Discipline_Bonus a, string value)

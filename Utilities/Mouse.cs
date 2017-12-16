@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Threading;
+using System.Globalization;
 
 namespace Utilities
 {
@@ -70,9 +71,9 @@ namespace Utilities
             {
                 //Create a string variable that shows the current mouse coordinates.
                 string strCaption = "x = " +
-                        MyMouseHookStruct.pt.x.ToString("d") +
+                        MyMouseHookStruct.pt.x.ToString("d", CultureInfo.InvariantCulture) +
                             "  y = " +
-                MyMouseHookStruct.pt.y.ToString("d");
+                MyMouseHookStruct.pt.y.ToString("d", CultureInfo.InvariantCulture);
                 Debug.WriteLine(strCaption);
                 return CallNextHookEx(hHook, nCode, wParam, lParam);
             }

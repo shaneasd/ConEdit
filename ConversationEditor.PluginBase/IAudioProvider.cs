@@ -14,7 +14,7 @@ namespace ConversationEditor
         /// <summary>
         /// Play the audio associated with the specified audio value if it exists
         /// </summary>
-        void Play(Audio value);
+        void Play(Audio audio);
 
         /// <summary>
         /// Generate an audio value given the specified contextual information for the value

@@ -19,7 +19,7 @@ namespace ConversationEditor
         {
             public const float HEIGHT = 20;
             const int CARET_HEIGHT = 15;
-            public static TextureBrush ReadonlyBackgroundBrush { get; }
+            public static TextureBrush ReadOnlyBackgroundBrush { get; }
             public static Item Null { get; } = null;
             static Item()
             {
@@ -33,14 +33,14 @@ namespace ConversationEditor
                         {
                             using (var fg = Graphics.FromImage(buffer))
                                 fg.DrawImage(temp, 0, 0, temp.Width, temp.Height);
-                            ReadonlyBackgroundBrush = new TextureBrush(buffer);
+                            ReadOnlyBackgroundBrush = new TextureBrush(buffer);
                         }
                     }
                 }
             }
 
-            public readonly FileSystemObject File;
-            protected readonly IProject m_project;
+            public FileSystemObject File { get; }
+            protected IProject m_project { get; }
             protected ContainerItem m_parent;
 
             private Func<RectangleF> m_area;
@@ -56,12 +56,12 @@ namespace ConversationEditor
 
             public struct ConstructorParams
             {
-                public readonly Func<RectangleF> Area;
-                public readonly IProject Project;
-                public readonly FileSystemObject File;
-                public readonly ContainerItem Parent;
-                public readonly Func<Matrix> ToControlTransform;
-                public readonly Func<FileSystemObject, string, bool> Rename;
+                public Func<RectangleF> Area { get; }
+                public IProject Project { get; }
+                public FileSystemObject File { get; }
+                public ContainerItem Parent { get; }
+                public Func<Matrix> ToControlTransform { get; }
+                public Func<FileSystemObject, string, bool> Rename { get; }
 
                 public ConstructorParams(Func<RectangleF> area, IProject project, FileSystemObject file, ContainerItem parent, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
                 {
@@ -95,9 +95,9 @@ namespace ConversationEditor
 
             private static void DrawReadOnly(Graphics g, RectangleF area)
             {
-                ReadonlyBackgroundBrush.TranslateTransform(area.X, area.Y);
-                g.FillRectangle(ReadonlyBackgroundBrush, area);
-                ReadonlyBackgroundBrush.ResetTransform();
+                ReadOnlyBackgroundBrush.TranslateTransform(area.X, area.Y);
+                g.FillRectangle(ReadOnlyBackgroundBrush, area);
+                ReadOnlyBackgroundBrush.ResetTransform();
             }
 
             public RectangleF CalculateIconRectangle(RectangleF area)

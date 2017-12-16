@@ -13,7 +13,7 @@ namespace ConversationEditor
     /// <summary>
     /// Whether to consider the main assembly or just plugin assemblies when importing factories
     /// </summary>
-    public enum MainAssemblies
+    public enum MainAssembly
     {
         Include,
         Ignore,
@@ -23,10 +23,10 @@ namespace ConversationEditor
     {
         private List<PluginAssembly> m_filteredAssemblies = new List<PluginAssembly>();
         public IEnumerable<PluginAssembly> FilteredAssemblies { get { return m_filteredAssemblies; } }
-        public IEnumerable<PluginAssembly> UnfilteredAssemblies(MainAssemblies mainAssembly)
+        public IEnumerable<PluginAssembly> UnfilteredAssemblies(MainAssembly mainAssembly)
         {
             var allAssemblies = PluginSelector.AllPlugins;
-            if (mainAssembly == MainAssemblies.Include)
+            if (mainAssembly == MainAssembly.Include)
             {
                 allAssemblies = allAssemblies.Concat(new PluginAssembly(Assembly.GetExecutingAssembly()).Only());
                 allAssemblies = allAssemblies.Concat(new PluginAssembly(typeof(EditableUI).Assembly).Only());
@@ -37,7 +37,7 @@ namespace ConversationEditor
         {
             get
             {
-                var assemblies = UnfilteredAssemblies(MainAssemblies.Include).Select(a => a.Assembly);
+                var assemblies = UnfilteredAssemblies(MainAssembly.Include).Select(a => a.Assembly);
 
                 foreach (Assembly assembly in assemblies)
                 {
@@ -57,7 +57,7 @@ namespace ConversationEditor
         {
             get
             {
-                var assemblies = UnfilteredAssemblies(MainAssemblies.Include).Select(a => a.Assembly);
+                var assemblies = UnfilteredAssemblies(MainAssembly.Include).Select(a => a.Assembly);
                 foreach (Assembly assembly in assemblies)
                 {
                     var types = assembly.GetExportedTypes();
@@ -82,7 +82,7 @@ namespace ConversationEditor
 
         public IEnumerable<IConfigNodeDefinition> GetConfigDefinitions()
         {
-            foreach (var assembly in UnfilteredAssemblies(MainAssemblies.Include).Select(a => a.Assembly))
+            foreach (var assembly in UnfilteredAssemblies(MainAssembly.Include).Select(a => a.Assembly))
             {
                 var factories = assembly.GetExportedTypes().Where(t => t.GetInterfaces().Contains(typeof(IConfigNodeDefinitionFactory)));
                 foreach (var factoryType in factories)
