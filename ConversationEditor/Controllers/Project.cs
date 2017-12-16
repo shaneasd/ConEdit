@@ -34,8 +34,8 @@ namespace ConversationEditor
         {
             public struct FileIdAndPath
             {
-                public Id<FileInProject> Id;
-                public DocumentPath Path;
+                public Id<FileInProject> Id { get; }
+                public DocumentPath Path { get; }
                 public FileIdAndPath(Id<FileInProject> id, DocumentPath path)
                 {
                     Id = id;

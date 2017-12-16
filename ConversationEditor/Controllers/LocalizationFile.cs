@@ -246,7 +246,7 @@ namespace ConversationEditor
                 }
             }
 
-            if (message != "")
+            if (!string.IsNullOrEmpty(message))
             {
                 MessageBox.Show(message);
             }
