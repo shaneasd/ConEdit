@@ -10,30 +10,30 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    internal class ProjectElementList<TInterface> : IProjectElementList<TInterface>
-        where TInterface : class, ISaveableFileProvider, IInProject
+    internal class ProjectElementList<TElement> : IProjectElementList<TElement>
+        where TElement : class, ISaveableFileProvider, IInProject
     {
-        public CallbackDictionary<Id<FileInProject>, TInterface> m_data;
-        private Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<TInterface>> m_loader;
-        private Func<DirectoryInfo, TInterface> m_makeEmpty;
+        public CallbackDictionary<Id<FileInProject>, TElement> m_data;
+        private Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<TElement>> m_loader;
+        private Func<DirectoryInfo, TElement> m_makeEmpty;
         private Func<string, bool> m_fileLocationOk;
         private GetFilePath m_getFilePath;
         private SuppressibleAction m_suppressibleGotChanged;
 
-        public event Action<TInterface> Added;
-        public event Action<TInterface> Removed;
-        public event Action<TInterface, TInterface> Reloaded;
+        public event Action<TElement> Added;
+        public event Action<TElement> Removed;
+        public event Action<TElement, TElement> Reloaded;
         public event Action GotChanged;
 
-        public ProjectElementList(GetFilePath getFilePath, Func<string, bool> fileLocationOk, Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<TInterface>> loader, Func<DirectoryInfo, TInterface> makeEmpty, Func<Id<FileInProject>, TInterface> makeMissing)
+        public ProjectElementList(GetFilePath getFilePath, Func<string, bool> fileLocationOk, Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<TElement>> loader, Func<DirectoryInfo, TElement> makeEmpty, Func<Id<FileInProject>, TElement> makeMissing)
             : this(getFilePath, fileLocationOk, MyLoader(getFilePath, loader, makeMissing), makeEmpty)
         {
         }
 
-        public ProjectElementList(GetFilePath getFilePath, Func<string, bool> fileLocationOk, Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<TInterface>> loader, Func<DirectoryInfo, TInterface> makeEmpty)
+        public ProjectElementList(GetFilePath getFilePath, Func<string, bool> fileLocationOk, Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<TElement>> loader, Func<DirectoryInfo, TElement> makeEmpty)
         {
             m_getFilePath = getFilePath;
-            m_data = new CallbackDictionary<Id<FileInProject>, TInterface>();
+            m_data = new CallbackDictionary<Id<FileInProject>, TElement>();
             m_data.Removing += (key, element) => { element.Removed(); };
             m_data.Clearing += () => { m_data.Values.ForAll(element => { element.Removed(); }); };
             m_loader = loader;
@@ -50,11 +50,11 @@ namespace ConversationEditor
             return m_fileLocationOk(path);
         }
 
-        static Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<TInterface>> MyLoader(GetFilePath getFilePath, Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<TInterface>> loader, Func<Id<FileInProject>, TInterface> makeMissing)
+        static Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<TElement>> MyLoader(GetFilePath getFilePath, Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<TElement>> loader, Func<Id<FileInProject>, TElement> makeMissing)
         {
             return files =>
                 {
-                    List<TInterface> result = new List<TInterface>();
+                    List<TElement> result = new List<TElement>();
                     foreach (var file in files)
                     {
                         if (file.Item2.Exists)
@@ -85,7 +85,7 @@ namespace ConversationEditor
                 };
         }
 
-        public IEnumerator<TInterface> GetEnumerator()
+        public IEnumerator<TElement> GetEnumerator()
         {
             return m_data.Values.GetEnumerator();
         }
@@ -95,35 +95,35 @@ namespace ConversationEditor
             return GetEnumerator();
         }
 
-        public IEnumerable<TInterface> Load(IEnumerable<DocumentPath> paths)
+        public IEnumerable<TElement> Load(IEnumerable<DocumentPath> paths)
         {
             IEnumerable<Tuple<Id<FileInProject>, DocumentPath>> toLoad = paths.Select(path => Tuple.Create((Id<FileInProject>.New()), path)).ToList();
             return Load(toLoad);
         }
 
-        public IEnumerable<TInterface> Load(IEnumerable<Id<FileInProject>> fileIds)
+        public IEnumerable<TElement> Load(IEnumerable<Id<FileInProject>> fileIds)
         {
             IEnumerable<Tuple<Id<FileInProject>, DocumentPath>> withFileIdsAndInfos = fileIds.Select(f => Tuple.Create(f, m_getFilePath(f)));
 
             return Load(withFileIdsAndInfos);
         }
 
-        private IEnumerable<TInterface> Load(IEnumerable<Tuple<Id<FileInProject>, DocumentPath>> withFileIdsAndInfos)
+        private IEnumerable<TElement> Load(IEnumerable<Tuple<Id<FileInProject>, DocumentPath>> withFileIdsAndInfos)
         {
-            List<Tuple<Id<FileInProject>, DocumentPath, TInterface>> toLoad = new List<Tuple<Id<FileInProject>, DocumentPath, TInterface>>();
+            List<Tuple<Id<FileInProject>, DocumentPath, TElement>> toLoad = new List<Tuple<Id<FileInProject>, DocumentPath, TElement>>();
             foreach (var fileInfo in withFileIdsAndInfos)
             {
                 TryAddToLoadList(toLoad, fileInfo.Item1, fileInfo.Item2);
             }
 
-            List<TInterface> result = m_loader(toLoad.Select(t => Tuple.Create(t.Item1, t.Item2))).ToList();
+            List<TElement> result = m_loader(toLoad.Select(t => Tuple.Create(t.Item1, t.Item2))).ToList();
 
             using (m_suppressibleGotChanged.SuppressCallback())
             {
                 for (int i = 0; i < result.Count; i++)
                 {
                     var conversation = result[i];
-                    TInterface existing = toLoad[i].Item3;
+                    TElement existing = toLoad[i].Item3;
                     m_data[conversation.Id] = conversation;
                     if (existing != null)
                         Reloaded.Execute(existing, conversation);
@@ -135,7 +135,7 @@ namespace ConversationEditor
             return this;
         }
 
-        private void TryAddToLoadList(List<Tuple<Id<FileInProject>, DocumentPath, TInterface>> toLoad, Id<FileInProject> fileId, DocumentPath path)
+        private void TryAddToLoadList(List<Tuple<Id<FileInProject>, DocumentPath, TElement>> toLoad, Id<FileInProject> fileId, DocumentPath path)
         {
             if (!FileLocationOk(path.AbsolutePath))
                 throw new InvalidOperationException("Attempting to load file that is not in a subfolder of the project's parent folder");
@@ -169,36 +169,36 @@ namespace ConversationEditor
             }
             else
             {
-                toLoad.Add(new Tuple<Id<FileInProject>, DocumentPath, TInterface>(fileId, path, null));
+                toLoad.Add(new Tuple<Id<FileInProject>, DocumentPath, TElement>(fileId, path, null));
             }
         }
 
         public void Reload()
         {
-            List<Tuple<Id<FileInProject>, DocumentPath, TInterface>> toLoad = new List<Tuple<Id<FileInProject>, DocumentPath, TInterface>>();
+            List<Tuple<Id<FileInProject>, DocumentPath, TElement>> toLoad = new List<Tuple<Id<FileInProject>, DocumentPath, TElement>>();
             foreach (var doc in m_data.Values)
             {
                 toLoad.Add(Tuple.Create(doc.Id, m_getFilePath(doc.Id), doc));
             }
 
-            List<TInterface> result = m_loader(toLoad.Select(t => Tuple.Create(t.Item1, t.Item2))).ToList();
+            List<TElement> result = m_loader(toLoad.Select(t => Tuple.Create(t.Item1, t.Item2))).ToList();
             for (int i = 0; i < result.Count; i++)
             {
                 var conversation = result[i];
-                TInterface existing = toLoad[i].Item3;
+                TElement existing = toLoad[i].Item3;
                 m_data[conversation.Id] = conversation;
                 Reloaded.Execute(existing, conversation);
             }
 
-            foreach (TInterface dispose in toLoad.Select(v => v.Item3))
+            foreach (TElement dispose in toLoad.Select(v => v.Item3))
             {
                 dispose.Dispose();
             }
         }
 
-        public TInterface New(DirectoryInfo path)
+        public TElement New(DirectoryInfo path)
         {
-            TInterface conversation = m_makeEmpty(path);
+            TElement conversation = m_makeEmpty(path);
             m_data.Add(conversation.Id, conversation);
             Added.Execute(conversation);
             return conversation;
@@ -211,7 +211,7 @@ namespace ConversationEditor
             return result == DialogResult.OK;
         }
 
-        public void Remove(TInterface element, bool force)
+        public void Remove(TElement element, bool force)
         {
             if (force || element.File.CanClose())
             {
@@ -225,7 +225,7 @@ namespace ConversationEditor
             }
         }
 
-        public void Delete(TInterface element)
+        public void Delete(TElement element)
         {
             Func<bool> prompt = element is IDomainFile ? (Func<bool>)GraphFile.PromptFileRemoved : (Func<bool>)PromptUsedAudioRemoved;
             if (element.CanRemove(prompt))
