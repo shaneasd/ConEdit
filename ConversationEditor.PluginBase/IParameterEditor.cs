@@ -31,7 +31,6 @@ namespace ConversationEditor
         public Func<string, IEnumerable<string>> AutoCompleteSuggestions { get { return m_autoCompleteSuggestions; } }
     }
 
-    //TODO: Fairly sure AsControl could just return Control and we could get rid of TUI
     public interface IParameterEditor : IDisposable
     {
         void Setup(ParameterEditorSetupData data);

@@ -127,12 +127,12 @@ namespace ConversationEditor
                 Console.Out.WriteLine(e.InnerException.StackTrace);
 
                 MessageBox.Show("File: " + path.AbsolutePath + " could not be accessed");
-                return new MissingConversationFile(file, path); //TODO: Generates CA2000 because of the implicit conversion to Either<,>
+                return new MissingConversationFile(file, path);
             }
             catch (DeserializerVersionMismatchException e)
             {
                 MessageBox.Show("File: " + path.AbsolutePath + " could not be processed. " + e.Message);
-                return new MissingConversationFile(file, path); //TODO: Generates CA2000 because of the implicit conversion to Either<,>
+                return new MissingConversationFile(file, path);
             }
         }
 
