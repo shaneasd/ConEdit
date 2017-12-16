@@ -943,7 +943,7 @@ namespace ConversationEditor
             }
         }
 
-        private IEnumerable<TInterface> LoadValidImportFiles<TConcrete, TInterface>(OpenFileDialog ofd, IProjectElementList<TConcrete, TInterface> list) where TConcrete : TInterface
+        private IEnumerable<TInterface> LoadValidImportFiles<TInterface>(OpenFileDialog ofd, IProjectElementList<TInterface> list)
         {
             var badpaths = ofd.FileNames.Where(p => !list.FileLocationOk(p)).ToArray();
             if (badpaths.Any())

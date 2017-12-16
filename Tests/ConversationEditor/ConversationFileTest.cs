@@ -91,7 +91,7 @@ namespace Tests.ConversationEditor
 
         class DummyAudioLibrary : IAudioLibrary
         {
-            public IProjectElementList<AudioFile, IAudioFile> AudioFiles
+            public IProjectElementList<IAudioFile> AudioFiles
             {
                 get
                 {

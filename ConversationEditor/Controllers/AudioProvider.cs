@@ -17,7 +17,7 @@ namespace ConversationEditor
         Audio IAudioParameterEditorCallbacks.Generate(AudioGenerationParameters parameters) { throw new NotSupportedException(); }
         void IAudioLibrary.UpdateUsage(Audio audio) { }
 
-        IProjectElementList<AudioFile, IAudioFile> IAudioLibrary.AudioFiles { get { throw new NotSupportedException(); } }
+        IProjectElementList<IAudioFile> IAudioLibrary.AudioFiles { get { throw new NotSupportedException(); } }
         IEnumerable<Audio> IAudioLibrary.UsedAudio() { return Enumerable.Empty<Audio>(); }
         void IAudioLibrary.UpdateUsage(ConversationNode<INodeGui> n) { }
         public static readonly NoAudio Instance = new NoAudio();
@@ -70,7 +70,7 @@ namespace ConversationEditor
         }
         public static IAudioProviderCustomization DefaultCustomization { get; } = new TDefaultCustomization();
 
-        ProjectElementList<AudioFile, MissingAudioFile, IAudioFile> m_audioFiles;
+        ProjectElementList<IAudioFile> m_audioFiles;
         private IProject m_project;
         private DirectoryInfo m_projectPath;
         private IAudioProviderCustomization m_customization;
@@ -80,10 +80,10 @@ namespace ConversationEditor
             m_project = project;
             m_customization = customization;
 
-            Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<AudioFile>> load = files => files.Select(file => new AudioFile(file.Item1, file.Item2, this));
+            Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<IAudioFile>> load = files => files.Select(file => new AudioFile(file.Item1, file.Item2, this));
             Func<DirectoryInfo, AudioFile> makeEmpty = path => { throw new NotSupportedException("Can't create new audio files within the editor"); };
             Func<Id<FileInProject>, MissingAudioFile> makeMissing = file => new MissingAudioFile(file, getFilePath(file), this);
-            m_audioFiles = new ProjectElementList<AudioFile, MissingAudioFile, IAudioFile>(getFilePath, fileLocationOk, load, makeEmpty, makeMissing);
+            m_audioFiles = new ProjectElementList<IAudioFile>(getFilePath, fileLocationOk, load, makeEmpty, makeMissing);
             UpdateQueued = new SuppressibleAction(() => { ReallyUpdateUsage(); }); //For now just update everything
         }
 
@@ -117,7 +117,7 @@ namespace ConversationEditor
             //Process.Start(m_mediaPlayerPath(), "\"" +  audio.File.File.FullName + "\"");
         }
 
-        public IProjectElementList<AudioFile, IAudioFile> AudioFiles
+        public IProjectElementList<IAudioFile> AudioFiles
         {
             get { return m_audioFiles; }
         }

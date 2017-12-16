@@ -14,7 +14,7 @@ namespace ConversationEditor
     {
         public const string MissingLocalizationString = "Missing Localization";
 
-        ProjectElementList<LocalizationFile, MissingLocalizationFile, ILocalizationFile> m_localizers;
+        ProjectElementList<ILocalizationFile> m_localizers;
         HashSet<Project.TData.LocalizerSetData> m_localizationSets;
         ILocalizationContext m_context;
 
@@ -33,18 +33,18 @@ namespace ConversationEditor
             m_usedGuids = usedGuids;
             ShouldClean = shouldClean;
 
-            Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<Either<LocalizationFile, MissingLocalizationFile>>> load = files =>
+            Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<ILocalizationFile>> load = files =>
             {
                 //return files.Select(file => LocalizationFile.Load(file, MakeSerializer(file.Name), backend));
                 var filesAndSerializer = files.Select(f => new { Id = f.Item1, Path = f.Item2, Serializer = MakeSerializer(f.Item2.AbsolutePath, f.Item1) }).ToList();
                 return ParallelEnumerable.Select(filesAndSerializer.AsParallel(), fs => LocalizationFile.Load(fs.Path, fs.Id, fs.Serializer, backend));
             };
             Func<DirectoryInfo, LocalizationFile> makeEmpty = path => LocalizationFile.MakeNew(path, MakeSerializer, pathOk, backend, origin);
-            m_localizers = new ProjectElementList<LocalizationFile, MissingLocalizationFile, ILocalizationFile>(getFilePath, fileLocationOk.Bottleneck(), load, makeEmpty);
+            m_localizers = new ProjectElementList<ILocalizationFile>(getFilePath, fileLocationOk.Bottleneck(), load, makeEmpty);
             m_localizationSets = sets.ToHashSet();
         }
 
-        public IProjectElementList<LocalizationFile, ILocalizationFile> Localizers { get { return m_localizers; } }
+        public IProjectElementList<ILocalizationFile> Localizers { get { return m_localizers; } }
 
         public HashSet<Project.TData.LocalizerSetData> LocalizationSets { get { return m_localizationSets; } }
 

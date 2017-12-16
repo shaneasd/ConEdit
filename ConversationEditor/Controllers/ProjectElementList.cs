@@ -10,14 +10,12 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    internal class ProjectElementList<TReal, TMissing, TInterface> : IProjectElementList<TReal, TInterface>
-        where TReal : TInterface
-        where TMissing : TInterface
+    internal class ProjectElementList<TInterface> : IProjectElementList<TInterface>
         where TInterface : class, ISaveableFileProvider, IInProject
     {
         public CallbackDictionary<Id<FileInProject>, TInterface> m_data;
-        private Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<Either<TReal, TMissing>>> m_loader;
-        private Func<DirectoryInfo, TReal> m_makeEmpty;
+        private Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<TInterface>> m_loader;
+        private Func<DirectoryInfo, TInterface> m_makeEmpty;
         private Func<string, bool> m_fileLocationOk;
         private GetFilePath m_getFilePath;
         private SuppressibleAction m_suppressibleGotChanged;
@@ -27,12 +25,12 @@ namespace ConversationEditor
         public event Action<TInterface, TInterface> Reloaded;
         public event Action GotChanged;
 
-        public ProjectElementList(GetFilePath getFilePath, Func<string, bool> fileLocationOk, Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<TReal>> loader, Func<DirectoryInfo, TReal> makeEmpty, Func<Id<FileInProject>, TMissing> makeMissing)
+        public ProjectElementList(GetFilePath getFilePath, Func<string, bool> fileLocationOk, Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<TInterface>> loader, Func<DirectoryInfo, TInterface> makeEmpty, Func<Id<FileInProject>, TInterface> makeMissing)
             : this(getFilePath, fileLocationOk, MyLoader(getFilePath, loader, makeMissing), makeEmpty)
         {
         }
 
-        public ProjectElementList(GetFilePath getFilePath, Func<string, bool> fileLocationOk, Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<Either<TReal, TMissing>>> loader, Func<DirectoryInfo, TReal> makeEmpty)
+        public ProjectElementList(GetFilePath getFilePath, Func<string, bool> fileLocationOk, Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<TInterface>> loader, Func<DirectoryInfo, TInterface> makeEmpty)
         {
             m_getFilePath = getFilePath;
             m_data = new CallbackDictionary<Id<FileInProject>, TInterface>();
@@ -52,11 +50,11 @@ namespace ConversationEditor
             return m_fileLocationOk(path);
         }
 
-        static Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<Either<TReal, TMissing>>> MyLoader(GetFilePath getFilePath, Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<TReal>> loader, Func<Id<FileInProject>, TMissing> makeMissing)
+        static Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<TInterface>> MyLoader(GetFilePath getFilePath, Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<TInterface>> loader, Func<Id<FileInProject>, TInterface> makeMissing)
         {
             return files =>
                 {
-                    List<Either<TReal, TMissing>> result = new List<Either<TReal, TMissing>>();
+                    List<TInterface> result = new List<TInterface>();
                     foreach (var file in files)
                     {
                         if (file.Item2.Exists)
@@ -118,7 +116,7 @@ namespace ConversationEditor
                 TryAddToLoadList(toLoad, fileInfo.Item1, fileInfo.Item2);
             }
 
-            List<TInterface> result = m_loader(toLoad.Select(t => Tuple.Create(t.Item1, t.Item2))).Select(o => o.Transformed<TInterface>(a => a, a => a)).ToList();
+            List<TInterface> result = m_loader(toLoad.Select(t => Tuple.Create(t.Item1, t.Item2))).ToList();
 
             using (m_suppressibleGotChanged.SuppressCallback())
             {
@@ -183,7 +181,7 @@ namespace ConversationEditor
                 toLoad.Add(Tuple.Create(doc.Id, m_getFilePath(doc.Id), doc));
             }
 
-            List<TInterface> result = m_loader(toLoad.Select(t => Tuple.Create(t.Item1, t.Item2))).Select(o => o.Transformed<TInterface>(a => a, a => a)).ToList();
+            List<TInterface> result = m_loader(toLoad.Select(t => Tuple.Create(t.Item1, t.Item2))).ToList();
             for (int i = 0; i < result.Count; i++)
             {
                 var conversation = result[i];
@@ -198,9 +196,9 @@ namespace ConversationEditor
             }
         }
 
-        public TReal New(DirectoryInfo path)
+        public TInterface New(DirectoryInfo path)
         {
-            TReal conversation = m_makeEmpty(path);
+            TInterface conversation = m_makeEmpty(path);
             m_data.Add(conversation.Id, conversation);
             Added.Execute(conversation);
             return conversation;

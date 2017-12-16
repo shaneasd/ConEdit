@@ -75,7 +75,7 @@ namespace ConversationEditor
             }
         }
 
-        internal static Either<LocalizationFile, MissingLocalizationFile> Load(DocumentPath path, Id<FileInProject> id, ISerializer<LocalizerData> serializer, UpToDateFile.BackEnd backend)
+        internal static ILocalizationFile Load(DocumentPath path, Id<FileInProject> id, ISerializer<LocalizerData> serializer, UpToDateFile.BackEnd backend)
         {
             if (path.Exists)
             {
@@ -220,7 +220,7 @@ namespace ConversationEditor
 
         public void ImportInto(string[] fileNames, DirectoryInfo origin)
         {
-            var localizations = fileNames.Select(path => new { Path = path, Localization = Either.UpCast<ILocalizationFile>().Cast(Load(DocumentPath.FromPath(path, origin), Id<FileInProject>.New(), null, m_backend)) });
+            var localizations = fileNames.Select(path => new { Path = path, Localization = Load(DocumentPath.FromPath(path, origin), Id<FileInProject>.New(), null, m_backend) });
 
             string message = "";
 

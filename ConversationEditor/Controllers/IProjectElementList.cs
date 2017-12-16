@@ -7,8 +7,7 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    public interface IProjectElementList<out TReal, TInterface> : IEnumerable<TInterface>
-        where TReal : TInterface
+    public interface IProjectElementList<TInterface> : IEnumerable<TInterface>
     {
         /// <summary>
         /// Load files unknown to the project, generating new FileIds for each
@@ -19,7 +18,7 @@ namespace ConversationEditor
         /// </summary>
         IEnumerable<TInterface> Load(IEnumerable<Id<FileInProject>> fileInfos);
         void Reload();
-        TReal New(DirectoryInfo path);
+        TInterface New(DirectoryInfo path);
         /// <summary>
         /// Remove the 'element' from the collection. Provided either 'force' is true or element.File.CanClose is true
         /// </summary>

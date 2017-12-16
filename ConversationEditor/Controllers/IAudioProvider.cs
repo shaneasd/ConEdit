@@ -14,7 +14,7 @@ namespace ConversationEditor
         /// </summary>
         void Play(IAudioFile file);
 
-        IProjectElementList<AudioFile, IAudioFile> AudioFiles { get; }
+        IProjectElementList<IAudioFile> AudioFiles { get; }
 
         /// <summary>
         /// Determine a complete list of audio entities which are referenced by nodes
@@ -56,7 +56,7 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public IProjectElementList<AudioFile, IAudioFile> AudioFiles
+        public IProjectElementList<IAudioFile> AudioFiles
         {
             get { return DummyProjectElementList<AudioFile, IAudioFile>.Instance; }
         }

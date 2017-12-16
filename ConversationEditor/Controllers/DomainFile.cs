@@ -392,7 +392,7 @@ namespace ConversationEditor
             }
         }
 
-        internal static IEnumerable<Either<DomainFile, MissingDomainFile>> Load(IEnumerable<Tuple<Id<FileInProject>, DocumentPath>> paths, DomainDomain source, Func<DocumentPath, DomainSerializerDeserializer> serializerdeserializer, INodeFactory nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, UpToDateFile.BackEnd backend)
+        internal static IEnumerable<IDomainFile> Load(IEnumerable<Tuple<Id<FileInProject>, DocumentPath>> paths, DomainDomain source, Func<DocumentPath, DomainSerializerDeserializer> serializerdeserializer, INodeFactory nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, UpToDateFile.BackEnd backend)
         {
             var streamsAndPaths = paths.Select((x) =>
             {
@@ -497,7 +497,7 @@ namespace ConversationEditor
             }
 
             {
-                var result = streamsAndPaths.Select(a => a.Transformed<Either<DomainFile, MissingDomainFile>>(stream =>
+                var result = streamsAndPaths.Select(a => a.Transformed<IDomainFile>(stream =>
                     {
                         try
                         {

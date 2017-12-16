@@ -92,8 +92,8 @@ namespace ConversationEditor
         ISerializer<TData> m_serializer;
         ConversationSerializerDeserializerFactory m_conversationSerializerFactory;
         ISerializer<TDomainData> m_domainSerializer;
-        private ProjectElementList<ConversationFile, MissingConversationFile, IConversationFile> m_conversations;
-        private ProjectElementList<DomainFile, MissingDomainFile, IDomainFile> m_domainFiles;
+        private ProjectElementList<IConversationFile> m_conversations; //TODO: Could these be IProjectElementLists?
+        private ProjectElementList<IDomainFile> m_domainFiles;
         private DomainDomain m_domainDataSource;
         private ConversationDataSource m_conversationDataSource;
         SaveableFileNotUndoable m_file;
@@ -228,14 +228,14 @@ namespace ConversationEditor
                     };
 
                     m_domainDataSource = new DomainDomain(pluginsConfig);
-                    Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<Either<DomainFile, MissingDomainFile>>> loader = paths =>
+                    Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<IDomainFile>> loader = paths =>
                     {
                         var result = DomainFile.Load(paths, m_domainDataSource, document => DomainSerializerDeserializer.Make(m_domainDataSource), DomainNodeFactory, () => DomainUsage, getDomainEnumSource, backend).Evaluate();
-                        result.ForAll(a => a.Do(b => b.ConversationDomainModified += ConversationDatasourceModified, null));
+                        result.ForAll(a => a.ConversationDomainModified += ConversationDatasourceModified);
                         return result;
                     };
                     Func<DirectoryInfo, DomainFile> makeEmpty = path => DomainFile.CreateEmpty(path, m_domainDataSource, m_domainSerializer, pathOk, DomainNodeFactory, () => DomainUsage, getDomainEnumSource, backend, Origin);
-                    m_domainFiles = new ProjectElementList<DomainFile, MissingDomainFile, IDomainFile>(GetFilePath, s => CheckFolder(s, Origin), loader, makeEmpty);
+                    m_domainFiles = new ProjectElementList<IDomainFile>(GetFilePath, s => CheckFolder(s, Origin), loader, makeEmpty);
                     m_domainFiles.Load(domainIds);
                 }
                 m_conversationDataSource = new ConversationDataSource(m_domainFiles.Select(df => df.Data));
@@ -261,7 +261,7 @@ namespace ConversationEditor
                         return m_conversationDataSource.GetSource(localEnum.TypeId, newSourceID);
                     };
 
-                    Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<Either<ConversationFile, MissingConversationFile>>> loadConversations = files =>
+                    Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<IConversationFile>> loadConversations = files =>
                     {
                         //TODO: Can we just construct this serializer once before the parallel loop? If so we should be using it (it's currently unused), if not we should delete this line.
                         ISerializerDeserializer<XmlGraphData<NodeUIData, ConversationEditorData>> conversationSerializerDeserializer = m_conversationSerializerFactory(m_conversationDataSource);
@@ -271,7 +271,7 @@ namespace ConversationEditor
                         return ParallelEnumerable.Select(files.AsParallel(), file => ConversationFile.Load(file.Item1, file.Item2, ConversationNodeFactory, m_conversationSerializerFactory(m_conversationDataSource), audio, getSource, m_audioProvider, backend));
                     };
                     Func<DirectoryInfo, ConversationFile> makeEmpty = path => ConversationFile.CreateEmpty(path, this, ConversationNodeFactory, audio, getSource, m_audioProvider, backend, Origin);
-                    m_conversations = new ProjectElementList<ConversationFile, MissingConversationFile, IConversationFile>(GetFilePath, s => CheckFolder(s, Origin), loadConversations, makeEmpty);
+                    m_conversations = new ProjectElementList<IConversationFile>(GetFilePath, s => CheckFolder(s, Origin), loadConversations, makeEmpty);
                     m_conversations.Load(conversationIds);
                 }
 
@@ -363,8 +363,7 @@ namespace ConversationEditor
             }
         }
 
-        private void RefreshCallbacks<TReal, TInterface>(IProjectElementList<TReal, TInterface> elements, List<Action> actionsOnRefreshCallbacks)
-            where TReal : TInterface
+        private void RefreshCallbacks<TInterface>(IProjectElementList<TInterface> elements, List<Action> actionsOnRefreshCallbacks)
             where TInterface : ISaveableFileProvider, IInProject
         {
             foreach (var action in actionsOnRefreshCallbacks)
@@ -404,8 +403,7 @@ namespace ConversationEditor
                 GotChanged();
         }
 
-        public void OnElementModifiedExternally<TReal, TInterface>(IProjectElementList<TReal, TInterface> list, TInterface element)
-            where TReal : TInterface
+        public void OnElementModifiedExternally<TInterface>(IProjectElementList<TInterface> list, TInterface element)
             where TInterface : ISaveableFileProvider, IInProject
         {
             ElementModifiedExternally.Execute(element, () =>
@@ -460,13 +458,13 @@ namespace ConversationEditor
 
         public DirectoryInfo Origin { get { return GetOrigin(File.File); } }
 
-        public IProjectElementList<ConversationFile, IConversationFile> Conversations { get { return m_conversations; } }
+        public IProjectElementList<IConversationFile> Conversations { get { return m_conversations; } }
 
-        public IProjectElementList<LocalizationFile, ILocalizationFile> LocalizationFiles { get { return m_localizer.Localizers; } }
+        public IProjectElementList<ILocalizationFile> LocalizationFiles { get { return m_localizer.Localizers; } }
 
-        public IProjectElementList<DomainFile, IDomainFile> DomainFiles { get { return m_domainFiles; } }
+        public IProjectElementList<IDomainFile> DomainFiles { get { return m_domainFiles; } }
 
-        public IProjectElementList<AudioFile, IAudioFile> AudioFiles
+        public IProjectElementList<IAudioFile> AudioFiles
         {
             get { return m_audioProvider.AudioFiles; }
         }

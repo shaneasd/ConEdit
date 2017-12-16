@@ -102,7 +102,7 @@ namespace ConversationEditor
             }
         }
 
-        public static Either<ConversationFile, MissingConversationFile> Load(Id<FileInProject> file, DocumentPath path, INodeFactory nodeFactory, ISerializerDeserializer<TData> serializer, GenerateAudio generateAudio,
+        public static IConversationFile Load(Id<FileInProject> file, DocumentPath path, INodeFactory nodeFactory, ISerializerDeserializer<TData> serializer, GenerateAudio generateAudio,
             Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.BackEnd backend)
         {
             try

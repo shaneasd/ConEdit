@@ -19,10 +19,10 @@ namespace ConversationEditor
 
         void GotChanged();
 
-        IProjectElementList<ConversationFile, IConversationFile> Conversations { get; }
-        IProjectElementList<LocalizationFile, ILocalizationFile> LocalizationFiles { get; }
-        IProjectElementList<DomainFile, IDomainFile> DomainFiles { get; }
-        IProjectElementList<AudioFile, IAudioFile> AudioFiles { get; }
+        IProjectElementList<IConversationFile> Conversations { get; }
+        IProjectElementList<ILocalizationFile> LocalizationFiles { get; }
+        IProjectElementList<IDomainFile> DomainFiles { get; }
+        IProjectElementList<IAudioFile> AudioFiles { get; }
         IEnumerable<ISaveableFileProvider> Elements { get; }
         IEnumerable<ISaveableFileProvider> ElementsExceptThis { get; }
 

@@ -7,7 +7,7 @@ using Conversation;
 
 namespace ConversationEditor
 {
-    internal class DummyProjectElementList<TReal, TInterface> : IProjectElementList<TReal, TInterface> where TReal : TInterface
+    internal class DummyProjectElementList<TReal, TInterface> : IProjectElementList<TInterface> where TReal : TInterface
     {
         public static readonly DummyProjectElementList<TReal, TInterface> Instance = new DummyProjectElementList<TReal, TInterface>();
 
@@ -26,7 +26,7 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public TReal New(DirectoryInfo path)
+        public TInterface New(DirectoryInfo path)
         {
             throw new NotImplementedException();
         }

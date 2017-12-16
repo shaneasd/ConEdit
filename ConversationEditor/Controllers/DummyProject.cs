@@ -21,7 +21,7 @@ namespace ConversationEditor
 
         IAudioLibrary IProject.AudioProvider { get { return null; } }
 
-        IProjectElementList<LocalizationFile, ILocalizationFile> IProject.LocalizationFiles
+        IProjectElementList<ILocalizationFile> IProject.LocalizationFiles
         {
             get { return DummyProjectElementList<LocalizationFile, ILocalizationFile>.Instance; }
         }
@@ -31,12 +31,12 @@ namespace ConversationEditor
             get { return DummyDataSource.Instance; }
         }
 
-        public IProjectElementList<ConversationFile, IConversationFile> Conversations
+        public IProjectElementList<IConversationFile> Conversations
         {
             get { return DummyProjectElementList<ConversationFile, IConversationFile>.Instance; }
         }
 
-        public IProjectElementList<DomainFile, IDomainFile> DomainFiles
+        public IProjectElementList<IDomainFile> DomainFiles
         {
             get { return DummyProjectElementList<DomainFile, IDomainFile>.Instance; }
         }
@@ -76,7 +76,7 @@ namespace ConversationEditor
             get { return new LocalizationEngine(null, Enumerable.Empty<Project.TData.LocalizerSetData>(), null, () => new HashSet<Id<LocalizedText>>(), s => false, p => true, s => true, m_backend, null); }
         }
 
-        IProjectElementList<AudioFile, IAudioFile> IProject.AudioFiles
+        IProjectElementList<IAudioFile> IProject.AudioFiles
         {
             get { return DummyProjectElementList<AudioFile, IAudioFile>.Instance; }
         }
