@@ -11,12 +11,12 @@ using System.Globalization;
 namespace Utilities
 {
     //https://support.microsoft.com/en-us/kb/318804
-    public class Mouse
+    public static class Mouse
     {
-        public delegate int HookProc(int nCode, IntPtr wParam, IntPtr lParam);
+        public delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
 
         //Declare the hook handle as an int.
-        static int hHook = 0;
+        static IntPtr hHook = IntPtr.Zero;
 
         //Declare the mouse hook constant.
         //For other hook types, you can obtain these values from Winuser.h in the Microsoft SDK.
@@ -46,19 +46,14 @@ namespace Utilities
         //This is the Import for the SetWindowsHookEx function.
         //Use this function to install a thread-specific hook.
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        private static extern int SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hInstance, int threadId);
-
-        //This is the Import for the UnhookWindowsHookEx function.
-        //Call this function to uninstall the hook.
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        private static extern bool UnhookWindowsHookEx(int idHook);
+        private static extern IntPtr SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hInstance, int threadId);
 
         //This is the Import for the CallNextHookEx function.
         //Use this function to pass the hook information to the next hook procedure in chain.
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        private static extern int CallNextHookEx(int idHook, int nCode, IntPtr wParam, IntPtr lParam);
+        private static extern IntPtr CallNextHookEx(IntPtr idHook, int nCode, IntPtr wParam, IntPtr lParam);
 
-        public static int MouseHookProc(int nCode, IntPtr wParam, IntPtr lParam)
+        public static IntPtr MouseHookProc(int nCode, IntPtr wParam, IntPtr lParam)
         {
             //Marshall the data from the callback.
             MouseHookStruct MyMouseHookStruct = (MouseHookStruct)Marshal.PtrToStructure(lParam, typeof(MouseHookStruct));
@@ -81,7 +76,7 @@ namespace Utilities
 
         static Mouse()
         {
-            if (hHook == 0)
+            if (hHook == IntPtr.Zero)
             {
                 // Create an instance of HookProc.
                 MouseHookProcedure = new HookProc(MouseHookProc);
@@ -91,7 +86,7 @@ namespace Utilities
                             (IntPtr)0,
                             AppDomain.GetCurrentThreadId());
                 //If the SetWindowsHookEx function fails.
-                if (hHook == 0)
+                if (hHook == IntPtr.Zero)
                 {
                     Debug.WriteLine("SetWindowsHookEx Failed");
                     return;
