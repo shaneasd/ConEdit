@@ -11,7 +11,6 @@ using Utilities;
 
 using TControl = Utilities.UI.MySuggestionBox<System.Guid>;
 using TItem = Utilities.UI.MyComboBoxItem<System.Guid>;
-//using TControl = Utilities.MyComboBox<System.Guid>;
 
 namespace ConversationEditor
 {

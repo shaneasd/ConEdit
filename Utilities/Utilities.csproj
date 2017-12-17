@@ -86,9 +86,6 @@
     <Compile Include="Algorithm\ExtraLazyEnumerable.cs" />
     <Compile Include="Algorithm\GenericEqualityComparer.cs" />
     <Compile Include="UI\Controls.cs" />
-    <Compile Include="UI\MySuggestionBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="UI\DrawWindow.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -97,6 +94,9 @@
     </Compile>
     <Compile Include="UI\GreyScrollBar.Designer.cs">
       <DependentUpon>GreyScrollBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\MySuggestionComboBox.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="UI\ScrollPanel.cs">
       <SubType>UserControl</SubType>
@@ -120,7 +120,6 @@
     <Compile Include="IO\FileSystem.cs" />
     <Compile Include="UI\GraphicsUtil.cs" />
     <Compile Include="Misc.cs" />
-    <Compile Include="UI\MyComboBox.cs" />
     <Compile Include="UI\MyTextBox.cs" />
     <Compile Include="Unused\NotNullable.cs" />
     <Compile Include="Serialization\NullDeserializer.cs" />

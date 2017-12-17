@@ -9,8 +9,7 @@ using System.Windows.Forms;
 using Conversation;
 using Utilities;
 
-//using TControl = Utilities.MySuggestionBox<System.Guid>;
-using TControl = Utilities.UI.MyComboBox<System.Guid>;
+using TControl = Utilities.UI.MySuggestionBox<System.Guid>;
 using TItem = Utilities.UI.MyComboBoxItem<System.Guid>;
 using Utilities.UI;
 
