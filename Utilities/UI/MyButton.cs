@@ -145,7 +145,15 @@ namespace Utilities.UI
         {
             var mat = new ColorMatrix(new[] { new float[] { 1, 0, 0, 0, 0 }, new float[] { 0, 1, 0, 0, 0 }, new float[] { 0, 0, 1, 0, 0 }, new float[] { 0, 0, 0, 0.3f, 0 }, new float[] { 0, 0, 0, 0, 1 } });
             ImageAttributes attr = new ImageAttributes();
-            attr.SetColorMatrix(mat);
+            try
+            {
+                attr.SetColorMatrix(mat);
+            }
+            catch
+            {
+                attr.Dispose();
+                throw;
+            }
             return attr;
         }
 

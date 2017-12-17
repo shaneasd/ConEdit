@@ -20,7 +20,7 @@ namespace Conversation
 
         string Localize(Id<LocalizedStringType> type, Id<LocalizedText> id);
 
-        SimpleUndoPair SetLocalizationAction(Id<LocalizedStringType> type, Id<LocalizedText> id, string p);
+        SimpleUndoPair SetLocalizationAction(Id<LocalizedStringType> type, Id<LocalizedText> id, string value);
 
         SimpleUndoPair ClearLocalizationAction(Id<LocalizedStringType> type, Id<LocalizedText> id);
 

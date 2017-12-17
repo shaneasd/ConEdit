@@ -45,7 +45,7 @@ namespace ConversationEditor
 
             private Func<RectangleF> m_area;
             Func<Matrix> ToControlTransform;
-            protected readonly Func<FileSystemObject, string, bool> Rename;
+            protected Func<FileSystemObject, string, bool> Rename { get; }
             protected int m_indentLevel = 0;
             MyTextBox m_textBox = null;
 

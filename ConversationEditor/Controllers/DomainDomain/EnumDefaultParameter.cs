@@ -13,7 +13,7 @@ namespace ConversationEditor
         private bool m_corrupted;
         public override bool Corrupted { get { return m_corrupted; } }
 
-        public new static readonly ParameterType TypeId = ParameterType.Parse("82e83436-f1b0-4f71-8882-51c171d14ff3");
+        public new static ParameterType TypeId { get; } = ParameterType.Parse("82e83436-f1b0-4f71-8882-51c171d14ff3");
 
         Func<Dictionary<ParameterType, IEnumerable<EnumerationData.Element>>> m_enumOptions;
 

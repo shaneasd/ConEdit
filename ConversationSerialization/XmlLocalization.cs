@@ -88,14 +88,12 @@ namespace Conversation.Serialization
         {
             private Func<Context> m_context;
             private Func<string, bool> m_shouldClean;
-            private Func<Id<LocalizedText>, string> m_bestLocalization;
             private string m_file;
 
-            public Serializer(Func<Context> context, Func<string, bool> shouldClean, Func<Id<LocalizedText>, string> bestLocalization, string file)
+            public Serializer(Func<Context> context, Func<string, bool> shouldClean, string file)
             {
                 m_context = context;
                 m_shouldClean = shouldClean;
-                m_bestLocalization = bestLocalization;
                 m_file = file;
             }
 

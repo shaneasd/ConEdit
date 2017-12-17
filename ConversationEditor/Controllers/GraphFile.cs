@@ -424,10 +424,10 @@ namespace ConversationEditor
             UndoableFile.Change(action);
         }
 
-        public void BringToFront(IReadOnlyNodeSet Selected)
+        public void BringToFront(IReadOnlyNodeSet selected)
         {
-            m_nodesOrdered.BringToFront(Selected.Nodes.Select(GetNode));
-            m_groupsOrdered.BringToFront(Selected.Groups);
+            m_nodesOrdered.BringToFront(selected.Nodes.Select(GetNode));
+            m_groupsOrdered.BringToFront(selected.Groups);
         }
 
         public event Action FileModifiedExternally

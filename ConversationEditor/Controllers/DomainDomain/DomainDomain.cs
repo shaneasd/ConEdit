@@ -293,7 +293,7 @@ namespace ConversationEditor
             AddNode(DomainIDs.AutoComplete.LocalDynamicEnumerationValue, "LocalDynamicEnumerationValue", m_autoCompleteMenu, MakeConfig('\0', "808080"), new List<NodeData.ConnectorData>() { DomainIDs.AutoComplete.parent }, new List<NodeData.ParameterData>() { localDynamicEnumSetGuid });
         }
 
-        public static List<NodeData.ConnectorData> NodeConnectors
+        private static List<NodeData.ConnectorData> NodeConnectors
         {
             get
             {

@@ -94,10 +94,5 @@ namespace ConversationEditor
         {
             throw new NotImplementedException();
         }
-
-        public void Rename(string from, string to)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

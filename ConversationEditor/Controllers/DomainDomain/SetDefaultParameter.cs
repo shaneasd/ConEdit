@@ -10,7 +10,7 @@ namespace ConversationEditor
 {
     public class SetDefaultParameter : Parameter<ReadOnlySet<Guid>>, ISetParameter
     {
-        public new static readonly ParameterType TypeId = ParameterType.ValueSetType.Parse("set:452fbad8-976c-47d3-8b6f-06f871e06044");
+        public new static ParameterType TypeId { get; } = ParameterType.ValueSetType.Parse("set:452fbad8-976c-47d3-8b6f-06f871e06044");
         private readonly Func<Dictionary<ParameterType, IEnumerable<EnumerationData.Element>>> m_getEnumeration;
         private readonly Func<ParameterType> m_getCurrentEnumType;
         IEnumerable<EnumerationData.Element> Enumeration

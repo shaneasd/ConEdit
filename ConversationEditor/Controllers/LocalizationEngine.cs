@@ -55,7 +55,7 @@ namespace ConversationEditor
                  var used = m_usedGuids();
                  return new XmlLocalization.Context(used.Contains, used);
              };
-            return new XmlLocalization.Serializer(context, ShouldClean, textId => Localize(Id<LocalizedStringType>.FromGuid(id.Guid), textId), file);
+            return new XmlLocalization.Serializer(context, ShouldClean, file);
         }
 
         public string Localize(Id<LocalizedStringType> type, Id<LocalizedText> guid)
@@ -77,17 +77,17 @@ namespace ConversationEditor
             return Tuple.Create(result, new SimpleUndoPair { Redo = () => actions.ForEach(a => a.Redo()), Undo = () => actions.ForEach(a => a.Undo()) });
         }
 
-        public SimpleUndoPair SetLocalizationAction(Id<LocalizedStringType> type, Id<LocalizedText> guid, string value)
+        public SimpleUndoPair SetLocalizationAction(Id<LocalizedStringType> type, Id<LocalizedText> id, string value)
         {
-            return Lookup(type).SetLocalizationAction(guid, value);
+            return Lookup(type).SetLocalizationAction(id, value);
         }
 
-        public SimpleUndoPair ClearLocalizationAction(Id<LocalizedStringType> type, Id<LocalizedText> guid)
+        public SimpleUndoPair ClearLocalizationAction(Id<LocalizedStringType> type, Id<LocalizedText> id)
         {
             List<SimpleUndoPair> actions = new List<SimpleUndoPair>();
             foreach (var loc in Localizers.OfType<LocalizationFile>())
             {
-                actions.Add(loc.ClearLocalizationAction(guid));
+                actions.Add(loc.ClearLocalizationAction(id));
             }
             return new SimpleUndoPair { Redo = () => actions.ForEach(a => a.Redo()), Undo = () => actions.ForEach(a => a.Undo()) };
         }

@@ -421,13 +421,12 @@ namespace ConversationEditor
                     {
                         temp = new MissingDomainFile(fileId, path);
                         Either<Tuple<MemoryStream, Id<FileInProject>, DocumentPath>, MissingDomainFile> result = temp;
-                        temp = null;
                         return result;
                     }
-                    finally
+                    catch
                     {
-                        if (temp != null)
-                            temp.Dispose();
+                        temp?.Dispose();
+                        throw;
                     }
                 }
             }).Evaluate();

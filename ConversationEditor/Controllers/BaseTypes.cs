@@ -76,7 +76,7 @@ namespace ConversationEditor
         {
         }
 
-        public static readonly ParameterType ParameterType = StringParameter.ParameterType;
+        public static ParameterType ParameterType { get; } = StringParameter.ParameterType;
 
         public override NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode)
         {
@@ -153,13 +153,13 @@ namespace ConversationEditor
         {
         }
 
-        public static ParameterType PARAMETER_TYPE { get; } = AudioParameter.ParameterType;
+        public static ParameterType ParameterType { get; } = AudioParameter.ParameterType;
 
         public override NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode)
         {
             var parameterNameParameter = parameterNode.Parameters.Single(p => p.Id == DomainIDs.ParameterName) as IStringParameter;
             var parameterName = parameterNameParameter.Value;
-            return new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), PARAMETER_TYPE, ReadConfig(parameterNode));
+            return new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), ParameterType, ReadConfig(parameterNode));
         }
 
         public override string Name
@@ -297,7 +297,11 @@ namespace ConversationEditor
         public Id<NodeTypeTemp> NodeType { get; }           //Type ID of the node which defines a new subtype of this type
         public Id<NodeTypeTemp> ParameterNodeType { get; }  //Type ID of the node which defines a new parameter of this type
 
-        protected BaseType(Id<NodeTypeTemp> parameterNodeType, Id<NodeTypeTemp> nodeType = null)
+        protected BaseType(Id<NodeTypeTemp> parameterNodeType) : this(parameterNodeType, null)
+        {
+        }
+
+        protected BaseType(Id<NodeTypeTemp> parameterNodeType, Id<NodeTypeTemp> nodeType)
         {
             ParameterNodeType = parameterNodeType;
             NodeType = nodeType;
