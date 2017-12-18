@@ -26,7 +26,7 @@ namespace Conversation
         bool IsEnum(ParameterType type);
         bool IsDynamicEnum(ParameterType type);
         bool IsLocalDynamicEnum(ParameterType type);
-        IParameter Make(ParameterType typeid, string name, Id<Parameter> id, string defaultValue, TDocument document);
+        IParameter Make(ParameterType typeId, string name, Id<Parameter> id, string defaultValue, TDocument document);
     }
 
     /// <summary>
@@ -166,9 +166,9 @@ namespace Conversation
             return m_localDynamicEnums.ContainsKey(type);
         }
 
-        public IParameter Make(ParameterType typeid, string name, Id<Parameter> id, string defaultValue, TDocument document)
+        public IParameter Make(ParameterType typeId, string name, Id<Parameter> id, string defaultValue, TDocument document)
         {
-            return m_types[typeid].Generator(name, id, defaultValue, document);
+            return m_types[typeId].Generator(name, id, defaultValue, document);
         }
     }
 
@@ -261,9 +261,9 @@ namespace Conversation
             return Tuple.Create(data.Min, data.Max);
         }
 
-        public IParameter Make(ParameterType typeid, string name, Id<Parameter> id, string defaultValue, TDocument document)
+        public IParameter Make(ParameterType typeId, string name, Id<Parameter> id, string defaultValue, TDocument document)
         {
-            return m_types[typeid].Generator(name, id, defaultValue, document);
+            return m_types[typeId].Generator(name, id, defaultValue, document);
         }
 
         public void AddInteger(IntegerData typeData)
