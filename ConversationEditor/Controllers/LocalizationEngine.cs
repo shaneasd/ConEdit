@@ -27,7 +27,7 @@ namespace ConversationEditor
         /// <param name="shouldExpand"></param>
         /// <param name="pathOk">Path is an acceptable filename for a new localization file</param>
         /// <param name="fileLocationOk">Path is an acceptable location from which to import an existing localization file</param>
-        public LocalizationEngine(GetFilePath getFilePath, IEnumerable<Project.TData.LocalizerSetData> sets, ILocalizationContext context, Func<HashSet<Id<LocalizedText>>> usedGuids, Func<string, bool> shouldClean, Func<FileInfo, bool> pathOk, Func<string, bool> fileLocationOk, UpToDateFile.BackEnd backend, DirectoryInfo origin)
+        public LocalizationEngine(GetFilePath getFilePath, IEnumerable<Project.TData.LocalizerSetData> sets, ILocalizationContext context, Func<HashSet<Id<LocalizedText>>> usedGuids, Func<string, bool> shouldClean, Func<FileInfo, bool> pathOk, Func<string, bool> fileLocationOk, UpToDateFile.BackEnd backEnd, DirectoryInfo origin)
         {
             m_context = context;
             m_usedGuids = usedGuids;
@@ -37,9 +37,9 @@ namespace ConversationEditor
             {
                 //return files.Select(file => LocalizationFile.Load(file, MakeSerializer(file.Name), backend));
                 var filesAndSerializer = files.Select(f => new { Id = f.Item1, Path = f.Item2, Serializer = MakeSerializer(f.Item2.AbsolutePath, f.Item1) }).ToList();
-                return ParallelEnumerable.Select(filesAndSerializer.AsParallel(), fs => LocalizationFile.Load(fs.Path, fs.Id, fs.Serializer, backend));
+                return ParallelEnumerable.Select(filesAndSerializer.AsParallel(), fs => LocalizationFile.Load(fs.Path, fs.Id, fs.Serializer, backEnd));
             };
-            Func<DirectoryInfo, LocalizationFile> makeEmpty = path => LocalizationFile.MakeNew(path, MakeSerializer, pathOk, backend, origin);
+            Func<DirectoryInfo, LocalizationFile> makeEmpty = path => LocalizationFile.MakeNew(path, MakeSerializer, pathOk, backEnd, origin);
             m_localizers = new ProjectElementList<ILocalizationFile>(getFilePath, fileLocationOk.Bottleneck(), load, makeEmpty);
             m_localizationSets = sets.ToHashSet();
         }
@@ -58,21 +58,21 @@ namespace ConversationEditor
             return new XmlLocalization.Serializer(context, ShouldClean, file);
         }
 
-        public string Localize(Id<LocalizedStringType> type, Id<LocalizedText> guid)
+        public string Localize(Id<LocalizedStringType> type, Id<LocalizedText> id)
         {
-            if (type != null && guid != null && m_context.CurrentLocalization.Value != null)
-                return Lookup(m_context.CurrentLocalization.Value.Sources[type])?.Localize(guid) ?? MissingLocalizationString;
+            if (type != null && id != null && m_context.CurrentLocalization.Value != null)
+                return Lookup(m_context.CurrentLocalization.Value.Sources[type])?.Localize(id) ?? MissingLocalizationString;
             else
                 return MissingLocalizationString;
         }
 
-        public Tuple<Id<LocalizedText>, SimpleUndoPair> DuplicateActions(Id<LocalizedText> guid)
+        public Tuple<Id<LocalizedText>, SimpleUndoPair> DuplicateActions(Id<LocalizedText> id)
         {
             Id<LocalizedText> result = Id<LocalizedText>.New();
             List<SimpleUndoPair> actions = new List<SimpleUndoPair>();
             foreach (var loc in Localizers.OfType<LocalizationFile>())
             {
-                actions.Add(loc.DuplicateAction(guid, result));
+                actions.Add(loc.DuplicateAction(id, result));
             }
             return Tuple.Create(result, new SimpleUndoPair { Redo = () => actions.ForEach(a => a.Redo()), Undo = () => actions.ForEach(a => a.Undo()) });
         }

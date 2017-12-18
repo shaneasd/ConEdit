@@ -28,7 +28,7 @@ namespace Utilities
         {
         }
 
-        protected DeserializerVersionMismatchException(SerializationInfo info, StreamingContext context)
+        protected DeserializerVersionMismatchException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 

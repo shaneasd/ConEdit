@@ -666,7 +666,7 @@ namespace ConversationEditor
 
             //TODO: Globals ewww
             if (!e.Cancel)
-                UndoQueue.m_logger.Dispose();
+                UndoQueue.Logger.Dispose();
         }
 
         private void throwTestExceptionToolStripMenuItem_Click(object sender, EventArgs e)

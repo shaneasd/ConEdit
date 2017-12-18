@@ -40,7 +40,7 @@ namespace ConversationEditor
             }
 
             public FileSystemObject File { get; }
-            protected IProject m_project { get; }
+            public IProject Project { get; }
             protected ContainerItem m_parent;
 
             private Func<RectangleF> m_area;
@@ -76,7 +76,7 @@ namespace ConversationEditor
 
             protected Item(ConstructorParams parameters)
             {
-                m_project = parameters.Project;
+                Project = parameters.Project;
                 File = parameters.File;
                 m_parent = parameters.Parent;
                 m_area = parameters.Area;
@@ -163,7 +163,7 @@ namespace ConversationEditor
                 }
             }
 
-            public void DrawText(Arthur.NativeTextRenderer renderer, VisibilityFilter Visibility, RectangleF area, IColorScheme scheme)
+            public void DrawText(Arthur.NativeTextRenderer renderer, VisibilityFilter visibility, RectangleF area, IColorScheme scheme)
             {
                 //g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
                 //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;

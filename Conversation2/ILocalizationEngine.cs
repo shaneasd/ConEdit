@@ -10,7 +10,7 @@ namespace Conversation
 {
     public interface ILocalizationEngine
     {
-        Tuple<Id<LocalizedText>, SimpleUndoPair> DuplicateActions(Id<LocalizedText> iD);
+        Tuple<Id<LocalizedText>, SimpleUndoPair> DuplicateActions(Id<LocalizedText> id);
 
         /// <summary>
         /// Does the localization engine provide the facility store a localization for this string

@@ -241,13 +241,13 @@ namespace ConversationEditor
 
         #region http://tech.pro/tutorial/732/csharp-tutorial-how-to-use-custom-cursors
 
-        public static Cursor CreateCursor(Bitmap bmp, int xHotSpot, int yHotSpot)
+        public static Cursor CreateCursor(Bitmap bmp, int xHotspot, int yHotspot)
         {
             IntPtr ptr = bmp.GetHicon();
             IconInfo tmp = new IconInfo();
             NativeMethods.GetIconInfo(ptr, ref tmp);
-            tmp.xHotspot = xHotSpot;
-            tmp.yHotspot = yHotSpot;
+            tmp.xHotspot = xHotspot;
+            tmp.yHotspot = yHotspot;
             tmp.fIcon = false;
             ptr = NativeMethods.CreateIconIndirect(ref tmp);
             return new Cursor(ptr);

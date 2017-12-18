@@ -22,7 +22,7 @@ namespace ConversationEditor
 
             internal override string CanSelect()
             {
-                return m_project.CanModifyConversations ? null : "Changes cannot be made to conversations while there are unsaved domain changes";
+                return Project.CanModifyConversations ? null : "Changes cannot be made to conversations while there are unsaved domain changes";
             }
         }
 
@@ -35,7 +35,7 @@ namespace ConversationEditor
 
             internal override string CanSelect()
             {
-                return m_project.CanModifyDomain ? null : "Changes cannot be made to domain while there are unsaved conversation changes";
+                return Project.CanModifyDomain ? null : "Changes cannot be made to domain while there are unsaved conversation changes";
             }
         }
 

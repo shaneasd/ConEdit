@@ -13,8 +13,8 @@ namespace ConversationEditor
 
     public class PluginAssembly
     {
-        public readonly string FileName; //Null if main assembly
-        public readonly Assembly Assembly;
+        public string FileName { get; } //Null if main assembly
+        public Assembly Assembly { get; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFile", Justification = "Can't see an alternative method...")]
         public PluginAssembly(string fileName)
         {

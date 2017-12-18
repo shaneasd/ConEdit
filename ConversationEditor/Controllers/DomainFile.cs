@@ -101,7 +101,7 @@ namespace ConversationEditor
             m_autoCompletePatterns = new List<IAutoCompletePattern>(autoCompletePatterns);
         }
 
-        public static DomainFile CreateEmpty(DirectoryInfo directory, DomainDomain datasource, ISerializer<TData> serializer, Func<FileInfo, bool> pathOk, INodeFactory nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, UpToDateFile.BackEnd backend, DirectoryInfo origin)
+        public static DomainFile CreateEmpty(DirectoryInfo directory, DomainDomain datasource, ISerializer<TData> serializer, Func<FileInfo, bool> pathOk, INodeFactory nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, UpToDateFile.BackEnd backEnd, DirectoryInfo origin)
         {
             //Create a stream under an available filename
             FileInfo path = null;
@@ -120,7 +120,7 @@ namespace ConversationEditor
                     m.CopyTo(stream);
                 }
 
-                var result = new DomainFile(new List<GraphAndUI<NodeUIData>>(), new List<NodeGroup>(), m, Id<FileInProject>.New(), DocumentPath.FromPath(path, origin), new ReadOnlyCollection<LoadError>(new LoadError[0]), datasource, serializer, nodeFactory, domainUsage, getDocumentSource, new List<IAutoCompletePattern>(), backend);
+                var result = new DomainFile(new List<GraphAndUI<NodeUIData>>(), new List<NodeGroup>(), m, Id<FileInProject>.New(), DocumentPath.FromPath(path, origin), new ReadOnlyCollection<LoadError>(new LoadError[0]), datasource, serializer, nodeFactory, domainUsage, getDocumentSource, new List<IAutoCompletePattern>(), backEnd);
                 result.m_file.Save(); //Make sure the file starts life as a valid xml document
                 return result;
             }

@@ -29,7 +29,7 @@ namespace Utilities
         /// A) A contiguous sequence of non-whitespace which in the input is bound by whitespace (or start/end of text)
         /// B) A whitespace character
         /// </summary>
-        public static IEnumerable<string> WordsAndWhitespace(string text)
+        public static IEnumerable<string> WordsAndWhiteSpace(string text)
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < text.Length; i++)
@@ -55,7 +55,7 @@ namespace Utilities
 
         public static IEnumerable<string> GetLines(string text, Font font, float width, TextFormatFlags format)
         {
-            List<string> words = StringUtil.WordsAndWhitespace(text).ToList();
+            List<string> words = StringUtil.WordsAndWhiteSpace(text).ToList();
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < words.Count; i++)
             {

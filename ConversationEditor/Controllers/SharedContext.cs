@@ -19,7 +19,7 @@ namespace ConversationEditor
     /// </summary>
     public class SharedContext : ILocalizationContext
     {
-        public NotifierProperty<IProject> CurrentProject = new NotifierProperty<IProject>(DummyProject.Instance);
+        public NotifierProperty<IProject> CurrentProject { get; } = new NotifierProperty<IProject>(DummyProject.Instance);
         public event Action<Changed<FileInfo>> ProjectMoved;
         public NotifierProperty<Project.TData.LocalizerSetData> CurrentLocalization { get; } = new NotifierProperty<Project.TData.LocalizerSetData>(Project.TData.LocalizerSetData.Empty);
 

@@ -762,9 +762,9 @@ namespace ConversationEditor
         };
         private PluginsConfig m_pluginsConfig;
 
-        public string GetTypeName(ParameterType id)
+        public string GetTypeName(ParameterType type)
         {
-            return m_typeSet.GetTypeName(id);
+            return m_typeSet.GetTypeName(type);
         }
 
         public Guid GetCategory(Id<NodeTypeTemp> type)

@@ -93,7 +93,7 @@ namespace ConversationEditor
         /// If so, return true.
         /// If not, display an appropriate message to the user and then return false.
         /// </summary>
-        private bool CheckResultSane(Project.TData.LocalizerSetData[] result)
+        private static bool CheckResultSane(Project.TData.LocalizerSetData[] result)
         {
             if (result.GroupBy(set => set.Name).Any(g => g.Count() != 1))
             {

@@ -344,24 +344,24 @@ namespace ConversationEditor
                     : base(parent)
                 {
                     ResizeState = resizeState;
-                    m_resizeOriginalArea = resizeOriginalArea;
-                    m_group = group;
+                    ResizeOriginalArea = resizeOriginalArea;
+                    Group = group;
                     UpdateNodesInGroup = () => updateNodesInGroup(group);
                 }
                 public ResizeState ResizeState { get; }
-                public RectangleF m_resizeOriginalArea { get; }
-                public NodeGroup m_group { get; }
+                public RectangleF ResizeOriginalArea { get; }
+                public NodeGroup Group { get; }
                 public Action UpdateNodesInGroup { get; }
 
                 public override void LeftMouseUp(Point client, Point screen)
                 {
-                    var newArea = m_group.Renderer.Area;
-                    var oldArea = m_resizeOriginalArea;
+                    var newArea = Group.Renderer.Area;
+                    var oldArea = ResizeOriginalArea;
 
                     UpdateNodesInGroup();
 
-                    Action undo = () => { m_group.Renderer.Area = oldArea; UpdateNodesInGroup(); };
-                    Action redo = () => { m_group.Renderer.Area = newArea; UpdateNodesInGroup(); };
+                    Action undo = () => { Group.Renderer.Area = oldArea; UpdateNodesInGroup(); };
+                    Action redo = () => { Group.Renderer.Area = newArea; UpdateNodesInGroup(); };
 
                     m_parent.Changed.Execute(new GenericUndoAction(undo, redo, "Resized group"));
                     m_parent.SetStateToNothingOrSelectingDirection(null, null);

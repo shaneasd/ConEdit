@@ -70,7 +70,7 @@ namespace Utilities
             m_name = name;
         }
 
-        public static PassiveLogger m_logger { get; } = new PassiveLogger();
+        public static PassiveLogger Logger { get; } = new PassiveLogger();
 
         /// <summary>
         /// This should be on the top of the undo queue for the file to be considered unmodified
@@ -157,7 +157,7 @@ namespace Utilities
             m_redoActions.Clear();
             m_undoActions.Push(action);
             Changed.Execute();
-            m_logger.Log(m_name + "changes.txt", "Action: " + action.LogDescription);
+            Logger.Log(m_name + "changes.txt", "Action: " + action.LogDescription);
             if (!modified)
                 ModifiedChanged.Execute();
         }
@@ -173,7 +173,7 @@ namespace Utilities
                 if (modified != Modified)
                     ModifiedChanged.Execute();
                 Changed.Execute();
-                m_logger.Log(m_name + "changes.txt", "Undo: " + a.LogDescription);
+                Logger.Log(m_name + "changes.txt", "Undo: " + a.LogDescription);
             }
         }
 
@@ -198,7 +198,7 @@ namespace Utilities
                 if (modified != Modified)
                     ModifiedChanged.Execute();
                 Changed.Execute();
-                m_logger.Log(m_name + "changes.txt", "Redo: " + a.LogDescription);
+                Logger.Log(m_name + "changes.txt", "Redo: " + a.LogDescription);
             }
         }
 

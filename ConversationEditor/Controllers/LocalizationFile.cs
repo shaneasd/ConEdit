@@ -123,18 +123,18 @@ namespace ConversationEditor
             //Do nothing
         }
 
-        public string Localize(Id<LocalizedText> guid)
+        public string Localize(Id<LocalizedText> id)
         {
-            if (m_data.LocalizationExists(guid))
-                return m_data.GetLocalized(guid).Text;
+            if (m_data.LocalizationExists(id))
+                return m_data.GetLocalized(id).Text;
             else
                 return null;
         }
 
-        public DateTime LocalizationTime(Id<LocalizedText> guid)
+        public DateTime LocalizationTime(Id<LocalizedText> id)
         {
-            if (m_data.LocalizationExists(guid))
-                return m_data.GetLocalized(guid).Localized;
+            if (m_data.LocalizationExists(id))
+                return m_data.GetLocalized(id).Localized;
             else
                 return DateTime.MinValue;
         }

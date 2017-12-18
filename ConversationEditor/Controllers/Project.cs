@@ -22,9 +22,18 @@ namespace ConversationEditor
     using System.Collections.ObjectModel;
     using System.Runtime.Serialization;
 
-    internal class ProjectCreationException : ApplicationException
+    [Serializable]
+    public class ProjectCreationException : ApplicationException
     {
+        public ProjectCreationException() : base()
+        {
+        }
+
         public ProjectCreationException(string message) : base(message)
+        {
+        }
+
+        public ProjectCreationException(string message, Exception inner) : base(message, inner)
         {
         }
 
@@ -104,7 +113,7 @@ namespace ConversationEditor
         SaveableFileNotUndoable m_file;
         UpToDateFile.BackEnd m_upToDateFileBackend;
 
-        public static Project CreateEmpty(ILocalizationContext context, FileInfo path, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializer, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization, UpToDateFile.BackEnd backend)
+        public static Project CreateEmpty(ILocalizationContext context, FileInfo path, INodeFactory conversationNodeFactory, INodeFactory domainNodeFactory, ISerializer<TData> serializer, ISerializer<TConversationData> conversationSerializer, ConversationSerializerDeserializerFactory conversationSerializerDeserializer, ISerializer<TDomainData> domainSerializer, PluginsConfig pluginsConfig, Func<IAudioProviderCustomization> audioCustomization, UpToDateFile.BackEnd backEnd)
         {
             using (MemoryStream m = new MemoryStream())
             {
@@ -117,7 +126,7 @@ namespace ConversationEditor
 
                 //Create the new project
                 GetFilePath getFilePath = null; //Should never need this as all the FileId lists are empty
-                Write(getFilePath, Enumerable.Empty<Id<FileInProject>>(), Enumerable.Empty<Id<FileInProject>>(), Enumerable.Empty<Id<FileInProject>>(), Enumerable.Empty<Id<FileInProject>>(), Enumerable.Empty<TData.LocalizerSetData>(), m, path.Directory, serializer);
+                Write(getFilePath, Enumerable.Empty<Id<FileInProject>>(), Enumerable.Empty<Id<FileInProject>>(), Enumerable.Empty<Id<FileInProject>>(), Enumerable.Empty<Id<FileInProject>>(), Enumerable.Empty<TData.LocalizerSetData>(), m, serializer);
                 using (FileStream projectfile = Util.LoadFileStream(path, FileMode.Create, FileAccess.Write))
                 {
                     m.Position = 0;
@@ -127,7 +136,7 @@ namespace ConversationEditor
 
                 TData data = new TData(Enumerable.Empty<TData.FileIdAndPath>(), Enumerable.Empty<TData.FileIdAndPath>(), Enumerable.Empty<TData.FileIdAndPath>(), Enumerable.Empty<TData.FileIdAndPath>(), Enumerable.Empty<TData.LocalizerSetData>());
 
-                Project result = new Project(context, data, conversationNodeFactory, domainNodeFactory, m, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig, audioCustomization, backend);
+                Project result = new Project(context, data, conversationNodeFactory, domainNodeFactory, m, path, serializer, conversationSerializer, conversationSerializerDeserializer, domainSerializer, pluginsConfig, audioCustomization, backEnd);
                 return result;
             }
         }
@@ -198,7 +207,7 @@ namespace ConversationEditor
             Action<Stream> saveTo = stream =>
             {
                 Write(GetFilePath, Conversations.Select(x => (x.Id)), LocalizationFiles.Select(x => (x.Id)),
-                      DomainFiles.Select(x => (x.Id)), AudioFiles.Select(x => (x.Id)), Localizer.LocalizationSets, stream, Origin, m_serializer);
+                      DomainFiles.Select(x => (x.Id)), AudioFiles.Select(x => (x.Id)), Localizer.LocalizationSets, stream, m_serializer);
             };
             m_file = new SaveableFileNotUndoable(initialData, projectFile, saveTo, backend);
             ConversationNodeFactory = conversationNodeFactory;
@@ -474,7 +483,7 @@ namespace ConversationEditor
             get { return m_audioProvider.AudioFiles; }
         }
 
-        private static void Write(GetFilePath getFilePath, IEnumerable<Id<FileInProject>> conversations, IEnumerable<Id<FileInProject>> localizations, IEnumerable<Id<FileInProject>> domains, IEnumerable<Id<FileInProject>> audio, IEnumerable<TData.LocalizerSetData> localizationSets, Stream stream, DirectoryInfo origin, ISerializer<TData> serializer)
+        private static void Write(GetFilePath getFilePath, IEnumerable<Id<FileInProject>> conversations, IEnumerable<Id<FileInProject>> localizations, IEnumerable<Id<FileInProject>> domains, IEnumerable<Id<FileInProject>> audio, IEnumerable<TData.LocalizerSetData> localizationSets, Stream stream, ISerializer<TData> serializer)
         {
             Func<Id<FileInProject>, TData.FileIdAndPath> getPath = fileId => new TData.FileIdAndPath(fileId, getFilePath(fileId));
             serializer.Write(new TData(conversations.Select(getPath), domains.Select(getPath), localizations.Select(getPath), audio.Select(getPath), localizationSets), stream);

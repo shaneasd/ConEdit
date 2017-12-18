@@ -38,12 +38,10 @@ namespace ConversationEditor
                 m_contents.Add(item.File.FullName);
                 ContainerItem.InsertChildAlphabetically(parent, item);
             }
-
-            public IProject Project { get { return m_project; } }
-
+            
             public override DirectoryInfo Path
             {
-                get { return m_project.Origin; }
+                get { return Project.Origin; }
             }
 
             public override void DrawIcon(Graphics g, RectangleF iconRectangle)
