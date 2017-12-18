@@ -79,13 +79,13 @@ namespace ConversationEditor
                             value.NodeRemoved += OnNodeRemoved;
 
                             m_conversation = value;
-
-                            OnNodesReset();
                         }
                         else
                         {
                             m_conversation = DummyConversationEditorControlData<TNode, TransitionNoduleUIInfo>.Instance;
                         }
+                        OnNodesReset();
+
                         ResizeDocument();
                         Redraw();
                     }
