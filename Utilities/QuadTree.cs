@@ -151,7 +151,7 @@ namespace Utilities
             }
         }
 
-        public bool Remove(T node, RectangleF area)
+        public bool Remove(T node, RectangleF area, bool dryRun)
         {
             if (Debugging.Enabled)
                 Debugging.WriteLine("Count: {0}", this.Count());
@@ -159,7 +159,7 @@ namespace Utilities
             {
                 Debugging.WriteLine("Removing {0}", area);
                 if (m_root.Bounds.Contains(area))
-                    return m_root.Remove(node, area);
+                    return m_root.Remove(node, area, dryRun);
                 else
                     return false;
             }
@@ -231,7 +231,7 @@ namespace Utilities
                 }
             }
 
-            private bool TooSmall(RectangleF area)
+            private static bool TooSmall(RectangleF area)
             {
                 return area.Width * area.Height < 1;//Avoid subdividing forever
             }
@@ -289,10 +289,18 @@ namespace Utilities
                 return this;
             }
 
-            public bool Remove(T node, RectangleF area)
+            public bool Remove(T node, RectangleF area, bool dryRun)
             {
-                if (ExtraData.Remove(Tuple.Create(node, area)))
-                    return true;
+                if (!dryRun)
+                {
+                    if (ExtraData.Remove(Tuple.Create(node, area)))
+                        return true;
+                }
+                else
+                {
+                    if (ExtraData.Contains(Tuple.Create(node, area)))
+                        return true;
+                }
                 var center = Bounds.Center();
                 if (!TooSmall(area))
                 {
@@ -301,12 +309,12 @@ namespace Utilities
                         if (area.Left > center.X) //It's in the right half only
                         {
                             if (Lower11 != null)
-                                return Lower11.Remove(node, area);
+                                return Lower11.Remove(node, area, dryRun);
                         }
                         else if (area.Right <= center.X) //It's in the left half only
                         {
                             if (Lower01 != null)
-                                return Lower01.Remove(node, area);
+                                return Lower01.Remove(node, area, dryRun);
                         }
                     }
                     else if (area.Bottom <= center.Y) //It's in the top half only
@@ -314,18 +322,21 @@ namespace Utilities
                         if (area.Left > center.X) //It's in the right half only
                         {
                             if (Lower10 != null)
-                                return Lower10.Remove(node, area);
+                                return Lower10.Remove(node, area, dryRun);
                         }
                         else if (area.Right <= center.X) //It's in the left half only
                         {
                             if (Lower00 != null)
-                                return Lower00.Remove(node, area);
+                                return Lower00.Remove(node, area, dryRun);
                         }
                     }
                 }
 
                 //Once we've descended as far as we can. Use this levels data.
-                return Data.Remove(node);
+                if (!dryRun)
+                    return Data.Remove(node);
+                else
+                    return Data.Contains(node);
             }
 
             /// <summary>

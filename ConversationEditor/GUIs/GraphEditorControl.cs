@@ -19,6 +19,7 @@ namespace ConversationEditor
     using ConversationNode = ConversationNode<INodeGui>;
     using System.Globalization;
     using System.Collections.ObjectModel;
+    using System.Diagnostics.Contracts;
 
     internal partial class GraphEditorControl<TNode> : UserControl, IGraphEditorControl<TNode> where TNode : class, IRenderable<IGui>, IConversationNode, IConfigurable
     {
@@ -97,7 +98,7 @@ namespace ConversationEditor
             TNode n;
             if (nodeRef.TryGetTarget(out n))
             {
-                bool removed = SpatiallyOrderedNodes.Remove(n, c.From);
+                bool removed = SpatiallyOrderedNodes.Remove(n, c.From, false);
                 if (!removed)
                 {
                     throw new InvalidOperationException("Something went wrong removing a node from the map in NodeAreaChanged");
@@ -202,7 +203,7 @@ namespace ConversationEditor
                         RectangleF fromBounds = RectangleF.Union(change.From, other.Area.Value);
 
                         var pair = UnorderedTuple.Make(connectorTemp, connection);
-                        bool removed = SpatiallyOrderedConnections.Remove(Tuple.Create(pair, fromBounds), fromBounds);
+                        bool removed = SpatiallyOrderedConnections.Remove(Tuple.Create(pair, fromBounds), fromBounds, false);
                         if (!removed)
                         {
                             throw new InvalidOperationException("Something went wrong removing a connector from the map in deregister");
@@ -249,7 +250,7 @@ namespace ConversationEditor
             bool exists = SpatiallyOrderedConnections.FindTouchingRegion(bounds).Contains(Tuple.Create(pair, bounds));
             if (exists)
             {
-                bool removed = SpatiallyOrderedConnections.Remove(Tuple.Create(pair, bounds), bounds);
+                bool removed = SpatiallyOrderedConnections.Remove(Tuple.Create(pair, bounds), bounds, false);
                 if (!removed)
                 {
                     throw new InvalidOperationException("Something went wrong removing a connector from the map in connectorTemp.Disconnected");
@@ -269,7 +270,7 @@ namespace ConversationEditor
         public void OnNodeRemoved(TNode node)
         {
             StoreConnections(node, false);
-            bool removed = SpatiallyOrderedNodes.Remove(node, node.Renderer.Area);
+            bool removed = SpatiallyOrderedNodes.Remove(node, node.Renderer.Area, false);
             if (!removed)
             {
                 throw new InvalidOperationException("Something went wrong removing a node from the map in OnNodeRemoved");
@@ -603,6 +604,12 @@ namespace ConversationEditor
 
         private void InitialiseMouseController()
         {
+            
+            Application.Idle += (object sender, EventArgs e) =>
+            {
+                SanityTest();
+            };
+
             m_mouseController = new MouseController<TNode>(Colors, Redraw, shift => Shift(shift), (screen) => ScrollIfRequired(screen), (p, z) => Zoom(p, z), () => new ZOrderedQuadTree<TNode>(SpatiallyOrderedNodes, CurrentFile.RelativePosition), () => new Fake<UnorderedTuple2<Output>>(SpatiallyOrderedConnections.Select(a => a.Item1)), () => CurrentFile.Groups, MyEdit, n => CurrentFile.Remove(n.Only(), Enumerable.Empty<NodeGroup>(), m_localization), Snap, SnapGroup, UIInfo, id => CurrentFile.GetNode(id));
             drawWindow.MouseDown += (a, args) => m_mouseController.MouseDown(DrawWindowToGraphSpace(args.Location), args.Location, args.Button);
             drawWindow.MouseUp += (a, args) => m_mouseController.MouseUp(DrawWindowToGraphSpace(args.Location), args.Location, args.Button);
@@ -683,6 +690,58 @@ namespace ConversationEditor
             };
         }
 
+        private void SanityTest()
+        {
+            bool keepSanityChecking = true;
+
+            if (!keepSanityChecking)
+                return;
+
+            //Verify that the two sources of nodes agree
+            HashSet<TNode> nodesInQuadTree = SpatiallyOrderedNodes.ToHashSet();
+            HashSet<TNode> nodesInCurrentFileList = CurrentFile.Nodes.ToHashSet();
+            if (!nodesInQuadTree.SetEquals(nodesInCurrentFileList))
+            {
+                var a = nodesInQuadTree.Select(x => x.Renderer.Area.Location);
+                var b = nodesInCurrentFileList.Select(x => x.Renderer.Area.Location);
+                MessageBox.Show("Sanity test failed: There is a discrepancy between the z-ordered nodes list and the xy-ordered nodes tree");
+                keepSanityChecking = false;
+            }
+
+            if (!keepSanityChecking)
+                return;
+
+            foreach (var node in SpatiallyOrderedNodes)
+            {
+                if (!SpatiallyOrderedNodes.FindTouchingRegion(node.Renderer.Area).Contains(node))
+                {
+                    MessageBox.Show("Sanity test failed: Node in incorrect location in the quad tree");
+                    keepSanityChecking = false;
+                    break;
+                }
+
+                if (!SpatiallyOrderedNodes.Remove(node, node.Renderer.Area, true))
+                {
+                    MessageBox.Show("Sanity test failed: Node could not be removed from quad tree");
+                    keepSanityChecking = false;
+                    break;
+                }
+            }
+
+            if (!keepSanityChecking)
+                return;
+
+            foreach (var connection in SpatiallyOrderedConnections)
+            {
+                if (!SpatiallyOrderedConnections.FindTouchingRegion(connection.Item2).Contains(connection))
+                {
+                    MessageBox.Show("Sanity test failed: Node in incorrect location in the quad tree");
+                    keepSanityChecking = false;
+                    break;
+                }
+            }
+        }
+
         private void Zoom(Point graphPoint, float z)
         {
             Matrix originalTransform = GetTransform();
@@ -737,6 +796,20 @@ namespace ConversationEditor
                     DrawGrid(e, pen, MinorGridSpacing, lowerBound, upperBound);
                 using (var pen = new Pen(m_colorScheme.Grid))
                     DrawGrid(e, pen, MajorGridSpacing, lowerBound, upperBound);
+
+                //Draw the quad tree
+                //using (Pen p = new Pen(Color.Green, 1))
+                //{
+                //    for (int subdivision = 0; subdivision <= 11; subdivision++)
+                //    {
+                //        p.Color = Color.FromArgb(0, 255 * subdivision / 11, 0);
+                //        int step = 2 << subdivision;
+                //        for (int x = 0; x <= 2048; x += step)
+                //            e.Graphics.DrawLine(p, new Point(x, 0), new Point(x, 2048));
+                //        for (int y = 0; y <= 2048; y += step)
+                //            e.Graphics.DrawLine(p, new Point(0, y), new Point(2048, y));
+                //    }
+                //}
             }
         }
 
