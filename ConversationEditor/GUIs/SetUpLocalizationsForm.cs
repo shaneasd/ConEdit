@@ -17,7 +17,6 @@ namespace ConversationEditor
     {
         private Action<Project.TData.LocalizerSetData[]> m_registerResult;
         private IEnumerable<Id<LocalizedStringType>> m_stringTypes;
-        private Func<Id<FileInProject>, ILocalizationFile> m_idToFile;
         private IEnumerable<ILocalizationFile> m_localizationFiles;
 
         public SetUpLocalizationsForm()
@@ -29,7 +28,6 @@ namespace ConversationEditor
         {
             m_registerResult = registerResult;
             m_stringTypes = stringTypes;
-            m_idToFile = idToFile;
             m_localizationFiles = localizationFiles;
 
             dataGridView1.DataError += DataGridView1_DataError;

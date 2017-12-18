@@ -74,7 +74,7 @@ namespace ConversationEditor
         /// <param name="domainUsage"></param>
         /// <param name="getDocumentSource"></param>
         /// <param name="autoCompletePatterns"></param>
-        public DomainFile(List<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, Id<FileInProject> file, DocumentPath path, ReadOnlyCollection<LoadError> errors, DomainDomain datasource, ISerializer<TData> serializer, INodeFactory nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, List<IAutoCompletePattern> autoCompletePatterns, UpToDateFile.BackEnd backEnd)
+        public DomainFile(IEnumerable<GraphAndUI<NodeUIData>> nodes, IEnumerable<NodeGroup> groups, MemoryStream rawData, Id<FileInProject> file, DocumentPath path, ReadOnlyCollection<LoadError> errors, DomainDomain datasource, ISerializer<TData> serializer, INodeFactory nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IEnumerable<IAutoCompletePattern> autoCompletePatterns, UpToDateFile.BackEnd backEnd)
             : base(nodes, groups, errors, nodeFactory, null, getDocumentSource, NoAudio.Instance)
         {
             Id = file;
@@ -98,7 +98,7 @@ namespace ConversationEditor
             m_datasource = datasource;
             //m_conversationDatasource = conversationDataSource;
             m_serializer = serializer;
-            m_autoCompletePatterns = autoCompletePatterns;
+            m_autoCompletePatterns = new List<IAutoCompletePattern>(autoCompletePatterns);
         }
 
         public static DomainFile CreateEmpty(DirectoryInfo directory, DomainDomain datasource, ISerializer<TData> serializer, Func<FileInfo, bool> pathOk, INodeFactory nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, UpToDateFile.BackEnd backend, DirectoryInfo origin)

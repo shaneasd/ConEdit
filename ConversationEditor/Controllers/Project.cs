@@ -20,10 +20,15 @@ namespace ConversationEditor
     using DomainSerializerDeserializerFactory = Func<IDataSource, DomainSerializerDeserializer>;
     using System.Diagnostics;
     using System.Collections.ObjectModel;
+    using System.Runtime.Serialization;
 
     internal class ProjectCreationException : ApplicationException
     {
         public ProjectCreationException(string message) : base(message)
+        {
+        }
+
+        protected ProjectCreationException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }

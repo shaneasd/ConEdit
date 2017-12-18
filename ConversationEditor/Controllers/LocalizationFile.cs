@@ -118,7 +118,7 @@ namespace ConversationEditor
             return true;
         }
 
-        void IInProject.Removed()
+        public void Removed()
         {
             //Do nothing
         }

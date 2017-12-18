@@ -311,8 +311,8 @@ namespace Utilities
         /// <param name="initialContent">Represents the current contents of the file. Reference is not held. A copy is made.</param>
         /// <param name="path"></param>
         /// <param name="saveTo"></param>
-        public SaveableFileNotUndoable(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo, UpToDateFile.BackEnd backend)
-            : base(initialContent, path, saveTo, backend)
+        public SaveableFileNotUndoable(MemoryStream initialContent, FileInfo path, Action<Stream> saveTo, UpToDateFile.BackEnd backEnd)
+            : base(initialContent, path, saveTo, backEnd)
         {
         }
         

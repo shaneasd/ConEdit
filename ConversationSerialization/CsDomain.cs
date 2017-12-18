@@ -27,6 +27,7 @@ namespace Conversation.Serialization
             return new CodeMethodInvokeExpression(new CodeMethodReferenceExpression(new CodeTypeReferenceExpression(typeof(Id<T>)), "Parse"), new CodePrimitiveExpression(id.Serialized()));
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "It's impossible to infer the types of the code expressions. The whole point is to specify the types we want.")]
         public static CodeExpression MakeTuple<T1, T2>(CodeExpression a, CodeExpression b)
         {
             return new CodeObjectCreateExpression(new CodeTypeReference(typeof(Tuple<T1, T2>)), a, b);

@@ -4,25 +4,36 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Xml.Linq;
+using System.Runtime.Serialization;
 
 namespace Utilities
 {
+    [Serializable]
     public class DeserializerVersionMismatchException : Exception
     {
-        public DeserializerVersionMismatchException(string expectedVersions, string encounteredVersion)
+        private static string MakeMessage(string expectedVersions, string encounteredVersion)
         {
-            ExpectedVersions = expectedVersions;
-            EncounteredVersion = encounteredVersion;
+            return "File version " + encounteredVersion + " cannot be read. Expected versions are: " + expectedVersions;
         }
 
-        public string EncounteredVersion { get; }
-        public string ExpectedVersions { get; }
-        public override string Message
+        public DeserializerVersionMismatchException() : base()
         {
-            get
-            {
-                return "File version " + EncounteredVersion + " cannot be read. Expected versions are: " + ExpectedVersions;
-            }
+        }
+
+        public DeserializerVersionMismatchException(string message) : base(message)
+        {
+        }
+
+        public DeserializerVersionMismatchException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected DeserializerVersionMismatchException(SerializationInfo info, StreamingContext context)
+        {
+        }
+
+        public DeserializerVersionMismatchException(string expectedVersions, string encounteredVersion) : base(MakeMessage(expectedVersions, encounteredVersion))
+        {
         }
     }
 

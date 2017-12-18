@@ -36,7 +36,7 @@ namespace ConversationEditor
         /// <param name="generateAudio"></param>
         /// <param name="getDocumentSource"></param>
         /// <param name="audioProvider"></param>
-        public ConversationFile(Id<FileInProject> id, IEnumerable<GraphAndUI<NodeUIData>> nodes, List<NodeGroup> groups, MemoryStream rawData, DocumentPath file, ISerializer<TData> serializer,
+        public ConversationFile(Id<FileInProject> id, IEnumerable<GraphAndUI<NodeUIData>> nodes, IEnumerable<NodeGroup> groups, MemoryStream rawData, DocumentPath file, ISerializer<TData> serializer,
             ReadOnlyCollection<LoadError> errors, INodeFactory nodeFactory, GenerateAudio generateAudio,
             Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, IAudioLibrary audioProvider, UpToDateFile.BackEnd backend)
             : base(nodes, groups, errors, nodeFactory, generateAudio, getDocumentSource, audioProvider)

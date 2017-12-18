@@ -95,6 +95,7 @@ namespace ConversationEditor
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "//https://msdn.microsoft.com/en-us/library/ms972962.aspx#pluginframework_topic5 Seems to suggest that a generic try catch is the way to go.")]
         public void Load(XElement root)
         {
             m_filteredAssemblies = new List<PluginAssembly>();

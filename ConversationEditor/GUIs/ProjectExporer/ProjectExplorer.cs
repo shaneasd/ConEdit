@@ -130,7 +130,7 @@ namespace ConversationEditor
 
         private void UnsuppressibleUpdateSelectedLocalizer()
         {
-            var localizationItems = m_root.AllItems(VisibilityFilter.Just(Localizations: true)).OfType<RealLeafItem<ILocalizationFile, ILocalizationFile>>();
+            var localizationItems = m_root.AllItems(VisibilityFilter.JustLocalizations).OfType<RealLeafItem<ILocalizationFile, ILocalizationFile>>();
             if (localizationItems.Any())
             {
                 m_selectedLocalizers = localizationItems.Where(f => m_context.CurrentLocalization.Value?.Sources?.Values?.Contains(f.Item.Id) ?? false).ToList();
@@ -175,22 +175,45 @@ namespace ConversationEditor
                 public NotifierProperty<bool> Audio { get; } = new NotifierProperty<bool>(true);
                 public NotifierProperty<bool> EmptyFolders { get; } = new NotifierProperty<bool>(true);
             }
-            public TypesSet Types = new TypesSet();
+            public TypesSet Types { get; } = new TypesSet();
             public NotifierProperty<string> Text { get; } = new NotifierProperty<string>("");
 
-            private VisibilityFilter() { }
-
-            public static VisibilityFilter Everything { get; } = new VisibilityFilter();
-            public static VisibilityFilter Just(bool Conversations = false, bool Domains = false, bool Localizations = false, bool Audio = false, bool EmptyFolders = false)
+            [Flags]
+            private enum Categories
             {
-                VisibilityFilter result = new VisibilityFilter();
-                result.Types.Conversations.Value = Conversations;
-                result.Types.Domains.Value = Domains;
-                result.Types.Localizations.Value = Localizations;
-                result.Types.Audio.Value = Audio;
-                result.Types.EmptyFolders.Value = EmptyFolders;
-                return result;
+                Conversations = 1 << 0,
+                Domains = 1 << 1,
+                Localizations = 1 << 2,
+                Audio = 1 << 3,
+                EmptyFolders = 1 << 4,
+
+                All = Conversations | Domains | Localizations | Audio | EmptyFolders,
             }
+
+            private VisibilityFilter(Categories categories)
+            {
+                Types.Conversations.Value = categories.HasFlag(Categories.Conversations);
+                Types.Domains.Value = categories.HasFlag(Categories.Domains);
+                Types.Localizations.Value = categories.HasFlag(Categories.Localizations);
+                Types.Audio.Value = categories.HasFlag(Categories.Audio);
+                Types.EmptyFolders.Value = categories.HasFlag(Categories.EmptyFolders);
+            }
+
+            public static VisibilityFilter Everything { get; } = new VisibilityFilter(Categories.All);
+
+            public static VisibilityFilter JustConversations { get; } = new VisibilityFilter(Categories.Conversations);
+            public static VisibilityFilter JustLocalizations { get; } = new VisibilityFilter(Categories.Localizations);
+
+            //public static VisibilityFilter Just(bool Conversations = false, bool Domains = false, bool Localizations = false, bool Audio = false, bool EmptyFolders = false)
+            //{
+            //    VisibilityFilter result = new VisibilityFilter();
+            //    result.Types.Conversations.Value = Conversations;
+            //    result.Types.Domains.Value = Domains;
+            //    result.Types.Localizations.Value = Localizations;
+            //    result.Types.Audio.Value = Audio;
+            //    result.Types.EmptyFolders.Value = EmptyFolders;
+            //    return result;
+            //}
         }
         private VisibilityFilter m_visibility = VisibilityFilter.Everything;
         private VisibilityFilter Visibility
@@ -534,7 +557,7 @@ namespace ConversationEditor
                             var i = new ToolStripMenuItem(a.Name);
                             i.Click += (x, y) =>
                             {
-                                IEnumerable<ConversationItem> conversationItems = folder.AllItems(VisibilityFilter.Just(Conversations: true)).OfType<ConversationItem>();
+                                IEnumerable<ConversationItem> conversationItems = folder.AllItems(VisibilityFilter.JustConversations).OfType<ConversationItem>();
                                 var conversations = conversationItems.Select(z => z.Item);
                                 a.Execute(conversations);
                             };

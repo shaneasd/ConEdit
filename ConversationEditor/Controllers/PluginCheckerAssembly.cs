@@ -80,27 +80,21 @@ namespace ConversationEditor
             //Load error checkers
             foreach (Type t in allTypes)
             {
-                try
+                if (t.IsGenericTypeDefinition)
                 {
-                    if (t.IsGenericTypeDefinition)
+                    var args = t.GetGenericArguments();
+                    if (args.Length == 1)
                     {
-                        var args = t.GetGenericArguments();
-                        if (args.Length == 1)
+                        var constraints = args[0].GetGenericParameterConstraints();
+                        if (constraints.Any(c => c.IsAssignableFrom(typeof(ConversationNode))))
                         {
-                            var constraints = args[0].GetGenericParameterConstraints();
-                            if (constraints.Any(c => c.IsAssignableFrom(typeof(ConversationNode))))
+                            var concrete = t.MakeGenericType(typeof(ConversationNode));
+                            if (concrete.IsSubclassOf(typeof(ErrorChecker<ConversationNode>)))
                             {
-                                var concrete = t.MakeGenericType(typeof(ConversationNode));
-                                if (concrete.IsSubclassOf(typeof(ErrorChecker<ConversationNode>)))
-                                {
-                                    result.Add(concrete);
-                                }
+                                result.Add(concrete);
                             }
                         }
                     }
-                }
-                catch
-                {
                 }
             }
             return result;

@@ -70,30 +70,30 @@ namespace ConversationEditor
             }
             public class Dragging : State
             {
-                public PointF m_moveOrigin;
-                public PointF m_lastClientPos;
-                IRenderable<IGui> m_dragTarget;
+                public PointF MoveOrigin { get; }
+                public PointF LastClientPos { get; private set; }
+                IRenderable<IGui> DragTarget { get; }
 
                 public Dragging(MouseController<TNode> parent, PointF moveOrigin, PointF client, IRenderable<IGui> dragTarget)
                     : base(parent)
                 {
-                    m_moveOrigin = moveOrigin;
-                    m_lastClientPos = client;
-                    m_dragTarget = dragTarget;
+                    MoveOrigin = moveOrigin;
+                    LastClientPos = client;
+                    DragTarget = dragTarget;
                 }
 
                 public override void MouseMove(PointF client, Point screen)
                 {
-                    PointF offset = client.Take(m_lastClientPos); //Amount the mouse has moved (since we last actually moved the nodes)
-                    var selectionOrigin = m_dragTarget.Renderer.Area.Center();
-                    var newPosF = m_dragTarget is NodeGroup
+                    PointF offset = client.Take(LastClientPos); //Amount the mouse has moved (since we last actually moved the nodes)
+                    var selectionOrigin = DragTarget.Renderer.Area.Center();
+                    var newPosF = DragTarget is NodeGroup
                                   ? selectionOrigin.Plus(m_parent.SnapGroup(offset))
                                   : m_parent.Snap(selectionOrigin.Plus(offset));
                     offset = newPosF.Take(selectionOrigin); //The actual offset applied
 
                     foreach (var a in m_parent.m_selection.Renderable(id => m_parent.GetNode(id)))
                         a.Renderer.Offset(offset);
-                    m_lastClientPos = m_lastClientPos.Plus(offset);
+                    LastClientPos = LastClientPos.Plus(offset);
                     m_parent.ScrollIfRequired(screen);
                 }
 
@@ -105,7 +105,7 @@ namespace ConversationEditor
 
                 internal override void ChangingState()
                 {
-                    var offset = m_moveOrigin.Take(m_dragTarget.Renderer.Area.Center());
+                    var offset = MoveOrigin.Take(DragTarget.Renderer.Area.Center());
 
                     if (!offset.IsEmpty)
                     {

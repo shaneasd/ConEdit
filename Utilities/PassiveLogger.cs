@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Utilities
 {
-    public class PassiveLogger : IDisposable
+    public class PassiveLogger : Disposable
     {
         System.Collections.Concurrent.ConcurrentQueue<Tuple<string, string>> m_toLog = new System.Collections.Concurrent.ConcurrentQueue<Tuple<string, string>>();
         Thread m_thread;
@@ -37,7 +37,7 @@ namespace Utilities
             }
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
             m_terminate = true;
         }
