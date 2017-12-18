@@ -17,7 +17,7 @@ namespace ConversationEditor
             typeMap[BaseTypeInteger.ParameterType] = "Int32";
             typeMap[BaseTypeDecimal.ParameterType] = "Decimal";
             typeMap[StringParameter.ParameterType] = "String";
-            typeMap[BaseTypeLocalizedString.ParameterType] = "RuntimeConversation.LocalizedString"; //TODO: LOC: Doesn't properly deal with user defined localized strings
+            typeMap[BaseTypeLocalizedString.ParameterType] = "RuntimeConversation.LocalizedString"; //TODO: LOC: CODE GENERATION: Doesn't properly deal with user defined localized strings
             typeMap[BooleanParameter.ParameterType] = "Boolean";
             typeMap[AudioParameter.ParameterType] = "RuntimeConversation.Audio";
             return typeMap;

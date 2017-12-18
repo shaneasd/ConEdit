@@ -87,6 +87,8 @@ namespace ConversationEditor
             UpdateQueued = new SuppressibleAction(() => { ReallyUpdateUsage(); }); //For now just update everything
         }
 
+        //TODO: AUDIO: If we don't need to be threadsafe then this is probably slower
+        //System.Collections.Concurrent.ConcurrentBag<FileInfo> m_toUpdate = new System.Collections.Concurrent.ConcurrentBag<FileInfo>();
         HashSet<FileInfo> m_toUpdate = new HashSet<FileInfo>();
         bool m_updateAll = false; //TODO: LOC: AUDIO: it's used by commented out code which needs to be revived
         public IDisposable SuppressUpdates()

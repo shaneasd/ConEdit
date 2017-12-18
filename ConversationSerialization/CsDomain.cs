@@ -185,7 +185,7 @@ namespace Conversation.Serialization
                 }
                 foreach (var b in a.Decimals)
                     data.Decimals.Add(new DecimalData(BestName(b.Name, usedNames), b.TypeId, b.Max, b.Min));
-                //TODO: Handle LocalizedStrings
+                //TODO: CODE GENERATION: Handle LocalizedStrings
                 foreach (var b in a.DynamicEnumerations)
                     data.DynamicEnumerations.Add(new DynamicEnumerationData(BestName(b.Name, usedNames), b.TypeId));
                 foreach (var b in a.LocalDynamicEnumerations)
@@ -729,7 +729,7 @@ namespace Conversation.Serialization
             type.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(RuntimeConversation.TypeIdAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression(dynamicEnum.TypeId.Guid.ToString()))));
             type.CustomAttributes.Add(new CodeAttributeDeclaration(new CodeTypeReference(typeof(GeneratedCodeAttribute)), new CodeAttributeArgument(new CodePrimitiveExpression("ConversationEditor")), new CodeAttributeArgument(new CodePrimitiveExpression("Beta"))));
 
-            //TODO: Need a better way to generate dynamicEnum options
+            //TODO: CODE GENERATION: Need a better way to generate dynamicEnum options
             //foreach (var element in dynamicEnum.Options)
             //{
             //    var elementName = element;

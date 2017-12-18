@@ -16,7 +16,7 @@ namespace Conversation
             m_enumeration = enumeration;
         }
 
-        //TODO: Isn't there already a mechanism for this at a higher level?
+        //TODO: Isn't there already a mechanism for this at a higher level? (This TODO copied to SetDefaultParameter)
         string m_textOverride = null; //initial string representation of parameter that failed parsing (or null if parsing succeeded or a new value has been specified.
 
         protected override Tuple<ReadOnlySet<Guid>, bool> DeserializeValueInner(string value)
