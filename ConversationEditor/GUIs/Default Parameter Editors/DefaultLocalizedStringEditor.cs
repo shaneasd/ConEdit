@@ -58,7 +58,6 @@ namespace ConversationEditor
         {
             InitializeComponent();
 
-            //TODO: Suggest things that make sense from the domain for autoCompleteSuggestions
             m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), MyTextBox.InputFormEnum.Text, AutoCompleteSuggestions);
             m_textBox.RequestedAreaChanged += () =>
             {

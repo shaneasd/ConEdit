@@ -331,6 +331,7 @@ namespace Utilities.UI
                 if (SelectedToolStripItem != null)
                 {
                     //TODO: this seems... odd. Should this be using a ColorScheme?
+                    //This definitely does show up as green when you select an item from the autocomplete suggestions...
                     SelectedToolStripItem.BackColor = Color.Green;
                 }
             }

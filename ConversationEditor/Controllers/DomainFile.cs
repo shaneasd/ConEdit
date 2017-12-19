@@ -381,7 +381,6 @@ namespace ConversationEditor
             m_serializer.Write(SerializationUtils.MakeDomainData(Nodes, new ConversationEditorData(Groups)), file);
         }
 
-        //TODO: Cache this and apply updates rather than regenerating every time
         public IDomainData Data
         {
             get
