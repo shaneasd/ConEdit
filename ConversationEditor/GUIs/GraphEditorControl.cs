@@ -57,37 +57,32 @@ namespace ConversationEditor
             get { return m_conversation ?? DummyConversationEditorControlData<TNode, TransitionNoduleUIInfo>.Instance; }
             set
             {
-                if (m_conversation == value)
-                    return;
-                else
+                if (m_conversation != (value ?? DummyConversationEditorControlData<TNode, TransitionNoduleUIInfo>.Instance))
                 {
-                    if (m_conversation != (value ?? DummyConversationEditorControlData<TNode, TransitionNoduleUIInfo>.Instance))
+                    m_conversation.File.Modified -= ResizeDocument;
+                    m_conversation.File.Modified -= Redraw;
+                    m_conversation.NodesDeleted -= OnNodesDeleted;
+                    m_conversation.NodeAdded -= OnNodeAdded;
+                    m_conversation.NodeRemoved -= OnNodeRemoved;
+
+                    if (value != null)
                     {
-                        m_conversation.File.Modified -= ResizeDocument;
-                        m_conversation.File.Modified -= Redraw;
-                        if (value != null)
-                        {
-                            value.File.Modified += ResizeDocument;
-                            value.File.Modified += Redraw;
-                            m_conversation.NodesDeleted -= OnNodesDeleted;
-                            value.NodesDeleted += OnNodesDeleted;
+                        value.File.Modified += ResizeDocument;
+                        value.File.Modified += Redraw;
+                        value.NodesDeleted += OnNodesDeleted;
+                        value.NodeAdded += OnNodeAdded;
+                        value.NodeRemoved += OnNodeRemoved;
 
-                            m_conversation.NodeAdded -= OnNodeAdded;
-                            m_conversation.NodeRemoved -= OnNodeRemoved;
-                            value.NodeAdded += OnNodeAdded;
-                            value.NodeRemoved += OnNodeRemoved;
-
-                            m_conversation = value;
-
-                            OnNodesReset();
-                        }
-                        else
-                        {
-                            m_conversation = DummyConversationEditorControlData<TNode, TransitionNoduleUIInfo>.Instance;
-                        }
-                        ResizeDocument();
-                        Redraw();
+                        m_conversation = value;
                     }
+                    else
+                    {
+                        m_conversation = DummyConversationEditorControlData<TNode, TransitionNoduleUIInfo>.Instance;
+                    }
+
+                    OnNodesReset();
+                    ResizeDocument();
+                    Redraw();
                 }
             }
         }
