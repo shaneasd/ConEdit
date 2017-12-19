@@ -191,6 +191,9 @@ namespace Conversation
 
     public sealed class FileInProject { }
 
+    public sealed class TConnectorDefinition { }
+    public sealed class TConnector { }
+
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
     public class Id<T> : IComparable<Id<T>>, IComparable
     {

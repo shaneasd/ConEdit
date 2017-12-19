@@ -58,6 +58,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigureResult.cs" />
+    <Compile Include="ConnectionConsiderations.cs" />
+    <Compile Include="ConnectorPosition.cs" />
     <Compile Include="ConversationError.cs" />
     <Compile Include="ConversationNode.cs" />
     <Compile Include="Domain\ConnectionDefinitionData.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="Domain\NodeData.cs" />
     <Compile Include="Domain\TypeSet.cs" />
     <Compile Include="ErrorChecker.cs" />
+    <Compile Include="IConnectionRules.cs" />
     <Compile Include="ILocalizationEngine.cs" />
     <Compile Include="Nodes\IConversationNode.cs" />
     <Compile Include="Id.cs" />
