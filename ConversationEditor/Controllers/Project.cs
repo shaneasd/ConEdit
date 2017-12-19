@@ -277,12 +277,11 @@ namespace ConversationEditor
 
                     Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<IConversationFile>> loadConversations = files =>
                     {
-                        //TODO: Can we just construct this serializer once before the parallel loop? If so we should be using it (it's currently unused), if not we should delete this line.
                         ISerializerDeserializer<XmlGraphData<NodeUIData, ConversationEditorData>> conversationSerializerDeserializer = m_conversationSerializerFactory(m_conversationDataSource);
                         //                                                 _/          _/                           _/                         X        _/             X            _/
                         //return files.Select(file => ConversationFile.Load(file, ConversationNodeFactory, conversationSerializerDeserializer, audio, getSource, m_audioProvider, backend));
-                        //TODO: This is ok as long as we're not using audio parameters at all
-                        return ParallelEnumerable.Select(files.AsParallel(), file => ConversationFile.Load(file.Item1, file.Item2, ConversationNodeFactory, m_conversationSerializerFactory(m_conversationDataSource), audio, getSource, m_audioProvider, backend));
+                        //TODO: AUDIO: This is ok as long as we're not using audio parameters at all
+                        return ParallelEnumerable.Select(files.AsParallel(), file => ConversationFile.Load(file.Item1, file.Item2, ConversationNodeFactory, conversationSerializerDeserializer, audio, getSource, m_audioProvider, backend));
                     };
                     Func<DirectoryInfo, ConversationFile> makeEmpty = path => ConversationFile.CreateEmpty(path, this, ConversationNodeFactory, audio, getSource, m_audioProvider, backend, Origin);
                     m_conversations = new ProjectElementList<IConversationFile>(GetFilePath, s => CheckFolder(s, Origin), loadConversations, makeEmpty);
