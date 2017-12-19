@@ -115,6 +115,9 @@ namespace ConversationEditor
             m_backend.Dispose();
         }
 
-        Func<IParameter, string, Func<ParameterType, DynamicEnumParameter.Source>, IEnumerable<string>> IProject.AutoCompleteSuggestions { get { return null; } }
+        public IEnumerable<string> AutoCompleteSuggestions(IParameter parameter, string start, IConversationEditorControlData<ConversationNode<INodeGui>, TransitionNoduleUIInfo> document)
+        {
+            throw new NotSupportedException();
+        }
     }
 }

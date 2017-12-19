@@ -41,9 +41,11 @@ namespace ConversationEditor
         bool CanModifyDomain { get; }
 
         /// <summary>
-        /// For an input parameter, current user entered value of that parameter and source for local data, suggest values extending upon that value
+        /// Suggest values for a parameter extending upon an initial string value
         /// </summary>
-        Func<IParameter, string, Func<ParameterType, DynamicEnumParameter.Source>, IEnumerable<string>> AutoCompleteSuggestions { get; }
+        /// <param name="parameter">The parameter defining valid values for the results</param>
+        /// <param name="start">The start of all results suggested</param>
+        IEnumerable<string> AutoCompleteSuggestions(IParameter parameter, string start, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo> document);
     }
 
 }

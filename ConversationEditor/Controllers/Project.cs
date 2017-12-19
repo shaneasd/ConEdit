@@ -575,12 +575,10 @@ namespace ConversationEditor
             get { return Conversations; }
         }
 
-        public Func<IParameter, string, Func<ParameterType, DynamicEnumParameter.Source>, IEnumerable<string>> AutoCompleteSuggestions
+        public IEnumerable<string> AutoCompleteSuggestions(IParameter parameter, string start, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo> document)
         {
-            get
-            {
-                return (p, s, e) => m_domainFiles.SelectMany(d => d.AutoCompleteSuggestions(p, s, e));
-            }
+            Func<ParameterType, DynamicEnumParameter.Source> enumSource = parameterType => ConversationDataSource.GetSource(parameterType, document);
+            return m_domainFiles.SelectMany(d => d.AutoCompleteSuggestions(parameter, start, enumSource));
         }
 
         Dictionary<Id<FileInProject>, DocumentPath> m_filePaths;

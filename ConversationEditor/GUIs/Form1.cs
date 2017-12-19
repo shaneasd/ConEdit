@@ -525,8 +525,7 @@ namespace ConversationEditor
             }
             else
             {
-                //TODO: This should probably be done by the project itself and should certainly handle local enums better (i.e. at all)
-                Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions = (p, s) => m_context.CurrentProject.Value.AutoCompleteSuggestions(p, s, (t) => m_context.CurrentProject.Value.ConversationDataSource.GetSource(t, CurrentFile));
+                AutoCompleteSuggestionsDelegate autoCompleteSuggestions = (p, s) => m_context.CurrentProject.Value.AutoCompleteSuggestions(p, s, CurrentFile);
 
                 ConfigureResult2 result = m_config.NodeEditors[data.NodeTypeId].GetEditorFactory().Edit(m_scheme, data, audioContext, GetParameterEditor, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value.AudioProvider, autoCompleteSuggestions);
                 return result.Transformed(a => OnOk(m_context.CurrentProject.Value.AudioProvider, a), b => new ConfigureResult(b));

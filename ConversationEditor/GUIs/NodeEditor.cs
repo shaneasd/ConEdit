@@ -48,7 +48,7 @@ namespace ConversationEditor
             UpdateScrollbarVisibility();
         }
 
-        public static ConfigureResult2 Edit(IColorScheme scheme, IConversationNodeData data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions)
+        public static ConfigureResult2 Edit(IColorScheme scheme, IConversationNodeData data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, AutoCompleteSuggestionsDelegate autoCompleteSuggestions)
         {
             using (Form f = new Form())
             {
@@ -133,7 +133,7 @@ namespace ConversationEditor
 
         event Action MouseActivated;
 
-        public NodeEditor(IColorScheme scheme, IConversationNodeData data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions)
+        public NodeEditor(IColorScheme scheme, IConversationNodeData data, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, AutoCompleteSuggestionsDelegate autoCompleteSuggestions)
             : this()
         {
             Scheme = scheme;
@@ -381,7 +381,7 @@ namespace ConversationEditor
             return true;
         }
 
-        public override ConfigureResult2 Edit(IColorScheme scheme, IConversationNodeData node, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, Func<IParameter, string, IEnumerable<string>> autoCompleteSuggestions)
+        public override ConfigureResult2 Edit(IColorScheme scheme, IConversationNodeData node, AudioGenerationParameters audioContext, Func<ParameterType, ParameterEditorSetupData, IParameterEditor> config, ILocalizationEngine localizer, IAudioParameterEditorCallbacks audioProvider, AutoCompleteSuggestionsDelegate autoCompleteSuggestions)
         {
             if (node.Parameters.Any())
                 return NodeEditor.Edit(scheme, node, audioContext, config, localizer, audioProvider, autoCompleteSuggestions);
