@@ -92,11 +92,7 @@ namespace ConversationEditor
             TNode n;
             if (nodeRef.TryGetTarget(out n))
             {
-                bool removed = SpatiallyOrderedNodes.Remove(n, c.From);
-                if (!removed)
-                {
-                    throw new InvalidOperationException("Something went wrong removing a node from the map in NodeAreaChanged");
-                }
+                SpatiallyOrderedNodes.Remove(n);
                 SpatiallyOrderedNodes.Add(n, c.To);
 
                 foreach (var connector in n.Data.Connectors)
@@ -197,11 +193,7 @@ namespace ConversationEditor
                         RectangleF fromBounds = RectangleF.Union(change.From, other.Area.Value);
 
                         var pair = UnorderedTuple.Make(connectorTemp, connection);
-                        bool removed = SpatiallyOrderedConnections.Remove(Tuple.Create(pair, fromBounds), fromBounds);
-                        if (!removed)
-                        {
-                            throw new InvalidOperationException("Something went wrong removing a connector from the map in deregister");
-                        }
+                        SpatiallyOrderedConnections.Remove(Tuple.Create(pair, fromBounds));
 
                         RectangleF toBounds = RectangleF.Union(change.To, other.Area.Value);
                         SpatiallyOrderedConnections.Add(Tuple.Create(pair, toBounds), toBounds);
@@ -244,11 +236,7 @@ namespace ConversationEditor
             bool exists = SpatiallyOrderedConnections.FindTouchingRegion(bounds).Contains(Tuple.Create(pair, bounds));
             if (exists)
             {
-                bool removed = SpatiallyOrderedConnections.Remove(Tuple.Create(pair, bounds), bounds);
-                if (!removed)
-                {
-                    throw new InvalidOperationException("Something went wrong removing a connector from the map in connectorTemp.Disconnected");
-                }
+                SpatiallyOrderedConnections.Remove(Tuple.Create(pair, bounds));
             }
         }
 
@@ -264,11 +252,7 @@ namespace ConversationEditor
         public void OnNodeRemoved(TNode node)
         {
             StoreConnections(node, false);
-            bool removed = SpatiallyOrderedNodes.Remove(node, node.Renderer.Area);
-            if (!removed)
-            {
-                throw new InvalidOperationException("Something went wrong removing a node from the map in OnNodeRemoved");
-            }
+            SpatiallyOrderedNodes.Remove(node);
             node.Renderer.AreaChanged -= m_nodeMovedCallbacks[node];
             m_nodeMovedCallbacks.Remove(node);
         }

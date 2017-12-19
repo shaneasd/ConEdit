@@ -47,11 +47,6 @@ namespace Utilities
             list.Sort(m_relativePosition);
             return list.GetEnumerator();
         }
-
-        public RectangleF? GetFirstNodeAreaDebug()
-        {
-            return m_tree.GetFirstNodeAreaDebug();
-        }
     }
 
     //TODO: Kinda defeats the purpose of maintaining the spatial information if we're just going to ignore it.
@@ -81,15 +76,7 @@ namespace Utilities
 
     public class QuadTree<T> : IReadOnlyQuadTree<T>
     {
-        private static class Debugging
-        {
-            public static bool Enabled = false;
-            public static void WriteLine(string line, params object[] data)
-            {
-                if (Enabled)
-                    Debug.WriteLine(line, data);
-            }
-        }
+        Dictionary<T, RectangleF> m_boundsMap = new Dictionary<T, RectangleF>();
 
         Element m_root;
         public QuadTree(RectangleF initialBounds)
@@ -107,86 +94,57 @@ namespace Utilities
             return m_root.GetEnumerator();
         }
 
+        public RectangleF GetBounds(T element)
+        {
+            return m_boundsMap[element];
+        }
+
         public void Add(T element, RectangleF bounds)
         {
-            if (Debugging.Enabled)
-                Debugging.WriteLine("Count: {0}", this.Count());
-            Debugging.WriteLine("Adding {0}", bounds);
-            try
+            bool added = false;
+            while (!added)
             {
-                bool added = false;
-                while (!added)
+                if (m_root.Bounds.Left > bounds.Left) //Need to expand to the left
                 {
-                    if (m_root.Bounds.Left > bounds.Left) //Need to expand to the left
+                    if (m_root.Bounds.Top > bounds.Top) //Need to expand to the top
                     {
-                        if (m_root.Bounds.Top > bounds.Top) //Need to expand to the top
-                        {
-                            m_root = m_root.ExpandLeftTop();
-                        }
-                        else
-                        {
-                            m_root = m_root.ExpandLeftBottom();
-                        }
-                    }
-                    else if (m_root.Bounds.Top > bounds.Top) //Need to expand to the top
-                    {
-                        m_root = m_root.ExpandRightTop();
-                    }
-                    else if (m_root.Bounds.Bottom < bounds.Bottom || //Need to expand to the bottom
-                             m_root.Bounds.Right < bounds.Right)     //Need to expand to the right
-                    {
-                        m_root = m_root.ExpandRightBottom();
+                        m_root = m_root.ExpandLeftTop();
                     }
                     else
                     {
-                        m_root.Add(element, bounds);
-                        added = true;
+                        m_root = m_root.ExpandLeftBottom();
                     }
                 }
+                else if (m_root.Bounds.Top > bounds.Top) //Need to expand to the top
+                {
+                    m_root = m_root.ExpandRightTop();
+                }
+                else if (m_root.Bounds.Bottom < bounds.Bottom || //Need to expand to the bottom
+                         m_root.Bounds.Right < bounds.Right)     //Need to expand to the right
+                {
+                    m_root = m_root.ExpandRightBottom();
+                }
+                else
+                {
+                    m_root.Add(element, bounds);
+                    added = true;
+                }
             }
-            finally
-            {
-                if (Debugging.Enabled)
-                    Debugging.WriteLine("Count: {0}", this.Count());
-            }
+            m_boundsMap[element] = bounds;
         }
 
-        public bool Remove(T node, RectangleF area)
+        public void Remove(T node)
         {
-            if (Debugging.Enabled)
-                Debugging.WriteLine("Count: {0}", this.Count());
-            try
-            {
-                Debugging.WriteLine("Removing {0}", area);
-                if (m_root.Bounds.Contains(area))
-                    return m_root.Remove(node, area);
-                else
-                    return false;
-            }
-            finally
-            {
-                if (Debugging.Enabled)
-                    Debugging.WriteLine("Count: {0}", this.Count());
-            }
+            RectangleF area = m_boundsMap[node];
+            if (!m_root.Bounds.Contains(area))
+                throw new InvalidOperationException("Tried to remove element whose bounds are outside the root nodes bounds");
+            m_root.Remove(node, area);
         }
 
         public IEnumerable<T> FindTouchingRegion(RectangleF bounds)
         {
-            if (Debugging.Enabled)
-                Debugging.WriteLine("Count: {0}", this.Count());
             return m_root.FindTouchingRegion(bounds);
         }
-
-        public RectangleF? FindAndRemove(T n)
-        {
-            return m_root.FindAndRemnove(n);
-        }
-
-        public RectangleF? GetFirstNodeAreaDebug()
-        {
-            return m_root.GetFirstNodeAreaDebug();
-        }
-
 
         public class Element : IEnumerable<T>
         {

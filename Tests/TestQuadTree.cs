@@ -87,8 +87,7 @@ namespace Tests
                 tree.Add(obj[i], bounds);
             foreach (var o in obj)
             {
-                bool removed = tree.Remove(o, bounds);
-                Assert.That(removed, Is.True);
+                tree.Remove(o);
             }
         }
 
@@ -99,7 +98,7 @@ namespace Tests
             var element1 = new object();
             var rect = new RectangleF(new PointF(0.25f, -1), new SizeF(0.1f, 0.1f));
             tree.Add(element1, rect);
-            Assert.That(tree.Remove(element1, rect), "failed to remove element");
+            tree.Remove(element1);
         }
 
         [NUnit.Framework.Test]
@@ -116,7 +115,7 @@ namespace Tests
                 object element = new object();
                 RectangleF area = new RectangleF(x, y, width, height);
                 tree.Add(element, area);
-                Assert.That(tree.Remove(element, area));
+                tree.Remove(element);
                 if (i % 100 == 0)
                     Console.WriteLine(i);
             }
