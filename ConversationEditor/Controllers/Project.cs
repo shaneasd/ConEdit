@@ -106,8 +106,8 @@ namespace ConversationEditor
         ISerializer<TData> m_serializer;
         ConversationSerializerDeserializerFactory m_conversationSerializerFactory;
         ISerializer<TDomainData> m_domainSerializer;
-        private ProjectElementList<IConversationFile> m_conversations; //TODO: Could these be IProjectElementLists?
-        private ProjectElementList<IDomainFile> m_domainFiles;
+        private IProjectElementList<IConversationFile> m_conversations;
+        private IProjectElementList<IDomainFile> m_domainFiles;
         private DomainDomain m_domainDataSource;
         private ConversationDataSource m_conversationDataSource;
         SaveableFileNotUndoable m_file;
