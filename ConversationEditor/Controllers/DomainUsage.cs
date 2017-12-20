@@ -84,6 +84,19 @@ namespace ConversationEditor
                         result.Add(new Usage(parameterNode, domainFile, type.Name + " parameter " + parameterNode.Data.Parameters.Where(x => x.Id == DomainIDs.ParameterName).Single().ValueAsString()));
                     }
                 }
+                //If it's an enum, we need to consider set parameters based off this enum
+                if (type == BaseType.Enumeration)
+                {
+                    var setParameterNodes = domainNodes.Where(n => BaseType.Set.ParameterNodeType ==  n.Data.NodeTypeId);
+                    foreach (var parameterNode in setParameterNodes)
+                    {
+                        var typeParameter = parameterNode.Data.Parameters.SingleOrDefault(p => p.Id == DomainIDs.PARAMETER_TYPE) as IEnumParameter; //Identifies what subtype of the base type it is (e.g. what kind of integer)
+                        if (typeParameter.Value == ParameterType.ValueSetType.Of(ParameterType.Basic.FromGuid(id.Guid)).Guid)
+                        {
+                            result.Add(new Usage(parameterNode, domainFile, BaseType.Set.Name + " parameter " + parameterNode.Data.Parameters.Where(x => x.Id == DomainIDs.ParameterName).Single().ValueAsString()));
+                        }
+                    }
+                }
             }
             return result;
         }
@@ -110,12 +123,15 @@ namespace ConversationEditor
                     foreach (var n in conversationFile.Nodes)
                     {
                         var parameters = n.Data.Parameters;
-                        var filteredParameters = parameters.Where(p => p.TypeId == ParameterType.Basic.ConvertFrom(enumTypeID)).Cast<IEnumParameter>()
-                                                           .Concat(parameters.Where(p => p.TypeId == ParameterType.ValueSetType.ConvertFrom(enumTypeID)).Cast<IEnumParameter>());
+                        var filteredEnumParameters = parameters.Where(p => p.TypeId == ParameterType.Basic.ConvertFrom(enumTypeID)).Cast<IEnumParameter>();
+                        var filteredSetParameters = parameters.Where(p => p.TypeId == ParameterType.ValueSetType.ConvertFrom(enumTypeID)).Cast<ISetParameter>();
 
-                        var usingParameters = filteredParameters.Where(p => p.Value == node.Data.NodeId.Guid);
-                        foreach (var p in usingParameters)
+                        var usingEnumParameters = filteredEnumParameters.Where(p => p.Value == node.Data.NodeId.Guid);
+                        foreach (var p in usingEnumParameters)
                             result.Add(new Usage(n, conversationFile, "Node " + n.Data.Name + " with Enum parameter " + p.Name));
+                        var usingSetParameters = filteredSetParameters.Where(p => p.Value.Contains(node.Data.NodeId.Guid));
+                        foreach (var p in usingSetParameters)
+                            result.Add(new Usage(n, conversationFile, "Node " + n.Data.Name + " with Set parameter " + p.Name));
                     }
                 }
 
@@ -132,7 +148,18 @@ namespace ConversationEditor
                                 var defaultParameter = n.Data.Parameters.Single(p => p.Id == DomainIDs.ParameterDefault) as IDynamicEnumParameter;
                                 var expectedValue = (node.Data.Parameters.Single(p => p.Id == DomainIDs.EnumerationValueParameter) as IStringParameter).Value;
                                 if (defaultParameter.Value == expectedValue)
-                                    result.Add(new Usage(n, domainFile, "Enum definition " + n.Data.Parameters.Where(x => x.Id == DomainIDs.ParameterName).Single().ValueAsString() + " default value"));
+                                    result.Add(new Usage(n, domainFile, "Enum parameter definition " + n.Data.Parameters.Where(x => x.Id == DomainIDs.ParameterName).Single().ValueAsString() + " default value"));
+                            }
+                        }
+                        if (n.Data.NodeTypeId == BaseType.Set.ParameterNodeType)
+                        {
+                            var typeParameter = n.Data.Parameters.Single(p => p.Id == DomainIDs.PARAMETER_TYPE) as IEnumParameter;
+                            if (typeParameter.Value == enumTypeID.Guid)
+                            {
+                                var defaultParameter = n.Data.Parameters.Single(p => p.Id == DomainIDs.ParameterDefault) as ISetParameter;
+                                var expectedValue = node.Data.NodeId;
+                                if (defaultParameter.Value.Contains(expectedValue.Guid))
+                                    result.Add(new Usage(n, domainFile, "Set parameter definition " + n.Data.Parameters.Where(x => x.Id == DomainIDs.ParameterName).Single().ValueAsString() + " default value"));
                             }
                         }
                     }

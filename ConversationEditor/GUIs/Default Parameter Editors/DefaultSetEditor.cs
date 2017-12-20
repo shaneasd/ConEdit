@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -121,7 +119,8 @@ namespace ConversationEditor
         private void SelectionChanged(TControl comboBox)
         {
             if (object.ReferenceEquals(comboBox, m_comboBoxes.Last()))
-                AddComboBox();
+                if (comboBox.SelectedItem.Contents != Guid.Empty)
+                    AddComboBox();
         }
 
         public void Setup(ParameterEditorSetupData data)
@@ -170,7 +169,20 @@ namespace ConversationEditor
 
         public string IsValid()
         {
-            return null;
+            bool valid = true;
+            StringBuilder errorBuilder = new StringBuilder();
+            foreach (var combobox in m_comboBoxes.Take(m_comboBoxes.Count - 1))//Ignore the last one as we know it's empty.
+            {
+                if (!combobox.Items.Any(i => i.Contents == combobox.SelectedItem.Contents))
+                {
+                    valid = false;
+                    errorBuilder.AppendLine("Selected item does not exist in enumeration");
+                }
+            }
+            if (!valid)
+                return errorBuilder.ToString();
+            else
+                return null;
         }
 
         public event Action Ok
@@ -202,7 +214,7 @@ namespace ConversationEditor
         private static void SetupColors(IColorScheme value, TControl b)
         {
             b.TextBoxColors.BorderPen = value.ControlBorder;
-            //b.SelectedBackgroundColor = value.SelectedConversationListItemPrimaryBackground; //TODO: We want this if we use a suggestion box
+            b.SelectedBackgroundColor = value.SelectedConversationListItemPrimaryBackground;
             b.Renderer = value.ContextMenu;
         }
     }
