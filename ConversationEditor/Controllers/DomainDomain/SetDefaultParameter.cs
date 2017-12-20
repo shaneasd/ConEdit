@@ -66,17 +66,12 @@ namespace ConversationEditor
             return SetParameter.SerializeSet(Value);
         }
 
-        private static string DisplayStringForSet(ReadOnlySet<Guid> value, Func<Guid, string> GetName)
-        {
-            return string.Join(" + ", value.Select(v => GetName(v) ?? SetParameter.InvalidValue).OrderBy(a => a));
-        }
-
         public override string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {
             if (Corrupted)
                 return ValueAsString();
             else
-                return DisplayStringForSet(Value, GetName);
+                return SetParameter.DisplayStringForSet(Value, GetName);
         }
 
         public string SerializedValue

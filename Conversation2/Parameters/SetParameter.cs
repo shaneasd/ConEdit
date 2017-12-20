@@ -16,16 +16,9 @@ namespace Conversation
             m_enumeration = enumeration;
         }
 
-        //TODO: Isn't there already a mechanism for this at a higher level? (This TODO copied to SetDefaultParameter)
-        string m_textOverride = null; //initial string representation of parameter that failed parsing (or null if parsing succeeded or a new value has been specified.
-
         protected override Tuple<ReadOnlySet<Guid>, bool> DeserializeValueInner(string value)
         {
             var result = StaticDeserialize(m_enumeration.Options, value);
-            if ( result.Item2 )
-                m_textOverride = value;
-            else
-                m_textOverride = null;
             return result;
         }
 
@@ -56,11 +49,6 @@ namespace Conversation
             }
         }
 
-        protected override void OnSetValue(ReadOnlySet<Guid> value)
-        {
-            m_textOverride = null;
-        }
-
         protected override bool ValueValid(ReadOnlySet<Guid> value)
         {
             return StaticValueValid(m_enumeration.Options, value);
@@ -73,8 +61,6 @@ namespace Conversation
 
         protected override string InnerValueAsString()
         {
-            if (m_textOverride != null)
-                return m_textOverride;
             return SerializeSet(Value);
         }
 
@@ -99,11 +85,17 @@ namespace Conversation
                 return m_enumeration.GetName(value);
         }
 
+        public static string DisplayStringForSet(ReadOnlySet<Guid> value, Func<Guid, string> GetName)
+        {
+            return string.Join(" + ", value.Select(v => GetName(v) ?? SetParameter.InvalidValue).OrderBy(a => a));
+        }
+
         public override string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {
-            if (m_textOverride != null)
-                return m_textOverride;
-            return string.Join(" + ", Value.Select(v => GetName(v) ?? InvalidValue).OrderBy(a => a));
+            if (Corrupted)
+                return ValueAsString();
+            else
+                return DisplayStringForSet(Value, GetName);
         }
 
         public const string InvalidValue = "ERROR: Unknown enumeration value";
