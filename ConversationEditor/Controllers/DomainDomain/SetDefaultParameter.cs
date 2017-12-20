@@ -25,9 +25,6 @@ namespace ConversationEditor
             }
         }
 
-        //TODO: Isn't there already a mechanism for this at a higher level? (Copied from SetParameter)
-        string m_textOverride = null; //initial string representation of parameter that failed parsing (or null if parsing succeeded or a new value has been specified.
-
         public SetDefaultParameter(Func<Dictionary<ParameterType, IEnumerable<EnumerationData.Element>>> getEnumeration, Func<ParameterType> getCurrentEnumType)
             : base("Default", DomainIDs.ParameterDefault, TypeId, "", Tuple.Create(new ReadOnlySet<Guid>(), false))
         {
@@ -61,38 +58,33 @@ namespace ConversationEditor
         protected override Tuple<ReadOnlySet<Guid>, bool> DeserializeValueInner(string value)
         {
             var result = SetParameter.StaticDeserialize(Enumeration.Select(e => e.Guid), value);
-            if (result.Item2)
-                m_textOverride = value;
-            else
-                m_textOverride = null;
             return result;
-        }
-
-        protected override void OnSetValue(ReadOnlySet<Guid> value)
-        {
-            m_textOverride = null;
         }
 
         protected override string InnerValueAsString()
         {
-            if (m_textOverride != null)
-                return m_textOverride;
             return SetParameter.SerializeSet(Value);
+        }
+
+        private static string DisplayStringForSet(ReadOnlySet<Guid> value, Func<Guid, string> GetName)
+        {
+            return string.Join(" + ", value.Select(v => GetName(v) ?? SetParameter.InvalidValue).OrderBy(a => a));
         }
 
         public override string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {
-            if (m_textOverride != null)
-                return m_textOverride;
-            return string.Join(" + ", Value.Select(v => GetName(v) ?? SetParameter.InvalidValue).OrderBy(a => a));
+            if (Corrupted)
+                return ValueAsString();
+            else
+                return DisplayStringForSet(Value, GetName);
         }
 
         public string SerializedValue
         {
             get
             {
-                if (m_textOverride != null)
-                    return m_textOverride;
+                if (Corrupted)
+                    return ValueAsString();
                 else
                     return SetParameter.SerializeSet(Value);
             }
