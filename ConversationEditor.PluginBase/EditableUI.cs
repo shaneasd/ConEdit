@@ -98,7 +98,7 @@ namespace ConversationEditor
                 Node = node;
             }
 
-            private Color baseColor
+            private Color BaseColor
             {
                 get
                 {
@@ -131,7 +131,7 @@ namespace ConversationEditor
                 RectangleF area = new RectangleF(location, m_size);
                 if (area.Height > 0)
                 {
-                    using (var theRestGradient = CalculateGradient(baseColor, brightnessFactor, darknessFactor, area))
+                    using (var theRestGradient = CalculateGradient(BaseColor, brightnessFactor, darknessFactor, area))
                     {
                         g.FillRectangle(theRestGradient, area);
                     }

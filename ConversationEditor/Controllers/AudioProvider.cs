@@ -63,10 +63,7 @@ namespace ConversationEditor
                 return new Audio("Resources\\Audio\\" + conversationPath + "\\" + filename + ".ogg");
             }
 
-            public string Name
-            {
-                get { return "Default"; }
-            }
+            public string Name { get; } = "Default";
         }
         public static IAudioProviderCustomization DefaultCustomization { get; } = new TDefaultCustomization();
 
@@ -119,10 +116,7 @@ namespace ConversationEditor
             //Process.Start(m_mediaPlayerPath(), "\"" +  audio.File.File.FullName + "\"");
         }
 
-        public IProjectElementList<IAudioFile> AudioFiles
-        {
-            get { return m_audioFiles; }
-        }
+        public IProjectElementList<IAudioFile> AudioFiles => m_audioFiles;
 
         //Will have to cache this one day
         public IEnumerable<Audio> UsedAudio()

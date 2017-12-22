@@ -26,8 +26,7 @@ namespace Conversation
 
             internal void DeregisterUsage(DynamicEnumParameter dynamicEnumParameter)
             {
-                string dontCare;
-                m_options.TryRemove(dynamicEnumParameter, out dontCare);
+                m_options.TryRemove(dynamicEnumParameter, out var dontCare);
             }
         }
 

@@ -24,7 +24,7 @@ namespace Conversation
 
         public static Tuple<ReadOnlySet<Guid>, bool> StaticDeserialize(IEnumerable<Guid> options, string value)
         {
-            if ( value == null )
+            if (value == null)
                 return Tuple.Create((ReadOnlySet<Guid>)null, true);
 
             string[] values = value.Split('+').Select(s => s.Trim()).Where(s => s.Length > 0).ToArray();
@@ -32,8 +32,7 @@ namespace Conversation
             bool valid = true;
             for (int i = 0; i < values.Length; i++)
             {
-                Guid g;
-                bool v = Guid.TryParse(values[i], out g);
+                bool v = Guid.TryParse(values[i], out Guid g);
                 guids[i] = v ? g : Guid.Empty;
                 valid &= v;
             }
@@ -85,9 +84,9 @@ namespace Conversation
                 return m_enumeration.GetName(value);
         }
 
-        public static string DisplayStringForSet(ReadOnlySet<Guid> value, Func<Guid, string> GetName)
+        public static string DisplayStringForSet(ReadOnlySet<Guid> value, Func<Guid, string> getName)
         {
-            return string.Join(" + ", value.Select(v => GetName(v) ?? SetParameter.InvalidValue).OrderBy(a => a));
+            return string.Join(" + ", value.Select(v => getName(v) ?? SetParameter.InvalidValue).OrderBy(a => a));
         }
 
         public override string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)

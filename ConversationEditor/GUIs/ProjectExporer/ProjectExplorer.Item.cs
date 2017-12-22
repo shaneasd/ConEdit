@@ -17,8 +17,7 @@ namespace ConversationEditor
     {
         public abstract class Item : Disposable
         {
-            public const float HEIGHT = 20;
-            const int CARET_HEIGHT = 15;
+            public const float ItemHeight = 20;
             public static TextureBrush ReadOnlyBackgroundBrush { get; }
             public static Item Null { get; } = null;
             static Item()
@@ -41,17 +40,16 @@ namespace ConversationEditor
 
             public FileSystemObject File { get; }
             public IProject Project { get; }
-            protected ContainerItem m_parent;
+            protected ContainerItem Parent { get; private set; }
 
             private Func<RectangleF> m_area;
             Func<Matrix> ToControlTransform;
             protected Func<FileSystemObject, string, bool> Rename { get; }
-            protected int m_indentLevel = 0;
             MyTextBox m_textBox = null;
 
             protected static void ChangeParent(Item item, ContainerItem parent)
             {
-                item.m_parent = parent;
+                item.Parent = parent;
             }
 
             public struct ConstructorParams
@@ -78,7 +76,7 @@ namespace ConversationEditor
             {
                 Project = parameters.Project;
                 File = parameters.File;
-                m_parent = parameters.Parent;
+                Parent = parameters.Parent;
                 m_area = parameters.Area;
                 ToControlTransform = parameters.ToControlTransform;
                 Rename = parameters.Rename;
@@ -105,7 +103,7 @@ namespace ConversationEditor
                 return new RectangleF(area.X + CalculateIndent(area) + 3, area.Y + 3, area.Height - 6, area.Height - 6);
             }
 
-            float CalculateIndent(RectangleF area) { return m_indentLevel * (area.Height - 6); }
+            float CalculateIndent(RectangleF area) { return IndentLevel * (area.Height - 6); }
 
             RectangleF CalculateTextArea(RectangleF area, float indent)
             {
@@ -189,7 +187,7 @@ namespace ConversationEditor
                 for (int i = 0; i < Text.Length; i++)
                 {
                     float width = g.MeasureString(Text.Substring(0, i), SystemFonts.MessageBoxFont).Width;
-                    float start = 5 + m_indentLevel * (HEIGHT - 6) + HEIGHT - 6;
+                    float start = 5 + IndentLevel * (ItemHeight - 6) + ItemHeight - 6;
                     if (start + width > x)
                     {
                         if (Math.Abs(bestX - x) < Math.Abs(start + width - x))
@@ -211,11 +209,7 @@ namespace ConversationEditor
             public abstract IEnumerable<Item> AllItems(VisibilityFilter filter);
             public abstract IEnumerable<Item> Children(VisibilityFilter filter);
 
-            public void SetIndentLevel(int indentLevel)
-            {
-                m_indentLevel = indentLevel;
-            }
-            public int IndentLevel { get { return m_indentLevel; } }
+            public int IndentLevel { get; set; }
 
             public abstract ContainerItem SpawnLocation { get; }
 

@@ -17,8 +17,7 @@ namespace Conversation
 
             public new static Basic Parse(string value)
             {
-                Guid g;
-                if (Guid.TryParse(value, out g))
+                if (Guid.TryParse(value, out Guid g))
                 {
                     return new Basic(g);
                 }
@@ -85,8 +84,7 @@ namespace Conversation
             {
                 if (value.StartsWith(SET_PREFIX, StringComparison.OrdinalIgnoreCase))
                 {
-                    Guid g;
-                    if (Guid.TryParse(value.Substring(SET_PREFIX.Length), out g))
+                    if (Guid.TryParse(value.Substring(SET_PREFIX.Length), out Guid g))
                     {
                         return new ValueSetType(g);
                     }
@@ -269,8 +267,7 @@ namespace Conversation
 
         internal static bool TryParse(string value, out Id<T> m_value)
         {
-            Guid guid;
-            if (Guid.TryParse(value, out guid))
+            if (Guid.TryParse(value, out Guid guid))
             {
                 m_value = new Id<T>(guid);
                 return true;

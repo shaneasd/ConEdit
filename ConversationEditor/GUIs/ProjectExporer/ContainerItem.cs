@@ -29,7 +29,7 @@ namespace ConversationEditor
 
             protected void InsertChildAlphabetically(Item child)
             {
-                child.SetIndentLevel(m_indentLevel + 1);
+                child.IndentLevel = IndentLevel + 1;
                 bool inserted = false;
                 for (int i = 0; i < m_subItems.Count && !inserted; i++)
                 {
@@ -111,7 +111,7 @@ namespace ConversationEditor
             {
                 var start = iconRectangle.Center();
 
-                float treeBranchX = start.X - HEIGHT + 6; //The x coordinate of the point where this node's connector line joins the parents branch line
+                float treeBranchX = start.X - ItemHeight + 6; //The x coordinate of the point where this node's connector line joins the parents branch line
                 g.DrawLine(scheme.TreePen, start, new PointF(treeBranchX, start.Y));
 
                 Func<Item, int> itemsBefore = (child) => Children(filter).TakeWhile(i => i != child).Select(c => c.AllItems(filter).Count()).Sum();
@@ -120,7 +120,7 @@ namespace ConversationEditor
                 if (Children(filter).Any())
                 {
                     int itemsBeforeLastChild = itemsBefore(Children(filter).Last());
-                    g.DrawLine(scheme.TreePen, start, new PointF(start.X, start.Y + HEIGHT * (itemsBeforeLastChild + 1) + 1));
+                    g.DrawLine(scheme.TreePen, start, new PointF(start.X, start.Y + ItemHeight * (itemsBeforeLastChild + 1) + 1));
                 }
             }
             protected override void DrawMinimizeIcon(Graphics g, RectangleF minimizeIconRectangle, VisibilityFilter filter, IColorScheme scheme)

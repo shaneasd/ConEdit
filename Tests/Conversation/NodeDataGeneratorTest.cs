@@ -72,8 +72,7 @@ namespace Tests.Conversation
         {
             public new bool Equals(object x, object y)
             {
-                var output = x as Output;
-                if (output != null)
+                if ( x is Output output)
                 {
                     return Compare(output, y as Tuple<NodeData.ConnectorData, ConnectorDefinitionData>);
                 }

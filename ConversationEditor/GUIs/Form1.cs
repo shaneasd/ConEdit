@@ -646,8 +646,7 @@ namespace ConversationEditor
             {
                 configPath = m_context.CurrentProject.Value.File.File.FullName + ".config";
                 lastDocument = projectExplorer.SelectedConversation != null ? projectExplorer.SelectedConversation.Id :
-                               projectExplorer.CurrentDomainFile != null ? projectExplorer.CurrentDomainFile.Id :
-                               null;
+                               projectExplorer.CurrentDomainFile?.Id;
                 lastLocalization = m_context.CurrentLocalization.Value?.Id;
             }
             Project.TConfig projectConfig = new Project.TConfig(lastDocument, lastLocalization);

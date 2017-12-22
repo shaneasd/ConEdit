@@ -38,7 +38,7 @@ namespace ConversationEditor
             public override void DrawTree(Graphics g, RectangleF iconRectangle, VisibilityFilter filter, IColorScheme scheme)
             {
                 var start = iconRectangle.Center();
-                float treeBranchX = start.X - HEIGHT + 6; //The x coordinate of the point where this node's connector line joins the parents branch line
+                float treeBranchX = start.X - ItemHeight + 6; //The x coordinate of the point where this node's connector line joins the parents branch line
                 g.DrawLine(scheme.TreePen, start, new PointF(treeBranchX, start.Y));
                 //g.DrawLine(ContainerItem.TreePen, treeBranchX, start.Y - HEIGHT, treeBranchX, start.Y + 1); //The +1 ensures the lines connect up nicely
 
@@ -47,7 +47,7 @@ namespace ConversationEditor
 
             public override ContainerItem SpawnLocation
             {
-                get { return m_parent; }
+                get { return Parent; }
             }
         }
 

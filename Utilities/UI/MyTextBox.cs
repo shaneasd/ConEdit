@@ -664,21 +664,13 @@ namespace Utilities.UI
                 }
                 else
                 {
-                    //bool acceptable = InputForm == MyTextBox.InputFormEnum.Text ||
-                    //                  InputForm == MyTextBox.InputFormEnum.Decimal && IsAcceptableNumeric(args.KeyChar) ||
-                    //                  InputForm == MyTextBox.InputFormEnum.Integer && IsAcceptableNumeric(args.KeyChar) ||
-                    //                  InputForm == MyTextBox.InputFormEnum.Path && StringUtil.IsAcceptablePathChar(args.KeyChar) ||
-                    //                  InputForm == MyTextBox.InputFormEnum.FileName && IsAcceptableFileNameChar(args.KeyChar);
-
                     string newText = Text.Remove(SelectionStart, Math.Abs(SelectionLength)).Insert(SelectionStart, args.KeyChar + "");
 
-                    decimal dontcare1;
-                    int dontcare2;
                     bool acceptable = InputForm == MyTextBox.InputFormEnum.Text ||
-                                      InputForm == MyTextBox.InputFormEnum.Decimal && decimal.TryParse(newText, NumberStyles.Number, CultureInfo.CurrentCulture, out dontcare1) ||
-                                      InputForm == MyTextBox.InputFormEnum.Integer && int.TryParse(newText, NumberStyles.Number, CultureInfo.CurrentCulture, out dontcare2) ||
-                                      InputForm == MyTextBox.InputFormEnum.Decimal && decimal.TryParse(newText + "0", NumberStyles.Number, CultureInfo.CurrentCulture, out dontcare1) || //To catch "-" and "+"
-                                      InputForm == MyTextBox.InputFormEnum.Integer && int.TryParse(newText + "0", NumberStyles.Number, CultureInfo.CurrentCulture, out dontcare2) || //To catch "-" and "+"
+                                      InputForm == MyTextBox.InputFormEnum.Decimal && decimal.TryParse(newText, NumberStyles.Number, CultureInfo.CurrentCulture, out var _) ||
+                                      InputForm == MyTextBox.InputFormEnum.Integer && int.TryParse(newText, NumberStyles.Number, CultureInfo.CurrentCulture, out var _) ||
+                                      InputForm == MyTextBox.InputFormEnum.Decimal && decimal.TryParse(newText + "0", NumberStyles.Number, CultureInfo.CurrentCulture, out var _) || //To catch "-" and "+"
+                                      InputForm == MyTextBox.InputFormEnum.Integer && int.TryParse(newText + "0", NumberStyles.Number, CultureInfo.CurrentCulture, out var _) || //To catch "-" and "+"
                                       InputForm == MyTextBox.InputFormEnum.Path && StringUtil.IsAcceptablePathChar(args.KeyChar) ||
                                       InputForm == MyTextBox.InputFormEnum.FileName && IsAcceptableFileNameChar(args.KeyChar);
 

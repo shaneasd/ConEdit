@@ -20,7 +20,7 @@ namespace ConversationEditor
         public static ParameterType ParameterType { get; } = ParameterType.Parse("fa7245b2-7bbf-4f31-ad3d-41e78577131e");
         private const string NAME = "Integer";
 
-        public static IntegerData Data { get { return new IntegerData(NAME, ParameterType, null, null); } }
+        public static IntegerData Data => new IntegerData(NAME, ParameterType, null, null);
 
         public override NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode)
         {
@@ -33,10 +33,7 @@ namespace ConversationEditor
             return new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), ParameterType.Basic.FromGuid(parameterType), ReadConfig(parameterNode), parameterDef.ToString(CultureInfo.InvariantCulture));
         }
 
-        public override string Name
-        {
-            get { return NAME; }
-        }
+        public override string Name => NAME;
     }
 
     public class BaseTypeDecimal : BaseType
@@ -50,7 +47,7 @@ namespace ConversationEditor
         public static ParameterType ParameterType { get; } = ParameterType.Parse("0222b56d-0e1b-40ac-bf86-5ab6399f6fc2");
         private const string NAME = "Decimal";
 
-        public static DecimalData Data { get { return new DecimalData(NAME, ParameterType, null, null); } }
+        public static DecimalData Data => new DecimalData(NAME, ParameterType, null, null);
 
         public override NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode)
         {
@@ -63,10 +60,7 @@ namespace ConversationEditor
             return new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), ParameterType.Basic.FromGuid(parameterType), ReadConfig(parameterNode), parameterDef.ToString(CultureInfo.InvariantCulture));
         }
 
-        public override string Name
-        {
-            get { return NAME; }
-        }
+        public override string Name => NAME;
     }
 
     public class BaseTypeString : BaseType
@@ -87,10 +81,7 @@ namespace ConversationEditor
             return new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), ParameterType, ReadConfig(parameterNode), parameterDefault);
         }
 
-        public override string Name
-        {
-            get { return "String"; }
-        }
+        public override string Name { get; } = "String";
     }
 
     public class BaseTypeLocalizedString : BaseType
@@ -103,7 +94,7 @@ namespace ConversationEditor
 
         public static ParameterType ParameterType { get; } = ParameterType.Parse("c72e8222-3e10-4995-b32b-5b3ebd8e0f20");
 
-        public static LocalizedStringData Data { get { return new LocalizedStringData(NAME, ParameterType); } }
+        public static LocalizedStringData Data => new LocalizedStringData(NAME, ParameterType);
 
         public override NodeData.ParameterData ReadDomainNode(IConversationNodeData parameterNode)
         {
@@ -116,10 +107,7 @@ namespace ConversationEditor
 
         private static string NAME = "Localized String";
 
-        public override string Name
-        {
-            get { return NAME; }
-        }
+        public override string Name => NAME;
     }
 
     public class BaseTypeBoolean : BaseType
@@ -140,10 +128,7 @@ namespace ConversationEditor
             return new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), ParameterType, ReadConfig(parameterNode), parameterDef.ToString());
         }
 
-        public override string Name
-        {
-            get { return "Boolean"; }
-        }
+        public override string Name { get; } = "Boolean";
     }
 
     public class BaseTypeAudio : BaseType
@@ -162,10 +147,7 @@ namespace ConversationEditor
             return new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), ParameterType, ReadConfig(parameterNode));
         }
 
-        public override string Name
-        {
-            get { return "Audio"; }
-        }
+        public override string Name { get; } = "Audio";
     }
 
     public class BaseTypeEnumeration : BaseType
@@ -189,10 +171,7 @@ namespace ConversationEditor
             return data;
         }
 
-        public override string Name
-        {
-            get { return "Enumeration"; }
-        }
+        public override string Name { get; } = "Enumeration";
     }
 
     public class BaseTypeFlags : BaseType
@@ -215,10 +194,7 @@ namespace ConversationEditor
             return data;
         }
 
-        public override string Name
-        {
-            get { return "Set"; }
-        }
+        public override string Name { get; } = "Set";
     }
 
     public class BaseTypeDynamicEnumeration : BaseType
@@ -239,10 +215,7 @@ namespace ConversationEditor
             return new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), ParameterType.Basic.FromGuid(parameterType), ReadConfig(parameterNode), parameterDef);
         }
 
-        public override string Name
-        {
-            get { return "Dynamic Enumeration"; }
-        }
+        public override string Name { get; } = "Dynamic Enumeration";
     }
 
     public class BaseTypeLocalDynamicEnumeration : BaseType
@@ -263,10 +236,7 @@ namespace ConversationEditor
             return new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), ParameterType.Basic.FromGuid(parameterType), ReadConfig(parameterNode), parameterDef);
         }
 
-        public override string Name
-        {
-            get { return "Local Dynamic Enumeration"; }
-        }
+        public override string Name { get; } = "Local Dynamic Enumeration";
     }
 
 
@@ -337,7 +307,7 @@ namespace ConversationEditor
 
         private static Dictionary<Id<NodeTypeTemp>, BaseType> s_parameterNodeTypeToBaseTypeMapping = new Dictionary<Id<NodeTypeTemp>, BaseType>();
 
-        public static IEnumerable<BaseType> BaseTypes { get { return s_parameterNodeTypeToBaseTypeMapping.Values; } }
+        public static IEnumerable<BaseType> BaseTypes => s_parameterNodeTypeToBaseTypeMapping.Values;
 
         public static BaseType GetType(Id<NodeTypeTemp> parameterNodeType)
         {

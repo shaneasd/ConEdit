@@ -70,7 +70,7 @@ namespace ConversationEditor
             m_updateScrollbar = new SuppressibleAction(() =>
             {
                 greyScrollBar1.Minimum = 0;
-                var listSize = m_root.AllItems(Visibility).Count() * Item.HEIGHT;
+                var listSize = m_root.AllItems(Visibility).Count() * Item.ItemHeight;
                 greyScrollBar1.Maximum = (listSize - drawWindow1.Height).Clamp(0, float.MaxValue);
                 greyScrollBar1.PercentageCovered = drawWindow1.Height / listSize;
             });
@@ -291,12 +291,12 @@ namespace ConversationEditor
 
         private static float IndexToY(int i)
         {
-            return i * Item.HEIGHT;
+            return i * Item.ItemHeight;
         }
 
         private int YToIndex(float y)
         {
-            return (int)((y + greyScrollBar1.Value) / Item.HEIGHT);
+            return (int)((y + greyScrollBar1.Value) / Item.ItemHeight);
             //return (int)((y) / Item.HEIGHT);
         }
 
@@ -305,24 +305,24 @@ namespace ConversationEditor
         /// </summary>
         private void ScrollForVisibility(Item item)
         {
-            Func<float, float> YToIndexFloat = y => ((y + greyScrollBar1.Value) / Item.HEIGHT);
+            Func<float, float> YToIndexFloat = y => ((y + greyScrollBar1.Value) / Item.ItemHeight);
 
             float topIndex = YToIndexFloat(0);
             float bottomIndex = YToIndexFloat(drawWindow1.Height);
 
             if (IndexOf(item) < topIndex)
             {
-                greyScrollBar1.Value += (IndexOf(item) - topIndex) * Item.HEIGHT;
+                greyScrollBar1.Value += (IndexOf(item) - topIndex) * Item.ItemHeight;
             }
             else if (IndexOf(item) + 1 > bottomIndex)
             {
-                greyScrollBar1.Value += (IndexOf(item) + 1 - bottomIndex) * Item.HEIGHT;
+                greyScrollBar1.Value += (IndexOf(item) + 1 - bottomIndex) * Item.ItemHeight;
             }
         }
 
         private RectangleF RectangleForIndex(int i)
         {
-            return new RectangleF(0, IndexToY(i), Width, Item.HEIGHT);
+            return new RectangleF(0, IndexToY(i), Width, Item.ItemHeight);
         }
 
         private RectangleF RectangleForItem(Item item)
@@ -353,10 +353,10 @@ namespace ConversationEditor
                     {
                         var y0 = IndexToY(i);
                         y0 -= greyScrollBar1.Value;
-                        var y1 = y0 + Item.HEIGHT;
+                        var y1 = y0 + Item.ItemHeight;
                         if (y1 > 0 && y0 < drawWindow1.Height)
                         {
-                            var rect = new RectangleF((int)TransformToRenderSurface.OffsetX, (int)TransformToRenderSurface.OffsetY + IndexToY(i), Width, Item.HEIGHT);
+                            var rect = new RectangleF((int)TransformToRenderSurface.OffsetX, (int)TransformToRenderSurface.OffsetY + IndexToY(i), Width, Item.ItemHeight);
                             itemsToDraw.Add(Tuple.Create(item, i, rect));
                         }
                     }
@@ -386,7 +386,7 @@ namespace ConversationEditor
                         if (allItems[j].IndentLevel < indent)
                         {
                             indent--;
-                            var rect = new RectangleF((int)TransformToRenderSurface.OffsetX, (int)TransformToRenderSurface.OffsetY + IndexToY(j), Width, Item.HEIGHT);
+                            var rect = new RectangleF((int)TransformToRenderSurface.OffsetX, (int)TransformToRenderSurface.OffsetY + IndexToY(j), Width, Item.ItemHeight);
                             allItems[j].DrawTree(g, allItems[j].CalculateIconRectangle(rect), Visibility, m_scheme);
                         }
                     }

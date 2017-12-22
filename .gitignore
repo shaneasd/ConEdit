@@ -9,3 +9,7 @@ Installer/out/*
 *.suo
 Project2.VisualState.xml
 TestResult.xml
+.vs/Conversation/v15/Server/sqlite3/db.lock
+.vs/Conversation/v15/Server/sqlite3/storage.ide
+.vs/Conversation/v15/Server/sqlite3/storage.ide-shm
+.vs/Conversation/v15/Server/sqlite3/storage.ide-wal

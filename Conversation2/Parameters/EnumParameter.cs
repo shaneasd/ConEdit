@@ -23,8 +23,7 @@ namespace Conversation
 
         private static Tuple<Guid, bool> StaticDeserialize(IEnumeration enumeration, string value)
         {
-            Guid guid;
-            if (!Guid.TryParse(value, out guid))
+            if (!Guid.TryParse(value, out Guid guid))
             {
                 return Tuple.Create(default(Guid), true);
             }
@@ -55,13 +54,7 @@ namespace Conversation
             return Value.ToString();
         }
 
-        public IEnumerable<Guid> Options
-        {
-            get
-            {
-                return m_enumeration.Options;
-            }
-        }
+        public IEnumerable<Guid> Options => m_enumeration.Options;
 
         public string GetName(Guid value)
         {

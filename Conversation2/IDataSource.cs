@@ -30,21 +30,12 @@ namespace Conversation
             m_childTypes.Add(childType);
         }
 
-        public IEnumerable<NodeCategory> ChildTypes
-        {
-            get { return m_childTypes; }
-        }
-
-        IEnumerable<INodeType> INodeType.ChildTypes
-        {
-            get { return m_childTypes; }
-        }
+        public IEnumerable<NodeCategory> ChildTypes => m_childTypes;
+        IEnumerable<INodeType> INodeType.ChildTypes => m_childTypes;
 
         private List<INodeDataGenerator> m_nodes { get; } = new List<INodeDataGenerator>();
-        public IEnumerable<INodeDataGenerator> Nodes
-        {
-            get { return m_nodes; }
-        }
+        public IEnumerable<INodeDataGenerator> Nodes => m_nodes;
+
         public void AddNode(INodeDataGenerator node)
         {
             m_nodes.Add(node);
@@ -105,15 +96,9 @@ namespace Conversation
         private DummyDataSource() { }
         public static IDomainDataSource Instance { get; } = new DummyDataSource();
 
-        IEnumerable<ParameterType> IDataSource.ParameterTypes
-        {
-            get { return Enumerable.Empty<ParameterType>(); }
-        }
+        IEnumerable<ParameterType> IDataSource.ParameterTypes => Enumerable.Empty<ParameterType>();
 
-        INodeType IDataSource.Nodes
-        {
-            get { return new NodeCategory("", Guid.NewGuid()); }
-        }
+        INodeType IDataSource.Nodes => new NodeCategory("", Guid.NewGuid());
 
         INodeDataGenerator IDataSource.GetNode(Id<NodeTypeTemp> nodeType)
         {
