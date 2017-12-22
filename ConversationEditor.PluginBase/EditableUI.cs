@@ -49,7 +49,6 @@ namespace ConversationEditor
             : base(node, p)
         {
             m_titleSection = new TitleSection(node);
-            m_descriptionSection = null; //TODO: Do we want the description section to 
             //m_descriptionSection = new DescriptionSection(node);
             m_outputsSection = new OutputsSection(node);
             m_parametersSection = new ParametersSection(node, localizer, ShouldRender);
@@ -57,7 +56,6 @@ namespace ConversationEditor
         }
 
         private Section m_titleSection;
-        private Section m_descriptionSection;
         private Section m_parametersSection;
         private Section m_outputsSection;
         private bool m_rounded;
@@ -333,12 +331,10 @@ namespace ConversationEditor
                     clip.Intersect(g.Clip);
                     g.Clip = clip;
 
-                    float descriptionHeight = m_descriptionSection?.Height ?? 0;
 
                     m_titleSection.Draw(g, Area.Location);
-                    m_descriptionSection?.Draw(g, new PointF(Area.X, Area.Y + m_titleSection.Height));
-                    m_parametersSection.Draw(g, new PointF(Area.X, Area.Y + m_titleSection.Height + descriptionHeight));
-                    m_outputsSection.Draw(g, new PointF(Area.X, Area.Y + m_titleSection.Height + descriptionHeight + m_parametersSection.Height));
+                    m_parametersSection.Draw(g, new PointF(Area.X, Area.Y + m_titleSection.Height));
+                    m_outputsSection.Draw(g, new PointF(Area.X, Area.Y + m_titleSection.Height + m_parametersSection.Height));
 
                     g.Restore(savedState);
 
@@ -468,9 +464,7 @@ namespace ConversationEditor
         /// </summary>
         protected override SizeF CalculateArea(Graphics g)
         {
-            Section[] sections = m_descriptionSection != null
-                                 ? new Section[] { m_titleSection, m_descriptionSection, m_outputsSection, m_parametersSection }
-                                 : new Section[] { m_titleSection, m_outputsSection, m_parametersSection };
+            Section[] sections = new Section[] { m_titleSection, m_outputsSection, m_parametersSection };
 
             foreach (var section in sections)
                 section.UpdateMeasurement(g);

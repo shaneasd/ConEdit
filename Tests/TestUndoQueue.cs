@@ -14,28 +14,30 @@ namespace Tests
         [NUnit.Framework.Test]
         public static void TestEverything()
         {
-            UpToDateFile.BackEnd backend = new UpToDateFile.BackEnd();
-            using (MemoryStream m = new MemoryStream())
+            using (UpToDateFile.BackEnd backEnd = new UpToDateFile.BackEnd())
             {
-                using (SaveableFileUndoable file = new SaveableFileUndoable(m, new FileInfo("ignore.txt"), a => { }, backend))
+                using (MemoryStream m = new MemoryStream())
                 {
-                    Assert.False(file.Changed);
-                    file.Change(new GenericUndoAction(() => { }, () => { }, ""));
-                    Assert.True(file.Changed);
-                    file.UndoQueue.Undo();
-                    Assert.False(file.Changed);
-                    file.UndoQueue.Redo();
-                    Assert.True(file.Changed);
-                    file.Save();
-                    Assert.False(file.Changed);
-                    file.Change(new GenericUndoAction(() => { }, () => { }, ""));
-                    Assert.True(file.Changed);
-                    file.UndoQueue.Undo();
-                    Assert.False(file.Changed);
-                    file.UndoQueue.Undo();
-                    Assert.True(file.Changed);
-                    file.UndoQueue.Redo();
-                    Assert.False(file.Changed);
+                    using (SaveableFileUndoable file = new SaveableFileUndoable(m, new FileInfo("ignore.txt"), a => { }, backEnd))
+                    {
+                        Assert.False(file.Changed);
+                        file.Change(new GenericUndoAction(() => { }, () => { }, ""));
+                        Assert.True(file.Changed);
+                        file.UndoQueue.Undo();
+                        Assert.False(file.Changed);
+                        file.UndoQueue.Redo();
+                        Assert.True(file.Changed);
+                        file.Save();
+                        Assert.False(file.Changed);
+                        file.Change(new GenericUndoAction(() => { }, () => { }, ""));
+                        Assert.True(file.Changed);
+                        file.UndoQueue.Undo();
+                        Assert.False(file.Changed);
+                        file.UndoQueue.Undo();
+                        Assert.True(file.Changed);
+                        file.UndoQueue.Redo();
+                        Assert.False(file.Changed);
+                    }
                 }
             }
         }

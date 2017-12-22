@@ -140,7 +140,7 @@ namespace Tests.Conversation
             Assert.That(g.Config, Is.EquivalentTo(config));
             Assert.That(g.Name, Is.EqualTo(nodeData.Name));
             Assert.That(g.Guid, Is.EqualTo(nodeData.Guid));
-            //TODO: Should I test the description here
+            Assert.That(g.Description, Is.EqualTo(nodeData.Description));
             Assert.That(g.GetParameterConfig(parameters[0].Id), Is.EqualTo(parameter0Config));
             Assert.That(g.GetParameterConfig(parameters[1].Id), Is.EqualTo(new List<NodeData.ConfigData>()));
 

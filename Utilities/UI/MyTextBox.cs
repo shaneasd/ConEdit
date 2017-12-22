@@ -683,18 +683,6 @@ namespace Utilities.UI
                             textToInsert = "\n"; //Currently newlines are considered like any other text in terms of resetting undo state
 
                         InsertText(textToInsert, GetCursorPosInt(), SelectionLength);
-
-                        if (m_autoCompleteRange == null)
-                        {
-                            if (args.KeyChar == '[' && InputForm == InputFormEnum.Text)
-                            {
-                                //TODO: Decide whether some form of autocomplete is necessary or whether to delete it
-                                //Text = Text.Insert(GetCursorPosInt(), "]");
-                                //CursorPos = new CP(CursorPos.Pos + 1);
-                                //m_additionUndoAction.SetRedo(m_state);
-                                //m_autoCompleteRange = Tuple.Create(new CP(GetCursorPosInt() - 1, false), new CP(GetCursorPosInt() + 1, true));
-                            }
-                        }
                     }
                 }
             }

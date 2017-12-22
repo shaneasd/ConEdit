@@ -33,33 +33,34 @@ namespace Tests
                 saveto(file);
             }
 
-            UpToDateFile.BackEnd backend = new UpToDateFile.BackEnd();
-
-            using (UpToDateFile f = new UpToDateFile(data, new FileInfo("test.txt"), saveto, backend))
+            using (UpToDateFile.BackEnd backEnd = new UpToDateFile.BackEnd())
             {
-                f.FileChanged += () =>
+                using (UpToDateFile f = new UpToDateFile(data, new FileInfo("test.txt"), saveto, backEnd))
                 {
-                    Assert.Fail("FileChange should not have triggered");
-                };
-
-                try
-                {
-                    for (int i = 0; i < 200; i++)
+                    f.FileChanged += () =>
                     {
+                        Assert.Fail("FileChange should not have triggered");
+                    };
 
-                        f.Save();
-                        f.Save();
+                    try
+                    {
+                        for (int i = 0; i < 200; i++)
+                        {
 
-                        data.Position = 10;
-                        data.WriteByte((byte)(i % 256));
+                            f.Save();
+                            f.Save();
 
-                        f.Save();
-                        Console.WriteLine(i);
+                            data.Position = 10;
+                            data.WriteByte((byte)(i % 256));
+
+                            f.Save();
+                            Console.WriteLine(i);
+                        }
                     }
-                }
-                catch (MyFileLoadException)
-                {
-                    Assert.Fail();
+                    catch (MyFileLoadException)
+                    {
+                        Assert.Fail();
+                    }
                 }
             }
         }

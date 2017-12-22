@@ -72,10 +72,10 @@ namespace ConversationEditor
         }
 
         public List<IConfigParameter> m_parameters = new List<IConfigParameter>();
-        public readonly MapConfig<ParameterType, Guid> ParameterEditors;
-        public readonly MapConfig<Id<NodeTypeTemp>, Guid> ConversationNodeRenderers;
-        public readonly ErrorCheckersConfig ErrorCheckers = new ErrorCheckersConfig();
-        public readonly GraphViewConfig GraphView = new GraphViewConfig();
+        public MapConfig<ParameterType, Guid> ParameterEditors { get; }
+        public MapConfig<Id<NodeTypeTemp>, Guid> ConversationNodeRenderers { get; }
+        public ErrorCheckersConfig ErrorCheckers { get; } = new ErrorCheckersConfig();
+        public GraphViewConfig GraphView { get; } = new GraphViewConfig();
         //public readonly TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice> ConversationNodeRenderers = new TypeMapConfig<ID<NodeTypeTemp>, NodeRendererChoice>("NodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultConversation(nodeType));
         public TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice> DomainNodeRenderers { get; } = new TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice>("DomainNodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultDomain(nodeType));
         public TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice> ProjectNodeRenderers { get; } = new TypeMapConfig<Id<NodeTypeTemp>, NodeRendererChoice>("ProjectNodeRenderers", nodeType => nodeType.Serialized(), (a, t) => new NodeRendererChoice(a, t), nodeType => NodeRendererChoice.DefaultDomain(nodeType));

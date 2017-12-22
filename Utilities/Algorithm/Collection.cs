@@ -288,15 +288,6 @@ namespace Utilities
             }
         }
 
-        public static void CopyTo<T>(this IEnumerable<T> data, T[] sink, int start)
-        {
-            foreach (var element in data)
-            {
-                sink[start] = element;
-                start++;
-            }
-        }
-
         public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue> getvalue)
         {
             if (!dict.TryGetValue(key, out TValue result))

@@ -335,8 +335,7 @@ namespace ConversationEditor
             return label;
         }
 
-        //TODO: Should this be public?
-        List<Tuple<IParameterEditor, IParameter>> m_parameterEditors = new List<Tuple<IParameterEditor, IParameter>>();
+        private List<Tuple<IParameterEditor, IParameter>> m_parameterEditors = new List<Tuple<IParameterEditor, IParameter>>();
 
         public event Action Cancel;
         public event Action Ok

@@ -112,7 +112,6 @@ namespace ConversationEditor
             }
         }
 
-        //TODO: LOC: This may need to be faster
         private ILocalizationFile Lookup(Id<FileInProject> fileId)
         {
             return m_localizers.FirstOrDefault(x => x.Id == fileId);
