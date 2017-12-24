@@ -32,12 +32,12 @@ namespace ConversationEditor
         private readonly Brush m_hatch;
         private readonly ToolStripProfessionalRenderer m_contextMenu;
 
-        public Color SelectedConnectors { get { return m_selectedConnectors; } }
-        public Color SelectedConversationListItemBorder { get { return m_selectedConversationListItemBorder; } }
-        public Color SelectedConversationListItemPrimaryBackground { get { return m_selectedConversationListItemPrimaryBackground; } }
-        public Color SelectedConversationListItemSecondaryBackground { get { return m_selectedConversationListItemSecondaryBackground; } }
-        public Brush Hatch { get { return m_hatch; } }
-        public ToolStripProfessionalRenderer ContextMenu { get { return m_contextMenu; } }
+        public Color SelectedConnectors => m_selectedConnectors;
+        public Color SelectedConversationListItemBorder => m_selectedConversationListItemBorder;
+        public Color SelectedConversationListItemPrimaryBackground => m_selectedConversationListItemPrimaryBackground;
+        public Color SelectedConversationListItemSecondaryBackground => m_selectedConversationListItemSecondaryBackground;
+        public Brush Hatch => m_hatch;
+        public ToolStripProfessionalRenderer ContextMenu => m_contextMenu;
 
         private static Pen MakeTreePen()
         {
@@ -65,47 +65,41 @@ namespace ConversationEditor
         public Color SelectionRectangle { get; } = Color.FromArgb(128, Color.Blue);
 
         private readonly Pen m_controlBorder = new Pen(Color.Black, 1);
-        public Pen ControlBorder { get { return m_controlBorder; } }
+        public Pen ControlBorder => m_controlBorder;
 
         private readonly Color m_formBackground = Color.FromArgb(45, 45, 45);
-        public Color FormBackground { get { return m_formBackground; } }
+        public Color FormBackground => m_formBackground;
 
         public Color Background { get; } = Color.FromArgb(56, 56, 56);
 
         private readonly Color m_foreground = Color.FromArgb(205, 205, 205);
-        public Color Foreground { get { return m_foreground; } }
+        public Color Foreground => m_foreground;
 
         private readonly Pen m_foregroundPen = new Pen(Defaults.Foreground);
-        public Pen ForegroundPen { get { return m_foregroundPen; } }
+        public Pen ForegroundPen => m_foregroundPen;
 
         private readonly SolidBrush m_foregroundBrush = new SolidBrush(Defaults.Foreground);
-        public SolidBrush ForegroundBrush { get { return m_foregroundBrush; } }
+        public SolidBrush ForegroundBrush => m_foregroundBrush;
 
         private readonly SolidBrush m_backgroundBrush = new SolidBrush(Defaults.Background);
-        public SolidBrush BackgroundBrush { get { return m_backgroundBrush; } }
+        public SolidBrush BackgroundBrush => m_backgroundBrush;
 
         private readonly Color m_groupBackgroundSelected = Color.FromArgb(92, Color.White);
-        public Color GroupBackgroundSelected { get { return m_groupBackgroundSelected; } }
+        public Color GroupBackgroundSelected => m_groupBackgroundSelected;
 
         private readonly Color m_groupBackgroundUnselected = Color.FromArgb(51, Color.White);
-        public Color GroupBackgroundUnselected { get { return m_groupBackgroundUnselected; } }
+        public Color GroupBackgroundUnselected => m_groupBackgroundUnselected;
 
         private readonly Color m_grid = Color.FromArgb(42, 42, 42);
-        public Color Grid { get { return m_grid; } }
+        public Color Grid => m_grid;
 
         private readonly Color m_minorGrid = Color.FromArgb(49, 49, 49);
-        public Color MinorGrid { get { return m_minorGrid; } }
+        public Color MinorGrid => m_minorGrid;
 
         private readonly Color m_selectedText = Color.Blue;
-        public Color SelectedText { get { return m_selectedText; } }
+        public Color SelectedText => m_selectedText;
 
-        public DrawWindow.IColorScheme DrawWindowColorScheme
-        {
-            get
-            {
-                return this;
-            }
-        }
+        public DrawWindow.IColorScheme DrawWindowColorScheme => this;
 
         protected override void Dispose(bool disposing)
         {
@@ -172,454 +166,118 @@ namespace ConversationEditor
                 m_scheme = scheme;
             }
 
-            public override Color ToolStripDropDownBackground
-            {
-                get
-                {
-                    return m_scheme.Background;
-                }
-            }
+            public override Color ToolStripDropDownBackground => m_scheme.Background;
 
-            public override Color MenuStripGradientBegin
-            {
-                get
-                {
-                    return m_scheme.Background;
-                }
-            }
+            public override Color MenuStripGradientBegin => m_scheme.Background;
 
-            public override Color MenuStripGradientEnd
-            {
-                get
-                {
-                    return m_scheme.Background;
-                }
-            }
+            public override Color MenuStripGradientEnd => m_scheme.Background;
 
-            public override Color ButtonSelectedHighlight
-            {
-                get
-                {
-                    return m_scheme.SelectedConversationListItemPrimaryBackground;
-                }
-            }
+            public override Color ButtonSelectedHighlight => m_scheme.SelectedConversationListItemPrimaryBackground;
 
-            public override Color MenuBorder
-            {
-                get
-                {
-                    return Color.Black;
-                }
-            }
+            public override Color MenuBorder => Color.Black;
 
-            public override Color MenuItemBorder
-            {
-                get
-                {
-                    return Color.Black;
-                }
-            }
+            public override Color MenuItemBorder => Color.Black;
 
-            public override Color ImageMarginGradientBegin
-            {
-                get
-                {
-                    return m_scheme.SelectedConversationListItemPrimaryBackground;
-                }
-            }
+            public override Color ImageMarginGradientBegin => m_scheme.SelectedConversationListItemPrimaryBackground;
 
-            public override Color ImageMarginGradientEnd
-            {
-                get
-                {
-                    return m_scheme.SelectedConversationListItemPrimaryBackground;
-                }
-            }
+            public override Color ImageMarginGradientEnd => m_scheme.SelectedConversationListItemPrimaryBackground;
 
-            public override Color ImageMarginGradientMiddle
-            {
-                get
-                {
-                    return m_scheme.SelectedConversationListItemPrimaryBackground;
-                }
-            }
+            public override Color ImageMarginGradientMiddle => m_scheme.SelectedConversationListItemPrimaryBackground;
 
-            public override Color MenuItemPressedGradientBegin
-            {
-                get
-                {
-                    return m_scheme.SelectedConversationListItemPrimaryBackground;
-                }
-            }
+            public override Color MenuItemPressedGradientBegin => m_scheme.SelectedConversationListItemPrimaryBackground;
 
-            public override Color MenuItemPressedGradientEnd
-            {
-                get
-                {
-                    return m_scheme.SelectedConversationListItemPrimaryBackground;
-                }
-            }
+            public override Color MenuItemPressedGradientEnd => m_scheme.SelectedConversationListItemPrimaryBackground;
 
-            public override Color MenuItemSelectedGradientBegin
-            {
-                get
-                {
-                    return m_scheme.SelectedConversationListItemPrimaryBackground;
-                }
-            }
+            public override Color MenuItemSelectedGradientBegin => m_scheme.SelectedConversationListItemPrimaryBackground;
 
-            public override Color MenuItemSelectedGradientEnd
-            {
-                get
-                {
-                    return m_scheme.SelectedConversationListItemPrimaryBackground;
-                }
-            }
+            public override Color MenuItemSelectedGradientEnd => m_scheme.SelectedConversationListItemPrimaryBackground;
 
-            public override Color ButtonSelectedBorder
-            {
-                get
-                {
-                    return Color.Black;
-                }
-            }
+            public override Color ButtonSelectedBorder => Color.Black;
 
-            public override Color CheckBackground
-            {
-                get
-                {
-                    return m_scheme.SelectedConversationListItemPrimaryBackground;
-                }
-            }
+            public override Color CheckBackground => m_scheme.SelectedConversationListItemPrimaryBackground;
 
-            public override Color CheckPressedBackground
-            {
-                get
-                {
-                    return m_scheme.SelectedConversationListItemPrimaryBackground;
-                }
-            }
+            public override Color CheckPressedBackground => m_scheme.SelectedConversationListItemPrimaryBackground;
 
-            public override Color CheckSelectedBackground
-            {
-                get
-                {
-                    return m_scheme.SelectedConversationListItemPrimaryBackground;
-                }
-            }
+            public override Color CheckSelectedBackground => m_scheme.SelectedConversationListItemPrimaryBackground;
 
-            public override Color MenuItemPressedGradientMiddle
-            {
-                get
-                {
-                    return m_scheme.SelectedConversationListItemPrimaryBackground;
-                }
-            }
+            public override Color MenuItemPressedGradientMiddle => m_scheme.SelectedConversationListItemPrimaryBackground;
 
-            public override Color ImageMarginRevealedGradientBegin
-            {
-                get
-                {
-                    return m_scheme.SelectedConversationListItemPrimaryBackground;
-                }
-            }
+            public override Color ImageMarginRevealedGradientBegin => m_scheme.SelectedConversationListItemPrimaryBackground;
 
-            public override Color ImageMarginRevealedGradientEnd
-            {
-                get
-                {
-                    return m_scheme.SelectedConversationListItemPrimaryBackground;
-                }
-            }
+            public override Color ImageMarginRevealedGradientEnd => m_scheme.SelectedConversationListItemPrimaryBackground;
 
-            public override Color ImageMarginRevealedGradientMiddle
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ImageMarginRevealedGradientMiddle => Color.Red;
 
-            public override Color SeparatorLight
-            {
-                get
-                {
-                    return m_scheme.Foreground;
-                }
-            }
+            public override Color SeparatorLight => m_scheme.Foreground;
 
-            public override Color SeparatorDark
-            {
-                get
-                {
-                    return m_scheme.Foreground;
-                }
-            }
+            public override Color SeparatorDark => m_scheme.Foreground;
 
-            public override Color StatusStripGradientBegin
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color StatusStripGradientBegin => Color.Red;
 
-            public override Color StatusStripGradientEnd
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color StatusStripGradientEnd => Color.Red;
 
-            public override Color ToolStripBorder
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ToolStripBorder => Color.Red;
 
-            public override Color ToolStripGradientEnd
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ToolStripGradientEnd => Color.Red;
 
-            public override Color ToolStripGradientMiddle
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ToolStripGradientMiddle => Color.Red;
 
-            public override Color ToolStripPanelGradientEnd
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ToolStripPanelGradientEnd => Color.Red;
 
-            public override Color MenuItemSelected
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color MenuItemSelected => Color.Red;
 
-            public override Color OverflowButtonGradientBegin
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color OverflowButtonGradientBegin => Color.Red;
 
-            public override Color OverflowButtonGradientEnd
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color OverflowButtonGradientEnd => Color.Red;
 
-            public override Color OverflowButtonGradientMiddle
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color OverflowButtonGradientMiddle => Color.Red;
 
-            public override Color RaftingContainerGradientBegin
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color RaftingContainerGradientBegin => Color.Red;
 
-            public override Color RaftingContainerGradientEnd
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color RaftingContainerGradientEnd => Color.Red;
 
-            public override Color ButtonPressedHighlightBorder
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ButtonPressedHighlightBorder => Color.Red;
 
-            public override Color ButtonSelectedGradientBegin
-            {
-                get
-                {
-                    return m_scheme.SelectedConversationListItemPrimaryBackground;
-                }
-            }
+            public override Color ButtonSelectedGradientBegin => m_scheme.SelectedConversationListItemPrimaryBackground;
 
-            public override Color ButtonSelectedGradientEnd
-            {
-                get
-                {
-                    return m_scheme.SelectedConversationListItemPrimaryBackground;
-                }
-            }
+            public override Color ButtonSelectedGradientEnd => m_scheme.SelectedConversationListItemPrimaryBackground;
 
-            public override Color ButtonSelectedHighlightBorder
-            {
-                get
-                {
-                    return m_scheme.SelectedConversationListItemBorder;
-                }
-            }
+            public override Color ButtonSelectedHighlightBorder => m_scheme.SelectedConversationListItemBorder;
 
 
-            public override Color ButtonPressedHighlight
-            {
-                get
-                {
-                    return m_scheme.SelectedConversationListItemPrimaryBackground;
-                }
-            }
+            public override Color ButtonPressedHighlight => m_scheme.SelectedConversationListItemPrimaryBackground;
 
-            public override Color ButtonPressedGradientMiddle
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ButtonPressedGradientMiddle => Color.Red;
 
-            public override Color ButtonPressedGradientEnd
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ButtonPressedGradientEnd => Color.Red;
 
-            public override Color ButtonCheckedHighlightBorder
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ButtonCheckedHighlightBorder => Color.Red;
 
-            public override Color ButtonCheckedHighlight
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ButtonCheckedHighlight => Color.Red;
 
-            public override Color ButtonCheckedGradientMiddle
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ButtonCheckedGradientMiddle => Color.Red;
 
-            public override Color ButtonCheckedGradientEnd
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ButtonCheckedGradientEnd => Color.Red;
 
-            public override Color ButtonPressedGradientBegin
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ButtonPressedGradientBegin => Color.Red;
 
-            public override Color GripDark
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color GripDark => Color.Red;
 
-            public override Color GripLight
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color GripLight => Color.Red;
 
-            public override Color ButtonPressedBorder
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ButtonPressedBorder => Color.Red;
 
-            public override Color ButtonSelectedGradientMiddle
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ButtonSelectedGradientMiddle => Color.Red;
 
-            public override Color ToolStripGradientBegin
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ToolStripGradientBegin => Color.Red;
 
-            public override Color ToolStripPanelGradientBegin
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ToolStripPanelGradientBegin => Color.Red;
 
-            public override Color ButtonCheckedGradientBegin
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ButtonCheckedGradientBegin => Color.Red;
 
-            public override Color ToolStripContentPanelGradientBegin
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ToolStripContentPanelGradientBegin => Color.Red;
 
-            public override Color ToolStripContentPanelGradientEnd
-            {
-                get
-                {
-                    return Color.Red;
-                }
-            }
+            public override Color ToolStripContentPanelGradientEnd => Color.Red;
         }
     }
 }

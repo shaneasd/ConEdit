@@ -57,14 +57,11 @@ namespace Tests.ConversationEditor
                 }
             }
 
-            public IReadOnlyList<NodeData.ConfigData> Config { get { return new List<NodeData.ConfigData>(); } }
+            public IReadOnlyList<NodeData.ConfigData> Config => new List<NodeData.ConfigData>();
 
             List<Output> m_outputs = new List<Output>();
 
-            public IEnumerable<Output> Connectors
-            {
-                get { return m_outputs; }
-            }
+            public IEnumerable<Output> Connectors => m_outputs;
 
             public string Name { get; }
 
@@ -91,13 +88,7 @@ namespace Tests.ConversationEditor
 
         class DummyAudioLibrary : IAudioLibrary
         {
-            public IProjectElementList<IAudioFile> AudioFiles
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public IProjectElementList<IAudioFile> AudioFiles => throw new NotSupportedException();
 
             public Audio Generate(AudioGenerationParameters parameters)
             {
@@ -169,8 +160,10 @@ namespace Tests.ConversationEditor
             Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource = (a, b) => source;
             IAudioLibrary audioProvider = new DummyAudioLibrary();
 
-            List<List<ConversationNode>> states = new List<List<ConversationNode<INodeGui>>>();
-            states.Add(new List<ConversationNode>());
+            List<List<ConversationNode>> states = new List<List<ConversationNode<INodeGui>>>
+            {
+                new List<ConversationNode>()
+            };
 
             Random r = new Random(0);
             UpToDateFile.BackEnd backend = new UpToDateFile.BackEnd();

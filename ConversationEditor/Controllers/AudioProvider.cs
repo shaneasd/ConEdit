@@ -17,7 +17,7 @@ namespace ConversationEditor
         Audio IAudioParameterEditorCallbacks.Generate(AudioGenerationParameters parameters) { throw new NotSupportedException(); }
         void IAudioLibrary.UpdateUsage(Audio audio) { }
 
-        IProjectElementList<IAudioFile> IAudioLibrary.AudioFiles { get { throw new NotSupportedException(); } }
+        IProjectElementList<IAudioFile> IAudioLibrary.AudioFiles => throw new NotSupportedException();
         IEnumerable<Audio> IAudioLibrary.UsedAudio() { return Enumerable.Empty<Audio>(); }
         void IAudioLibrary.UpdateUsage(ConversationNode<INodeGui> n) { }
         public static readonly NoAudio Instance = new NoAudio();
@@ -63,7 +63,7 @@ namespace ConversationEditor
                 return new Audio("Resources\\Audio\\" + conversationPath + "\\" + filename + ".ogg");
             }
 
-            public string Name { get; } = "Default";
+            public string Name => "Default";
         }
         public static IAudioProviderCustomization DefaultCustomization { get; } = new TDefaultCustomization();
 

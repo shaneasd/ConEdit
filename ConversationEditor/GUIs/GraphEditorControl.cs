@@ -89,8 +89,7 @@ namespace ConversationEditor
 
         private void NodeAreaChanged(WeakReference<TNode> nodeRef, Changed<RectangleF> c)
         {
-            TNode n;
-            if (nodeRef.TryGetTarget(out n))
+            if (nodeRef.TryGetTarget(out TNode n))
             {
                 SpatiallyOrderedNodes.Remove(n);
                 SpatiallyOrderedNodes.Add(n, c.To);
@@ -307,7 +306,7 @@ namespace ConversationEditor
         }
 
         IDataSource m_datasource = DummyDataSource.Instance;
-        public IDataSource DataSource { get { return m_datasource; } }
+        public IDataSource DataSource => m_datasource;
 
         LocalizationEngine m_localization;
 
@@ -420,15 +419,9 @@ namespace ConversationEditor
             m_mouseController.SetSelection(nodes, groups);
         }
 
-        public IReadOnlyNodeSet Selected
-        {
-            get
-            {
-                return m_mouseController.Selected;
-            }
-        }
+        public IReadOnlyNodeSet Selected => m_mouseController.Selected;
 
-        public CopyPasteController<TNode, TransitionNoduleUIInfo> CopyPasteController { get { return m_copyPasteController; } }
+        public CopyPasteController<TNode, TransitionNoduleUIInfo> CopyPasteController => m_copyPasteController;
 
         ToolTip m_toolTip = new ToolTip();
 
@@ -681,13 +674,11 @@ namespace ConversationEditor
             m_keyMapping = new Dictionary<Keys, INodeDataGenerator>();
             foreach (var node in DataSource.AllNodes())
             {
-                string shortcutKeys;
-                if (ShortcutKey.TryGet(node.Config, out shortcutKeys))
+                if (ShortcutKey.TryGet(node.Config, out string shortcutKeys))
                 {
                     foreach (char key in shortcutKeys)
                     {
-                        Keys k;
-                        if (Enum.TryParse("" + key, out k) || (Enum.TryParse(("" + key).ToUpper(CultureInfo.InvariantCulture), out k)))
+                        if (Enum.TryParse("" + key, out Keys k) || (Enum.TryParse(("" + key).ToUpper(CultureInfo.InvariantCulture), out k)))
                             m_keyMapping[k] = node;
                     }
                 }

@@ -353,15 +353,9 @@ namespace ConversationEditor
             m_nodes[guid] = generator;
         }
 
-        public IEnumerable<ParameterType> ParameterTypes
-        {
-            get { return m_typeSet.AllTypes; }
-        }
+        public IEnumerable<ParameterType> ParameterTypes => m_typeSet.AllTypes;
 
-        public INodeType Nodes
-        {
-            get { return m_nodeHeirarchy; }
-        }
+        public INodeType Nodes => m_nodeHeirarchy;
 
         public INodeDataGenerator GetNode(Id<NodeTypeTemp> guid)
         {

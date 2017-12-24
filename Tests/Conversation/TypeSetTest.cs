@@ -25,7 +25,7 @@ namespace Tests.Conversation
 
                 private readonly string DefaultValue;
 
-                public bool Corrupted { get { return false; } }
+                public bool Corrupted => false;
 
                 public Id<global::Conversation.Parameter> Id { get; }
 

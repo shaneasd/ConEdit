@@ -236,7 +236,7 @@ namespace ConversationEditor
                         return null;
                 }
 
-                public override Output SelectedTransition { get { return m_selectedTransition; } }
+                public override Output SelectedTransition => m_selectedTransition;
             }
             public class Killing : State
             {
@@ -336,7 +336,7 @@ namespace ConversationEditor
                         return null;
                 }
 
-                public override Output SelectedTransition { get { return m_selectedTransition; } }
+                public override Output SelectedTransition => m_selectedTransition;
             }
             public class Resizing : State
             {
@@ -616,9 +616,9 @@ namespace ConversationEditor
 
             public virtual void MiddleMouseUp(Point client, Point screen) { }
 
-            public virtual Cursor Cursor { get { return Cursors.Default; } }
+            public virtual Cursor Cursor => Cursors.Default;
 
-            public virtual Output SelectedTransition { get { return null; } }
+            public virtual Output SelectedTransition => null;
 
             internal bool IsSelected(Output connector)
             {
@@ -724,10 +724,10 @@ namespace ConversationEditor
         public event Action StateChanged;
         NodeSet m_selection = new NodeSet();
 
-        public IReadOnlyNodeSet Selected { get { return m_selection; } }
+        public IReadOnlyNodeSet Selected => m_selection;
         public event Action SelectionChanged { add { m_selection.Changed += value; } remove { m_selection.Changed -= value; } }
 
-        private TNode m_hoverNode = default(TNode);
+        private TNode m_hoverNode = default;
         /// <summary>
         /// The topmost node the mouse is currently on top of
         /// </summary>
@@ -745,13 +745,7 @@ namespace ConversationEditor
         }
         public event Action HoverNodeChanged;
 
-        public bool DraggingLinks
-        {
-            get
-            {
-                return m_state is State.DraggingLinks;
-            }
-        }
+        public bool DraggingLinks => m_state is State.DraggingLinks;
 
         public void SetSelection(IEnumerable<Id<NodeTemp>> nodes, IEnumerable<NodeGroup> groups)
         {
@@ -1123,7 +1117,7 @@ namespace ConversationEditor
 
         public void MouseMove(PointF client, Point screen)
         {
-            ForClickedOn(client, n => { HoverNode = n; }, t => { HoverNode = default(TNode); }, (a, b) => { HoverNode = default(TNode); }, g => { HoverNode = default(TNode); }, () => { HoverNode = default(TNode); });
+            ForClickedOn(client, n => { HoverNode = n; }, t => { HoverNode = default; }, (a, b) => { HoverNode = default; }, g => { HoverNode = default; }, () => { HoverNode = default; });
             m_state.MouseMove(client, screen);
             RefreshDisplay();
         }

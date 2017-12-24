@@ -150,10 +150,7 @@ namespace ConversationEditor
             return nodeHeirarchy;
         }
 
-        public IEnumerable<ParameterType> ParameterTypes
-        {
-            get { return m_types.AllTypes; }
-        }
+        public IEnumerable<ParameterType> ParameterTypes => m_types.AllTypes;
 
         public string GetTypeName(ParameterType id)
         {

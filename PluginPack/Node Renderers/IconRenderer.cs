@@ -13,17 +13,14 @@ namespace PluginPack
     public class IconRendererFactory : NodeUI.IFactory
     {
         private static readonly IconRendererFactory s_instance = new IconRendererFactory();
-        public static IconRendererFactory Instance { get { return s_instance; } }
+        public static IconRendererFactory Instance => s_instance;
 
         public bool WillRender(Id<NodeTypeTemp> nodeType)
         {
             return true;
         }
 
-        public string DisplayName
-        {
-            get { return "Icon Renderer"; }
-        }
+        public string DisplayName => "Icon Renderer";
 
         public INodeGui GetRenderer(ConversationNode<INodeGui> n, PointF p, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {

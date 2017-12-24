@@ -113,13 +113,7 @@ namespace Tests.ConversationSerialization
 
             public class DummyEnumeration : IEnumeration
             {
-                public Either<string, Guid> DefaultValue
-                {
-                    get
-                    {
-                        return Options.ElementAt(0);
-                    }
-                }
+                public Either<string, Guid> DefaultValue => Options.ElementAt(0);
 
                 public IEnumerable<Guid> Options
                 {
@@ -130,13 +124,7 @@ namespace Tests.ConversationSerialization
                     }
                 }
 
-                public ParameterType TypeId
-                {
-                    get
-                    {
-                        return ParameterType.Basic.Parse("5e85aa7a-069e-4006-abc7-33abd504df28");
-                    }
-                }
+                public ParameterType TypeId { get; } = ParameterType.Basic.Parse("5e85aa7a-069e-4006-abc7-33abd504df28");
 
                 public string GetName(Guid id)
                 {
@@ -231,23 +219,10 @@ namespace Tests.ConversationSerialization
                 Parameters = parameters;
             }
 
-            public IReadOnlyList<NodeData.ConfigData> Config
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public IReadOnlyList<NodeData.ConfigData> Config => throw new NotSupportedException();
 
             public IEnumerable<Output> Connectors { get; }
-            public string Name
-            {
-                get
-                {
-                    return "GRaphData";
-                }
-            }
-
+            public string Name => "GRaphData";
             public string Description => "Description";
 
             public Id<NodeTemp> NodeId { get; }
@@ -275,60 +250,26 @@ namespace Tests.ConversationSerialization
 
         public class DataSource : IDataSource
         {
-            public INodeType Nodes
-            {
-                get
-                {
-                    throw new NotSupportedException();
-                }
-            }
+            public INodeType Nodes => throw new NotSupportedException();
 
-            public IEnumerable<ParameterType> ParameterTypes
-            {
-                get
-                {
-                    throw new NotSupportedException();
-                }
-            }
+            public IEnumerable<ParameterType> ParameterTypes => throw new NotSupportedException();
 
-            public Guid GetCategory(Id<NodeTypeTemp> type)
-            {
-                throw new NotImplementedException();
-            }
+            public Guid GetCategory(Id<NodeTypeTemp> type) => throw new NotSupportedException();
 
             private class Generator : INodeDataGenerator
             {
-
                 public Generator(Id<NodeTypeTemp> guid)
                 {
                     Guid = guid;
                 }
 
-                public IReadOnlyList<NodeData.ConfigData> Config
-                {
-                    get
-                    {
-                        throw new NotImplementedException();
-                    }
-                }
+                public IReadOnlyList<NodeData.ConfigData> Config => throw new NotSupportedException();
 
                 public Id<NodeTypeTemp> Guid { get; }
 
-                public string Name
-                {
-                    get
-                    {
-                        throw new NotImplementedException();
-                    }
-                }
+                public string Name => throw new NotSupportedException();
 
-                public string Description
-                {
-                    get
-                    {
-                        throw new NotImplementedException();
-                    }
-                }
+                public string Description => throw new NotSupportedException();
 
                 public IConversationNodeData Generate(Id<NodeTemp> id, IEnumerable<NodeDataGeneratorParameterData> parameters, object document)
                 {

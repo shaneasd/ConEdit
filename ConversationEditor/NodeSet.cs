@@ -96,8 +96,7 @@ namespace ConversationEditor
 
         public override bool Equals(object obj)
         {
-            NodeSet other = obj as NodeSet;
-            if (other != null)
+            if (obj is NodeSet other)
             {
                 return m_nodes.SetEquals(other.m_nodes);
             }
@@ -114,15 +113,9 @@ namespace ConversationEditor
             return m_nodes.Count() + m_groups.Count;
         }
 
-        public IEnumerable<Id<NodeTemp>> Nodes
-        {
-            get { return m_nodes; }
-        }
+        public IEnumerable<Id<NodeTemp>> Nodes => m_nodes;
 
-        public IEnumerable<NodeGroup> Groups
-        {
-            get { return m_groups; }
-        }
+        public IEnumerable<NodeGroup> Groups => m_groups;
 
         public IEnumerable<IRenderable<IGui>> Renderable(Func<Id<NodeTemp>, IRenderable<IGui>> GetNode)
         {

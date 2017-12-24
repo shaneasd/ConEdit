@@ -406,8 +406,7 @@ namespace ConversationEditor
             m_domainEditor.UpdateKeyMappings();
 
             projectExplorer.SetProject(project, projectConfig);
-            var p = project as Project;
-            if (p != null)
+            if (project is Project)
             {
                 var con = projectConfig.LastEdited != null ? project.Conversations.FirstOrDefault(c => c.Id == projectConfig.LastEdited) : null;
                 var dom = projectConfig.LastEdited != null ? project.DomainFiles.FirstOrDefault(c => c.Id == projectConfig.LastEdited) : null;

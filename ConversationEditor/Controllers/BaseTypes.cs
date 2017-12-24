@@ -81,7 +81,7 @@ namespace ConversationEditor
             return new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), ParameterType, ReadConfig(parameterNode), parameterDefault);
         }
 
-        public override string Name { get; } = "String";
+        public override string Name => "String";
     }
 
     public class BaseTypeLocalizedString : BaseType
@@ -128,7 +128,7 @@ namespace ConversationEditor
             return new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), ParameterType, ReadConfig(parameterNode), parameterDef.ToString());
         }
 
-        public override string Name { get; } = "Boolean";
+        public override string Name => "Boolean";
     }
 
     public class BaseTypeAudio : BaseType
@@ -147,7 +147,7 @@ namespace ConversationEditor
             return new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), ParameterType, ReadConfig(parameterNode));
         }
 
-        public override string Name { get; } = "Audio";
+        public override string Name => "Audio";
     }
 
     public class BaseTypeEnumeration : BaseType
@@ -171,7 +171,7 @@ namespace ConversationEditor
             return data;
         }
 
-        public override string Name { get; } = "Enumeration";
+        public override string Name => "Enumeration";
     }
 
     public class BaseTypeFlags : BaseType
@@ -194,7 +194,7 @@ namespace ConversationEditor
             return data;
         }
 
-        public override string Name { get; } = "Set";
+        public override string Name => "Set";
     }
 
     public class BaseTypeDynamicEnumeration : BaseType
@@ -215,7 +215,7 @@ namespace ConversationEditor
             return new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), ParameterType.Basic.FromGuid(parameterType), ReadConfig(parameterNode), parameterDef);
         }
 
-        public override string Name { get; } = "Dynamic Enumeration";
+        public override string Name => "Dynamic Enumeration";
     }
 
     public class BaseTypeLocalDynamicEnumeration : BaseType
@@ -236,7 +236,7 @@ namespace ConversationEditor
             return new NodeData.ParameterData(parameterName, Id<Parameter>.ConvertFrom(parameterNode.NodeId), ParameterType.Basic.FromGuid(parameterType), ReadConfig(parameterNode), parameterDef);
         }
 
-        public override string Name { get; } = "Local Dynamic Enumeration";
+        public override string Name => "Local Dynamic Enumeration";
     }
 
 

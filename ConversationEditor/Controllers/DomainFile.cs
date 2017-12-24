@@ -24,7 +24,7 @@ namespace ConversationEditor
         public event Action ConversationDomainModified;
 
         private SaveableFileUndoable m_file;
-        public override ISaveableFileUndoable UndoableFile { get { return m_file; } }
+        public override ISaveableFileUndoable UndoableFile => m_file;
 
         public Id<FileInProject> Id { get; }
 

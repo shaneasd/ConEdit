@@ -10,7 +10,7 @@ namespace Conversation
     public sealed class Failed
     {
         private Failed() { }
-        public static Failed Instance { get; } = null;
+        public static Failed Instance => null;
     }
 
     public struct Audio

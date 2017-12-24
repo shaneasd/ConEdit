@@ -19,7 +19,7 @@ namespace ConversationEditor
         {
             public const float ItemHeight = 20;
             public static TextureBrush ReadOnlyBackgroundBrush { get; }
-            public static Item Null { get; } = null;
+            public static Item Null => null;
             static Item()
             {
                 Assembly assembly = Assembly.GetExecutingAssembly();
@@ -82,14 +82,8 @@ namespace ConversationEditor
                 Rename = parameters.Rename;
             }
 
-            protected virtual string PermanentText { get { return File.Name; } }
-            public string Text
-            {
-                get
-                {
-                    return File.Changed ? PermanentText + " *" : PermanentText;
-                }
-            }
+            protected virtual string PermanentText => File.Name;
+            public string Text => File.Changed ? PermanentText + " *" : PermanentText;
 
             private static void DrawReadOnly(Graphics g, RectangleF area)
             {

@@ -56,12 +56,12 @@ namespace Utilities
         {
             m_aSpecified = true;
             A = a;
-            B = default(U);
+            B = default;
         }
         public Either(U b)
         {
             m_aSpecified = false;
-            A = default(T);
+            A = default;
             B = b;
         }
 
@@ -71,11 +71,11 @@ namespace Utilities
             if (useA)
             {
                 A = aGenerator();
-                B = default(U);
+                B = default;
             }
             else
             {
-                A = default(T);
+                A = default;
                 B = bGenerator();
             }
         }
@@ -97,8 +97,7 @@ namespace Utilities
 
         public override bool Equals(object obj)
         {
-            var other = obj as Either<T, U>;
-            if (other != null)
+            if (obj is Either<T, U> other)
             {
                 if (m_aSpecified != other.m_aSpecified)
                     return false;

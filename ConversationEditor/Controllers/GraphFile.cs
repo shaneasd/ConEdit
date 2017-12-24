@@ -116,15 +116,9 @@ namespace ConversationEditor
                 UIInfo(connection, false);
         }
 
-        public IEnumerableReversible<ConversationNode> Nodes
-        {
-            get { return m_nodesOrdered; }
-        }
+        public IEnumerableReversible<ConversationNode> Nodes => m_nodesOrdered;
 
-        public IEnumerableReversible<NodeGroup> Groups
-        {
-            get { return m_groupsOrdered; }
-        }
+        public IEnumerableReversible<NodeGroup> Groups => m_groupsOrdered;
 
         //TODO: Duplicate the IEditable with a new ID (must be deep copy of parameters)
         public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, object documentId, PointF location, ILocalizationEngine localization)
@@ -413,9 +407,9 @@ namespace ConversationEditor
         }
 
         public abstract ISaveableFileUndoable UndoableFile { get; }
-        public ISaveableFile File { get { return UndoableFile; } }
+        public ISaveableFile File => UndoableFile;
 
-        public ReadOnlyCollection<LoadError> Errors { get { return m_errors; } }
+        public ReadOnlyCollection<LoadError> Errors => m_errors;
 
         public void ClearErrors()
         {

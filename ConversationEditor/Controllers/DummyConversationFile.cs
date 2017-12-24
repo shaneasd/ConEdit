@@ -22,25 +22,16 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public IEnumerableReversible<ConversationNode> Nodes
-        {
-            get { return EnumerableReversible.Empty<ConversationNode>(); }
-        }
+        public IEnumerableReversible<ConversationNode> Nodes => EnumerableReversible.Empty<ConversationNode>();
 
-        public IEnumerableReversible<NodeGroup> Groups
-        {
-            get { return EnumerableReversible.Empty<NodeGroup>(); }
-        }
+        public IEnumerableReversible<NodeGroup> Groups => EnumerableReversible.Empty<NodeGroup>();
 
         public void RemoveLinks(Output o)
         {
             throw new NotImplementedException();
         }
 
-        public ReadOnlyCollection<LoadError> Errors
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public ReadOnlyCollection<LoadError> Errors => throw new NotImplementedException();
 
         public void ClearErrors()
         {
@@ -57,15 +48,9 @@ namespace ConversationEditor
             //Do nothing
         }
 
-        ISaveableFile ISaveableFileProvider.File
-        {
-            get { throw new NotImplementedException(); }
-        }
+        ISaveableFile ISaveableFileProvider.File => throw new NotImplementedException();
 
-        ISaveableFileUndoable ISaveableFileUndoableProvider.UndoableFile
-        {
-            get { throw new NotImplementedException(); }
-        }
+        ISaveableFileUndoable ISaveableFileUndoableProvider.UndoableFile => throw new NotImplementedException();
 
         public void BringToFront(IReadOnlyNodeSet Selected)
         {
