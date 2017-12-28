@@ -11,7 +11,6 @@ WORKFLOW:
 Textbox: Use mouse to select text then mouse up while not on box. Selection does not stop.
 Figure out a way to allow the user to specify the order of parameters when defining a node type (jonas wants an integer id)
 localized string that is missing localization saves to localization file as "Missing Localization"
-mousewheel scrollbar for project explorer
 read all conversation files in parallel assuming load time is bound by cpu and not disk
 dragging lots of nodes around on a large conversation has poor performance because of the constant adding/removing to/from the quad tree.
 
@@ -20,8 +19,6 @@ Investigate construction of dynamicenumeration data sources. It seems like we cr
 https://xkcd.com/1806/ : scroll wheel undo/redo
 
 Editor crashes if integer definition used in a conversation does not exist in domain
-
-P3	Scroll bar for node editor is a bit messed up
 
 P4	Handle user specifying a default value for a parameter that is outside the acceptable range
     This seems to be mostly done for integers (TODO: copy for decimals) but there is an outstanding issue
