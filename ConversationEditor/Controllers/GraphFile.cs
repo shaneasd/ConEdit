@@ -29,8 +29,8 @@ namespace ConversationEditor
         protected CallbackList<NodeGroup> m_groups;
 
         protected O1LookupWrapper<ConversationNode, Id<NodeTemp>> m_nodesLookup;
-        protected SortedWrapper<ConversationNode> m_nodesOrdered;
-        protected SortedWrapper<NodeGroup> m_groupsOrdered;
+        private SortedWrapper<ConversationNode> m_nodesOrdered;
+        private SortedWrapper<NodeGroup> m_groupsOrdered;
 
         protected ReadOnlyCollection<LoadError> m_errors;
         Dictionary<Output, TransitionNoduleUIInfo> m_cachedNodeUI = new Dictionary<Output, TransitionNoduleUIInfo>();
