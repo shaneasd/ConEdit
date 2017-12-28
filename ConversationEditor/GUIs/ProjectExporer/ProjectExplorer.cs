@@ -22,6 +22,7 @@ namespace ConversationEditor
     {
         public static Bitmap ProjectIcon { get; }
         public static Bitmap FolderIcon { get; }
+        public static Bitmap MinimiseIcon { get; }
 
         Dictionary<DirectoryInfoHashed, ContainerItem> m_mapping = new Dictionary<DirectoryInfoHashed, ContainerItem>(10000);
         private ContextMenuStrip m_contextMenu;
@@ -40,7 +41,7 @@ namespace ConversationEditor
                 drawWindow3.ColorScheme = value;
                 m_contextMenu.Renderer = value.ContextMenu;
 
-                foreach (var button in m_buttons)
+                foreach (var button in m_highlightButtons)
                 {
                     button.SelectionPen = Scheme.ForegroundPen;
                     button.HighlightBackground = Scheme.ForegroundBrush;
@@ -55,6 +56,8 @@ namespace ConversationEditor
                 ProjectIcon = new Bitmap(stream);
             using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.Folder.png"))
                 FolderIcon = new Bitmap(stream);
+            using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.Minimise.png"))
+                MinimiseIcon = new Bitmap(stream);
         }
 
         SuppressibleAction m_updateScrollbar;
@@ -99,14 +102,32 @@ namespace ConversationEditor
                 button.Highlighted = true;
                 d.RegisterFilterChangedCallback(m_visibility, b => button.Highlighted = b);
                 button.ValueChanged += () => { d.Update(button.Highlighted, ref m_visibility); InvalidateImage(); };
+                button.RegisterCallbacks(null, drawWindow2);
 
-                m_buttons.Add(button);
+                m_highlightButtons.Add(button);
             }
 
             var folderFilterButton = makeButton(FolderIcon);
             folderFilterButton.Highlighted = true;
             folderFilterButton.ValueChanged += () => { m_visibility.Types.EmptyFolders.Value = folderFilterButton.Highlighted; InvalidateImage(); };
-            m_buttons.Add(folderFilterButton);
+            folderFilterButton.RegisterCallbacks(null, drawWindow2);
+            m_highlightButtons.Add(folderFilterButton);
+
+            void MinimiseAll(ContainerItem container)
+            {
+                foreach (var c in container.Children(VisibilityFilter.Everything).OfType<ContainerItem>())
+                {
+                    c.Minimized.Value = true;
+                    MinimiseAll(c);
+                }
+            }
+
+            var minimiseButton = new GenericButton(
+                () => new RectangleF(drawWindow2.Width - MinimiseIcon.Width - 4, 0, MinimiseIcon.Width + 4, MinimiseIcon.Height + 4),
+                (area, graphics) => graphics.DrawImage(MinimiseIcon, (int)area.X + 2, (int)area.Y + 2, MinimiseIcon.Width, MinimiseIcon.Height),
+                () => { MinimiseAll(m_root); InvalidateImage(); }
+                );
+            minimiseButton.RegisterCallbacks(null, drawWindow2);
 
             m_visibility.Types.Audio.Changed.Register(b => { m_config.Audio.Value = b.To; m_updateScrollbar.TryExecute(); });
             m_visibility.Types.Conversations.Changed.Register(b => { m_config.Conversations.Value = b.To; m_updateScrollbar.TryExecute(); });
@@ -163,7 +184,7 @@ namespace ConversationEditor
                 invalidate();
         }
 
-        List<HighlightableImageButton> m_buttons = new List<HighlightableImageButton>();
+        List<HighlightableImageButton> m_highlightButtons = new List<HighlightableImageButton>();
 
         public class VisibilityFilter
         {
@@ -1111,17 +1132,10 @@ namespace ConversationEditor
         private void drawWindow2_Paint(object sender, PaintEventArgs e)
         {
             drawWindow2.Height = ProjectElementDefinition.Definitions.Select(d => d.Icon.Height).Max() + 4 + 4;
-
-            m_buttons.ForEach(b => b.Paint(e.Graphics));
         }
 
         private void drawWindow2_MouseClick(object sender, MouseEventArgs e)
         {
-            foreach (var button in m_buttons)
-            {
-                if (button.Area.Contains(e.Location))
-                    button.MouseClick(e);
-            }
             InvalidateImage();
         }
 

@@ -12,7 +12,6 @@ Textbox: Use mouse to select text then mouse up while not on box. Selection does
 Figure out a way to allow the user to specify the order of parameters when defining a node type (jonas wants an integer id)
 localized string that is missing localization saves to localization file as "Missing Localization"
 mousewheel scrollbar for project explorer
-minimise all button for project explorer
 read all conversation files in parallel assuming load time is bound by cpu and not disk
 dragging lots of nodes around on a large conversation has poor performance because of the constant adding/removing to/from the quad tree.
 

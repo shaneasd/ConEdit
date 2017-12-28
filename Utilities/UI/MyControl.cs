@@ -52,21 +52,25 @@ namespace Utilities.UI
         //SizeF RequestedArea { get; }
         public abstract event Action RequestedAreaChanged;
 
-        //public void RegisterCallbacks(Action<MouseEventArgs> mouseDown, Action<MouseEventArgs> mouseUp, Action<MouseEventArgs> mouseMove, Action<MouseEventArgs> mouseClick,
-        //                              Action<KeyEventArgs> keyDown, Action<KeyPressEventArgs> keyPress, Action<MouseEventArgs> mouseWheel,
-        //                              Action mouseCaptureChanged, Action<Graphics> paint, Func<PointF, bool> contains,
-        //                              Func<MyControl> lastFocussed, Control control)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="focus">Can be null indicating there is no focus concept</param>
+        /// <param name="control"></param>
         public void RegisterCallbacks(IFocusProvider focus, Control control)
         {
             MouseEventHandler MouseDown = (a, args) =>
             {
                 if (this.Contains(args.Location))
                 {
-                    if (focus.LastFocused != this)
+                    if (focus != null)
                     {
-                        focus.LastFocused.LostFocus();
-                        focus.LastFocused = this;
-                        this.GotFocus();
+                        if (focus.LastFocused != this)
+                        {
+                            focus.LastFocused.LostFocus();
+                            focus.LastFocused = this;
+                            this.GotFocus();
+                        }
                     }
                     this.MouseDown(args);
                 }
@@ -77,11 +81,14 @@ namespace Utilities.UI
                 if (this.Contains(args.Location))
                 {
                     this.MouseUp(args);
-                    if (focus.LastFocused != this)
+                    if (focus != null)
                     {
-                        focus.LastFocused.LostFocus();
-                        focus.LastFocused = this;
-                        this.GotFocus();
+                        if (focus.LastFocused != this)
+                        {
+                            focus.LastFocused.LostFocus();
+                            focus.LastFocused = this;
+                            this.GotFocus();
+                        }
                     }
                 }
             };
@@ -97,19 +104,22 @@ namespace Utilities.UI
                 if (this.Contains(args.Location))
                 {
                     this.MouseClick(args);
-                    if (focus.LastFocused != this)
+                    if (focus != null)
                     {
-                        focus.LastFocused.LostFocus();
-                        focus.LastFocused = this;
-                        this.GotFocus();
+                        if (focus.LastFocused != this)
+                        {
+                            focus.LastFocused.LostFocus();
+                            focus.LastFocused = this;
+                            this.GotFocus();
+                        }
                     }
                 }
             };
-            KeyPressEventHandler KeyPress = (a, args) => { if (this == focus.LastFocused) this.KeyPress(args); };
-            KeyEventHandler KeyDown = (a, args) => { if (this == focus.LastFocused) this.KeyDown(args); };
+            KeyPressEventHandler KeyPress = (a, args) => { if (focus == null || this == focus.LastFocused) this.KeyPress(args); };
+            KeyEventHandler KeyDown = (a, args) => { if (focus == null || this == focus.LastFocused) this.KeyDown(args); };
             PaintEventHandler Paint = (a, args) => this.Paint(args.Graphics);
-            EventHandler GotFocus = (a, args) => { if (this == focus.LastFocused) this.GotFocus(); };
-            EventHandler LostFocus = (a, args) => { if (this == focus.LastFocused) this.LostFocus(); };
+            EventHandler GotFocus = (a, args) => { if (focus == null || this == focus.LastFocused) this.GotFocus(); };
+            EventHandler LostFocus = (a, args) => { if (focus == null || this == focus.LastFocused) this.LostFocus(); };
 
             control.MouseDown += MouseDown;
             control.MouseUp += MouseUp;
