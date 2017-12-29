@@ -1185,6 +1185,7 @@ namespace ConversationEditor
                 ProjectExplorer.FolderItem item = null;
                 item = new ProjectExplorer.FolderItem(() => RectangleForItem(item), newDir, m_root.Project, parent, () => TransformToRenderSurface, RenameItem);
                 m_root.InsertProjectChildAlphabetically(parent, item);
+                m_mapping[new DirectoryInfoHashed(newDir)] = item;
                 m_updateScrollbar.TryExecute();
                 InvalidateImage();
             }
