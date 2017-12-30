@@ -131,11 +131,5 @@ namespace ConversationEditor
                 drawWindow1.ColorScheme = value;
             }
         }
-
-        //TODO: Awful hack
-        internal void ParentFormMouseActivatedHack()
-        {
-            m_comboBox.ParentFormMouseActivatedHack();
-        }
     }
 }

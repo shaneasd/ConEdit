@@ -327,11 +327,6 @@ namespace ConversationEditor
             flowLayoutPanel1.Controls.Add(label);
             flowLayoutPanel2.Controls.Add(p);
 
-            //TODO: Awful hack
-            var enumEditor = editor as DefaultEnumEditor;
-            if (enumEditor != null)
-                MouseActivated += enumEditor.ParentFormMouseActivatedHack;
-
             return label;
         }
 

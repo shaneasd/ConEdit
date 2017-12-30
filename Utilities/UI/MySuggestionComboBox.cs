@@ -175,7 +175,15 @@ namespace Utilities.UI
 
             m_textBox.TextChanged += s => ExecuteSelectionChanged();
             m_textBox.TextChanged += s => { m_itemIndex = -1; m_dropDownWindow = 0; UpdateDropdown(); };
+
+            Mouse.MouseDown.Register(this, (me, point) => me.GlobalMouseDown(point));
+            Mouse.MouseUp.Register(this, (me, point) => me.GlobalMouseUp(point));
         }
+
+        /// <summary>
+        /// The mouse left button is currently held down and was over the drop down button when it was most recently pressed.
+        /// </summary>
+        private bool m_mouseIsDownOnButton = false;
 
         public void SetupCallbacks()
         {
@@ -289,12 +297,32 @@ namespace Utilities.UI
             m_textBox.Text = SelectedItem.DisplayString;
         }
 
+        private void GlobalMouseDown(Point point)
+        {
+            m_mouseIsDownOnButton = m_buttonArea().Contains(m_control.PointToClient(point));
+            if (!m_mouseIsDownOnButton)
+            {
+                if (!m_dropDown.ClientRectangle.Contains(m_dropDown.PointToClient(point)))
+                    m_dropDown.Close();
+            }
+        }
+
+        private void GlobalMouseUp(Point point)
+        {
+            m_mouseIsDownOnButton = false;
+        }
+
         public override void MouseDown(MouseEventArgs args)
         {
-            if (m_buttonArea().Contains(args.Location))
-                ButtonMouseDown();
-            else if (m_textBox.Area.Contains(args.Location))
-                m_textBox.MouseDown(args);
+            if (m_mouseIsDownOnButton && m_dropDownOpen)
+                m_dropDown.Close();
+            else
+            {
+                if (m_buttonArea().Contains(args.Location))
+                    ButtonMouseDown();
+                else if (m_textBox.Area.Contains(args.Location))
+                    m_textBox.MouseDown(args);
+            }
         }
 
         public override void KeyDown(KeyEventArgs args)
@@ -442,12 +470,6 @@ namespace Utilities.UI
                 m_itemIndex = -1;
                 UpdateDropdown();
             }
-        }
-
-        //TODO: Awful hack
-        public void ParentFormMouseActivatedHack()
-        {
-            m_dropDown.Close();
         }
     }
 }
