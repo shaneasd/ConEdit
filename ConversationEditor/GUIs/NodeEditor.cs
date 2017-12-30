@@ -169,8 +169,7 @@ namespace ConversationEditor
             foreach (Parameter p in m_data.Parameters.OrderByDescending(p => p.Name))
             {
                 var editorData = new ParameterEditorSetupData(p, localizer, audioProvider, audioContext, (s) => autoCompleteSuggestions(p, s));
-                var unknown = p as UnknownParameter;
-                if (unknown != null)
+                if (p is UnknownParameter unknown)
                 {
                     UnknownParameterEditor ed = null;
                     Label label = null;
@@ -254,13 +253,7 @@ namespace ConversationEditor
             //greyScrollBar1.Visible = true;
         }
 
-        private int MaximumHeight
-        {
-            get
-            {
-                return TotalSize + 32;
-            }
-        }
+        private int MaximumHeight => TotalSize + 32;
 
         private int MinimumHeight
         {
@@ -292,7 +285,7 @@ namespace ConversationEditor
             }
         }
         int TotalParametersSize => flowLayoutPanel2.Controls[0]?.Bottom ?? 0;
-        int WindowSize { get { return splitContainer1.Panel2.Height; } }
+        int WindowSize => splitContainer1.Panel2.Height;
 
         public Label AddParameter(IParameter parameter, IParameterEditor editor)
         {
@@ -383,9 +376,6 @@ namespace ConversationEditor
                 return ConfigureResult2.NotApplicable;
         }
 
-        public override string DisplayName
-        {
-            get { return "Default Node Editor"; }
-        }
+        public override string DisplayName => "Default Node Editor";
     }
 }

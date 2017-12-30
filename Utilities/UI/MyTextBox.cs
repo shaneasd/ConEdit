@@ -43,15 +43,9 @@ namespace Utilities.UI
                 SetState(m_redoState);
             }
 
-            public override string Description
-            {
-                get { return "Edited text box"; }
-            }
+            public override string Description => "Edited text box";
 
-            public override string LogDescription
-            {
-                get { return Description; }
-            }
+            public override string LogDescription => Description;
         }
 
         private struct State
@@ -256,14 +250,14 @@ namespace Utilities.UI
 
         public event Action<string> TextChanged;
 
-        public string SelectedText { get { return Text.Substring(SelectionStart, Math.Abs(SelectionLength)); } }
+        public string SelectedText => Text.Substring(SelectionStart, Math.Abs(SelectionLength));
 
         public Font Font
         {
             get; set;
         } = SystemFonts.MessageBoxFont;
         private Func<RectangleF> m_area;
-        public RectangleF Area { get { return m_area(); } }
+        public RectangleF Area => m_area();
         private void UpdateRequestedArea()
         {
             RectangleF size = GetTextBounds();
@@ -291,7 +285,7 @@ namespace Utilities.UI
 
         const int CARET_HEIGHT = 13;
 
-        public RectangleF TextRectangle { get { return RectangleF.Inflate(Area, -BorderSize, -BorderSize); } }
+        public RectangleF TextRectangle => RectangleF.Inflate(Area, -BorderSize, -BorderSize);
 
         public InputFormEnum InputForm { get; set; }
 

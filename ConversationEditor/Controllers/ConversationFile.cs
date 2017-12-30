@@ -19,7 +19,7 @@ namespace ConversationEditor
         private ISerializer<TData> m_serializer;
 
         SaveableFileUndoable m_file;
-        public override ISaveableFileUndoable UndoableFile { get { return m_file; } }
+        public override ISaveableFileUndoable UndoableFile => m_file;
 
         public Id<FileInProject> Id { get; }
 

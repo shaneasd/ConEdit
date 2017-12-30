@@ -22,15 +22,9 @@ namespace ConversationEditor
             return queries.IsEnum(type);
         }
 
-        public string Name
-        {
-            get { return "Default Enumeration Editor"; }
-        }
+        public string Name => "Default Enumeration Editor";
 
-        public Guid Guid
-        {
-            get { return StaticId; }
-        }
+        public Guid Guid => StaticId;
 
         public IParameterEditor Make(IColorScheme scheme)
         {
@@ -98,10 +92,7 @@ namespace ConversationEditor
 
         public const string InvalidValue = "ERROR: Unknown enumeration value";
 
-        public Control AsControl
-        {
-            get { return this; }
-        }
+        public Control AsControl => this;
 
         public UpdateParameterData UpdateParameterAction()
         {
