@@ -237,6 +237,7 @@ namespace Tests.Conversation
                     Assert.That(t.GetTypeName(x.TypeId), Is.EqualTo(x.Name));
                     object document = new object();
                     IParameter parameter = CheckBasicMake(randomString(), randomParameterId(), randomString(), t, x.TypeId, document, false);
+                    Assert.That(parameter, Is.InstanceOf<ILocalizedStringParameter>());
                 }
                 foreach (var x in others)
                 {
