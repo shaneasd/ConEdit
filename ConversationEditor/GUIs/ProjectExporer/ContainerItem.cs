@@ -60,8 +60,7 @@ namespace ConversationEditor
                 {
                     for (int i = 0; i < m_subItems.Count; i++)
                     {
-                        var container = m_subItems[i] as ContainerItem;
-                        if (container != null)
+                        if (m_subItems[i] is ContainerItem container)
                             if (container.RemoveChild(item))
                                 return true;
                     }
@@ -102,7 +101,7 @@ namespace ConversationEditor
             }
 
             public abstract DirectoryInfo Path { get; }
-            public override ContainerItem SpawnLocation { get { return this; } }
+            public override ContainerItem SpawnLocation => this;
 
             public NotifierProperty<bool> Minimized { get; } = new NotifierProperty<bool>(false);
 

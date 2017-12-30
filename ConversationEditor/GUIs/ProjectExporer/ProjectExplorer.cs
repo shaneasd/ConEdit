@@ -236,14 +236,10 @@ namespace ConversationEditor
             //    return result;
             //}
         }
+
+        //TODO: m_visibility and Visibility seem to do the exact same thing
         private VisibilityFilter m_visibility = VisibilityFilter.Everything;
-        private VisibilityFilter Visibility
-        {
-            get
-            {
-                return m_visibility;
-            }
-        }
+        private VisibilityFilter Visibility => m_visibility;
 
         ProjectItem m_root = ProjectItem.Null;
 
@@ -300,15 +296,9 @@ namespace ConversationEditor
 
         public SuppressibleAction m_suppressibleItemSelected;
         public event Action ItemSelected;
-        public IConversationFile SelectedConversation
-        {
-            get
-            {
-                return (m_selectedEditable is LeafItem<IConversationFile>) ? (m_selectedEditable as LeafItem<IConversationFile>).Item : null;
-            }
-        }
-        public IDomainFile CurrentDomainFile { get { return (m_selectedEditable is LeafItem<IDomainFile>) ? (m_selectedEditable as LeafItem<IDomainFile>).Item : null; } }
-        public bool ProjectSelected { get { return m_selectedEditable is ProjectItem; } }
+        public IConversationFile SelectedConversation => (m_selectedEditable as LeafItem<IConversationFile>)?.Item;
+        public IDomainFile CurrentDomainFile => (m_selectedEditable as LeafItem<IDomainFile>)?.Item;
+        public bool ProjectSelected => m_selectedEditable is ProjectItem;
 
         private static float IndexToY(int i)
         {
@@ -351,13 +341,7 @@ namespace ConversationEditor
             return RectangleForIndex(IndexOf(item));
         }
 
-        private Matrix TransformToRenderSurface //Currently the image is rendered unscaled so only the position will be honored
-        {
-            get
-            {
-                return new Matrix(1, 0, 0, 1, 0, -(int)greyScrollBar1.Value);
-            }
-        }
+        private Matrix TransformToRenderSurface => new Matrix(1, 0, 0, 1, 0, -(int)greyScrollBar1.Value); //Currently the image is rendered unscaled so only the position will be honored
 
         HashSet<Item> m_drawn = new HashSet<Item>();
 
@@ -477,8 +461,7 @@ namespace ConversationEditor
 
         private void Clicked(Item item, MouseEventArgs e)
         {
-            var container = item as ContainerItem;
-            if (container != null)
+            if (item is ContainerItem container)
             {
                 if (container.MinimizedIconRectangle(RectangleForItem(item)).Contains(e.Location.Plus(new PointF(0, greyScrollBar1.Value).Round())))
                 {
@@ -521,8 +504,7 @@ namespace ConversationEditor
                 m_contextMenu.Show(PointToScreen(e.Location));
 
                 {
-                    var con = m_contextItem as ConversationItem;
-                    if (con != null)
+                    if (m_contextItem is ConversationItem con)
                     {
                         foreach (var aa in m_contextMenuItemsFactory.ConversationContextMenuItems((type, textId) => Tuple.Create(m_context.CurrentProject.Value.Localizer.Localize(type, textId), m_context.CurrentProject.Value.Localizer.LocalizationTime(type, textId))))
                         {
@@ -537,8 +519,7 @@ namespace ConversationEditor
                 }
 
                 {
-                    var dom = m_contextItem as DomainItem;
-                    if (dom != null)
+                    if (m_contextItem is DomainItem dom)
                     {
                         foreach (var aa in m_contextMenuItemsFactory.DomainContextMenuItems)
                         {
@@ -553,8 +534,7 @@ namespace ConversationEditor
                 }
 
                 {
-                    var loc = m_contextItem as RealLeafItem<ILocalizationFile, ILocalizationFile>;
-                    if (loc != null)
+                    if (m_contextItem is RealLeafItem<ILocalizationFile, ILocalizationFile> loc)
                     {
                         foreach (var aa in m_contextMenuItemsFactory.LocalizationContextMenuItems)
                         {
@@ -569,8 +549,7 @@ namespace ConversationEditor
                 }
 
                 {
-                    var folder = m_contextItem as FolderItem;
-                    if (folder != null)
+                    if (m_contextItem is FolderItem folder)
                     {
                         foreach (var aa in m_contextMenuItemsFactory.FolderContextMenuItems((type, textId) => Tuple.Create(m_context.CurrentProject.Value.Localizer.Localize(type, textId), m_context.CurrentProject.Value.Localizer.LocalizationTime(type, textId))))
                         {
@@ -1039,12 +1018,11 @@ namespace ConversationEditor
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var conversationItem = m_contextItem as LeafItem<IConversationFile>;
             var localizationItem = m_contextItem as LeafItem<ILocalizationFile>;
             var domainItem = m_contextItem as LeafItem<IDomainFile>;
             var audioItem = m_contextItem as LeafItem<IAudioFile>;
 
-            if (conversationItem != null)
+            if (m_contextItem is LeafItem<IConversationFile> conversationItem)
                 m_root.Project.Conversations.Remove(conversationItem.Item, false);
             else if (localizationItem != null)
                 m_root.Project.LocalizationFiles.Remove(localizationItem.Item, false);
@@ -1067,11 +1045,10 @@ namespace ConversationEditor
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var conversationItem = m_contextItem as LeafItem<IConversationFile>;
             var localizationItem = m_contextItem as LeafItem<ILocalizationFile>;
             var domainItem = m_contextItem as LeafItem<IDomainFile>;
             var audioItem = m_contextItem as LeafItem<IAudioFile>;
-            if (conversationItem != null)
+            if (m_contextItem is LeafItem<IConversationFile> conversationItem)
                 m_root.Project.Conversations.Delete(conversationItem.Item);
             else if (localizationItem != null)
                 m_root.Project.LocalizationFiles.Delete(localizationItem.Item);
@@ -1111,10 +1088,9 @@ namespace ConversationEditor
 
         private void showInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var leaf = m_contextItem as LeafItem;
             var folder = m_contextItem as FolderItem;
             var project = m_contextItem as ProjectItem;
-            if (leaf != null)
+            if (m_contextItem is LeafItem leaf)
             {
                 if (leaf.File.Exists)
                     Process.Start("explorer", "/select,\"" + leaf.File.FullName + "\"");
@@ -1193,12 +1169,11 @@ namespace ConversationEditor
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var conversationItem = m_contextItem as LeafItem<IConversationFile>;
             var localizationItem = m_contextItem as LeafItem<ILocalizationFile>;
             var domainItem = m_contextItem as LeafItem<IDomainFile>;
             //Audio files are not saveable
 
-            if (conversationItem != null)
+            if (m_contextItem is LeafItem<IConversationFile> conversationItem)
                 conversationItem.Item.File.Writable.Save();
             else if (localizationItem != null)
                 localizationItem.Item.File.Writable.Save();

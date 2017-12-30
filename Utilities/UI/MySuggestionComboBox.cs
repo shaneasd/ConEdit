@@ -78,8 +78,8 @@ namespace Utilities.UI
         private readonly string m_displayString;
         private readonly T m_contents;
 
-        public string DisplayString { get { return m_displayString; } }
-        public T Contents { get { return m_contents; } }
+        public string DisplayString => m_displayString;
+        public T Contents => m_contents;
         private bool m_sourcedValue;
         public MyComboBoxItem(string displayString, T contents)
         {
@@ -90,7 +90,7 @@ namespace Utilities.UI
         public MyComboBoxItem(string displayString)
         {
             m_displayString = displayString;
-            m_contents = default(T);
+            m_contents = default;
             m_sourcedValue = false;
         }
         public override string ToString()
@@ -126,7 +126,7 @@ namespace Utilities.UI
         private Func<RectangleF> m_textBoxArea;
         private ToolStripDropDown m_dropDown;
         private readonly bool m_HasDropDownButton = true;
-        private MyComboBoxItem<T> m_selectedItem = new MyComboBoxItem<T>("Uninitialized default", default(T));
+        private MyComboBoxItem<T> m_selectedItem = new MyComboBoxItem<T>("Uninitialized default", default);
 
         public ToolStripRenderer Renderer { get { return m_dropDown.Renderer; } set { m_dropDown.Renderer = value; } }
         public IEnumerable<MyComboBoxItem<T>> Items { get; }
@@ -199,7 +199,7 @@ namespace Utilities.UI
             m_control.Paint += (a, args) => Paint(args.Graphics);
         }
 
-        public RectangleF Area { get { return m_area(); } }
+        public RectangleF Area => m_area();
 
         public MyTextBox.ColorOptions TextBoxColors { get { return m_textBox.Colors; } set { m_textBox.Colors = value; } }
 

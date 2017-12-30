@@ -94,14 +94,14 @@ namespace ConversationEditor
         /// <summary>
         /// All (in theory) colors used within the GUI. Some of these colors updated at runtime from config
         /// </summary>
-        readonly ColorScheme m_scheme = new ColorScheme();
+        ColorScheme Scheme { get; } = new ColorScheme();
 
         public Form1()
         {
             InitializeComponent();
 
-            errorList1.ColorScheme = m_scheme;
-            projectExplorer.Scheme = m_scheme;
+            errorList1.ColorScheme = Scheme;
+            projectExplorer.Scheme = Scheme;
 
             m_context = new SharedContext();
 
@@ -156,15 +156,15 @@ namespace ConversationEditor
 
                     errorList1.HightlightNode += errorList1_HightlightNode;
 
-                    menuStrip1.Renderer = m_scheme.ContextMenu;
-                    splitContainer1.BackColor = m_scheme.FormBackground;
-                    splitContainer1.ForeColor = m_scheme.Foreground;
-                    splitContainer2.BackColor = m_scheme.FormBackground;
-                    splitContainer2.ForeColor = m_scheme.Foreground;
-                    BackColor = m_scheme.FormBackground;
-                    ForeColor = m_scheme.Foreground;
-                    errorList1.ForeColor = m_scheme.Foreground;
-                    errorList1.BackColor = m_scheme.Background;
+                    menuStrip1.Renderer = Scheme.ContextMenu;
+                    splitContainer1.BackColor = Scheme.FormBackground;
+                    splitContainer1.ForeColor = Scheme.Foreground;
+                    splitContainer2.BackColor = Scheme.FormBackground;
+                    splitContainer2.ForeColor = Scheme.Foreground;
+                    BackColor = Scheme.FormBackground;
+                    ForeColor = Scheme.Foreground;
+                    errorList1.ForeColor = Scheme.Foreground;
+                    errorList1.BackColor = Scheme.Background;
 
                     projectExplorer.m_contextMenuItemsFactory = new WrapperContextMenuItemsFactory((mainAssembly) => m_config.Plugins.UnfilteredAssemblies(mainAssembly));
                 }
@@ -296,7 +296,7 @@ namespace ConversationEditor
                 editor.SnapToGrid = m_config.GraphView.SnapToGrid;
                 editor.ShowGrid = m_config.GraphView.ShowGrid;
                 editor.ShowIds = m_config.GraphView.ShowIds;
-                m_scheme.Connectors = m_config.ColorScheme.ConnectorColor;
+                Scheme.Connectors = m_config.ColorScheme.ConnectorColor;
                 editor.MinorGridSpacing = m_config.GraphView.MinorGridSpacing;
                 editor.MajorGridSpacing = m_config.GraphView.MajorGridSpacing;
             };
@@ -505,7 +505,7 @@ namespace ConversationEditor
         private IParameterEditor GetParameterEditor(Guid id, ParameterEditorSetupData data)
         {
             var editorFactory = GetAllOfType<IParameterEditorFactory>().Where(e => e.Guid == id).Single();
-            IParameterEditor editor = editorFactory.Make(m_scheme);
+            IParameterEditor editor = editorFactory.Make(Scheme);
             editor.Setup(data);
             return editor;
         }
@@ -526,7 +526,7 @@ namespace ConversationEditor
             {
                 AutoCompleteSuggestionsDelegate autoCompleteSuggestions = (p, s) => m_context.CurrentProject.Value.AutoCompleteSuggestions(p, s, CurrentFile);
 
-                ConfigureResult2 result = m_config.NodeEditors[data.NodeTypeId].GetEditorFactory().Edit(m_scheme, data, audioContext, GetParameterEditor, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value.AudioProvider, autoCompleteSuggestions);
+                ConfigureResult2 result = m_config.NodeEditors[data.NodeTypeId].GetEditorFactory().Edit(Scheme, data, audioContext, GetParameterEditor, m_context.CurrentProject.Value.Localizer, m_context.CurrentProject.Value.AudioProvider, autoCompleteSuggestions);
                 return result.Transformed(a => OnOk(m_context.CurrentProject.Value.AudioProvider, a), b => new ConfigureResult(b));
             }
         }
@@ -687,7 +687,7 @@ namespace ConversationEditor
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            m_errorCheckerController.Configure(m_scheme);
+            m_errorCheckerController.Configure(Scheme);
         }
 
         private void tsmiShowGrid_CheckedChanged(object sender, EventArgs e)
@@ -716,7 +716,7 @@ namespace ConversationEditor
                 var result = new DefaultEnumEditor();
                 try
                 {
-                    result.Scheme = m_scheme;
+                    result.Scheme = Scheme;
                     result.Setup(d);
                 }
                 catch
@@ -728,7 +728,7 @@ namespace ConversationEditor
             };
 
             var editor = new DefaultNodeEditorFactory();
-            editor.Edit(m_scheme, data, null, config, null, null, null).Transformed(a => OnOk(DummyAudioLibrary.Instance, a), a => a).Do(a => a.Redo(), a => { });
+            editor.Edit(Scheme, data, null, config, null, null, null).Transformed(a => OnOk(DummyAudioLibrary.Instance, a), a => a).Do(a => a.Redo(), a => { });
 
             foreach (var d in data.Parameters)
             {
@@ -750,7 +750,7 @@ namespace ConversationEditor
                 var result = new DefaultEnumEditor();
                 try
                 {
-                    result.Scheme = m_scheme;
+                    result.Scheme = Scheme;
                     result.Setup(d);
                 }
                 catch
@@ -761,7 +761,7 @@ namespace ConversationEditor
                 return result;
             };
             var editor = new DefaultNodeEditorFactory();
-            editor.Edit(m_scheme, data, null, config, null, null, null).Transformed(a => OnOk(DummyAudioLibrary.Instance, a), a => a).Do(a => a.Redo(), a => { });
+            editor.Edit(Scheme, data, null, config, null, null, null).Transformed(a => OnOk(DummyAudioLibrary.Instance, a), a => a).Do(a => a.Redo(), a => { });
             using (m_config.ConversationNodeRenderers.SuppressValueChanged())
             {
                 foreach (var d in data.Parameters)
@@ -781,7 +781,7 @@ namespace ConversationEditor
         {
             using (var form = new PluginSelector())
             {
-                form.Initalize(m_scheme, m_config.Plugins);
+                form.Initalize(Scheme, m_config.Plugins);
                 form.ShowDialog();
             }
         }
@@ -954,8 +954,8 @@ namespace ConversationEditor
         {
             if (components != null)
                 components.Dispose();
-            if (m_scheme != null)
-                m_scheme.Dispose();
+            if (Scheme != null)
+                Scheme.Dispose();
             if (m_config != null)
                 m_config.Dispose();
             if (m_context.CurrentProject != null)

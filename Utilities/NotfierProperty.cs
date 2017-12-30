@@ -9,7 +9,7 @@ namespace Utilities
     {
         private T m_value;
         private WeakEvent<Changed<T>> m_changed = new WeakEvent<Changed<T>>();
-        public WeakEvent<Changed<T>> Changed { get { return m_changed; } }
+        public WeakEvent<Changed<T>> Changed => m_changed;
         public NotifierProperty(T value)
         {
             m_value = value;

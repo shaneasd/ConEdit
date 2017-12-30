@@ -38,11 +38,8 @@ namespace ConversationEditor
                 m_contents.Add(item.File.FullName);
                 ContainerItem.InsertChildAlphabetically(parent, item);
             }
-            
-            public override DirectoryInfo Path
-            {
-                get { return Project.Origin; }
-            }
+
+            public override DirectoryInfo Path => Project.Origin;
 
             public override void DrawIcon(Graphics g, RectangleF iconRectangle)
             {
@@ -52,7 +49,7 @@ namespace ConversationEditor
             private class DummyProjectItem : ProjectItem
             {
                 public DummyProjectItem() : base(() => new RectangleF(0, 0, 0, 0), DummyProject.Instance, () => null, (f, s) => { throw new NotImplementedException(); }) { }
-                protected override string PermanentText { get { return ""; } }
+                protected override string PermanentText => "";
                 public override IEnumerable<Item> AllItems(VisibilityFilter filter)
                 {
                     return Enumerable.Empty<Item>();
@@ -61,10 +58,10 @@ namespace ConversationEditor
 
             public new static readonly ProjectItem Null = new DummyProjectItem();
 
-            public override bool CanDelete { get { return false; } }
-            public override bool CanRemove { get { return false; } }
+            public override bool CanDelete => false;
+            public override bool CanRemove => false;
 
-            public override bool CanSave { get { return Project.File.Writable != null; } }
+            public override bool CanSave => Project.File.Writable != null;
 
             public Item MakeElement<T>(Func<RectangleF> area, T item, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform) where T : ISaveableFileProvider
             {

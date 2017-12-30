@@ -30,15 +30,11 @@ namespace Utilities
         WeakReference Target;
         Action<TObject, TParameter> Callback;
 
-        public override bool Expired
-        {
-            get { return !Target.IsAlive; }
-        }
+        public override bool Expired => !Target.IsAlive;
 
         public override void Execute(TParameter value)
         {
-            TObject target = Target.Target as TObject;
-            if (target != null)
+            if (Target.Target is TObject target)
                 Callback(target, value);
         }
     }

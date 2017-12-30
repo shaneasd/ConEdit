@@ -16,9 +16,7 @@ namespace ConversationEditor
             public FolderItem(Func<RectangleF> area, DirectoryInfo path, IProject project, ContainerItem parent, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
                 : base(new ConstructorParams(area, project, new FileSystemObject( path), parent, toControlTransform, rename))
             {
-                if (path == null)
-                    throw new ArgumentNullException("path");
-                m_path = path;
+                m_path = path ?? throw new ArgumentNullException("path");
                 File.Moved += (o, n) => { Children(VisibilityFilter.Everything).ForAll(a => a.File.ParentMoved(o, n)); };
             }
 
@@ -29,17 +27,11 @@ namespace ConversationEditor
                 g.DrawImage(FolderIcon, iconRectangle);
             }
 
-            public override DirectoryInfo Path
-            {
-                get
-                {
-                    return m_path;
-                }
-            }
+            public override DirectoryInfo Path => m_path;
 
-            public override bool CanDelete { get { return false; } }
-            public override bool CanRemove { get { return false; } }
-            public override bool CanSave { get { return false; } }
+            public override bool CanDelete => false;
+            public override bool CanRemove => false;
+            public override bool CanSave => false;
         }
 
     }
