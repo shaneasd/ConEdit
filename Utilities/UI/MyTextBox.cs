@@ -401,8 +401,7 @@ namespace Utilities.UI
         public System.Windows.Forms.ToolStripRenderer Renderer { get { return m_dropDown.Renderer; } set { m_dropDown.Renderer = value; } }
         private void CloseDropdown()
         {
-            if (m_dropDown != null)
-                m_dropDown.Close();
+            m_dropDown?.Close();
         }
 
         private void AutoCompleteTo(string item)
@@ -435,7 +434,11 @@ namespace Utilities.UI
             control.SizeChanged += (a, b) => UpdateRequestedArea();
             InputForm = inputForm;
             AutoCompleteSuggestions = autoCompleteSuggestions;
+
+            m_disposeActions.Add(Mouse.MouseUp.Register(this, (me, point) => me.GlobalMouseUp()));
         }
+
+        List<Action> m_disposeActions = new List<Action>();
 
         public void Redraw()
         {
@@ -594,9 +597,15 @@ namespace Utilities.UI
             }
         }
 
-        public override void MouseUp(MouseEventArgs args)
+        private void GlobalMouseUp()
         {
             m_selecting = false;
+        }
+
+        public override void MouseUp(MouseEventArgs args)
+        {
+            //GlobalMouseUp handles it
+            //m_selecting = false;
         }
 
         public override void MouseMove(MouseEventArgs args)
@@ -1135,6 +1144,8 @@ namespace Utilities.UI
             {
                 if (m_dropDown != null)
                     m_dropDown.Dispose();
+                foreach (var action in m_disposeActions)
+                    action.Execute();
             }
             ClearCaret();
         }

@@ -176,8 +176,22 @@ namespace Utilities.UI
             m_textBox.TextChanged += s => ExecuteSelectionChanged();
             m_textBox.TextChanged += s => { m_itemIndex = -1; m_dropDownWindow = 0; UpdateDropdown(); };
 
-            Mouse.MouseDown.Register(this, (me, point) => me.GlobalMouseDown(point));
-            Mouse.MouseUp.Register(this, (me, point) => me.GlobalMouseUp(point));
+            m_disposeActions.Add(Mouse.MouseDown.Register(this, (me, point) => me.GlobalMouseDown(point)));
+            m_disposeActions.Add(Mouse.MouseUp.Register(this, (me, point) => me.GlobalMouseUp(point)));
+        }
+
+        List<Action> m_disposeActions = new List<Action>();
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (disposing)
+            {
+                foreach (var action in m_disposeActions)
+                {
+                    action.Execute();
+                }
+            }
         }
 
         /// <summary>

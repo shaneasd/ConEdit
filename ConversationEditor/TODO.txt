@@ -8,7 +8,6 @@ Installer builder project
 
 WORKFLOW:
 
-Textbox: Use mouse to select text then mouse up while not on box. Selection does not stop.
 Figure out a way to allow the user to specify the order of parameters when defining a node type (jonas wants an integer id)
 localized string that is missing localization saves to localization file as "Missing Localization"
 read all conversation files in parallel assuming load time is bound by cpu and not disk
