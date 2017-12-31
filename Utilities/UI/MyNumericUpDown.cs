@@ -26,7 +26,7 @@ namespace Utilities.UI
                 }
             }
         }
-        public RectangleF Area { get { return m_area(); } }
+        public RectangleF Area => m_area();
 
         private MyTextBox m_textBox;
 
@@ -58,8 +58,7 @@ namespace Utilities.UI
                                 m_textBox.Text = oldText;
                         if (typeof(T) == typeof(int))
                         {
-                            int value;
-                            if (!int.TryParse(m_textBox.Text, out value))
+                            if (!int.TryParse(m_textBox.Text, out int value))
                                 m_textBox.Text = oldText;
                             else
                                 m_value = value;

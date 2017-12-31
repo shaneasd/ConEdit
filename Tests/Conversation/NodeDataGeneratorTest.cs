@@ -38,13 +38,7 @@ namespace Tests.Conversation
 
             public Id<Parameter> Id { get; }
 
-            public bool Corrupted
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public bool Corrupted => throw new NotSupportedException();
 
             public string Name { get; }
 

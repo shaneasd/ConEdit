@@ -30,10 +30,7 @@ namespace PluginPack
             {
             }
 
-            public override string Message
-            {
-                get { return "Cycle error checker not implemented"; }
-            }
+            public override string Message => "Cycle error checker not implemented";
         }
 
         public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
@@ -90,9 +87,6 @@ namespace PluginPack
             //return disconnectedNodes.Select(n => new CycleError(n));
         }
 
-        public override string Name
-        {
-            get { return "Cycle error checker"; }
-        }
+        public override string Name => "Cycle error checker";
     }
 }

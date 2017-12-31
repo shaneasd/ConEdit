@@ -22,15 +22,10 @@ namespace ConversationEditor
             Id = file;
         }
 
-        ISaveableFile ISaveableFileProvider.File
-        {
-            get { return m_file; }
-        }
 
-        ISaveableFileUndoable ISaveableFileUndoableProvider.UndoableFile
-        {
-            get { throw new NotSupportedException("Shouldn't be trying to queue modifications to a missing file"); }
-        }
+        ISaveableFile ISaveableFileProvider.File => m_file;
+
+        ISaveableFileUndoable ISaveableFileUndoableProvider.UndoableFile => throw new NotSupportedException("Shouldn't be trying to queue modifications to a missing file");
 
         bool IInProject.CanRemove(Func<bool> prompt)
         {
@@ -43,20 +38,11 @@ namespace ConversationEditor
             //Do nothing
         }
 
-        public bool Remove(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Remove(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization) => throw new NotSupportedException();
 
-        public IEnumerableReversible<ConversationNode> Nodes
-        {
-            get { return EnumerableReversible.Empty<ConversationNode>(); }
-        }
+        public IEnumerableReversible<ConversationNode> Nodes => EnumerableReversible.Empty<ConversationNode>();
 
-        public IEnumerableReversible<NodeGroup> Groups
-        {
-            get { return EnumerableReversible.Empty<NodeGroup>(); }
-        }
+        public IEnumerableReversible<NodeGroup> Groups => EnumerableReversible.Empty<NodeGroup>();
 
         public void RemoveLinks(Output o)
         {
@@ -72,10 +58,7 @@ namespace ConversationEditor
             }
         }
 
-        public ReadOnlyCollection<Conversation.Serialization.LoadError> Errors
-        {
-            get { return new ReadOnlyCollection<Conversation.Serialization.LoadError>(new Conversation.Serialization.LoadError[0]); }
-        }
+        public ReadOnlyCollection<Conversation.Serialization.LoadError> Errors => new ReadOnlyCollection<Conversation.Serialization.LoadError>(new Conversation.Serialization.LoadError[0]);
 
         public void ClearErrors()
         {

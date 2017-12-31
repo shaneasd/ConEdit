@@ -50,10 +50,7 @@ namespace ConversationEditor
                 m_textBox.Text = m_parameter.Value;
         }
 
-        public Control AsControl
-        {
-            get { return this; }
-        }
+        public Control AsControl => this;
 
         bool m_remove = false;
         private SimpleUndoPair m_removeParameter;

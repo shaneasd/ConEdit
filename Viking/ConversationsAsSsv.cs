@@ -13,10 +13,7 @@ namespace Viking
     //TODO: Archive this somewhere rather than removing the inheritance
     public class ConversationsAsSsv //: IProjectExporter
     {
-        public string Name
-        {
-            get { return "Conversations as Semicolon Separated Values (Viking)"; }
-        }
+        public string Name => "Conversations as Semicolon Separated Values (Viking)";
 
         public void Export(IProject2 project, ConfigParameterString exportPath, Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localize, IErrorCheckerUtilities<IConversationNode> util)
         {

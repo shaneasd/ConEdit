@@ -16,12 +16,8 @@ namespace Conversation
 
         public NodeDataGeneratorParameterData(Id<Parameter> guid, string value)
         {
-            if (object.ReferenceEquals(guid, null))
-                throw new ArgumentNullException(nameof(guid));
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-            Guid = guid;
-            Value = value;
+            Guid = guid ?? throw new ArgumentNullException(nameof(guid));
+            Value = value ?? throw new ArgumentNullException(nameof(value));
         }
     }
 
@@ -109,8 +105,7 @@ namespace Conversation
             Dictionary<Id<Parameter>, IParameter> result = parameters.Concat(m_extraParameters(parameters)).ToDictionary(p => p.Id);
             foreach (var d in parameterData)
             {
-                IParameter parameter;
-                if (result.TryGetValue(d.Guid, out parameter))
+                if (result.TryGetValue(d.Guid, out IParameter parameter))
                 {
                     parameter.TryDeserialiseValue(d.Value);
                 }
@@ -135,25 +130,13 @@ namespace Conversation
             return result;
         }
 
-        public string Name
-        {
-            get { return m_exists ? m_data.Name : "Definition Deleted"; }
-        }
+        public string Name => m_exists ? m_data.Name : "Definition Deleted";
 
-        public Id<NodeTypeTemp> Guid
-        {
-            get { return m_data.Guid; }
-        }
+        public Id<NodeTypeTemp> Guid => m_data.Guid;
 
-        public string Description
-        {
-            get { return m_data.Description; }
-        }
+        public string Description => m_data.Description;
 
-        public IReadOnlyList<NodeData.ConfigData> Config
-        {
-            get { return m_data.Config; }
-        }
+        public IReadOnlyList<NodeData.ConfigData> Config => m_data.Config;
 
         public void Removed()
         {

@@ -142,9 +142,9 @@ namespace ConversationEditor
         const int SPACING = 2;
         const int BOX_SIZE = 15;
 
-        public int PerItemHeight { get { return SPACING + BOX_SIZE; } }
+        public int PerItemHeight => SPACING + BOX_SIZE;
 
-        public IEnumerable<ListElement> Items { get { return m_items; } }
+        public IEnumerable<ListElement> Items => m_items;
         private List<ListElement> m_items = new List<ListElement>();
         private Func<T, string> m_stringSelector;
 

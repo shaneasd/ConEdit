@@ -12,15 +12,9 @@ namespace ConversationEditor
     public class ShortcutKey : IConfigNodeDefinition
     {
         private static readonly Id<NodeTypeTemp> ID = Id<NodeTypeTemp>.Parse("b3a94816-8236-4ea5-8646-09887e1ebf94");
-        public Id<NodeTypeTemp> Id
-        {
-            get { return ID; }
-        }
+        public Id<NodeTypeTemp> Id => ID;
 
-        public string Name
-        {
-            get { return "Shortcut Key"; }
-        }
+        public string Name => "Shortcut Key";
 
         public IEnumerable<IParameter> MakeParameters()
         {
@@ -51,15 +45,9 @@ namespace ConversationEditor
     public class BackgroundColor : IConfigNodeDefinition
     {
         static readonly Id<NodeTypeTemp> ID = Id<NodeTypeTemp>.Parse("5887131d-47aa-49ac-b73f-2e21a176af16");
-        public Id<NodeTypeTemp> Id
-        {
-            get { return ID; }
-        }
+        public Id<NodeTypeTemp> Id => ID;
 
-        public string Name
-        {
-            get { return "Color"; }
-        }
+        public string Name => "Color";
 
         public IEnumerable<IParameter> MakeParameters()
         {
@@ -121,19 +109,13 @@ namespace ConversationEditor
 
     public class GenericNodeConfigDefinition : IConfigNodeDefinition
     {
-        public static Id<NodeTypeTemp> StaticId { get { return Id<NodeTypeTemp>.Parse("ba33c8fb-6f3e-4a0f-ba97-b346e02304f8"); } }
-        public static Id<Parameter> ConfigKey { get { return Id<Parameter>.Parse("d7e0e8bd-534c-4827-9f57-cbe5446b716d"); } }
-        public static Id<Parameter> ConfigValue { get { return Id<Parameter>.Parse("0b82c6b5-3a74-4511-b52b-0d8070839d89"); } }
+        public static Id<NodeTypeTemp> StaticId => Id<NodeTypeTemp>.Parse("ba33c8fb-6f3e-4a0f-ba97-b346e02304f8");
+        public static Id<Parameter> ConfigKey => Id<Parameter>.Parse("d7e0e8bd-534c-4827-9f57-cbe5446b716d");
+        public static Id<Parameter> ConfigValue => Id<Parameter>.Parse("0b82c6b5-3a74-4511-b52b-0d8070839d89");
 
-        public Id<NodeTypeTemp> Id
-        {
-            get { return StaticId; }
-        }
+        public Id<NodeTypeTemp> Id => StaticId;
 
-        public string Name
-        {
-            get { return "Generic Config"; }
-        }
+        public string Name => "Generic Config";
 
         public IEnumerable<IParameter> MakeParameters()
         {

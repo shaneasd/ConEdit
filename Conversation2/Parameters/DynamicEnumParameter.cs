@@ -13,7 +13,7 @@ namespace Conversation
         {
             public Source() { }
             ConcurrentDictionary<DynamicEnumParameter, string> m_options = new ConcurrentDictionary<DynamicEnumParameter, string>();
-            public IEnumerable<string> Options { get { return m_options.Values.Distinct().Except("".Only()); } }
+            public IEnumerable<string> Options => m_options.Values.Distinct().Except("".Only());
             public void RegisterUsage(DynamicEnumParameter user, string value)
             {
                 m_options[user] = value;
@@ -70,10 +70,7 @@ namespace Conversation
             return Value;
         }
 
-        public IEnumerable<string> Options
-        {
-            get { return m_source.Options; }
-        }
+        public IEnumerable<string> Options => m_source.Options;
 
         protected override bool ValueValid(string value)
         {
@@ -88,13 +85,7 @@ namespace Conversation
             }
         }
 
-        public bool Local
-        {
-            get
-            {
-                return m_local;
-            }
-        }
+        public bool Local => m_local;
 
         ///// <summary>
         ///// Notifies the parameter that its parent node has been removed and as such it is no longer a valid usage of the underlying data value

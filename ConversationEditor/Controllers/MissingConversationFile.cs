@@ -23,15 +23,10 @@ namespace ConversationEditor
             Id = file;
         }
 
-        public IEnumerableReversible<ConversationNode> Nodes
-        {
-            get { return EnumerableReversible.Empty<ConversationNode>(); }
-        }
 
-        public IEnumerableReversible<NodeGroup> Groups
-        {
-            get { return EnumerableReversible.Empty<NodeGroup>(); }
-        }
+        public IEnumerableReversible<ConversationNode> Nodes => EnumerableReversible.Empty<ConversationNode>();
+
+        public IEnumerableReversible<NodeGroup> Groups => EnumerableReversible.Empty<NodeGroup>();
 
         public bool Remove(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization)
         {
@@ -43,10 +38,7 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public ReadOnlyCollection<LoadError> Errors
-        {
-            get { return new ReadOnlyCollection<LoadError>(new LoadError[0]); } //A missing file inherently has no errors within its data (though it is a project error to have missing files)
-        }
+        public ReadOnlyCollection<LoadError> Errors => new ReadOnlyCollection<LoadError>(new LoadError[0]); //A missing file inherently has no errors within its data (though it is a project error to have missing files)
 
         public void ClearErrors()
         {
@@ -64,20 +56,11 @@ namespace ConversationEditor
             //Do nothing
         }
 
-        public ISaveableFile File
-        {
-            get { return m_file; }
-        }
+        public ISaveableFile File => m_file;
 
-        ISaveableFileUndoable ISaveableFileUndoableProvider.UndoableFile
-        {
-            get { throw new NotSupportedException("Shouldn't be queuing up modifications to a file that isn't there"); }
-        }
+        ISaveableFileUndoable ISaveableFileUndoableProvider.UndoableFile => throw new NotSupportedException("Shouldn't be queuing up modifications to a file that isn't there");
 
-        public void BringToFront(IReadOnlyNodeSet selected)
-        {
-            throw new NotImplementedException();
-        }
+        public void BringToFront(IReadOnlyNodeSet selected) => throw new NotImplementedException();
 
         public event Action FileModifiedExternally
         {

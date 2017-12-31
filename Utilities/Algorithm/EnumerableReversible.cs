@@ -52,19 +52,13 @@ namespace Utilities
             m_data = data;
         }
 
-        public T Current
-        {
-            get { return m_current.Value; }
-        }
+        public T Current => m_current.Value;
 
         protected override void Dispose(bool disposing)
         {
         }
 
-        object System.Collections.IEnumerator.Current
-        {
-            get { return m_current.Value; }
-        }
+        object System.Collections.IEnumerator.Current => m_current.Value;
 
         public bool MoveNext()
         {
@@ -98,15 +92,13 @@ namespace Utilities
         }
         public static EnumerableReversible<T> Make<T>(IEnumerable<T> data)
         {
-            var linkedList = data as LinkedList<T>;
-            if (linkedList != null)
+            if (data is LinkedList<T> linkedList)
             {
                 return Make(linkedList);
             }
             else
             {
-                var enumerableReversible = data as EnumerableReversible<T>;
-                if (enumerableReversible != null)
+                if (data is EnumerableReversible<T> enumerableReversible)
                     return Make(enumerableReversible);
                 else
                     return new EnumerableReversible<T>(data, new LazyReverseEnumerable<T>(data)); //The standard buffered way, but lazy.

@@ -35,13 +35,7 @@ namespace ConversationEditor
             g.DrawString(Text, Font, Brushes.Black, Area.Location);
         }
 
-        public string Text
-        {
-            get
-            {
-                return Node.Data.Parameters.Where(p=>p.Corrupted).Aggregate("Corrupted " + Node.Data.Name + " ID: " + Node.Data.NodeId.Guid, (a, p) => a + "\r\n  -  " + p.Name, s => s);
-            }
-        }
+        public string Text => Node.Data.Parameters.Where(p => p.Corrupted).Aggregate("Corrupted " + Node.Data.Name + " ID: " + Node.Data.NodeId.Guid, (a, p) => a + "\r\n  -  " + p.Name, s => s);
 
         protected override SizeF CalculateArea(System.Drawing.Graphics g)
         {

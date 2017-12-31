@@ -8,11 +8,10 @@ namespace RuntimeConversation
 {
     public class LocalizedString
     {
-        public Id<LocalizedText> Id { get { return m_id; } }
-        private readonly Id<LocalizedText> m_id;
+        public Id<LocalizedText> Id { get; }
         public LocalizedString(string value)
         {
-            m_id = Id<LocalizedText>.Parse(value);
+            Id = Id<LocalizedText>.Parse(value);
         }
 
         public string Localized(Func<Id<LocalizedText>, string> localizer)

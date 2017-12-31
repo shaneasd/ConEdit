@@ -44,9 +44,9 @@ namespace ConversationEditor
             m_localizationSets = sets.ToHashSet();
         }
 
-        public IProjectElementList<ILocalizationFile> Localizers { get { return m_localizers; } }
+        public IProjectElementList<ILocalizationFile> Localizers => m_localizers;
 
-        public HashSet<Project.TData.LocalizerSetData> LocalizationSets { get { return m_localizationSets; } }
+        public HashSet<Project.TData.LocalizerSetData> LocalizationSets => m_localizationSets;
 
         internal ISerializer<LocalizerData> MakeSerializer(string file, Id<FileInProject> id)
         {
@@ -119,8 +119,7 @@ namespace ConversationEditor
 
         private ILocalizationFile Lookup(Id<LocalizedStringType> type)
         {
-            Id<FileInProject> fileId;
-            if (m_context.CurrentLocalization.Value.Sources.TryGetValue(type, out fileId))
+            if (m_context.CurrentLocalization.Value.Sources.TryGetValue(type, out Id<FileInProject> fileId))
                 return Lookup(fileId);
             else
                 return null;

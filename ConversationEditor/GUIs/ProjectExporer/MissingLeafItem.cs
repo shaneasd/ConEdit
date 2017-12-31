@@ -12,22 +12,22 @@ namespace ConversationEditor
     {
         public class MissingLeafItem<T> : LeafItem<T> where T : ISaveableFileProvider
         {
-            Bitmap m_icon;
+            Bitmap Icon { get; }
             public MissingLeafItem(Func<RectangleF> area, T item, IProject project, Bitmap icon, ContainerItem parent, ItemFilter filter, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
                 : base(area, project, item, parent, filter, toControlTransform, rename)
             {
-                m_icon = icon;
+                Icon = icon;
             }
 
             public override void DrawIcon(Graphics g, RectangleF iconRectangle)
             {
-                g.DrawImage(m_icon, iconRectangle);
+                g.DrawImage(Icon, iconRectangle);
             }
 
-            public override bool CanDelete { get { return false; } }
-            public override bool CanRemove { get { return true; } }
+            public override bool CanDelete => false;
+            public override bool CanRemove => true;
 
-            public override bool CanSave { get { return false; } }
+            public override bool CanSave => false;
         }
     }
 }

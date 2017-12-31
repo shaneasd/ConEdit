@@ -21,8 +21,7 @@ namespace Conversation
 
         private static Tuple<bool, bool> StaticDeserialize(string value)
         {
-            bool val = false;
-            var isValid = bool.TryParse(value, out val);
+            var isValid = bool.TryParse(value, out bool val);
             return Tuple.Create(val, !isValid);
         }
 

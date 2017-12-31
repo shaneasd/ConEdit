@@ -25,10 +25,7 @@ namespace Conversation
             Id = id;
         }
 
-        public IEnumerable<Output> Connections
-        {
-            get { return m_connections; }
-        }
+        public IEnumerable<Output> Connections => m_connections;
 
         public event Action<Output> Connected;
         public event Action<Output> Disconnected;

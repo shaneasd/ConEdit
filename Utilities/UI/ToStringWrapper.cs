@@ -15,12 +15,11 @@ namespace Utilities.UI
 
     public class ToStringWrapper<T>
     {
-        public T Value { get { return m_value; } }
-        private readonly T m_value;
+        public T Value { get; }
         private readonly string m_string;
         public ToStringWrapper(T value, string toString)
         {
-            m_value = value;
+            Value = value;
             m_string = toString;
         }
 
@@ -31,8 +30,7 @@ namespace Utilities.UI
 
         public override bool Equals(object obj)
         {
-            var other = obj as ToStringWrapper<T>;
-            if (other != null)
+            if (obj is ToStringWrapper<T> other)
                 return other.Value.Equals(Value);
             else
                 return false;

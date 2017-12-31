@@ -11,7 +11,7 @@ namespace ConversationEditor
     internal class ErrorCheckersConfig : IConfigParameter
     {
         private List<ErrorCheckerAssembly> m_assemblies = new List<ErrorCheckerAssembly>();
-        public IEnumerable<ErrorCheckerAssembly> Assemblies { get { return m_assemblies; } }
+        public IEnumerable<ErrorCheckerAssembly> Assemblies => m_assemblies;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "//https://msdn.microsoft.com/en-us/library/ms972962.aspx#pluginframework_topic5 Seems to suggest that a generic try catch is the way to go.")]
         public void Load(XElement root)

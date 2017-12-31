@@ -10,9 +10,8 @@ namespace Utilities
     {
         public bool Equals(WeakReference<T> x, WeakReference<T> y)
         {
-            T xVal, yVal;
-            bool xAlive = x.TryGetTarget(out xVal);
-            bool yAlive = y.TryGetTarget(out yVal);
+            bool xAlive = x.TryGetTarget(out T xVal);
+            bool yAlive = y.TryGetTarget(out T yVal);
             if (xAlive && yAlive)
                 return object.Equals(xVal, yVal);
             else
@@ -21,8 +20,7 @@ namespace Utilities
 
         public int GetHashCode(WeakReference<T> obj)
         {
-            T xVal;
-            bool xAlive = obj.TryGetTarget(out xVal);
+            bool xAlive = obj.TryGetTarget(out T xVal);
             if (xAlive)
                 return xVal.GetHashCode();
             else

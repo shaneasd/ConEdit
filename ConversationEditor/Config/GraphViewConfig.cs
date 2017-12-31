@@ -103,15 +103,9 @@ namespace ConversationEditor
         }
 
         private int m_minorGridSpacing = 20;
-        public int MinorGridSpacing
-        {
-            get { return m_minorGridSpacing; }
-        }
+        public int MinorGridSpacing => m_minorGridSpacing;
 
         private int m_majorGridSpacing = 80;
-        public int MajorGridSpacing
-        {
-            get { return m_majorGridSpacing; }
-        }
+        public int MajorGridSpacing => m_majorGridSpacing;
     }
 }

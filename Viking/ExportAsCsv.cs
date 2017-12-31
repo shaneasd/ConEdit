@@ -214,9 +214,9 @@ namespace Viking
         {
         }
 
-        public override string Name { get { return "Export As Csv"; } }
+        public override string Name => "Export As Csv";
 
-        public override string Separator { get { return ","; } }
+        public override string Separator => ",";
     }
 
     public class ExportAsSsv : ExportAsSeparatedStrings
@@ -226,8 +226,8 @@ namespace Viking
         {
         }
 
-        public override string Name { get { return "Export As ssv"; } }
+        public override string Name => "Export As ssv";
 
-        public override string Separator { get { return ";"; } }
+        public override string Separator => ";";
     }
 }

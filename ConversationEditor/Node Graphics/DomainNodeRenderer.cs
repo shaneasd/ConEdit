@@ -20,10 +20,7 @@ namespace ConversationEditor
             return true;
         }
 
-        public string DisplayName
-        {
-            get { return "Default Domain Node Renderer"; }
-        }
+        public string DisplayName => "Default Domain Node Renderer";
 
         public INodeGui GetRenderer(ConversationNode n, PointF p, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
@@ -120,8 +117,8 @@ namespace ConversationEditor
                 }
             }
 
-            public float Height { get { return m_size.Height; } }
-            public float Width { get { return m_size.Width; } }
+            public float Height => m_size.Height;
+            public float Width => m_size.Width;
         }
 
         class TitleSection : Section
@@ -145,13 +142,7 @@ namespace ConversationEditor
         {
             public OutputsSection(ConversationNode node) : base(node) { }
 
-            IEnumerable<Output> BottomNodes
-            {
-                get
-                {
-                    return Node.Data.Connectors.Where(c => c.Definition.Position == ConnectorPosition.Bottom);
-                }
-            }
+            IEnumerable<Output> BottomNodes => Node.Data.Connectors.Where(c => c.Definition.Position == ConnectorPosition.Bottom);
 
             public override SizeF Measure(Graphics g)
             {
@@ -209,13 +200,7 @@ namespace ConversationEditor
                 m_localizer = localizer;
             }
 
-            public float MaxWidth
-            {
-                get
-                {
-                    return MaxWidthConfig.TryGet(Node.Data.Config) ?? DomainNodeRenderer.MaxWidth;
-                }
-            }
+            public float MaxWidth => MaxWidthConfig.TryGet(Node.Data.Config) ?? DomainNodeRenderer.MaxWidth;
 
             public override SizeF Measure(Graphics g)
             {
@@ -311,13 +296,7 @@ namespace ConversationEditor
             }
         }
 
-        private bool Rounded
-        {
-            get
-            {
-                return RoundedConfig.TryGet(Node.Data.Config) ?? false;
-            }
-        }
+        private bool Rounded => RoundedConfig.TryGet(Node.Data.Config) ?? false;
 
         private static void DrawBorder(Graphics g, GraphicsPath nodeShape, bool selected)
         {

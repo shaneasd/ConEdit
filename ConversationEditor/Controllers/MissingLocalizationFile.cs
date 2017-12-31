@@ -20,10 +20,7 @@ namespace ConversationEditor
             Id = file;
         }
 
-        ISaveableFile ISaveableFileProvider.File
-        {
-            get { return m_file; }
-        }
+        ISaveableFile ISaveableFileProvider.File => m_file;
 
         bool IInProject.CanRemove(Func<bool> prompt)
         {
@@ -78,17 +75,8 @@ namespace ConversationEditor
             m_file.Dispose();
         }
 
-        public bool IsValid
-        {
-            get { return false; }
-        }
+        public bool IsValid => false;
 
-        public IEnumerable<Id<LocalizedText>> ExistingLocalizations
-        {
-            get
-            {
-                return Enumerable.Empty<Id<LocalizedText>>();
-            }
-        }
+        public IEnumerable<Id<LocalizedText>> ExistingLocalizations => Enumerable.Empty<Id<LocalizedText>>();
     }
 }

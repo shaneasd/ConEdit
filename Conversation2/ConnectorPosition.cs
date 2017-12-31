@@ -82,7 +82,7 @@ namespace Conversation
         private Guid m_guid;
         private string m_name;
 
-        private Tuple<Guid, string> Tuple { get { return System.Tuple.Create(m_guid, m_name); } }
+        private Tuple<Guid, string> Tuple => System.Tuple.Create(m_guid, m_name);
 
         public static ParameterType EnumId { get; } = ParameterType.Parse("2b075746-9b6e-4d6e-ad39-a083049374f2");
         public static Id<Parameter> ParameterId { get; } = Id<Parameter>.Parse("43903044-1ef9-4c9f-a782-6219fb8e7826");
@@ -93,14 +93,8 @@ namespace Conversation
             return new EnumParameter("Position", ParameterId, enumeration, null);
         }
 
-        public EnumerationData.Element Element
-        {
-            get { return new EnumerationData.Element(m_name, m_guid); }
-        }
+        public EnumerationData.Element Element => new EnumerationData.Element(m_name, m_guid);
 
-        public static EnumerationData PositionConnectorDefinition
-        {
-            get { return new EnumerationData("Position", EnumId, new List<EnumerationData.Element>() { Top.Element, Bottom.Element, Left.Element, Right.Element }); }
-        }
+        public static EnumerationData PositionConnectorDefinition => new EnumerationData("Position", EnumId, new List<EnumerationData.Element>() { Top.Element, Bottom.Element, Left.Element, Right.Element });
     }
 }

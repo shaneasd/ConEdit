@@ -34,8 +34,7 @@ namespace Utilities
 
         public override bool Equals(object obj)
         {
-            var other = obj as ReadOnlySet<T>;
-            if (other != null)
+            if (obj is ReadOnlySet<T> other)
             {
                 if (other.m_values.Length != m_values.Length)
                     return false;

@@ -25,8 +25,7 @@ namespace Utilities
             FileSystem.EnsureExists(new DirectoryInfo("ChangeLogs"));
             while (!m_terminate)
             {
-                Tuple<string, string> data;
-                while (m_toLog.TryDequeue(out data))
+                while (m_toLog.TryDequeue(out Tuple<string, string> data))
                 {
                     using (StreamWriter file = new StreamWriter("ChangeLogs\\" + data.Item1, true))
                     {

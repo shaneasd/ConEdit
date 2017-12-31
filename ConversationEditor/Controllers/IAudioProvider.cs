@@ -56,10 +56,7 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public IProjectElementList<IAudioFile> AudioFiles
-        {
-            get { return DummyProjectElementList<AudioFile, IAudioFile>.Instance; }
-        }
+        public IProjectElementList<IAudioFile> AudioFiles => DummyProjectElementList<AudioFile, IAudioFile>.Instance;
 
         public IEnumerable<Audio> UsedAudio()
         {

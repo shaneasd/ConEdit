@@ -50,8 +50,7 @@ namespace Utilities
         /// </summary>
         public static int? TryParseInt(string s)
         {
-            int temp;
-            if (int.TryParse(s, out temp))
+            if (int.TryParse(s, out int temp))
                 return temp;
             else
                 return null;

@@ -15,45 +15,24 @@ namespace Conversation
         private List<IParameter> m_parameters;
         private readonly IEnumerable<Output> m_connectors;
 
-        public Id<NodeTypeTemp> NodeTypeId
-        {
-            get { return m_generator.Guid; }
-        }
+        public Id<NodeTypeTemp> NodeTypeId => m_generator.Guid;
 
-        public string Name
-        {
-            get { return m_generator.Name; }
-        }
+        public string Name => m_generator.Name;
 
         public string Description => m_generator.Description;
 
-        public IReadOnlyList<NodeData.ConfigData> Config
-        {
-            get { return m_generator.Config; }
-        }
+        public IReadOnlyList<NodeData.ConfigData> Config => m_generator.Config;
 
-        public IEnumerable<Output> Connectors
-        {
-            get
-            {
-                return m_connectors;
-            }
-        }
+        public IEnumerable<Output> Connectors => m_connectors;
 
-        public IEnumerable<IParameter> Parameters
-        {
-            get
-            {
-                return m_parameters;
-            }
-        }
+        public IEnumerable<IParameter> Parameters => m_parameters;
 
         public void ChangeId(Id<NodeTemp> id)
         {
             m_id = id;
         }
 
-        public Id<NodeTemp> NodeId { get { return m_id; } }
+        public Id<NodeTemp> NodeId => m_id;
 
         public event Action Linked;
         protected void OnOutputLinked(Output o)

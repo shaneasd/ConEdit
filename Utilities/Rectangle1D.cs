@@ -17,6 +17,6 @@ namespace Utilities
 
         public float Height { get; set; }
 
-        public float Bottom { get { return Top + Height; } }
+        public float Bottom => Top + Height;
     }
 }

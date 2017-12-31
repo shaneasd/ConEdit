@@ -20,10 +20,7 @@ namespace ConversationEditor
             return nodeType == SpecialNodes.Start;
         }
 
-        public string DisplayName
-        {
-            get { return "Start Node Renderer"; }
-        }
+        public string DisplayName => "Start Node Renderer";
 
         public INodeGui GetRenderer(ConversationNode<INodeGui> n, PointF p, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {

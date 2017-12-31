@@ -12,15 +12,9 @@ namespace PluginPack
     public class IconConfig : IConfigNodeDefinition
     {
         private static readonly Id<NodeTypeTemp> ID = Id<NodeTypeTemp>.Parse("d2ca0f2a-abed-4000-a41c-7f55a7652585");
-        public Id<NodeTypeTemp> Id
-        {
-            get { return ID; }
-        }
+        public Id<NodeTypeTemp> Id => ID;
 
-        public string Name
-        {
-            get { return "Icon"; }
-        }
+        public string Name => "Icon";
 
         public IEnumerable<IParameter> MakeParameters()
         {

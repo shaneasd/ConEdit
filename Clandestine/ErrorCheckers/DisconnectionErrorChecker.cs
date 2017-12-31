@@ -13,28 +13,19 @@ namespace Clandestine
         private class DisconnectedInputError : ConversationError<T>
         {
             public DisconnectedInputError(T node) : base(node.Only()) { }
-            public override string Message
-            {
-                get { return "Disconnected input"; }
-            }
+            public override string Message => "Disconnected input";
         }
 
         private class DisconnectedOutputError : ConversationError<T>
         {
             public DisconnectedOutputError(T node) : base(node.Only()) { }
-            public override string Message
-            {
-                get { return "Disconnected output"; }
-            }
+            public override string Message => "Disconnected output";
         }
 
         private class DisconnectedConnectorError : ConversationError<T>
         {
             public DisconnectedConnectorError(T node) : base(node.Only()) { }
-            public override string Message
-            {
-                get { return "Disconnected connector"; }
-            }
+            public override string Message => "Disconnected connector";
         }
 
         static bool IsOptional(Output connector)
@@ -84,10 +75,7 @@ namespace Clandestine
             }
         }
 
-        public override string Name
-        {
-            get { return "Disconnected link"; }
-        }
+        public override string Name => "Disconnected link";
 
     }
 }

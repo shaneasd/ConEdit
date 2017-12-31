@@ -30,13 +30,7 @@ namespace ConversationEditor
             return m_factory.WillRender(guid);
         }
 
-        public override string DisplayName
-        {
-            get
-            {
-                return m_factory.DisplayName;
-            }
-        }
+        public override string DisplayName => m_factory.DisplayName;
 
         public INodeGui GetRenderer(ConversationNode<INodeGui> n, PointF p, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {

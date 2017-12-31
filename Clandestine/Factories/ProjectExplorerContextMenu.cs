@@ -9,10 +9,7 @@ namespace Clandestine
 {
     public class ProjectExplorerContextMenu : IProjectExplorerContextMenuItemsFactory
     {
-        public IEnumerable<IDomainContextMenuItem> DomainContextMenuItems
-        {
-            get { return Enumerable.Empty<IDomainContextMenuItem>(); }
-        }
+        public IEnumerable<IDomainContextMenuItem> DomainContextMenuItems => Enumerable.Empty<IDomainContextMenuItem>();
 
         public IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localizer)
         {
@@ -20,15 +17,9 @@ namespace Clandestine
             yield return new ExportAsSsv(localizer);
         }
 
-        public IEnumerable<ILocalizationContextMenuItem> LocalizationContextMenuItems
-        {
-            get { return Enumerable.Empty<ILocalizationContextMenuItem>(); }
-        }
+        public IEnumerable<ILocalizationContextMenuItem> LocalizationContextMenuItems => Enumerable.Empty<ILocalizationContextMenuItem>();
 
-        public IEnumerable<IAudioContextMenuItem> AudioContextMenuItems
-        {
-            get { return Enumerable.Empty<IAudioContextMenuItem>(); }
-        }
+        public IEnumerable<IAudioContextMenuItem> AudioContextMenuItems => Enumerable.Empty<IAudioContextMenuItem>();
 
         public IEnumerable<IFolderContextMenuItem> FolderContextMenuItems(Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localizer)
         {

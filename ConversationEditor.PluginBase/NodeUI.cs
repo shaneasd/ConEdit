@@ -33,7 +33,7 @@ namespace ConversationEditor
         protected abstract void InnerDraw(Graphics g, bool selected);
 
         private readonly ConversationNode<INodeGui> m_node;
-        public ConversationNode<INodeGui> Node { get { return m_node; } }
+        public ConversationNode<INodeGui> Node => m_node;
 
         public event Action<Changed<RectangleF>> AreaChanged;
 

@@ -16,24 +16,23 @@ namespace ConversationEditor
             where TConcrete : TInterface
             where TInterface : ISaveableFileProvider
         {
-            private readonly TConcrete m_item;
-            private readonly Bitmap m_icon;
-            public new TConcrete Item { get { return m_item; } }
+            private Bitmap Icon { get; }
+            public new TConcrete Item { get; }
             public RealLeafItem(Func<RectangleF> area, TConcrete item, Bitmap icon, IProject project, ContainerItem parent, ItemFilter filter, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
                 : base(area, project, item, parent, filter, toControlTransform, rename)
             {
-                m_item = item;
-                m_icon = icon;
+                Item = item;
+                Icon = icon;
             }
 
             public override void DrawIcon(Graphics g, RectangleF iconRectangle)
             {
-                g.DrawImage(m_icon, iconRectangle);
+                g.DrawImage(Icon, iconRectangle);
             }
 
-            public override bool CanDelete { get { return true; } }
-            public override bool CanRemove { get { return true; } }
-            public override bool CanSave { get { return m_item.File.Writable != null; } }
+            public override bool CanDelete => true;
+            public override bool CanRemove => true;
+            public override bool CanSave => Item.File.Writable != null;
         }
     }
 }

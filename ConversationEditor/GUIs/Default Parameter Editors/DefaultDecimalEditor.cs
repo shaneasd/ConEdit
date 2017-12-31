@@ -20,15 +20,9 @@ namespace ConversationEditor
             return queries.IsDecimal(type);
         }
 
-        public string Name
-        {
-            get { return "Default Decimal Editor"; }
-        }
+        public string Name => "Default Decimal Editor";
 
-        public Guid Guid
-        {
-            get { return StaticId; }
-        }
+        public Guid Guid => StaticId;
 
         public IParameterEditor Make(IColorScheme scheme)
         {
@@ -67,10 +61,7 @@ namespace ConversationEditor
             m_numericUpDown.Value = m_parameter.Value;
         }
 
-        public Control AsControl
-        {
-            get { return this; }
-        }
+        public Control AsControl => this;
 
         public UpdateParameterData UpdateParameterAction()
         {

@@ -34,25 +34,16 @@ namespace ConversationEditor
             return result;
         }
 
-        public IEnumerable<IDomainContextMenuItem> DomainContextMenuItems
-        {
-            get { return PluginContextMenuFactories().SelectMany(p => p.DomainContextMenuItems); }
-        }
+        public IEnumerable<IDomainContextMenuItem> DomainContextMenuItems => PluginContextMenuFactories().SelectMany(p => p.DomainContextMenuItems);
 
         public IEnumerable<IConversationContextMenuItem> ConversationContextMenuItems(Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localizer)
         {
             return PluginContextMenuFactories().SelectMany(p => p.ConversationContextMenuItems(localizer));
         }
 
-        public IEnumerable<ILocalizationContextMenuItem> LocalizationContextMenuItems
-        {
-            get { return PluginContextMenuFactories().SelectMany(p => p.LocalizationContextMenuItems); }
-        }
+        public IEnumerable<ILocalizationContextMenuItem> LocalizationContextMenuItems => PluginContextMenuFactories().SelectMany(p => p.LocalizationContextMenuItems);
 
-        public IEnumerable<IAudioContextMenuItem> AudioContextMenuItems
-        {
-            get { return PluginContextMenuFactories().SelectMany(p => p.AudioContextMenuItems); }
-        }
+        public IEnumerable<IAudioContextMenuItem> AudioContextMenuItems => PluginContextMenuFactories().SelectMany(p => p.AudioContextMenuItems);
 
         public IEnumerable<IFolderContextMenuItem> FolderContextMenuItems(Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localizer)
         {

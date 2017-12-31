@@ -21,15 +21,9 @@ namespace ConversationEditor
             return type.IsSet;
         }
 
-        public string Name
-        {
-            get { return "Default Set Editor"; }
-        }
+        public string Name => "Default Set Editor";
 
-        public Guid Guid
-        {
-            get { return StaticId; }
-        }
+        public Guid Guid => StaticId;
 
         public IParameterEditor Make(IColorScheme scheme)
         {
@@ -152,10 +146,7 @@ namespace ConversationEditor
             }
         }
 
-        public Control AsControl
-        {
-            get { return this; }
-        }
+        public Control AsControl => this;
 
         public UpdateParameterData UpdateParameterAction()
         {

@@ -60,7 +60,7 @@ namespace Utilities
             }
         }
 
-        public bool Suppressed { get { return m_actionSuppressors.Any(); } }
+        public bool Suppressed => m_actionSuppressors.Any();
 
         public void Dispose()
         {

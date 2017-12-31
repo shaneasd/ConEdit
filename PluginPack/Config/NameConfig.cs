@@ -12,15 +12,9 @@ namespace PluginPack
     public class NameConfig : IConfigNodeDefinition
     {
         private static readonly Id<NodeTypeTemp> ID = Id<NodeTypeTemp>.Parse("271466d3-aef4-4d35-884c-f079de48c2a4");
-        public Id<NodeTypeTemp> Id
-        {
-            get { return ID; }
-        }
+        public Id<NodeTypeTemp> Id => ID;
 
-        public string Name
-        {
-            get { return "Name"; }
-        }
+        public string Name => "Name";
 
         public IEnumerable<IParameter> MakeParameters()
         {

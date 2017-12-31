@@ -35,37 +35,19 @@ namespace ConversationEditor
             }
         }
 
-        public IEnumerable<IParameter> Parameters
-        {
-            get { return m_parameters; }
-        }
+        public IEnumerable<IParameter> Parameters => m_parameters;
 
-        public Id<NodeTemp> NodeId
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public Id<NodeTemp> NodeId => throw new NotSupportedException();
 
-        public Id<NodeTypeTemp> NodeTypeId
-        {
-            get { throw new NotImplementedException(); }
-        }
-        
-        public string Name
-        {
-            get { return "Customize node renderers"; }
-        }
+        public Id<NodeTypeTemp> NodeTypeId => throw new NotSupportedException();
+
+        public string Name => "Customize node renderers";
 
         public string Description => "";
 
-        public IReadOnlyList<NodeData.ConfigData> Config
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public IReadOnlyList<NodeData.ConfigData> Config => throw new NotSupportedException();
 
-        public IEnumerable<Output> Connectors
-        {
-            get { return Enumerable.Empty<Output>(); }
-        }
+        public IEnumerable<Output> Connectors => Enumerable.Empty<Output>();
 
         public event Action Linked { add { } remove { } }
 

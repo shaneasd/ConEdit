@@ -49,7 +49,7 @@ namespace ConversationEditor
             m_data = data;
         }
 
-        public ISaveableFile File { get { return m_file; } }
+        public ISaveableFile File => m_file;
 
         internal static LocalizationFile MakeNew(DirectoryInfo directory, Func<string, Id<FileInProject>, ISerializer<LocalizerData>> serializer, Func<FileInfo, bool> pathOk, UpToDateFile.BackEnd backend, DirectoryInfo origin)
         {
@@ -171,7 +171,7 @@ namespace ConversationEditor
             return InnerSetLocalizationAction(guid, Null.Func(), oldValue);
         }
 
-        public IEnumerable<Id<LocalizedText>> ExistingLocalizations { get { return m_data.AllLocalizations.Select(kvp => kvp.Key); } }
+        public IEnumerable<Id<LocalizedText>> ExistingLocalizations => m_data.AllLocalizations.Select(kvp => kvp.Key);
 
         public SimpleUndoPair DuplicateAction(Id<LocalizedText> guid, Id<LocalizedText> result)
         {
@@ -262,9 +262,6 @@ namespace ConversationEditor
             }
         }
 
-        public bool IsValid
-        {
-            get { return true; }
-        }
+        public bool IsValid => true;
     }
 }

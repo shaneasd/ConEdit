@@ -21,10 +21,7 @@ namespace ConversationEditor
         {
         }
 
-        public override string DisplayName
-        {
-            get { return GetEditorFactory().DisplayName; }
-        }
+        public override string DisplayName => GetEditorFactory().DisplayName;
 
         internal bool WillEdit(Id<NodeTypeTemp> nodeType)
         {

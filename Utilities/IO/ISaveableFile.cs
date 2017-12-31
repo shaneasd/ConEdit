@@ -88,10 +88,7 @@ namespace Utilities
             m_backEnd = backEnd;
         }
 
-        public FileInfo File
-        {
-            get { return m_upToDateFile.File; }
-        }
+        public FileInfo File => m_upToDateFile.File;
 
         public abstract bool Changed { get; }
 
@@ -142,17 +139,11 @@ namespace Utilities
 
         protected abstract void Saved();
 
-        public string Name
-        {
-            get { return File.Name; }
-        }
+        public string Name => File.Name;
 
         public event Action<Changed<FileInfo>> Moved;
 
-        public bool Exists
-        {
-            get { return true; }
-        }
+        public bool Exists => true;
 
         public bool Move(FileInfo newPath, Func<bool> replace)
         {
@@ -193,10 +184,7 @@ namespace Utilities
             }
         }
 
-        public IWritable Writable
-        {
-            get { return this; }
-        }
+        public IWritable Writable => this;
     }
 
     [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly", Justification = "Disposable behavior inherited from SaveableFile")]
@@ -216,10 +204,10 @@ namespace Utilities
             m_undoQueue = new UndoQueue(path.Name);
         }
 
-        readonly UndoQueue m_undoQueue; 
-        public IUndoQueue UndoQueue { get { return m_undoQueue; } }
+        readonly UndoQueue m_undoQueue;
+        public IUndoQueue UndoQueue => m_undoQueue;
 
-        public override bool Changed { get { return m_undoQueue.Modified; } }
+        public override bool Changed => m_undoQueue.Modified;
 
         public void ChangeNoUndo()
         {
@@ -269,8 +257,8 @@ namespace Utilities
             m_saved = saved;
             m_lastChanged = false;
         }
-        
-        public IUndoQueue UndoQueue { get { return NoUndoQueue.Instance; } }
+
+        public IUndoQueue UndoQueue => NoUndoQueue.Instance;
 
         private Func<bool> m_changed;
         private Action m_saved;
@@ -286,10 +274,7 @@ namespace Utilities
             Modified.Execute();
         }
 
-        public override bool Changed
-        {
-            get { return m_changed(); }
-        }
+        public override bool Changed => m_changed();
 
         protected override void Saved()
         {
@@ -315,8 +300,8 @@ namespace Utilities
             : base(initialContent, path, saveTo, backEnd)
         {
         }
-        
-        public IUndoQueue UndoQueue { get { return NoUndoQueue.Instance; } }
+
+        public IUndoQueue UndoQueue => NoUndoQueue.Instance;
 
         private bool m_changed = false;
 
@@ -330,10 +315,7 @@ namespace Utilities
             Modified.Execute();
         }
 
-        public override bool Changed
-        {
-            get { return m_changed; }
-        }
+        public override bool Changed => m_changed;
 
         protected override void Saved()
         {
@@ -352,10 +334,7 @@ namespace Utilities
             File = path;
         }
 
-        public IUndoQueue UndoQueue
-        {
-            get { return NoUndoQueue.Instance; }
-        }
+        public IUndoQueue UndoQueue => NoUndoQueue.Instance;
 
         public event Action<Changed<FileInfo>> Moved;
 
@@ -396,15 +375,9 @@ namespace Utilities
             return true;
         }
 
-        public bool Exists
-        {
-            get { return true; }
-        }
+        public bool Exists => true;
 
-        public IWritable Writable
-        {
-            get { return null; }
-        }
+        public IWritable Writable => null;
 
         public event Action FileModifiedExternally { add { } remove { } }
 
@@ -428,10 +401,7 @@ namespace Utilities
             m_upToDateFile.FileDeleted += () => FileDeletedExternally.Execute();
         }
 
-        public FileInfo File
-        {
-            get { return m_upToDateFile.File; }
-        }
+        public FileInfo File => m_upToDateFile.File;
 
         public bool Move(FileInfo newPath, Func<bool> replace)
         {
@@ -466,18 +436,12 @@ namespace Utilities
             return true;
         }
 
-        public bool Exists
-        {
-            get { return true; }
-        }
+        public bool Exists => true;
 
         public event Action<Changed<FileInfo>> Moved;
         public event Action Modified { add { } remove { } } //Can't be modified
 
-        public IUndoQueue UndoQueue
-        {
-            get { return NoUndoQueue.Instance; }
-        }
+        public IUndoQueue UndoQueue => NoUndoQueue.Instance;
 
         public event Action SaveStateChanged { add { } remove { } } //Can't be modified/saved
 
@@ -490,9 +454,6 @@ namespace Utilities
             m_upToDateFile.Dispose();
         }
 
-        public IWritable Writable
-        {
-            get { return null; }
-        }
+        public IWritable Writable => null;
     }
 }

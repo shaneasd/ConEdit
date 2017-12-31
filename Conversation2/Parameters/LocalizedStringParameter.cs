@@ -18,8 +18,7 @@ namespace Conversation
 
         private static Tuple<Id<LocalizedText>, bool> StaticDeserialize(string value)
         {
-            Id<LocalizedText> val = null;
-            var result = Id<LocalizedText>.TryParse(value, out val);
+            var result = Id<LocalizedText>.TryParse(value, out Id<LocalizedText> val);
             return Tuple.Create(val, !result);
         }
 

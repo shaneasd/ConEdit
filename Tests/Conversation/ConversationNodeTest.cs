@@ -31,29 +31,11 @@ namespace Tests.Conversation
 
             public bool Corrupted { get; }
 
-            public Id<global::Conversation.Parameter> Id
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public Id<global::Conversation.Parameter> Id => throw new NotSupportedException();
 
-            public string Name
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public string Name => throw new NotSupportedException();
 
-            public ParameterType TypeId
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public ParameterType TypeId => throw new NotSupportedException();
 
             public string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
             {
@@ -96,41 +78,17 @@ namespace Tests.Conversation
                 NodeId = nodeId;
             }
 
-            public IReadOnlyList<NodeData.ConfigData> Config
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public IReadOnlyList<NodeData.ConfigData> Config => throw new NotSupportedException();
 
             public IEnumerable<Output> Connectors { get; }
 
-            public string Name
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public string Name => throw new NotSupportedException();
 
-            public string Description
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public string Description => throw new NotSupportedException();
 
             public Id<NodeTemp> NodeId { get; }
 
-            public Id<NodeTypeTemp> NodeTypeId
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public Id<NodeTypeTemp> NodeTypeId => throw new NotSupportedException();
 
             public IEnumerable<IParameter> Parameters { get; }
 
@@ -138,23 +96,17 @@ namespace Tests.Conversation
             {
                 add
                 {
-                    throw new NotImplementedException();
+                    throw new NotSupportedException();
                 }
                 remove
                 {
-                    throw new NotImplementedException();
+                    throw new NotSupportedException();
                 }
             }
 
-            public void ChangeId(Id<NodeTemp> id)
-            {
-                throw new NotImplementedException();
-            }
+            public void ChangeId(Id<NodeTemp> id) => throw new NotSupportedException();
 
-            public SimpleUndoPair RemoveUnknownParameter(UnknownParameter p)
-            {
-                throw new NotImplementedException();
-            }
+            public SimpleUndoPair RemoveUnknownParameter(UnknownParameter p) => throw new NotSupportedException();
         }
 
         [Test]

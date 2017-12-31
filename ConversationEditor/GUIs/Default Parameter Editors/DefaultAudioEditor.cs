@@ -21,15 +21,9 @@ namespace ConversationEditor
             return type == BaseTypeAudio.ParameterType;
         }
 
-        public string Name
-        {
-            get { return "Default Audio Editor"; }
-        }
+        public string Name => "Default Audio Editor";
 
-        public Guid Guid
-        {
-            get { return StaticId; }
-        }
+        public Guid Guid => StaticId;
 
         public IParameterEditor Make(IColorScheme scheme)
         {
@@ -85,10 +79,7 @@ namespace ConversationEditor
                 Generate();
         }
 
-        public Control AsControl
-        {
-            get { return this; }
-        }
+        public Control AsControl => this;
 
         public UpdateParameterData UpdateParameterAction()
         {

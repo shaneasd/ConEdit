@@ -22,21 +22,9 @@ namespace Tests.Conversation.Parameters
                { Guid.Parse("23DB4D33-79D4-4920-A163-32FB515BF5E8"), "name3" },
             };
 
-            public Either<string, Guid> DefaultValue
-            {
-                get
-                {
-                    return m_values.Keys.ElementAt(2);
-                }
-            }
+            public Either<string, Guid> DefaultValue => m_values.Keys.ElementAt(2);
 
-            public IEnumerable<Guid> Options
-            {
-                get
-                {
-                    return m_values.Keys.OfType<Guid>();
-                }
-            }
+            public IEnumerable<Guid> Options => m_values.Keys.OfType<Guid>();
 
             public ParameterType TypeId { get; } = ParameterType.Parse("6C3963EB-591E-4054-8238-225BD503F04E");
 
@@ -55,21 +43,9 @@ namespace Tests.Conversation.Parameters
                { Guid.Parse("447CE89A-43AC-4F36-B53A-86F64C4FEAC5"), "nameB"},
             };
 
-            public Either<string, Guid> DefaultValue
-            {
-                get
-                {
-                    return "unknown value";
-                }
-            }
+            public Either<string, Guid> DefaultValue => "unknown value";
 
-            public IEnumerable<Guid> Options
-            {
-                get
-                {
-                    return m_values.Keys.OfType<Guid>();
-                }
-            }
+            public IEnumerable<Guid> Options => m_values.Keys.OfType<Guid>();
 
             public ParameterType TypeId { get; } = ParameterType.Parse("01B0F81F-6BF6-4CAA-8953-77CE594196DF");
 
@@ -174,8 +150,7 @@ namespace Tests.Conversation.Parameters
             Assert.That(p.Corrupted, Is.False);
             Assert.That(p.DisplayValue((a, b) => ""), Is.EqualTo(enumeration.GetName(value)));
             Assert.That(p.Value, Is.EqualTo(value));
-            Guid guid;
-            Assert.That(Guid.TryParse(p.ValueAsString(), out guid), Is.True);
+            Assert.That(Guid.TryParse(p.ValueAsString(), out Guid guid), Is.True);
             Assert.That(guid, Is.EqualTo(p.Value));
         }
 

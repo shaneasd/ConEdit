@@ -27,14 +27,12 @@ namespace ConversationEditor
 
         protected TypeChoice(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException("type");
-            m_type = type;
+            m_type = type ?? throw new ArgumentNullException("type");
             m_typeName = type.FullName;
             m_assembly = type.Assembly.Location;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFile", Justification ="Can't see an alternative method...")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods", MessageId = "System.Reflection.Assembly.LoadFile", Justification = "Can't see an alternative method...")]
         protected TypeChoice(string assembly, string type)
              : this(Assembly.LoadFile(assembly).GetType(type))
         {

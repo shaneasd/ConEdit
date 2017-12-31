@@ -21,16 +21,16 @@ namespace Conversation
 
     public class DomainData : IDomainData
     {
-        IReadOnlyList<NodeTypeData> IDomainData.NodeTypes { get { return m_nodeTypes; } }
-        IReadOnlyList<DynamicEnumerationData> IDomainData.DynamicEnumerations { get { return m_dynamicEnumerations; } }
-        IReadOnlyList<LocalDynamicEnumerationData> IDomainData.LocalDynamicEnumerations { get { return m_localDynamicEnumerations; } }
-        IReadOnlyList<EnumerationData> IDomainData.Enumerations { get { return m_enumerations; } }
-        IReadOnlyList<DecimalData> IDomainData.Decimals { get { return m_decimals; } }
-        IReadOnlyList<LocalizedStringData> IDomainData.LocalizedStrings { get { return m_localizedStrings; } }
-        IReadOnlyList<IntegerData> IDomainData.Integers { get { return m_integers; } }
-        IReadOnlyList<NodeData> IDomainData.Nodes { get { return m_nodes; } }
-        IReadOnlyList<ConnectorDefinitionData> IDomainData.Connectors { get { return m_connectors; } }
-        IReadOnlyList<ConnectionDefinitionData> IDomainData.Connections { get { return m_connections; } }
+        IReadOnlyList<NodeTypeData> IDomainData.NodeTypes => m_nodeTypes;
+        IReadOnlyList<DynamicEnumerationData> IDomainData.DynamicEnumerations => m_dynamicEnumerations;
+        IReadOnlyList<LocalDynamicEnumerationData> IDomainData.LocalDynamicEnumerations => m_localDynamicEnumerations;
+        IReadOnlyList<EnumerationData> IDomainData.Enumerations => m_enumerations;
+        IReadOnlyList<DecimalData> IDomainData.Decimals => m_decimals;
+        IReadOnlyList<LocalizedStringData> IDomainData.LocalizedStrings => m_localizedStrings;
+        IReadOnlyList<IntegerData> IDomainData.Integers => m_integers;
+        IReadOnlyList<NodeData> IDomainData.Nodes => m_nodes;
+        IReadOnlyList<ConnectorDefinitionData> IDomainData.Connectors => m_connectors;
+        IReadOnlyList<ConnectionDefinitionData> IDomainData.Connections => m_connections;
 
         private readonly List<NodeTypeData> m_nodeTypes = new List<NodeTypeData>();
         private readonly List<DynamicEnumerationData> m_dynamicEnumerations = new List<DynamicEnumerationData>();
@@ -43,15 +43,15 @@ namespace Conversation
         private readonly List<ConnectorDefinitionData> m_connectors = new List<ConnectorDefinitionData>();
         private readonly List<ConnectionDefinitionData> m_connections = new List<ConnectionDefinitionData>();
 
-        public ICollection<NodeTypeData> NodeTypes { get { return m_nodeTypes; } }
-        public ICollection<DynamicEnumerationData> DynamicEnumerations { get { return m_dynamicEnumerations; } }
-        public ICollection<LocalDynamicEnumerationData> LocalDynamicEnumerations { get { return m_localDynamicEnumerations; } }
-        public ICollection<EnumerationData> Enumerations { get { return m_enumerations; } }
-        public ICollection<DecimalData> Decimals { get { return m_decimals; } }
-        public ICollection<LocalizedStringData> LocalizedStrings { get { return m_localizedStrings; } }
-        public ICollection<IntegerData> Integers { get { return m_integers; } }
-        public ICollection<NodeData> Nodes { get { return m_nodes; } }
-        public ICollection<ConnectorDefinitionData> Connectors { get { return m_connectors; } }
-        public ICollection<ConnectionDefinitionData> Connections { get { return m_connections; } }
+        public ICollection<NodeTypeData> NodeTypes => m_nodeTypes;
+        public ICollection<DynamicEnumerationData> DynamicEnumerations => m_dynamicEnumerations;
+        public ICollection<LocalDynamicEnumerationData> LocalDynamicEnumerations => m_localDynamicEnumerations;
+        public ICollection<EnumerationData> Enumerations => m_enumerations;
+        public ICollection<DecimalData> Decimals => m_decimals;
+        public ICollection<LocalizedStringData> LocalizedStrings => m_localizedStrings;
+        public ICollection<IntegerData> Integers => m_integers;
+        public ICollection<NodeData> Nodes => m_nodes;
+        public ICollection<ConnectorDefinitionData> Connectors => m_connectors;
+        public ICollection<ConnectionDefinitionData> Connections => m_connections;
     }
 }

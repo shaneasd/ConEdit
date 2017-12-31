@@ -67,7 +67,7 @@ namespace ConversationEditor
 
         public event Action ValueChanged;
 
-        public IList<TValue> Value { get { return m_data; } }
+        public IList<TValue> Value => m_data;
 
         public IDisposable SuppressCallback()
         {

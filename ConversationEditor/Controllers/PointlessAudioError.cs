@@ -17,9 +17,6 @@ namespace ConversationEditor
             m_file = file;
         }
 
-        public override string Message
-        {
-            get { return "Audio file '" + m_file + "' is not referenced by any conversation in this project"; }
-        }
+        public override string Message => "Audio file '" + m_file + "' is not referenced by any conversation in this project";
     }
 }

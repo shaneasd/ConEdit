@@ -13,9 +13,6 @@ namespace PluginPack
             return new Conversation.Audio("AlternateAudioPath");
         }
 
-        public string Name
-        {
-            get { return "Alternate"; }
-        }
+        public string Name => "Alternate";
     }
 }

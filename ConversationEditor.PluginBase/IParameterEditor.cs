@@ -24,11 +24,11 @@ namespace ConversationEditor
         private readonly AudioGenerationParameters m_audioGenerationParameters;
         private readonly Func<string, IEnumerable<string>> m_autoCompleteSuggestions;
 
-        public IParameter Parameter { get { return m_parameter; } }
-        public ILocalizationEngine Localizer { get { return m_localizer; } }
-        public IAudioParameterEditorCallbacks AudioProvider { get { return m_audioProvider; } }
-        public AudioGenerationParameters AudioGenerationParameters { get { return m_audioGenerationParameters; } }
-        public Func<string, IEnumerable<string>> AutoCompleteSuggestions { get { return m_autoCompleteSuggestions; } }
+        public IParameter Parameter => m_parameter;
+        public ILocalizationEngine Localizer => m_localizer;
+        public IAudioParameterEditorCallbacks AudioProvider => m_audioProvider;
+        public AudioGenerationParameters AudioGenerationParameters => m_audioGenerationParameters;
+        public Func<string, IEnumerable<string>> AutoCompleteSuggestions => m_autoCompleteSuggestions;
     }
 
     public interface IParameterEditor : IDisposable

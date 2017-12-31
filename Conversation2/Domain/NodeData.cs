@@ -53,13 +53,11 @@ namespace Conversation
 
             public ParameterData(string name, Id<Parameter> id, ParameterType type, IReadOnlyList<ConfigData> config, string def)
             {
-                if (config == null)
-                    throw new ArgumentNullException(nameof(config));
+                Config = config ?? throw new ArgumentNullException(nameof(config));
                 Type = type;
                 Name = name;
                 Id = id;
                 Default = def;
-                Config = config;
             }
 
             /// <summary>

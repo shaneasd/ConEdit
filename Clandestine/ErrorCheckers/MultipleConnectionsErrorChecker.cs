@@ -23,10 +23,7 @@ namespace Clandestine
                 : base(node.Only())
             {
             }
-            public override string Message
-            {
-                get { return "Node has an output with multiple children including a non-option node"; }
-            }
+            public override string Message => "Node has an output with multiple children including a non-option node";
         }
 
         public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
@@ -48,9 +45,6 @@ namespace Clandestine
             }
         }
 
-        public override string Name
-        {
-            get { return "Multiple connection"; }
-        }
+        public override string Name => "Multiple connection";
     }
 }

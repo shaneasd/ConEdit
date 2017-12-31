@@ -12,8 +12,8 @@ namespace ConversationEditor
     {
         public string AbsolutePath { get; }
         public string RelativePath { get; }
-        public FileInfo FileInfo { get { return new FileInfo(AbsolutePath); } }
-        public bool Exists { get { return FileInfo.Exists; } }
+        public FileInfo FileInfo => new FileInfo(AbsolutePath);
+        public bool Exists => FileInfo.Exists;
 
         public override bool Equals(object obj)
         {

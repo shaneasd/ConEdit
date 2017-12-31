@@ -323,7 +323,7 @@ namespace ConversationEditor
                 m_localizer.Localizers.Removed += file => m_filePaths.Remove(file.Id);
                 //Files being moved is setup in RefreshCallbacks()
 
-                m_domainUsage = new DomainUsage(this);
+                DomainUsage = new DomainUsage(this);
 
                 m_audioProvider.UpdateUsage();
             }
@@ -433,21 +433,9 @@ namespace ConversationEditor
             ElementDeletedExternally.Execute(element);
         }
 
-        public IEnumerable<ISaveableFileProvider> Elements
-        {
-            get
-            {
-                return ElementsExceptThis.Concat(this.Only());
-            }
-        }
+        public IEnumerable<ISaveableFileProvider> Elements => ElementsExceptThis.Concat(this.Only());
 
-        public IEnumerable<ISaveableFileProvider> ElementsExceptThis
-        {
-            get
-            {
-                return m_conversations.Concat<ISaveableFileProvider>(m_localizer.Localizers).Concat(m_domainFiles).Concat(m_audioProvider.AudioFiles);
-            }
-        }
+        public IEnumerable<ISaveableFileProvider> ElementsExceptThis => m_conversations.Concat<ISaveableFileProvider>(m_localizer.Localizers).Concat(m_domainFiles).Concat(m_audioProvider.AudioFiles);
 
         public static bool CheckFolder(string path, DirectoryInfo origin)
         {
@@ -462,25 +450,22 @@ namespace ConversationEditor
             return Path.IsPathRooted(path) ? path : Path.Combine(Origin.FullName, path);
         }
 
-        public ISaveableFile File { get { return m_file; } }
+        public ISaveableFile File => m_file;
 
         private static DirectoryInfo GetOrigin(FileInfo projectFile)
         {
             return projectFile.Directory;
         }
 
-        public DirectoryInfo Origin { get { return GetOrigin(File.File); } }
+        public DirectoryInfo Origin => GetOrigin(File.File);
 
-        public IProjectElementList<IConversationFile> Conversations { get { return m_conversations; } }
+        public IProjectElementList<IConversationFile> Conversations => m_conversations;
 
-        public IProjectElementList<ILocalizationFile> LocalizationFiles { get { return m_localizer.Localizers; } }
+        public IProjectElementList<ILocalizationFile> LocalizationFiles => m_localizer.Localizers;
 
-        public IProjectElementList<IDomainFile> DomainFiles { get { return m_domainFiles; } }
+        public IProjectElementList<IDomainFile> DomainFiles => m_domainFiles;
 
-        public IProjectElementList<IAudioFile> AudioFiles
-        {
-            get { return m_audioProvider.AudioFiles; }
-        }
+        public IProjectElementList<IAudioFile> AudioFiles => m_audioProvider.AudioFiles;
 
         private static void Write(GetFilePath getFilePath, IEnumerable<Id<FileInProject>> conversations, IEnumerable<Id<FileInProject>> localizations, IEnumerable<Id<FileInProject>> domains, IEnumerable<Id<FileInProject>> audio, IEnumerable<TData.LocalizerSetData> localizationSets, Stream stream, ISerializer<TData> serializer)
         {
@@ -494,43 +479,21 @@ namespace ConversationEditor
             m_file.Change();
         }
 
-        public IDomainDataSource DomainDataSource
-        {
-            get { return m_domainDataSource; }
-        }
+        public IDomainDataSource DomainDataSource => m_domainDataSource;
 
-        public IDataSource ConversationDataSource
-        {
-            get { return m_conversationDataSource; }
-        }
+        public IDataSource ConversationDataSource => m_conversationDataSource;
 
-        public bool CanModifyConversations
-        {
-            get { return DomainFiles.All(f => f.File.Writable == null || !f.File.Writable.Changed); }
-        }
+        public bool CanModifyConversations => DomainFiles.All(f => f.File.Writable == null || !f.File.Writable.Changed);
 
-        public bool CanModifyDomain
-        {
-            get { return Conversations.All(f => f.File.Writable == null || !f.File.Writable.Changed); }
-        }
+        public bool CanModifyDomain => Conversations.All(f => f.File.Writable == null || !f.File.Writable.Changed);
 
         private readonly IAudioLibrary m_audioProvider;
-        public IAudioLibrary AudioProvider
-        {
-            get { return m_audioProvider; }
-        }
+        public IAudioLibrary AudioProvider => m_audioProvider;
 
         LocalizationEngine m_localizer;
-        public LocalizationEngine Localizer
-        {
-            get { return m_localizer; }
-        }
+        public LocalizationEngine Localizer => m_localizer;
 
-        private IDomainUsage<ConversationNode, TransitionNoduleUIInfo> m_domainUsage;
-        public IDomainUsage<ConversationNode, TransitionNoduleUIInfo> DomainUsage
-        {
-            get { return m_domainUsage; }
-        }
+        public IDomainUsage<ConversationNode, TransitionNoduleUIInfo> DomainUsage { get; }
 
         public event Action FileModifiedExternally
         {
@@ -564,15 +527,9 @@ namespace ConversationEditor
             }
         }
 
-        public IEnumerable<IDomainFile> DomainFilesCollection
-        {
-            get { return DomainFiles; }
-        }
+        public IEnumerable<IDomainFile> DomainFilesCollection => DomainFiles;
 
-        public IEnumerable<IConversationFile> ConversationFilesCollection
-        {
-            get { return Conversations; }
-        }
+        public IEnumerable<IConversationFile> ConversationFilesCollection => Conversations;
 
         public IEnumerable<string> AutoCompleteSuggestions(IParameter parameter, string start, IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo> document)
         {

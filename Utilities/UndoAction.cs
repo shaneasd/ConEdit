@@ -27,8 +27,8 @@ namespace Utilities
         {
             public override void Undo() { }
             public override void Redo() { }
-            public override string Description { get { return ""; } }
-            public override string LogDescription { get { return "DummyUndoAction"; } }
+            public override string Description => "";
+            public override string LogDescription => "DummyUndoAction";
         }
     }
 
@@ -73,9 +73,9 @@ namespace Utilities
             m_redo.Execute();
         }
 
-        public override string Description { get { return m_description; } }
-        
-        public override string LogDescription { get { return m_logDescription; } }
+        public override string Description => m_description;
+
+        public override string LogDescription => m_logDescription;
     }
 
     //public class MoveAction : UndoAction

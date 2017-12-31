@@ -16,10 +16,7 @@ namespace ConversationEditor.ErrorCheckers
             {
             }
 
-            public override string Message
-            {
-                get { return "Rule breaking connection"; }
-            }
+            public override string Message => "Rule breaking connection";
         }
 
         public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
@@ -40,9 +37,6 @@ namespace ConversationEditor.ErrorCheckers
             return results.Select(r => new InvalidConnectionError(r));
         }
 
-        public override string Name
-        {
-            get { return "Invalid Connections"; }
-        }
+        public override string Name => "Invalid Connections";
     }
 }

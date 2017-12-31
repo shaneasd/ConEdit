@@ -27,21 +27,9 @@ namespace PluginPack
 
             public IConversationEditorControlData<ConversationNode<INodeGui>, TransitionNoduleUIInfo> File { get; }
 
-            public string Message
-            {
-                get
-                {
-                    return m_node.Data.Name + ":  " + string.Join(", ", m_node.Data.Parameters.Select(p => p.Name + ": " + p.DisplayValue(m_localize)).ToArray());
-                }
-            }
+            public string Message => m_node.Data.Name + ":  " + string.Join(", ", m_node.Data.Parameters.Select(p => p.Name + ": " + p.DisplayValue(m_localize)).ToArray());
 
-            public IEnumerable<ConversationNode<INodeGui>> Nodes
-            {
-                get
-                {
-                    return m_node.Only();
-                }
-            }
+            public IEnumerable<ConversationNode<INodeGui>> Nodes => m_node.Only();
 
             public IEnumerator<Tuple<ConversationNode<INodeGui>, IConversationEditorControlData<ConversationNode<INodeGui>, TransitionNoduleUIInfo>>> MakeEnumerator()
             {

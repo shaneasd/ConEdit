@@ -68,13 +68,7 @@ namespace Conversation
             return string.Join("+", value.Select(v => v.ToString()));
         }
 
-        public IEnumerable<Guid> Options
-        {
-            get
-            {
-                return m_enumeration.Options;
-            }
-        }
+        public IEnumerable<Guid> Options => m_enumeration.Options;
 
         public string GetName(Guid value)
         {

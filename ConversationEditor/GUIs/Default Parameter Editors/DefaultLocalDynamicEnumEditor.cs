@@ -22,15 +22,9 @@ namespace ConversationEditor
             return queries.IsDynamicEnum(type);
         }
 
-        public string Name
-        {
-            get { return "Default Local Dynamic Enumeration Editor"; }
-        }
+        public string Name => "Default Local Dynamic Enumeration Editor";
 
-        public Guid Guid
-        {
-            get { return StaticId; }
-        }
+        public Guid Guid => StaticId;
 
         public IParameterEditor Make(IColorScheme scheme)
         {

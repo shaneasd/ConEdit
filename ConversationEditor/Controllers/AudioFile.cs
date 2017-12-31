@@ -24,10 +24,7 @@ namespace ConversationEditor
             m_audio = new Audio(path.RelativePath);
         }
 
-        public ISaveableFile File
-        {
-            get { return m_file; }
-        }
+        public ISaveableFile File => m_file;
 
         public bool CanRemove(Func<bool> prompt)
         {
@@ -96,10 +93,7 @@ namespace ConversationEditor
             //Do nothing
         }
 
-        ISaveableFile ISaveableFileProvider.File
-        {
-            get { return m_file; }
-        }
+        ISaveableFile ISaveableFileProvider.File => m_file;
 
         public void Play()
         {

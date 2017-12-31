@@ -12,18 +12,13 @@ namespace PluginPack
 {
     public class PartialRendererFactory : NodeUI.IFactory
     {
-        private static readonly PartialRendererFactory s_instance = new PartialRendererFactory();
-        public static PartialRendererFactory Instance { get { return s_instance; } }
-
+        public static PartialRendererFactory Instance { get; } = new PartialRendererFactory();
         public bool WillRender(Id<NodeTypeTemp> nodeType)
         {
             return true;
         }
 
-        public string DisplayName
-        {
-            get { return "Partial Renderer"; }
-        }
+        public string DisplayName => "Partial Renderer";
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "IL might look different to the code but there's nothing you can do to fix the warning")]
         public INodeGui GetRenderer(ConversationNode<INodeGui> n, PointF p, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
@@ -31,10 +26,7 @@ namespace PluginPack
             return new PartialRenderer(n, p, localizer, datasource);
         }
 
-        public Guid Guid
-        {
-            get { return Guid.Parse("a24b2f32-571d-4e3b-b091-2712d412ac5e"); }
-        }
+        public Guid Guid => Guid.Parse("a24b2f32-571d-4e3b-b091-2712d412ac5e");
     }
 
     public class PartialRenderer : EditableUI

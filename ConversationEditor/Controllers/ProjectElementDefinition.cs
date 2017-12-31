@@ -55,15 +55,9 @@ namespace ConversationEditor
                 s_missingIcon = new Bitmap(stream);
         }
 
-        public override Bitmap Icon
-        {
-            get { return s_icon; }
-        }
+        public override Bitmap Icon => s_icon;
 
-        public override Bitmap MissingIcon
-        {
-            get { return s_missingIcon; }
-        }
+        public override Bitmap MissingIcon => s_missingIcon;
 
         public override ProjectExplorer.Item MakeMissingElement(Func<RectangleF> area, IConversationFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
         {
@@ -103,15 +97,9 @@ namespace ConversationEditor
                 s_missingIcon = new Bitmap(stream);
         }
 
-        public override Bitmap Icon
-        {
-            get { return s_icon; }
-        }
+        public override Bitmap Icon => s_icon;
 
-        public override Bitmap MissingIcon
-        {
-            get { return s_missingIcon; }
-        }
+        public override Bitmap MissingIcon => s_missingIcon;
 
         public override ProjectExplorer.Item MakeMissingElement(Func<RectangleF> area, ILocalizationFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
         {
@@ -151,15 +139,9 @@ namespace ConversationEditor
                 s_missingIcon = new Bitmap(stream);
         }
 
-        public override Bitmap Icon
-        {
-            get { return s_icon; }
-        }
+        public override Bitmap Icon => s_icon;
 
-        public override Bitmap MissingIcon
-        {
-            get { return s_missingIcon; }
-        }
+        public override Bitmap MissingIcon => s_missingIcon;
 
         public override ProjectExplorer.Item MakeMissingElement(Func<RectangleF> area, IDomainFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
         {
@@ -199,15 +181,9 @@ namespace ConversationEditor
                 s_missingIcon = new Bitmap(stream);
         }
 
-        public override Bitmap Icon
-        {
-            get { return s_icon; }
-        }
+        public override Bitmap Icon => s_icon;
 
-        public override Bitmap MissingIcon
-        {
-            get { return s_missingIcon; }
-        }
+        public override Bitmap MissingIcon => s_missingIcon;
 
         public override ProjectExplorer.Item MakeMissingElement(Func<RectangleF> area, IAudioFile item, IProject project, ProjectExplorer.ContainerItem parent, Func<Matrix> toControlTransform, Func<ProjectExplorer.FileSystemObject, string, bool> rename)
         {

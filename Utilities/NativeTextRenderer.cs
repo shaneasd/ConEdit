@@ -169,8 +169,7 @@ namespace Arthur
         {
             SetFont(font);
 
-            Size size;
-            if (!NativeMethods.GetTextExtentPoint32(_hdc, str, str.Length, out size))
+            if (!NativeMethods.GetTextExtentPoint32(_hdc, str, str.Length, out Size size))
                 throw new InvalidOperationException("NativeMethods.GetTextExtentPoint32 failed in NativeTextRenderer.MeasureString");
             return size;
         }
@@ -236,8 +235,7 @@ namespace Arthur
             info.biPlanes = 1;
             info.biBitCount = 32;
             info.biCompression = 0; // BI_RGB
-            IntPtr ppvBits;
-            IntPtr dib = NativeMethods.CreateDIBSection(_hdc, ref info, 0, out ppvBits, IntPtr.Zero, 0);
+            IntPtr dib = NativeMethods.CreateDIBSection(_hdc, ref info, 0, out IntPtr ppvBits, IntPtr.Zero, 0);
             NativeMethods.SelectObject(memoryHdc, dib);
 
             try
@@ -295,11 +293,9 @@ namespace Arthur
         private static IntPtr GetCachedHFont(Font font)
         {
             IntPtr hfont = IntPtr.Zero;
-            Dictionary<float, Dictionary<FontStyle, IntPtr>> dic1;
-            if (_fontsCache.TryGetValue(font.Name, out dic1))
+            if (_fontsCache.TryGetValue(font.Name, out Dictionary<float, Dictionary<FontStyle, IntPtr>> dic1))
             {
-                Dictionary<FontStyle, IntPtr> dic2;
-                if (dic1.TryGetValue(font.Size, out dic2))
+                if (dic1.TryGetValue(font.Size, out Dictionary<FontStyle, IntPtr> dic2))
                 {
                     dic2.TryGetValue(font.Style, out hfont);
                 }

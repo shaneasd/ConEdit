@@ -120,15 +120,9 @@ namespace Utilities
             m_base.CopyTo(array, arrayIndex);
         }
 
-        public int Count
-        {
-            get { return m_base.Count; }
-        }
+        public int Count => m_base.Count;
 
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly => false;
 
         public IEnumerator<T> GetEnumerator()
         {

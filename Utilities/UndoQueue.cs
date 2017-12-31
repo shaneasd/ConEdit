@@ -43,20 +43,11 @@ namespace Utilities
             throw new NotImplementedException();
         }
 
-        public bool HasUndo
-        {
-            get { return false; }
-        }
+        public bool HasUndo => false;
 
-        public bool HasRedo
-        {
-            get { return false; }
-        }
+        public bool HasRedo => false;
 
-        public IEnumerable<IUndoQueueElement> Elements
-        {
-            get { return Enumerable.Empty<IUndoQueueElement>(); }
-        }
+        public IEnumerable<IUndoQueueElement> Elements => Enumerable.Empty<IUndoQueueElement>();
 
         public event Action Changed { add { } remove { } }
     }
@@ -89,10 +80,7 @@ namespace Utilities
                 Action = action;
             }
 
-            public string Description
-            {
-                get { return Action.Description; }
-            }
+            public string Description => Action.Description;
 
             public void UndoUpToAndIncluding()
             {
@@ -100,13 +88,7 @@ namespace Utilities
             }
         }
 
-        public IEnumerable<IUndoQueueElement> Elements
-        {
-            get
-            {
-                return m_undoActions.Select(a => new Element(this, a));
-            }
-        }
+        public IEnumerable<IUndoQueueElement> Elements => m_undoActions.Select(a => new Element(this, a));
 
         public event Action Changed;
 
@@ -202,7 +184,7 @@ namespace Utilities
             }
         }
 
-        public bool HasUndo { get { return m_undoActions.Any(); } }
-        public bool HasRedo { get { return m_redoActions.Any(); } }
+        public bool HasUndo => m_undoActions.Any();
+        public bool HasRedo => m_redoActions.Any();
     }
 }

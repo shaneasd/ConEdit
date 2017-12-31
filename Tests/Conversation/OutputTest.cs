@@ -18,66 +18,30 @@ namespace Tests.Conversation
                 NodeId = id;
             }
 
-            public IReadOnlyList<NodeData.ConfigData> Config
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public IReadOnlyList<NodeData.ConfigData> Config => throw new NotSupportedException();
 
-            public IEnumerable<Output> Connectors
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public IEnumerable<Output> Connectors => throw new NotSupportedException();
 
-            public string Name
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public string Name => throw new NotSupportedException();
 
-            public string Description
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public string Description => throw new NotSupportedException();
 
             public Id<NodeTemp> NodeId { get; }
 
-            public Id<NodeTypeTemp> NodeTypeId
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public Id<NodeTypeTemp> NodeTypeId => throw new NotSupportedException();
 
-            public IEnumerable<IParameter> Parameters
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public IEnumerable<IParameter> Parameters => throw new NotSupportedException();
 
             public event Action Linked { add { } remove { } }
 
             public void ChangeId(Id<NodeTemp> id)
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
 
             public SimpleUndoPair RemoveUnknownParameter(UnknownParameter p)
             {
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
         }
 

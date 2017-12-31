@@ -160,6 +160,6 @@ namespace Conversation.Serialization
             m_data.Remove(id);
         }
 
-        public IEnumerable<KeyValuePair<Id<LocalizedText>, LocalizationElement>> AllLocalizations { get { return m_data; } }
+        public IEnumerable<KeyValuePair<Id<LocalizedText>, LocalizationElement>> AllLocalizations => m_data;
     }
 }

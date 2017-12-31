@@ -33,13 +33,7 @@ namespace ConversationEditor
             }
         }
 
-        public string Text
-        {
-            get
-            {
-                return Node.Data.Parameters.Aggregate(Node.Data.Name, (a, p) => a + "\r\n  -  " + p.Name, s => s);
-            }
-        }
+        public string Text => Node.Data.Parameters.Aggregate(Node.Data.Name, (a, p) => a + "\r\n  -  " + p.Name, s => s);
 
         protected override SizeF CalculateArea(System.Drawing.Graphics g)
         {

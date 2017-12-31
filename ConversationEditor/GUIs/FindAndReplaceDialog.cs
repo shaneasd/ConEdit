@@ -118,19 +118,22 @@ namespace ConversationEditor
                 File = file;
                 Node = node;
                 Parameter = parameter;
-                m_done = false;
+                Done = false;
             }
 
             Action m_undo;
             Action m_redo;
-            public readonly IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo> File;
-            public readonly ConversationNode Node;
-            public readonly IParameter Parameter;
-            bool m_done;
-            public bool Done { get { return m_done; } }
+            public IConversationEditorControlData<ConversationNode, TransitionNoduleUIInfo> File { get; }
+            public ConversationNode Node { get; }
+            public IParameter Parameter { get; }
+            public bool Done
+            {
+                get;
+                private set;
+            }
             public void Execute()
             {
-                m_done = true;
+                Done = true;
                 File.UndoableFile.Change(new GenericUndoAction(m_undo, m_redo, "Replaced text"));
             }
         }
@@ -157,8 +160,7 @@ namespace ConversationEditor
                         foreach (var parameter in node.Data.Parameters.OfType<IStringParameter>())
                         {
                             string original = parameter.Value;
-                            string output;
-                            if (Replace(original, find, txtReplace.Text, out output))
+                            if (Replace(original, find, txtReplace.Text, out string output))
                             {
                                 //Treat replace actions as true actions even if they don't actually alter the value of the parameter
                                 yield return new ReplaceAction(parameter.SetValueAction(output) ?? new SimpleUndoPair() { Redo = () => { }, Undo = () => { } }, file, node, parameter);
@@ -173,8 +175,7 @@ namespace ConversationEditor
                             var original = m_localizer.Localize(Id<LocalizedStringType>.FromGuid(parameter.TypeId.Guid), parameter.Value);
                             if (original != null)
                             {
-                                string output;
-                                if (Replace(original, find, txtReplace.Text, out output))
+                                if (Replace(original, find, txtReplace.Text, out string output))
                                 {
                                     SimpleUndoPair redoUndo = m_localizer.SetLocalizationAction(Id<LocalizedStringType>.ConvertFrom(parameter.TypeId), parameter.Value, output);
                                     Action redo = () => { redoUndo.Redo(); UpdateDisplay.Execute(); };
@@ -190,10 +191,9 @@ namespace ConversationEditor
                         foreach (var parameter in node.Data.Parameters.OfType<IDynamicEnumParameter>().Where(x => !x.Corrupted))
                         {
                             string original = parameter.Value;
-                            string output;
                             if (original != null) //DynamicEnumParameters shouldn't have a value of null typically but DomainDomain.EnumDefaultParameter can
                             {
-                                if (Replace(original, find, txtReplace.Text, out output))
+                                if (Replace(original, find, txtReplace.Text, out string output))
                                 {
                                     //Treat replace actions as true actions even if they don't actually alter the value of the parameter
                                     yield return new ReplaceAction(parameter.SetValueAction(output) ?? new SimpleUndoPair() { Redo = () => { }, Undo = () => { } }, file, node, parameter);

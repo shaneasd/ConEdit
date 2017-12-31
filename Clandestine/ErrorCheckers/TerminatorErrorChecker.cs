@@ -17,10 +17,7 @@ namespace Clandestine
             {
             }
 
-            public override string Message
-            {
-                get { return "Conversation node not connected via any path to a terminator"; }
-            }
+            public override string Message => "Conversation node not connected via any path to a terminator";
         }
 
         class StartError : ConversationError<T>
@@ -30,10 +27,7 @@ namespace Clandestine
             {
             }
 
-            public override string Message
-            {
-                get { return "Conversation node not connected via any path to a valid start"; }
-            }
+            public override string Message => "Conversation node not connected via any path to a valid start";
         }
 
         private IEnumerable<ConversationError<T>> CheckStart(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
@@ -103,9 +97,6 @@ namespace Clandestine
             return start.Concat(end);
         }
 
-        public override string Name
-        {
-            get { return "Node not in valid path"; }
-        }
+        public override string Name => "Node not in valid path";
     }
 }

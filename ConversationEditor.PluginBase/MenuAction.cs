@@ -9,22 +9,17 @@ namespace ConversationEditor
 {
     public class MenuAction<TNode> where TNode : IRenderable<IGui>, IConversationNode, IConfigurable
     {
-        private readonly string m_name;
-        public string Name { get { return m_name; } }
+        public string Name { get; }
 
-        private readonly Func<TNode, Point, Action> m_nodeAction;
-        public Func<TNode, Point, Action> NodeAction { get { return m_nodeAction; } }
+        public Func<TNode, Point, Action> NodeAction { get; }
 
-        private readonly Action<Output, Point> m_transitionAction;
-        public Action<Output, Point> TransitionAction { get { return m_transitionAction; } }
+        public Action<Output, Point> TransitionAction { get; }
 
-        private readonly Action<NodeGroup, Point> m_groupAction;
-        public Action<NodeGroup, Point> GroupAction { get { return m_groupAction; } }
+        public Action<NodeGroup, Point> GroupAction { get; }
 
-        private readonly Action<Point> m_emptySpaceAction;
-        public Action<Point> EmptySpaceAction { get { return m_emptySpaceAction; } }
+        public Action<Point> EmptySpaceAction { get; }
 
-        public IEnumerable<MenuAction<TNode>> Children { get { return m_children; } }
+        public IEnumerable<MenuAction<TNode>> Children => m_children;
         private List<MenuAction<TNode>> m_children = new List<MenuAction<TNode>>();
 
         public MenuAction<TNode> Add(MenuAction<TNode> child)
@@ -36,11 +31,11 @@ namespace ConversationEditor
         public MenuAction(string name, Func<TNode, Point, Action> nodeAction, Action<Output, Point> transitionAction,
             Action<NodeGroup, Point> groupAction, Action<Point> emptySpaceAction)
         {
-            m_name = name;
-            m_nodeAction = nodeAction;
-            m_transitionAction = transitionAction;
-            m_groupAction = groupAction;
-            m_emptySpaceAction = emptySpaceAction;
+            Name = name;
+            NodeAction = nodeAction;
+            TransitionAction = transitionAction;
+            GroupAction = groupAction;
+            EmptySpaceAction = emptySpaceAction;
         }
     }
 

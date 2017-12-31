@@ -10,15 +10,9 @@ namespace ConversationEditor
     {
         public static ProjectDomain Instance = new ProjectDomain();
 
-        public IEnumerable<ParameterType> ParameterTypes
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public IEnumerable<ParameterType> ParameterTypes => throw new NotImplementedException();
 
-        public INodeType Nodes
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public INodeType Nodes => throw new NotImplementedException();
 
         public INodeDataGenerator GetNode(Id<NodeTypeTemp> guid)
         {

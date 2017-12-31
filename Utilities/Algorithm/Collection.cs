@@ -48,15 +48,9 @@ namespace Utilities
                 array[arrayIndex] = m_element;
             }
 
-            public int Count
-            {
-                get { return 1; }
-            }
+            public int Count => 1;
 
-            public bool IsReadOnly
-            {
-                get { return true; }
-            }
+            public bool IsReadOnly => true;
 
             public bool Remove(T item)
             {

@@ -16,10 +16,7 @@ namespace Clandestine.ErrorCheckers
                 : base(node.Only())
             {
             }
-            public override string Message
-            {
-                get { return "Node has a controller connection that is connected to a non cinematic connector"; }
-            }
+            public override string Message => "Node has a controller connection that is connected to a non cinematic connector";
         }
 
         private class CinematicControllerConnectionError2 : ConversationError<T>
@@ -28,10 +25,7 @@ namespace Clandestine.ErrorCheckers
                 : base(node.Only())
             {
             }
-            public override string Message
-            {
-                get { return "Node has a controller connection that is not connected to anything"; }
-            }
+            public override string Message => "Node has a controller connection that is not connected to anything";
         }
 
         Id<TConnectorDefinition> CINEMATIC = Id<TConnectorDefinition>.Parse("430e6b72-0caa-476e-8da6-8bd1f127127a");
@@ -56,9 +50,6 @@ namespace Clandestine.ErrorCheckers
             }
         }
 
-        public override string Name
-        {
-            get { return "Cinematic Connections"; }
-        }
+        public override string Name => "Cinematic Connections";
     }
 }

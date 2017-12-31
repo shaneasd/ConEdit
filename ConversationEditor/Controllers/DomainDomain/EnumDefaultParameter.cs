@@ -11,13 +11,13 @@ namespace ConversationEditor
     public class EnumDefaultParameter : Parameter, IDynamicEnumParameter
     {
         private bool m_corrupted;
-        public override bool Corrupted { get { return m_corrupted; } }
+        public override bool Corrupted => m_corrupted;
 
         public new static ParameterType TypeId { get; } = ParameterType.Parse("82e83436-f1b0-4f71-8882-51c171d14ff3");
 
         Func<Dictionary<ParameterType, IEnumerable<EnumerationData.Element>>> m_enumOptions;
 
-        private Dictionary<ParameterType, IEnumerable<EnumerationData.Element>> EnumOptions { get { return m_enumOptions(); } }
+        private Dictionary<ParameterType, IEnumerable<EnumerationData.Element>> EnumOptions => m_enumOptions();
 
         Func<ParameterType> m_currentEnumType;
 
@@ -128,13 +128,7 @@ namespace ConversationEditor
             }
         }
 
-        public bool Local
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool Local => false;
 
         public void MergeInto(DynamicEnumParameter.Source newSource)
         {

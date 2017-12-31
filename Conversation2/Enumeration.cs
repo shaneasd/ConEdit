@@ -68,7 +68,7 @@ namespace Conversation
             DefaultValue = def;
         }
 
-        public IEnumerable<Guid> Options { get { return OptionsMap.Keys; } }
+        public IEnumerable<Guid> Options => OptionsMap.Keys;
         public Either<string, Guid> DefaultValue { get; protected set; }
 
         public ParameterType TypeId { get; }
@@ -89,7 +89,7 @@ namespace Conversation
     {
         private Dictionary<Guid, string> m_options;
 
-        protected override Dictionary<Guid, string> OptionsMap { get { return m_options; } }
+        protected override Dictionary<Guid, string> OptionsMap => m_options;
 
         public MutableEnumeration(IEnumerable<Tuple<Guid, string>> options, ParameterType typeId, Either<string, Guid> def)
             : base(typeId, def)

@@ -10,26 +10,22 @@ namespace Utilities
     {
         public static void Execute(this Action action)
         {
-            if (action != null)
-                action();
+            action?.Invoke();
         }
 
         public static void Execute<T>(this Action<T> action, T t)
         {
-            if (action != null)
-                action(t);
+            action?.Invoke(t);
         }
 
         public static void Execute<T1, T2>(this Action<T1, T2> action, T1 t1, T2 t2)
         {
-            if (action != null)
-                action(t1, t2);
+            action?.Invoke(t1, t2);
         }
 
         public static void Execute<T1, T2, T3>(this Action<T1, T2, T3> action, T1 t1, T2 t2, T3 t3)
         {
-            if (action != null)
-                action(t1, t2, t3);
+            action?.Invoke(t1, t2, t3);
         }
 
         public static int GetDecimalPlaces(decimal value)

@@ -24,21 +24,9 @@ namespace ConversationEditor
                 m_target = folder;
             }
 
-            public string Name
-            {
-                get
-                {
-                    return m_target.Transformed(a => a.Name, b => b.File.Name);
-                }
-            }
+            public string Name => m_target.Transformed(a => a.Name, b => b.File.Name);
 
-            public string FullName
-            {
-                get
-                {
-                    return m_target.Transformed(a => a.FullName, b => b.File.FullName);
-                }
-            }
+            public string FullName => m_target.Transformed(a => a.FullName, b => b.File.FullName);
 
             public event Action SaveStateChanged
             {
@@ -46,29 +34,11 @@ namespace ConversationEditor
                 remove { m_target.Do(a => { }, b => b.SaveStateChanged -= value); }
             }
 
-            public bool Exists
-            {
-                get
-                {
-                    return m_target.Transformed(a => true, b => b.Exists);
-                }
-            }
+            public bool Exists => m_target.Transformed(a => true, b => b.Exists);
 
-            public bool Changed
-            {
-                get
-                {
-                    return m_target.Transformed(a => false, b => b.Writable == null || b.Writable.Changed);
-                }
-            }
+            public bool Changed => m_target.Transformed(a => false, b => b.Writable == null || b.Writable.Changed);
 
-            public DirectoryInfo Parent
-            {
-                get
-                {
-                    return m_target.Transformed(a => a.Parent, b => b.File.Directory);
-                }
-            }
+            public DirectoryInfo Parent => m_target.Transformed(a => a.Parent, b => b.File.Directory);
 
             public bool Move(string newPath, Func<bool> replace)
             {
@@ -102,13 +72,7 @@ namespace ConversationEditor
                 m_target.Do(x => m_target = x, x => x.GotMoved(new FileInfo(newPath)));
             }
 
-            public bool Writable
-            {
-                get
-                {
-                    return m_target.Transformed(d => true, f => !f.File.Exists || (f.File.Attributes & FileAttributes.ReadOnly) != FileAttributes.ReadOnly);
-                }
-            }
+            public bool Writable => m_target.Transformed(d => true, f => !f.File.Exists || (f.File.Attributes & FileAttributes.ReadOnly) != FileAttributes.ReadOnly);
         }
     }
 }

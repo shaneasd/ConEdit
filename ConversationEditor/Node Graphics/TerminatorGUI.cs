@@ -20,10 +20,7 @@ namespace ConversationEditor
             return nodeType == SpecialNodes.Terminator;
         }
 
-        public string DisplayName
-        {
-            get { return "Terminator Node Renderer"; }
-        }
+        public string DisplayName => "Terminator Node Renderer";
 
         public INodeGui GetRenderer(ConversationNode<INodeGui> n, PointF p, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
@@ -31,10 +28,7 @@ namespace ConversationEditor
         }
 
         Guid m_guid = Guid.Parse("aacda2b5-bd9e-4fd2-ad0c-5f6a4d764702");
-        public Guid Guid
-        {
-            get { return m_guid; }
-        }
+        public Guid Guid => m_guid;
     }
 
     internal class TerminatorGui : NodeUI

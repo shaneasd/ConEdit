@@ -59,13 +59,8 @@ namespace ConversationEditor
 
     public static class SerializationUtils
     {
-        public static ISerializer<XmlGraphData<NodeUIData, ConversationEditorData>> DomainSerializer
-        {
-            get
-            {
-                return new XmlDomain<NodeUIData, ConversationEditorData>.Serializer(NodeUIDataSerializerXml.Instance, new ConversationEditorData.Serializer());
-            }
-        }
+        public static ISerializer<XmlGraphData<NodeUIData, ConversationEditorData>> DomainSerializer 
+            => new XmlDomain<NodeUIData, ConversationEditorData>.Serializer(NodeUIDataSerializerXml.Instance, new ConversationEditorData.Serializer());
 
         public static XmlGraphData<NodeUIData, ConversationEditorData> MakeDomainData(IEnumerable<ConversationNode<INodeGui>> nodes, ConversationEditorData data)
         {
@@ -79,13 +74,8 @@ namespace ConversationEditor
         }
 
         #region Conversation
-        public static ISerializer<XmlGraphData<NodeUIData, ConversationEditorData>> ConversationSerializer
-        {
-            get
-            {
-                return new XmlConversation<NodeUIData, ConversationEditorData>.Serializer(NodeUIDataSerializerXml.Instance, new ConversationEditorData.Serializer());
-            }
-        }
+        public static ISerializer<XmlGraphData<NodeUIData, ConversationEditorData>> ConversationSerializer 
+            => new XmlConversation<NodeUIData, ConversationEditorData>.Serializer(NodeUIDataSerializerXml.Instance, new ConversationEditorData.Serializer());
 
         public static ISerializerDeserializer<XmlGraphData<NodeUIData, ConversationEditorData>> ConversationSerializerDeserializer(IDataSource d)
         {

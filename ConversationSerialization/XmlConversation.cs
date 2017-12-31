@@ -15,22 +15,21 @@ namespace Conversation.Serialization
 {
     public class LoadError
     {
-        private string m_message;
-        public string Message { get { return m_message; } }
+        public string Message { get; }
         public LoadError()
         {
-            m_message = ""; //Will be assigned later presumably. Not critical.
+            Message = ""; //Will be assigned later presumably. Not critical.
         }
         public LoadError(string message)
         {
-            m_message = message;
+            Message = message;
         }
     }
 
     public class GraphAndUI<TUIRawData>
     {
-        public IConversationNodeData GraphData { get { return m_graphData; } }
-        public TUIRawData UIData { get { return m_uiData; } }
+        public IConversationNodeData GraphData => m_graphData;
+        public TUIRawData UIData => m_uiData;
 
         private readonly IConversationNodeData m_graphData;
         private readonly TUIRawData m_uiData;
@@ -67,10 +66,10 @@ namespace Conversation.Serialization
         private readonly ReadOnlyCollection<LoadError> m_errors;
         private object m_documentId;
 
-        public IEnumerable<GraphAndUI<TUIRawData>> Nodes { get { return m_nodes; } }
-        public TEditorData EditorData { get { return m_editorData; } }
-        public ReadOnlyCollection<LoadError> Errors { get { return m_errors; } }
-        public object DocumentId { get { return m_documentId; } }
+        public IEnumerable<GraphAndUI<TUIRawData>> Nodes => m_nodes;
+        public TEditorData EditorData => m_editorData;
+        public ReadOnlyCollection<LoadError> Errors => m_errors;
+        public object DocumentId => m_documentId;
     }
 
     public static class XmlConversation<TUIRawData, TEditorData>
@@ -126,12 +125,12 @@ namespace Conversation.Serialization
 
                 //TODO: Should possibly treat this as a missing file rather than crashing the editor
                 string encounteredVersion = root.Attribute("xmlversion")?.Value ?? "";
-                if ( !XmlVersionRead.Contains(encounteredVersion))
+                if (!XmlVersionRead.Contains(encounteredVersion))
                     throw new DeserializerVersionMismatchException(string.Join(", ", XmlVersionRead), encounteredVersion);
 
                 var nodeElements = root.Elements("Node");
                 var filteredNodes = m_filter != null ? nodeElements.Where(n => m_filter(ReadType(n))) : nodeElements;
-                IEnumerable <Either<GraphAndUI<TUIRawData>, LoadError>> editables = filteredNodes.Select(n => ReadEditable(n, m_datasource, documentID)).Evaluate();
+                IEnumerable<Either<GraphAndUI<TUIRawData>, LoadError>> editables = filteredNodes.Select(n => ReadEditable(n, m_datasource, documentID)).Evaluate();
                 var allnodes = new Dictionary<Id<NodeTemp>, GraphAndUI<TUIRawData>>();
                 var errors = new List<LoadError>();
 

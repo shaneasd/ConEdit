@@ -16,10 +16,7 @@ namespace Clandestine
             {
             }
 
-            public override string Message
-            {
-                get { return "Conversation contains TODO node"; }
-            }
+            public override string Message => "Conversation contains TODO node";
         }
 
         public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
@@ -27,9 +24,6 @@ namespace Clandestine
             return nodes.Where(e => e.Data.NodeTypeId == SpecialNodes.ToDo).Select(node => new TodoError(node));
         }
 
-        public override string Name
-        {
-            get { return "TODO nodes"; }
-        }
+        public override string Name => "TODO nodes";
     }
 }

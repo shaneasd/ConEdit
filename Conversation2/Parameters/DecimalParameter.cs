@@ -33,8 +33,7 @@ namespace Conversation
 
         private static Tuple<decimal, bool> StaticDeserialize(Definition definition, string value)
         {
-            decimal val;
-            if (!decimal.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out val))
+            if (!decimal.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal val))
                 return Tuple.Create(0.0m, true);
             else
                 return Tuple.Create(val, !StaticIsValid(definition, val));
@@ -61,15 +60,9 @@ namespace Conversation
             return Value.ToString(CultureInfo.InvariantCulture);
         }
 
-        public decimal Max
-        {
-            get { return m_definition.Max ?? decimal.MaxValue; }
-        }
+        public decimal Max => m_definition.Max ?? decimal.MaxValue;
 
-        public decimal Min
-        {
-            get { return m_definition.Min ?? decimal.MinValue; }
-        }
+        public decimal Min => m_definition.Min ?? decimal.MinValue;
 
         public override string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {

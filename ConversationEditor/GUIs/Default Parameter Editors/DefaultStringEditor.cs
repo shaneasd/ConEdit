@@ -20,15 +20,9 @@ namespace ConversationEditor
             return type == BaseTypeString.ParameterType;
         }
 
-        public string Name
-        {
-            get { return "Default String Editor"; }
-        }
+        public string Name => "Default String Editor";
 
-        public Guid Guid
-        {
-            get { return StaticId; }
-        }
+        public Guid Guid => StaticId;
 
         public IParameterEditor Make(IColorScheme scheme)
         {
@@ -80,10 +74,7 @@ namespace ConversationEditor
             m_autoCompleteSuggestions = data.AutoCompleteSuggestions;
         }
 
-        public Control AsControl
-        {
-            get { return this; }
-        }
+        public Control AsControl => this;
 
         public UpdateParameterData UpdateParameterAction()
         {

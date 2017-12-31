@@ -16,13 +16,7 @@ namespace Viking
             this.localizer = localizer;
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Export Localization Lines";
-            }
-        }
+        public string Name => "Export Localization Lines";
 
         public void Execute(IConversationFile conversation, IErrorCheckerUtilities<IConversationNode> util)
         {

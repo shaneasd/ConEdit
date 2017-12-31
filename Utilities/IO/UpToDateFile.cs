@@ -25,7 +25,7 @@ namespace Utilities
             private volatile bool m_disposed = false;
             private volatile bool m_threadWaiting = false;
 
-            public WaitHandle AbortHandle { get { return m_abort.WaitHandle; } }
+            public WaitHandle AbortHandle => m_abort.WaitHandle;
 
             public BackEnd()
             {
@@ -140,7 +140,7 @@ namespace Utilities
         }
 
 
-        public FileInfo File { get { return m_file; } }
+        public FileInfo File => m_file;
 
         private FileSystemWatcher m_watcher;
         private FileInfo m_file;

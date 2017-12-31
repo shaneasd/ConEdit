@@ -20,10 +20,7 @@ namespace ConversationEditor
             return true;
         }
 
-        public string DisplayName
-        {
-            get { return "Default Conversation Node Renderer"; }
-        }
+        public string DisplayName => "Default Conversation Node Renderer";
 
         public INodeGui GetRenderer(ConversationNode n, PointF p, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer, Func<IDataSource> datasource)
         {
@@ -137,8 +134,8 @@ namespace ConversationEditor
                 }
             }
 
-            public float Height { get { return m_size.Height; } }
-            public float Width { get { return m_size.Width; } }
+            public float Height => m_size.Height;
+            public float Width => m_size.Width;
         }
 
         protected class TitleSection : Section
@@ -180,13 +177,7 @@ namespace ConversationEditor
         {
             public OutputsSection(ConversationNode node) : base(node) { }
 
-            IEnumerable<Output> BottomNodes
-            {
-                get
-                {
-                    return Node.Data.Connectors.Where(c => c.Definition.Position == ConnectorPosition.Bottom);
-                }
-            }
+            IEnumerable<Output> BottomNodes => Node.Data.Connectors.Where(c => c.Definition.Position == ConnectorPosition.Bottom);
 
             public override SizeF Measure(Graphics g)
             {
@@ -263,13 +254,7 @@ namespace ConversationEditor
                 }
             }
 
-            private IEnumerable<IParameter> ParametersToRender
-            {
-                get
-                {
-                    return Node.Data.Parameters.Where(ShouldRender);
-                }
-            }
+            private IEnumerable<IParameter> ParametersToRender => Node.Data.Parameters.Where(ShouldRender);
 
             public override SizeF Measure(Graphics g)
             {

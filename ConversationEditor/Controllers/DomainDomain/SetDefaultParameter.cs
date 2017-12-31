@@ -32,13 +32,7 @@ namespace ConversationEditor
             m_getCurrentEnumType = getCurrentEnumType;
         }
 
-        public IEnumerable<Guid> Options
-        {
-            get
-            {
-                return Enumeration.Select(e => e.Guid);
-            }
-        }
+        public IEnumerable<Guid> Options => Enumeration.Select(e => e.Guid);
 
         public string GetName(Guid value)
         {

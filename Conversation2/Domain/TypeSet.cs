@@ -114,7 +114,7 @@ namespace Conversation
             }
         }
 
-        public IEnumerable<ParameterType> AllTypes { get { return m_types.Keys; } }
+        public IEnumerable<ParameterType> AllTypes => m_types.Keys;
 
         public DynamicEnumParameter.Source GetDynamicEnumSource(ParameterType type)
         {
@@ -241,19 +241,19 @@ namespace Conversation
             m_decimals = new TypeProvider<DecimalData>(m_hidden);
         }
 
-        public IEnumerable<ParameterType> AllTypes { get { return m_types.Keys; } }
+        public IEnumerable<ParameterType> AllTypes => m_types.Keys;
 
         /// <summary>
         /// Triggered whenever a new type is added or an existing type is modified or removed
         /// </summary>
         public event Action<ParameterType> Modified;
 
-        public IEnumerable<EnumerationData> VisibleEnums { get { return m_enums.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => GetEnumData(kvp.Key)); } }
-        public IEnumerable<DynamicEnumerationData> VisibleDynamicEnums { get { return m_dynamicEnums.Visible; } }
-        public IEnumerable<LocalDynamicEnumerationData> VisibleLocalDynamicEnums { get { return m_localDynamicEnums.Visible; } }
-        public IEnumerable<IntegerData> VisibleIntegers { get { return m_integers.Visible; } }
-        public IEnumerable<DecimalData> VisibleDecimals { get { return m_decimals.Visible; } }
-        public IEnumerable<LocalizedStringData> VisibleLocalizedStrings { get { return m_localizedStrings.Visible; } }
+        public IEnumerable<EnumerationData> VisibleEnums => m_enums.Where(kvp => !m_hidden[kvp.Key]).Select(kvp => GetEnumData(kvp.Key));
+        public IEnumerable<DynamicEnumerationData> VisibleDynamicEnums => m_dynamicEnums.Visible;
+        public IEnumerable<LocalDynamicEnumerationData> VisibleLocalDynamicEnums => m_localDynamicEnums.Visible;
+        public IEnumerable<IntegerData> VisibleIntegers => m_integers.Visible;
+        public IEnumerable<DecimalData> VisibleDecimals => m_decimals.Visible;
+        public IEnumerable<LocalizedStringData> VisibleLocalizedStrings => m_localizedStrings.Visible;
 
         public Tuple<int?, int?> GetIntegerRange(ParameterType type)
         {

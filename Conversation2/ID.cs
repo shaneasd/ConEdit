@@ -24,10 +24,7 @@ namespace Conversation
                 return null;
             }
 
-            public override Guid Guid
-            {
-                get { return m_value; }
-            }
+            public override Guid Guid => m_value;
 
             public override string Serialized()
             {
@@ -62,10 +59,7 @@ namespace Conversation
                 return Guid.GetHashCode();
             }
 
-            public override bool IsSet
-            {
-                get { return false; }
-            }
+            public override bool IsSet => false;
         }
 
         /// <summary>
@@ -92,10 +86,7 @@ namespace Conversation
                 return null;
             }
 
-            public override Guid Guid
-            {
-                get { return m_of; }
-            }
+            public override Guid Guid => m_of;
 
             public override string Serialized()
             {
@@ -138,10 +129,7 @@ namespace Conversation
                     return new ValueSetType(type.Guid);
             }
 
-            public override bool IsSet
-            {
-                get { return true; }
-            }
+            public override bool IsSet => true;
         }
 
         public static ParameterType Parse(string guid)

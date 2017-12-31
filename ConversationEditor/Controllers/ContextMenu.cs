@@ -40,13 +40,7 @@ namespace ConversationEditor
             m_menu.Opening += (a, b) => b.Cancel = UpdateContextMenu();
         }
 
-        private Point MenuPosition
-        {
-            get
-            {
-                return m_control.PointToClient(new Point(m_menu.Left, m_menu.Top));
-            }
-        }
+        private Point MenuPosition => m_control.PointToClient(new Point(m_menu.Left, m_menu.Top));
 
         internal bool UpdateContextMenu()
         {

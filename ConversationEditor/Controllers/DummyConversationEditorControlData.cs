@@ -16,39 +16,27 @@ namespace ConversationEditor
 
         public bool Remove(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public IEnumerableReversible<TNode> Nodes
-        {
-            get { return EnumerableReversible.Empty<TNode>(); }
-        }
+        public IEnumerableReversible<TNode> Nodes => EnumerableReversible.Empty<TNode>();
 
-        public IEnumerableReversible<NodeGroup> Groups
-        {
-            get { return EnumerableReversible.Empty<NodeGroup>(); }
-        }
+        public IEnumerableReversible<NodeGroup> Groups => EnumerableReversible.Empty<NodeGroup>();
 
         public void RemoveLinks(Output o)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        ISaveableFileUndoable ISaveableFileUndoableProvider.UndoableFile
-        {
-            get { throw new NotImplementedException(); }
-        }
+        ISaveableFileUndoable ISaveableFileUndoableProvider.UndoableFile => throw new NotSupportedException();
 
-        ISaveableFile ISaveableFileProvider.File { get { return new MissingFile( Id<FileInProject>.FromGuid(Guid.Empty) , DocumentPath.FromPath("", new DirectoryInfo("."))); } }
+        ISaveableFile ISaveableFileProvider.File => new MissingFile(Id<FileInProject>.FromGuid(Guid.Empty), DocumentPath.FromPath("", new DirectoryInfo(".")));
 
-        public ReadOnlyCollection<Conversation.Serialization.LoadError> Errors
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public ReadOnlyCollection<Conversation.Serialization.LoadError> Errors => throw new NotSupportedException();
 
         public void ClearErrors()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public void BringToFront(IReadOnlyNodeSet Selected)

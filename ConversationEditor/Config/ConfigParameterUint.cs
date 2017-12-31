@@ -22,10 +22,9 @@ namespace ConversationEditor
         {
             if (root == null)
                 throw new ArgumentNullException(nameof(root));
-            uint val;
             var b = root.Attribute("value");
             if (b != null)
-                if (uint.TryParse(b.Value, out val))
+                if (uint.TryParse(b.Value, out uint val))
                     InnerValue = val;
         }
 

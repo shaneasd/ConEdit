@@ -23,15 +23,9 @@ namespace ConversationEditor
             return type == BaseTypeBoolean.ParameterType;
         }
 
-        public string Name
-        {
-            get { return "Default Boolean Editor"; }
-        }
+        public string Name => "Default Boolean Editor";
 
-        public Guid Guid
-        {
-            get { return StaticId; }
-        }
+        public Guid Guid => StaticId;
 
         public IParameterEditor Make(IColorScheme scheme)
         {
@@ -125,13 +119,7 @@ namespace ConversationEditor
             Invalidate(true);
         }
 
-        string DisplayText
-        {
-            get
-            {
-                return Checked ? "True" : "False";
-            }
-        }
+        string DisplayText => Checked ? "True" : "False";
 
         public Rectangle BoxRectangle()
         {
@@ -183,10 +171,7 @@ namespace ConversationEditor
                 Checked = m_parameter.Value;
         }
 
-        public Control AsControl
-        {
-            get { return this; }
-        }
+        public Control AsControl => this;
 
         public UpdateParameterData UpdateParameterAction()
         {

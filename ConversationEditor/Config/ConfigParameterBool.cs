@@ -20,13 +20,12 @@ namespace ConversationEditor
         {
             if (root == null)
                 throw new ArgumentNullException(nameof(root));
-            bool val;
             var n = root.Element(m_name);
             if (n != null)
             {
                 var b = n.Attribute("value");
                 if (b != null)
-                    if (bool.TryParse(b.Value, out val))
+                    if (bool.TryParse(b.Value, out bool val))
                         InnerValue = val;
             }
         }

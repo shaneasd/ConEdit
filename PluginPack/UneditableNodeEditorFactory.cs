@@ -21,9 +21,6 @@ namespace PluginPack
             return ConfigureResult2.NotApplicable;
         }
 
-        public override string DisplayName
-        {
-            get { return "Uneditable"; }
-        }
+        public override string DisplayName => "Uneditable";
     }
 }

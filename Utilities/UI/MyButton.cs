@@ -60,15 +60,9 @@ namespace Utilities.UI
         {
         }
 
-        public System.Drawing.RectangleF Area
-        {
-            get { return m_area(); }
-        }
+        public System.Drawing.RectangleF Area => m_area();
 
-        public virtual System.Drawing.SizeF RequestedArea
-        {
-            get { return m_area().Size; }
-        }
+        public virtual System.Drawing.SizeF RequestedArea => m_area().Size;
 
         public override event Action RequestedAreaChanged { add { } remove { } }
         private Func<RectangleF> m_area;

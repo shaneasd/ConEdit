@@ -11,15 +11,9 @@ namespace RawSerialization
 {
     public class ProjectExplorerContextMenu : IProjectExplorerContextMenuItemsFactory
     {
-        public IEnumerable<IAudioContextMenuItem> AudioContextMenuItems
-        {
-            get { return Enumerable.Empty<IAudioContextMenuItem>(); }
-        }
+        public IEnumerable<IAudioContextMenuItem> AudioContextMenuItems => Enumerable.Empty<IAudioContextMenuItem>();
 
-        public IEnumerable<IDomainContextMenuItem> DomainContextMenuItems
-        {
-            get { return Enumerable.Empty<IDomainContextMenuItem>(); }
-        }
+        public IEnumerable<IDomainContextMenuItem> DomainContextMenuItems => Enumerable.Empty<IDomainContextMenuItem>();
 
         public IEnumerable<IFolderContextMenuItem> FolderContextMenuItems(Func<Id<LocalizedStringType>, Id<LocalizedText>, Tuple<string, DateTime>> localizer)
         {

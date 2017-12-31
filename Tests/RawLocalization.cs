@@ -29,21 +29,9 @@ namespace Tests
             return m_localize(id);
         }
 
-        public ISaveableFile File
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public ISaveableFile File => throw new NotSupportedException();
 
-        public bool IsValid
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public bool IsValid => throw new NotSupportedException();
 
         public event Action FileDeletedExternally { add { } remove { } }
         public event Action FileModifiedExternally { add { } remove { } }
@@ -82,13 +70,7 @@ namespace Tests
             throw new NotImplementedException();
         }
 
-        Id<FileInProject> IInProject.Id
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        Id<FileInProject> IInProject.Id => throw new NotSupportedException();
     }
 
     public static class TestRawLocalization

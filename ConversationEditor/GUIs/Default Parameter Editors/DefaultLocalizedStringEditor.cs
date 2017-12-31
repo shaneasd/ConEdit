@@ -21,15 +21,9 @@ namespace ConversationEditor
             return queries.IsLocalizedString(type);
         }
 
-        public string Name
-        {
-            get { return "Default Localized String Editor"; }
-        }
+        public string Name => "Default Localized String Editor";
 
-        public Guid Guid
-        {
-            get { return StaticId; }
-        }
+        public Guid Guid => StaticId;
 
         public IParameterEditor Make(IColorScheme scheme)
         {
@@ -86,10 +80,7 @@ namespace ConversationEditor
             m_autoCompleteSuggestions = data.AutoCompleteSuggestions;
         }
 
-        public Control AsControl
-        {
-            get { return this; }
-        }
+        public Control AsControl => this;
 
         public UpdateParameterData UpdateParameterAction()
         {

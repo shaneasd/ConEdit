@@ -161,10 +161,7 @@ namespace Conversation
         private string m_lastValueString = null;
         public void TryDeserialiseValue(string value)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-
-            m_lastValueString = value;
+            m_lastValueString = value ?? throw new ArgumentNullException(nameof(value));
             DeserialiseValue(value);
         }
     }
@@ -177,7 +174,7 @@ namespace Conversation
             private set;
         }
 
-        public sealed override bool Corrupted { get { return m_corrupted; } }
+        public sealed override bool Corrupted => m_corrupted;
         private bool m_corrupted;
 
         /// <summary>

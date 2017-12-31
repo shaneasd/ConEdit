@@ -26,10 +26,7 @@ namespace Utilities
             return m_data.ContainsKey(key);
         }
 
-        public ICollection<TKey> Keys
-        {
-            get { return m_data.Keys; }
-        }
+        public ICollection<TKey> Keys => m_data.Keys;
 
         public bool Remove(TKey key)
         {
@@ -46,10 +43,7 @@ namespace Utilities
             return m_data.TryGetValue(key, out value);
         }
 
-        public ICollection<TValue> Values
-        {
-            get { return m_data.Values; }
-        }
+        public ICollection<TValue> Values => m_data.Values;
 
         public TValue this[TKey key]
         {
@@ -92,15 +86,9 @@ namespace Utilities
             (m_data as ICollection<KeyValuePair<TKey, TValue>>).CopyTo(array, arrayIndex);
         }
 
-        public int Count
-        {
-            get { return m_data.Count; }
-        }
+        public int Count => m_data.Count;
 
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly => false;
 
         bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
         {

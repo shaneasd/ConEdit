@@ -22,7 +22,7 @@ namespace ConversationEditor
     public class PluginsConfig : IConfigParameter
     {
         private List<PluginAssembly> m_filteredAssemblies = new List<PluginAssembly>();
-        public IEnumerable<PluginAssembly> FilteredAssemblies { get { return m_filteredAssemblies; } }
+        public IEnumerable<PluginAssembly> FilteredAssemblies => m_filteredAssemblies;
         public IEnumerable<PluginAssembly> UnfilteredAssemblies(MainAssembly mainAssembly)
         {
             var allAssemblies = PluginSelector.AllPlugins;

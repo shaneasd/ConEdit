@@ -17,94 +17,46 @@ namespace ConversationEditor
 
         private DummyProject() { }
 
-        public ISaveableFile File { get { return new MissingFile( Id<FileInProject>.FromGuid(Guid.Empty) , DocumentPath.FromPath("", new DirectoryInfo("."))); } }
+        public ISaveableFile File => new MissingFile(Id<FileInProject>.FromGuid(Guid.Empty), DocumentPath.FromPath("", new DirectoryInfo(".")));
 
-        IAudioLibrary IProject.AudioProvider { get { return null; } }
+        IAudioLibrary IProject.AudioProvider => null;
 
-        IProjectElementList<ILocalizationFile> IProject.LocalizationFiles
-        {
-            get { return DummyProjectElementList<LocalizationFile, ILocalizationFile>.Instance; }
-        }
+        IProjectElementList<ILocalizationFile> IProject.LocalizationFiles => DummyProjectElementList<LocalizationFile, ILocalizationFile>.Instance;
 
-        IDomainDataSource IProject.DomainDataSource
-        {
-            get { return DummyDataSource.Instance; }
-        }
+        IDomainDataSource IProject.DomainDataSource => DummyDataSource.Instance;
 
-        public IProjectElementList<IConversationFile> Conversations
-        {
-            get { return DummyProjectElementList<ConversationFile, IConversationFile>.Instance; }
-        }
+        public IProjectElementList<IConversationFile> Conversations => DummyProjectElementList<ConversationFile, IConversationFile>.Instance;
 
-        public IProjectElementList<IDomainFile> DomainFiles
-        {
-            get { return DummyProjectElementList<DomainFile, IDomainFile>.Instance; }
-        }
+        public IProjectElementList<IDomainFile> DomainFiles => DummyProjectElementList<DomainFile, IDomainFile>.Instance;
 
-        IEnumerable<ISaveableFileProvider> IProject.Elements
-        {
-            get { return Enumerable.Empty<ISaveableFileProvider>(); }
-        }
+        IEnumerable<ISaveableFileProvider> IProject.Elements => Enumerable.Empty<ISaveableFileProvider>();
 
-        IEnumerable<ISaveableFileProvider> IProject.ElementsExceptThis
-        {
-            get { return Enumerable.Empty<ISaveableFileProvider>(); }
-        }
+        IEnumerable<ISaveableFileProvider> IProject.ElementsExceptThis => Enumerable.Empty<ISaveableFileProvider>();
 
-        DirectoryInfo IProject.Origin
-        {
-            get { return new DirectoryInfo("."); }
-        }
+        DirectoryInfo IProject.Origin => new DirectoryInfo(".");
 
-        IDataSource IProject.ConversationDataSource
-        {
-            get { return DummyDataSource.Instance; }
-        }
+        IDataSource IProject.ConversationDataSource => DummyDataSource.Instance;
 
-        bool IProject.CanModifyConversations
-        {
-            get { throw new NotImplementedException(); }
-        }
+        bool IProject.CanModifyConversations => throw new NotImplementedException();
 
-        bool IProject.CanModifyDomain
-        {
-            get { throw new NotImplementedException(); }
-        }
+        bool IProject.CanModifyDomain => throw new NotImplementedException();
 
-        LocalizationEngine IProject.Localizer
-        {
-            get { return new LocalizationEngine(null, Enumerable.Empty<Project.TData.LocalizerSetData>(), null, () => new HashSet<Id<LocalizedText>>(), s => false, p => true, s => true, m_backend, null); }
-        }
+        LocalizationEngine IProject.Localizer => new LocalizationEngine(null, Enumerable.Empty<Project.TData.LocalizerSetData>(), null, () => new HashSet<Id<LocalizedText>>(), s => false, p => true, s => true, m_backend, null);
 
-        IProjectElementList<IAudioFile> IProject.AudioFiles
-        {
-            get { return DummyProjectElementList<AudioFile, IAudioFile>.Instance; }
-        }
+        IProjectElementList<IAudioFile> IProject.AudioFiles => DummyProjectElementList<AudioFile, IAudioFile>.Instance;
 
         void IProject.GotChanged()
         {
             throw new NotImplementedException();
         }
 
-        IDomainUsage<ConversationNode, TransitionNoduleUIInfo> IProject.DomainUsage
-        {
-            get { return null; }
-        }
+        IDomainUsage<ConversationNode, TransitionNoduleUIInfo> IProject.DomainUsage => null;
 
-        bool IProject.ReloadConversationDatasourceIfRequired()
-        {
-            return false;
-        }
+        bool IProject.ReloadConversationDatasourceIfRequired() => false;
 
-        public IEnumerable<IDomainFile> DomainFilesCollection
-        {
-            get { return DomainFiles; }
-        }
+        public IEnumerable<IDomainFile> DomainFilesCollection => DomainFiles;
 
-        public IEnumerable<IConversationFile> ConversationFilesCollection
-        {
-            get { return Conversations; }
-        }
+        public IEnumerable<IConversationFile> ConversationFilesCollection => Conversations;
 
         public event Action FileModifiedExternally { add { } remove { } }
 

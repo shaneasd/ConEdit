@@ -62,10 +62,7 @@ namespace ConversationEditor
             }
         }
 
-        public string Name
-        {
-            get { return "Domain as C#"; }
-        }
+        public string Name => "Domain as C#";
     }
 
 }

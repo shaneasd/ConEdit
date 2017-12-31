@@ -26,13 +26,7 @@ namespace Utilities.UI
         {
             public Color Background { get; } = Color.FromArgb(56, 56, 56);
 
-            public DrawWindow.IColorScheme DrawWindowColorScheme
-            {
-                get
-                {
-                    return new DrawWindow.DefaultColorScheme();
-                }
-            }
+            public DrawWindow.IColorScheme DrawWindowColorScheme => new DrawWindow.DefaultColorScheme();
         }
 
         public static Bitmap ScrollBarUpIcon { get; }
@@ -276,7 +270,7 @@ namespace Utilities.UI
                 m_backColor = backColor;
             }
 
-            public Rectangle Area { get { return m_rectangle; } }
+            public Rectangle Area => m_rectangle;
 
             public void Draw(Graphics g, bool pushed)
             {
@@ -318,38 +312,13 @@ namespace Utilities.UI
             }
         }
 
-        public float Range
-        {
-            get
-            {
-                return Length - BUTTON_SIZE - BUTTON_SIZE;
-            }
-        }
+        public float Range => Length - BUTTON_SIZE - BUTTON_SIZE;
 
-        public float BarLength
-        {
-            get
-            {
-                return (PercentageCovered * Range).Clamp(BUTTON_SIZE, Range);
-                //return (LargeChange * Range).Clamp(BUTTON_SIZE, Range);
-            }
-        }
+        public float BarLength => (PercentageCovered * Range).Clamp(BUTTON_SIZE, Range);//return (LargeChange * Range).Clamp(BUTTON_SIZE, Range);
 
-        public float LowHeight
-        {
-            get
-            {
-                return RatioValue * (Range - BarLength) + BUTTON_SIZE - 1;
-            }
-        }
+        public float LowHeight => RatioValue * (Range - BarLength) + BUTTON_SIZE - 1;
 
-        public float HighHeight
-        {
-            get
-            {
-                return RatioValue * (Range - BarLength) + TopButton.Area.Height + BarLength + 1;
-            }
-        }
+        public float HighHeight => RatioValue * (Range - BarLength) + TopButton.Area.Height + BarLength + 1;
 
         private void drawWindow1_Paint(object sender, PaintEventArgs e)
         {

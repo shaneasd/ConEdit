@@ -23,13 +23,7 @@ namespace Viking
             m_localizer = localizer;
         }
 
-        public string Name
-        {
-            get
-            {
-                return "Export Localization";
-            }
-        }
+        public string Name => "Export Localization";
 
         public void Execute(IEnumerable<IConversationFile> conversations)
         {

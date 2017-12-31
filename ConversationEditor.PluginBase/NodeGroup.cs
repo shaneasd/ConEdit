@@ -118,14 +118,8 @@ namespace ConversationEditor
             m_renderer = new NodeGroupRenderer(area);
         }
 
-        public NodeGroupRenderer Renderer
-        {
-            get { return m_renderer; }
-        }
+        public NodeGroupRenderer Renderer => m_renderer;
 
-        public HashSet<Id<NodeTemp>> Contents
-        {
-            get { return m_contents; }
-        }
+        public HashSet<Id<NodeTemp>> Contents => m_contents;
     }
 }

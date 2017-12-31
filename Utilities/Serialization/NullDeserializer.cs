@@ -11,12 +11,12 @@ namespace Utilities
 
         public T Read(System.Xml.Linq.XElement node)
         {
-            return default(T);
+            return default;
         }
 
         public T Read(System.IO.Stream stream)
         {
-            return default(T);
+            return default;
         }
     }
 }

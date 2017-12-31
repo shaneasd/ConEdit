@@ -126,10 +126,10 @@ namespace ConversationEditor
         {
             const float HEIGHT = 23;
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-            public float Height { get { return HEIGHT; } }
+            public float Height => HEIGHT;
 
             IErrorListElement m_data;
-            public IErrorListElement Error { get { return m_data; } }
+            public IErrorListElement Error => m_data;
 
             public ErrorItem(IErrorListElement data)
             {

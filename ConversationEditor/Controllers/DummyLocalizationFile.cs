@@ -27,7 +27,7 @@ namespace ConversationEditor
             throw new NotSupportedException("Attempting to modify localization values of a dummy localization file");
         }
 
-        IEnumerable<Id<LocalizedText>> ILocalizationFile.ExistingLocalizations { get { throw new NotImplementedException("ExistingLocalizations"); } }
+        IEnumerable<Id<LocalizedText>> ILocalizationFile.ExistingLocalizations => throw new NotSupportedException("ExistingLocalizations");
 
         void ILocalizationFile.ImportInto(string[] fileNames, DirectoryInfo origin)
         {
@@ -44,10 +44,7 @@ namespace ConversationEditor
             throw new NotSupportedException(); // Can never be in a project
         }
 
-        public Utilities.ISaveableFile File
-        {
-            get { return null; } //No corresponding file
-        }
+        public Utilities.ISaveableFile File => null; //No corresponding file
 
         public event Action FileModifiedExternally { add { } remove { } } //Doesn't exist on disk
 
@@ -60,18 +57,8 @@ namespace ConversationEditor
             throw new NotImplementedException();
         }
 
-        public bool IsValid
-        {
-            get { return false; }
-        }
+        public bool IsValid => false;
 
-        Id<FileInProject> IInProject.Id
-        {
-            get
-            {
-                throw new NotImplementedException();
-                //return Id<FileInProject>.FromGuid(Guid.Empty);
-            }
-        }
+        Id<FileInProject> IInProject.Id => throw new NotImplementedException();
     }
 }

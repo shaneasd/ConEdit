@@ -7,11 +7,10 @@ namespace RuntimeConversation
 {
     public class Audio
     {
-        public string Path { get { return m_path; } }
-        private readonly string m_path;
+        public string Path { get; }
         public Audio(string value)
         {
-            m_path = value;
+            Path = value;
         }
     }
 }

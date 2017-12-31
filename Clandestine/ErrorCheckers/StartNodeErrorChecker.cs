@@ -17,10 +17,7 @@ namespace Clandestine
             {
             }
 
-            public override string Message
-            {
-                get { return Nodes.Any() ? "More than one start node" : "No start node"; }
-            }
+            public override string Message => Nodes.Any() ? "More than one start node" : "No start node";
         }
 
         public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
@@ -30,9 +27,6 @@ namespace Clandestine
                 yield return new StartNodeCountError(startNodes);
         }
 
-        public override string Name
-        {
-            get { return "Incorrect number of start nodes"; }
-        }
+        public override string Name => "Incorrect number of start nodes";
     }
 }

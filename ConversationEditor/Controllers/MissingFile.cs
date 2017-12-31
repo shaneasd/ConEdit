@@ -19,10 +19,7 @@ namespace ConversationEditor
             Id = file;
         }
 
-        public FileInfo File
-        {
-            get { return m_file; }
-        }
+        public FileInfo File => m_file;
 
         public bool Move(System.IO.FileInfo newPath, Func<bool> replace)
         {
@@ -48,23 +45,14 @@ namespace ConversationEditor
         public event Action FileModifiedExternally { add { } remove { } }
         public event Action FileDeletedExternally { add { } remove { } }
 
-        public bool Exists
-        {
-            get { return false; }
-        }
+        public bool Exists => false;
 
-        public IUndoQueue UndoQueue
-        {
-            get { return NoUndoQueue.Instance; }
-        }
+        public IUndoQueue UndoQueue => NoUndoQueue.Instance;
 
         protected override void Dispose(bool disposing)
         {
         }
 
-        public IWritable Writable
-        {
-            get { return null; }
-        }
+        public IWritable Writable => null;
     }
 }

@@ -44,8 +44,7 @@ namespace Conversation
 
         private static Tuple<int, bool> StaticDeserialize(Definition definition, string value)
         {
-            int val;
-            if (!int.TryParse(value, out val))
+            if (!int.TryParse(value, out int val))
                 return Tuple.Create(0, true);
             else
                 return Tuple.Create(val, !StaticValueValid(definition, val));
@@ -72,15 +71,9 @@ namespace Conversation
             return Value.ToString(CultureInfo.InvariantCulture);
         }
 
-        public int Max
-        {
-            get { return m_definition().Max ?? int.MaxValue; }
-        }
+        public int Max => m_definition().Max ?? int.MaxValue;
 
-        public int Min
-        {
-            get { return m_definition().Min ?? int.MinValue; }
-        }
+        public int Min => m_definition().Min ?? int.MinValue;
 
         public override string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {

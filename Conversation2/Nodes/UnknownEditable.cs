@@ -21,38 +21,20 @@ namespace Conversation
             m_parameters = parameters.ToList();
         }
 
-        public Id<NodeTemp> NodeId
-        {
-            get { return m_nodeId; }
-        }
+        public Id<NodeTemp> NodeId => m_nodeId;
 
-        public Id<NodeTypeTemp> NodeTypeId
-        {
-            get { return m_nodeTypeId; }
-        }
+        public Id<NodeTypeTemp> NodeTypeId => m_nodeTypeId;
 
-        public string Name
-        {
-            get { return "Unknown Node"; }
-        }
+        public string Name => "Unknown Node";
 
         public string Description => "This node is of a type unknown in the domain. Is a file missing from the domain or has a node definition been deleted?";
 
-        public IReadOnlyList<NodeData.ConfigData> Config
-        {
-            get { return new ReadOnlyCollection<NodeData.ConfigData>(new NodeData.ConfigData[0]); }
-        }
+        public IReadOnlyList<NodeData.ConfigData> Config => new ReadOnlyCollection<NodeData.ConfigData>(new NodeData.ConfigData[0]);
 
-        public IEnumerable<IParameter> Parameters
-        {
-            get { return m_parameters; }
-        }
+        public IEnumerable<IParameter> Parameters => m_parameters;
 
         List<Output> m_connectors = new List<Output>();
-        public IEnumerable<Output> Connectors
-        {
-            get { return m_connectors; }
-        }
+        public IEnumerable<Output> Connectors => m_connectors;
 
         public void ChangeId(Id<NodeTemp> id)
         {

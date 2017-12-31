@@ -14,14 +14,13 @@ namespace ConversationEditor
 
         public abstract class LeafItem : Item
         {
-            private readonly ISaveableFileProvider m_item;
-            public ISaveableFileProvider Item { get { return m_item; } }
+            public ISaveableFileProvider Item { get; }
             private ItemFilter m_filter;
             protected LeafItem(Func<RectangleF> area, IProject project, ISaveableFile file, ContainerItem parent, ItemFilter filter, ISaveableFileProvider item, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
                 : base(new ConstructorParams(area, project, new FileSystemObject(file), parent, toControlTransform, rename))
             {
                 m_filter = filter;
-                m_item = item;
+                Item = item;
             }
 
             public override IEnumerable<Item> AllItems(VisibilityFilter filter)
@@ -45,22 +44,17 @@ namespace ConversationEditor
                 //start, new PointF(start.X, start.Y + HEIGHT * (itemsBeforeLastChild + 1)));
             }
 
-            public override ContainerItem SpawnLocation
-            {
-                get { return Parent; }
-            }
+            public override ContainerItem SpawnLocation => Parent;
         }
 
         public abstract class LeafItem<T> : LeafItem where T : ISaveableFileProvider
         {
-            private readonly T m_item;
-
-            public new T Item { get { return m_item; } }
+            public new T Item { get; }
 
             protected LeafItem(Func<RectangleF> area, IProject project, T item, ContainerItem parent, ItemFilter filter, Func<Matrix> toControlTransform, Func<FileSystemObject, string, bool> rename)
                 : base(area, project, item.File, parent, filter, item, toControlTransform, rename)
             {
-                m_item = item;
+                Item = item;
             }
         }
     }

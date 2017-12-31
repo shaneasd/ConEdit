@@ -28,30 +28,21 @@ namespace Clandestine
                 m_target = target;
             }
 
-            public override string Message
-            {
-                get { return "Multiple jump targets named \"" + m_target + "\""; }
-            }
+            public override string Message => $"Multiple jump targets named \"{m_target}\"";
         }
 
         class PointlessTargetError : ConversationError<T>
         {
             private string m_id;
             public PointlessTargetError(T node) : base(node.Only()) { m_id = GetId(node); }
-            public override string Message
-            {
-                get { return "Jump target \"" + m_id + "\" has nothing jumping to it"; }
-            }
+            public override string Message => $"Jump target \"{m_id}\" has nothing jumping to it";
         }
 
         class DeadEndJumpError : ConversationError<T>
         {
             private string m_target;
             public DeadEndJumpError(T node) : base(node.Only()) { m_target = GetTarget(node); }
-            public override string Message
-            {
-                get { return "Jump to unknown target: \"" + m_target + "\""; }
-            }
+            public override string Message => $"Jump to unknown target: \"{m_target}\"";
         }
 
         public override IEnumerable<ConversationError<T>> Check(IEnumerable<T> nodes, IErrorCheckerUtilities<T> utils)
@@ -72,10 +63,7 @@ namespace Clandestine
                 yield return new DeadEndJumpError(node);
         }
 
-        public override string Name
-        {
-            get { return "Invalid jumps"; }
-        }
+        public override string Name => "Invalid jumps";
     }
 
 }

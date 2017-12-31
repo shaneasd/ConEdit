@@ -39,8 +39,7 @@ namespace ConversationEditor
             GetNodeRendererChoice = (id, n, p) =>
             {
                 Guid configValue = config[id];
-                NodeUI.IFactory factory;
-                if (!nodeRenderers.TryGetValue(configValue, out factory))
+                if (!nodeRenderers.TryGetValue(configValue, out NodeUI.IFactory factory))
                     factory = nodeRenderers[EditableUIFactory.Instance.Guid];
                 return factory.GetRenderer(n, p, localizer, datasource);
             };

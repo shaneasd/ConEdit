@@ -115,29 +115,11 @@ namespace Utilities
     {
         List<RectangleF> m_rectangles = new List<RectangleF>();
 
-        public IEnumerable<RectangleF> AllRectangles
-        {
-            get
-            {
-                return m_rectangles;
-            }
-        }
+        public IEnumerable<RectangleF> AllRectangles => m_rectangles;
 
-        private float MinX
-        {
-            get
-            {
-                return AllRectangles.Select(r => r.Left).Concat(float.MaxValue.Only()).Min();
-            }
-        }
+        private float MinX => AllRectangles.Select(r => r.Left).Concat(float.MaxValue.Only()).Min();
 
-        private float MaxX
-        {
-            get
-            {
-                return float.MinValue.Only().Concat(AllRectangles.Select(rr => rr.Right)).Max();
-            }
-        }
+        private float MaxX => float.MinValue.Only().Concat(AllRectangles.Select(rr => rr.Right)).Max();
 
         private void MergeRectangles(IEnumerable<RectangleF> r)
         {
@@ -219,21 +201,9 @@ namespace Utilities
             }
         }
 
-        public IEnumerable<PointF> Vertices
-        {
-            get
-            {
-                return m_rectangles.SelectMany(r => { r.Inflate(2, 2); return r.Corners(); });
-            }
-        }
+        public IEnumerable<PointF> Vertices => m_rectangles.SelectMany(r => { r.Inflate(2, 2); return r.Corners(); });
 
-        public IEnumerable<Edge> Edges
-        {
-            get
-            {
-                return m_rectangles.SelectMany(r => r.Edges());
-            }
-        }
+        public IEnumerable<Edge> Edges => m_rectangles.SelectMany(r => r.Edges());
     }
 
     public class RectangleUnion
@@ -287,13 +257,7 @@ namespace Utilities
             g.DrawLine(Pens.Green, point.Take(0, 1), point.Plus(0, 1));
         }
 
-        public IEnumerable<RectangleF> Obstacles
-        {
-            get
-            {
-                return m_shapes.SelectMany(s => s.AllRectangles);
-            }
-        }
+        public IEnumerable<RectangleF> Obstacles => m_shapes.SelectMany(s => s.AllRectangles);
     }
 
     public class PointComparer : IComparer<Point>

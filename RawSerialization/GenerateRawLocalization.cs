@@ -11,7 +11,7 @@ namespace RawSerialization
 {
     public class GenerateRawLocalization : ILocalizationContextMenuItem
     {
-        public string Name { get { return "Generate Binary Localization"; } }
+        public string Name => "Generate Binary Localization";
 
         private static Stream DetermineFileStream()
         {

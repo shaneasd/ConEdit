@@ -8,7 +8,7 @@ namespace Utilities
     public class Polynomial
     {
         private readonly double[] m_coefficients;
-        public IReadOnlyList<double> Coefficients { get { return m_coefficients; } }
+        public IReadOnlyList<double> Coefficients => m_coefficients;
         public Polynomial(IEnumerable<double> coefficients)
         {
             m_coefficients = coefficients.ToArray();
@@ -22,17 +22,11 @@ namespace Utilities
             m_deriv = new Lazy<Polynomial>(() => new Polynomial(m_coefficients.Select((t, i) => i * t).Skip(1)));
         }
 
-        public int Order { get { return m_coefficients.Length - 1; } }
-        public int Indexes { get { return m_coefficients.Length; } }
+        public int Order => m_coefficients.Length - 1;
+        public int Indexes => m_coefficients.Length;
 
         Lazy<Polynomial> m_deriv;
-        public Polynomial Derivative
-        {
-            get
-            {
-                return m_deriv.Value;
-            }
-        }
+        public Polynomial Derivative => m_deriv.Value;
 
         public override string ToString()
         {
@@ -185,21 +179,9 @@ namespace Utilities
             return a;
         }
 
-        public int SignAtNegativeInfinity
-        {
-            get
-            {
-                return Math.Sign(m_coefficients.Last()) * (((int)Order % 2) * -2 + 1);
-            }
-        }
+        public int SignAtNegativeInfinity => Math.Sign(m_coefficients.Last()) * (((int)Order % 2) * -2 + 1);
 
-        public int SignAtPositiveInfinity
-        {
-            get
-            {
-                return Math.Sign(m_coefficients.Last());
-            }
-        }
+        public int SignAtPositiveInfinity => Math.Sign(m_coefficients.Last());
 
         public Polynomial[] SturmSequence()
         {
