@@ -213,19 +213,25 @@ namespace ConversationEditor
 
                 List<NodeData.ConnectorData> parameterConnectors = new List<NodeData.ConnectorData> { parameterOutput, parameterConfigConnector };
 
-                AddNode(BaseType.Integer.ParameterNodeType, "Integer", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, integerTypeParameter }, p => new List<IParameter>()
-                { new IntegerParameter("Default", DomainIDs.ParameterDefault, BaseTypeInteger.ParameterType,
-                ()=>
+                List<IParameter> AddDefaultInteger(IParameter[] p)
                 {
-                    var selection = p.Where(x=>x.Id == DomainIDs.PARAMETER_TYPE).OfType<IEnumParameter>().Single();
-                    if ( selection.EditorSelected == Guid.Empty )
-                        return new IntegerParameter.Definition(int.MinValue, int.MaxValue);
-                    else
-                    {
-                        var range = m_typeSet.GetIntegerRange(new ParameterType.Basic(selection.EditorSelected));
-                        return new IntegerParameter.Definition(range.Item1, range.Item2);
-                    }
-                }, "0") });
+                    var defaultParameter = new IntegerParameter("Default", DomainIDs.ParameterDefault, BaseTypeInteger.ParameterType,
+                                                     () =>
+                                                     {
+                                                         var selection = p.Where(x => x.Id == DomainIDs.PARAMETER_TYPE).OfType<IEnumParameter>().Single();
+                                                         if (selection.EditorSelected == Guid.Empty)
+                                                             return new IntegerParameter.Definition(int.MinValue, int.MaxValue);
+                                                         else
+                                                         {
+                                                             var range = m_typeSet.GetIntegerRange(new ParameterType.Basic(selection.EditorSelected));
+                                                             return new IntegerParameter.Definition(range?.Item1, range?.Item2);
+                                                         }
+                                                     },
+                                                     "0");
+                    return new List<IParameter>() { defaultParameter };
+                }
+
+                AddNode(BaseType.Integer.ParameterNodeType, "Integer", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, integerTypeParameter }, AddDefaultInteger);
                 AddNode(BaseType.Decimal.ParameterNodeType, "Decimal", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, decimalTypeParameter, decimalDefaultParameter });
                 AddNode(BaseType.String.ParameterNodeType, "String", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, stringDefaultParameter });
                 AddNode(BaseType.LocalizedString.ParameterNodeType, "Localized String", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, localizedStringTypeParameter });

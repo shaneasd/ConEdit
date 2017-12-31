@@ -17,8 +17,6 @@ Investigate construction of dynamicenumeration data sources. It seems like we cr
 
 https://xkcd.com/1806/ : scroll wheel undo/redo
 
-Editor crashes if integer definition used in a conversation does not exist in domain
-
 P4	Handle user specifying a default value for a parameter that is outside the acceptable range
     This seems to be mostly done for integers (TODO: copy for decimals) but there is an outstanding issue
 	where the numeric up down is not informed when the integer type changes (and thus the range is no longer correct.)

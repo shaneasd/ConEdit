@@ -168,7 +168,10 @@ namespace Conversation
 
         public IParameter Make(ParameterType typeId, string name, Id<Parameter> id, string defaultValue, TDocument document)
         {
-            return m_types[typeId].Generator(name, id, defaultValue, document);
+            if (!m_types.ContainsKey(typeId))
+                return new UnknownParameter(id, defaultValue);
+            else
+                return m_types[typeId].Generator(name, id, defaultValue, document);
         }
     }
 
@@ -257,8 +260,15 @@ namespace Conversation
 
         public Tuple<int?, int?> GetIntegerRange(ParameterType type)
         {
-            var data = m_integers[type];
-            return Tuple.Create(data.Min, data.Max);
+            if (m_integers.Contains(type))
+            {
+                var data = m_integers[type];
+                return Tuple.Create(data.Min, data.Max);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public IParameter Make(ParameterType typeId, string name, Id<Parameter> id, string defaultValue, TDocument document)
