@@ -56,8 +56,8 @@ namespace ConversationEditor
         public void Setup(ParameterEditorSetupData data)
         {
             m_parameter = data.Parameter as IDecimalParameter;
-            m_numericUpDown.Minimum = m_parameter.Min;
-            m_numericUpDown.Maximum = m_parameter.Max;
+            m_numericUpDown.Minimum = () => m_parameter.Min;
+            m_numericUpDown.Maximum = () => m_parameter.Max;
             m_numericUpDown.Value = m_parameter.Value;
         }
 
@@ -70,9 +70,9 @@ namespace ConversationEditor
 
         public string IsValid()
         {
-            if (m_numericUpDown.Value > m_numericUpDown.Maximum)
+            if (m_numericUpDown.Value > m_numericUpDown.Maximum())
                 return "Entered value is greater than maximum allowed value";
-            else if (m_numericUpDown.Value < m_numericUpDown.Minimum)
+            else if (m_numericUpDown.Value < m_numericUpDown.Minimum())
                 return "Entered value is less than minimum allowed value";
             else
                 return null;

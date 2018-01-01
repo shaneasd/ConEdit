@@ -56,8 +56,8 @@ namespace ConversationEditor
         public void Setup(ParameterEditorSetupData data)
         {
             m_parameter = data.Parameter as IIntegerParameter;
-            m_numericUpDown.Minimum = m_parameter.Min;
-            m_numericUpDown.Maximum = m_parameter.Max;
+            m_numericUpDown.Minimum = () => m_parameter.Min;
+            m_numericUpDown.Maximum = () => m_parameter.Max;
             m_numericUpDown.Value = m_parameter.Value;
         }
 

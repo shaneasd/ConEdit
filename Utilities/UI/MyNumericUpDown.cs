@@ -78,6 +78,8 @@ namespace Utilities.UI
                 m_mouseDownTimer.Interval = (int)(m_mouseDownTimer.Interval * 0.95).Clamp(1, 10000); ;
             };
 
+            Minimum = () => 0;
+            Maximum = () => 0;
             Value = 0;
         }
 
@@ -216,7 +218,7 @@ namespace Utilities.UI
             get { return m_value; }
             set
             {
-                value = Util.Clamp(value, Minimum, Maximum);
+                value = Util.Clamp(value, Minimum(), Maximum());
                 if (value != m_value)
                 {
                     m_value = value;
@@ -225,8 +227,10 @@ namespace Utilities.UI
                 }
             }
         }
-        public decimal Minimum { get; set; } = 0;
-        public decimal Maximum { get; set; } = 0;
+
+        public Func<decimal> Minimum { get; set; }
+        public Func<decimal> Maximum { get; set; }
+
         public decimal Increment { get; set; } = 1;
 
         public override bool Contains(PointF point)
