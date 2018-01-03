@@ -96,7 +96,7 @@ namespace Conversation
             {
                 var typeData = td;
                 m_decimals.Add(typeData.TypeId, typeData);
-                m_types.Add(typeData.TypeId, new TypeData((name, id, defaultValue, document) => new DecimalParameter(name, id, typeData.TypeId, typeData.Definition(), defaultValue), typeData.Name));
+                m_types.Add(typeData.TypeId, new TypeData((name, id, defaultValue, document) => new DecimalParameter(name, id, typeData.TypeId, m_decimals[typeData.TypeId].Definition(), defaultValue), typeData.Name));
             }
 
             foreach (var td in integers)
@@ -271,6 +271,19 @@ namespace Conversation
             }
         }
 
+        public Tuple<decimal?, decimal?> GetDecimalRange(ParameterType type)
+        {
+            if (m_decimals.Contains(type))
+            {
+                var data = m_decimals[type];
+                return Tuple.Create(data.Min, data.Max);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public IParameter Make(ParameterType typeId, string name, Id<Parameter> id, string defaultValue, TDocument document)
         {
             return m_types[typeId].Generator(name, id, defaultValue, document);
@@ -295,7 +308,7 @@ namespace Conversation
         {
             m_hidden[typeData.TypeId] = false;
             m_decimals.Add(typeData.TypeId, typeData);
-            m_types.Add(typeData.TypeId, new TypeData((name, id, defaultValue, document) => new DecimalParameter(name, id, typeData.TypeId, typeData.Definition(), defaultValue), typeData.Name));
+            m_types.Add(typeData.TypeId, new TypeData((name, id, defaultValue, document) => new DecimalParameter(name, id, typeData.TypeId, m_decimals[typeData.TypeId].Definition(), defaultValue), typeData.Name));
             Modified.Execute(typeData.TypeId);
         }
 

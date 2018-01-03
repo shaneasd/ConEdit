@@ -206,7 +206,6 @@ namespace ConversationEditor
                 NodeData.ParameterData localizedStringTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, LocalizedStringSetGuid, NO_CONFIG, BaseTypeLocalizedString.ParameterType.Guid.ToString());
                 NodeData.ParameterData dynamicEnumTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, DynamicEnumSetGuid, NO_CONFIG);
                 NodeData.ParameterData localDynamicEnumTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, LocalDynamicEnumSetGuid, NO_CONFIG);
-                NodeData.ParameterData decimalDefaultParameter = new NodeData.ParameterData("Default", DomainIDs.ParameterDefault, BaseTypeDecimal.ParameterType, NO_CONFIG);
                 NodeData.ParameterData stringDefaultParameter = new NodeData.ParameterData("Default", DomainIDs.ParameterDefault, BaseTypeString.ParameterType, NO_CONFIG);
                 NodeData.ParameterData booleanDefaultParameter = new NodeData.ParameterData("Default", DomainIDs.ParameterDefault, BaseTypeBoolean.ParameterType, NO_CONFIG);
                 NodeData.ParameterData enumTypeParameter = new NodeData.ParameterData("Type", DomainIDs.PARAMETER_TYPE, EnumSetGuid, NO_CONFIG);
@@ -231,8 +230,26 @@ namespace ConversationEditor
                     return new List<IParameter>() { defaultParameter };
                 }
 
+                List<IParameter> AddDefaultDecimal(IParameter[] p)
+                {
+                    var defaultParameter = new DecimalParameter("Default", DomainIDs.ParameterDefault, BaseTypeDecimal.ParameterType,
+                                                 () =>
+                                                 {
+                                                     var selection = p.Where(x => x.Id == DomainIDs.PARAMETER_TYPE).OfType<IEnumParameter>().Single();
+                                                     if (selection.EditorSelected == Guid.Empty)
+                                                         return new DecimalParameter.Definition(decimal.MinValue, decimal.MaxValue);
+                                                     else
+                                                     {
+                                                         var range = m_typeSet.GetDecimalRange(new ParameterType.Basic(selection.EditorSelected));
+                                                         return new DecimalParameter.Definition(range?.Item1, range?.Item2);
+                                                     }
+                                                 },
+                                                 "0");
+                    return new List<IParameter>() { defaultParameter };
+                }
+
                 AddNode(BaseType.Integer.ParameterNodeType, "Integer", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, integerTypeParameter }, AddDefaultInteger);
-                AddNode(BaseType.Decimal.ParameterNodeType, "Decimal", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, decimalTypeParameter, decimalDefaultParameter });
+                AddNode(BaseType.Decimal.ParameterNodeType, "Decimal", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, decimalTypeParameter }, AddDefaultDecimal);
                 AddNode(BaseType.String.ParameterNodeType, "String", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, stringDefaultParameter });
                 AddNode(BaseType.LocalizedString.ParameterNodeType, "Localized String", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, localizedStringTypeParameter });
                 AddNode(BaseType.Boolean.ParameterNodeType, "Boolean", parameterMenu, MakeConfig('p', "00aaaa"), parameterConnectors, new List<NodeData.ParameterData> { nameParameter, booleanDefaultParameter });

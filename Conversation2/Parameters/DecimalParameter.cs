@@ -9,26 +9,34 @@ namespace Conversation
 {
     public class DecimalParameter : Parameter<decimal>, IDecimalParameter
     {
-        private Definition m_definition;
         public class Definition
         {
             public Definition(decimal? min, decimal? max)
             {
+                if (max < min)
+                    throw new ArgumentOutOfRangeException(nameof(max), "max must equal or exceed min");
                 Max = max;
                 Min = min;
             }
             public decimal? Min { get; private set; }
             public decimal? Max { get; private set; }
         }
-        public DecimalParameter(string name, Id<Parameter> id, ParameterType typeId, Definition definition, string defaultValue)
-            : base(name, id, typeId, defaultValue, StaticDeserialize(definition, defaultValue))
+
+        private Func<Definition> m_definition;
+
+        public DecimalParameter(string name, Id<Parameter> id, ParameterType typeId, Func<Definition> definition, string defaultValue)
+            : base(name, id, typeId, defaultValue, StaticDeserialize(definition(), defaultValue))
         {
             m_definition = definition;
         }
 
+        public DecimalParameter(string name, Id<Parameter> id, ParameterType typeId, Definition definition, string defaultValue)
+            : this(name, id, typeId, () => definition, defaultValue)
+        { }
+
         protected override Tuple<decimal, bool> DeserializeValueInner(string value)
         {
-            return StaticDeserialize(m_definition, value);
+            return StaticDeserialize(m_definition(), value);
         }
 
         private static Tuple<decimal, bool> StaticDeserialize(Definition definition, string value)
@@ -41,7 +49,7 @@ namespace Conversation
 
         protected override bool ValueValid(decimal value)
         {
-            return StaticIsValid(m_definition, value);
+            return StaticIsValid(m_definition(), value);
         }
 
         private static bool StaticIsValid(Definition definition, decimal value)
@@ -60,9 +68,9 @@ namespace Conversation
             return Value.ToString(CultureInfo.InvariantCulture);
         }
 
-        public decimal Max => m_definition.Max ?? decimal.MaxValue;
+        public decimal Max => m_definition().Max ?? decimal.MaxValue;
 
-        public decimal Min => m_definition.Min ?? decimal.MinValue;
+        public decimal Min => m_definition().Min ?? decimal.MinValue;
 
         public override string DisplayValue(Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localize)
         {

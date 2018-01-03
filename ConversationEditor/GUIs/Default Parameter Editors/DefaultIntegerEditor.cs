@@ -14,7 +14,7 @@ namespace ConversationEditor
 {
     public class DefaultIntegerEditorFactory : IParameterEditorFactory
     {
-        public static readonly Guid StaticId = Guid.Parse("1e5e942c-b9a9-4f5c-a572-0a189c9545fe");
+        public static Guid StaticId { get; } = Guid.Parse("1e5e942c-b9a9-4f5c-a572-0a189c9545fe");
         public bool WillEdit(ParameterType type, WillEdit queries)
         {
             return queries.IsInteger(type);
@@ -87,7 +87,7 @@ namespace ConversationEditor
             set
             {
                 m_scheme = value;
-                m_numericUpDown.Colors.BorderPen = Scheme.ControlBorder;
+                m_numericUpDown.Colors.BorderPen = value.ControlBorder;
                 drawWindow1.ColorScheme = value;
             }
         }

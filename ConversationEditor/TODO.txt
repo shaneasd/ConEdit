@@ -17,9 +17,6 @@ Investigate construction of dynamicenumeration data sources. It seems like we cr
 
 https://xkcd.com/1806/ : scroll wheel undo/redo
 
-P4	Handle user specifying a default value for a parameter that is outside the acceptable range
-    This seems to be mostly done for integers (TODO: copy for decimals)
-
 P5	Handle changes to domain dynamically affecting conversations
 		- Warn when removing things that are in use
 		- constrain defaults for custom numeric types based on min/max
