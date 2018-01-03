@@ -98,7 +98,11 @@ namespace Utilities
                 using (ProcessModule module = process.MainModule)
                 {
                     IntPtr handle = GetModuleHandle(module.ModuleName);
-                    hHook = SetWindowsHookEx(WH_MOUSE_LL, MouseHookProcedure, handle, 0);
+                    if (!Debugger.IsAttached) //This is a pretty depressing necessity which will probably come back to bite me.
+                    {
+                        //https://stackoverflow.com/questions/9727327/windows-keyboard-hook-hangs-debugger
+                        hHook = SetWindowsHookEx(WH_MOUSE_LL, MouseHookProcedure, handle, 0);
+                    }
                 }
 
                 //If the SetWindowsHookEx function fails.
