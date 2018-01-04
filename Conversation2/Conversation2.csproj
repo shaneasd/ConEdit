@@ -84,7 +84,6 @@
     <Compile Include="InternalLogicException.cs" />
     <Compile Include="Nodes\NodeEditOperation.cs" />
     <Compile Include="Nodes\NodeGenerator.cs" />
-    <Compile Include="Nodes\SpecialNodes.cs" />
     <Compile Include="Nodes\UnknownEditable.cs" />
     <Compile Include="Output.cs" />
     <Compile Include="Parameters\AudioParameter.cs" />

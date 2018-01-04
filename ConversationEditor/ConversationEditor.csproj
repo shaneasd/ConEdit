@@ -300,8 +300,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\MouseController.cs" />
     <Compile Include="Serialization\XmlProject.cs" />
-    <Compile Include="Node Graphics\StartGUI.cs" />
-    <Compile Include="Node Graphics\TerminatorGUI.cs" />
     <Compile Include="testform.cs">
       <SubType>Form</SubType>
     </Compile>

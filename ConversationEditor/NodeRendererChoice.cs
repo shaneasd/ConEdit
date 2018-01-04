@@ -39,17 +39,12 @@ namespace ConversationEditor
 
         public static NodeRendererChoice DefaultConversation(Id<NodeTypeTemp> guid)
         {
-            if (guid == SpecialNodes.Start)
-                return new NodeRendererChoice(StartGuiFactory.Instance);
-            else if (guid == SpecialNodes.Terminator)
-                return new NodeRendererChoice(TerminatorGuiFactory.Instance);
-            else
-                return new NodeRendererChoice(EditableUIFactory.Instance);
+            return new NodeRendererChoice(EditableUIFactory.Instance);
         }
 
         public static NodeRendererChoice DefaultDomain(Id<NodeTypeTemp> guid)
         {
-                return new NodeRendererChoice(DomainNodeRendererFactory.Instance);
+            return new NodeRendererChoice(DomainNodeRendererFactory.Instance);
         }
     }
 }
