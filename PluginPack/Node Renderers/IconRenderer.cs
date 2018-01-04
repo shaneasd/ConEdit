@@ -32,7 +32,7 @@ namespace PluginPack
 
     public class IconRenderer : NodeUI
     {
-        string m_name;
+        string m_name = "";
         Bitmap m_image;
 
         public IconRenderer(ConversationNode<ConversationEditor.INodeGui> node, PointF p, Func<Id<LocalizedStringType>, Id<LocalizedText>, string> localizer) :
@@ -44,10 +44,10 @@ namespace PluginPack
 
         private void SetName()
         {
-            m_name = "Node name not found";
             string parameterName = NameConfig.TryGet(Node.Data.Config);
-            if (parameterName != null)
+            if (!string.IsNullOrEmpty(parameterName))
             {
+                m_name = "Node name not found";
                 var stringParameters = Node.Data.Parameters.OfType<IStringParameter>().Where(p => p.Name == parameterName);
                 if (stringParameters.Any())
                 {
