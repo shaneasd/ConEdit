@@ -476,12 +476,6 @@
     <EmbeddedResource Include="Resources\GenericSystemHover.ico" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\End Icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\Start Icon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Resources\ReadOnly.png" />
   </ItemGroup>
   <ItemGroup>
