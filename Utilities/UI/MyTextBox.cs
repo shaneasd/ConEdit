@@ -619,6 +619,8 @@ namespace Utilities.UI
             }
         }
 
+        public override void MouseLeave() { }
+
         public override void MouseClick(System.Windows.Forms.MouseEventArgs args)
         {
             if (m_area().Contains(args.Location))

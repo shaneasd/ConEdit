@@ -27,10 +27,10 @@ namespace ConversationEditor
             {
                 m_scheme = value;
                 this.BackColor = value.FormBackground;
-                this.okButton.BackColor = value.Background;
-                this.cancelButton.BackColor = value.Background;
-                okButton.ForeColor = value.Foreground;
-                cancelButton.ForeColor = value.Foreground;
+                //this.okButton.BackColor = value.Background;
+                //this.cancelButton.BackColor = value.Background;
+                //okButton.ForeColor = value.Foreground;
+                //cancelButton.ForeColor = value.Foreground;
 
                 panel1.ColorScheme = value;
                 greyScrollBar1.ColorScheme = value;
@@ -41,6 +41,24 @@ namespace ConversationEditor
         {
             InitializeComponent();
             this.Resize += NodeEditor_Resize;
+
+            NeutralHoveredPressedButton ok = new NeutralHoveredPressedButton(() => okButton.ClientRectangle,
+                (area, graphics) => ButtonDrawer.DrawButton(area.Round(), graphics, ButtonDrawer.ButtonState.Neutral),
+                (area, graphics) => ButtonDrawer.DrawButton(area.Round(), graphics, ButtonDrawer.ButtonState.Hovered),
+                (area, graphics) => ButtonDrawer.DrawButton(area.Round(), graphics, ButtonDrawer.ButtonState.Pressed),
+                () => Invalidate(true),
+                () => m_ok(),
+                () => "Ok");
+            ok.RegisterCallbacks(null, okButton);
+
+            NeutralHoveredPressedButton cancel = new NeutralHoveredPressedButton(() => cancelButton.ClientRectangle,
+                (area, graphics) => ButtonDrawer.DrawButton(area.Round(), graphics, ButtonDrawer.ButtonState.Neutral),
+                (area, graphics) => ButtonDrawer.DrawButton(area.Round(), graphics, ButtonDrawer.ButtonState.Hovered),
+                (area, graphics) => ButtonDrawer.DrawButton(area.Round(), graphics, ButtonDrawer.ButtonState.Pressed),
+                () => Invalidate(true),
+                () => Cancel.Execute(),
+                () => "Cancel");
+            cancel.RegisterCallbacks(null, cancelButton);
         }
 
         private void NodeEditor_Resize(object sender, EventArgs e)
@@ -342,16 +360,6 @@ namespace ConversationEditor
             }
         }
         private event Action m_ok;
-
-        private void cancelButton_Click(object sender, EventArgs e)
-        {
-            Cancel();
-        }
-
-        private void okButton_Click(object sender, EventArgs e)
-        {
-            m_ok();
-        }
 
         private void keyDown(object sender, KeyEventArgs e)
         {

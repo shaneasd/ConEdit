@@ -39,6 +39,7 @@ namespace Utilities.UI
         public abstract void MouseDown(MouseEventArgs args);
         public abstract void MouseUp(MouseEventArgs args);
         public abstract void MouseMove(MouseEventArgs args);
+        public abstract void MouseLeave();
         public abstract void MouseClick(MouseEventArgs args);
         public abstract void KeyDown(KeyEventArgs args);
         public abstract void KeyPress(KeyPressEventArgs args);
@@ -98,6 +99,10 @@ namespace Utilities.UI
                 {
                     this.MouseMove(args);
                 }
+                else
+                {
+                    this.MouseLeave();
+                }
             };
             MouseEventHandler MouseClick = (a, args) =>
             {
@@ -120,6 +125,8 @@ namespace Utilities.UI
             PaintEventHandler Paint = (a, args) => this.Paint(args.Graphics);
             EventHandler GotFocus = (a, args) => { if (focus == null || this == focus.LastFocused) this.GotFocus(); };
             EventHandler LostFocus = (a, args) => { if (focus == null || this == focus.LastFocused) this.LostFocus(); };
+            EventHandler MouseCaptureChanged = (a, args) => this.MouseCaptureChanged();
+            EventHandler MouseLeave = (a, args) => this.MouseLeave();
 
             control.MouseDown += MouseDown;
             control.MouseUp += MouseUp;
@@ -130,6 +137,8 @@ namespace Utilities.UI
             control.Paint += Paint;
             control.GotFocus += GotFocus;
             control.LostFocus += LostFocus;
+            control.MouseCaptureChanged += MouseCaptureChanged;
+            control.MouseLeave += MouseLeave;
 
             PushDisposeActions(() =>
             {
@@ -142,6 +151,8 @@ namespace Utilities.UI
                 control.Paint -= Paint;
                 control.GotFocus -= GotFocus;
                 control.LostFocus -= LostFocus;
+                control.MouseCaptureChanged -= MouseCaptureChanged;
+                control.MouseLeave -= MouseLeave;
             });
         }
 
@@ -170,6 +181,7 @@ namespace Utilities.UI
         public override void MouseUp(MouseEventArgs args) { }
         public override void MouseMove(MouseEventArgs args) { }
         public override void MouseClick(MouseEventArgs args) { }
+        public override void MouseLeave() { }
         public override void KeyDown(KeyEventArgs args) { }
         public override void KeyPress(KeyPressEventArgs args) { }
         public override void MouseWheel(MouseEventArgs args) { }

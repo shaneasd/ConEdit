@@ -227,6 +227,11 @@ namespace Utilities.UI
             if (m_textBox.Area.Contains(args.Location)) m_textBox.MouseMove(args);
         }
 
+        public override void MouseLeave()
+        {
+            m_textBox.MouseLeave();
+        }
+
         public override void MouseClick(MouseEventArgs args)
         {
             if (m_textBox.Area.Contains(args.Location)) m_textBox.MouseClick(args);

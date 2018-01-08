@@ -22,7 +22,9 @@ namespace ConversationEditor
     {
         public static Bitmap ProjectIcon { get; }
         public static Bitmap FolderIcon { get; }
-        public static Bitmap MinimiseIcon { get; }
+        public static Bitmap CollapseButton { get; }
+        public static Bitmap CollapseButtonHover { get; }
+        public static Bitmap CollapseButtonPressed { get; }
 
         Dictionary<DirectoryInfoHashed, ContainerItem> m_mapping = new Dictionary<DirectoryInfoHashed, ContainerItem>(10000);
         private ContextMenuStrip m_contextMenu;
@@ -56,8 +58,12 @@ namespace ConversationEditor
                 ProjectIcon = new Bitmap(stream);
             using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.Folder.png"))
                 FolderIcon = new Bitmap(stream);
-            using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.Minimise.png"))
-                MinimiseIcon = new Bitmap(stream);
+            using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.CollapseButton.png"))
+                CollapseButton = new Bitmap(stream);
+            using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.CollapseButtonHover.png"))
+                CollapseButtonHover = new Bitmap(stream);
+            using (Stream stream = assembly.GetManifestResourceStream("ConversationEditor.Resources.CollapseButtonPressed.png"))
+                CollapseButtonPressed = new Bitmap(stream);
         }
 
         SuppressibleAction m_updateScrollbar;
@@ -122,11 +128,14 @@ namespace ConversationEditor
                 }
             }
 
-            var minimiseButton = new GenericButton(
-                () => new RectangleF(drawWindow2.Width - MinimiseIcon.Width - 4, 0, MinimiseIcon.Width + 4, MinimiseIcon.Height + 4),
-                (area, graphics) => graphics.DrawImage(MinimiseIcon, (int)area.X + 2, (int)area.Y + 2, MinimiseIcon.Width, MinimiseIcon.Height),
-                () => { MinimiseAll(m_root); InvalidateImage(); }
-                );
+            RectangleF minimiseButtonArea() => new RectangleF(drawWindow2.Width - CollapseButton.Width - 4, 0, CollapseButton.Width + 4, CollapseButton.Height + 4);
+            var minimiseButton = new NeutralHoveredPressedButton(minimiseButtonArea,
+                (area, graphics) => graphics.DrawImage(CollapseButton, (int)area.X + 2, (int)area.Y + 2, CollapseButton.Width, CollapseButton.Height),
+                (area, graphics) => graphics.DrawImage(CollapseButtonHover, (int)area.X + 2, (int)area.Y + 2, CollapseButton.Width, CollapseButton.Height),
+                (area, graphics) => graphics.DrawImage(CollapseButtonPressed, (int)area.X + 2, (int)area.Y + 2, CollapseButton.Width, CollapseButton.Height),
+                InvalidateImage,
+                () => { MinimiseAll(m_root); InvalidateImage(); },
+                null);
             minimiseButton.RegisterCallbacks(null, drawWindow2);
 
             m_visibility.Types.Audio.Changed.Register(b => { m_config.Audio.Value = b.To; m_updateScrollbar.TryExecute(); });

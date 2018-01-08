@@ -81,6 +81,7 @@
     <Compile Include="SharedResource.cs" />
     <Compile Include="StringUtil.cs" />
     <Compile Include="TemporaryCulture.cs" />
+    <Compile Include="UI\ButtonDrawer.cs" />
     <Compile Include="UI\Caret.cs" />
     <Compile Include="Algorithm\Collection.cs" />
     <Compile Include="Algorithm\EnumerableReversible.cs" />

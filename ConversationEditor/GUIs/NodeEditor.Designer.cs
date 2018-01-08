@@ -32,44 +32,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Utilities.UI.GreyScrollBar.DefaultColorScheme defaultColorScheme2 = new Utilities.UI.GreyScrollBar.DefaultColorScheme();
-            this.cancelButton = new System.Windows.Forms.Button();
-            this.okButton = new System.Windows.Forms.Button();
+            Utilities.UI.GreyScrollBar.DefaultColorScheme defaultColorScheme1 = new Utilities.UI.GreyScrollBar.DefaultColorScheme();
+            Utilities.UI.DrawWindow.DefaultColorScheme defaultColorScheme2 = new Utilities.UI.DrawWindow.DefaultColorScheme();
+            Utilities.UI.DrawWindow.DefaultColorScheme defaultColorScheme4 = new Utilities.UI.DrawWindow.DefaultColorScheme();
+            Utilities.UI.DrawWindow.DefaultColorScheme defaultColorScheme3 = new Utilities.UI.DrawWindow.DefaultColorScheme();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.flowLayoutPanel1 = new System.Windows.Forms.Panel();
             this.flowLayoutPanel2 = new System.Windows.Forms.Panel();
             this.greyScrollBar1 = new Utilities.UI.GreyScrollBar();
+            this.okButton = new Utilities.UI.DrawWindow();
             this.panel1 = new Utilities.UI.DrawWindow();
+            this.cancelButton = new Utilities.UI.DrawWindow();
             this.tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // cancelButton
-            // 
-            this.cancelButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cancelButton.Location = new System.Drawing.Point(345, 355);
-            this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(316, 24);
-            this.cancelButton.TabIndex = 2;
-            this.cancelButton.Text = "Cancel";
-            this.cancelButton.UseVisualStyleBackColor = true;
-            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
-            // 
-            // okButton
-            // 
-            this.okButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.okButton.Location = new System.Drawing.Point(13, 355);
-            this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(316, 24);
-            this.okButton.TabIndex = 1;
-            this.okButton.Text = "Ok";
-            this.okButton.UseVisualStyleBackColor = true;
-            this.okButton.Click += new System.EventHandler(this.okButton_Click);
-            this.okButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.keyDown);
             // 
             // tableLayoutPanel3
             // 
@@ -79,9 +59,9 @@
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 10F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 10F));
-            this.tableLayoutPanel3.Controls.Add(this.cancelButton, 3, 1);
             this.tableLayoutPanel3.Controls.Add(this.splitContainer1, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.okButton, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.cancelButton, 3, 1);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 96);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -131,7 +111,7 @@
             // 
             // greyScrollBar1
             // 
-            this.greyScrollBar1.ColorScheme = defaultColorScheme2;
+            this.greyScrollBar1.ColorScheme = defaultColorScheme1;
             this.greyScrollBar1.Dock = System.Windows.Forms.DockStyle.Right;
             this.greyScrollBar1.Horizontal = false;
             this.greyScrollBar1.LargeChange = 0.1F;
@@ -147,13 +127,37 @@
             this.greyScrollBar1.TabStop = false;
             this.greyScrollBar1.Value = 0F;
             // 
+            // okButton
+            // 
+            this.okButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(56)))), ((int)(((byte)(56)))));
+            this.okButton.ColorScheme = defaultColorScheme2;
+            this.okButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.okButton.HandleNavigation = false;
+            this.okButton.Location = new System.Drawing.Point(13, 355);
+            this.okButton.Name = "okButton";
+            this.okButton.Size = new System.Drawing.Size(316, 24);
+            this.okButton.TabIndex = 3;
+            // 
             // panel1
             // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(56)))), ((int)(((byte)(56)))));
+            this.panel1.ColorScheme = defaultColorScheme4;
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.HandleNavigation = false;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(674, 96);
             this.panel1.TabIndex = 0;
+            // 
+            // cancelButton
+            // 
+            this.cancelButton.ColorScheme = defaultColorScheme3;
+            this.cancelButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cancelButton.HandleNavigation = false;
+            this.cancelButton.Location = new System.Drawing.Point(345, 355);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(316, 24);
+            this.cancelButton.TabIndex = 4;
             // 
             // NodeEditor
             // 
@@ -173,15 +177,14 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Button cancelButton;
-        private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private Utilities.UI.GreyScrollBar greyScrollBar1;
         private System.Windows.Forms.Panel flowLayoutPanel1;
         private System.Windows.Forms.Panel flowLayoutPanel2;
         private Utilities.UI.DrawWindow panel1;
+        private Utilities.UI.DrawWindow okButton;
+        private Utilities.UI.DrawWindow cancelButton;
         //private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Windows.Forms;
+using Arthur;
 
 namespace Utilities.UI
 {
@@ -15,46 +17,30 @@ namespace Utilities.UI
             m_callback = callback;
         }
 
-        public override void MouseDown(System.Windows.Forms.MouseEventArgs args)
-        {
-        }
+        public override void MouseDown(System.Windows.Forms.MouseEventArgs args) { }
 
-        public override void MouseUp(System.Windows.Forms.MouseEventArgs args)
-        {
-        }
+        public override void MouseUp(System.Windows.Forms.MouseEventArgs args) { }
 
-        public override void MouseMove(System.Windows.Forms.MouseEventArgs args)
-        {
-        }
+        public override void MouseMove(System.Windows.Forms.MouseEventArgs args) { }
+
+        public override void MouseLeave() { }
 
         public override void MouseClick(System.Windows.Forms.MouseEventArgs args)
         {
             m_callback();
         }
 
-        public override void KeyDown(System.Windows.Forms.KeyEventArgs args)
-        {
-        }
+        public override void KeyDown(System.Windows.Forms.KeyEventArgs args) { }
 
-        public override void KeyPress(System.Windows.Forms.KeyPressEventArgs args)
-        {
-        }
+        public override void KeyPress(System.Windows.Forms.KeyPressEventArgs args) { }
 
-        public override void MouseWheel(System.Windows.Forms.MouseEventArgs args)
-        {
-        }
+        public override void MouseWheel(System.Windows.Forms.MouseEventArgs args) { }
 
-        public override void GotFocus()
-        {
-        }
+        public override void GotFocus() { }
 
-        public override void LostFocus()
-        {
-        }
+        public override void LostFocus() { }
 
-        public override void MouseCaptureChanged()
-        {
-        }
+        public override void MouseCaptureChanged() { }
 
         public override void Paint(System.Drawing.Graphics g)
         {
@@ -212,6 +198,93 @@ namespace Utilities.UI
         {
             base.Paint(g);
             m_draw(Area, g);
+        }
+    }
+
+    public class NeutralHoveredPressedButton : MyButton
+    {
+        private Action<RectangleF, Graphics> m_drawNeutral;
+        private Action<RectangleF, Graphics> m_drawHovered;
+        private Action<RectangleF, Graphics> m_drawPressed;
+        private Action m_invalidated;
+        private Func<string> m_text;
+
+        public NeutralHoveredPressedButton(Func<RectangleF> area,
+            Action<RectangleF, Graphics> drawNeutral,
+            Action<RectangleF, Graphics> drawHovered,
+            Action<RectangleF, Graphics> drawPressed,
+            Action invalidated,
+            Action callback,
+            Func<string> text) : base(area, callback)
+        {
+            m_drawNeutral = drawNeutral;
+            m_drawHovered = drawHovered;
+            m_drawPressed = drawPressed;
+            m_invalidated = invalidated;
+            m_text = text;
+
+            m_hovered.Changed.Register(c => m_invalidated.Execute());
+            m_pressed.Changed.Register(c => m_invalidated.Execute());
+        }
+
+        NotifierProperty<bool> m_hovered = new NotifierProperty<bool>(false);
+        NotifierProperty<bool> m_pressed = new NotifierProperty<bool>(false);
+
+        public override void MouseCaptureChanged()
+        {
+            base.MouseCaptureChanged();
+            m_hovered.Value = false;
+            m_pressed.Value = false;
+        }
+
+        public override void MouseLeave()
+        {
+            base.MouseCaptureChanged();
+            m_hovered.Value = false;
+            m_pressed.Value = false;
+        }
+
+        public override void MouseMove(MouseEventArgs args)
+        {
+            base.MouseMove(args);
+            m_hovered.Value = Area.Contains(args.Location);
+            if (m_hovered.Value)
+                m_pressed.Value = args.Button.HasFlag(MouseButtons.Left);
+        }
+
+        public override void MouseUp(MouseEventArgs args)
+        {
+            base.MouseUp(args);
+            m_pressed.Value = false;
+        }
+
+        public override void MouseDown(MouseEventArgs args)
+        {
+            base.MouseDown(args);
+            if (m_hovered.Value)
+                m_pressed.Value = true;
+        }
+
+        public override void Paint(Graphics g)
+        {
+            base.Paint(g);
+            if (m_pressed.Value)
+                m_drawPressed(Area, g);
+            else if (m_hovered.Value)
+                m_drawHovered(Area, g);
+            else
+                m_drawNeutral(Area, g);
+            if (m_text != null)
+            {
+                using (var textRenderer = new NativeTextRenderer(g))
+                {
+                    string text = m_text();
+                    Size textSize = textRenderer.MeasureString(text, SystemFonts.DefaultFont);
+                    int offset = m_pressed.Value ? 1 : 0;
+                    PointF textLocation = new PointF((Area.Width - textSize.Width) / 2 + offset, (Area.Height - textSize.Height) / 2 + offset);
+                    textRenderer.DrawString(text, SystemFonts.DefaultFont, Color.White, textLocation.Round());
+                }
+            }
         }
     }
 }
