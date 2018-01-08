@@ -602,11 +602,7 @@ namespace Utilities.UI
             m_selecting = false;
         }
 
-        public override void MouseUp(MouseEventArgs args)
-        {
-            //GlobalMouseUp handles it
-            //m_selecting = false;
-        }
+        public override void MouseUp(MouseEventArgs args) { }
 
         public override void MouseMove(MouseEventArgs args)
         {
