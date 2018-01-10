@@ -64,19 +64,13 @@ namespace ConversationEditor
 
         public Color SelectionRectangle { get; } = Color.FromArgb(128, Color.Blue);
 
-        private readonly Pen m_controlBorder = new Pen(Color.Black, 1);
-        public Pen ControlBorder => m_controlBorder;
+        public Pen ControlBorder { get; } = new Pen(Color.Black, 1);
 
-        private readonly Color m_formBackground = Color.FromArgb(45, 45, 45);
-        public Color FormBackground => m_formBackground;
-
+        public Color FormBackground { get; } = Color.FromArgb(45, 45, 45);
         public Color Background { get; } = Color.FromArgb(56, 56, 56);
+        public Color Foreground { get; } = Color.FromArgb(205, 205, 205);
 
-        private readonly Color m_foreground = Color.FromArgb(205, 205, 205);
-        public Color Foreground => m_foreground;
-
-        private readonly Pen m_foregroundPen = new Pen(Defaults.Foreground);
-        public Pen ForegroundPen => m_foregroundPen;
+        public Pen ForegroundPen { get; } = new Pen(Defaults.Foreground);
 
         private readonly SolidBrush m_foregroundBrush = new SolidBrush(Defaults.Foreground);
         public SolidBrush ForegroundBrush => m_foregroundBrush;
@@ -105,8 +99,8 @@ namespace ConversationEditor
         {
             if (disposing)
             {
-                m_controlBorder.Dispose();
-                m_foregroundPen.Dispose();
+                ControlBorder.Dispose();
+                ForegroundPen.Dispose();
                 m_foregroundBrush.Dispose();
                 m_backgroundBrush.Dispose();
                 m_hatch.Dispose();
