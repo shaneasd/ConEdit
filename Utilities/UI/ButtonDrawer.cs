@@ -41,15 +41,31 @@ namespace Utilities.UI
             }
         }
 
+        private static Pen GetOutline(ButtonState state)
+        {
+            switch (state)
+            {
+                case ButtonState.Neutral:
+                    return NeutralOutline;
+                case ButtonState.Hovered:
+                    return HoveredOutline;
+                case ButtonState.Pressed:
+                    return PressedOutline;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(state));
+            }
+        }
+
         public static void DrawButton(Rectangle area, Graphics graphics, ButtonState state)
         {
             using (var gradient = MakeGradient(area, state))
             {
                 graphics.FillRectangle(gradient, InnerRectangle(area));
-                graphics.DrawLine(Pens.Black, new Point(area.Left + 1, area.Top), new Point(area.Right - 1 - 1, area.Top));
-                graphics.DrawLine(Pens.Black, new Point(area.Left + 1, area.Bottom - 1), new Point(area.Right - 1 - 1, area.Bottom - 1));
-                graphics.DrawLine(Pens.Black, new Point(area.Left, area.Top + 1), new Point(area.Left, area.Bottom - 1 - 1));
-                graphics.DrawLine(Pens.Black, new Point(area.Right - 1, area.Top + 1), new Point(area.Right - 1, area.Bottom - 1 - 1));
+                Pen outline = GetOutline(state);
+                graphics.DrawLine(outline, new Point(area.Left + 1, area.Top), new Point(area.Right - 1 - 1, area.Top));
+                graphics.DrawLine(outline, new Point(area.Left + 1, area.Bottom - 1), new Point(area.Right - 1 - 1, area.Bottom - 1));
+                graphics.DrawLine(outline, new Point(area.Left, area.Top + 1), new Point(area.Left, area.Bottom - 1 - 1));
+                graphics.DrawLine(outline, new Point(area.Right - 1, area.Top + 1), new Point(area.Right - 1, area.Bottom - 1 - 1));
             }
         }
     }

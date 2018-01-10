@@ -45,7 +45,7 @@ namespace ConversationEditor
             InitializeComponent();
 
             //TODO: AUDIO: Suggest paths that exist for autoCompleteSuggestions
-            m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), MyTextBox.InputFormEnum.Path, null);
+            m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), MyTextBox.InputFormEnum.Path, null, x => MyTextBox.TextBoxBorderDaniel);
             m_textBox.RequestedAreaChanged += () =>
             {
                 int extraHeight = (Size.Height - drawWindow1.Size.Height).Clamp(0, int.MaxValue);
@@ -137,7 +137,7 @@ namespace ConversationEditor
                 m_scheme = value;
                 m_textBox.Colors.BorderPen = value.ControlBorder;
                 ForeColor = value.Foreground;
-                drawWindow1.ColorScheme = value;
+                //drawWindow1.ColorScheme = value;
             }
         }
     }

@@ -37,7 +37,7 @@ namespace ConversationEditor
             set
             {
                 m_scheme = value;
-                greyScrollBar1.ColorScheme = value;
+                //greyScrollBar1.ColorScheme = value;
                 drawWindow1.ColorScheme = value;
                 drawWindow2.ColorScheme = value;
                 drawWindow3.ColorScheme = value;
@@ -144,7 +144,7 @@ namespace ConversationEditor
             m_visibility.Types.EmptyFolders.Changed.Register(b => { m_config.Folders.Value = b.To; m_updateScrollbar.TryExecute(); });
             m_visibility.Types.Localizations.Changed.Register(b => { m_config.Localizations.Value = b.To; m_updateScrollbar.TryExecute(); });
 
-            m_filterTextBox = new MyTextBox(drawWindow3, () => drawWindow3.DisplayRectangle, MyTextBox.InputFormEnum.Text, s => null);
+            m_filterTextBox = new MyTextBox(drawWindow3, () => drawWindow3.DisplayRectangle, MyTextBox.InputFormEnum.Text, s => null, x => new SimpleTextBoxBorderDrawer(x));
             MyTextBox.SetupCallbacks(drawWindow3, m_filterTextBox);
             m_filterTextBox.TextChanged += (oldtext) => filterTextChanged();
         }

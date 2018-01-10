@@ -115,17 +115,38 @@ namespace Utilities.UI
         }
     }
 
+    internal class SuggestionBoxGraphics
+    {
+        public static Bitmap ButtonDropdown { get; }
+        public static Bitmap ButtonDropdownHover { get; }
+        public static Bitmap ButtonDropdownPressed { get; }
+        public static int ButtonWidth { get; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = "I believe this would actually be slower due to the inability to cache Assembly.GetExecutingAssembly()")]
+        static SuggestionBoxGraphics()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.ButtonDropdown.png"))
+                ButtonDropdown = new Bitmap(stream);
+            using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.ButtonDropdownHover.png"))
+                ButtonDropdownHover = new Bitmap(stream);
+            using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.ButtonDropdownPressed.png"))
+                ButtonDropdownPressed = new Bitmap(stream);
+            ButtonWidth = ButtonDropdown.Width;
+        }
+    }
+
     public class MySuggestionBox<T> : MyControl
     {
         private SizeF m_requestedSize;
         private MyTextBox m_textBox;
+        private NeutralHoveredPressedButton m_button;
         private Control m_control;
         private bool m_allowCustomText;
         private Func<RectangleF> m_buttonArea;
         private Func<RectangleF> m_area;
         private Func<RectangleF> m_textBoxArea;
         private ToolStripDropDown m_dropDown;
-        private readonly bool m_HasDropDownButton = true;
         private MyComboBoxItem<T> m_selectedItem = new MyComboBoxItem<T>("Uninitialized default", default);
 
         public ToolStripRenderer Renderer { get { return m_dropDown.Renderer; } set { m_dropDown.Renderer = value; } }
@@ -149,8 +170,6 @@ namespace Utilities.UI
             }
         }
 
-        private const int ButtonWidth = 20;
-
         public MySuggestionBox(Control control, Func<RectangleF> area, bool allowCustomText, IEnumerable<MyComboBoxItem<T>> items)
         {
             m_allowCustomText = allowCustomText;
@@ -159,25 +178,30 @@ namespace Utilities.UI
             Items = items;
 
             m_textBoxArea = m_area;
-            if (m_HasDropDownButton)
-            {
-                m_buttonArea = () => { var a = area(); return RectangleF.FromLTRB(a.Right - ButtonWidth, a.Top, a.Right, a.Bottom); };
-                m_textBoxArea = () => { var a = area(); return RectangleF.FromLTRB(a.Left, a.Top, a.Right - ButtonWidth, a.Bottom); };
-            }
+            m_buttonArea = () => { var a = area(); return RectangleF.FromLTRB(a.Right - SuggestionBoxGraphics.ButtonWidth, a.Top, a.Right, a.Bottom); };
+            m_textBoxArea = () => { var a = area(); return RectangleF.FromLTRB(a.Left, a.Top, a.Right - SuggestionBoxGraphics.ButtonWidth, a.Bottom); };
 
             m_dropDown = new ToolStripDropDown();
             m_dropDown.Opened += (a, b) => { m_dropDownOpen = true; };
             m_dropDown.Closed += (a, b) => { m_dropDownOpen = false; m_itemIndex = -1; m_dropDownWindow = 0; };
 
-            m_textBox = new MyTextBox(control, m_textBoxArea, allowCustomText ? MyTextBox.InputFormEnum.Text : MyTextBox.InputFormEnum.None, null);
+            m_textBox = new MyTextBox(control, m_textBoxArea, allowCustomText ? MyTextBox.InputFormEnum.Text : MyTextBox.InputFormEnum.None, null, x => MyTextBox.TextBoxBorderDaniel);
             m_textBox.Font = m_dropDown.Font;
             m_textBox.RequestedAreaChanged += () => { RequestedArea = new SizeF(Area.Width, m_textBox.RequestedArea.Height); };
 
             m_textBox.TextChanged += s => ExecuteSelectionChanged();
             m_textBox.TextChanged += s => { m_itemIndex = -1; m_dropDownWindow = 0; UpdateDropdown(); };
 
+            m_button = new NeutralHoveredPressedButton(m_buttonArea,
+                (a, graphics) => graphics.DrawImage(SuggestionBoxGraphics.ButtonDropdown, a),
+                (a, graphics) => graphics.DrawImage(SuggestionBoxGraphics.ButtonDropdownHover, a),
+                (a, graphics) => graphics.DrawImage(SuggestionBoxGraphics.ButtonDropdownPressed, a),
+                () => m_control.Invalidate(true),
+                ButtonMouseDown,
+                null);
+            m_button.RegisterCallbacks(null, control);
+
             m_disposeActions.Add(Mouse.MouseDown.Register(this, (me, point) => me.GlobalMouseDown(point)));
-            m_disposeActions.Add(Mouse.MouseUp.Register(this, (me, point) => me.GlobalMouseUp(point)));
         }
 
         List<Action> m_disposeActions = new List<Action>();
@@ -194,10 +218,7 @@ namespace Utilities.UI
             }
         }
 
-        /// <summary>
-        /// The mouse left button is currently held down and was over the drop down button when it was most recently pressed.
-        /// </summary>
-        private bool m_mouseIsDownOnButton = false;
+        private bool m_suppressDropDownOpen = false;
 
         public void SetupCallbacks()
         {
@@ -255,21 +276,6 @@ namespace Utilities.UI
         public override void Paint(Graphics g)
         {
             m_textBox.Paint(g);
-
-            if (m_HasDropDownButton)
-                DrawButton(g, m_buttonArea());
-        }
-
-        private void DrawButton(Graphics graphics, RectangleF buttonArea)
-        {
-            graphics.DrawRectangle(TextBoxColors.BorderPen, RectangleF.FromLTRB(buttonArea.Left, buttonArea.Top, buttonArea.Right - 1, buttonArea.Bottom - 1));
-            using (var path = new GraphicsPath())
-            {
-                path.AddLines(new PointF[] { buttonArea.Location.Plus(buttonArea.Width/4,buttonArea.Height/3),
-                                         buttonArea.Location.Plus(3*buttonArea.Width/4, buttonArea.Height/3),
-                                         buttonArea.Location.Plus(buttonArea.Width/2, 2*buttonArea.Height/3)});
-                graphics.FillPath(TextBoxColors.TextBrush, path);
-            }
         }
 
         private MyComboBoxItem<T> MatchingItem()
@@ -318,30 +324,24 @@ namespace Utilities.UI
 
         private void GlobalMouseDown(Point point)
         {
-            m_mouseIsDownOnButton = m_buttonArea().Contains(m_control.PointToClient(point));
-            if (!m_mouseIsDownOnButton)
+            m_suppressDropDownOpen = m_buttonArea().Contains(m_control.PointToClient(point)) && m_dropDownOpen;
+            if (m_suppressDropDownOpen)
             {
                 if (!m_dropDown.ClientRectangle.Contains(m_dropDown.PointToClient(point)))
                     m_dropDown.Close();
             }
         }
 
-        private void GlobalMouseUp(Point point)
+        private void ButtonMouseDown()
         {
-            m_mouseIsDownOnButton = false;
+            if (!m_suppressDropDownOpen)
+                UpdateDropdown();
         }
 
         public override void MouseDown(MouseEventArgs args)
         {
-            if (m_mouseIsDownOnButton && m_dropDownOpen)
-                m_dropDown.Close();
-            else
-            {
-                if (m_buttonArea().Contains(args.Location))
-                    ButtonMouseDown();
-                else if (m_textBox.Area.Contains(args.Location))
-                    m_textBox.MouseDown(args);
-            }
+            if (m_textBox.Area.Contains(args.Location))
+                m_textBox.MouseDown(args);
         }
 
         public override void KeyDown(KeyEventArgs args)
@@ -394,11 +394,6 @@ namespace Utilities.UI
         private const int WINDOW_SIZE = 4;
         private int m_dropDownWindow = 0;
         public event Action EnterPressed;
-
-        private void ButtonMouseDown()
-        {
-            UpdateDropdown();
-        }
 
         private void UpdateDropdown()
         {

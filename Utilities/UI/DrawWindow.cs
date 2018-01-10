@@ -19,7 +19,8 @@ namespace Utilities.UI
 
         public class DefaultColorScheme : IColorScheme
         {
-            public Color Background { get; } = Color.FromArgb(56, 56, 56);
+            //public Color Background { get; } = Color.FromArgb(56, 56, 56);
+            public Color Background { get; } = Color.Transparent;
         }
 
         bool m_colorSchemeAssigned = false;
@@ -36,6 +37,7 @@ namespace Utilities.UI
         public DrawWindow()
             : base()
         {
+            BackColor = Color.Transparent;
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             SetStyle(ControlStyles.UserPaint, true);
@@ -46,8 +48,8 @@ namespace Utilities.UI
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (!m_colorSchemeAssigned && !Util.DesignMode())
-                throw new InvalidOperationException("DrawWindow not given a color scheme");
+            //if (!m_colorSchemeAssigned && !Util.DesignMode())
+            //    throw new InvalidOperationException("DrawWindow not given a color scheme");
             base.OnPaint(e);
         }
 

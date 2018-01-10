@@ -45,7 +45,7 @@ namespace Utilities.UI
             m_buttonDownArea = () => { var a = area(); return new RectangleF(a.Right - BUTTON_WIDTH, a.Top + a.Height / 2, BUTTON_WIDTH, a.Height / 2); };
             Func<RectangleF> m_textBoxArea = () => { var a = area(); return RectangleF.FromLTRB(a.Left, a.Top, a.Right - BUTTON_WIDTH, a.Bottom); };
 
-            m_textBox = new MyTextBox(control, m_textBoxArea, decimalAllowed ? MyTextBox.InputFormEnum.Decimal : MyTextBox.InputFormEnum.Integer, null);
+            m_textBox = new MyTextBox(control, m_textBoxArea, decimalAllowed ? MyTextBox.InputFormEnum.Decimal : MyTextBox.InputFormEnum.Integer, null, x => MyTextBox.TextBoxBorderDaniel);
             m_textBox.RequestedAreaChanged += () => { RequestedArea = new SizeF(Area.Width, m_textBox.RequestedArea.Height); };
             m_textBox.TextChanged += (string oldText) =>
                 {

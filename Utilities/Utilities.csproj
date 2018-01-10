@@ -81,6 +81,7 @@
     <Compile Include="SharedResource.cs" />
     <Compile Include="StringUtil.cs" />
     <Compile Include="TemporaryCulture.cs" />
+    <Compile Include="UI\BorderDrawer.cs" />
     <Compile Include="UI\ButtonDrawer.cs" />
     <Compile Include="UI\Caret.cs" />
     <Compile Include="Algorithm\Collection.cs" />
@@ -179,6 +180,14 @@
   <ItemGroup>
     <None Include="ShanesKey.snk" />
     <None Include="Utilities.ruleset" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Resources\ButtonDropdown.png" />
+    <EmbeddedResource Include="UI\Resources\ButtonDropdownHover.png" />
+    <EmbeddedResource Include="UI\Resources\ButtonDropdownPressed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Resources\InputField.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

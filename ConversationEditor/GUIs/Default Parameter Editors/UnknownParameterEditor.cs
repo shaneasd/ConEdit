@@ -24,7 +24,7 @@ namespace ConversationEditor
 
             const int BUTTON_SIZE = 16;
 
-            m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width - BUTTON_SIZE, Math.Max(BUTTON_SIZE, drawWindow1.Height)), MyTextBox.InputFormEnum.None, null);
+            m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width - BUTTON_SIZE, Math.Max(BUTTON_SIZE, drawWindow1.Height)), MyTextBox.InputFormEnum.None, null, x => MyTextBox.TextBoxBorderDaniel);
             m_textBox.RequestedAreaChanged += () =>
             {
                 //Draw window is the whole control so we can just modify the control
@@ -99,7 +99,7 @@ namespace ConversationEditor
             {
                 m_scheme = value;
                 m_textBox.Colors.BorderPen = value.ControlBorder;
-                drawWindow1.ColorScheme = value;
+                //drawWindow1.ColorScheme = value;
                 m_button.Foreground = Scheme.ControlBorder;
                 m_button.Background = Scheme.BackgroundBrush;
             }

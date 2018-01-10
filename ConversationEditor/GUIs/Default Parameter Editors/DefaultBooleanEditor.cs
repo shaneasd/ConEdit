@@ -66,7 +66,7 @@ namespace ConversationEditor
             set
             {
                 m_colorScheme = value;
-                drawWindow1.ColorScheme = value;
+                //drawWindow1.ColorScheme = value;
             }
         }
 

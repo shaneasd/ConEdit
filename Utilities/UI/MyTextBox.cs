@@ -11,11 +11,27 @@ using System.Globalization;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Collections.ObjectModel;
+using System.Reflection;
 
 namespace Utilities.UI
 {
     public class MyTextBox : MyControl, IDisposable
     {
+        public static ImageBorderDrawer TextBoxBorderDaniel { get; }
+
+        public static Bitmap InputField { get; }
+        private IBorderDrawer Border { get; }
+
+        static MyTextBox()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.InputField.png"))
+            {
+                InputField = new Bitmap(stream);
+            }
+            TextBoxBorderDaniel = new ImageBorderDrawer(InputField, 4);
+        }
+
         public const int BorderSize = 4;
         private class UndoAction : Utilities.UndoAction
         {
@@ -55,6 +71,7 @@ namespace Utilities.UI
             public int SelectionLength;
         }
 
+        //TODO: Replace ColorOptions concept with something more akin to the BorderDrawer concept so that we can avoid redundancy in things like background color
         public class ColorOptions
         {
             public ColorOptions()
@@ -416,7 +433,7 @@ namespace Utilities.UI
 
         #endregion
 
-        public MyTextBox(Control control, Func<RectangleF> area, InputFormEnum inputForm, Func<string, IEnumerable<string>> autoCompleteSuggestions)
+        public MyTextBox(Control control, Func<RectangleF> area, InputFormEnum inputForm, Func<string, IEnumerable<string>> autoCompleteSuggestions, Func<MyTextBox, IBorderDrawer> borderDrawer)
         {
             if (autoCompleteSuggestions != null)
             {
@@ -436,6 +453,8 @@ namespace Utilities.UI
             AutoCompleteSuggestions = autoCompleteSuggestions;
 
             m_disposeActions.Add(Mouse.MouseUp.Register(this, (me, point) => me.GlobalMouseUp()));
+
+            Border = borderDrawer(this);
         }
 
         List<Action> m_disposeActions = new List<Action>();
@@ -526,9 +545,12 @@ namespace Utilities.UI
         public override void Paint(Graphics g)
         {
             var area = Area;
-            g.FillRectangle(Colors.BackgroundBrush, area);
-            g.DrawRectangle(Colors.BorderPen, new Rectangle((int)area.X, (int)area.Y, (int)Math.Floor(area.Width) - 1, (int)Math.Floor(area.Height) - 1));
+            Border.Draw(g, area.Round());
+            DrawText(g, TextRectangle);
+        }
 
+        private void DrawText(Graphics g, RectangleF area)
+        {
             using (g.SaveState())
             {
                 g.Clip = new Region(TextRectangle);
@@ -539,7 +561,7 @@ namespace Utilities.UI
                     for (int i = 0; i <= text.Length; i++)
                     {
                         g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
-                        TextRenderer.DrawText(g, text.Substring(0, i), Font, TextRectangle.Location.Round().Plus(0, Font.Height * line), Colors.Text, Colors.Background, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix);
+                        TextRenderer.DrawText(g, text.Substring(0, i), Font, TextRectangle.Location.Round().Plus(0, Font.Height * line), Colors.Text, Border.BackColor, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix);
                     }
                 }
 

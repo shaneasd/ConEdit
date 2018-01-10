@@ -73,9 +73,9 @@ namespace Utilities.UI
             InitializeComponent();
             Action CreateButtons = () =>
                 {
-                    TopButton = new Button(new Point(0, 0), !Horizontal ? Button.Direction.Up : Button.Direction.Left, () => ColorScheme.Background);
+                    TopButton = new Button(new Point(0, 0), !Horizontal ? Button.Direction.Up : Button.Direction.Left, () => Color.Transparent);
                     var location = Horizontal ? new Point(Width - BUTTON_SIZE, 0) : new Point(0, Height - BUTTON_SIZE);
-                    BottomButton = new Button(location, !Horizontal ? Button.Direction.Down : Button.Direction.Right, () => ColorScheme.Background);
+                    BottomButton = new Button(location, !Horizontal ? Button.Direction.Down : Button.Direction.Right, () => Color.Transparent);
                 };
             CreateButtons();
             SizeChanged += (a, b) => CreateButtons();
@@ -148,17 +148,17 @@ namespace Utilities.UI
             set { m_percentageCovered = value; Invalidate(true); }
         }
 
-        private IColorScheme m_colorScheme = new DefaultColorScheme();
-        [Browsable(false)]
-        public IColorScheme ColorScheme
-        {
-            get { return m_colorScheme; }
-            set
-            {
-                m_colorScheme = value;
-                drawWindow1.ColorScheme = value.DrawWindowColorScheme;
-            }
-        }
+        //private IColorScheme m_colorScheme = new DefaultColorScheme();
+        //[Browsable(false)]
+        //public IColorScheme ColorScheme
+        //{
+        //    get { return m_colorScheme; }
+        //    set
+        //    {
+        //        m_colorScheme = value;
+        //        drawWindow1.ColorScheme = value.DrawWindowColorScheme;
+        //    }
+        //}
 
         private enum StateEnum { None, HoldingScrollDownButton, HoldingScrollUpButton, Dragging, EmptyScrollDown, EmptyScrollUp }
         StateEnum m_state;

@@ -115,7 +115,7 @@ namespace ConversationEditor
                 button2.BackColor = value.Background;
                 button1.ForeColor = value.Foreground;
                 button2.ForeColor = value.Foreground;
-                greyScrollBar1.ColorScheme = value;
+                //greyScrollBar1.ColorScheme = value;
                 drawWindow1.ColorScheme = value;
             }
         }

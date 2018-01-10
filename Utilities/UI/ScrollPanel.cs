@@ -16,6 +16,6 @@ namespace Utilities.UI
             InitializeComponent();
         }
 
-        public GreyScrollBar.IColorScheme ColorScheme { get { return greyScrollBar1.ColorScheme; } set { greyScrollBar1.ColorScheme = value; } }
+        //public GreyScrollBar.IColorScheme ColorScheme { get { return greyScrollBar1.ColorScheme; } set { greyScrollBar1.ColorScheme = value; } }
     }
 }

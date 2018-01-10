@@ -53,7 +53,7 @@ namespace ConversationEditor
         {
             InitializeComponent();
 
-            m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), MyTextBox.InputFormEnum.Text, AutoCompleteSuggestions);
+            m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), MyTextBox.InputFormEnum.Text, AutoCompleteSuggestions, x => MyTextBox.TextBoxBorderDaniel);
             m_textBox.RequestedAreaChanged += () =>
             {
                 //Draw window is the whole control so we can just modify the control
@@ -98,7 +98,7 @@ namespace ConversationEditor
             {
                 m_scheme = value;
                 m_textBox.Colors.BorderPen = value.ControlBorder;
-                drawWindow1.ColorScheme = value;
+                //drawWindow1.ColorScheme = value;
             }
         }
 

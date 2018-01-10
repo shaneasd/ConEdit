@@ -28,7 +28,7 @@ namespace ConversationEditor
                 BackColor = value.FormBackground;
                 btnOk.BackColor = value.Background;
                 btnOk.ForeColor = value.Foreground;
-                greyScrollBar1.ColorScheme = value;
+                //greyScrollBar1.ColorScheme = value;
                 drawWindow1.ColorScheme = value;
             }
         }

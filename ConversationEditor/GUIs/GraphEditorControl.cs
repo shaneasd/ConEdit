@@ -376,9 +376,9 @@ namespace ConversationEditor
                 m_colorScheme = value;
                 BackColor = value.FormBackground;
                 drawWindow.ColorScheme = value;
-                hScrollBar1.ColorScheme = value;
-                vScrollBar1.ColorScheme = value;
-                zoomBar.ColorScheme = value;
+                //hScrollBar1.ColorScheme = value;
+                //vScrollBar1.ColorScheme = value;
+                //zoomBar.ColorScheme = value;
                 Redraw();
             }
         }

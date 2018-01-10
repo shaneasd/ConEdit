@@ -111,7 +111,7 @@
             // 
             // greyScrollBar1
             // 
-            this.greyScrollBar1.ColorScheme = defaultColorScheme1;
+            //this.greyScrollBar1.ColorScheme = defaultColorScheme1;
             this.greyScrollBar1.Dock = System.Windows.Forms.DockStyle.Right;
             this.greyScrollBar1.Horizontal = false;
             this.greyScrollBar1.LargeChange = 0.1F;
@@ -129,7 +129,7 @@
             // 
             // okButton
             // 
-            this.okButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(56)))), ((int)(((byte)(56)))));
+            //this.okButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(56)))), ((int)(((byte)(56)))));
             this.okButton.ColorScheme = defaultColorScheme2;
             this.okButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.okButton.HandleNavigation = false;
@@ -151,7 +151,7 @@
             // 
             // cancelButton
             // 
-            this.cancelButton.ColorScheme = defaultColorScheme3;
+            //this.cancelButton.ColorScheme = defaultColorScheme3;
             this.cancelButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cancelButton.HandleNavigation = false;
             this.cancelButton.Location = new System.Drawing.Point(345, 355);

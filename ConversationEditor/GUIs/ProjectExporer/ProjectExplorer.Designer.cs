@@ -224,7 +224,7 @@
             // 
             // greyScrollBar1
             // 
-            this.greyScrollBar1.ColorScheme = defaultColorScheme2;
+            //this.greyScrollBar1.ColorScheme = defaultColorScheme2;
             this.greyScrollBar1.Dock = System.Windows.Forms.DockStyle.Right;
             this.greyScrollBar1.Horizontal = false;
             this.greyScrollBar1.LargeChange = 0.1F;

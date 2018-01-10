@@ -214,7 +214,7 @@ namespace ConversationEditor
                     var area = m_area();
                     var indent = CalculateIndent(area);
                     var textArea = CalculateTextArea(area, indent);
-                    m_textBox = new MyTextBox(control, () => new RectangleF(textArea.Location.Plus(ToControlTransform().OffsetX, ToControlTransform().OffsetY), textArea.Size), MyTextBox.InputFormEnum.FileName, null);
+                    m_textBox = new MyTextBox(control, () => new RectangleF(textArea.Location.Plus(ToControlTransform().OffsetX, ToControlTransform().OffsetY), textArea.Size), MyTextBox.InputFormEnum.FileName, null, x => new SimpleTextBoxBorderDrawer(x));
                     m_textBox.Text = PermanentText;
                     m_textBox.SetCursorPosition(cursorPos);
                     m_textBox.Colors.Background = Color.Transparent;

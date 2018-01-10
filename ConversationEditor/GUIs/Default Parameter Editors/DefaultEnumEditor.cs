@@ -119,7 +119,7 @@ namespace ConversationEditor
                 m_comboBox.TextBoxColors.BorderPen = value.ControlBorder;
                 m_comboBox.SelectedBackgroundColor = value.SelectedConversationListItemPrimaryBackground;
                 m_comboBox.Renderer = value.ContextMenu;
-                drawWindow1.ColorScheme = value;
+                //drawWindow1.ColorScheme = value;
             }
         }
     }

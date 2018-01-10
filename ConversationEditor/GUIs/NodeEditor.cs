@@ -33,7 +33,7 @@ namespace ConversationEditor
                 //cancelButton.ForeColor = value.Foreground;
 
                 panel1.ColorScheme = value;
-                greyScrollBar1.ColorScheme = value;
+                //greyScrollBar1.ColorScheme = value;
             }
         }
 
@@ -163,7 +163,7 @@ namespace ConversationEditor
 
             if (!string.IsNullOrEmpty(data.Description))
             {
-                m_descriptionBox = new MyTextBox(this.panel1, () => new RectangleF(panel1.Location, panel1.Size), MyTextBox.InputFormEnum.None, null);
+                m_descriptionBox = new MyTextBox(this.panel1, () => new RectangleF(panel1.Location, panel1.Size), MyTextBox.InputFormEnum.None, null, x => new SimpleTextBoxBorderDrawer(x));
                 m_descriptionBox.Text = data.Description;
                 MyTextBox.SetupCallbacks(panel1, m_descriptionBox);
                 panel1.Size = m_descriptionBox.RequestedArea.ToSize();
