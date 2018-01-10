@@ -491,7 +491,9 @@
     <EmbeddedResource Include="Resources\ToggleButtonOnPressed.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Minimise.png" />
+    <EmbeddedResource Include="Resources\CollapseButton.png" />
+    <EmbeddedResource Include="Resources\CollapseButtonHover.png" />
+    <EmbeddedResource Include="Resources\CollapseButtonPressed.png" />
     <Content Include="TODO.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
