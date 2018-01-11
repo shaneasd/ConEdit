@@ -185,7 +185,7 @@ namespace Utilities.UI
             m_dropDown.Opened += (a, b) => { m_dropDownOpen = true; };
             m_dropDown.Closed += (a, b) => { m_dropDownOpen = false; m_itemIndex = -1; m_dropDownWindow = 0; };
 
-            m_textBox = new MyTextBox(control, m_textBoxArea, allowCustomText ? MyTextBox.InputFormEnum.Text : MyTextBox.InputFormEnum.None, null, x => MyTextBox.TextBoxBorderDaniel);
+            m_textBox = new MyTextBox(control, m_textBoxArea, allowCustomText ? MyTextBox.InputFormEnum.Text : MyTextBox.InputFormEnum.None, null, x => MyTextBox.ComboBoxBorderDaniel);
             m_textBox.Font = m_dropDown.Font;
             m_textBox.RequestedAreaChanged += () => { RequestedArea = new SizeF(Area.Width, m_textBox.RequestedArea.Height); };
 

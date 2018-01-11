@@ -18,8 +18,8 @@ namespace Utilities.UI
     public class MyTextBox : MyControl, IDisposable
     {
         public static ImageBorderDrawer TextBoxBorderDaniel { get; }
+        public static ImageBorderDrawer ComboBoxBorderDaniel { get; }
 
-        public static Bitmap InputField { get; }
         private IBorderDrawer Border { get; }
 
         static MyTextBox()
@@ -27,9 +27,13 @@ namespace Utilities.UI
             Assembly assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.InputField.png"))
             {
-                InputField = new Bitmap(stream);
+                TextBoxBorderDaniel = new ImageBorderDrawer(new Bitmap(stream), 4);
             }
-            TextBoxBorderDaniel = new ImageBorderDrawer(InputField, 4);
+            using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.ComboBoxDropdown.png"))
+            {
+                ComboBoxBorderDaniel = new ImageBorderDrawer(new Bitmap(stream), 4);
+            }
+            
         }
 
         public const int BorderSize = 4;
