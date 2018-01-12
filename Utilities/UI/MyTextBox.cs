@@ -33,10 +33,8 @@ namespace Utilities.UI
             {
                 ComboBoxBorderDaniel = new ImageBorderDrawer(new Bitmap(stream), 4);
             }
-            
         }
 
-        public const int BorderSize = 4;
         private class UndoAction : Utilities.UndoAction
         {
             private State m_undoState;
@@ -282,7 +280,7 @@ namespace Utilities.UI
         private void UpdateRequestedArea()
         {
             RectangleF size = GetTextBounds();
-            size.Inflate(BorderSize, BorderSize);
+            size.Inflate(Margin, Margin);
             RequestedArea = new SizeF(Area.Width, size.Height);
         }
 
@@ -306,7 +304,7 @@ namespace Utilities.UI
 
         const int CARET_HEIGHT = 13;
 
-        public RectangleF TextRectangle => RectangleF.Inflate(Area, -BorderSize, -BorderSize);
+        public RectangleF TextRectangle => RectangleF.Inflate(Area, -Margin, -Margin);
 
         public InputFormEnum InputForm { get; set; }
 
@@ -387,7 +385,7 @@ namespace Utilities.UI
             }
 
             m_dropDown.SuspendLayout();
-            var width = (int)m_area().Width - 2;
+            var width = (int)Area.Width - 2;
             var height = m_dropDown.Font.Height + 4;
             m_dropDown.Items.Clear();
             m_dropDown.Items.Add(new UpArrowItem(width, () => { m_dropDownWindow--; UpdateDropdown(); }, true));
@@ -437,7 +435,7 @@ namespace Utilities.UI
 
         #endregion
 
-        public MyTextBox(Control control, Func<RectangleF> area, InputFormEnum inputForm, Func<string, IEnumerable<string>> autoCompleteSuggestions, Func<MyTextBox, IBorderDrawer> borderDrawer)
+        public MyTextBox(Control control, Func<RectangleF> area, InputFormEnum inputForm, Func<string, IEnumerable<string>> autoCompleteSuggestions, Func<MyTextBox, IBorderDrawer> borderDrawer, int margin = 4)
         {
             if (autoCompleteSuggestions != null)
             {
@@ -459,7 +457,10 @@ namespace Utilities.UI
             m_disposeActions.Add(Mouse.MouseUp.Register(this, (me, point) => me.GlobalMouseUp()));
 
             Border = borderDrawer(this);
+            Margin = margin;
         }
+
+        int Margin { get; }
 
         List<Action> m_disposeActions = new List<Action>();
 
@@ -475,6 +476,8 @@ namespace Utilities.UI
 
         private IEnumerable<string> GetLines()
         {
+            if (TextRectangle.Width <= 0)
+                return Enumerable.Empty<string>();
             return StringUtil.GetLines(Text, Font, TextRectangle.Width, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding);
         }
 
@@ -645,7 +648,7 @@ namespace Utilities.UI
 
         public override void MouseClick(System.Windows.Forms.MouseEventArgs args)
         {
-            if (m_area().Contains(args.Location))
+            if (Area.Contains(args.Location))
             {
                 if (args.Button == MouseButtons.Left)
                 {

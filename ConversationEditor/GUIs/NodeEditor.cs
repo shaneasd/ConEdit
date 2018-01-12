@@ -32,7 +32,7 @@ namespace ConversationEditor
                 //okButton.ForeColor = value.Foreground;
                 //cancelButton.ForeColor = value.Foreground;
 
-                panel1.ColorScheme = value;
+                //panel1.ColorScheme = value;
                 //greyScrollBar1.ColorScheme = value;
             }
         }
@@ -163,13 +163,15 @@ namespace ConversationEditor
 
             if (!string.IsNullOrEmpty(data.Description))
             {
-                m_descriptionBox = new MyTextBox(this.panel1, () => new RectangleF(panel1.Location, panel1.Size), MyTextBox.InputFormEnum.None, null, x => new SimpleTextBoxBorderDrawer(x));
+                int padding = 8;
+                m_descriptionBox = new MyTextBox(panel1, () => new RectangleF(panel1.Location.Plus(padding, padding), new SizeF(panel1.Width - padding * 2, panel1.Height - padding * 2)), MyTextBox.InputFormEnum.None, null, x => new SimpleTextBoxBorderDrawer(x), 8);
                 m_descriptionBox.Text = data.Description;
                 MyTextBox.SetupCallbacks(panel1, m_descriptionBox);
                 panel1.Size = m_descriptionBox.RequestedArea.ToSize();
                 panel1.SizeChanged += (object sender, EventArgs e) =>
                 {
-                    panel1.Size = m_descriptionBox.RequestedArea.ToSize();
+                    var requested = m_descriptionBox.RequestedArea.ToSize();
+                    panel1.Size = new Size(requested.Width + padding * 2, requested.Height + padding * 2);
                 };
             }
             else

@@ -140,7 +140,6 @@
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(56)))), ((int)(((byte)(56)))));
             this.panel1.ColorScheme = defaultColorScheme4;
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.HandleNavigation = false;

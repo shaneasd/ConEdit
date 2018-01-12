@@ -166,7 +166,8 @@ namespace ConversationEditor
                     //g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
                     var textArea = CalculateTextArea(area, indent);
 
-                    renderer.DrawString(Text, SystemFonts.MessageBoxFont, scheme.Foreground, textArea.Location.Plus(MyTextBox.BorderSize, MyTextBox.BorderSize).Round());
+                    int margin = 4;
+                    renderer.DrawString(Text, SystemFonts.MessageBoxFont, scheme.Foreground, textArea.Location.Plus(margin, margin).Round());
                     //TextRenderer.DrawText(g, Text, SystemFonts.MessageBoxFont, textArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE).Round(), ColorScheme.Foreground, Color.Transparent, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix);
 
                     //g.DrawString(Text, SystemFonts.MessageBoxFont, ColorScheme.ForegroundBrush, TextArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE));
