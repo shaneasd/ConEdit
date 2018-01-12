@@ -1044,5 +1044,10 @@ namespace ConversationEditor
         {
             SetUpLocalizationsForm.SetupLocalizations(m_context.CurrentProject.Value);
         }
+
+        private void layoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CurrentEditor.LayoutNodes();
+        }
     }
 }

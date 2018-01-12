@@ -22,6 +22,7 @@ namespace ConversationEditor
             Id = file;
         }
 
+        public void Move(IEnumerable<ValueTuple<ConversationNode, System.Drawing.PointF>> move) => throw new NotSupportedException();
 
         ISaveableFile ISaveableFileProvider.File => m_file;
 

@@ -180,6 +180,7 @@
       <DependentUpon>SetUpLocalizationsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="INodeGUIUtils.cs" />
+    <Compile Include="Layout.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Node Graphics\UnknownNodeRenderer.cs" />
     <Compile Include="Controllers\ErrorCheckerController.cs" />

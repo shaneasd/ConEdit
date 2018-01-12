@@ -14,6 +14,8 @@ namespace ConversationEditor
         public static IConversationEditorControlData<TNode, TTransitionUI> Instance = new DummyConversationEditorControlData<TNode, TTransitionUI>();
         private DummyConversationEditorControlData() { }
 
+        public void Move(IEnumerable<ValueTuple<TNode, System.Drawing.PointF>> move) => throw new NotSupportedException();
+
         public bool Remove(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization)
         {
             throw new NotSupportedException();

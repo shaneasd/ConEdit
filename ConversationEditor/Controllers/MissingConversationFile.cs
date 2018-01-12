@@ -23,6 +23,7 @@ namespace ConversationEditor
             Id = file;
         }
 
+        public void Move(IEnumerable<ValueTuple<ConversationNode, System.Drawing.PointF>> move) => throw new NotSupportedException();
 
         public IEnumerableReversible<ConversationNode> Nodes => EnumerableReversible.Empty<ConversationNode>();
 

@@ -1004,6 +1004,17 @@ namespace ConversationEditor
         {
             return CurrentFile.UIInfo(connection, canFail);
         }
+
+        public void LayoutNodes()
+        {
+            var currentFile = CurrentFile;
+            Action action = null;
+            action = () =>
+            {
+                NodeLayout.LayoutNodes(currentFile);
+            };
+            action();
+        }
     }
 
     /// <summary>

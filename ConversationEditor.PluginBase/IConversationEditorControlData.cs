@@ -19,6 +19,7 @@ namespace ConversationEditor
         Tuple<IEnumerable<TNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, object documentId, PointF location, ILocalizationEngine localization);
         void Add(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization);
         bool Remove(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization);
+        void Move(IEnumerable<ValueTuple<TNode, PointF>> move);
         IEnumerableReversible<TNode> Nodes { get; }
         IEnumerableReversible<NodeGroup> Groups { get; }
         void RemoveLinks(Output o);

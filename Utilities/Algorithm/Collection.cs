@@ -297,5 +297,19 @@ namespace Utilities
             dict.TryGetValue(key, out value);
             return dict.Remove(key);
         }
+
+        public static bool Randomise<T>(this List<T> data, Random r)
+        {
+            bool result = false;
+            for (int i = data.Count-1; i > 0; i--)
+            {
+                T temp = data[i];
+                int j = r.Next(i+1);
+                result |= i != j;
+                data[i] = data[j];
+                data[j] = temp;
+            }
+            return result;
+        }
     }
 }

@@ -235,6 +235,21 @@ namespace ConversationEditor
                 throw new InternalLogicException("why would you do this?");
         }
 
+        //TODO: MouseController and this should use the same logic (not sure which is better)
+        public void Move(IEnumerable<ValueTuple<ConversationNode, PointF>> move)
+        {
+            //TODO: What happens if the nodes are in groups?
+            Action undo = () => { };
+            Action redo = () => { };
+            foreach ((var node, var point) in move)
+            {
+                PointF origin = node.Renderer.Area.Center();
+                undo += () => node.Renderer.MoveTo(origin);
+                redo += () => node.Renderer.MoveTo(point);
+            }
+            UndoableFile.Change(new GenericUndoAction(undo, redo, "Moved nodes"));
+        }
+
         private SimpleUndoPair InnerAddNodes(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization)
         {
             List<Action> undoActions = new List<Action>();

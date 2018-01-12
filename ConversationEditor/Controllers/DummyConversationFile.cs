@@ -17,6 +17,8 @@ namespace ConversationEditor
         public static IConversationFile Instance { get; } = new DummyConversationFile();
         private DummyConversationFile() { }
 
+        public void Move(IEnumerable<ValueTuple<ConversationNode, System.Drawing.PointF>> move) => throw new NotSupportedException();
+
         public bool Remove(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization) => throw new NotSupportedException();
 
         public IEnumerableReversible<ConversationNode> Nodes => EnumerableReversible.Empty<ConversationNode>();
