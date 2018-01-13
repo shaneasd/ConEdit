@@ -43,7 +43,7 @@ namespace ConversationEditor
         {
             InitializeComponent();
 
-            m_numericUpDown = new MyNumericUpDown<int>(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), false);
+            m_numericUpDown = new MyNumericUpDown<int>(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), false, Fonts.Default);
             m_numericUpDown.RequestedAreaChanged += () =>
             {
                 MinimumSize = new Size(0, (int)m_numericUpDown.RequestedArea.Height);

@@ -146,6 +146,7 @@
     <Compile Include="Delegates.cs" />
     <Compile Include="DocumentPath.cs" />
     <Compile Include="Error Checkers\InvalidConnectionErrorChecker.cs" />
+    <Compile Include="Fonts.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="GUIs\Default Parameter Editors\DefaultLocalDynamicEnumEditor.cs" />
     <Compile Include="GUIs\Default Parameter Editors\DefaultSetEditor.cs" />

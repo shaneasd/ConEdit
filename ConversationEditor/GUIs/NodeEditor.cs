@@ -48,7 +48,7 @@ namespace ConversationEditor
                 (area, graphics) => ButtonDrawer.DrawButton(area.Round(), graphics, ButtonDrawer.ButtonState.Pressed),
                 () => Invalidate(true),
                 () => m_ok(),
-                () => "Ok");
+                () => "Ok", Fonts.Default);
             ok.RegisterCallbacks(null, okButton);
 
             NeutralHoveredPressedButton cancel = new NeutralHoveredPressedButton(() => cancelButton.ClientRectangle,
@@ -57,7 +57,7 @@ namespace ConversationEditor
                 (area, graphics) => ButtonDrawer.DrawButton(area.Round(), graphics, ButtonDrawer.ButtonState.Pressed),
                 () => Invalidate(true),
                 () => Cancel.Execute(),
-                () => "Cancel");
+                () => "Cancel", Fonts.Default);
             cancel.RegisterCallbacks(null, cancelButton);
         }
 
@@ -164,7 +164,7 @@ namespace ConversationEditor
             if (!string.IsNullOrEmpty(data.Description))
             {
                 int padding = 8;
-                m_descriptionBox = new MyTextBox(panel1, () => new RectangleF(panel1.Location.Plus(padding, padding), new SizeF(panel1.Width - padding * 2, panel1.Height - padding * 2)), MyTextBox.InputFormEnum.None, null, x => new SimpleTextBoxBorderDrawer(x), 8);
+                m_descriptionBox = new MyTextBox(panel1, () => new RectangleF(panel1.Location.Plus(padding, padding), new SizeF(panel1.Width - padding * 2, panel1.Height - padding * 2)), MyTextBox.InputFormEnum.None, null, x => new SimpleTextBoxBorderDrawer(x), 8, Fonts.Default);
                 m_descriptionBox.Text = data.Description;
                 MyTextBox.SetupCallbacks(panel1, m_descriptionBox);
                 panel1.Size = m_descriptionBox.RequestedArea.ToSize();

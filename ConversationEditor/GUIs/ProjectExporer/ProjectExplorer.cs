@@ -135,7 +135,7 @@ namespace ConversationEditor
                 (area, graphics) => graphics.DrawImage(CollapseButtonPressed, (int)area.X + 2, (int)area.Y + 2, CollapseButton.Width, CollapseButton.Height),
                 InvalidateImage,
                 () => { MinimiseAll(m_root); InvalidateImage(); },
-                null);
+                null, null);
             minimiseButton.RegisterCallbacks(null, drawWindow2);
 
             m_visibility.Types.Audio.Changed.Register(b => { m_config.Audio.Value = b.To; m_updateScrollbar.TryExecute(); });
@@ -144,7 +144,7 @@ namespace ConversationEditor
             m_visibility.Types.EmptyFolders.Changed.Register(b => { m_config.Folders.Value = b.To; m_updateScrollbar.TryExecute(); });
             m_visibility.Types.Localizations.Changed.Register(b => { m_config.Localizations.Value = b.To; m_updateScrollbar.TryExecute(); });
 
-            m_filterTextBox = new MyTextBox(drawWindow3, () => drawWindow3.DisplayRectangle, MyTextBox.InputFormEnum.Text, s => null, x => new SimpleTextBoxBorderDrawer(x));
+            m_filterTextBox = new MyTextBox(drawWindow3, () => drawWindow3.DisplayRectangle, MyTextBox.InputFormEnum.Text, s => null, x => new SimpleTextBoxBorderDrawer(x), 4, Fonts.Default);
             MyTextBox.SetupCallbacks(drawWindow3, m_filterTextBox);
             m_filterTextBox.TextChanged += (oldtext) => filterTextChanged();
         }

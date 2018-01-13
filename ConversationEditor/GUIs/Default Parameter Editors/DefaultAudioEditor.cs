@@ -45,7 +45,7 @@ namespace ConversationEditor
             InitializeComponent();
 
             //TODO: AUDIO: Suggest paths that exist for autoCompleteSuggestions
-            m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), MyTextBox.InputFormEnum.Path, null, x => MyTextBox.TextBoxBorderDaniel);
+            m_textBox = new MyTextBox(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), MyTextBox.InputFormEnum.Path, null, x => MyTextBox.TextBoxBorderDaniel, 4, Fonts.Default);
             m_textBox.RequestedAreaChanged += () =>
             {
                 int extraHeight = (Size.Height - drawWindow1.Size.Height).Clamp(0, int.MaxValue);

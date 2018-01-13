@@ -61,7 +61,7 @@ namespace ConversationEditor
         private void AddComboBox()
         {
             TControl comboBox = null;
-            comboBox = new TControl(drawWindow1, () => new RectangleF(IndexOfCombo(comboBox) * (COMBO_WIDTH + drawWindow1.Height), 0, COMBO_WIDTH, drawWindow1.Height), true, m_comboBoxItems);
+            comboBox = new TControl(drawWindow1, () => new RectangleF(IndexOfCombo(comboBox) * (COMBO_WIDTH + drawWindow1.Height), 0, COMBO_WIDTH, drawWindow1.Height), true, m_comboBoxItems, Fonts.Default);
             comboBox.RequestedAreaChanged += () =>
             {
                 MinimumSize = new Size(0, (int)comboBox.RequestedArea.Height);

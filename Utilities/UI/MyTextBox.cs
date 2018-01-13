@@ -271,10 +271,7 @@ namespace Utilities.UI
 
         public string SelectedText => Text.Substring(SelectionStart, Math.Abs(SelectionLength));
 
-        public Font Font
-        {
-            get; set;
-        } = SystemFonts.MessageBoxFont;
+        public Font Font { get; set; } = null;
         private Func<RectangleF> m_area;
         public RectangleF Area => m_area();
         private void UpdateRequestedArea()
@@ -435,7 +432,7 @@ namespace Utilities.UI
 
         #endregion
 
-        public MyTextBox(Control control, Func<RectangleF> area, InputFormEnum inputForm, Func<string, IEnumerable<string>> autoCompleteSuggestions, Func<MyTextBox, IBorderDrawer> borderDrawer, int margin = 4)
+        public MyTextBox(Control control, Func<RectangleF> area, InputFormEnum inputForm, Func<string, IEnumerable<string>> autoCompleteSuggestions, Func<MyTextBox, IBorderDrawer> borderDrawer, int margin, Font font)
         {
             if (autoCompleteSuggestions != null)
             {
@@ -447,6 +444,8 @@ namespace Utilities.UI
             m_area = area;
             m_requestedSize = SizeF.Empty;
             m_control = control;
+            Margin = margin;
+            Font = font;
             Colors = new ColorOptions();
             CursorPos = new CP(0);
             SelectionLength = 0;
@@ -457,7 +456,6 @@ namespace Utilities.UI
             m_disposeActions.Add(Mouse.MouseUp.Register(this, (me, point) => me.GlobalMouseUp()));
 
             Border = borderDrawer(this);
-            Margin = margin;
         }
 
         int Margin { get; }

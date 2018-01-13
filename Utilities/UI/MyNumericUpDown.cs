@@ -37,7 +37,7 @@ namespace Utilities.UI
 
         public MyTextBox.ColorOptions Colors { get { return m_textBox.Colors; } set { m_textBox.Colors = value; } }
 
-        public MyNumericUpDown(Control control, Func<RectangleF> area, bool decimalAllowed)
+        public MyNumericUpDown(Control control, Func<RectangleF> area, bool decimalAllowed, Font font)
         {
             m_area = area;
 
@@ -45,7 +45,7 @@ namespace Utilities.UI
             m_buttonDownArea = () => { var a = area(); return new RectangleF(a.Right - BUTTON_WIDTH, a.Top + a.Height / 2, BUTTON_WIDTH, a.Height / 2); };
             Func<RectangleF> m_textBoxArea = () => { var a = area(); return RectangleF.FromLTRB(a.Left, a.Top, a.Right - BUTTON_WIDTH, a.Bottom); };
 
-            m_textBox = new MyTextBox(control, m_textBoxArea, decimalAllowed ? MyTextBox.InputFormEnum.Decimal : MyTextBox.InputFormEnum.Integer, null, x => MyTextBox.ComboBoxBorderDaniel);
+            m_textBox = new MyTextBox(control, m_textBoxArea, decimalAllowed ? MyTextBox.InputFormEnum.Decimal : MyTextBox.InputFormEnum.Integer, null, x => MyTextBox.ComboBoxBorderDaniel, 4, font);
             m_textBox.RequestedAreaChanged += () => { RequestedArea = new SizeF(Area.Width, m_textBox.RequestedArea.Height); };
             m_textBox.TextChanged += (string oldText) =>
                 {

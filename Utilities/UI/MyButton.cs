@@ -208,6 +208,7 @@ namespace Utilities.UI
         private Action<RectangleF, Graphics> m_drawPressed;
         private Action m_invalidated;
         private Func<string> m_text;
+        private Font m_font;
 
         public NeutralHoveredPressedButton(Func<RectangleF> area,
             Action<RectangleF, Graphics> drawNeutral,
@@ -215,13 +216,14 @@ namespace Utilities.UI
             Action<RectangleF, Graphics> drawPressed,
             Action invalidated,
             Action callback,
-            Func<string> text) : base(area, callback)
+            Func<string> text, Font font) : base(area, callback)
         {
             m_drawNeutral = drawNeutral;
             m_drawHovered = drawHovered;
             m_drawPressed = drawPressed;
             m_invalidated = invalidated;
             m_text = text;
+            m_font = font;
 
             m_hovered.Changed.Register(c => m_invalidated.Execute());
             m_pressed.Changed.Register(c => m_invalidated.Execute());

@@ -47,7 +47,7 @@ namespace ConversationEditor
             InitializeComponent();
 
             m_comboBoxItems = (new ExtraLazyEnumerable<TItem>(() => m_parameter.Options.Select(ch => new TItem(ch, ch))));
-            m_comboBox = new TControl(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), true, m_comboBoxItems);
+            m_comboBox = new TControl(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), true, m_comboBoxItems, Fonts.Default);
             m_comboBox.SetupCallbacks();
             m_comboBox.RequestedAreaChanged += () =>
             {

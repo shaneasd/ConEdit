@@ -170,7 +170,7 @@ namespace Utilities.UI
             }
         }
 
-        public MySuggestionBox(Control control, Func<RectangleF> area, bool allowCustomText, IEnumerable<MyComboBoxItem<T>> items)
+        public MySuggestionBox(Control control, Func<RectangleF> area, bool allowCustomText, IEnumerable<MyComboBoxItem<T>> items, Font font)
         {
             m_allowCustomText = allowCustomText;
             m_control = control;
@@ -185,7 +185,7 @@ namespace Utilities.UI
             m_dropDown.Opened += (a, b) => { m_dropDownOpen = true; };
             m_dropDown.Closed += (a, b) => { m_dropDownOpen = false; m_itemIndex = -1; m_dropDownWindow = 0; };
 
-            m_textBox = new MyTextBox(control, m_textBoxArea, allowCustomText ? MyTextBox.InputFormEnum.Text : MyTextBox.InputFormEnum.None, null, x => MyTextBox.ComboBoxBorderDaniel);
+            m_textBox = new MyTextBox(control, m_textBoxArea, allowCustomText ? MyTextBox.InputFormEnum.Text : MyTextBox.InputFormEnum.None, null, x => MyTextBox.ComboBoxBorderDaniel, 4, font);
             m_textBox.Font = m_dropDown.Font;
             m_textBox.RequestedAreaChanged += () => { RequestedArea = new SizeF(Area.Width, m_textBox.RequestedArea.Height); };
 
@@ -198,7 +198,7 @@ namespace Utilities.UI
                 (a, graphics) => graphics.DrawImage(SuggestionBoxGraphics.ButtonDropdownPressed, a),
                 () => m_control.Invalidate(true),
                 ButtonMouseDown,
-                null);
+                null, null);
             m_button.RegisterCallbacks(null, control);
 
             m_disposeActions.Add(Mouse.MouseDown.Register(this, (me, point) => me.GlobalMouseDown(point)));

@@ -163,14 +163,9 @@ namespace ConversationEditor
                 if (m_textBox == null)
                 {
                     float indent = CalculateIndent(area);
-                    //g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
                     var textArea = CalculateTextArea(area, indent);
-
                     int margin = 4;
                     renderer.DrawString(Text, SystemFonts.MessageBoxFont, scheme.Foreground, textArea.Location.Plus(margin, margin).Round());
-                    //TextRenderer.DrawText(g, Text, SystemFonts.MessageBoxFont, textArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE).Round(), ColorScheme.Foreground, Color.Transparent, TextFormatFlags.TextBoxControl | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix);
-
-                    //g.DrawString(Text, SystemFonts.MessageBoxFont, ColorScheme.ForegroundBrush, TextArea.Location.Plus(MyTextBox.BORDER_SIZE, MyTextBox.BORDER_SIZE));
                 }
             }
 
@@ -215,7 +210,7 @@ namespace ConversationEditor
                     var area = m_area();
                     var indent = CalculateIndent(area);
                     var textArea = CalculateTextArea(area, indent);
-                    m_textBox = new MyTextBox(control, () => new RectangleF(textArea.Location.Plus(ToControlTransform().OffsetX, ToControlTransform().OffsetY), textArea.Size), MyTextBox.InputFormEnum.FileName, null, x => new SimpleTextBoxBorderDrawer(x));
+                    m_textBox = new MyTextBox(control, () => new RectangleF(textArea.Location.Plus(ToControlTransform().OffsetX, ToControlTransform().OffsetY), textArea.Size), MyTextBox.InputFormEnum.FileName, null, x => new SimpleTextBoxBorderDrawer(x), 4, Fonts.Default);
                     m_textBox.Text = PermanentText;
                     m_textBox.SetCursorPosition(cursorPos);
                     m_textBox.Colors.Background = Color.Transparent;

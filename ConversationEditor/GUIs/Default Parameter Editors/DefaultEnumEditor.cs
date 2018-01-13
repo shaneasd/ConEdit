@@ -48,7 +48,7 @@ namespace ConversationEditor
             InitializeComponent();
             drawWindow1.SizeChanged += (a, args) => m_comboBox.AreaChanged();
 
-            m_comboBox = new TControl(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), true, m_comboBoxItems);
+            m_comboBox = new TControl(drawWindow1, () => new RectangleF(0, 0, drawWindow1.Width, drawWindow1.Height), true, m_comboBoxItems, Fonts.Default);
             m_comboBox.SetupCallbacks();
             m_comboBox.RequestedAreaChanged += () =>
             {
