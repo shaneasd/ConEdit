@@ -115,7 +115,7 @@ namespace Utilities.UI
         }
     }
 
-    internal class SuggestionBoxGraphics
+    internal static class SuggestionBoxGraphics
     {
         public static Bitmap ButtonDropdown { get; }
         public static Bitmap ButtonDropdownHover { get; }
