@@ -20,8 +20,8 @@ namespace Utilities
         private const int WM_LBUTTONDOWN = 0x0201;
         private const int WM_LBUTTONUP = 0x0202;
 
-        public static WeakEvent<System.Drawing.Point> MouseDown = new WeakEvent<System.Drawing.Point>();
-        public static WeakEvent<System.Drawing.Point> MouseUp = new WeakEvent<System.Drawing.Point>();
+        public static WeakEvent<System.Drawing.Point> MouseDown { get; } = new WeakEvent<System.Drawing.Point>();
+        public static WeakEvent<System.Drawing.Point> MouseUp { get; } = new WeakEvent<System.Drawing.Point>();
 
         class Filter : System.Windows.Forms.IMessageFilter
         {
