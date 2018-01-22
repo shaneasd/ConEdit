@@ -156,6 +156,7 @@ namespace Utilities
             var stream = m_upToDateFile.Migrate();
             newPath.Directory.EnsureExists(); //This can fail (returning false) if it does then we subsequently get a (hopefully) useful exception from File.Move
             System.IO.File.Move(File.FullName, newPath.FullName);
+            m_upToDateFile.Dispose();
             m_upToDateFile = new UpToDateFile(stream, newPath, m_saveTo, m_backEnd);
             m_upToDateFile.FileChanged += () => FileModifiedExternally.Execute();
             m_upToDateFile.FileDeleted += () => FileDeletedExternally.Execute();

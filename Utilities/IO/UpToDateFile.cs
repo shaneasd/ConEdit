@@ -249,7 +249,6 @@ namespace Utilities
             m_backEnd.Abort(this);
             MemoryStream temp = m_onDisk;
             m_onDisk = null;
-            this.Dispose();
             return temp;
         }
     }
