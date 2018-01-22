@@ -281,10 +281,10 @@ namespace Utilities.UI
                 using (var textRenderer = new NativeTextRenderer(g))
                 {
                     string text = m_text();
-                    Size textSize = textRenderer.MeasureString(text, SystemFonts.DefaultFont);
+                    Size textSize = textRenderer.MeasureString(text, m_font);
                     int offset = m_pressed.Value ? 1 : 0;
                     PointF textLocation = new PointF((Area.Width - textSize.Width) / 2 + offset, (Area.Height - textSize.Height) / 2 + offset);
-                    textRenderer.DrawString(text, SystemFonts.DefaultFont, Color.White, textLocation.Round());
+                    textRenderer.DrawString(text, m_font, Color.White, textLocation.Round());
                 }
             }
         }
