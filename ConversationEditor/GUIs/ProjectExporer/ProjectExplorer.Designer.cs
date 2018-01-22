@@ -230,14 +230,14 @@
             this.greyScrollBar1.Dock = System.Windows.Forms.DockStyle.Right;
             this.greyScrollBar1.Horizontal = false;
             this.greyScrollBar1.LargeChange = 0.1F;
-            this.greyScrollBar1.Location = new System.Drawing.Point(0, 0);
+            this.greyScrollBar1.Location = new System.Drawing.Point(0, 2);
             this.greyScrollBar1.Margin = new System.Windows.Forms.Padding(0);
             this.greyScrollBar1.Maximum = 0F;
             this.greyScrollBar1.Minimum = 0F;
             this.greyScrollBar1.MinimumSize = new System.Drawing.Size(15, 15);
             this.greyScrollBar1.Name = "greyScrollBar1";
             this.greyScrollBar1.PercentageCovered = 0F;
-            this.greyScrollBar1.Size = new System.Drawing.Size(15, 454);
+            this.greyScrollBar1.Size = new System.Drawing.Size(15, 452);
             this.greyScrollBar1.SmallChange = 0.01F;
             this.greyScrollBar1.TabIndex = 1;
             this.greyScrollBar1.Value = 0F;
@@ -284,7 +284,7 @@
             this.panel2.Location = new System.Drawing.Point(380, 26);
             this.panel2.MinimumSize = new System.Drawing.Size(15, 15);
             this.panel2.Name = "panel2";
-            this.panel2.Padding = new System.Windows.Forms.Padding(0, 0, 0, 2);
+            this.panel2.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             this.panel2.Size = new System.Drawing.Size(15, 456);
             this.panel2.TabIndex = 1;
             // 
