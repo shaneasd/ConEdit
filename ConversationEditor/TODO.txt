@@ -26,6 +26,7 @@ P3	Unity color scheme whole application
 	- Search and Replace dialog
 	- Message boxes
 	- Border for title bar
+	- Setup localizations form
 
 P6	Node avoidance line drawing
 
