@@ -19,18 +19,15 @@ namespace Utilities.UI
 
         public class DefaultColorScheme : IColorScheme
         {
-            //public Color Background { get; } = Color.FromArgb(56, 56, 56);
             public Color Background { get; } = Color.Transparent;
         }
 
-        bool m_colorSchemeAssigned = false;
         IColorScheme m_colorScheme = new DefaultColorScheme();
         [Browsable(false)]
         public IColorScheme ColorScheme
         {
             set { m_colorScheme = value;
-                BackColor = value.Background;
-                m_colorSchemeAssigned = true; }
+                BackColor = value.Background;}
             get { return m_colorScheme; }
         }
 

@@ -28,25 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
+            Utilities.UI.DrawWindow.DefaultColorScheme defaultColorScheme1 = new Utilities.UI.DrawWindow.DefaultColorScheme();
             this.drawWindow1 = new Utilities.UI.DrawWindow();
             this.greyScrollBar1 = new Utilities.UI.GreyScrollBar();
             this.SuspendLayout();
             // 
             // drawWindow1
             // 
-            this.drawWindow1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.drawWindow1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(56)))), ((int)(((byte)(56)))));
+            this.drawWindow1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.drawWindow1.BackColor = System.Drawing.Color.Transparent;
+            this.drawWindow1.ColorScheme = defaultColorScheme1;
+            this.drawWindow1.HandleNavigation = false;
             this.drawWindow1.Location = new System.Drawing.Point(0, 0);
             this.drawWindow1.Name = "drawWindow1";
-            this.drawWindow1.Size = new System.Drawing.Size(934, 147);
+            this.drawWindow1.Size = new System.Drawing.Size(933, 146);
             this.drawWindow1.TabIndex = 1;
             // 
             // greyScrollBar1
             // 
-            this.greyScrollBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.greyScrollBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.greyScrollBar1.Horizontal = false;
             this.greyScrollBar1.LargeChange = 0.05F;
             this.greyScrollBar1.Location = new System.Drawing.Point(935, 0);
@@ -55,7 +58,8 @@
             this.greyScrollBar1.MinimumSize = new System.Drawing.Size(15, 15);
             this.greyScrollBar1.Name = "greyScrollBar1";
             this.greyScrollBar1.PercentageCovered = 0F;
-            this.greyScrollBar1.Size = new System.Drawing.Size(15, 150);
+            this.greyScrollBar1.Size = new System.Drawing.Size(15, 146);
+            this.greyScrollBar1.SmallChange = 0.01F;
             this.greyScrollBar1.TabIndex = 0;
             this.greyScrollBar1.Value = 0F;
             // 

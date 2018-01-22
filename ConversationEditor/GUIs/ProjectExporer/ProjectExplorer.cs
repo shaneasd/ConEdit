@@ -39,7 +39,7 @@ namespace ConversationEditor
                 m_scheme = value;
                 //greyScrollBar1.ColorScheme = value;
                 drawWindow1.ColorScheme = value;
-                drawWindow2.ColorScheme = value;
+                //drawWindow2.ColorScheme = value;
                 drawWindow3.ColorScheme = value;
                 m_contextMenu.Renderer = value.ContextMenu;
 
@@ -128,7 +128,7 @@ namespace ConversationEditor
                 }
             }
 
-            RectangleF minimiseButtonArea() => new RectangleF(drawWindow2.Width - CollapseButton.Width - 4, 0, CollapseButton.Width + 4, CollapseButton.Height + 4);
+            RectangleF minimiseButtonArea() => new RectangleF(drawWindow2.Width - CollapseButton.Width - 2, -2, CollapseButton.Width + 4, CollapseButton.Height + 4);
             var minimiseButton = new NeutralHoveredPressedButton(minimiseButtonArea,
                 (area, graphics) => graphics.DrawImage(CollapseButton, (int)area.X + 2, (int)area.Y + 2, CollapseButton.Width, CollapseButton.Height),
                 (area, graphics) => graphics.DrawImage(CollapseButtonHover, (int)area.X + 2, (int)area.Y + 2, CollapseButton.Width, CollapseButton.Height),
@@ -1116,7 +1116,7 @@ namespace ConversationEditor
 
         private void drawWindow2_Paint(object sender, PaintEventArgs e)
         {
-            drawWindow2.Height = ProjectElementDefinition.Definitions.Select(d => d.Icon.Height).Max() + 4 + 4;
+            drawWindow2.Height = ProjectElementDefinition.Definitions.Select(d => d.Icon.Height).Max() + 6;
         }
 
         private void drawWindow2_MouseClick(object sender, MouseEventArgs e)

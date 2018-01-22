@@ -17,9 +17,8 @@
         {
             this.components = new System.ComponentModel.Container();
             Utilities.UI.DrawWindow.DefaultColorScheme defaultColorScheme1 = new Utilities.UI.DrawWindow.DefaultColorScheme();
-            Utilities.UI.GreyScrollBar.DefaultColorScheme defaultColorScheme2 = new Utilities.UI.GreyScrollBar.DefaultColorScheme();
+            Utilities.UI.DrawWindow.DefaultColorScheme defaultColorScheme2 = new Utilities.UI.DrawWindow.DefaultColorScheme();
             Utilities.UI.DrawWindow.DefaultColorScheme defaultColorScheme3 = new Utilities.UI.DrawWindow.DefaultColorScheme();
-            Utilities.UI.DrawWindow.DefaultColorScheme defaultColorScheme4 = new Utilities.UI.DrawWindow.DefaultColorScheme();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.newConversationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importConversationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,7 +44,11 @@
             this.greyScrollBar1 = new Utilities.UI.GreyScrollBar();
             this.drawWindow2 = new Utilities.UI.DrawWindow();
             this.drawWindow3 = new Utilities.UI.DrawWindow();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.contextMenuStrip1.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenuStrip1
@@ -72,7 +75,7 @@
             this.toolStripSeparator5,
             this.setUpLocalizationsToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(188, 386);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(188, 364);
             // 
             // newConversationToolStripMenuItem
             // 
@@ -206,14 +209,14 @@
             // 
             // drawWindow1
             // 
-            this.drawWindow1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(56)))), ((int)(((byte)(56)))));
+            this.drawWindow1.BackColor = System.Drawing.Color.Transparent;
             this.drawWindow1.ColorScheme = defaultColorScheme1;
             this.drawWindow1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.drawWindow1.HandleNavigation = true;
-            this.drawWindow1.Location = new System.Drawing.Point(0, 26);
+            this.drawWindow1.Location = new System.Drawing.Point(2, 2);
             this.drawWindow1.Margin = new System.Windows.Forms.Padding(0);
             this.drawWindow1.Name = "drawWindow1";
-            this.drawWindow1.Size = new System.Drawing.Size(380, 450);
+            this.drawWindow1.Size = new System.Drawing.Size(376, 452);
             this.drawWindow1.TabIndex = 0;
             this.drawWindow1.Paint += new System.Windows.Forms.PaintEventHandler(this.drawWindow1_Paint);
             this.drawWindow1.Leave += new System.EventHandler(this.drawWindow1_Leave);
@@ -224,38 +227,38 @@
             // 
             // greyScrollBar1
             // 
-            //this.greyScrollBar1.ColorScheme = defaultColorScheme2;
             this.greyScrollBar1.Dock = System.Windows.Forms.DockStyle.Right;
             this.greyScrollBar1.Horizontal = false;
             this.greyScrollBar1.LargeChange = 0.1F;
-            this.greyScrollBar1.Location = new System.Drawing.Point(380, 26);
+            this.greyScrollBar1.Location = new System.Drawing.Point(0, 0);
+            this.greyScrollBar1.Margin = new System.Windows.Forms.Padding(0);
             this.greyScrollBar1.Maximum = 0F;
             this.greyScrollBar1.Minimum = 0F;
             this.greyScrollBar1.MinimumSize = new System.Drawing.Size(15, 15);
             this.greyScrollBar1.Name = "greyScrollBar1";
             this.greyScrollBar1.PercentageCovered = 0F;
-            this.greyScrollBar1.Size = new System.Drawing.Size(15, 450);
+            this.greyScrollBar1.Size = new System.Drawing.Size(15, 454);
             this.greyScrollBar1.SmallChange = 0.01F;
             this.greyScrollBar1.TabIndex = 1;
             this.greyScrollBar1.Value = 0F;
             // 
             // drawWindow2
             // 
-            this.drawWindow2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(56)))), ((int)(((byte)(56)))));
-            this.drawWindow2.ColorScheme = defaultColorScheme3;
+            this.drawWindow2.BackColor = System.Drawing.Color.Transparent;
+            this.drawWindow2.ColorScheme = defaultColorScheme2;
             this.drawWindow2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.drawWindow2.HandleNavigation = false;
-            this.drawWindow2.Location = new System.Drawing.Point(0, 476);
+            this.drawWindow2.Location = new System.Drawing.Point(0, 482);
             this.drawWindow2.Name = "drawWindow2";
-            this.drawWindow2.Size = new System.Drawing.Size(395, 26);
+            this.drawWindow2.Size = new System.Drawing.Size(395, 20);
             this.drawWindow2.TabIndex = 2;
             this.drawWindow2.Paint += new System.Windows.Forms.PaintEventHandler(this.drawWindow2_Paint);
             this.drawWindow2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.drawWindow2_MouseClick);
             // 
             // drawWindow3
             // 
-            this.drawWindow3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(56)))), ((int)(((byte)(56)))));
-            this.drawWindow3.ColorScheme = defaultColorScheme4;
+            this.drawWindow3.BackColor = System.Drawing.Color.Transparent;
+            this.drawWindow3.ColorScheme = defaultColorScheme3;
             this.drawWindow3.Dock = System.Windows.Forms.DockStyle.Top;
             this.drawWindow3.HandleNavigation = false;
             this.drawWindow3.Location = new System.Drawing.Point(0, 0);
@@ -263,17 +266,41 @@
             this.drawWindow3.Size = new System.Drawing.Size(395, 26);
             this.drawWindow3.TabIndex = 3;
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.drawWindow1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 26);
+            this.panel1.Margin = new System.Windows.Forms.Padding(0);
+            this.panel1.Name = "panel1";
+            this.panel1.Padding = new System.Windows.Forms.Padding(2);
+            this.panel1.Size = new System.Drawing.Size(380, 456);
+            this.panel1.TabIndex = 4;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.greyScrollBar1);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel2.Location = new System.Drawing.Point(380, 26);
+            this.panel2.MinimumSize = new System.Drawing.Size(15, 15);
+            this.panel2.Name = "panel2";
+            this.panel2.Padding = new System.Windows.Forms.Padding(0, 0, 0, 2);
+            this.panel2.Size = new System.Drawing.Size(15, 456);
+            this.panel2.TabIndex = 1;
+            // 
             // ProjectExplorer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.drawWindow1);
-            this.Controls.Add(this.greyScrollBar1);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.drawWindow2);
             this.Controls.Add(this.drawWindow3);
             this.Name = "ProjectExplorer";
             this.Size = new System.Drawing.Size(395, 502);
             this.contextMenuStrip1.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -305,5 +332,7 @@
         private Utilities.UI.DrawWindow drawWindow3;
         private System.Windows.Forms.ToolStripMenuItem setUpLocalizationsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
     }
 }

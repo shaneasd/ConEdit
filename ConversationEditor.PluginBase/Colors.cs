@@ -20,7 +20,7 @@ namespace ConversationEditor
         public ColorScheme()
         {
             Connectors = Color.Black;
-            m_contextMenu = new ToolStripRenderer(this);
+            ContextMenu = new ToolStripRenderer(this);
             m_hatch = new HatchBrush(HatchStyle.Percent50, SelectionRectangle);
         }
 
@@ -30,14 +30,13 @@ namespace ConversationEditor
         private readonly Color m_selectedConversationListItemPrimaryBackground = Color.FromArgb(96, 96, 96);
         private readonly Color m_selectedConversationListItemSecondaryBackground = Color.FromArgb(76, 76, 76);
         private readonly Brush m_hatch;
-        private readonly ToolStripProfessionalRenderer m_contextMenu;
 
         public Color SelectedConnectors => m_selectedConnectors;
         public Color SelectedConversationListItemBorder => m_selectedConversationListItemBorder;
         public Color SelectedConversationListItemPrimaryBackground => m_selectedConversationListItemPrimaryBackground;
         public Color SelectedConversationListItemSecondaryBackground => m_selectedConversationListItemSecondaryBackground;
         public Brush Hatch => m_hatch;
-        public ToolStripProfessionalRenderer ContextMenu => m_contextMenu;
+        public ToolStripProfessionalRenderer ContextMenu { get; }
 
         private static Pen MakeTreePen()
         {
@@ -67,6 +66,7 @@ namespace ConversationEditor
         public Pen ControlBorder { get; } = new Pen(Color.Black, 1);
 
         public Color FormBackground { get; } = Color.FromArgb(45, 45, 45);
+        public Color MenuBackground { get; } = Color.FromArgb(45, 45, 45);
         public Color Background { get; } = Color.FromArgb(56, 56, 56);
         public Color Foreground { get; } = Color.FromArgb(205, 205, 205);
 
@@ -160,11 +160,11 @@ namespace ConversationEditor
                 m_scheme = scheme;
             }
 
-            public override Color ToolStripDropDownBackground => m_scheme.Background;
+            public override Color ToolStripDropDownBackground => m_scheme.MenuBackground;
 
-            public override Color MenuStripGradientBegin => m_scheme.Background;
+            public override Color MenuStripGradientBegin => m_scheme.MenuBackground;
 
-            public override Color MenuStripGradientEnd => m_scheme.Background;
+            public override Color MenuStripGradientEnd => m_scheme.MenuBackground;
 
             public override Color ButtonSelectedHighlight => m_scheme.SelectedConversationListItemPrimaryBackground;
 

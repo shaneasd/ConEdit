@@ -7,6 +7,7 @@ namespace ConversationEditor
     public interface IColorScheme : GreyScrollBar.IColorScheme, DrawWindow.IColorScheme
     {
         new Color Background { get; }
+        Color MenuBackground { get; }
         SolidBrush BackgroundBrush { get; }
         Color Connectors { get; set; }
         ToolStripProfessionalRenderer ContextMenu { get; }

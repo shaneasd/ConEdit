@@ -174,7 +174,7 @@ namespace ConversationEditor
             {
                 m_scheme = value;
                 //greyScrollBar1.ColorScheme = value;
-                drawWindow1.ColorScheme = value;
+                //drawWindow1.ColorScheme = value;
             }
         }
     }

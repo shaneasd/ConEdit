@@ -63,13 +63,13 @@
             this.parameterCountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cyclomaticComplexityToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.layoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.projectExplorer = new ConversationEditor.ProjectExplorer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.m_conversationEditor = new ConversationEditor.ConversationEditorControl();
             this.errorList1 = new ConversationEditor.ErrorList();
-            this.layoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -116,32 +116,32 @@
             // projectNewMenuItem
             // 
             this.projectNewMenuItem.Name = "projectNewMenuItem";
-            this.projectNewMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.projectNewMenuItem.Size = new System.Drawing.Size(150, 22);
             this.projectNewMenuItem.Text = "New";
             // 
             // projectOpenMenuItem
             // 
             this.projectOpenMenuItem.Name = "projectOpenMenuItem";
-            this.projectOpenMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.projectOpenMenuItem.Size = new System.Drawing.Size(150, 22);
             this.projectOpenMenuItem.Text = "Open";
             // 
             // recentProjectsToolStripMenuItem
             // 
             this.recentProjectsToolStripMenuItem.Name = "recentProjectsToolStripMenuItem";
-            this.recentProjectsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.recentProjectsToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.recentProjectsToolStripMenuItem.Text = "Recent Projects";
             // 
             // projectSaveMenuItem
             // 
             this.projectSaveMenuItem.Name = "projectSaveMenuItem";
             this.projectSaveMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.projectSaveMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.projectSaveMenuItem.Size = new System.Drawing.Size(150, 22);
             this.projectSaveMenuItem.Text = "Save";
             // 
             // projectSaveAsMenuItem
             // 
             this.projectSaveAsMenuItem.Name = "projectSaveAsMenuItem";
-            this.projectSaveAsMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.projectSaveAsMenuItem.Size = new System.Drawing.Size(150, 22);
             this.projectSaveAsMenuItem.Text = "Save As";
             // 
             // editToolStripMenuItem
@@ -359,21 +359,21 @@
             // testToolStripMenuItem
             // 
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.testToolStripMenuItem.Text = "Test Document";
             this.testToolStripMenuItem.Click += new System.EventHandler(this.errorCheckToolStripMenuItem_Click);
             // 
             // testProjectToolStripMenuItem
             // 
             this.testProjectToolStripMenuItem.Name = "testProjectToolStripMenuItem";
-            this.testProjectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.testProjectToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.testProjectToolStripMenuItem.Text = "Test Project";
             this.testProjectToolStripMenuItem.Click += new System.EventHandler(this.testProjectToolStripMenuItem_Click);
             // 
             // testEverythingToolStripMenuItem
             // 
             this.testEverythingToolStripMenuItem.Name = "testEverythingToolStripMenuItem";
-            this.testEverythingToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.testEverythingToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.testEverythingToolStripMenuItem.Text = "Test Everything";
             this.testEverythingToolStripMenuItem.Click += new System.EventHandler(this.testEverythingToolStripMenuItem_Click);
             // 
@@ -451,6 +451,13 @@
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
+            // layoutToolStripMenuItem
+            // 
+            this.layoutToolStripMenuItem.Name = "layoutToolStripMenuItem";
+            this.layoutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.layoutToolStripMenuItem.Text = "Layout";
+            this.layoutToolStripMenuItem.Click += new System.EventHandler(this.layoutToolStripMenuItem_Click);
+            // 
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
@@ -466,6 +473,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.projectExplorer);
+            this.splitContainer1.Panel1.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
             // 
             // splitContainer1.Panel2
             // 
@@ -477,12 +485,12 @@
             // projectExplorer
             // 
             this.projectExplorer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.projectExplorer.Location = new System.Drawing.Point(0, 0);
+            this.projectExplorer.Location = new System.Drawing.Point(4, 0);
             this.projectExplorer.Margin = new System.Windows.Forms.Padding(0);
             this.projectExplorer.Name = "projectExplorer";
             colorScheme1.Connectors = System.Drawing.Color.Black;
             this.projectExplorer.Scheme = colorScheme1;
-            this.projectExplorer.Size = new System.Drawing.Size(181, 561);
+            this.projectExplorer.Size = new System.Drawing.Size(177, 561);
             this.projectExplorer.TabIndex = 0;
             // 
             // splitContainer2
@@ -530,13 +538,6 @@
             this.errorList1.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.errorList1.Size = new System.Drawing.Size(804, 138);
             this.errorList1.TabIndex = 3;
-            // 
-            // layoutToolStripMenuItem
-            // 
-            this.layoutToolStripMenuItem.Name = "layoutToolStripMenuItem";
-            this.layoutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
-            this.layoutToolStripMenuItem.Text = "Layout";
-            this.layoutToolStripMenuItem.Click += new System.EventHandler(this.layoutToolStripMenuItem_Click);
             // 
             // Form1
             // 

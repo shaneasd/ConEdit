@@ -164,7 +164,7 @@ namespace ConversationEditor
                     BackColor = Scheme.FormBackground;
                     ForeColor = Scheme.Foreground;
                     errorList1.ForeColor = Scheme.Foreground;
-                    errorList1.BackColor = Scheme.Background;
+                    //errorList1.BackColor = Scheme.Background;
 
                     projectExplorer.m_contextMenuItemsFactory = new WrapperContextMenuItemsFactory((mainAssembly) => m_config.Plugins.UnfilteredAssemblies(mainAssembly));
                 }
