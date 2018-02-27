@@ -8,6 +8,14 @@ Installer builder project
 
 WORKFLOW:
 
+Add a context menu to change the type of a node (for decorruption)
+
+Would it be possible to hide the scrollbar if the window is big enough to display all the parameters?
+A lot of the time it doesn't seem necessary at all
+the issue is how to rearrange everything when it becomes necessary
+since the window is resizable
+I think the width of the parameters should just be shortened by the width of the scrollbar + 4px
+
 Figure out a way to allow the user to specify the order of parameters when defining a node type (jonas wants an integer id)
 localized string that is missing localization saves to localization file as "Missing Localization"
 read all conversation files in parallel assuming load time is bound by cpu and not disk
