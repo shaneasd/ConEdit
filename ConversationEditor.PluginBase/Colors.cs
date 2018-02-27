@@ -160,6 +160,9 @@ namespace ConversationEditor
                 m_scheme = scheme;
             }
 
+            //TODO: Run this on a windows 10 machine and fix the red bits.
+            //      - When you have a dropdown with an arrow to scroll through it, like for an enum, when you click the arrow it highlights in red
+            //      - Same goes for selecting an item from the list actually
             public override Color ToolStripDropDownBackground => m_scheme.MenuBackground;
 
             public override Color MenuStripGradientBegin => m_scheme.MenuBackground;
