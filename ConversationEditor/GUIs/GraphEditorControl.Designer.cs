@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Utilities.UI.DrawWindow.DefaultColorScheme defaultColorScheme1 = new Utilities.UI.DrawWindow.DefaultColorScheme();
+            Utilities.UI.DrawWindow.DefaultColorScheme defaultColorScheme3 = new Utilities.UI.DrawWindow.DefaultColorScheme();
             this.zoomBar = new Utilities.UI.GreyScrollBar();
             this.hScrollBar1 = new Utilities.UI.GreyScrollBar();
             this.vScrollBar1 = new Utilities.UI.GreyScrollBar();
@@ -39,6 +39,7 @@
             // 
             this.zoomBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.zoomBar.Arrows = false;
             this.zoomBar.Horizontal = true;
             this.zoomBar.LargeChange = 0.1F;
             this.zoomBar.Location = new System.Drawing.Point(0, 303);
@@ -92,8 +93,8 @@
             this.drawWindow.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.drawWindow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(56)))), ((int)(((byte)(56)))));
-            this.drawWindow.ColorScheme = defaultColorScheme1;
+            this.drawWindow.BackColor = System.Drawing.Color.Transparent;
+            this.drawWindow.ColorScheme = defaultColorScheme3;
             this.drawWindow.HandleNavigation = false;
             this.drawWindow.Location = new System.Drawing.Point(0, 0);
             this.drawWindow.Name = "drawWindow";
