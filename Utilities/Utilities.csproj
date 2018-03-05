@@ -194,6 +194,17 @@
   <ItemGroup>
     <EmbeddedResource Include="UI\Resources\ComboBoxDropdown.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Resources\ButtonCollapse15x15.png" />
+    <EmbeddedResource Include="UI\Resources\ButtonCollapse15x15Hover.png" />
+    <EmbeddedResource Include="UI\Resources\ButtonCollapse15x15Pressed.png" />
+    <EmbeddedResource Include="UI\Resources\ButtonExpand15x15.png" />
+    <EmbeddedResource Include="UI\Resources\ButtonExpand15x15Hover.png" />
+    <EmbeddedResource Include="UI\Resources\ButtonExpand15x15Pressed.png" />
+    <Content Include="UI\Resources\CollapseButton.png" />
+    <Content Include="UI\Resources\CollapseButtonHover.png" />
+    <Content Include="UI\Resources\CollapseButtonPressed.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

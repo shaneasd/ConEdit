@@ -41,6 +41,11 @@ namespace Utilities.UI
         public static Bitmap ScrollBarBottomIcon { get; }
         public static Bitmap ScrollBarBottomPressedIcon { get; }
 
+        public static Bitmap ScrollBarReduceIcon { get; }
+        public static Bitmap ScrollBarReducePressedIcon { get; }
+        public static Bitmap ScrollBarIncreaseIcon { get; }
+        public static Bitmap ScrollBarIncreasePressedIcon { get; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = "I believe this would actually be slower due to the inability to cache Assembly.GetExecutingAssembly()")]
         static GreyScrollBar()
         {
@@ -63,6 +68,21 @@ namespace Utilities.UI
                 ScrollBarBottomIcon = new Bitmap(stream);
             using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.ScrollbarBottomPressed.png"))
                 ScrollBarBottomPressedIcon = new Bitmap(stream);
+            using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.ButtonCollapse15x15.png"))
+                ScrollBarReduceIcon = new Bitmap(stream);
+            using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.ButtonCollapse15x15Pressed.png"))
+                ScrollBarReducePressedIcon = new Bitmap(stream);
+            using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.ButtonExpand15x15.png"))
+                ScrollBarIncreaseIcon = new Bitmap(stream);
+            using (Stream stream = assembly.GetManifestResourceStream("Utilities.UI.Resources.ButtonExpand15x15Pressed.png"))
+                ScrollBarIncreasePressedIcon = new Bitmap(stream);
+        }
+
+        void CreateButtons()
+        {
+            TopButton = new Button(new Point(0, 0), !Arrows ? Button.Direction.Decrease : (!Horizontal ? Button.Direction.Up : Button.Direction.Left), () => Color.Transparent);
+            var location = Horizontal ? new Point(Width - BUTTON_SIZE, 0) : new Point(0, Height - BUTTON_SIZE);
+            BottomButton = new Button(location, !Arrows ? Button.Direction.Increase : (!Horizontal ? Button.Direction.Down : Button.Direction.Right), () => Color.Transparent);
         }
 
         const int BUTTON_SIZE = 15;
@@ -71,12 +91,6 @@ namespace Utilities.UI
             MinimumSize = new Size(BUTTON_SIZE, BUTTON_SIZE);
             Width = BUTTON_SIZE;
             InitializeComponent();
-            Action CreateButtons = () =>
-                {
-                    TopButton = new Button(new Point(0, 0), !Horizontal ? Button.Direction.Up : Button.Direction.Left, () => Color.Transparent);
-                    var location = Horizontal ? new Point(Width - BUTTON_SIZE, 0) : new Point(0, Height - BUTTON_SIZE);
-                    BottomButton = new Button(location, !Horizontal ? Button.Direction.Down : Button.Direction.Right, () => Color.Transparent);
-                };
             CreateButtons();
             SizeChanged += (a, b) => CreateButtons();
             drawWindow1.MouseDown += (a, b) => drawWindowMouseDown(b);
@@ -106,8 +120,20 @@ namespace Utilities.UI
 
         public event Action Scrolled;
 
-        public bool Horizontal { get; set; }
+        private bool m_horizontal = false;
+        public bool Horizontal
+        {
+            get { return m_horizontal; }
+            set { m_horizontal = value; CreateButtons(); }
+        }
 
+        private bool m_arrows = true;
+        public bool Arrows
+        {
+            get { return m_arrows; }
+            set { m_arrows = value; CreateButtons(); }
+        }
+        
         float m_value;
         private float RatioValue
         {
@@ -259,7 +285,7 @@ namespace Utilities.UI
 
         private class Button
         {
-            public enum Direction { Up, Down, Left, Right }
+            public enum Direction { Up, Down, Left, Right, Increase, Decrease }
             private Rectangle m_rectangle;
             private Direction m_direction;
             private Func<Color> m_backColor;
@@ -276,6 +302,7 @@ namespace Utilities.UI
             {
                 var state = g.Save();
                 var m = g.Transform;
+                Bitmap image = pushed ? GreyScrollBar.ScrollBarUpPressedIcon : GreyScrollBar.ScrollBarUpIcon;
                 switch (m_direction)
                 {
                     case Direction.Up:
@@ -292,11 +319,17 @@ namespace Utilities.UI
                     case Direction.Right:
                         m.RotateAt(90, ((RectangleF)Area).Center());
                         break;
+                    case Direction.Increase:
+                        image = pushed ? GreyScrollBar.ScrollBarIncreasePressedIcon : GreyScrollBar.ScrollBarIncreaseIcon;
+                        break;
+                    case Direction.Decrease:
+                        image = pushed ? GreyScrollBar.ScrollBarReducePressedIcon : GreyScrollBar.ScrollBarReduceIcon;
+                        break;
                 }
                 g.Transform = m;
                 using (var brush = new SolidBrush(m_backColor()))
                     g.FillRectangle(brush, Area);
-                g.DrawImage(pushed ? GreyScrollBar.ScrollBarUpPressedIcon : GreyScrollBar.ScrollBarUpIcon, Area);
+                g.DrawImage(image, Area);
                 g.Restore(state);
             }
         }
