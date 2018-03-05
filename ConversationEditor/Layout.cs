@@ -12,13 +12,13 @@ namespace ConversationEditor
 {
     class NodeLayout
     {
-        public static void LayoutNodes<TNode>(IConversationEditorControlData<TNode, TransitionNoduleUIInfo> currentFile)
+        public static void LayoutNodes<TNode>(IConversationEditorControlData<TNode, TransitionNoduleUIInfo> currentFile, Func<Output, PointF> getConnectorLocation)
             where TNode : class, IRenderable<IGui>, IConversationNode, IConfigurable
         {
-            LayoutNodes1(currentFile);
+            LayoutNodes3(currentFile, getConnectorLocation);
         }
 
-        public static void LayoutNodes2<TNode>(IConversationEditorControlData<TNode, TransitionNoduleUIInfo> currentFile)
+        public static void LayoutNodes2<TNode>(IConversationEditorControlData<TNode, TransitionNoduleUIInfo> currentFile, Func<Output, PointF> getConnectorLocation)
             where TNode : class, IRenderable<IGui>, IConversationNode, IConfigurable
         {
             IEnumerable<Output> TopConnectors(TNode n) => n.Data.Connectors.Where(c => c.Definition.Position.ForPosition(top: () => true, () => false, () => false, () => false));
@@ -95,7 +95,7 @@ namespace ConversationEditor
             }, error => { });
         }
 
-        public static void LayoutNodes1<TNode>(IConversationEditorControlData<TNode, TransitionNoduleUIInfo> currentFile)
+        public static void LayoutNodes1<TNode>(IConversationEditorControlData<TNode, TransitionNoduleUIInfo> currentFile, Func<Output, PointF> getConnectorLocation)
             where TNode : class, IRenderable<IGui>, IConversationNode, IConfigurable
         {
             IEnumerable<Output> TopConnectors(TNode n) => n.Data.Connectors.Where(c => c.Definition.Position.ForPosition(top: () => true, () => false, () => false, () => false));
@@ -111,12 +111,12 @@ namespace ConversationEditor
                 {
                     List<ValueTuple<TNode, PointF>> allmovement = new List<ValueTuple<TNode, PointF>>();
                     float xEdge = 100;
+                    Dictionary<TNode, int> heights = new Dictionary<TNode, int>();
+                    Dictionary<int, List<TNode>> nodesAtHeight = new Dictionary<int, List<TNode>>();
+                    int maxHeight = 0;
                     for (int j = 0; j < lists.Count; j++)
                     {
                         var list = lists[j];
-                        Dictionary<TNode, int> heights = new Dictionary<TNode, int>();
-                        Dictionary<int, List<TNode>> nodesAtHeight = new Dictionary<int, List<TNode>>();
-                        int maxHeight = 0;
                         for (int i = 0; i < list.Count; i++)
                         {
                             var node = list[i];
@@ -127,56 +127,153 @@ namespace ConversationEditor
                             nodesAtHeight[height].Add(node);
                             maxHeight = Math.Max(maxHeight, height);
                         }
+                    }
 
-                        float[] widths = new float[maxHeight + 1];
-                        float maxWidth = 0;
+                    float[] widths = new float[maxHeight + 1];
+                    float maxWidth = 0;
+                    for (int h = 0; h <= maxHeight; h++)
+                    {
+                        var nodes = nodesAtHeight[h];
+                        int count = 0;
+                        foreach (var node in nodes)
+                        {
+                            var width = node.Renderer.Area.Width;
+                            widths[h] += width;
+                            count++;
+                        }
+                        widths[h] += (40 + h * 20) * (count - 1);
+                        maxWidth = Math.Max(maxWidth, widths[h]);
+                    }
+
+                    int bestScore = int.MaxValue;
+                    List<ValueTuple<TNode, PointF>> bestMovement = new List<ValueTuple<TNode, PointF>>();
+                    Random r = new Random(0);
+
+                    for (int attempts = 0; attempts < 10000; attempts++)
+                    {
+                        List<ValueTuple<TNode, PointF>> movement = new List<ValueTuple<TNode, PointF>>();
                         for (int h = 0; h <= maxHeight; h++)
                         {
                             var nodes = nodesAtHeight[h];
-                            int count = 0;
+                            bool randomized = nodes.Randomise(r);
+                            float x = xEdge;
+
                             foreach (var node in nodes)
                             {
                                 var width = node.Renderer.Area.Width;
-                                widths[h] += width;
-                                count++;
+                                PointF to = new PointF(x + width / 2 + h * 20 + (maxWidth - widths[h]) / 2, h * 100 + 50); //stagger slightly so vertical lines don't overlap
+                                movement.Add((node, to));
+                                x += width + 40;
                             }
-                            widths[h] += (40 + h * 20) * (count - 1);
-                            maxWidth = Math.Max(maxWidth, widths[h]);
                         }
 
-                        int bestScore = int.MaxValue;
-                        List<ValueTuple<TNode, PointF>> bestMovement = new List<ValueTuple<TNode, PointF>>();
-                        Random r = new Random(0);
-
-                        for (int attempts = 0; attempts < 10000; attempts++)
+                        int score = Score(movement, currentFile, getConnectorLocation);
+                        if (score < bestScore)
                         {
-                            List<ValueTuple<TNode, PointF>> movement = new List<ValueTuple<TNode, PointF>>();
-                            for (int h = 0; h <= maxHeight; h++)
+                            bestScore = score;
+                            bestMovement = movement.ToList();
+                        }
+                    }
+
+                    xEdge += maxWidth + 40;
+                    allmovement.AddRange(bestMovement);
+
+                    currentFile.Move(allmovement);
+                },
+                error => MessageBox.Show("Cannot perform layout as there are cycles in the graph")
+            );
+        }
+
+        public static void LayoutNodes3<TNode>(IConversationEditorControlData<TNode, TransitionNoduleUIInfo> currentFile, Func<Output, PointF> getConnectorLocation)
+            where TNode : class, IRenderable<IGui>, IConversationNode, IConfigurable
+        {
+            IEnumerable<Output> TopConnectors(TNode n) => n.Data.Connectors.Where(c => c.Definition.Position.ForPosition(top: () => true, () => false, () => false, () => false));
+            IEnumerable<Output> BottomConnectors(TNode n) => n.Data.Connectors.Where(c => c.Definition.Position.ForPosition(top: () => false, bottom: () => true, () => false, () => false));
+            IEnumerable<TNode> TopConnections(TNode n) => TopConnectors(n).SelectMany(c => c.Connections).Select(c => currentFile.GetNode(c.Parent.NodeId));
+            IEnumerable<TNode> BottomConnections(TNode n) => BottomConnectors(n).SelectMany(c => c.Connections).Select(c => currentFile.GetNode(c.Parent.NodeId));
+
+            var ordered = Graph.Order(currentFile.Nodes, TopConnections, BottomConnections);
+
+            ordered.Do
+            (
+                lists =>
+                {
+                    List<ValueTuple<TNode, PointF>> allmovement = new List<ValueTuple<TNode, PointF>>();
+                    float xEdge = 100;
+                    Dictionary<TNode, int> heights = new Dictionary<TNode, int>();
+                    Dictionary<int, List<TNode>> nodesAtHeight = new Dictionary<int, List<TNode>>();
+                    int maxHeight = 0;
+                    for (int j = 0; j < lists.Count; j++)
+                    {
+                        var list = lists[j];
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            var node = list[i];
+                            int height = (TopConnections(node).Select(n => heights[n]).Max(x => (int?)x) ?? -1) + 1;
+                            heights[node] = height;
+                            if (!nodesAtHeight.ContainsKey(height))
+                                nodesAtHeight[height] = new List<TNode>();
+                            nodesAtHeight[height].Add(node);
+                            maxHeight = Math.Max(maxHeight, height);
+                        }
+                    }
+
+                    float[] widths = new float[maxHeight + 1];
+                    float maxWidth = 0;
+                    for (int h = 0; h <= maxHeight; h++)
+                    {
+                        var nodes = nodesAtHeight[h];
+                        int count = 0;
+                        foreach (var node in nodes)
+                        {
+                            var width = node.Renderer.Area.Width;
+                            widths[h] += width;
+                            count++;
+                        }
+                        widths[h] += (40 + h * 20) * (count - 1);
+                        maxWidth = Math.Max(maxWidth, widths[h]);
+                    }
+
+                    Random r = new Random(0);
+
+                    //for (int attempts = 0; attempts < 10000; attempts++)
+                    {
+                        for (int h = 0; h <= maxHeight; h++)
+                        {
+                            int bestScore = int.MaxValue;
+                            List<ValueTuple<TNode, PointF>> bestMovement = new List<ValueTuple<TNode, PointF>>();
+                            var nodes = nodesAtHeight[h];
+                            var attempts = nodes.Count < 8 ? Permutation<TNode>.Permute(nodes) : Permutation<TNode>.Random(nodes, 5000);
+                            foreach ( var permutation in attempts)
                             {
-                                var nodes = nodesAtHeight[h];
-                                bool randomized = nodes.Randomise(r);
+                                List<ValueTuple<TNode, PointF>> movement = new List<ValueTuple<TNode, PointF>>();
                                 float x = xEdge;
 
-                                foreach (var node in nodes)
+                                foreach (var node in permutation)
                                 {
                                     var width = node.Renderer.Area.Width;
                                     PointF to = new PointF(x + width / 2 + h * 20 + (maxWidth - widths[h]) / 2, h * 100 + 50); //stagger slightly so vertical lines don't overlap
                                     movement.Add((node, to));
                                     x += width + 40;
                                 }
-                            }
 
-                            int score = Score(movement, currentFile);
-                            if (score < bestScore)
-                            {
-                                bestScore = score;
-                                bestMovement = movement.ToList();
+                                List<ValueTuple<TNode, PointF>> combinedMovement = new List<(TNode, PointF)>(movement.Count + allmovement.Count);
+                                combinedMovement.AddRange(allmovement);
+                                combinedMovement.AddRange(movement);
+
+                                int score = Score(combinedMovement, currentFile, getConnectorLocation);
+                                if (score < bestScore)
+                                {
+                                    bestScore = score;
+                                    bestMovement = movement.ToList();
+                                }
                             }
+                            allmovement.AddRange(bestMovement);
                         }
-
-                        xEdge += maxWidth + 40;
-                        allmovement.AddRange(bestMovement);
                     }
+
+                    xEdge += maxWidth + 40;
+
                     currentFile.Move(allmovement);
                 },
                 error => MessageBox.Show("Cannot perform layout as there are cycles in the graph")
@@ -199,23 +296,28 @@ namespace ConversationEditor
             return 0 < t && t < 1 && 0 < u && u < 1;
         }
 
-        public static int Score<TNode>(List<ValueTuple<TNode, PointF>> movement, IConversationEditorControlData<TNode, TransitionNoduleUIInfo> currentFile)
+        public static int Score<TNode>(List<ValueTuple<TNode, PointF>> movement, IConversationEditorControlData<TNode, TransitionNoduleUIInfo> currentFile, Func<Output, PointF> getConnectorLocation)
             where TNode : class, IRenderable<IGui>, IConversationNode, IConfigurable
         {
             Dictionary<TNode, PointF> lookup = movement.ToDictionary(m => m.Item1, m => m.Item2);
+            PointF GetOffset(TNode node) => lookup[node].Take(node.Renderer.Area.Center());
+            PointF GetLocation(Output connector) => getConnectorLocation(connector).Plus(GetOffset(currentFile.GetNode(connector.Parent.NodeId)));
+            bool InSet(Output connector) => lookup.ContainsKey(currentFile.GetNode(connector.Parent.NodeId));
+
             IEnumerable<Output> BottomConnectors(TNode n) => n.Data.Connectors.Where(c => c.Definition.Position.ForPosition(top: () => false, bottom: () => true, () => false, () => false));
-            IEnumerable<TNode> BottomConnections(TNode n) => BottomConnectors(n).SelectMany(c => c.Connections).Select(c => currentFile.GetNode(c.Parent.NodeId));
+            IEnumerable<(Output, Output)> BottomConnections(TNode n) => BottomConnectors(n).SelectMany(A => A.Connections.Where(InSet).Select(B => (A, B)));
+            (PointF, PointF) GetEdge((Output, Output) connectors) => (GetLocation(connectors.Item1), GetLocation(connectors.Item2));
 
             int score = 0;
-            var edges = movement.SelectMany(A => BottomConnections(A.Item1).Select(B => new { A = A.Item2, B = lookup[B] })).ToList();
+            var edges = movement.SelectMany(node => BottomConnections(node.Item1).Select(GetEdge)).ToList();
             for (int i = 0; i < edges.Count; i++)
             {
                 for (int j = i + 1; j < edges.Count; j++)
                 {
-                    var AiPos = edges[i].A;
-                    var BiPos = edges[i].B;
-                    var AjPos = edges[j].A;
-                    var BjPos = edges[j].B;
+                    var AiPos = edges[i].Item1;
+                    var BiPos = edges[i].Item2;
+                    var AjPos = edges[j].Item1;
+                    var BjPos = edges[j].Item2;
                     if (LinesIntersect((AiPos, BiPos), (AjPos, BjPos)))
                         score++;
                 }
