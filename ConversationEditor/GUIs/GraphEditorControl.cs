@@ -963,7 +963,7 @@ namespace ConversationEditor
             if (Selected.Nodes.Any() || Selected.Groups.Any())
             {
                 var duplicates = m_copyPasteController.Duplicate(Selected.Nodes.Select(CurrentFile.GetNode), Selected.Groups, DataSource);
-                var nodesAndGroups = CurrentFile.DuplicateInto(duplicates.Item1, duplicates.Item2, duplicates.Item4, duplicates.Item3, m_localization);
+                var nodesAndGroups = CurrentFile.DuplicateInto(duplicates.Item1, duplicates.Item2, duplicates.Item3, m_localization);
                 SetSelection(nodesAndGroups.Item1, nodesAndGroups.Item2);
                 Redraw();
             }
@@ -974,6 +974,16 @@ namespace ConversationEditor
             //Can't pass in the lazy collections as selecting these nodes brings them to the front
             //which changes the order of the elements corrupting the enumerator
             SetSelection(CurrentFile.Nodes.Evaluate(), CurrentFile.Groups.Evaluate());
+        }
+
+        public void CutSelection()
+        {
+            //TODO: This has a lot in common with the delete operation
+            if (m_mouseController.Selected.Nodes.Any() || m_mouseController.Selected.Groups.Any())
+            {
+                m_copyPasteController.Cut(Selected.Nodes.Select(CurrentFile.GetNode), Selected.Groups);
+                CurrentFile.Remove(m_mouseController.Selected.Nodes.Select(CurrentFile.GetNode), m_mouseController.Selected.Groups, m_localization);
+            }
         }
 
         public void CopySelection()
@@ -988,10 +998,18 @@ namespace ConversationEditor
             Insert(p, additions);
         }
 
-        public void Insert(Point? p, Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, object> additions)
+        public void Insert(Point? p, Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, object, bool> additions)
         {
             Point loc = p ?? DrawWindowToGraphSpace(new Point(Width / 2, Height / 2));
-            var nodesAndGroups = CurrentFile.DuplicateInto(additions.Item1, additions.Item2, additions.Item3, loc, m_localization);
+            Tuple<IEnumerable<TNode>, IEnumerable<NodeGroup>> nodesAndGroups;
+            if (additions.Item4)
+            {
+                nodesAndGroups = CurrentFile.DuplicateInto(additions.Item1, additions.Item2, loc, m_localization);
+            }
+            else
+            {
+                nodesAndGroups = CurrentFile.InsertInto(additions.Item1, additions.Item2, loc, m_localization);
+            }
             SetSelection(nodesAndGroups.Item1, nodesAndGroups.Item2);
         }
 

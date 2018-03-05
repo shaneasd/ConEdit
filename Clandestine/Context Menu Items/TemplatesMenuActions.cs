@@ -24,7 +24,7 @@ namespace PluginPack
 
             yield return new MenuAction<ConversationNode>("Basic Conversation", (a, b) => null, null, null, p =>
             {
-                control.Insert(p, Tuple.Create(data.Nodes, data.EditorData.Groups, new object()));
+                control.Insert(p, Tuple.Create(data.Nodes, data.EditorData.Groups, new object(), true));
             });
         }
     }

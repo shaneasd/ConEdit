@@ -11,6 +11,8 @@ namespace ConversationEditor
 {
     public interface IGraphEditorControl<TNode> where TNode : IRenderable<IGui>
     {
+        void CutSelection();
+
         void CopySelection();
 
         void DuplicateSelection();
@@ -41,7 +43,7 @@ namespace ConversationEditor
 
         void AddNode(INodeDataGenerator nn, Point p);
 
-        void Insert(Point? p, Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, object> additions);
+        void Insert(Point? p, Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, object, bool> additions);
         void LayoutNodes();
     }
 }

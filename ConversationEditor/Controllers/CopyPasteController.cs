@@ -12,18 +12,20 @@ using Conversation.Serialization;
 namespace ConversationEditor
 {
     using ConversationNode = ConversationNode<INodeGui>;
-    using TData = Tuple<IEnumerable<ConversationNode<INodeGui>>, ConversationEditorData>;
 
     internal abstract class CopyPasteController<TNode, TTransitionUI> where TNode : IRenderable<IGui>
     {
         public abstract Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, PointF, object> Duplicate(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups, IDataSource datasource);
         public abstract void Copy(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups);
-        public abstract Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, object> Paste(IDataSource datasource);
+        public abstract void Cut(IEnumerable<TNode> nodes, IEnumerable<NodeGroup> groups);
+        public abstract Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, object, bool> Paste(IDataSource datasource);
     }
 
     internal class ConversationCopyPasteController : CopyPasteController<ConversationNode, TransitionNoduleUIInfo>
     {
-        public static ConversationCopyPasteController Instance = new ConversationCopyPasteController();
+        private bool m_shouldDuplicate;
+
+        public static ConversationCopyPasteController Instance { get; } = new ConversationCopyPasteController();
 
         public override Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, PointF, object> Duplicate(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups, IDataSource datasource)
         {
@@ -53,28 +55,45 @@ namespace ConversationEditor
                 m.Position = 0;
                 Clipboard.SetDataObject(m.ToArray());
             }
+            m_shouldDuplicate = true;
         }
 
-        public override Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, object> Paste(IDataSource datasource)
+        public override void Cut(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups)
         {
+            using (MemoryStream m = new MemoryStream())
+            {
+                CopyToStream(nodes, groups, m);
+                m.Position = 0;
+                Clipboard.SetDataObject(m.ToArray());
+            }
+            m_shouldDuplicate = false;
+        }
+
+        public override Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, object, bool> Paste(IDataSource datasource)
+        {
+            Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, object, bool> result = null;
             var clipboardData = Clipboard.GetDataObject();
             if (clipboardData.GetDataPresent(typeof(byte[])))
             {
                 var bytes = (byte[])clipboardData.GetData(typeof(byte[]));
                 using (MemoryStream m = new MemoryStream(bytes))
                 {
-                    return ReadFromStream(datasource, m);
+                    result = ReadFromStream(datasource, m);
                 }
             }
-            return Tuple.Create(Enumerable.Empty<GraphAndUI<NodeUIData>>(), Enumerable.Empty<NodeGroup>(), new object());
+            result = result ?? Tuple.Create(Enumerable.Empty<GraphAndUI<NodeUIData>>(), Enumerable.Empty<NodeGroup>(), new object(), false);
+
+            m_shouldDuplicate = true;
+
+            return result;
         }
 
-        private static Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, object> ReadFromStream(IDataSource datasource, Stream m)
+        private Tuple<IEnumerable<GraphAndUI<NodeUIData>>, IEnumerable<NodeGroup>, object, bool> ReadFromStream(IDataSource datasource, Stream m)
         {
             var deserializer = SerializationUtils.ConversationDeserializer(datasource);
             var data = deserializer.Read(m);
             var groups = data.EditorData.Groups;
-            return Tuple.Create(data.Nodes, groups, data.DocumentId);
+            return Tuple.Create(data.Nodes, groups, data.DocumentId, m_shouldDuplicate);
         }
     }
 }

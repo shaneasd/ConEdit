@@ -307,6 +307,7 @@ namespace ConversationEditor
 
         private void InitialiseEditMenu()
         {
+            cutToolStripMenuItem.Click += (a, b) => { if (CurrentEditor != null) CurrentEditor.CutSelection(); };
             copyToolStripMenuItem.Click += (a, b) => { if (CurrentEditor != null) CurrentEditor.CopySelection(); };
             duplicateToolStripMenuItem.Click += (a, b) => { if (CurrentEditor != null) CurrentEditor.DuplicateSelection(); };
             selectAllToolStripMenuItem.Click += (a, b) => { if (CurrentEditor != null) CurrentEditor.SelectAll(); };

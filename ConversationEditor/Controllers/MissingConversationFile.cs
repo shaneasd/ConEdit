@@ -81,39 +81,26 @@ namespace ConversationEditor
         }
 
 
-        public TransitionNoduleUIInfo UIInfo(Output connection, bool canFail)
+        public TransitionNoduleUIInfo UIInfo(Output connection, bool canFail) => throw new NotImplementedException();
+
+        public ConversationNode GetNode(Id<NodeTemp> id) => throw new NotImplementedException();
+
+        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, System.Drawing.PointF location, ILocalizationEngine localization)
         {
             throw new NotImplementedException();
         }
 
-        public ConversationNode GetNode(Id<NodeTemp> id)
-        {
-            throw new NotImplementedException();
-        }
+        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> InsertInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, System.Drawing.PointF location, ILocalizationEngine localization) => throw new NotSupportedException();
 
-        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, object documentId, System.Drawing.PointF location, ILocalizationEngine localization)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Add(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization)
-        {
-            throw new NotImplementedException();
-        }
+        public void Add(IEnumerable<ConversationNode> nodes, IEnumerable<NodeGroup> groups, ILocalizationEngine localization) => throw new NotImplementedException();
 
         public event Action NodesDeleted { add { } remove { } }
         public event Action<ConversationNode> NodeAdded { add { } remove { } }
         public event Action<ConversationNode> NodeRemoved { add { } remove { } }
 
 
-        public ConversationNode MakeNode(IConversationNodeData e, NodeUIData uiData)
-        {
-            throw new NotImplementedException();
-        }
+        public ConversationNode MakeNode(IConversationNodeData e, NodeUIData uiData) => throw new NotImplementedException();
 
-        public int RelativePosition(ConversationNode ofNode, ConversationNode relativeTo)
-        {
-            throw new NotImplementedException();
-        }
+        public int RelativePosition(ConversationNode ofNode, ConversationNode relativeTo) => throw new NotImplementedException();
     }
 }

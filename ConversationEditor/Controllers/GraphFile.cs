@@ -120,8 +120,26 @@ namespace ConversationEditor
 
         public IEnumerableReversible<NodeGroup> Groups => m_groupsOrdered;
 
+        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> InsertInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, PointF location, ILocalizationEngine localization)
+        {
+            var nodes = nodeData.Select(gnu => MakeNode(gnu.GraphData, gnu.UIData)).Evaluate();
+            var area = NodeSet.GetArea(nodes.Concat<IRenderable<IGui>>(groups));
+            PointF offset = location.Take(area.Center());
+            foreach (var node in nodes)
+            {
+                node.Renderer.Offset(offset);
+            }
+            foreach (var group in groups)
+            {
+                group.Renderer.Offset(offset);
+            }
+            SimpleUndoPair addActions = InnerAddNodes(nodes, groups, localization);
+            UndoableFile.Change(new GenericUndoAction(addActions, "Pasted"));
+            return Tuple.Create(nodes, groups);
+        }
+
         //TODO: Duplicate the IEditable with a new ID (must be deep copy of parameters)
-        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, object documentId, PointF location, ILocalizationEngine localization)
+        public Tuple<IEnumerable<ConversationNode>, IEnumerable<NodeGroup>> DuplicateInto(IEnumerable<GraphAndUI<NodeUIData>> nodeData, IEnumerable<NodeGroup> groups, PointF location, ILocalizationEngine localization)
         {
             var nodes = nodeData.Select(gnu => MakeNode(gnu.GraphData, gnu.UIData)).Evaluate();
 
