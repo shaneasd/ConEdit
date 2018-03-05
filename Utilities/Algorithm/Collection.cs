@@ -298,7 +298,7 @@ namespace Utilities
             return dict.Remove(key);
         }
 
-        public static bool Randomise<T>(this List<T> data, Random r)
+        public static bool Randomise<T>(this IList<T> data, Random r)
         {
             bool result = false;
             for (int i = data.Count-1; i > 0; i--)

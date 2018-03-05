@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithm\Graph.cs" />
+    <Compile Include="Algorithm\Permutation.cs" />
     <Compile Include="Algorithm\ReadonlySet.cs" />
     <Compile Include="BottleNeck.cs" />
     <Compile Include="Disposable.cs" />
