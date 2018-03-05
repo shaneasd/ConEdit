@@ -1029,7 +1029,7 @@ namespace ConversationEditor
             Action action = null;
             action = () =>
             {
-                NodeLayout.LayoutNodes(currentFile);
+                NodeLayout.LayoutNodes(currentFile, c => UIInfo(c, false).Area.Value.Center());
             };
             action();
         }
