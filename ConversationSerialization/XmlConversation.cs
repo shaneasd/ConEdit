@@ -240,6 +240,31 @@ namespace Conversation.Serialization
                 return new XmlGraphData<TUIRawData, TEditorData>(allnodes.Values, m_editorDataDeserializer.Read(root), new ReadOnlyCollection<LoadError>(errors), documentID);
             }
 
+            public static IReadOnlyCollection<Guid> CheckUniqueIds(IEnumerable<MemoryStream> validStreams)
+            {
+                HashSet<Guid> result = new HashSet<Guid>();
+                HashSet<Guid> existing = new HashSet<Guid>();
+                foreach (var stream in validStreams)
+                {
+                    stream.Position = 0;
+                    var d = XDocument.Load(stream);
+                    var root = d.Element(Root);
+
+                    //TODO: Make sure the docs for this function (and the call chain) clarify that unsupported versions will be silently ignored.
+                    string encounteredVersion = root.Attribute("xmlversion")?.Value ?? "";
+                    if (XmlVersionRead.Contains(encounteredVersion))
+                    {
+                        var nodeElements = root.Elements("Node");
+                        foreach (var guid in nodeElements.Select(n => Id<NodeTemp>.Parse(n.Attribute("Id").Value).Guid))
+                        {
+                            if (!existing.Add(guid))
+                                result.Add(guid);
+                        }
+                    }
+                }
+                return result;
+            }
+
             private Id<NodeTypeTemp> ReadType(XElement node)
             {
                 return Id<NodeTypeTemp>.Parse(node.Attribute("Guid").Value);

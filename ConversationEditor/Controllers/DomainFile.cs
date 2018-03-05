@@ -391,7 +391,7 @@ namespace ConversationEditor
             }
         }
 
-        internal static IEnumerable<IDomainFile> Load(IEnumerable<Tuple<Id<FileInProject>, DocumentPath>> paths, DomainDomain source, Func<DocumentPath, DomainSerializerDeserializer> serializerdeserializer, INodeFactory nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, UpToDateFile.BackEnd backend)
+        internal static IEnumerable<IDomainFile> Load(IEnumerable<Tuple<Id<FileInProject>, DocumentPath>> paths, DomainDomain source, Func<DomainDomain, DomainSerializerDeserializer> serializerdeserializer, INodeFactory nodeFactory, Func<IDomainUsage<ConversationNode, TransitionNoduleUIInfo>> domainUsage, Func<IDynamicEnumParameter, object, DynamicEnumParameter.Source> getDocumentSource, UpToDateFile.BackEnd backend)
         {
             var streamsAndPaths = paths.Select((x) =>
             {
@@ -430,6 +430,15 @@ namespace ConversationEditor
                 }
             }).Evaluate();
 
+            var validStreamsAndPaths = Either.Split(streamsAndPaths).Item1; //TODO: Use this in the below cases where we currently use streamsAndPaths
+            IReadOnlyCollection<Guid> nonUniqueGuids = serializerdeserializer(source).CheckUniqueIds(validStreamsAndPaths.Select(x=>x.Item1));
+            if (nonUniqueGuids.Any())
+            {
+                //TODO: Provide feedback to the user as to why these failed to load.
+                //TODO: Unit test this
+                return streamsAndPaths.Select(x => x.Transformed(a => new MissingDomainFile(a.Item2, a.Item3), a => a));
+            }
+
             //We make the, hopefully, valid assumption here that the deserializers for the various concepts within a domain file have the same version requirements.
             Dictionary<DocumentPath, DeserializerVersionMismatchException> failedToParseFiles = new Dictionary<DocumentPath, DeserializerVersionMismatchException>();
 
@@ -439,7 +448,7 @@ namespace ConversationEditor
                 {
                     try
                     {
-                        var categoryData = serializerdeserializer(stream.Item3).CategoriesDeserializer.Read(stream.Item1);
+                        var categoryData = serializerdeserializer(source).CategoriesDeserializer.Read(stream.Item1);
                         DomainFile.AddToData(categoryData.Nodes.Select(n => n.GraphData), source);
                     }
                     catch (DeserializerVersionMismatchException e)
@@ -454,7 +463,7 @@ namespace ConversationEditor
                 {
                     try
                     {
-                        var typeData = serializerdeserializer(stream.Item3).TypesDeserializer.Read(stream.Item1);
+                        var typeData = serializerdeserializer(source).TypesDeserializer.Read(stream.Item1);
                         DomainFile.AddToData(typeData.Nodes.Select(n => n.GraphData), source);
                     }
                     catch (DeserializerVersionMismatchException e)
@@ -469,7 +478,7 @@ namespace ConversationEditor
                 {
                     try
                     {
-                        var connectorData = serializerdeserializer(stream.Item3).ConnectorsDeserializer.Read(stream.Item1);
+                        var connectorData = serializerdeserializer(source).ConnectorsDeserializer.Read(stream.Item1);
                         DomainFile.AddToData(connectorData.Nodes.Select(n => n.GraphData), source);
                     }
                     catch (DeserializerVersionMismatchException e)
@@ -484,7 +493,7 @@ namespace ConversationEditor
                 {
                     try
                     {
-                        var nodeData = serializerdeserializer(stream.Item3).NodesDeserializer.Read(stream.Item1);
+                        var nodeData = serializerdeserializer(source).NodesDeserializer.Read(stream.Item1);
                         DomainFile.AddToData(nodeData.Nodes.Select(n => n.GraphData), source);
                     }
                     catch (DeserializerVersionMismatchException e)
@@ -499,15 +508,15 @@ namespace ConversationEditor
                     {
                         try
                         {
-                            var editorData = serializerdeserializer(stream.Item3).EditorDataDeserializer.Read(stream.Item1);
+                            var editorData = serializerdeserializer(source).EditorDataDeserializer.Read(stream.Item1);
                             DomainFile.AddToData(editorData.Nodes.Select(n => n.GraphData), source);
-                            var allData = serializerdeserializer(stream.Item3).EverythingDeserializer.Read(stream.Item1);
+                            var allData = serializerdeserializer(source).EverythingDeserializer.Read(stream.Item1);
 
                             List<IAutoCompletePattern> autoCompletePatterns = new List<IAutoCompletePattern>();
-                            var nodeData = serializerdeserializer(stream.Item3).AutoCompleteSuggestionsDeserializer.Read(stream.Item1);
+                            var nodeData = serializerdeserializer(source).AutoCompleteSuggestionsDeserializer.Read(stream.Item1);
                             autoCompletePatterns.AddRange(AutoCompletePattern.Generate(nodeData, source));
 
-                            return new DomainFile(allData.Nodes.ToList(), editorData.EditorData.Groups.ToList(), stream.Item1, stream.Item2, stream.Item3, allData.Errors, source, serializerdeserializer(stream.Item3).Serializer, nodeFactory, domainUsage, getDocumentSource, autoCompletePatterns, backend);
+                            return new DomainFile(allData.Nodes.ToList(), editorData.EditorData.Groups.ToList(), stream.Item1, stream.Item2, stream.Item3, allData.Errors, source, serializerdeserializer(source).Serializer, nodeFactory, domainUsage, getDocumentSource, autoCompletePatterns, backend);
                         }
                         catch (DeserializerVersionMismatchException e)
                         {
@@ -518,6 +527,7 @@ namespace ConversationEditor
 
                 if (failedToParseFiles.Any())
                 {
+                    //TODO: expose this to the user in a consistent way with other errors (missing files, duplicated or missing guids)
                     StringBuilder message = new StringBuilder("Failed to parse files:\n");
                     foreach (var kvp in failedToParseFiles)
                     {

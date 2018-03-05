@@ -244,7 +244,7 @@ namespace ConversationEditor
                     m_domainDataSource = new DomainDomain(pluginsConfig);
                     Func<IEnumerable<Tuple<Id<FileInProject>, DocumentPath>>, IEnumerable<IDomainFile>> loader = paths =>
                     {
-                        var result = DomainFile.Load(paths, m_domainDataSource, document => DomainSerializerDeserializer.Make(m_domainDataSource), DomainNodeFactory, () => DomainUsage, getDomainEnumSource, backend).Evaluate();
+                        var result = DomainFile.Load(paths, m_domainDataSource, DomainSerializerDeserializer.Make, DomainNodeFactory, () => DomainUsage, getDomainEnumSource, backend).Evaluate();
                         result.ForAll(a => a.ConversationDomainModified += ConversationDatasourceModified);
                         return result;
                     };
@@ -254,6 +254,10 @@ namespace ConversationEditor
                 }
                 m_conversationDataSource = new ConversationDataSource(m_domainFiles.Select(df => df.Data));
 
+                if (m_conversationDataSource.DomainErrors.Any())
+                {
+                    MessageBox.Show(string.Join("\n", m_conversationDataSource.DomainErrors.Select(error => error.Message)));
+                }
 
                 {
                     m_localizer = new LocalizationEngine(GetFilePath, data.LocalizationSets, context, UsedLocalizations, ShouldContract, pathOk, s => CheckFolder(s, Origin), backend, Origin);

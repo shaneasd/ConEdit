@@ -21,8 +21,27 @@ namespace ConversationEditor
         protected CategoryGenerationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 
+    internal class DomainError : IErrorListElement
+    {
+        public DomainError(string message)
+        {
+            Message = message;
+        }
+
+        public IEnumerable<ConversationNode<INodeGui>> Nodes => Enumerable.Empty<ConversationNode<INodeGui>>();
+
+        public IConversationEditorControlData<ConversationNode<INodeGui>, TransitionNoduleUIInfo> File => null;
+
+        public string Message { get; }
+
+        public IEnumerator<Tuple<ConversationNode<INodeGui>, IConversationEditorControlData<ConversationNode<INodeGui>, TransitionNoduleUIInfo>>> MakeEnumerator() => null;
+    }
+
     internal class ConversationDataSource : IDataSource
     {
+        public IReadOnlyCollection<IErrorListElement> DomainErrors => m_domainErrors;
+        List<DomainError> m_domainErrors = new List<DomainError>();
+
         ConversationConnectionRules m_connectionRules = new ConversationConnectionRules();
         ConstantTypeSet m_types;
 
@@ -60,42 +79,34 @@ namespace ConversationEditor
             //Connectors must be generated after Types but before Nodes
             foreach (var connector in domains.SelectMany(d => d.Connectors))
             {
-                AddConnector(connector);
+                m_connectorDefinitions[connector.Id] = connector;
             }
 
             //Nodes must be generated after NodeTypes, Types and Connectors
             foreach (var node in domains.SelectMany(d => d.Nodes))
             {
-                AddNodeType(node);
+                var nodeGenerator = new NodeDataGenerator(node, m_types, m_connectorDefinitions, m_connectionRules, null);
+                m_nodes[node.Guid] = new Tuple<Guid, NodeDataGenerator>(node.Category.GetValueOrDefault(DomainIDs.CategoryNone), nodeGenerator); //TODO: Make the Guid an Id<Category>
             }
 
             m_connectionRules.SetRules(domains.SelectMany(d => d.Connections));
+
+            m_domainErrors.AddRange(DetectErrors());
+        }
+
+        //TODO: When loading domain files we check for uniqueness of guids. Link this with that.
+        private IEnumerable<DomainError> DetectErrors()
+        {
+            var repeatedNodeIds = m_nodes.GroupBy(n => n.Key).Where(g => g.Count() > 1).Select(k => (k.First().Key, k.Count()));
+            foreach (ValueTuple<Id<NodeTypeTemp>, int> repeatedNodeId in repeatedNodeIds)
+            {
+                yield return new DomainError("Id " + repeatedNodeId.Item1 + " is repeated " + repeatedNodeId.Item2 + " times."); //TODO: Actually help locate the duplicate nodes
+            }
         }
 
         void m_nodes_Removing(Id<NodeTypeTemp> id, Tuple<Guid, NodeDataGenerator> generator)
         {
             generator.Item2.Removed();
-        }
-
-        public void AddNodeType(NodeData node)
-        {
-            var nodeGenerator = new NodeDataGenerator(node, m_types, m_connectorDefinitions, m_connectionRules, null);
-            m_nodes[node.Guid] = new Tuple<Guid, NodeDataGenerator>(node.Category.GetValueOrDefault(DomainIDs.CategoryNone), nodeGenerator);
-        }
-
-        internal void RemoveNodeType(Id<NodeTypeTemp> id)
-        {
-            m_nodes.Remove(id);
-        }
-
-        public void AddConnector(ConnectorDefinitionData connector)
-        {
-            m_connectorDefinitions[connector.Id] = connector;
-        }
-
-        public void RemoveConnector(Id<TConnectorDefinition> id)
-        {
-            m_connectorDefinitions.Remove(id);
         }
 
         private static NodeCategory GenerateCategories(List<NodeTypeData> nodeTypeData)

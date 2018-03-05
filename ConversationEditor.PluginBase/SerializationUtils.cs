@@ -55,6 +55,11 @@ namespace ConversationEditor
                 autoCompleteSuggestionsDeserializer: AutoCompleteSuggestionsDeserializer,
                 everythingDeserializer: ErrorDeserializer);
         }
+
+        public IReadOnlyCollection<Guid> CheckUniqueIds(IEnumerable<MemoryStream> validStreamsAndPaths)
+        {
+            return SerializationUtils.CheckUniqueIds(validStreamsAndPaths);
+        }
     }
 
     public static class SerializationUtils
@@ -96,6 +101,11 @@ namespace ConversationEditor
         public static XmlGraphData<NodeUIData, ConversationEditorData> MakeConversationData(IEnumerable<GraphAndUI<NodeUIData>> nodeData, ConversationEditorData data)
         {
             return new XmlGraphData<NodeUIData, ConversationEditorData>(nodeData, data);
+        }
+
+        internal static IReadOnlyCollection<Guid> CheckUniqueIds(IEnumerable<MemoryStream> validStreamsAndPaths)
+        {
+           return XmlConversation<NodeUIData, ConversationEditorData>.Deserializer.CheckUniqueIds(validStreamsAndPaths);
         }
         #endregion
     }
